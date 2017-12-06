@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\EspecialNivelTecnicoTipo:
+    type: entity
+    table: especial_nivel_tecnico_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nivelTecnico:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: nivel_tecnico
+    lifecycleCallbacks: {  }

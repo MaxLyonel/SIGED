@@ -1,0 +1,649 @@
+{% extends 'layoutBjp.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/chosen.css')}}" rel="stylesheet">
+    <link href="{{asset('bootstrap-wizard/css/bwizard.min.css')}}" rel="stylesheet">
+
+</style>
+{% endblock %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>{{ app.session.get('tituloTipo') }}
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('PagosBono')}}">Buscar</a></li>
+                    <li><i class="fa fa-list"></i>  <a href="{{path('PagosBono',{'op':'result'})}}">{{ app.session.get('tituloTipo') }}</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><.0 span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!--  cursos -->
+            {% for flashMessage in app.session.flashbag.get('newCursoOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newCursoError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteCursoOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteCursoError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Institución Educativa</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+                            <div style="background: #EEE; padding:3px 10px 10px 10px">
+                                <h4 class="text-orange">Seleccionar SIE / RUE</h4>
+                                {{form_start(form,{'attr':{'id':'formAreas','onsubmit':'return validateForm()'} })}}
+
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4">
+                                    {{form_label(form.sie)}}
+                                    </div>
+                                    <div class="col-lg-3 col-md-4">
+                                    {{form_widget(form.sie)}}
+                                    </div>
+                                    <div class="col-lg-3 col-md-4">
+                                      {{form_widget(form.buscar)}}
+                                    </div>
+
+                                </div></br>
+                                <div class="row">
+                                  <div class="col-lg-3 col-md-4">
+                                  {{form_label(form.sies)}}
+                                  </div>
+                                  <div class="col-lg-7 col-md-7">
+                                  {{form_widget(form.sies)}}
+                                  </div>
+                                </div>
+                                {{form_end(form)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id='resultlabelsUe'>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>Institución Educativa a Registrar</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="panelinstitucion" class="panel-collapse collapse in">
+                        <div class="portlet-body">
+
+                                <div style="background: #EEE; padding:3px 10px 10px 10px">
+                                    <h4 class="text-orange">Datos de la Institución Educativa</h4>
+
+
+                                          <div id='resultInfoUe'>    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="modal modal-flex fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="formAreasModal" id="formAreasModal" action="" onsubmit="enviarAreas();
+                        return false">
+                    <input type="hidden" name="divResultado" id="divResultado">
+                    <input type="hidden" name="idInstitucionCurso" id="idInstitucionCurso">
+                    <input type="hidden" name="idNivel" id="idNivel">
+                    <input type="hidden" name="educacionTipo" id="educacionTipo" value="{{app.session.get('sysname')}}">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="flexModalLabel">Adición de áreas</h4>
+                        <span id="nivelModal"></span>
+                        - <span id="gradoModal"></span>
+                        - <span id="paraleloModal"></span>
+                    </div>
+                    <div class="modal-body">
+                        <div id="areasModal">
+
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('js/chosen.jquery.js')}}"></script>
+    <script src="{{asset('bootstrap-wizard/js/bwizard.js')}}"></script>
+    <script src="{{asset('bootstrap-wizard/jquery-ui.min.js')}}"></script>
+    <script>
+
+    function informacionUeFindDropDown(sie){
+
+       sie=sie.value;
+       $('#form_sie').val(sie);
+       formData = $('#formAreas').serialize();
+       $.ajax({
+              type: 'post',
+              url: Routing.generate('PagosBono_buscar_infoUe'),
+              data: formData,
+              beforeSend: function () {
+                  $("#resultInfoUe").empty();
+                  $("#resultInfoUe").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+              },
+              success: function (data) {
+                  $("#resultInfoUe").empty();
+                  $("#resultInfoUe").append(data);
+                  //location.reload(true);
+              },
+              statusCode: {
+                  500: function () {
+
+                  },
+                  404: function () {
+
+                  }
+              }
+          });
+
+    }
+    function informacionUe(){
+       sie=$('#form_sie').val();
+       formData = $('#formAreas').serialize();
+       $.ajax({
+              type: 'post',
+              url: Routing.generate('PagosBono_buscar_infoUe'),
+              data: formData,
+              beforeSend: function () {
+                  $("#resultInfoUe").empty();
+                  $("#resultInfoUe").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+              },
+              success: function (data) {
+                  $("#resultInfoUe").empty();
+                  $("#resultInfoUe").append(data);
+                  //location.reload(true);
+              },
+              statusCode: {
+                  500: function () {
+
+                  },
+                  404: function () {
+
+                  }
+              }
+          });
+
+    }
+ function informacionUecombo(){
+
+       sie=$('#form_sies').val();
+       alert(sie);
+       $('#form_sie').val()=sie;
+      //$('#form_sie').val() = sie; $("#form_grado").append('<option value="">Seleccionar...</option>');
+       formData = $('#formAreas').serialize();
+       $.ajax({
+              type: 'post',
+              url: Routing.generate('PagosBono_buscar_infoUe'),
+              data: formData,
+              beforeSend: function () {
+                  $("#resultInfoUe").empty();
+                  $("#resultInfoUe").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                   $("#form_sie").empty();
+
+              },
+              success: function (data) {
+                  $("#resultInfoUe").empty();
+                  $("#resultInfoUe").append(data);
+                   $("#form_sie").append(data);
+                  //location.reload(true);
+              },
+              statusCode: {
+                  500: function () {
+
+                  },
+                  404: function () {
+
+                  }
+              }
+          });
+
+    }
+
+
+                    var xhr2;
+                    var xhr3;
+                    var xhr4;
+                    function cargarNiveles() {
+                        var institucion = $('#form_idInstitucion').val();
+                        var gestion = $('#form_idGestion').val();
+                        var turno = $('#form_turno').val();
+                        if (xhr2 && xhr2.readyState != 4) {
+                            xhr2.abort();
+                        }
+                        xhr2 = $.ajax({
+                            type: 'get',
+                            url: Routing.generate('areas_cargar_niveles', {'idInstitucion': institucion, 'gestion': gestion, 'turno': turno}),
+                            beforeSend: function () {
+                                $("#form_nivel").empty();
+                                $("#form_grado").empty();
+                                $("#form_paralelo").empty();
+                                $("#form_nivel").append('<option value="">Buscando...</option>');
+                                $("#form_grado").append('<option value="">Buscando...</option>');
+                                $("#form_paralelo").append('<option value="">Buscando...</option>');
+                                $('#divAreas').empty();
+                            },
+                            success: function (data) {
+                                $("#form_nivel").empty();
+                                $("#form_grado").empty();
+                                $("#form_paralelo").empty();
+                                $("#form_nivel").append('<option value="">Seleccionar...</option>');
+                                $("#form_grado").append('<option value="">Seleccionar...</option>');
+                                $("#form_paralelo").append('<option value="">Seleccionar...</option>');
+                                $.each(data.niveles, function (i, value) {
+                                    $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+                                });
+                            }
+                        });
+                    }
+                    function cargarGrados() {
+                        var institucion = $('#form_idInstitucion').val();
+                        var gestion = $('#form_idGestion').val();
+                        var turno = $('#form_turno').val();
+                        var nivel = $('#form_nivel').val();
+                        if (xhr3 && xhr3.readyState != 4) {
+                            xhr3.abort();
+                        }
+                        xhr3 = $.ajax({
+                            type: 'get',
+                            url: Routing.generate('areas_cargar_grados', {'idInstitucion': institucion, 'gestion': gestion, 'turno': turno, 'nivel': nivel}),
+                            beforeSend: function () {
+                                $("#form_grado").empty();
+                                $("#form_paralelo").empty();
+                                $("#form_grado").append('<option value="">Buscando...</option>');
+                                $("#form_paralelo").append('<option value="">Buscando...</option>');
+                                $('#divAreas').empty();
+                            },
+                            success: function (data) {
+                                $("#form_grado").empty();
+                                $("#form_paralelo").empty();
+                                $("#form_grado").append('<option value="">Seleccionar...</option>');
+                                $("#form_paralelo").append('<option value="">Seleccionar...</option>');
+                                $.each(data.grados, function (i, value) {
+                                    $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                                });
+                            }
+                        });
+                    }
+                    function cargarParalelos() {
+                        var institucion = $('#form_idInstitucion').val();
+                        var gestion = $('#form_idGestion').val();
+                        var turno = $('#form_turno').val();
+                        var nivel = $('#form_nivel').val();
+                        var grado = $('#form_grado').val();
+                        if (xhr4 && xhr4.readyState != 4) {
+                            xhr4.abort();
+                        }
+                        xhr4 = $.ajax({
+                            type: 'get',
+                            url: Routing.generate('areas_cargar_paralelos', {'idInstitucion': institucion, 'gestion': gestion, 'turno': turno, 'nivel': nivel, 'grado': grado}),
+                            beforeSend: function () {
+                                $("#form_paralelo").empty();
+                                $("#form_paralelo").append('<option value="">Buscando...</option>');
+                                $('#divAreas').empty();
+                            },
+                            success: function (data) {
+                                $("#form_paralelo").empty();
+                                $("#form_paralelo").append('<option value="">Seleccionar...</option>');
+                                $.each(data.paralelos, function (i, value) {
+                                    $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                                });
+                            }
+                        });
+                    }
+
+                    var xhr1;
+                    function validateForm() {
+                        var turno = $('#form_turno').val();
+                        var nivel = $('#form_nivel').val();
+                        var grado = $('#form_grado').val();
+                        var paralelo = $('#form_paralelo').val();
+                        if (turno == '') {
+                            alert('Debe seleccionar un turno');
+                            return false;
+                        }
+                        if (nivel == '') {
+                            alert('Debe seleccionar un nivel');
+                            return false;
+                        }
+                        if (grado == '') {
+                            alert('Debe seleccionar un grado');
+                            return false;
+                        }
+                        if (paralelo == '') {
+                            alert('Debe seleccionar un paralelo');
+                            return false;
+                        }
+
+                        if (xhr1 && xhr1.readyState != 4) {
+                            xhr1.abort();
+                        }
+
+                        var formData = $('#formAreas').serialize();
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('areas_listar_areas_curso'),
+                            data: formData,
+                            beforeSend: function () {
+                                $("#divAreas").empty();
+                                $("#divAreas").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                            },
+                            success: function (data) {
+                                $("#divAreas").empty();
+                                $("#divAreas").append(data);
+                                $('.chosen-select').chosen({allow_single_deselect: false});
+                                $('.chosen-container').css('width', '100%');
+                                //$(".tooltips").tooltip();
+                            },
+                            error: function (data) {
+                                $("#divAreas").empty();
+                                $("#divAreas").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no existe o no hay conexion con el servidor</div>');
+                            }
+                        });
+                        return false;
+                    }
+
+                    function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, divResultado) {
+                        $('#nivelModal').empty();
+                        $('#nivelModal').append((nivel));
+                        $('#gradoModal').empty();
+                        $('#gradoModal').append(grado);
+                        $('#paraleloModal').empty();
+                        $('#paraleloModal').append(paralelo);
+
+                        $('#divResultado').empty();
+                        $('#divResultado').val(divResultado);
+                        $('#idInstitucionCurso').empty();
+                        $('#idInstitucionCurso').val(idInstitucionCurso);
+                        $('#idNivel').empty();
+                        $('#idNivel').val(idNivel);
+
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('areas_listar_areas_nivel', {'idNivel': idNivel, 'idCurso': idInstitucionCurso}),
+                            beforeSend: function () {
+                                $("#areasModal").empty();
+                                $("#areasModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                            },
+                            success: function (data) {
+                                $("#areasModal").empty();
+                                $("#areasModal").append(data);
+                            }
+                        });
+                        $('#newModal').modal('show');
+                    }
+
+                    function marcarTodasAreas() {
+                        var marcar = document.getElementById('marcarTodos');
+                        var areas = document.getElementsByName('areas[]');
+                        if (marcar.checked) {
+                            for (var i = 0; i < areas.length; i++) {
+                                areas[i].checked = true;
+                            }
+                        } else {
+                            for (var i = 0; i < areas.length; i++) {
+                                if (areas[i].disabled != true) {
+                                    areas[i].checked = false;
+                                }
+                            }
+                        }
+                    }
+
+                    function enviarAreas() {
+                        var educacionTipo = $('#educacionTipo').val();
+                        var nivel = $('#idNivel').val();
+                        if (educacionTipo != 'REGULAR') {
+                            var marcados = 'si';
+                            var areas = document.getElementsByName('areas[]');
+                            for (var i = 0; i < areas.length; i++) {
+                                if (!areas[i].checked) {
+                                    marcados = 'no';
+                                }
+                            }
+                            if (marcados == 'no') {
+                                alert('Debe seleccionar todas las areas.');
+                                return 0;
+                            }
+                        }
+
+
+                        var div = $('#divResultado').val();
+                        var formData = $('#formAreasModal').serialize();
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('areas_listar_areas_curso_adicionar_eliminar'),
+                            data: formData,
+                            beforeSend: function () {
+                                $("#divAreas").append("<div style='text-align:center' id='img-loading'><img src='{{asset('img/loading.gif')}}'></div>");
+                            },
+                            success: function (data) {
+                                $("#divAreas").empty();
+                                $("#divAreas").append(data);
+                                $('.chosen-select').chosen({allow_single_deselect: false});
+                                $('.chosen-container').css('width', '100%');
+                                $('.tooltip')
+                            },
+                            error: function(data){
+                                $("#img-loading").css('display','none');
+                                $("#divAreas").append("<div class='alert alert-danger'>Ocurrio un error al registrar las áreas, intentelo de nuevo o comuniquese con un responsable del sistema</div>")
+                            }
+                        });
+                        $('#newModal').modal('hide');
+                    }
+
+                    var xhr6;
+                    function eliminarArea(idCursoOferta,materia) {
+
+                        if (confirm('Se eliminara la asignatura '+ materia +' del curso, tambien se eliminaran las calificaciones de los estudiantes en esta asignatura.\n ¿Esta seguro de eliminar la asignatura?')) {
+                            $.ajax({
+                                type: 'get',
+                                url: Routing.generate('areas_delete', {'idCursoOferta': idCursoOferta}),
+                                beforeSend: function () {
+                                    Messenger.options = {
+                                        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+                                        theme: 'flat'
+                                    }
+
+                                    Messenger().post({
+                                        message: 'Eliminando, espere un momento...',
+                                        type: 'info',
+                                        showCloseButton: false
+                                    });
+                                },
+                                success: function (data) {
+                                    $("#divAreas").empty();
+                                    $("#divAreas").append(data);
+                                    $('.chosen-select').chosen({allow_single_deselect: false});
+                                    $('.chosen-container').css('width', '100%');
+                                },
+                                error: function (data) {
+                                    $("#divAreas").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No se puede eliminar el curso</div>');
+                                }
+                            });
+                        } else {
+                            return false;
+                        }
+                    }
+var xhr5;
+    var addpop = function(idco){
+        if ($('#'+idco).is(':hidden')){
+            if (xhr5 && xhr5.readyState != 4) {
+                xhr5.abort();
+            }
+            xhr5 = $.ajax({
+                type: 'post',
+                data: ({idco: idco}),
+                url: "{{ path('areas_maestros') }}",
+                beforeSend: function () {
+                    $('.divMaestros').hide();
+                    $('.arrow-before').hide();
+                    $('.arrow-after').hide();
+                    $("#"+idco).empty();
+                    $('#before'+idco).fadeIn();
+                    $('#after'+idco).fadeIn();
+                    $('#'+idco).fadeIn();
+                    $('#'+idco).append("<div style='background:#FFFFFF; text-align:center; color:#286AFB'><div style='padding:10px 0px 10px 0px;'>Cargando maestros<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
+                },
+                success: function (data) {
+                    $("#"+idco).empty();
+                    $("#"+idco).append(data);
+                    $('.chosen-select').chosen({allow_single_deselect: false});
+                    $('#'+idco).fadeIn();
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }else{
+            if (xhr5 && xhr5.readyState != 4) {
+                xhr5.abort();
+            }
+            $("#"+idco).empty();
+            $('#'+idco).fadeOut();
+            $('#before'+idco).fadeOut();
+            $('#after'+idco).fadeOut();
+        }
+    }
+
+    var cerrarMaestros = function(idco){
+        $("#"+idco).empty();
+        $('#'+idco).fadeOut();
+        $('#before'+idco).fadeOut();
+        $('#after'+idco).fadeOut();
+    }
+
+    var xhr6;
+    var asignarMaestro = function(){
+        if (xhr6 && xhr6.readyState != 4) {
+            xhr6.abort();
+        }
+        var formData = $('#formMaestros').serialize();
+        xhr6 = $.ajax({
+            type: 'post',
+            data: formData,
+            url: "{{ path('areas_maestros_asignar_siged') }}",
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                //$('#28030476'),append(data);
+                var idco = data.ieco;
+
+                $('#'+idco).empty();
+                $('#'+idco).append("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>"+ data.mensaje +"</div>");
+                setTimeout("cerrarMaestros('"+idco+"')",1000);
+
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,98 @@
+Sie\AppWebBundle\Entity\TtecParaleloMateria:
+    type: entity
+    table: ttec_paralelo_materia
+    indexes:
+        IDX_EA4642B5F8AECF5F:
+            columns:
+                - ttec_docente_persona_id
+        IDX_EA4642B59B276788:
+            columns:
+                - turno_tipo_id
+        IDX_EA4642B52E917E5D:
+            columns:
+                - ttec_paralelo_tipo_id
+        IDX_EA4642B5211947BA:
+            columns:
+                - ttec_paralelo_materia_horario_id
+        IDX_EA4642B56716D8F6:
+            columns:
+                - ttec_materia_tipo_id
+        IDX_EA4642B5179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        ttecDocentePersona:
+            targetEntity: TtecDocentePersona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_docente_persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        turnoTipo:
+            targetEntity: TurnoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                turno_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecParaleloTipo:
+            targetEntity: TtecParaleloTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_paralelo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecParaleloMateriaHorario:
+            targetEntity: TtecParaleloMateriaHorario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_paralelo_materia_horario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecMateriaTipo:
+            targetEntity: TtecMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

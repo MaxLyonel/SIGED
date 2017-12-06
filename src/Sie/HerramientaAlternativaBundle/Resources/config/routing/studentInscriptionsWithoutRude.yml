@@ -1,0 +1,23 @@
+alter_inscriptionstudent_without_rude_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptionsWithoutRude:index"}
+    options:
+         expose: true
+
+alter_inscriptionstudent_without_rude_findstudent:
+    path:     /findstudent
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptionsWithoutRude:findStudent"}
+    options:
+         expose: true
+
+alter_inscriptionstudent_without_rude_saveinscription:
+    path:     /save
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptionsWithoutRude:saveInscription"}
+    options:
+         expose: true
+
+alter_inscriptionstudent_without_rude_saveinscriptionstudent:
+    path:     /savestudent/{idStudent}/{dataUe}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptionsWithoutRude:saveInscriptionStudent"}
+    options:
+         expose: true

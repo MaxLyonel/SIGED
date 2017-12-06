@@ -1,0 +1,25 @@
+Sie\AppWebBundle\Entity\Mytable:
+    type: entity
+    table: mytable
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        mytable:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        a1:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,7 @@
+principal_web:
+    path:    /
+    defaults: { _controller: SieAppWebBundle:Principal:index }
+    
+siged_director_seleccionar_unidad_educativa:
+    path:    /{ue}/dirseluniedu
+    defaults: { _controller: SieAppWebBundle:Login:dirseluniedu }    

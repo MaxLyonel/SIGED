@@ -1,0 +1,106 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo %}      
+    <div id="tablaListadoPersonas_fil" style="visibility: hidden;"></div>
+    
+    {% if ((app.session.get('roluser') == 7) or (app.session.get('roluser') == 31) )%}
+
+        {% include 'SieUsuariosBundle:Listas:listausuariosincludeavanzado.html.twig' with {'po': po, 'titulo': titulo} %}        
+        
+    {% endif %}                    
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">        
+    $(document).ready(function() {
+        $('#tablaListadoPersonas tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+                $('#tablaListadoPersonas_fil').text($(this).index());
+                
+            }
+        });
+        
+        var table = $('#tablaListadoPersonas').DataTable({
+            language: {
+                "sProcessing":     "Procesando...",
+                "sLengthMenu":     "Mostrar _MENU_ registros",
+                "sZeroRecords":    "No se encontraron resultados",
+                "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix":    "",
+                "sSearch":         "Buscar:",
+                "sUrl":            "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Cargando...",                
+                "oPaginate": {
+                    "sFirst":    "Primero",
+                    "sLast":     "Último",
+                    "sNext":     "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            },
+            'dom': 'lBfrtip <"clear">',
+            'buttons': [
+                {   
+                    extend: 'colvis',
+                    text:'Visibilizar Columnas'
+                },
+                {
+                    extend: 'print',
+                    text: 'Imprimir',
+                    autoPrint: true,
+                    title: 'SIGED - LISTA DE USUARIO',
+                    header:true,
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend:'pdf',
+                    title: 'SIGED - LISTA DE USUARIO',
+                    filename:'Lista de usuarios filtrados',
+                    orientation:'landscape',
+                    exportOptions: {
+                    modifier: {
+                        page: 'Lista de usuarios filtrados'
+                        }
+                    }
+                },
+                {
+                extend: 'excel',
+                text: 'Excel',
+                filename:'Lista de usuarios filtrados',
+                exportOptions: {
+                    modifier: {
+                        page: 'Lista de usuarios filtrados'
+                        }
+                    }
+                },
+            ]            
+        });
+        
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                that
+                    .search( this.value )
+                    .draw();
+            } );
+        });       
+    } );
+    </script>
+{% endblock %}

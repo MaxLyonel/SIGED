@@ -1,0 +1,52 @@
+Sie\AppWebBundle\Entity\BonojuancitoInstitucioneducativaValidacion:
+    type: entity
+    table: bonojuancito_institucioneducativa_validacion
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestionTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        institucioneducativaId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        institucioneducativaIdNueva:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id_nueva
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+        fechaFinVal:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_fin_val
+        fechaFinEdit:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_fin_edit
+        obs:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

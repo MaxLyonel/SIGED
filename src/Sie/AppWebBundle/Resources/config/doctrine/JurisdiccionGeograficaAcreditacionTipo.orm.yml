@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\JurisdiccionGeograficaAcreditacionTipo:
+    type: entity
+    table: jurisdiccion_geografica_acreditacion_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        jurisdiccionGeograficaAcreditacion:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: jurisdiccion_geografica_acreditacion
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

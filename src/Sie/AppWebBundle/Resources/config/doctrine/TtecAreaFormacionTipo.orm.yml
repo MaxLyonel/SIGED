@@ -1,0 +1,45 @@
+Sie\AppWebBundle\Entity\TtecAreaFormacionTipo:
+    type: entity
+    table: ttec_area_formacion_tipo
+    indexes:
+        IDX_5720010A4080FEFA:
+            columns:
+                - institucioneducativa_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        areaFormacion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: area_formacion
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        institucioneducativaTipo:
+            targetEntity: InstitucioneducativaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

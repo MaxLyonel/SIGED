@@ -1,0 +1,120 @@
+Sie\AppWebBundle\Entity\InfraestructuraH6EquipamientoVivienda:
+    type: entity
+    table: infraestructura_h6_equipamiento_vivienda
+    indexes:
+        IDX_C784F6F72CCBCD40:
+            columns:
+                - infraestructura_h6_equipamiento_id
+        IDX_C784F6F7791CA4D:
+            columns:
+                - n1_cielo_estadogeneral_tipo_id
+        IDX_C784F6F7A90CABF2:
+            columns:
+                - n1_piso_estadogeneral_tipo_id
+        IDX_C784F6F7F6506E05:
+            columns:
+                - n1_techo_estadogeneral_tipo_id
+        IDX_C784F6F7C6B9923:
+            columns:
+                - n1_pared_estadogeneral_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n1Numeroambientes:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n1_numeroambientes
+        n1Numerohambientes:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n1_numerohambientes
+        n1EsBanio:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n1_es_banio
+        n1EsDucha:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n1_es_ducha
+        n1EsCocina:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n1_es_cocina
+        n1Aream2:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n1_aream2
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        infraestructuraH6Equipamiento:
+            targetEntity: InfraestructuraH6Equipamiento
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h6_equipamiento_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n1CieloEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n1_cielo_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n1PisoEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n1_piso_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n1TechoEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n1_techo_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n1ParedEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n1_pared_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

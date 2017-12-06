@@ -1,0 +1,44 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaUsuario:
+    type: entity
+    table: institucioneducativa_usuario
+    indexes:
+        IDX_CBC220CB3AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_CBC220CBDB38439E:
+            columns:
+                - usuario_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

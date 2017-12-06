@@ -1,0 +1,57 @@
+personaladministrativoinscripcion:
+    path:     /
+    defaults: { _controller: SieRegularBundle:PersonalAdministrativoInscripcion:index }
+
+personaladministrativoinscripcion_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:show" }
+
+personaladministrativoinscripcion_new:
+    path:     /new/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:new" }
+
+personaladministrativoinscripcion_create:
+    path:     /create/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:create" }
+    methods:  POST
+
+personaladministrativoinscripcion_edit:
+    path:     /edit/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:edit" }
+    methods:  [POST, PUT]
+
+personaladministrativoinscripcion_update:
+    path:     /update/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:update" }
+    methods:  [POST, PUT]
+
+personaladministrativoinscripcion_es_vigente_administrativo:
+    path:     /administrativo/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:esVigenteAdministrativo" }
+    methods:  [POST, PUT]      
+    
+personaladministrativoinscripcion_list:
+    path:     /list/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:list" }
+
+personaladministrativoinscripcion_find:
+    path:     /find/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:find" }
+    
+personaladministrativoinscripcion_result:
+    path:     /result/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:result" }    
+    
+personaladministrativoinscripcion_delete:
+    path:     /delete/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:delete" }
+    methods:  [POST, DELETE]   
+    
+personaladministrativoinscripcion_persona_new:
+    path:     /newPerson/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:newpersona" }
+
+personaladministrativoinscripcion_persona_create:
+    path:     /createPerson/
+    defaults: { _controller: "SieRegularBundle:PersonalAdministrativoInscripcion:createpersona" }
+    methods:  POST    

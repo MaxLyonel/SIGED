@@ -1,0 +1,102 @@
+download_ddjjone_web:
+    path:    /ddjjone/{rude}/{gestion}/{sie}
+    defaults: { _controller: SieAppWebBundle:Download:ddjjone }
+
+download_ddjjgroup_web:
+    path:   /ddjjgroup/{gestion}/{sie}
+    defaults: { _controller: SieAppWebBundle:Download:ddjjgroup}
+
+donwload_listStudentPerCourse:
+    path: /listStudentPerCourse/{ue}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}
+    defaults: { _controller: SieAppWebBundle:Download:listStudentPerCourse }
+
+donwload_listStudentPerUe:
+    path: /listStudentPerUe/{ue}/{gestion}
+    defaults: { _controller: SieAppWebBundle:Download:listStudentPerUe }
+
+donwload_listStudentPerUeUnAcredited:
+    path: /listStudentPerUe/{sie}
+    defaults: { _controller: SieAppWebBundle:Download:listStudentPerUeUnAcredited }
+
+donwload_listStudentPerUeTecnicoHumanistico:
+    path: /listStudentPerUeTecnicoHumanistico/{uetu}/{gestion}
+    defaults: { _controller: SieAppWebBundle:Download:listStudentPerUeTecnicoHumanistico }
+
+download_distrito_sie_download:
+    path:     /download/{file}
+    defaults: { _controller: SieAppWebBundle:Download:downloaddistrito }
+
+download_distrito_sie_downloadxls:
+    path:     /downloadxls/{file}
+    defaults: { _controller: SieAppWebBundle:Download:downloaddistritoxls }
+
+download_distrito_sie_downloadinfoInscritos:
+    path:     /downloadinfoInscritos
+    defaults: { _controller: SieAppWebBundle:Download:downloadinfoInscritos }
+
+download_ue_solicitudModificacionCalificaciones:
+    path:     /djSolicitudModificacionCalificaciones/{idSolicitud}
+    defaults: { _controller: SieAppWebBundle:Download:solicitudModificacionCalificaciones }
+
+download_ue_solicitudAdicionCalificaciones:
+    path:     /djSolicitudAdicionCalificaciones/{idSolicitud}
+    defaults: { _controller: SieAppWebBundle:Download:solicitudAdicionCalificaciones }
+
+download_ue_list_gral_tec_hum:
+    path:     /listgraltechum
+    defaults: { _controller: SieAppWebBundle:Download:listgraltechum }
+
+download_ue_list_gral_tec_hum_xls:
+    path:     /listgraltechumxls
+    defaults: { _controller: SieAppWebBundle:Download:listgraltechumxls }
+
+download_ue_list_resumen_tec_hum:
+    path:     /listresumentechum
+    defaults: { _controller: SieAppWebBundle:Download:resumentechum }
+
+download_ue_reportes_departamento:
+    path:    /reportedepartamento/
+    defaults: { _controller: SieAppWebBundle:Download:departamentoreporte }
+
+download_ue_reportes_distrito:
+    path:    /reportedistrito/
+    defaults: { _controller: SieAppWebBundle:Download:distritoreporte }
+
+donwload_boletinPromoPerUe:
+    path: /boletinPromoPerUe/{ue}/{nivel}/{ciclo}/{grado}/{paralelo}/{turno}/{gestion}/{itemsUe}
+    defaults: { _controller: SieAppWebBundle:Download:boletinPromoPerUe }
+
+donwload_listMaestrosPerUe:
+    path: /listMaestrosPerUe/{ue}/{nivel}/{ciclo}/{grado}/{paralelo}/{turno}/{gestion}/{itemsUe}
+    defaults: { _controller: SieAppWebBundle:Download:listMaestrosPerUe }
+
+download_ddjjStudent_web:
+    path:    /ddjjStudentWeb/{rude}/{gestion}/{sie}
+    defaults: { _controller: SieAppWebBundle:Download:ddjjStudentWeb }
+
+download_libreta:
+    path:    /downloadLibreta/{idInscripcion}/{rude}/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}/{ciclo}
+    defaults: { _controller: SieAppWebBundle:Download:downloadLibreta }
+
+download_ddjj_speciality:
+    path:    /ddjjSpecialityStudent/{idInscripcion}/{rude}/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}/{ciclo}
+    defaults: { _controller: SieAppWebBundle:Download:ddjjSpecialityStudent }
+
+gestionUesprocesoApertura_listStudentsNoAcreditados:
+    path:    /listStudentsNoAcreditados/
+    defaults: { _controller: SieAppWebBundle:Download:listStudentsNoAcreditados }
+
+download_rude:
+    path:    /downloadrude/{codue}/{rude}/{gestion}/{eins}
+    defaults: { _controller: SieAppWebBundle:Download:downloadRude }
+
+donwload_report_rude_operativo:
+    path: /reportRudeOperatvio/{codDistrito}
+    defaults: { _controller: SieAppWebBundle:Download:reportRudeOperatvio }
+
+download_reporte_gis:
+    path:    /downloadReporteGis/{codEdificio}
+    defaults: { _controller: SieAppWebBundle:Download:downloadReporteGis }
+    options:
+        expose: true
+    

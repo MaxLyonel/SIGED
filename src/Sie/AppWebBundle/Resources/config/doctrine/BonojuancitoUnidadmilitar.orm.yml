@@ -1,0 +1,223 @@
+Sie\AppWebBundle\Entity\BonojuancitoUnidadmilitar:
+    type: entity
+    table: bonojuancito_unidadmilitar
+    indexes:
+        IDX_A1CD8493CDB85643:
+            columns:
+                - bonojuancito_gran_unidadmilitar_id
+        IDX_A1CD8493DB38439E:
+            columns:
+                - usuario_id
+        IDX_A1CD8493179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        unidadmilitar:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+        comandanteUnidad:
+            type: string
+            nullable: false
+            length: 200
+            fixed: false
+            comment: ''
+            column: comandante_unidad
+        responsable:
+            type: string
+            nullable: false
+            length: 200
+            fixed: false
+            comment: ''
+        telefonoR:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: telefono_r
+        celular:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        departamento:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+        provincia:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+        municipio:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+        canton:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+        localidad:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+        zona:
+            type: string
+            nullable: false
+            length: 250
+            fixed: false
+            comment: ''
+        direccion:
+            type: string
+            nullable: false
+            length: 500
+            fixed: false
+            comment: ''
+        telefono:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+        correoElectronico:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: correo_electronico
+        referenciaUbicacion:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: referencia_ubicacion
+        montoasignado:
+            type: decimal
+            nullable: false
+            precision: 15
+            scale: 2
+            comment: ''
+        montoentregado:
+            type: decimal
+            nullable: false
+            precision: 15
+            scale: 2
+            comment: ''
+        montorevertido:
+            type: decimal
+            nullable: false
+            precision: 15
+            scale: 2
+            comment: ''
+        montotransferido:
+            type: decimal
+            nullable: false
+            precision: 15
+            scale: 2
+            comment: ''
+        codGranum:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_granum
+        responsablerp:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        telefonoRp:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: telefono_rp
+        correoRp:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: correo_rp
+        responsableRf:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: responsable_rf
+        telefonoRf:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: telefono_rf
+        correoRf:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: correo_rf
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        bonojuancitoGranUnidadmilitar:
+            targetEntity: BonojuancitoGranUnidadmilitar
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bonojuancito_gran_unidadmilitar_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,47 @@
+ccalidad_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:ControlCalidad:index }
+
+ccalidad_list:
+    path:     /{id}/{gestion}/list
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:list" }
+
+ccalidad_detalle:
+    path:     /{id}/detalle
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:detalle" }
+    options:
+         expose: true
+
+ccalidad_omitir:
+    path:     /omitir
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:omitir" }
+
+ccalidad_verificar:
+    path:     /verificar
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:verificar" }
+
+ccalidad_grafico:
+    path:     /{id}/grafico
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:grafico" }
+
+ccalidad_reporte:
+    path:     /{lugar_tipo_id}/rep-distrito
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:repDistrito" }
+    options:
+         expose: true
+
+ccalidad_solucion_historico:
+    path:     /{vp_id}/{llave}/{gestion}/historico
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:solucionHistorico" }
+    options:
+         expose: true
+
+#ccalidad_omitir_historico:
+#    path:     /omitirHistorico
+#    defaults: { _controller: "SieRegularBundle:ControlCalidad:omitirHistorico" }
+
+ccalidad_omitir_historico:
+    path:     /{vp_id}/{llave}/{gestion}/{nivel}/{grado}/omitirHistorico
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:omitirHistorico" }
+    options:
+         expose: true

@@ -1,0 +1,17 @@
+herramienta_changeMatricula_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaBundle:ChangeMatricula:index"}
+    options:
+         expose: true
+
+herramienta_changeMatricula_updatematricula:
+    path:     /updatematricula
+    defaults: { _controller: "SieHerramientaBundle:ChangeMatricula:updateMatricula"}
+    options:
+         expose: true
+
+herramienta_changeMatricula_delete:
+    path:     /delete
+    defaults: { _controller: "SieHerramientaBundle:ChangeMatricula:delete"}
+    options:
+         expose: true

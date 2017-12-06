@@ -1,0 +1,109 @@
+herramienta_ceducativa_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:index}  
+    
+sie_alt_ges_sub_sem:
+    path:     /gessubsem/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:gessubsem}  
+    options:
+         expose: true
+         
+sie_alt_ges_sub_sem_open:
+    path:     /{teid}/{gestion}/{subcea}/{semestre}/{idiesuc}/gessubsemopen/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:gessubsemopen}  
+    options:
+         expose: true
+         
+sie_alt_ges_sub_sem_tramite_solicitud:
+    path:     /{idiesuc}/gessubsemtramitesolicitud/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:gessubsemtramitesolicitud}  
+    options:
+         expose: true  
+         
+sie_alt_ges_sub_sem_panel_operativos:
+    path:     /gessubsempaneloperativos/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:paneloperativos}  
+    options:
+         expose: true 
+         
+sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado:
+    path:     /{iestid}/gessubsemtramitesolicitudcambiarestado/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:gessubsemtramitesolicitudcambiarestado}  
+    options:
+         expose: true          
+
+herramienta_ceducativa_menu_principal:
+    path:     /menuprincipalopen/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:menuprincipalopen}
+    
+#herramienta_ceducativa_generar_inicio:
+#    path:     /{gestion}/{subcea}/{semestre}/generarinicio/
+#    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:generarinicio}   
+    
+herramienta_ceducativa_update:
+    path:     /update/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Institucioneducativa:update" }
+    methods:  [POST, PUT]  
+    
+herramienta_ceducativa_cerrar_operativo:
+    path:     /cerraroperativo/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:cerraroperativo}       
+    
+herramienta_ceducativa_distrito_listaceas:
+    path:     /listaceas/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:listadisceas}         
+    options:
+         expose: true
+
+herramienta_ceducativa_seleccionar_cea:
+    path:     /seleccionarcea/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:seleccionarcea}       
+    
+herramienta_ceducativa_buscar_cea:
+    path:     /buscarcea/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:buscarcea}    
+    methods:  [POST, PUT]
+    
+herramienta_ceducativa_abrir_cea:
+    path:     /{ie_id}/{ie_nombre}/abrircea/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:abrircea} 
+    options:
+         expose: true
+
+herramientalt_ceducativa_crear_periodo:
+    path:     /crearPeriodo/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:crearPeriodo}
+
+herramientalt_ceducativa_crear_periodo_cea:
+    path:     /crearPeriodoCea/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:crearPeriodoCea}
+
+sie_alt_ges_sub_sem_ceas_pendinte:
+    path:     /ceaspendientes/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceaspendientes}
+    options:
+         expose: true
+         
+herramientalt_ceducativa_estadistiscas_cierre:
+    path:     /ceasstdcierre/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:ceasstdcierre}
+    options:
+         expose: true         
+         
+sie_alt_ges_rudes_user:
+    path:     /ceasrudeuser/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Default:ceasrudeuser}
+    options:
+         expose: true 
+         
+sie_alt_ges_sub_sem_tramite_continuar_sig_operativo:
+    path:     /{iestid}/tramitecontinuaroperativo/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:tramitecontinuaroperativo}  
+    options:
+         expose: true    
+         
+herramientalt_ceducativa_estadistiscas_departamento:
+    path:     /deptoestadsiticas/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:ceasstdcierre}
+    options:
+         expose: true         

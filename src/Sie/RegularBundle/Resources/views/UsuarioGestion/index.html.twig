@@ -1,0 +1,165 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Gestión de Usuarios
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="">Usuarios</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('registroConRudeOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Lista de Usuarios</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+
+                            <div id="no-more-tables" class="overflow">
+                                <table class="table table-bordered table-hover cf dataTable">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Lugar</th>
+                                            <th>C.I.</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>Nombre</th>
+                                            <th>Celular</th>
+                                            <th>Correo</th>
+                                            <th>Género</th>
+                                            <th>Usuario</th>
+                                            <th>Activo</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for us in usuarios %}
+                                            <tr>
+                                                <td data-title="No">{{loop.index}}</td>
+                                                <td data-title="Lugar">{{ us.lugar2 }}&nbsp;</td>
+                                                <td data-title="C.I.">{{ us.carnet }}&nbsp;</td>
+                                                <td data-title="Paterno">{{ us.paterno }}&nbsp;</td>
+                                                <td data-title="Materno">{{ us.materno }}&nbsp;</td>
+                                                <td data-title="Nombres">{{ us.nombre }}&nbsp;</td>
+                                                <td data-title="Celular">&nbsp;</td>
+                                                <td data-title="Correo">&nbsp;</td>
+                                                <td data-title="Género">{{ us.genero }}&nbsp;</td>
+                                                <td data-title="Usuario">{{ us.username }}&nbsp;</td>
+                                                <td data-title="Activo">
+                                                    <span id="boton{{loop.index}}">
+                                                        {% if us.esactivo == 'Si' %}
+                                                            <button class="label green" onclick="activarUsuario({{us.usuarioRolId}},{{loop.index}})">{{ us.esactivo }}&nbsp;</button>
+                                                        {% else %}
+                                                            <button class="label red" onclick="activarUsuario({{us.usuarioRolId}},{{loop.index}})">{{ us.esactivo }}&nbsp;</button>
+                                                        {% endif %}
+                                                    </span>
+                                                </td>
+                                                <td data-title="Acciones">
+                                                    <form action="{{path('usuariogestion_edit')}}" method="post" style="display:inline-block">
+                                                        <input type="hidden" name="idUsuario" value="{{us.usuarioId}}">
+                                                        <input type="hidden" name="idUsuarioRol" value="{{us.usuarioRolId}}">
+                                                        <input type="hidden" name="idPersona" value="{{us.personaId}}">
+                                                        <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
+                                                    </form>
+                                                    
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-footer">
+                    Lista de usuarios
+                </div>
+            </div>
+        </div>
+    </div> 
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function activarUsuario(idUsuarioRol,div){
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('activarDesactivar_usuario', {'idUsuarioRol': idUsuarioRol,'div': div}),
+                beforeSend: function () {
+                    $("#boton"+div).empty();
+                    $("#boton"+div).append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#boton"+div).empty();
+                    $("#boton"+div).append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,3 @@
+sie_tramite_documento:
+    path:     /documento
+    defaults: { _controller: SieTramitesBundle:Default:Generar }

@@ -1,0 +1,63 @@
+sie_especial_main:
+    resource: "@SieEspecialBundle/Resources/config/routing/estudianteInscripcionEspecial.yml"
+    prefix:   /sie/especial
+
+sie_especial_creacion_cursos:
+    resource: "@SieEspecialBundle/Resources/config/routing/creacionCursosEspecial.yml"
+    prefix:   /sie/creacionCursosEspecial
+
+sie_especial_info_maestro:
+    resource: "@SieEspecialBundle/Resources/config/routing/infoMaestro.yml"
+    prefix:   /sie/infoMaestroEsp
+
+sie_especial_info_personal_adm:
+    resource: "@SieEspecialBundle/Resources/config/routing/infoPersonalAdm.yml"
+    prefix:   /sie/infoPersonalAdmEsp
+
+sie_especial_homepage:
+    path:     /sie/hello/{name}
+    defaults: { _controller: "SieEspecialBundle:Default:index" }
+
+sie_especial_area:
+    resource: "@SieEspecialBundle/Resources/config/routing/areaEspecial.yml"
+    prefix:   /sie/areaEspecial
+
+sie_especial_reportes:
+    resource: "@SieEspecialBundle/Resources/config/routing/reporteEspecial.yml"
+    prefix:   /sie/reporteEspecial
+
+sie_especial_notas:
+    resource: "@SieEspecialBundle/Resources/config/routing/estudianteNotas.yml"
+    prefix:   /sie/estudianteNotas
+
+sie_especial_info_notas:
+    resource: "@SieEspecialBundle/Resources/config/routing/infoNotas.yml"
+    prefix:   /sie/infoNotas
+
+sie_especial_estadistica:
+    resource: "@SieEspecialBundle/Resources/config/routing/estadisticaEspecial.yml"
+    prefix:   /sie/especial/estadistica
+
+sie_especial_info_especial:
+    resource: "@SieEspecialBundle/Resources/config/routing/infoEspecial.yml"
+    prefix:   /sie/infoEspecial
+
+sie_especial_info_centro:
+    resource: "@SieEspecialBundle/Resources/config/routing/infoCentro.yml"
+    prefix:   /sie/centroEspecial
+
+sie_especial_info_personal:
+    resource: "@SieEspecialBundle/Resources/config/routing/infoPersonal.yml"
+    prefix:   /sie/infoEspecial
+
+sie_especial_info_maestros:
+    resource: "@SieEspecialBundle/Resources/config/routing/infoMaestros.yml"
+    prefix:   /sie/infoEspecial
+
+sie_especial_info_students:
+    resource: "@SieEspecialBundle/Resources/config/routing/infoStudents.yml"
+    prefix:   /sie/infoStudents
+
+index:
+    path:     /index
+    defaults: { _controller: SieEspecialBundle:InfoEspecial:index }

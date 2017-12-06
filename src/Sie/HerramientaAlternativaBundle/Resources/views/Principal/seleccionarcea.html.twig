@@ -1,0 +1,38 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block contentoption %}
+    <div class="row">
+        {% for flashMessage in app.session.flashbag.get('notfound') %}
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Start inline form -->
+            <div class="panel rounded shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Selección de CEA <code>Introduzca el codigo SIE del centro que desea gestionar.</code></h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body no-padding">
+                    <form action="{{path('herramienta_ceducativa_buscar_cea')}}" method="post" style="display:inline-block">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="sr-only" for="Inputcodsie">Codigo SIE</label>
+                                <input type="text" class="form-control" name="form[Inputcodsie]" id="form_Inputcodsie" placeholder="Cod. SIE">
+                            </div><!-- /.form-group -->                            
+                            <button type="submit" class="btn btn-success">Buscar</button>
+                        </div><!-- /.form-body -->
+                    </form>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+            <!--/ End inline form -->
+
+        </div>
+    </div>
+    
+{% endblock %}    

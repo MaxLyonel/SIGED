@@ -1,0 +1,174 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+    {#///PARA SUBIR EL ARCHIVO#}
+    <div class="header-content">
+        <h2><i class="fa fa-language"></i> Malla Técnica <span>Lista de areas, especialidades y módulos del centro de educación alternativa.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <i class="fa fa-angle-right"></i>
+                </li> 
+                <li>
+                    <i class="fa fa-th-large"></i>
+                    <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+                    <i class="fa fa-angle-right"></i>
+                </li> 
+                <li>
+                    <i class="fa fa-language"></i>
+                    Malla Técnica
+                    <i class="fa fa-angle-right"></i>
+                </li>                
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+    {% if exist == 1 %}  
+        <div class="body-content animated fadeIn">
+            <div class="row">
+                <div id= "mengestioncurso" class="col-md-12">                    
+                      
+                </div>                
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <small>
+                        <div class="tree well">
+                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nueva Acreditación">
+                                {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%} 
+                                    <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaAcreditacion();">
+                                        <i class="fa fa-outdent"></i> Nueva Acreditación
+                                    </button>
+                                {% endif%}
+                                <a class="btn btn-lilac btn-xs btn-stroke" href="{{path('herramienta_alter_reporte_mallatecnica')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Pdf</a>                                
+                            </div>
+                            {% for turno_superiorKey, dataturno_superior in aInfoUnidadEductiva %}
+                                <ul>
+                                    <li>
+                                        <span><i class="icon-folder-open"></i>{{ turno_superiorKey }}</span> 
+                                        <ul>
+                                            {% for facultad_areaKey, datafacultad_area in dataturno_superior %}                                                
+                                                <li>
+                                                    <span><i class="icon-folder-open"></i>{{ facultad_areaKey }}</span> 
+                                                    <ul>
+                                                        {% for especialidadKey, dataespecialidad in datafacultad_area %}                                                                
+                                                            <li>
+                                                                <span><i class="icon-minus-sign"></i>{{ especialidadKey }} 
+                                                                    <button type="button" class="btn btn-circle btn-warning btn-stroke"  onclick="getModulos('{{ dataespecialidad.infoMallTec }}');">
+                                                                        <i class="glyphicon glyphicon-list-alt"></i>
+                                                                    </button>
+                                                                </span>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>                                                
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                </ul>
+                            {% endfor %}
+
+                        </div>
+                    </small>
+                </div>
+                <div class='col-md-8'>
+                    <div id="idmodulos"></div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%} 
+            <div class="body-content animated fadeIn">
+                <div class="row">
+                    <div  class="col-md-12">                    
+                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevaAcreditacion();">
+                            <i class="fa fa-outdent"></i> Nueva Acreditación
+                        </button>
+                    </div>                
+                </div>
+            </div> 
+        {% endif%}    
+    {% endif%}      
+    
+    
+    <!-- Start body content -->
+    <!--/ End body content -->
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+
+    </div><!-- /.modal -->
+    <!--/ End body content -->
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        /**
+         * this is to the tree menu option
+         * @returns {undefined}
+         */
+        $(function () {
+            $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+            $('.tree li.parent_li > span').on('click', function (e) {
+                var children = $(this).parent('li.parent_li').find(' > ul > li');
+                if (children.is(":visible")) {
+                    children.hide('fast');
+                    $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+                } else {
+                    children.show('fast');
+                    $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+                }
+                e.stopPropagation();
+            });
+        });
+
+        var getModulos = function (infoUe) {
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_alter_malla_tecnica_modulos'),
+                beforeSend: function () {
+                    $("#idmodulos").empty();
+                    $("#idmodulos").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#idmodulos").empty();
+                    $("#idmodulos").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+        
+        // New curso show
+        var nuevaAcreditacion = function () {
+            $.ajax({
+                type: 'get',
+                url: "{{ path('herramienta_nueva_acreditacion') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };        
+    </script>
+{%endblock%}
+

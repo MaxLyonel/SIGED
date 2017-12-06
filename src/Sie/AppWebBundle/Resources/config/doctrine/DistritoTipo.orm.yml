@@ -1,0 +1,53 @@
+Sie\AppWebBundle\Entity\DistritoTipo:
+    type: entity
+    table: distrito_tipo
+    repositoryClass: Sie\AppWebBundle\Entity\DistritoTipoRepository
+    indexes:
+        idx_f7f932f6564aff69:
+            columns:
+                - departamento_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        distrito:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        codPlanillas:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: cod_planillas
+        tipo:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    manyToOne:
+        departamentoTipo:
+            targetEntity: DepartamentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                departamento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

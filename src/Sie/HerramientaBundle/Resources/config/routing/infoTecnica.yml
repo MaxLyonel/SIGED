@@ -1,0 +1,9 @@
+herramienta_InfoTecnica_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InfoTecnica:index}
+
+herramienta_InfoTecnica_open:
+    path:     /sie/open
+    defaults: { _controller: SieHerramientaBundle:InfoTecnica:open}
+
+

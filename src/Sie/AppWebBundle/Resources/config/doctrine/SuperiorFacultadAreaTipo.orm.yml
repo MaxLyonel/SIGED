@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\SuperiorFacultadAreaTipo:
+    type: entity
+    table: superior_facultad_area_tipo
+    indexes:
+        fki_institucioneducativa_tipo:
+            columns:
+                - institucioneducativa_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codigo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        facultadArea:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: facultad_area
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        institucioneducativaTipo:
+            targetEntity: InstitucioneducativaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

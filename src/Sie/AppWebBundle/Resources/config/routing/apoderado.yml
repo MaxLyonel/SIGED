@@ -1,0 +1,60 @@
+apoderado:
+    path:    /{op}
+    defaults: { _controller: SieAppWebBundle:Apoderado:index, op:search }
+
+apoderado_new:
+    path:    /new/
+    defaults: { _controller: SieAppWebBundle:Apoderado:new }
+
+apoderado_create:
+    path:    /create/
+    defaults: { _controller: SieAppWebBundle:Apoderado:create }
+    methods: POST
+
+apoderado_edit:
+    path:    /edit/
+    defaults: { _controller: SieAppWebBundle:Apoderado:edit }
+    methods: POST
+
+apoderado_update:
+    path:    /update/
+    defaults: { _controller: SieAppWebBundle:Apoderado:update }
+    methods: POST
+
+apoderado_delete:
+    path:    /delete/
+    defaults: { _controller: SieAppWebBundle:Apoderado:delete }
+    methods: POST
+
+search_departamentos:
+     path:    /dep/departamentos/{pais}/
+     defaults: { _controller: SieAppWebBundle:Apoderado:departamentos }
+     options:
+         expose: true
+
+search_provincias:
+     path:    /prov/provincias/{departamento}/
+     defaults: { _controller: SieAppWebBundle:Apoderado:provincias }
+     options:
+         expose: true
+
+search_localidad:
+     path:    /loc/localidades/{provincia}/
+     defaults: { _controller: SieAppWebBundle:Apoderado:localidades }
+     options:
+         expose: true
+
+apoderado_find:
+    path:     /find/
+    defaults: { _controller: "SieAppWebBundle:Apoderado:find" } 
+    methods: POST
+
+verificar_existe_persona_carnet_complemento:
+     path:    /verificar_existe_persona_carnet_complemento/{carnet}/{complemento}/
+     defaults: { _controller: SieAppWebBundle:Apoderado:verificar_existe_persona_carnet_complemento }
+     options:
+         expose: true
+         
+apoderado_result:
+    path:     /result/
+    defaults: { _controller: "SieAppWebBundle:Apoderado:result" }           

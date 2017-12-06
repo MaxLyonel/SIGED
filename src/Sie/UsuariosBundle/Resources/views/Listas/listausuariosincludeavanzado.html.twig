@@ -1,0 +1,92 @@
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4>{{titulo}}</h4>
+        </div>    
+        <div class="panel-body">
+            <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                <table class="display" id="tablaListadoPersonas" cellspacing="0" width="100%">    
+
+                    <thead>
+                        <tr>
+                            <th>Acciones</th>
+                            <th>Nombre de Usuario</th>
+                            <th>Estado</th>                            
+                            <th>Nombre, Apellidos y Carnet</th>
+                            <th>Roles-Cobertura-Juridicción</th>                                                                                   
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for persona in po %}
+                        <tr>                  
+                            <td>                                
+                                {% if persona.username %}
+                                    {% include 'SieUsuariosBundle:Default:menuprincipalusuario.html.twig' with {'persona': persona} %}
+                                {% else %}
+                                    <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="usuarioForm('0','0','0','{{persona.personaid}}')"> Asignar Usuario</a>
+                                {% endif %}                        
+                            </td>                                                        
+                            <td>{{ persona.username }}</td>
+                            <td>                        
+                                {% if persona.usuarioesactivo == true %}
+                                    <span class="label label-success">Activo</span>
+                                {% else %}
+                                    <span class="label label-default">Desactivado</span>
+                                {% endif %}        
+                            </td>
+                            <td>{{ persona.nombre }} {{ persona.paterno }} {{ persona.materno }}, CI:{{ [persona.carnet,persona.complemento]|join|trim}}</td>   
+                            <td>
+                                {% set roles_depu = persona.roles|replace({'"':'','{':'','}':''}) %}
+                                {% set rolesarray = roles_depu|split(',') %}   
+
+                                {% set roles_depu_est = persona.roles_estado|replace({'"':'','{':'','}':''}) %}
+                                {% set rolesarray_est = roles_depu_est|split(',') %}                                                                                 
+
+                                {% set roles_depu_jur = persona.jurisdiccion|replace({'"':'','{':'','}':''}) %}
+                                {% set rolesarray_jur = roles_depu_jur|split(',') %}    
+
+                                {% set roles_depu_cob = persona.cobertura|replace({'"':'','{':'','}':''}) %}
+                                {% set rolesarray_cob = roles_depu_cob|split(',') %}
+
+                                {% set roles_sub_sis = persona.subsistema|replace({',"':'|','",':'|','{':'','}':''}) %}
+                                {% set roles_sub_sis = roles_sub_sis|replace({'"':''}) %}
+                                {% set rolesarray_sub_sis = roles_sub_sis|split('|') %}    
+
+                                {% for i in 0..rolesarray|length-1 %}
+                                            {% if rolesarray_est[i] == 'false'%}
+                                                <div class="panel panel-default">
+                                            {% else %}
+                                                <div class="panel panel-success">
+                                            {% endif %}                                            
+                                                <div class="panel-heading">
+                                                    <h3 class="panel-title text-center"><b>{{rolesarray[i]}}</b> - {{rolesarray_cob[i]}}</h3>
+                                                </div>
+                                                <div class="panel-body no-padding">                                                    
+                                                    <div class="table-responsive">
+                                                        <span class="pull-left text-capitalize">{{rolesarray_jur[i]}}</span>
+                                                        <span class="pull-right text-strong">{{rolesarray_sub_sis[i]}}</span>                                                        
+                                                    </div>
+                                                </div><!-- /.panel-body -->
+                                            </div>
+                                            <!--/ End list bank table -->
+                                {% endfor %}                                                
+                            </td>                                                     
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th><input type="text" placeholder="filtrar por Usuario" /></th>
+                            <th><input type="text" placeholder="filtrar por Estado" /></th>                            
+                            <th><input type="text" placeholder="filtrar por Persona" /></th>
+                            <th><input type="text" placeholder="filtrar por Otros" /></th>                       
+                        </tr>
+                    </tfoot>
+
+                </table>
+            </div>        
+        </div>
+    </div>

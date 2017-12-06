@@ -1,0 +1,109 @@
+sie_herramienta_tramite_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:Tramite:index }
+
+sie_herramienta_tramite_tsie_index:
+    path:     /tsie
+    defaults: { _controller: SieHerramientaBundle:Tramite:indexTsie }
+
+sie_herramienta_tramite_result:
+    path:     /result/
+    defaults: { _controller: "SieHerramientaBundle:Tramite:result" }
+
+sie_herramienta_tramite_validacionue:
+    path:     /validacionue/
+    defaults: { _controller: "SieHerramientaBundle:Tramite:validacionue" }
+    options:
+        expose: true
+
+herramienta_inbox_delete_tramite:
+    path:     /eliminartramiteue/
+    defaults: { _controller: "SieHerramientaBundle:Tramite:eliminartramiteue" }
+
+sie_herramienta_tramite_recepcion_distrito:
+    path:     /recepcion/distrito
+    defaults: { _controller: SieHerramientaBundle:Tramite:recepcionDistrito }
+
+sie_herramienta_tramite_recepcion_departamento:
+    path:     /recepcion/departamento
+    defaults: { _controller: SieHerramientaBundle:Tramite:recepcionDepartamento }
+    
+sie_herramienta_tramite_autorizacion:
+    path:     /autorizacion/diploma
+    defaults: { _controller: SieHerramientaBundle:Tramite:autorizacionDiploma }
+    
+sie_herramienta_tramite_impresion_listados:
+    path:     /impresion/listado
+    defaults: { _controller: SieHerramientaBundle:Tramite:impresionListado }    
+        
+sie_herramienta_tramite_impresion_listados_pdf:
+    path:     /impresion/listado/pdf
+    defaults: { _controller: SieHerramientaBundle:Tramite:impresionListadoPdf }
+    
+sie_herramienta_tramite_anular:
+    path:     /anular/diploma
+    defaults: { _controller: SieHerramientaBundle:Tramite:anularDiploma }
+    
+sie_herramienta_tramite_impresion:
+    path:     /impresion/diploma
+    defaults: { _controller: SieHerramientaBundle:Tramite:impresionDiploma }
+    
+sie_herramienta_tramite_impresion_pdf:
+    path:     /impresion/diploma/pdf
+    defaults: { _controller: SieHerramientaBundle:Tramite:impresionDiplomaPdf }
+    
+sie_herramienta_tramite_documento_impresion_pdf:
+    path:     /impresion/diploma/lista/pdf
+    defaults: { _controller: SieHerramientaBundle:Tramite:printDiplomaListaPdf }
+    
+sie_herramienta_tramite_legalizacion:
+    path:     /legalizacion/diploma
+    defaults: { _controller: SieHerramientaBundle:Tramite:legalizacionDiploma }
+    
+sie_herramienta_tramite_reactivacion:
+    path:     /reactivacion/tramite
+    defaults: { _controller: SieHerramientaBundle:Tramite:reactivarTramite }
+    
+sie_herramienta_tramite_legalizacion_save:
+    path:     /legalizacion/diploma/save
+    defaults: { _controller: SieHerramientaBundle:Tramite:legalizacionDiplomaSave }
+    
+sie_herramienta_tramite_reactivacion_save:
+    path:     /reactivacion/tramite/save
+    defaults: { _controller: SieHerramientaBundle:Tramite:reactivarTramiteSave }
+    
+sie_herramienta_tramite_busca_ue:
+    path:     /lista/estudiantes/unidad/educativa
+    defaults: { _controller: SieHerramientaBundle:Tramite:buscaUnidadEducativa }
+
+sie_herramienta_tramite_recepcion_distrito_registra:
+    path:     /recepcion/distrito/registra
+    defaults: { _controller: SieHerramientaBundle:Tramite:registraTramiteAcademico }
+
+sie_herramienta_tramite_recepcion_distrito_tsie_aprueba:
+    path:     /recepcion/distrito/aprueba
+    defaults: { _controller: SieHerramientaBundle:Tramite:registraTramiteAcademicoAprueba }
+    
+sie_herramienta_tramite_procesa:
+    path:     /procesa/tramite/diploma
+    defaults: { _controller: SieHerramientaBundle:Tramite:procesaTramiteDiploma }
+
+sie_herramienta_tramite_entrega_departamento:
+    path:     /entrega/departamento
+    defaults: { _controller: SieHerramientaBundle:Tramite:entregaDepartamento }
+
+sie_herramienta_tramite_entrega_distrito:
+    path:     /entrega/distrito
+    defaults: { _controller: SieHerramientaBundle:Tramite:entregaDistrito }
+    
+sie_herramienta_tramite_descarga_reporte_distrito_pdf:
+    path:     /reporte/recepcion/distrito/download/{sie}
+    defaults: { _controller: SieHerramientaBundle:Tramite:printReportesDistritoPdf }
+    
+sie_herramienta_tramite_descarga_reporte_departamental_pdf:
+    path:     /reporte/recepcion/departamental/download/{sie}
+    defaults: { _controller: SieHerramientaBundle:Tramite:printReportesDepartamentalPdf }
+
+sie_herramienta_tramite_impresion_serie_form:
+    path:     /impresion/diploma/serie/form
+    defaults: { _controller: SieHerramientaBundle:Tramite:impresionDiplomaSerieForm }

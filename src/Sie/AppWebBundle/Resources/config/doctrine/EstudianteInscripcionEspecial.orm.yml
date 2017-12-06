@@ -1,0 +1,166 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionEspecial:
+    type: entity
+    table: estudiante_inscripcion_especial
+    indexes:
+        IDX_826A3188AED57829:
+            columns:
+                - institucioneducativa_curso_especial_id
+        IDX_826A3188FA6D71F9:
+            columns:
+                - grado_discapacidad_tipo_id
+        IDX_826A3188D2EA1892:
+            columns:
+                - especial_area_tipo_id
+        IDX_826A3188C4F4AB1B:
+            columns:
+                - socioeconomico_especial_id
+        IDX_826A3188A1104027:
+            columns:
+                - estudiante_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        informePsicopedagogicoTalento:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: informe_psicopedagogico_talento
+        evaluacionPedagogica:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: evaluacion_pedagogica
+        evaluacionUnidadEducativa:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: evaluacion_unidad_educativa
+        evaluacionEscolaridad:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: evaluacion_escolaridad
+        codigoPedagogico:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: codigo_pedagogico
+        codigoPsicopedagogico:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: codigo_psicopedagogico
+        modalidadAtencion:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: modalidad_atencion
+        dificultadAprendizaje:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: dificultad_aprendizaje
+        deteccionTalento:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: deteccion_talento
+        gradoTalento:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: grado_talento
+        tipoTalento:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: tipo_talento
+        discapacidad:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        tipoDiscapacidad:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: tipo_discapacidad
+    manyToOne:
+        institucioneducativaCursoEspecial:
+            targetEntity: InstitucioneducativaCursoEspecial
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_especial_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gradoDiscapacidadTipo:
+            targetEntity: GradoDiscapacidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_discapacidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        especialAreaTipo:
+            targetEntity: EspecialAreaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                especial_area_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        socioeconomicoEspecial:
+            targetEntity: SocioeconomicoEspecial
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                socioeconomico_especial_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

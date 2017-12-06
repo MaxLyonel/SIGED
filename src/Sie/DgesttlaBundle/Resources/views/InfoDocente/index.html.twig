@@ -1,0 +1,155 @@
+{% extends 'layoutDgesttla.html.twig' %}
+
+{% block headercontent %}
+<!-- Start header content -->
+<div class="header-content">
+    <h2><i class="fa fa-file-o"></i>Formación Técnica Tecnológica <span>Lista de Docentes</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Estás aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('principal_web')}}">Inicio</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Lista de Docentes</li>
+        </ol>
+    </div>
+</div><!-- /.header-content -->
+<!--/ End header content -->
+{% endblock %}
+
+{% block bodycontent %}
+
+    {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Gestión Personal Docente', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+
+    {% for flashMessage in app.session.flashbag.get('newOk') %}
+    <div class="alert alert-success" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+    </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('newError') %}
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <i class="fa fa-warning"></i> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('updateOk') %}
+        <div class="alert alert-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('updateError') %}
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <i class="fa fa-warning"></i> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+        <div class="alert alert-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('eliminarError') %}
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <i class="fa fa-warning"></i> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Docentes</h3>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="pull-right">
+                        {% if app.session.get('roluser') != 20 %}
+                            <a href="{{path('dgesttla_info_docente_find')}}" class="btn btn-primary btn-md" style="display:inline-block" id="nuevoA" name="nuevoA"><i class="fa fa-user"></i> Nueva/o Docente</a>
+                        {% endif %}
+                    </div>
+                    <div class="callout callout-warning">
+                        <strong>Recuerde que:</strong><br />
+                        - Es obligatorio que cada administrativo se encuentre registrado con el género correcto.<br />
+                    </div>
+                    {% if docente is not empty %}
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover table-primary">
+                                <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Carnet de Identidad</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>
+                                        <th>Nombre(s)</th>
+                                        <th>Fecha Registro</th>
+                                        <th>Fecha Modificación</th>
+                                        {% if app.session.get('roluser') != 20 %}
+                                            <th>Acciones</th>
+                                            <th>Es vigente</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for docente in docente %}
+                                        <tr>
+                                            <td data-title="N°">{{ loop.index }}</td>
+                                            <td data-title="Carnet">{{ docente.carnet }}</td>
+                                            <td data-title="Paterno">{{ docente.paterno }}</td>
+                                            <td data-title="Materno">{{ docente.materno }}</td>
+                                            <td data-title="Nombre(s)">{{ docente.nombre }}</td>
+                                            <td data-title="FechReg">{% if docente.fechaRegistro %}{{ docente.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                            <td data-title="FechMod">{% if docente.fechaModificacion %}{{ docente.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                            {% if app.session.get('roluser') != 20 %}
+                                                <td data-title="Acciones">
+                                                    <form action="{{path('dgesttla_info_docente_edit')}}" method="post" style="display:inline-block">
+                                                        <input type="hidden" name="idPersona" value="{{docente.perId}}">
+                                                        <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                                                        <input type="hidden" name="gestion" value="{{gestion}}">
+                                                        <input type="hidden" name="idDocentePersona" value="{{docente.tdpId}}">
+                                                        <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
+                                                    </form>
+                                                    <form action="{{path('dgesttla_info_docente_delete')}}" method="post" style="display: inline-block">
+                                                        <input type="hidden" name="idPersona" value="{{docente.perId}}">
+                                                        <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                                                        <input type="hidden" name="gestion" value="{{gestion}}">
+                                                        <input type="hidden" name="idDocentePersona" value="{{docente.tdpId}}">
+                                                        <button type="submit" class="btn-link" onclick="return confirm('¡Se eliminará el registro!. ¿Desea continuar?');" id="eliminarD{{ loop.index }}" name="eliminarD{{ loop.index }}"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form action="{{path('dgesttla_info_docente_es_vigente')}}" method="post" style="display: inline-block">
+                                                        <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                                                        <input type="hidden" name="gestion" value="{{gestion}}">
+                                                        <input type="hidden" name="idDocentePersona" value="{{docente.tdpId}}">
+                                                        {% if docente.esVigente %}
+                                                            <button type="submit" class="btn btn-success" onclick="return confirm('¿Está segura/o de continuar?');">Vigente</button>
+                                                        {% else %}
+                                                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está segura/o de continuar?');">Definir como Vigente</button>
+                                                        {% endif %}
+                                                    </form>
+                                                </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <i class="fa fa-info-circle"></i> No hay Docentes Registrados
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

@@ -1,0 +1,221 @@
+            <div class="row">
+                <row>
+                    {% if (app.session.get('roluser') == 8) %}
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong> ¡SEÑOR TÉCNICO SIE NACIONAL! </strong> Se le han desabilitado las validaciones para este módulo, tenga todos los cuidados correspondientes al momento de realizar la Unificación.
+                        </div>   
+                    {% endif %}
+                </row>
+                <row>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="portlet portlet-blue">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h3 class="fa fa-thumbs-o-down"> Información de Rude :{{datastudenta[0].codigo_rude}}</h3>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        <h4 class="fa fa-info"> Información Estudiante</h4>
+                                    </div>    
+                                    <div class="panel-body"> 
+                                        <div class="row">                    
+                                            <table class="table table-bordered table-hover cf">
+                                                <thead class="cf">
+                                                    <tr class="info">
+                                                        <th class="text-center">Rude</th>
+                                                        <th class="text-center">Nombre(s)</th>
+                                                        <th class="text-center">Paterno</th>
+                                                        <th class="text-center">Materno</th>
+                                                        <th class="text-center">Genero</th>
+                                                        <th class="text-center">F. Nacimiento</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td data-title="Rude" id="rudea">{{datastudenta[0].codigo_rude}}</td>
+                                                        <td data-title="Nombre">{{ datastudenta[0].nombre|e }} </td>
+                                                        <td data-title="Paterno">{{datastudenta[0].paterno|e}}</td>
+                                                        <td data-title="Materno">{{datastudenta[0].materno|e}}</td>                                                            
+                                                        <td data-title="Genero" class="text-center">{{datastudenta[0].genero}} </td>
+                                                        <td data-title="F. Nacimiento" class="text-center">{{datastudenta[0].fecha_nacimiento|date('d-m-Y')}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row"> 
+
+                                        </div>    
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        <h4 class="fa fa-list"> Historial de Inscripciones</h4>
+                                    </div>    
+                                    <div class="panel-body">
+                                        <div class="row">                    
+                                            <table class="table table-bordered table-hover cf">
+                                                <thead class="cf">
+                                                    <tr class="info">
+                                                        <th class="text-center">Gestión</th>
+                                                        <th class="text-center">SIE</th>
+                                                        <th class="text-center">Unidad Educativa</th>
+                                                        <th class="text-center">Nivel</th>
+                                                        <th class="text-center">Grado</th>
+                                                        <th class="text-center">Turno</th>
+                                                        <th class="text-center">Paralelo</th>
+                                                        <th class="text-center">Estado Matricula</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for data in datastudenta%}
+                                                        <tr>
+                                                            <td>{{data.gestion_tipo_id}}</td>
+                                                            <td>{{data.institucioneducativa_titulo}}</td>
+                                                            <td>{{data.institucioneducativa}}</td>
+                                                            <td>{{data.nivel|e }} </td>
+                                                            <td>{{data.grado|e}}</td>
+                                                            <td>{{data.turno}} </td>
+                                                            <td>{{data.paralelo|e}}</td>
+                                                            <td class="text-center">{{data.em}}</td>                                                            
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">   
+                                    <div class="col-ms-12">                                     
+                                        <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" onclick="unificarrudesvercorinc('{{datastudenta[0].codigo_rude}}', '{{datastudentb[0].codigo_rude}}')" > SELECCIONAR COMO RUDE CORRECTO</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                                                 
+                                                
+                        </div>
+                                                
+                    </div>
+
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="portlet portlet-blue">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h3><i class="fa fa-thumbs-o-up"> Información de Rude :{{datastudentb[0].codigo_rude}}</i></h3>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        <h4 class="fa fa-info"> Informacion Estudiante</h4>
+                                    </div>    
+                                    <div class="panel-body"> 
+                                        <div class="row">                    
+                                            <table class="table table-bordered table-hover cf">
+                                                <thead class="cf">
+                                                    <tr class="info">
+                                                        <th class="text-center">Rude</th>
+                                                        <th class="text-center">Nombre(s)</th>
+                                                        <th class="text-center">Paterno</th>
+                                                        <th class="text-center">Materno</th>
+                                                        <th class="text-center">Genero</th>
+                                                        <th class="text-center">F. Nacimiento</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td data-title="Rude" id="rudecor">{{datastudentb[0].codigo_rude}}</td>
+                                                        <td data-title="Nombre">{{ datastudentb[0].nombre|e }} </td>
+                                                        <td data-title="Paterno">{{datastudentb[0].paterno|e}}</td>
+                                                        <td data-title="Materno">{{datastudentb[0].materno|e}}</td>
+                                                        <td data-title="Genero" class="text-center">{{datastudentb[0].genero}} </td>
+                                                        <td data-title="F. Nacimiento" class="text-center">{{datastudentb[0].fecha_nacimiento|date('d-m-Y')}}</td>                                                                                                                    
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row"> 
+
+                                        </div>    
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        <h4 class="fa fa-list"> Historial de Inscripciones</h4>
+                                    </div>    
+                                    <div class="panel-body">
+                                        <div class="row">                    
+                                            <table class="table table-bordered table-hover cf">
+                                                <thead class="cf">
+                                                    <tr class="info">
+                                                        <th class="text-center">Gestión</th>
+                                                        <th class="text-center">SIE</th>
+                                                        <th class="text-center">Unidad Educativa</th>
+                                                        <th class="text-center">Nivel</th>
+                                                        <th class="text-center">Grado</th>
+                                                        <th class="text-center">Turno</th>
+                                                        <th class="text-center">Paralelo</th>                                                        
+                                                        <th class="text-center">Estado Matricula</th>                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for data in datastudentb%}
+                                                        <tr>
+                                                            <td>{{data.gestion_tipo_id}}</td>
+                                                            <td>{{data.institucioneducativa_titulo}}</td>
+                                                            <td>{{data.institucioneducativa}}</td>
+                                                            <td>{{data.nivel|e }} </td>
+                                                            <td>{{data.grado|e}}</td>
+                                                            <td>{{data.turno}} </td>
+                                                            <td>{{data.paralelo|e}}</td>
+                                                            <td class="text-center">{{data.em}}</td>                                                            
+                                                        </tr>                                                        
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="row">    
+                                    <div class="col-ms-12">                                     
+                                        <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="#" onclick="unificarrudesvercorinc('{{datastudentb[0].codigo_rude}}', '{{datastudenta[0].codigo_rude}}')" > SELECCIONAR COMO RUDE CORRECTO</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                                    
+                        </div>                                                
+                        
+                    </div>
+                </row>          
+            </div>
+
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-4">                        
+                            </div>                                                
+                            <div class="col-xs-4">
+                                <a role="button" class="btn btn-warning btn-large glyphicon glyphicon-remove-sign" href="{{ path('unificacion_index') }}"> VOLVER ATRAS</a> 
+                            </div>
+                            <div class="col-xs-4">                        
+                            </div>                    
+                        </div>
+                    </div>
+                </div>
+            </div>

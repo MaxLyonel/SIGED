@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\AcreditacionnivelTipo:
+    type: entity
+    table: acreditacionnivel_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        acreditacionnivel:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

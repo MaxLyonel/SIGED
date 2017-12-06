@@ -1,0 +1,409 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Cambio Estado Inscripción
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('remove_inscription_student_free_index')}}">Busqueda</a></li>
+                    <li class="active"> Resultado</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    <div class="row">
+
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>ATENCIÓN!</strong> OJO...!!!... TODA MODIFICACIÓN QUE SE REALICE NO PODRA RECTIFICARSE, REVISE BIEN SU DOCUMENTACIÓN.
+        </div>
+
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+    <div class="row">
+
+        {% for flashMessage in app.session.flashbag.get('okchange') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información del Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Rude</th>
+                                        <th class="text-center">Nombre(s)</th>
+                                        <th class="text-center">Paterno</th>
+                                        <th class="text-center">Materno</th>
+                                        <th class="text-center">CI</th>
+                                        <th class="text-center">Complemento</th>
+                                        <th class="text-center">Genero</th>
+                                        <th class="text-center">F. Nacimiento</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Rude">{{datastudent.codigoRude}}</td>
+                                        <td data-title="Nombre">{{ datastudent.nombre|e }} </td>
+                                        <td data-title="Paterno">{{datastudent.paterno|e}}</td>
+                                        <td data-title="Materno">{{datastudent.materno|e}}</td>
+                                        <td data-title="CI">{{datastudent.carnetIdentidad}} </td>
+                                        <td data-title="Complemento" class="text-center">{{datastudent.complemento}}</td>
+                                        <td data-title="Genero" class="text-center">{{datastudent.generoTipo}} </td>
+                                        <td data-title="F. Nacimiento" class="text-center">{{datastudent.fechaNacimiento|date('d-m-Y')}}</td>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Inscripciones Actuales</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#omitidos"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div id="omitidos" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+
+
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Gestion</th>
+                                        <th class="text-center">SIE</th>
+                                        <th class="text-center">Unidad Educativa</th>
+                                        <th class="text-center">Nivel</th>
+                                        <th class="text-center">Grado</th>
+                                        <th class="text-center">Paralelo</th>
+                                        <th class="text-center">Turno</th>
+                                        <th class="text-center">Estado Matricula</th>
+                                        <th class="text-center">Opción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in dataInscription %}
+                                            {% set error  = 0 %}
+                                            {% if data.idObservacion  == '' %}
+                                                <tr class = "success">
+                                            {% else %}
+                                                {% set error  = 1 %}
+                                                {% if (data.idObsTipo  == '1') or (data.idObsTipo  == '3') or (data.idObsTipo  == '4')%}
+                                                    <tr class = "warning">
+                                                {% endif %}
+                                                {% if (data.idObsTipo  == '2') or (data.idObsTipo  == '5') %}
+                                                    <tr class = "danger">
+                                                {% endif %}
+                                            {% endif %}
+                                            <td data-title="Rude">{{data.gestion}}</td>
+                                                <td data-title="Rude">{{data.sie}}</td>
+                                                <td data-title="Rude">{{data.institucioneducativa}}</td>
+                                                <td data-title="Nombre">{{ data.nivel|e }} </td>
+                                                <td data-title="Paterno">{{data.grado|e}}</td>
+                                                <td data-title="Materno">{{data.paralelo|e}}</td>
+                                                <td data-title="CI">{{data.turno}} </td>
+                                                <td data-title="Est. Matricula" class="text-center">{{data.estadoMatricula}}</td>
+                                                <td data-title="Retirar" class="text-center">
+                                                    {% if error  == 1 %}
+                                                        <button type = "button" class = "btn btn-warning btn-sm" title = "{{data.ObsTipoDesc}}"
+                                                            data-container = "body" data-toggle = "popover" data-placement = "left"
+                                                            data-content = "{{data.Obs}}">
+                                                        i
+                                                        </button>
+                                                    {% endif %}
+
+                                                    {% set dataToChange = {
+                                                                          'sie':data.sie, 'rude':datastudent.codigoRude, 'gestion':data.gestion, 'nivelId':data.nivelId,
+                                                                          'gradoId':data.gradoId, 'paraleloId':data.paraleloId,'turnoId':data.turnoId, 'estInsId':data.eiId,
+                                                                          'estId':data.eId, 'estadoMatriculaId':data.estadoMatriculaId
+                                                                          }
+                                                    %}
+                                                    <a href="#" class="" onclick = "mainCambioEstado('{{dataToChange|json_encode}}');" >
+                                                        Cambio de Estado
+                                                    </a>
+
+
+
+                                                </td>
+                                            </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    {#<div class="row">
+        <div class="col-md-12">
+            <a href="{{ path('history_inscription_quest', { 'rude': datastudent.codigoRude }) }}" ><span class="glyphicon glyphicon-eye-open"></span> Volver</a>
+        </div>
+    </div>#}
+
+
+    <!-- Flex Modal -->
+  <div class="modal modal-flex fade" id="flexModal" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="flexModalLabel">Cambio de Estado</h4>
+              </div>
+              <div class="modal-body">
+                <div id='idcambioparalelo'></div>
+                <div id='answerVerfication'></div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+              </div>
+          </div>
+          <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+    var mainCambioEstado = function(dataInfo){
+
+
+      $('#flexModal').modal('show');
+
+      $.ajax({
+             type: 'post',
+             url: Routing.generate('remove_inscription_student_free_maincambioestado'),
+             data: ({'dataInfo':dataInfo}),
+             beforeSend: function () {
+                 $("#answerVerfication").empty();
+                 $("#idcambioparalelo").empty();
+                 $("#idcambioparalelo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+             },
+             success: function (data) {
+                 $("#idcambioparalelo").empty();
+                 $("#idcambioparalelo").append(data);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+         });
+
+    };
+
+    var verificarCambio = function(dataInfo){
+      var estadonew = $('#form_estadonew').val();
+      $.ajax({
+             type: 'post',
+             url: Routing.generate('remove_inscription_student_free_verificarcambio'),
+             data: ({'dataInfo':dataInfo, 'estadonew':estadonew}),
+             beforeSend: function () {
+                 $("#answerVerfication").empty();
+                 $("#answerVerfication").append('<div class="text-center"><p style="color:#308AB7">Verificando, por favor espere...</p><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+             },
+             success: function (data) {
+                 $("#answerVerfication").empty();
+                 $("#answerVerfication").append(data);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+         });
+    };
+
+    var saveCambioEstado = function(){
+        var enviar = true;
+        var mensaje = "";
+    	$(".nota").each(function (index) {
+            if($(this).val() == 0 ){
+            	enviar = false;
+                mensaje = "Las notas registradas no pueden estar vacias o estar en cero";
+            }
+        });
+        $(".cualitativas").each(function (index) {
+            if($(this).val().length < 15 ){
+            	enviar = false;
+                if(mensaje.length == 0){
+                    mensaje = "Las notas cualitativas deben tener al menos 15 caracteres";
+                }
+            }
+        });
+        if(enviar == false){
+        	alert(mensaje);
+        }
+        if(enviar == true){
+            formData = $('#formCambioEstadoNotasId').serialize();
+            $.ajax({
+                   type: 'post',
+                   url: Routing.generate('remove_inscription_student_free_savecambioestado'),
+                   data: formData,
+                   beforeSend: function () {
+                       $("#answerVerfication").empty();
+                       $("#answerVerfication").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                   },
+                   success: function (data) {
+                       $("#answerVerfication").empty();
+                       if(data.reloadIt){
+                         $("#answerVerfication").append('<p>'+data.mssg+'</p>');
+                         location.reload(true);
+                       }else{
+                         $("#answerVerfication").append(data);
+                       }
+
+
+                   },
+                   statusCode: {
+                       500: function () {
+
+                       },
+                       404: function () {
+
+                       }
+                   }
+               });
+           }
+    }
+
+    function validarNota(e,id,nota){
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+        )
+        return false;
+    }
+
+    function validarNota1(id,nota){
+            //var nota = Math.round(nota);
+            var grado = $('#idGrado').val();
+            var gestion = $('#idGestion').val();
+            if($('#'+id).val() != ""){
+              $('#'+id).val(Math.round(nota));
+            }
+            if(gestion < 2013){
+                if(nota<0){$('#'+id).val(0);}
+                if(nota>70){$('#'+id).val(70);}
+            }else{
+                if(gestion == 2013){
+                    if(grado == 1){
+                        if(nota<0){$('#'+id).val(0);}
+                        if(nota>100){$('#'+id).val(100);}
+                    }else{
+                        if(nota<0){$('#'+id).val(0);}
+                        if(nota>70){$('#'+id).val(70);}
+                    }
+                }else{
+                    if(nota<0){$('#'+id).val(0);}
+                    if(nota>100){$('#'+id).val(100);}
+                }
+            }
+
+    }
+
+    function validarNotaCualitativa(e,id,nota){
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 97 || k > 122)//letras minusculas
+            && (k < 65 || k > 90) //letras mayusculas
+            && (k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+            && (k != 241) //ñ
+             && (k != 209) //Ñ
+             && (k != 32) //espacio
+             && (k != 225) //á
+             && (k != 233) //é
+             && (k != 237) //í
+             && (k != 243) //ó
+             && (k != 250) //ú
+             && (k != 193) //Á
+             && (k != 201) //É
+             && (k != 205) //Í
+             && (k != 211) //Ó
+             && (k != 218) //Ú
+             && (k != 44) //coma ,
+             && (k != 46) //punto .
+            )
+        return false;
+    }
+
+    </script>
+
+
+{% endblock %}

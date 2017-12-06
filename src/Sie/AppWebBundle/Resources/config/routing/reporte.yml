@@ -1,0 +1,63 @@
+reporte_regular_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:Reporte:index }
+
+reporte_regular_informacion_general:
+    path:     /informacion/general/regular
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegular }
+
+reporte_regular_informacion_general_unidad_educativa:
+    path:     /informacion/general/regular/unidad/educativa
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularInstitucionEducativa }
+
+reporte_regular_informacion_general_unidad_educativa_lista_print_xls:
+    path:     /informacion/general/regular/unidad/educativa/lista/print/xls
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularInstitucionEducativaListaPrintXls }
+
+reporte_regular_informacion_general_chart:
+    path:     /informacion/general/regular/chart
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularChart }
+    options:
+         expose: true 
+
+reporte_regular_informacion_general_print_pdf:
+    path:     /informacion/general/regular/print/pdf
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularPrintPdf }
+
+reporte_regular_informacion_general_print_pdf_temp:
+    path:     /informacion/general/regular/print/pdf/temp
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularPrintPdfTemp }
+
+
+reporte_regular_informacion_general_print_xls:
+    path:     /informacion/general/regular/print/xls
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularPrintXls }
+
+
+reporte_regular_informacion_general_valoracion_cuantitativa_endesarrollo_print_pdf:
+    path:     /informacion/general/regular/valoracion/cuantitativa/endesarrollo/print/pdf
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularValoracionCuantitativaEnDesarrolloPrintPdf }
+
+reporte_regular_informacion_general_valoracion_cuantitativa_endesarrollo_print_xls:
+    path:     /informacion/general/regular/valoracion/cuantitativa/endesarrollo/print/xls
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularValoracionCuantitativaEnDesarrolloPrintXls }
+
+reporte_regular_subida_archivos:
+    path:     /archivos/regular
+    defaults: { _controller: SieAppWebBundle:Reporte:subidaArchivosRegular }
+
+reporte_regular_directorio_institucioneducativa:
+    path:     /directorio/institucioneducativa/regular
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioInstitucionEducativaRegular }
+
+reporte_regular_directorio_institucioneducativa_busqueda:
+    path:     /directorio/institucioneducativa/busqueda/regular
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioInstitucionEducativaBusquedaRegular }
+
+reporte_regular_directorio_institucioneducativa_detalle:
+    path:     /directorio/institucioneducativa/detalle/regular
+    defaults: { _controller: SieAppWebBundle:Reporte:directorioInstitucionEducativaDetalleRegular }
+
+reporte_regular_juegos_plurinacionales_nacional_pdf:
+    path:    /informacion/general/regular/juegos/nacional/fase/{fase}
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralJuegosNacionalFasePdf } 

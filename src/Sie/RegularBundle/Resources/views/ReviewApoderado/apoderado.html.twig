@@ -1,0 +1,85 @@
+<div class="alert alert-info">
+    <strong>Datos Apoderado </strong>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+
+        <div class="row">
+            <div class="col-xs-4 col-sm-4"><b> Paterno:</b> </div>
+            <div class="col-xs-4 col-sm-4"><b> Materno:</b> </div>
+            <div class="col-xs-4 col-sm-4"><b> Nombre:</b> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-sm-4">{{apoderado.paterno}}</div>
+            <div class="col-xs-4 col-sm-4"> {{apoderado.materno}}</div>
+            <div class="col-xs-4 col-sm-4"> {{apoderado.nombre}}</div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-sm-4"><b> Carnet Identidad:</b> </div>
+            <div class="col-xs-4 col-sm-4"><b> Fecha Nacimiento:</b> </div>
+            <div class="col-xs-4 col-sm-4"><b> Parentesco:</b> </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-sm-4">{{apoderado.carnet}}</div>
+            <div class="col-xs-4 col-sm-4"> {{apoderado.fechaNacimiento | date('m-d-Y')}}</div>
+            <div class="col-xs-4 col-sm-4"> {{apoderado.apoderado}}</div>
+        </div>
+    </div>
+</div> 
+
+<div class="alert alert-info">
+    <strong>Datos Hijos</strong>
+</div>
+
+<div class="row ">
+
+    <div class="col-lg-12">
+
+        <div class="portlet portlet-basic">
+            <div class="portlet-body">
+                <!--h3 id="grid-offsetting">Datos Estudiantes</h3-->
+                <div class="small">
+                    <div id="no-more-tables">
+
+                        <table class="table table-bordered table-hover cf">
+                            <thead class="cf">
+                                <tr class="info">
+                                    <th class="text-center">No</th>
+                                    <th class="text-center">Paterno</th>
+                                    <th class="text-center">Materno</th>
+                                    <th class="text-center">Nombre</th>
+                                    <th class="text-center">CI</th>
+                                    <th class="text-center">F. Nacimiento</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%for child in children %}
+                                    <tr ><td data-title="No">{{loop.index}}</td>
+
+                                        <td data-title="Paterno"> {{child.paterno}}</td>
+                                        <td data-title="Materno"> {{child.materno}}</td>
+                                        <td data-title="Nombre"> {{child.nombre}}</td>
+                                        <td data-title="Carnet"> {{child.carnetIdentidad}}</td>
+                                        <td data-title="F. Nac."> {{child.fechaNacimiento | date('d-m-Y')}}</td>
+
+
+                                    </tr>
+                                {% endfor%}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+

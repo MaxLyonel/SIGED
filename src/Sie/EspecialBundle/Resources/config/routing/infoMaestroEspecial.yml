@@ -1,0 +1,63 @@
+info_maestro_especial_index:
+    path:     /{op}
+    defaults: { _controller: SieEspecialBundle:InfoMaestroEspecial:index, op:search }
+
+info_maestro_especial_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroEspecial:show" }
+
+info_maestro_especial_new:
+    path:     /new/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroEspecial:new" }
+    methods:  [POST, PUT]
+
+info_maestro_especial_create:
+    path:     /create/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroEspecial:create" }
+    methods:  POST
+
+info_maestro_especial_edit:
+    path:     /edit/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroEspecial:edit" }
+    methods:  [POST, PUT]
+
+info_maestro_especial_update:
+    path:     /update/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroEspecial:update" }
+    methods:  [POST, PUT]
+
+info_maestro_especial_delete:
+    path:     /delete/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroEspecial:delete" }
+    methods:  [POST, DELETE]
+    
+info_maestro_especial_search:
+    path:     /search/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroEspecial:search" }
+    methods:  POST
+
+info_maestro_especial_find:
+    path:     /find/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroEspecial:find" }
+    
+info_maestro_especial_result:
+    path:     /result/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroEspecial:result" }    
+
+info_maestro_especial_listaridiomasleehablaescribe:
+     path:    /idiomas/
+     defaults: { _controller: SieEspecialBundle:InfoMaestroEspecial:listaridiomasleehablaescribe }
+     options:
+         expose: true
+
+info_maestro_especial_listaridiomasleehablaescribe_edit:
+     path:    /idiomasmaestro/{idMaestroInscripcion}/
+     defaults: { _controller: SieEspecialBundle:InfoMaestroEspecial:listaridiomasleehablaescribeedit }
+     options:
+         expose: true
+
+info_maestro_especial_verificar_existe_persona:
+     path:    /verificar_existe_persona/{carnet}/
+     defaults: { _controller: SieEspecialBundle:InfoMaestroEspecial:verificar_existe_persona }
+     options:
+         expose: true    

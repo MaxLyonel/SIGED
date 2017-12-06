@@ -1,0 +1,12 @@
+herramienta_ieducativa_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:Institucioneducativa:index}
+    
+herramienta_info_ueducativa_update:
+    path:     /update/
+    defaults: { _controller: "SieHerramientaBundle:Institucioneducativa:update" }
+    methods:  [POST, PUT]    
+
+herramienta_ieducativa_index_calidad:
+    path:     /ueducativa
+    defaults: { _controller: SieHerramientaBundle:Institucioneducativa:calidad}

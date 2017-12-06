@@ -1,0 +1,65 @@
+sie_usuarios_nacio_lista:
+    path:     /roladmin/listasgenerales
+    defaults: { _controller: SieUsuariosBundle:Listas:listassegunrol }
+
+sie_usuarios_listar_por_rol:
+    path:     /usuarionaciolistaporol/
+    defaults: { _controller: SieUsuariosBundle:Listas:usuarionaciolista }    
+
+sie_usuarios_lista_jurisdiccion:
+    path:     /usuarionaciolistajurisdiccion/
+    defaults: { _controller: SieUsuariosBundle:Listas:listassegunjurisdiccion }
+
+sie_usuarios_lista_jurisdiccion_nacional:
+    path:     /usuarionaciolistajurisdiccionnacional/
+    defaults: { _controller: SieUsuariosBundle:Listas:listassegunjurisdiccionnacional }
+    
+sie_usuarios_lista_jurisdiccion_lugar:
+    path:     /usuarionaciolistajurisdiccionlugar/{iddepto}
+    defaults: { _controller: SieUsuariosBundle:Listas:listassegunjurisdiccionidlugar }    
+    options:
+         expose: true 
+         
+sie_usuarios_depto_lista:
+    path:     /usuariodeptolista/
+    defaults: { _controller: SieUsuariosBundle:Listas:usuariodeptolista }    
+    
+sie_usuarios_dis_lista:
+    path:     /usuariodislista/
+    defaults: { _controller: SieUsuariosBundle:Listas:usuariodislista }
+    
+sie_usuarios_dep_dis_lista:
+    path:     /usuariodepdislista/
+    defaults: { _controller: SieUsuariosBundle:Listas:usuariodepdislista }
+
+sie_usuarios_dep_dis_lista_obs:
+    path:     /usuariodepdislistaobs/
+    defaults: { _controller: SieUsuariosBundle:Listas:usuariodepdislistaobs }        
+
+sie_usuarios_dis_usus_obs:
+    path:     /usuariosobsdistrito//{idlugar}
+    defaults: { _controller: SieUsuariosBundle:Listas:usuariosobsdistrito } 
+
+sie_usuario_ie_cursos:
+    path:     /iecursos/
+    defaults: { _controller: SieUsuariosBundle:Listas:iecursos }
+    options:
+         expose: true 
+         
+sie_usuarios_apoderados_ie_nivel:
+    path:     /{gestion}/{nivel}/{grado}/{turno}/{paralelo}/apoderadosienivel/
+    defaults: { _controller: SieUsuariosBundle:Listas:apoderadosienivel }
+    options:
+         expose: true
+         
+sie_usuarios_apoderados_generar:
+    path:     /apoderadosiegenerar/
+    defaults: { _controller: SieUsuariosBundle:Listas:apoderadosiegenerar }
+
+sie_ie_distrito:
+    path:    /iedistrito/
+    defaults: { _controller: SieUsuariosBundle:Listas:iedistrito }         
+    
+sie_usuarios_personas_ie:
+    path:     /personasie/
+    defaults: { _controller: SieUsuariosBundle:Listas:personasie }    

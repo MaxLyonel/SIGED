@@ -1,0 +1,34 @@
+
+<!-- Start page header -->
+
+<!--/ End page header -->
+<div class="body-content animated fadeIn">
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Start input grid -->
+            <div class="panel rounded shadow">
+
+                <div class="panel-body no-padding">
+                    {% for key,malla in arrMallaPeriodo %}
+                        <ul><b>{{key}}</b>
+                            {% for mod in malla %}
+                                <li>{{mod}} <a href="">Eliminar</a></li>
+                                {% endfor %}
+                        </ul>
+                    {% endfor %}
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+            <!--/ End input grid -->
+        </div>
+    </div>
+
+    <div class='row'>
+        <div class='col-md-12'>
+            <div id='materiaMalla'></div>
+        </div>
+    </div>
+
+
+</div> 

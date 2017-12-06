@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\TtecResolucionTipo:
+    type: entity
+    table: ttec_resolucion_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombre:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        abreviatura:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

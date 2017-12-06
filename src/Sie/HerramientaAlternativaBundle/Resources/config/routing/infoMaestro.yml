@@ -1,0 +1,78 @@
+herramientalt_info_maestro_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:InfoMaestro:index}
+
+herramientalt_info_maestro_second:
+    path:     /sie/second
+    defaults: { _controller: SieHerramientaAlternativaBundle:InfoMaestro:second}
+
+herramienta_info_maestro_third:
+    path:     /sie/third
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:loadThird"}
+    options:
+         expose: true
+
+herramientalt_info_maestro_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:show" }
+
+herramientalt_info_maestro_new:
+    path:     /new/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:new" }
+    methods:  [POST, PUT]
+
+herramientalt_info_maestro_create:
+    path:     /create/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:create" }
+    methods:  POST
+
+herramientalt_info_maestro_edit:
+    path:     /edit/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:edit" }
+    methods:  [POST, PUT]
+
+herramientalt_info_maestro_update:
+    path:     /update/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:update" }
+    methods:  [POST, PUT]
+
+herramientalt_info_maestro_delete:
+    path:     /delete/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:delete" }
+    methods:  [POST, DELETE]
+    
+herramientalt_info_maestro_search:
+    path:     /search/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:search" }
+    methods:  POST
+
+herramientalt_info_maestro_find:
+    path:     /find/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:find" }
+    
+herramientalt_info_maestro_result:
+    path:     /result/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:result" }    
+
+herramientalt_listaridiomasleehablaescribe:
+     path:    /idiomas/
+     defaults: { _controller: SieHerramientaAlternativaBundle:InfoMaestro:listaridiomasleehablaescribe }
+     options:
+         expose: true
+
+herramientalt_listaridiomasleehablaescribe_edit:
+     path:    /idiomasmaestro/{idMaestroInscripcion}/
+     defaults: { _controller: SieHerramientaAlternativaBundle:InfoMaestro:listaridiomasleehablaescribeedit }
+     options:
+         expose: true
+
+herramientalt_verificar_existe_persona:
+     path:    /verificar_existe_persona/{carnet}/
+     defaults: { _controller: SieHerramientaAlternativaBundle:InfoMaestro:verificar_existe_persona }
+     options:
+         expose: true    
+
+herramientalt_info_maestro_es_vigente_maestro:
+    path:     /maestroVigente/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:esVigenteMaestro" }
+    methods:  [POST, PUT]         

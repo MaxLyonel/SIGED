@@ -1,0 +1,7 @@
+herramienta_ceducativa_administrativos:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:Administrativos:index}  
+    
+herramienta_alter_administrativos_edit:
+    path:     /editadministrador
+    defaults: { _controller: SieHerramientaAlternativaBundle:Administrativos:edit}

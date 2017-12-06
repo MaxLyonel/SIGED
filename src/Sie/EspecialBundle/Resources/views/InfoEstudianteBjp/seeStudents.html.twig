@@ -1,0 +1,104 @@
+{% if exist == true %}
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                  <div class="alert alert-warning alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                  <div class="alert alert-success alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+    <br />
+        <div class="row">
+            <div class="col-lg-12">
+            <div class="alert alert-info" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="fa fa-info"></i> Debe marcar a todos los estudiantes que realizaron el cobro del Bono Juancito Pinto y posteriormente hacer clic en el botón "Enviar Datos".
+            </div>
+                <div id="no-more-tables">
+                    <form method ="POST" action="{{path('herramienta_info_estudiante_bjp_verifica_pago')}}" name="form" id="form">
+                      <input type="hidden" id="verificarPago_sie" name="verificarPago[sie]" value="{{sie}}">
+                      <input type="hidden" id="verificarPago_turno" name="verificarPago[turno]" value="{{turno}}">
+                      <input type="hidden" id="verificarPago_nivel" name="verificarPago[nivel]" value="{{nivel}}">
+                      <input type="hidden" id="verificarPago_grado" name="verificarPago[grado]" value="{{grado}}">
+                      <input type="hidden" id="verificarPago_paralelo" name="verificarPago[paralelo]" value="{{paralelo}}">
+                    <table class="table table-bordered table-hover cf">
+                        <tr>
+                          <td align="center" class="info" colspan="5">Estudiantes para validar el pago del BJP</br>
+                              {{gradoname}} - {{paraleloname}}
+                          </td>
+                        </tr>
+                        <tr class="warning">
+                          <td><strong>#</strong></td>
+                          <td><strong>Código Rude</strong></td>
+                          <td><strong>Apellido(s) y Nombre(s)</strong></td>
+                          <td><strong>Estado Matrícula</strong></td>
+                          <td><strong>Validar Pago</strong></td>
+                          <td><strong>Eliminar</strong></td>
+                        </tr>
+                        {#init the array info student #}
+                        {% set objInfoStudent = [] %}
+                        {% for data in objStudents %}
+                          {% set items = {
+                                'estadomatriculaId': data.estadomatriculaTipoId,
+                                'id': data.id,
+                                'carnetIdentidad': data.carnetIdentidad,
+                                'codigoRude': data.codigoRude,
+                                'paterno': '',
+                                'materno': '',
+                                'nombre': '',
+                                'fechaNacimiento': data.fechaNacimiento,
+                                'nivel': data.nivel,
+                                'grado': data.grado,
+                                'paralelo': data.paralelo
+                            } %}
+                            {% set jsnInfoStudent = items|json_encode() %}
+                            <tr >
+                                <td>{{loop.index}}</td>
+                                <td  align="">{{data.codigoRude}}</td>
+                                <td  align="">{{data.paterno}} {{data.materno}} {{data.nombre}}</td>
+                                <td  align="">{{data.estadomatricula}}</td>
+                                <td  align="center">
+                                  <input type="checkbox" id="verificarPago_{{data.id}}" name="verificarPago[{{data.id}}]" {% if data.esPagado %}checked{% endif %}>
+                                </td>
+                                <td  align="">
+                                    {% if data.esNuevo %}
+                                      <a onclick="eliminarRegistroBjp('{{infoUe}}','{{data.id}}');">Eliminar</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr><td colspan="5"><div class="span4 pull-right"><input type="submit" class="btn btn-md btn-success" value="Enviar Datos"></div></td></tr>
+                    </table>
+                    </form>
+                </div>
+                <!-- /.portlet -->
+            </div>
+        </div>
+    <!-- /.row -->
+{% else %}
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endif %}

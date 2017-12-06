@@ -1,0 +1,87 @@
+Sie\AppWebBundle\Entity\InfraestructuraH6EquipamientoPedagogico:
+    type: entity
+    table: infraestructura_h6_equipamiento_pedagogico
+    indexes:
+        IDX_57723C0A2CCBCD40:
+            columns:
+                - infraestructura_h6_equipamiento_id
+        IDX_57723C0A9C4B3235:
+            columns:
+                - n4_mobiliario_estadogeneral_tipo_id
+        IDX_57723C0A5FD85DD1:
+            columns:
+                - n4_mobiliario_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n4NumeroAula:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: n4_numero_aula
+        n4NumeroTaller:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: n4_numero_taller
+        n4NumeroLaboratorio:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: n4_numero_laboratorio
+        n4NumeroBiblioteca:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: n4_numero_biblioteca
+        n4NumeroSala:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: n4_numero_sala
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        infraestructuraH6Equipamiento:
+            targetEntity: InfraestructuraH6Equipamiento
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h6_equipamiento_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n4MobiliarioEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n4_mobiliario_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n4MobiliarioTipo:
+            targetEntity: InfraestructuraH6MobiliarioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n4_mobiliario_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\FlujoProcesoDetalle:
+    type: entity
+    table: flujo_proceso_detalle
+    indexes:
+        IDX_3D9A9B234EAECCA4:
+            columns:
+                - flujo_proceso_id_sig
+        IDX_3D9A9B239AF36CA3:
+            columns:
+                - flujo_proceso_id_ant
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    manyToOne:
+        flujoProcesoSig:
+            targetEntity: FlujoProceso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                flujo_proceso_id_sig:
+                    referencedColumnName: id
+            orphanRemoval: false
+        flujoProcesoAnt:
+            targetEntity: FlujoProceso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                flujo_proceso_id_ant:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

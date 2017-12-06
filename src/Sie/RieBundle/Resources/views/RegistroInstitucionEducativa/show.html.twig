@@ -1,0 +1,117 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption %}
+
+<div class="block-header">
+        <h2>DATOS DE INSTITUTO TÉCNICO/TECNOLÓGICO</h2>
+    </div>
+
+	<ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('rie_list')}}">Inicio</a></li>
+        <li class="active">Ver Instituto Técnico/Tecnológico</li>
+    </ol>
+
+	<!-- Basic Example -->
+	<div class="row clearfix">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="card">
+				<div class="header bg-blue-grey">
+					<h2>
+						<i class="material-icons">home</i> {{entity.id}} - {{entity.institucioneducativa}}
+					</h2>
+				</div>
+				<div class="body">
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+							<div class="card">
+								<div class="body">
+									<h4 class="col-teal">1.- Datos Generales</h2>
+									<ul class="dashboard-stat-list">
+										<li>
+											Código RIE:
+											<span class="pull-right col-blue"><b>{{entity.id}}</b>
+										</li>
+										<li>
+											Nombre:
+											<span class="pull-right col-blue"><b>{{entity.institucioneducativa}}</b>
+										</li>
+										<li>
+											Resolución:
+											<span class="pull-right"><b>{{entity.nroResolucion}}</b>
+										</li>
+										<li>
+											Fecha Resolución:
+											<span class="pull-right"><b>{{entity.fechaResolucion|date('d-m-Y')}}</b>
+										</li>
+										<li>
+											Observaciones:
+											<span class="pull-right"><b>{{entity.obsRue}}</b>
+										</li>
+										<li>
+											Carácter Jurídico:
+											<span class="pull-right"><b>{{entity.dependenciaTipo.dependencia}}</b>
+										</li>
+										<li>
+											Estado:
+											<span class="pull-right"><b>{{entity.estadoinstitucionTipo.estadoinstitucion}}</b>
+										</li>
+										<li>
+											Tipo:
+											<span class="pull-right"><b>{{entity.institucioneducativaTipo.descripcion}}</b>
+										</li>
+										<li>
+											Datos Históricos:
+											<textarea rows="4" cols="50" disabled="disabled" class="form-control no-resize">{{entity.obsRue}}</textarea
+										</li>										
+									</ul>
+								</div>
+							</div>
+						</div><!-- end Datos Generales -->
+
+						<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+							<div class="card">
+								<div class="body">
+									<h4 class="col-teal">2.- Localización del Local Educativo</h4>
+									<ul class="dashboard-stat-list">
+										<li>
+											Código LE:
+											<span class="pull-right col-blue"><b>{{entity.leJuridicciongeografica.id}}</b>
+										</li>
+										<li>
+											Departamento:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar}}</b>
+										</li>
+										<li>
+											Provincia:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugar}}</b>
+										</li>
+										<li>
+											Municipio:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugar}}</b>
+										</li>
+										<li>
+											Canton:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugar}}</b>
+										</li>
+										<li>
+											Localidad:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugar}}</b>
+										</li>
+										<li>
+											Zona:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.zona}}</b>
+										</li>
+										<li>
+											Dirección:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.direccion}}</b>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div><!-- end Ubicación del edificio escolar -->
+					</div>
+				</div>
+			</div>
+		</div> 
+
+{% endblock %}

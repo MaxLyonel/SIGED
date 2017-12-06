@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH3AccesoAguaTipo:
+    type: entity
+    table: infraestructura_h3_acceso_agua_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraAccesoAgua:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_acceso_agua
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

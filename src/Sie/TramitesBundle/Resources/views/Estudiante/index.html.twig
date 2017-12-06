@@ -1,0 +1,75 @@
+{% extends 'layoutCertification.html.twig' %}
+
+{% block body -%}
+    <h1>Estudiante list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Codigorude</th>
+                <th>Carnetidentidad</th>
+                <th>Pasaporte</th>
+                <th>Paterno</th>
+                <th>Materno</th>
+                <th>Nombre</th>
+                <th>Oficialia</th>
+                <th>Libro</th>
+                <th>Partida</th>
+                <th>Folio</th>
+                <th>Idiomamaternoid</th>
+                <th>Segipid</th>
+                <th>Complemento</th>
+                <th>Bolean</th>
+                <th>Fechanacimiento</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entity in pagination %}
+                <tr>
+                    <td><a href="{{ path('estudiante_main_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                    <td>{{ entity.codigoRude }}</td>
+                    <td>{{ entity.carnetIdentidad }}</td>
+                    <td>{{ entity.pasaporte }}</td>
+                    <td>{{ entity.paterno }}</td>
+                    <td>{{ entity.materno }}</td>
+                    <td>{{ entity.nombre }}</td>
+                    <td>{{ entity.oficialia }}</td>
+                    <td>{{ entity.libro }}</td>
+                    <td>{{ entity.partida }}</td>
+                    <td>{{ entity.folio }}</td>
+                    <td>{{ entity.idiomaMaternoId }}</td>
+                    <td>{{ entity.segipId }}</td>
+                    <td>{{ entity.complemento }}</td>
+                    <td>{{ entity.bolean }}</td>
+                    <td>{% if entity.fechaNacimiento %}{{ entity.fechaNacimiento|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href="{{ path('estudiante_main_show', { 'id': entity.id }) }}">show</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('estudiante_main_edit', { 'id': entity.id }) }}">edit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="panel-footer">
+        <div class="panel-footer">
+            <div class="paginacion">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+    <ul>
+        <li>
+            <a href="{{ path('estudiante_main_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+{% endblock %}

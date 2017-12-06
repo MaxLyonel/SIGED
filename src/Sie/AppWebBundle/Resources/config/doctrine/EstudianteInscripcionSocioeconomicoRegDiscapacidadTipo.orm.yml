@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegDiscapacidadTipo:
+    type: entity
+    table: estudiante_inscripcion_socioeconomico_reg_discapacidad_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        discapacitadTipo:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: discapacitad_tipo
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,23 @@
+up_file_ftp_sie_zero__web:
+    path:    /
+    defaults: { _controller: SieRegularBundle:UpFileFtpZero:index }
+    
+up_file_ftp_sie_zero__seefiles_web:
+    path:    /seefiles
+    defaults: { _controller: SieRegularBundle:UpFileFtpZero:seefiles }  
+    options:
+         expose: true
+         
+up_file_ftp_sie_zero__upfile_web:
+    path:    /upfile
+    defaults: { _controller: SieRegularBundle:UpFileFtpZero:upfile }  
+    options:
+         expose: true          
+
+up_file_ftp_sie_zero__checkit_web:
+    path:    /thinkit
+    defaults: { _controller: SieRegularBundle:UpFileFtpZero:greeting }
+    
+up_file_ftp_sie_zero__find:
+    path:    /find
+    defaults: { _controller: SieRegularBundle:UpFileFtpZero:find }         

@@ -1,0 +1,99 @@
+<div class="tab-pane fade active in" id="cursosId">
+  <!-- all about cursos -->
+  <small>
+    <div class="row">
+      <div class="col-lg-12">
+        {% for flashMessage in app.session.flashbag.get('print_ddjj') %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>¡Advertencia!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+  <div id='infoCursos'>
+    <div class="row">
+      <div class="col-lg-12 text-right">
+        {% if swShowlinkDdjj %}
+          <a class="btn btn-circle btn-default" href="{{path('gestionUesprocesoApertura_listStudentsNoAcreditados', {'dataInfo': dataInfo} )}}">
+             Descargar Declaración Jurada
+          </a>
+        {% else %}
+          <a href="#" onclick="printDDJJ('{{dataInfo}}')" ><i class="fa fa-file-text"></i> Imprimir Declaración Jurada</a>
+          &nbsp;&nbsp;&nbsp;
+          <a href="#" onclick="cursoNew('{{dataInfo}}')" ><i class="fa fa-th-list"></i> Nuevo Curso</a>
+        {% endif %}
+      </div>
+
+      <div class="col-lg-12">
+          {% if cursos is not empty %}
+
+</br></br></br>
+          <div id="no-more-tables">
+              <table class="table table bordered cf dataTable">
+                  <thead class="cf">
+                      <tr>
+
+                          <th>Nivel</th>
+                          <th>Grado</th>
+                          <th>Paralelo</th>
+                          <th>Turno</th>
+                          <th>Acciones</th>
+                      </tr>
+                  </thead>
+          {% for c in cursos %}
+
+                        <tbody>
+                        <tr {% if c.nivelTipo == 11 %}
+                            class="success"
+                        {% else %}
+                            {% if c .nivelTipo == 12 %}
+                                class="warning"
+                            {% else %}
+                                class="info"
+                            {% endif %}
+                        {% endif %}>
+
+                        <td data-title="Nivel">{{c.nivel|upper}}</td>
+                        <td data-title="Grado">{{c.grado|upper}}</td>
+                        <td data-title="Paralelo">{{c.paralelo}}</td>
+                        <td data-title="Turno">{{c.turno}} {{c.printddjj}}</td>
+                        <td data-title="Acciones">
+                          {% if c.printddjj %}
+                            --
+                          {% else %}
+                            <div class="input-group">
+                                <button type="button" class="btn btn-green dropdown-toggle" data-toggle="dropdown">Acciones
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" onclick="removeCurso('{{c.id}}','{{dataInfo}}');">Eliminar Curso</a>
+                                    </li>
+                                    <li><a href="#" onclick="inscribirStudents('{{c.id}}','{{dataInfo}}');">Inscribir Estudiante</a>
+                                    </li>
+                                    <li><a href="#" onclick="listStudents('{{c.id}}','{{dataInfo}}');">Lista de Estudiantes</a>
+                                    </li>
+                                </ul>
+                            </div>
+                          {% endif %}
+                        </td>
+                    </tr>
+
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+
+
+          {% else %}
+              <div class="alert alert-info">
+                  No hay cursos registrados
+              </div>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</small>
+  <!-- end all about cursos -->
+</div>

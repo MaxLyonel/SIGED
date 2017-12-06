@@ -1,0 +1,68 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="block-header">
+        <h2>RESULTADO DE LA BÚSQUEDA</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('consultains_rie')}}">Inicio</a></li>
+        <li class="active">Resultado de la búsqueda</li>
+    </ol>
+
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        CONSULTA DE INSTITUTOS TÉCNICOS Y TECNOLÓGICOS
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <!--<table class="table table-bordered table-striped table-hover js-exportable dataTable" data-page-length="5" data-order="[[ 1, &quot;asc&quot; ]]" width="100%">-->
+                            <table class="table table-striped table-hover js-basic-example dataTable">                            
+                                <thead>
+                                    <tr>
+                                        <th>Acciones</th>
+                                        <th>Departamento</th>
+                                        <th>Denominación</th>
+                                        <th>Nro. Resolución</th>
+                                        <th>Fecha Resolución</th>
+                                        <th>Caractér Jurídico</th>
+                                        <th>Código RIE</th>                                        
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for entity in entities %}
+                                        <tr>
+                                            <td class="width:10px">
+                                                <form action="{{path('consultains_rie_show')}}" method="post" style="display:inline-block">
+                                                    <input type="hidden" name="idRie" value="{{entity.id}}">
+                                                    <button type="submit" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Ver datos">
+                                                        <i class="material-icons">dashboard</i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td>{{ entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>
+                                            <td>{{ entity.institucioneducativa }}</td>
+                                            <td>{{ entity.nroResolucion }}</td>
+                                            <td>{% if entity.fechaResolucion %}{{ entity.fechaResolucion|date('Y-m-d') }}{% endif %}</td>
+                                            <td>{{ entity.dependenciaTipo.dependencia }}</td>
+                                            <td>{{ entity.id }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Basic Examples -->
+{% endblock %}

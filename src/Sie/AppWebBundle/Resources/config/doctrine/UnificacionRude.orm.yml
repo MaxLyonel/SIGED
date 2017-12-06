@@ -1,0 +1,117 @@
+Sie\AppWebBundle\Entity\UnificacionRude:
+    type: entity
+    table: unificacion_rude
+    indexes:
+        IDX_D8F031DDE49C5748:
+            columns:
+                - estadomatricula_tipo_inco
+        IDX_D8F031DDDB38439E:
+            columns:
+                - usuario_id
+        IDX_D8F031DDA97FA969:
+            columns:
+                - sieinco
+        IDX_D8F031DDF7DF6CF3:
+            columns:
+                - siecorr
+        IDX_D8F031DDBA3C92D2:
+            columns:
+                - estadomatricula_tipo_corr
+        IDX_D8F031DDFEA7432F:
+            columns:
+                - gestion_tipo_inco
+        IDX_D8F031DDA00786B5:
+            columns:
+                - gestion_tipo_corr
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        rudecorr:
+            type: string
+            nullable: false
+            length: 18
+            fixed: true
+            comment: ''
+        rudeinco:
+            type: string
+            nullable: false
+            length: 18
+            fixed: true
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    manyToOne:
+        estadomatriculaTipoInco:
+            targetEntity: EstadomatriculaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadomatricula_tipo_inco:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        sieinco:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sieinco:
+                    referencedColumnName: id
+            orphanRemoval: false
+        siecorr:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                siecorr:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadomatriculaTipoCorr:
+            targetEntity: EstadomatriculaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadomatricula_tipo_corr:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipoInco:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_inco:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipoCorr:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_corr:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

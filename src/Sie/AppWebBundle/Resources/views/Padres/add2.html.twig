@@ -1,0 +1,30 @@
+{% extends 'SieAppWebBundle:Default:index.html.twig' %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Gestión de Usuario Padre(s)</h1>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Ingrese los datos del Padre/Apoderado
+                    </div>
+                    <div class="panel-body">
+                        {{ form_start(form) }}
+    
+                        <p>Nombre : {{form_widget(form.nombre)}}</p>
+                        <p>Paterno : {{form_widget(form.precio)}}</p>
+                        <p>Materno : {{form_widget(form.precio)}}</p>
+
+                        <p>
+                            <hr />
+                            {{form_widget(form.Guardar)}}
+                        </p>
+                        {{ form_end(form) }}
+                    </div>
+                </div> 
+            </div>
+        </div>      
+    </div>
+                
+{% endblock %}

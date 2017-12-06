@@ -1,0 +1,15 @@
+change_state_student_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:ChangeStateStudent:index }
+
+change_state_student_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:ChangeStateStudent:result }
+
+change_state_student_save:
+    path: /save
+    defaults: { _controller: SieRegularBundle:ChangeStateStudent:save }
+
+change_state_student_modify:    
+    path: /modify
+    defaults: { _controller: SieRegularBundle:ChangeStateStudent:modify }

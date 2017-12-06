@@ -1,0 +1,49 @@
+herramienta_apderado_estudiante_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:ApoderadoEstudiante:index}
+
+herramienta_apderado_estudiante_find:
+    path:     /sie/find/
+    defaults: { _controller: SieHerramientaBundle:ApoderadoEstudiante:find}
+
+herramienta_apderado_estudiante_see_apoderados:
+    path:     /sie/seestudents/
+    defaults: { _controller: SieHerramientaBundle:ApoderadoEstudiante:seeApoderados }
+    options:
+         expose: true
+
+herramienta_apderado_estudiante_see_children:
+    path:     /seeChildren
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoEstudiante:seeChildren"}
+    options:
+         expose: true
+
+herramienta_apderado_estudiante_add_children:
+    path:     /addChildren
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoEstudiante:addChildren"}
+    options:
+         expose: true
+
+herramienta_apderado_estudiante_find_children:
+    path:     /findChildren
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoEstudiante:findChildren"}
+    options:
+         expose: true
+
+herramienta_apderado_estudiante_see_save_children:
+    path:     /seeSaveChildren
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoEstudiante:seeSaveChildren"}
+    options:
+         expose: true
+
+herramienta_apderado_estudiante_remove_children:
+    path:     /removeChildren
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoEstudiante:removeChildren"}
+    options:
+         expose: true
+
+herramienta_apderado_estudiante_validate_children:
+    path:     /validateChildren
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoEstudiante:validateChildren"}
+    options:
+         expose: true

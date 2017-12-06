@@ -1,0 +1,77 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-find"></i>Busqueda por SIE<span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">
+                      Busqueda por SIE
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+
+
+    <div class="body-content animated fadeIn">
+
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Start bordered form -->
+          <div class="panel rounded shadow">
+              <div class="panel-heading">
+                  <div class="pull-left">
+                      <h3 class="panel-title"></h3>
+                  </div>
+                  <div class="pull-right">
+                  </div>
+                  <div class="clearfix"></div>
+              </div><!-- /.panel-heading -->
+              <div class="panel-body no-padding">
+                {{form_start(form, {'attr': {'class':'form-horizontal form-bordered', 'role':'form'} } )}}
+
+                      <div class="form-body">
+                          <div class="form-group">
+                              <label for="firstname-1" class="col-sm-3 control-label">
+                                {{form_label(form.sie)}}
+                              </label>
+
+                              <div class="col-sm-7">
+                                  {{form_widget(form.sie)}}
+                              </div>
+                          </div><!-- /.form-group -->
+
+                      </div><!-- /.form-body -->
+                      <div class="form-footer">
+                          <div class="col-sm-offset-3">
+                            {{form_widget(form.find)}}
+                          </div>
+                      </div><!-- /.form-footer -->
+
+                {{form_end(form)}}
+              </div><!-- /.panel-body -->
+          </div><!-- /.panel -->
+          <!--/ End bordered form -->
+      </div>
+    </div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    </script>
+{%endblock%}

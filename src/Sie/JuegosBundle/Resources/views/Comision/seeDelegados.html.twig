@@ -1,0 +1,341 @@
+{% if exist == true %}
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary shadow">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Estudiantes - Listado</h3>
+                </div><!-- /.pull-left -->
+                <div class="pull-right">
+
+                </div><!-- /.pull-right -->
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <!-- Start project overview -->
+                <ol class="breadcrumb">
+                    <li>{{ nivel }}</li>
+                    <li>{{ disciplina }}</li>
+                    <li>{{ prueba }}</li>
+                    <li>{{ genero }}</li>
+                </ol>
+                <!-- Start datatable -->
+                <table id="datatable-delegados" class="table table-striped table-success">
+                    <thead>
+                        <tr>                            
+                            <th data-class="expand">#</th>
+                            <th>Disciplina</th>
+                            <th>Prueba</th>
+                            <th>Género</th>
+                            <th>C.I.</th>
+                            <th>Delegado</th>  
+                            <th>Comisión</th> 
+                            <th>Posición</th>   
+                            <th>Foto</th>                             
+                            <th style="min-width: 50px">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#init the array info student #}
+                        {% set objInfoDelegados = [] %}
+                        {% for data in objDelegados%}
+                            {# set the array student info and convert on json string #}
+                            {% set id = data.id %}    
+                            {% set nombre = data.paterno~' '~data.materno~' '~data.nombre %}
+                            {% set disciplina = data.disciplina %}                            
+                            {% set prueba = data.prueba %}                             
+                            {% set generoPrueba = data.genero_prueba %}    
+                            {% set ci = data.carnet_identidad %}
+                            {% set comision = data.comision %}
+                            {% set posicion = data.posicion %}
+                            {% if data.foto == "" %}
+                                {% set foto = "user.png" %}
+                            {% else %}
+                                {% set foto = data.foto %}
+                            {% endif %} 
+                            <tr>
+                                <td align="">{{loop.index}}</td>
+                                <td align="">{{disciplina}}</td>
+                                <td align="">{{prueba}}</td>
+                                <td align="">{{generoPrueba}}</td>
+                                <td align="">{{ci}}</td>
+                                <td align="">{{nombre}}</td>
+                                <td align="">{{comision}}</td>
+                                <td align="">{{posicion}}</td>
+                                <td align="center"><img src="{{ asset('uploads/fotos_juegos/'~foto) }}" title="{{nombre}}" class="img-circle" width="30" height="30"></td>
+                                <td align="">
+                                    <form role="form" action="{{ path('sie_juegos_comision_acompanante_lista_registro_elimina') }}" method="POST">
+                                        <input type="hidden" name="id" value="{{ id }}" />  
+                                        <button type="submit" title="{{nombre}}" class="btn btn-danger"><i class="fa fa-remove"></i></button>  
+                                    </form>
+                                </td>
+                            </tr>
+                        {%endfor%}
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                </table>
+                <!--/ End datatable -->
+                <div id="no-more-tables">  
+                </div>
+                <!-- /.portlet -->
+                <!--/ End project overview -->  
+            </div><!-- /.panel-body -->
+        </div>                    
+    </div>  
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-primary shadow">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Registro</h3>
+                </div><!-- /.pull-left -->
+                <div class="pull-right">
+
+                </div><!-- /.pull-right -->
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                {{form_start(form, { 'attr': { 'role': "form", 'class': 'form-horizontal form-bordered'} } )}}
+                    <input type="hidden" name="infoDeportes" value="{{infoDeporte}}"/>                       
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.posicion)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.posicion, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}} ) }}
+                            <div class="help-block with-errors"></div>
+                        </div>    
+                    </div>                    
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.carnetIdentidad)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.carnetIdentidad, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}} ) }}
+                            <div class="help-block with-errors"></div>
+                        </div>    
+                    </div>
+                    <div class="form-group">                                
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.nombre)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.nombre, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                            <div class="help-block with-errors"></div>
+                        </div>    
+                    </div> 
+                    <div class="form-group">    
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.paterno)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.paterno, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                            <div class="help-block with-errors"></div>
+                        </div>      
+                    </div>  
+                    <div class="form-group">    
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.materno)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.materno, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                            <div class="help-block with-errors"></div>
+                        </div>      
+                    </div>  
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.generoTipo)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.generoTipo, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                            <div class="help-block with-errors"></div>
+                        </div>  
+                    </div>
+                    <div class="form-group">    
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.celular)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.celular, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                            <div class="help-block with-errors"></div>
+                        </div>      
+                    </div>  
+                    <div class="form-group">    
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.correo)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.correo, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                            <div class="help-block with-errors"></div>
+                        </div>      
+                    </div>  
+                    <div class="form-group">    
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.avc)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.avc, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                            <div class="help-block with-errors"></div>
+                        </div>      
+                    </div>  
+                    <div class="form-group">    
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.obs)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.obs, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                            <div class="help-block with-errors"></div>
+                        </div>      
+                    </div>  
+                    <div class="form-group">    
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.comisionTipoId)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.comisionTipoId, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                            <div class="help-block with-errors"></div>
+                        </div>      
+                    </div> 
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                            {{form_label(form.foto)}}                                    
+                        </label>
+                        <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                            {{ form_widget(form.foto, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                            <div class="help-block with-errors"></div>
+                        </div>  
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            {{ form_widget(form.submit,{ 'attr':{'class':'btn btn-success col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                        </div>   
+                    </div>
+                {{form_end(form)}}
+            </div><!-- /.panel-body -->
+        </div>                               
+    </div> 
+    <!-- /.row -->
+{% else %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    
+    function getPruebas(es) {
+        genero = $('#form_genero').val();
+        ue = $('#form_sie').val();
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_juegos_inscripcion_lista_estudiantes_registro_busca_pruebas', {'ue': parseInt(ue),'disciplina': parseInt(es), 'genero': genero}),
+            beforeSend: function () {
+                $("#form_prueba").empty();
+                $("#form_prueba").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+
+                $("#listaInscritos").empty();
+                $("#listaInscritos").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $("#form_prueba").empty();
+                //$("#form_prueba").append('<option value="0">Seleccionar</option>');
+                $.each(data.apruebas, function (i, value) {
+                    $("#form_prueba").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $("#listaInscritos").empty();
+                $.each(data.ainscritos, function (i, value) {
+                    $("#listaInscritos").append('<li id="list' + i + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(' + i + ');"><span class="status"><i class="fa fa-arrow-circle-down fg-danger"></i></span></a></div></li>');
+                });
+            }
+        });
+    }
+
+    function getInscritos(es) {  
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_juegos_inscripcion_lista_estudiantes_inscritos_busca_pruebas', {'prueba': parseInt(es)}),
+            beforeSend: function () {
+                $("#listaInscritos").empty();
+                $("#listaInscritos").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $("#listaInscritos").empty();
+                $.each(data.ainscritos, function (i, value) {
+                    $("#listaInscritos").append('<li id="list' + i + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(' + i + ');"><span class="status"><i class="fa fa-arrow-circle-down fg-danger"></i></span></a></div></li>');
+                });
+            }
+        });
+    }
+
+    function getEliminarInscripcion(es) {  
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_juegos_comision_acompanante_lista_registro_elimina', {'inscripcion': parseInt(es)}),
+            beforeSend: function () {
+            },
+            success: function (data) {
+                dep = document.getElementById('list' + es);   
+                if (dep){        
+                    $.each(data.aregistro, function (i, value) {
+                        padre = dep.parentNode;
+                        padre.removeChild(dep);
+                    });
+                }
+            }
+        });
+    }
+
+    function setDeportistas(es,des) {
+        var deportistas = document.getElementsByName('deportistas[]');
+        var botonAceptar = document.getElementById('form_submit');
+        habilitarBotonSubmit();
+        if(es.checked){
+            $("#listaDeportistas").append('<div class="ckbox ckbox-lilac circle"><input type="checkbox" checked="chequed" id="idd' + es.value + '" name="deportistas[]" value="' + es.value + '" /><label id="lbd' + es.value + '" for="id">' + des + '</label></div>');          
+            botonAceptar.disabled = false;       
+        }else{    
+            dep = document.getElementById('idd' + es.value); 
+            lbl = document.getElementById('lbd' + es.value);              
+            if (dep){
+                padre = dep.parentNode;
+                padre.removeChild(dep);
+            }
+            if (lbl){
+                padre2 = lbl.parentNode;
+                padre2.removeChild(lbl);
+            }
+        }  
+    }
+
+    function habilitarBotonSubmit(){
+            var estudiantes = document.getElementsByName('estudiantes[]');
+            var botonAceptar = document.getElementById('form_submit');     
+            var cant = 0;
+            for (var i=0; i < estudiantes.length; i++){
+                if(estudiantes[i].checked == true){
+                    cant = 1;
+                }
+            }           
+            if(cant == 1){    
+                if(botonAceptar){
+                    botonAceptar.disabled = false; 
+                    botonAceptar.className = "btn btn-success col-sm-12 btn-slidedown";
+                }  
+                return true;
+            } else {   
+                if(botonAceptar){
+                    botonAceptar.className = "btn btn-default col-sm-12";
+                    botonAceptar.disabled = true; 
+                }    
+                return false;  
+            }
+        }
+</script>
+

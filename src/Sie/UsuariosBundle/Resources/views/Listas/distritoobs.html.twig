@@ -1,0 +1,33 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+    {% block cuerpo %}    
+        <p>        
+            <h3>Lista de distritos observados por contar con mas de un Técnico Sie asignado.</h3>
+        <p>   
+        <div id="tablaListadoPersonas_fil" style="visibility: hidden;">        
+        </div>
+        <div id="idmaestrodir_fil" style="visibility: hidden;">
+        </div>
+        <div class="contenedor-tabla" style="width: 1500px; overflow: scroll;">
+            <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+                <thead>
+                    <tr>
+                        <th>Selección</th>                         
+                        <th>Código Distrito</th>
+                        <th>Distrito</th>
+                    </tr>
+                </thead>                
+                <tbody>
+                    {% for entity in po %}
+                        <tr>
+                            <td>
+                               <a role="button" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_usuarios_dis_usus_obs',{'idlugar': entity.jurisdiccin_lugar_id}) }}"> Ver usuarios en conflicto.</a> 
+                            </td>                            
+                            <td>{{entity.jurisdiccion_codigo}}</td>                
+                            <td>{{entity.jurisdiccion}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endblock %}

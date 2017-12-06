@@ -1,0 +1,125 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+
+{% block contentoption %}
+
+
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Información General <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                    Información Centro Educativo
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+
+
+    <div class="body-content animated fadeIn">
+
+      <div class="row">
+
+        <div class="col-md-12">
+
+            <!-- Start order table -->
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title text-center">Información Centro</h3>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body no-padding">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-middle table-danger">
+                            <thead>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>Código Centro</th>
+                                <th>Centro</th>
+                                <th>Gestión</th>
+                                <th class="text-center" style="width: 11%;">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for arrInfoCentroGestion in arrInfoCentro %}
+                                    <tr class="border-lilac">
+                                        <td class="text-center" style="width: 7%;"><b># {{loop.index}}</b></td>
+                                        <td>{{arrInfoCentroGestion.sie}}</td>
+                                        <td>{{objCentro.institucioneducativa}}</td>
+
+                                        <td class='text-center' ><span class="label label-info">{{arrInfoCentroGestion.gestion}}</span></td>
+                                        <td class="text-center">
+                                            <!-- <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Ver Detalle"><i class="fa fa-eye"></i></a>
+                                            <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Acceder"><i class="fa fa-pencil"></i></a> -->
+                                            <!-- <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a> -->
+                                            <form action="{{path('info_especial_open')}}" method="post" style="display: inline-block">
+
+                                                <input type="hidden" id="form_idInstitucion" name="form[idInstitucion]" value="{{arrInfoCentroGestion.sie}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{arrInfoCentroGestion.gestion}}">
+                                                <input type="hidden" id="form_institucioneducativa" name="form[institucioneducativa]" value="{{objCentro.institucioneducativa}}">
+                                                <input type="hidden" id="form_institucioneducativaTipoId" name="form[institucioneducativaTipoId]" value="{{arrInfoCentroGestion.institucioneducativaTipoId}}">
+                                                <!-- this is the new start-->
+                                                <input type="hidden" id="form_data" name="form[data]" required="required" value="">
+                                                <!-- this is the new end-->
+                                                <button type="submit" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" data-original-title="Acceder"><i class="fa fa-cogs"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                  {% endfor %}
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- /.panel-body -->
+            </div>
+            <!--/ End order table -->
+
+        </div>
+      </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    var xhr1;
+    function validateForm(contador) {
+        if (xhr1 && xhr1.readyState != 4) {
+            xhr1.abort();
+        }
+
+        var formData = $('#formVal'+contador).serialize();
+
+        xhr1 = $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_herramienta_tramite_validacionue'),
+            data: formData,
+            beforeSend: function () {
+                $("#logs").empty();
+                $("#logs").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#logs").empty();
+                $("#logs").html(data);
+            },
+            error: function (data) {
+                $("#logs").empty();
+                $("#logs").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+            }
+        });
+
+        return false;
+    }
+    </script>
+{% endblock %}

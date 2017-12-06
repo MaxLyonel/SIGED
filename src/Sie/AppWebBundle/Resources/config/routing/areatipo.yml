@@ -1,0 +1,30 @@
+areatipo:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:AreaTipo:index" }
+
+areatipo_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:AreaTipo:show" }
+
+areatipo_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:AreaTipo:new" }
+
+areatipo_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:AreaTipo:create" }
+    methods:  POST
+
+areatipo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:AreaTipo:edit" }
+
+areatipo_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:AreaTipo:update" }
+    methods:  [POST, PUT]
+
+areatipo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:AreaTipo:delete" }
+    methods:  [POST, DELETE]

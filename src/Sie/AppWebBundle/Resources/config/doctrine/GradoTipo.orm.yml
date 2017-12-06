@@ -1,0 +1,38 @@
+Sie\AppWebBundle\Entity\GradoTipo:
+    type: entity
+    table: grado_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        grado:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+        edadMinima:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: edad_minima
+        edadMaxima:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: edad_maxima
+        idSeguimiento:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: id_seguimiento
+    lifecycleCallbacks: {  }

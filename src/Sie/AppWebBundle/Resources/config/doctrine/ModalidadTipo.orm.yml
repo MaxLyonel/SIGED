@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\ModalidadTipo:
+    type: entity
+    table: modalidad_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        modalidad:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

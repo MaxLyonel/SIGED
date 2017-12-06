@@ -1,0 +1,173 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet portlet-blue">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Información Estudiante</h4>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="pinfoestudiante" class="panel-collapse collapse in">
+                <div class="portlet-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <th scope="row"><small>Rude</small></th><td><small>{{datastudent.codigoRude}}</small></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><small>Paterno</small></th><td><small>{{datastudent.paterno}}</small></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><small>Materno</small></th><td><small>{{datastudent.materno}}</small></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><small>Nombre</small></th><td><small>{{datastudent.nombre}}</small></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><small>Género</small></th><td><small>{{datastudent.generoTipo}}</small></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><small>CI</small></th><td><small>{{datastudent.carnetIdentidad}}</small></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><small>Fecha Nac.</small></th><td><small>{{ datastudent.fechaNacimiento|date('d-m-Y') }}</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="portlet portlet-default">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Registro Bachiller de Excelencia</h4>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="portlet-body">
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <p><i class="fa fa-warning fa-fw"></i> <strong>¡Atención!. Recuerde que debe registrar el Promedio Anual.</strong></p>
+                    <p>Se permite redondeo a dos dígitos decimales, para ello utilizar la tecla "punto" (.), en lugar de la tecla "coma" (,)</p>
+                </div>
+                <div id="formbachex">
+                    {{form_start(form_ed, { 'attr': {'data-toggle': 'validator', 'role': "form", 'class':'form-horizontal', 'onsubmit': 'guardarBachiller(); return false;', 'id': 'sie_appwebbundle_estudiantedestacado' } } )}}
+                    <div class="form-group">
+                        <label for="sie_appwebbundle_estudiantedestacado_promedioFinal" class="col-sm-4 control-label">{{ form_label(form_ed.promedioFinal) }}</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form_ed.promedioFinal, { 'attr': {'class': 'form-control jnumbers' }  }) }}
+                            <div class="help-block with-errors">{{ form_errors(form_ed.promedioFinal) }}</div>
+                            <script>
+                                $(function () {
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                });
+
+                                $(".jnumbers").keypress(function (key) {
+                                    var key = key || window.event;
+                                    var k = key.charCode || key.keyCode;
+                                    if ((k < 48 || k > 57) //Números
+                                            && (k != 13) //Enter
+                                            && (k != 8) //retroceso
+                                            && (k != 9) //tab
+                                            && (k != 46) //punto(.)
+                                            )
+                                        return false;
+                                });
+
+                                function validarNotas() {
+                                    var notas = $('input[name="sie_appwebbundle_estudiantedestacado[promedioFinal]"]');
+                                    for (i = 0; i < notas.length; i++) {
+                                        if (notas[i].value > 100) {
+                                            alert('La calificación no pude ser mayor a 100, revise la calificación.');
+                                            return false;
+                                        }
+                                        if (notas[i].value < 51) {
+                                            alert('La calificación no pude ser menor a 51, revise la calificación.');
+                                            return false;
+                                        }
+                                        if (notas[i].value == "") {
+                                            alert('La calificación no pude estar vacía, revise la calificación.');
+                                            return false;
+                                        }
+                                    }
+                                    return true;
+                                }
+                                function verificarNota(id) {
+                                    var valorNota = $('#' + id).val();
+                                    if (valorNota < 0) {
+                                        $('#' + id).val(0);
+                                    }
+                                    if (valorNota > 100) {
+                                        $('#' + id).val(100);
+                                    }
+                                }
+                            </script>
+                        </div>
+                        <div class="hidden">
+                            {{ form_widget(form_ed.estudianteInscripcion, { 'attr': {'class': 'form-control', 'value': estinsId}  }) }}
+                            {{ form_widget(form_ed.generoTipo, { 'attr': {'class': 'form-control', 'value': genId}  }) }}
+                            {{ form_widget(form_ed.institucioneducativa, { 'attr': {'class': 'form-control', 'value': instId}  }) }}
+                            {{ form_widget(form_ed.estudiante, { 'attr': {'class': 'form-control', 'value': estId}  }) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_widget(form_ed.submit, { 'attr': {'class': 'btn btn-primary', 'onclick': "return validarNotas()" } } ) }}
+                        </div>
+                    </div>
+                    {{form_end(form_ed)}}
+                </div>
+                <div id="divAlert"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function guardarBachiller() {
+
+        var msj = '\n- RUDE: {{datastudent.codigoRude}}';
+        msj += '\n- Carnet de Identidad: {{datastudent.carnetIdentidad}}';
+        msj += '\n- Apellido Paterno: {{datastudent.paterno}}';
+        msj += '\n- Apellido Materno: {{datastudent.materno}}';
+        msj += '\n- Nombre(s): {{datastudent.nombre}}';
+        msj += '\n- Género: {{datastudent.generoTipo}}';
+        msj += '\n- Fecha de Nacimiento: {{ datastudent.fechaNacimiento|date('d-m-Y') }}';
+        msj += '\n- Promedio Anual: ' + $("#sie_appwebbundle_estudiantedestacado_promedioFinal").val();
+        msj += '\n\nTenga en cuenta que no podrá realizar cambios posteriores. Verifique la información introducida.';
+        msj += '\n\nNota.- Para confirmar los datos ingresados presione sobre el botón "Aceptar", para corregir la información introducida presione sobre el botón "Cancelar".';
+
+        if (confirm('Está a punto de registrar la siguiente información: ' + msj)) {
+
+            var formData = $('#sie_appwebbundle_estudiantedestacado').serialize();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('bach_exc_create'),
+                data: formData,
+                beforeSend: function () {
+                    $("#divAlert").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#divAlert").empty();
+                    $("#formbachex").empty();
+                    $("#formbachex").append('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                    if (data.genero == '2') {
+                        $("#bachFem").empty();
+                        $("#bachFem").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                    }
+                    if (data.genero == '1') {
+                        $("#bachMas").empty();
+                        $("#bachMas").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                    }
+                    $("#botonesAcc").show();
+                },
+                error: function () {
+                    $("#divAlert").empty();
+                    $("#divAlert").append('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Datos Incorrectos</div>');
+                }
+            });
+        }
+        return false;
+    }
+
+</script>

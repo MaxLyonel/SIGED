@@ -1,0 +1,97 @@
+
+{% if exist == true %}
+    <small>
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="no-more-tables">
+                    <div class="row">
+                        <!--div class="col-lg-3 col-lg-offset-9">
+
+                            <a href="#" onclick="inscriptionWithRude('{{aData}}');" ><span class="fa fa-newspaper-o"></span>Inscripción con Rude </a>
+                        </div-->
+                    </div>
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form', 'id':'formStudentInscription'} } )}}
+                    <table class="table table-bordered table-hover cf">
+                        <tr>
+
+                        <input type="hidden" id="formdata_data" name="formdata[data]" value="{{aData}}">
+                        <td align="center" class="warning" colspan="6">Estudiantes para Inscribir</br>
+                            {{gradoname}} - {{paraleloname}}
+                        </td>
+                        <td> 
+                            <input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"   >
+                        </td>
+                        </tr>
+                        {% for data in objStudents%}
+                            <tr >
+                                <td>{{loop.index}}</td>
+                                <td  align="">{{data.codigoRude}}</td>
+                                <td  align="">{{data.nombre}} {{data.paterno}} {{data.materno}}</td>
+
+                                <td  align="">{{data.fechaNacimiento |date('d-m-Y')}} <p class='text-green'>{{data.estadomatricula}} </p></td>
+                                <td  align="">
+
+                                    <select class="form-control"  id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}][paralelo]">
+                                        {% for paralelo in objParalelos %}
+                                            {% if paraleloSelected == paralelo.paraleloTipo.id %}
+                                                <option  id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}]"  value="{{paralelo.paraleloTipo.id}}" selected>{{paralelo.paraleloTipo}}</option>
+                                            {%else%}
+                                                <option  id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}]"  value="{{paralelo.paraleloTipo.id}}">{{paralelo.paraleloTipo}}</option>
+                                            {%endif%}
+                                        {% endfor %}
+                                    </select>
+
+                                </td>
+                                <td  align="">
+                                    <select class="form-control"  id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}][turno]">
+                                        {% for turno in objTurnos %}
+                                            {% if turnoSelected == turno.turnoTipo %}
+                                                <option  id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}]"  value="{{turno.turnoTipo}}" selected>{{turno.turno}}</option>
+                                            {%else%}
+                                                <option  id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}]"  value="{{turno.turnoTipo}}">{{turno.turno}}</option>
+                                            {%endif%}
+                                        {% endfor %}
+                                    </select>
+                                </td>
+
+                                <td data-title="Opcion" class="success" >
+                                    <div >
+                                        <label>
+                                            <input type="checkbox" id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}][student]"   value='{{data.id}}'>
+                                            <input type="hidden" id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}][matricula]"   value='{{data.estadomatriculaId}}'>
+                                        </label>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        {%endfor%}
+                    </table>
+                    {{form_end(form)}}
+                </div>
+                <!-- /.portlet -->
+            </div>
+        </div>
+    </small>
+    <!-- /.row -->
+{%else%}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warningstudents') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{%endif%}
+
+
+
+<script>
+
+
+</script>
+

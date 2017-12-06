@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\DocumentoEstado:
+    type: entity
+    table: documento_estado
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        documentoEstado:
+            type: string
+            nullable: false
+            length: 70
+            fixed: false
+            comment: ''
+            column: documento_estado
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

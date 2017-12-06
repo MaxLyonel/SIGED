@@ -1,0 +1,144 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo %}
+<p>  
+    <h3>Roles asignados a un Rol para la creación de un usuario.</h3>
+<p>
+<div class="contenedor-tabla" style="width: 1500px; overflow: scroll;">
+<table id="tablaListadoRoles" class="display" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Acciones</th>
+            <th>Rol</th>
+            <th>Lista de roles que el rol puede asignar en la creacion de un usuario</th>
+        </tr>
+    </thead>
+    
+    <tfoot>
+        <tr>
+            <th></th>
+            <th></th>
+            <th><input type="text" placeholder="Buscar por Rol" /></th>
+            <th><input type="text" placeholder="Buscar por Rol Asignado" /></th>
+        </tr>
+    </tfoot>
+    
+    <tbody>
+        {% for rol in roles %}
+        <tr>
+            <td>{{ rol.id }}</td>
+            <td>
+                <a role="button" class="btn btn-danger btn-xs glyphicon glyphicon-trash" href="{{ path('sie_usuarios_rol_delete', { 'id': rol.id }) }}"> Eliminar Rol</a>
+            </td>
+            <td>{{ rol.rola }}</td> 
+            <td>{{ rol.rolb }}</td>            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<HR>    
+<a role="button" class="btn btn-success glyphicon glyphicon-arrow-right" href="#" onclick="rolnuevoForm();"> Añadir Asignación de Rol</a>
+
+<div class="modal modal-flex fade" id="ModalRol" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="formAreasModal" id="formAreasModal" action="">                    
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">ASIGNACION DE ROL</h4>             
+                </div>
+                <div class="modal-body">
+                    <div id="rolModal">
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#tablaListadoRoles tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        var table = $('#tablaListadoRoles').DataTable({
+            language: {
+                "sProcessing":     "Procesando...",
+                "sLengthMenu":     "Mostrar _MENU_ registros",
+                "sZeroRecords":    "No se encontraron resultados",
+                "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix":    "",
+                "sSearch":         "Buscar:",
+                "sUrl":            "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Cargando...",                
+                "oPaginate": {
+                    "sFirst":    "Primero",
+                    "sLast":     "Último",
+                    "sNext":     "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        });
+        
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                that
+                    .search( this.value )
+                    .draw();
+            } );
+        });
+    });
+    
+    //NUEVO ROL
+    function rolnuevoForm(){
+        var formData = $('#myModalNotas').serialize();
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_usuarios_rol_nuevo'),
+            data: formData,
+            beforeSend: function () {
+                $("#rolModal").empty();
+                $("#rolModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#rolModal").empty();
+                $("#rolModal").append(data);
+            },
+            error: function(data){
+                $("#rolModal").empty();
+                $("#rolModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido. Se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+        $('#ModalRol').modal('show');
+    }
+    
+    //CERRAR VENTANA MODAL
+    function modaluserclose(){            
+       $('#ModalRol').modal('hide');
+    }
+    </script>
+{% endblock %}

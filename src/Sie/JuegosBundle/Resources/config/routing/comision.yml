@@ -1,0 +1,93 @@
+sie_juegos_comision_acompanante_lista_index:
+    path:    /acompanante/lista/index
+    defaults: { _controller: SieJuegosBundle:Comision:registroAcompananteIndex }
+
+sie_juegos_comision_acompanante_lista_registro:
+    path:    /acompanante/lista/registro
+    defaults: { _controller: SieJuegosBundle:Comision:listaAcompanante }
+    options:
+         expose: true  
+
+sie_juegos_comision_acompanante_lista_registro_elimina:
+    path:    /acompanante/lista/registro/elimina
+    defaults: { _controller: SieJuegosBundle:Comision:listaAcompananteElimina }
+
+sie_juegos_comision_acompanante_lista_registro_save:
+    path:    /acompanante/lista/registro/save
+    defaults: { _controller: SieJuegosBundle:Comision:listaAcompananteSave }
+
+sie_juegos_comision_departamental_lista_index:
+    path:    /departamental/lista/index
+    defaults: { _controller: SieJuegosBundle:Comision:registroDepartamentalIndex }
+
+sie_juegos_comision_departamental_lista_registro_save:
+    path:    /departamental/lista/registro/save
+    defaults: { _controller: SieJuegosBundle:Comision:registroDepartamentalSave }
+
+sie_juegos_comision_departamental_lista_registro_elimina:
+    path:    /departamental/lista/registro/elimina
+    defaults: { _controller: SieJuegosBundle:Comision:listaDepartamentalElimina }
+
+sie_juegos_comision_nacional_lista_index:
+    path:    /nacional/lista/index
+    defaults: { _controller: SieJuegosBundle:Comision:registroNacionalIndex }
+
+sie_juegos_comision_nacional_form_save:
+    path:    /nacional/lista/save
+    defaults: { _controller: SieJuegosBundle:Comision:registroNacionalFormSave }
+
+sie_juegos_comision_nacional_lista_elimina:
+    path:    /nacional/lista/elimina
+    defaults: { _controller: SieJuegosBundle:Comision:listaNacionalElimina }
+
+sie_juegos_comision_nacional_lista_print:
+    path:    /nacional/lista/print
+    defaults: { _controller: SieJuegosBundle:Comision:listaNacionalPrint }
+
+sie_juegos_comision_estudianteacompañante_print:
+    path:    /nacional/estaco/print
+    defaults: { _controller: SieJuegosBundle:Comision:listaEstudianteAcompañantePrint }
+
+sie_juegos_comision_entrenador_f1_lista_index:
+    path:    /entrenador/f1/lista/index
+    defaults: { _controller: SieJuegosBundle:Comision:registroEntrenadorF1Index }
+
+sie_juegos_comision_entrenador_f2_lista_index:
+    path:    /entrenador/f2/lista/index
+    defaults: { _controller: SieJuegosBundle:Comision:registroEntrenadorF2Index }
+
+sie_juegos_comision_entrenador_f3_lista_index:
+    path:    /entrenador/f3/lista/index
+    defaults: { _controller: SieJuegosBundle:Comision:registroEntrenadorF3Index }
+
+sie_juegos_comision_entrenador_lista_print:
+    path:    /entrenador/lista/print
+    defaults: { _controller: SieJuegosBundle:Comision:listaEntrenadorPrint }
+
+sie_juegos_comision_entrenador_lista_print_xls:
+    path:    /entrenador/lista/print/xls
+    defaults: { _controller: SieJuegosBundle:Comision:listaEntrenadorPrintXls }
+
+sie_juegos_comision_entrenador_lista_registro:
+    path:    /entrenador/lista/registro
+    defaults: { _controller: SieJuegosBundle:Comision:listaEntrenador }
+    options:
+         expose: true  
+
+sie_juegos_comision_entrenador_lista_clasificacion:
+    path:    /entrenador/lista/clasificacion
+    defaults: { _controller: SieJuegosBundle:Comision:listaEntrenadorClasificacion }
+    options:
+         expose: true  
+
+sie_juegos_comision_entrenador_lista_registro_save:
+    path:    /entrenador/lista/registro/save
+    defaults: { _controller: SieJuegosBundle:Comision:listaEntrenadorSave }
+
+sie_juegos_comision_entrenador_lista_registro_clasifica:
+    path:    /entrenador/lista/registro/clasifica
+    defaults: { _controller: SieJuegosBundle:Comision:listaEntrenadorClasifica }
+
+sie_juegos_comision_entrenador_lista_registro_elimina:
+    path:    /entrenador/lista/registro/elimina
+    defaults: { _controller: SieJuegosBundle:Comision:listaEntrenadorElimina }

@@ -1,0 +1,78 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+
+    <div class="body-content animated fadeIn">
+        
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Administración Personal Administrativo', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Buscar Persona'} %}
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-danger">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Buscar Persona</h3>
+                        </div>
+                        <div class="pull-right">
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.carnetIdentidad)}}
+                                        {{form_widget(form.carnetIdentidad) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.complemento)}}
+                                        <div class="input-group">
+                                            <div class="input-group-addon">-</div>
+                                            {{form_widget(form.complemento,{'attr':{'data-toggle':'tooltip','data-placement':'bottom','data-original-title':'El complemento del CI no es el lugar de expedicion, no coloque abreviaciones de departamentos'} }) }}
+                                        </div>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">                                        
+                                        <p>{{ form_widget(form.buscar ) }}</p>
+                                        <p><a href="{{ path('herramienta_info_personal_adm_index') }}" class="btn btn-default">Cancelar</a></p>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="datosPersonas"></div>
+            </div>
+        </div>
+    </div> 
+
+{% endblock %}

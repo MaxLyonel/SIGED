@@ -1,0 +1,173 @@
+sie_app_web_infraestructurah4ambientepedagogico:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah4ambientepedagogico.yml"
+    prefix:   /infraestructurah4ambientepedagogico
+
+sie_app_web_socioeconomicoregular:
+    resource: "@SieAppWebBundle/Resources/config/routing/socioeconomicoregular.yml"
+    prefix:   /sie/socioeconomicoregular
+
+sie_app_web_faea:
+    resource: "@SieAppWebBundle/Resources/config/routing/faea.yml"
+    prefix:   /sie/faea
+    
+sie_app_web_bach_exc:
+    resource: "@SieAppWebBundle/Resources/config/routing/bachexc.yml"
+    prefix:   /sie/bachiller-excelencia
+
+sie_app_web_bach_exc_alt:
+    resource: "@SieAppWebBundle/Resources/config/routing/bachexcalt.yml"
+    prefix:   /sie/bachiller-excelencia-alternativa
+
+sie_app_web_mensaje:
+    resource: "@SieAppWebBundle/Resources/config/routing/mensaje.yml"
+    prefix:   /sie/mensaje
+
+sie_app_web_notificacion:
+    resource: "@SieAppWebBundle/Resources/config/routing/notificacion.yml"
+    prefix:   /sie/notificacion
+
+sie_app_web_download:
+    resource: "@SieAppWebBundle/Resources/config/routing/download.yml"
+    prefix:   /reportdownload
+
+sie_app_web_institucioneducativagestion:
+    resource: "@SieAppWebBundle/Resources/config/routing/institucioneducativagestion.yml"
+    prefix:   /sie/institucioneducativagestion
+
+sie_app_web_personaladministrativogestion:
+    resource: "@SieAppWebBundle/Resources/config/routing/personaladministrativogestion.yml"
+    prefix:   /sie/personaladministrativogestion
+
+sie_app_web_maestrogestion:
+    resource: "@SieAppWebBundle/Resources/config/routing/maestrogestion.yml"
+    prefix:   /sie/maestrogestion
+
+sie_app_web_estudianteinscripcion:
+    resource: "@SieAppWebBundle/Resources/config/routing/estudianteinscripcion.yml"
+    prefix:   /sie/estudianteinscripcion
+
+sie_app_web_estudianteespecialindirecta:
+    resource: "@SieAppWebBundle/Resources/config/routing/estudianteespecialindirecta.yml"
+    prefix:   /sie/estudianteespecialindirecta
+
+sie_app_web_usuario:
+    resource: "@SieAppWebBundle/Resources/config/routing/usuario.yml"
+    prefix:   /sie/usuario
+
+sie_app_web_consultalibreta:
+    resource: "@SieAppWebBundle/Resources/config/routing/consultalibreta.yml"
+    prefix:   /acceso/consultaLibreta    
+
+sie_app_web_principal:
+    resource: "@SieAppWebBundle/Resources/config/routing/principal.yml"
+    prefix:   /acceso/principal/
+
+sie_app_web_apoderado_main:
+    resource: "@SieAppWebBundle/Resources/config/routing/apoderado.yml"
+    prefix:   /datosapoderado/
+
+sie_app_web_nota_main:
+    resource: "@SieAppWebBundle/Resources/config/routing/estudianteasignatura.yml"
+    prefix:   /sie/nota
+
+sie_app_web_estudiante_main:
+    resource: "@SieAppWebBundle/Resources/config/routing/estudiante.yml"
+    prefix:   /sie/estudiante
+
+sie_app_web_institucioneducativa:
+    resource: "@SieAppWebBundle/Resources/config/routing/institucioneducativa.yml"
+    prefix:   /sie/institucioneducativa
+    
+sie_app_web_maestroinscripcion:
+    resource: "@SieAppWebBundle/Resources/config/routing/maestroinscripcion.yml"
+    prefix:   /sie/maestroinscripcion
+      
+#buscar estudiante para ver libreta
+search_data_libreta:
+    path:     /searchlibreta
+    defaults: { _controller: "SieAppWebBundle:LookforLibreta:searchdatalibreta" }
+find_data_libreta:
+    path:     /findlibreta
+    defaults: { _controller: "SieAppWebBundle:LookforLibreta:findlibreta" }    
+#login paths
+login:
+    path: /
+    defaults: { _controller: SieAppWebBundle:Default:index }
+    
+login_check:
+    path: /login_check
+
+logout:
+    path: /logout
+create_sessions_login:
+    path:   /create_sessions_login
+    defaults: { _controller: SieAppWebBundle:Default:create_sessions_login }
+#for the SIGED system
+sie_login_homepage:
+    path:     /checktheuser
+    defaults: { _controller: SieAppWebBundle:Login:index } 
+
+user_logout:
+    path:   /userlogout/
+    defaults: { _controller: SieAppWebBundle:Login:logout }
+
+home_page:
+    path:   /sie/
+    defaults: { _controller: SieAppWebBundle:Login:sie }
+
+login_rol_select:
+    path:   /sigedrolselect/{key}/
+    defaults: { _controller: SieAppWebBundle:Default:sigedrolselect }
+
+#modulo director dar de alta cuenta
+padres_admin:
+    path:    /apoderado/
+    defaults: { _controller: SieAppWebBundle:Padres:main }
+    
+boletin_bimestral:
+    path:     /hello/
+    defaults: { _controller: SieAppWebBundle:Login:index } 
+ 
+reportes_informativos:
+    resource: "@SieAppWebBundle/Resources/config/routing/reportesinformativos.yml"
+    prefix:   /sie/reportes
+ 
+reporte_regular:
+    resource: "@SieAppWebBundle/Resources/config/routing/reporte.yml"
+    prefix:   /reporteestadistico
+    
+reporte_alternativa:
+    resource: "@SieAppWebBundle/Resources/config/routing/reporteAlt.yml"
+    prefix:   /sie/alternativa/reporte
+
+sie_app_web_estudianteinformacion:
+    resource: "@SieAppWebBundle/Resources/config/routing/estudianteinformacion.yml"
+    prefix:   /sie/estudianteinformacion
+    
+sie_app_web_gestionmenu:
+    resource: "@SieAppWebBundle/Resources/config/routing/gestionmenu.yml"
+    prefix:   /sie/gestmenu
+
+sie_app_web_validacion:
+    resource: "@SieAppWebBundle/Resources/config/routing/validacion.yml"
+    prefix:   /sie/validacion
+
+sie_app_bjp_validacion_ie:
+    resource: "@SieAppWebBundle/Resources/config/routing/validacionInstitucionEducativa.yml"
+    prefix:   /sie/bjp/validacion/ie
+
+sie_app_web_estudiantedatopersonal:
+    resource: "@SieAppWebBundle/Resources/config/routing/estudiantedatopersonal.yml"
+    prefix:   /acceso/estudiantedatopersonal
+
+sie_app_web_lugarTipo:
+    resource: "@SieAppWebBundle/Resources/config/routing/lugarTipo.yml"
+    prefix:   /sie/lugarTipo
+
+sie_app_web_areaTipo:
+    resource: "@SieAppWebBundle/Resources/config/routing/areatipo.yml"
+    prefix:   /sie/areatipo
+
+sie_app_web_close_modules:
+    resource: "@SieAppWebBundle/Resources/config/routing/closemodules.yml"
+    prefix:   /sie/closemodules

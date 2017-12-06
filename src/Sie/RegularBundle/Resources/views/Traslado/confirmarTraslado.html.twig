@@ -1,0 +1,179 @@
+<small>
+    <div class="row">
+        <div class="col-lg-1">
+
+        </div>
+        <div class="col-lg-10">
+        {% for flashMessage in app.session.flashbag.get('estadoTraslado') %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Verificar!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        </div>
+        <div class="col-lg-1">
+
+        </div>
+{% if asignaturas is defined %}
+<div class="col-md-6">
+
+    {% if asignaturas is defined %}
+        <div class="alert alert-info">
+            Materias del estudiante en el curso actual
+        </div>
+        <h5>Notas Cuantitativas</h5>
+        <table class="table table-bordered">
+            <tr>
+                <th>
+                    Asignatura
+                </th>
+                {% for i in 1 .. operativo %}
+                    <th>
+                        {{ i }} Bimestre
+                    </th>
+                {% endfor %}
+            </tr>
+            <tbody>
+                {% for a in asignaturas %}
+                    <tr>
+                        <td>
+                            {{a.asignatura}}
+                        </td>
+                        {% for n in a.notas %}
+                            {% if n.idEstudianteNota == 'nuevo' or n.nota == 0 %}
+                                <td>
+                                    <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+                                    <input type="hidden" name="idNotaTipo[]" value="{{n.notaTipo}}">
+                                    <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                    <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="validarNota1(this.id,this.value)" class="form-control input-sm" style="width:50px" maxlength="3" autocomplete="off">
+                                </td>
+                            {% else %}
+                                <td>
+                                    {{n.nota}}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    {% if cualitativas is defined and 1 == 2 %}
+        <h5 class="text-warning">Notas cualitativas</h5>
+        <table class="table">
+            <tr>
+                <th>
+                    Bimestre
+                </th>
+                <th>
+                    Valoración Cualitativa
+                </th>
+            </tr>
+            {% for nc in cualitativas %}
+                <tr>
+                    <td>
+                        {{loop.index}} Bimestre
+                    </td>
+                    <td>
+                        {% if nc.idEstudianteNotaCualitativa == 'nuevo' or nc.notaCualitativa|length <= 1 %}
+                            <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{nc.idEstudianteNota}}">
+                            <input type="hidden" name="idNotaTipoCualitativa[]" value="{{nc.notaTipo}}">
+                            <textarea class="cualitativas" name="notaCualitativa[]" id="notaCualitativa'+idTD+'" onkeypress="return validarNotaCualitativa(event,this.id,this.value)" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:300px" rows="4" minlength="15" maxlength="400">{{nc.notaCualitativa}}</textarea>
+                        {% else %}
+                            <textarea required autocomplete="off" style="text-transform: uppercase; width:300px; border:none;" rows="4" maxlength="400" disabled="disabled">{{nc.notaCualitativa}}</textarea>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    <hr>
+
+</div>
+
+
+
+
+
+<div class="col-md-6">
+<form class="" action="index.html" method="post" id="formTrasladoNotasId">
+    <input type="hidden" name="newForm" value="{{newForm}}">
+    {% if newAsignaturas is defined %}
+        <div class="alert alert-info">
+            Materias del nuevo curso
+        </div>
+        <h5>Notas Cuantitativas</h5>
+        <table class="table table-bordered">
+            <tr>
+                <th>
+                    Asignatura
+                </th>
+                {% for i in 1 .. operativo %}
+                    <th>
+                        {{ i }} Bimestre
+                    </th>
+                {% endfor %}
+            </tr>
+            <tbody>
+                {% for a in newAsignaturas %}
+                    <tr>
+                        <td>
+                            {{a.asignatura}}
+                        </td>
+                        {% for n in a.notas %}
+                            {% if n.idEstudianteNota == 'nuevo' %}
+                                <td>
+                                    <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+                                    <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+                                    <input type="hidden" name="idCursoOferta[]" value="{{a.idCursoOferta}}">
+                                    <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="validarNota1(this.id,this.value)" class="form-control input-sm nota" style="width:50px" maxlength="3" autocomplete="off">
+                                </td>
+                            {% else %}
+                                <td>
+                                    {{n.nota}}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    {% if cualitativas is defined and 1 == 2 %}
+        <h5 class="text-warning">Notas cualitativas</h5>
+        <table class="table">
+            <tr>
+                <th>
+                    Bimestre
+                </th>
+                <th>
+                    Valoración Cualitativa
+                </th>
+            </tr>
+            {% for nc in cualitativas %}
+                <tr>
+                    <td>
+                        {{loop.index}} Bimestre
+                    </td>
+                    <td>
+                        {% if nc.idEstudianteNotaCualitativa == 'nuevo' or nc.notaCualitativa|length <= 1 %}
+                            <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{nc.idEstudianteNota}}">
+                            <input type="hidden" name="idNotaTipoCualitativa[]" value="{{nc.notaTipo}}">
+                            <textarea class="cualitativas" name="notaCualitativa[]" id="notaCualitativa'+idTD+'" onkeypress="return validarNotaCualitativa(event,this.id,this.value)" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:300px" rows="4" minlength="15" maxlength="400">{{nc.notaCualitativa}}</textarea>
+                        {% else %}
+                            <textarea required autocomplete="off" style="text-transform: uppercase; width:300px; border:none;" rows="4" maxlength="400" disabled="disabled">{{nc.notaCualitativa}}</textarea>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    <hr>
+    <div class="text-center">
+        <button type="button" name="button" class="btn btn-green" onclick="saveTraslado();">Realizar traslado</button>
+    </div>
+</form>
+</div>
+{% endif %}
+</div>
+</small>

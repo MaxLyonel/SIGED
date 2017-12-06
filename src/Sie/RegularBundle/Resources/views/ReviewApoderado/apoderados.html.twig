@@ -1,0 +1,113 @@
+<div class="row">
+  <div class='col-md-12'>
+  {% for flashMessage in app.session.flashbag.get('msgremoveapoderado') %}
+      <div class="alert alert-success alert-dismissible" >
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          <strong>Bien!</strong> {{ flashMessage }}
+      </div>
+  {% endfor %}
+  </div>
+</div>
+
+<div class="row">
+  <div class='col-md-12'>
+  {% for flashMessage in app.session.flashbag.get('msgaddapoderado') %}
+      <div class="alert alert-success alert-dismissible" >
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          <strong>Bien!</strong> {{ flashMessage }}
+      </div>
+  {% endfor %}
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet portlet-basic">
+            <div class="portlet-body">
+
+                <div class="row ">
+
+                    <div class="col-lg-12">
+
+                        <div class="portlet portlet-basic">
+                            <div class="portlet-body">
+                                <!--h3 id="grid-offsetting">Datos Estudiantes</h3-->
+                                <div class="small">
+                                    <div id="no-more-tables">
+
+                                        <div class="row">
+                                            <div class="col-md-10 ">
+                                                <div class="alert alert-info alert-dismissible" role="alert">
+                                                    <strong><i class='fa fa-list'></i></strong>
+                                                    Listado de Apoderados {{gestionSelected}}
+                                                </div>
+                                                <h3>{{student.codigoRude}} </br>{{student.paterno}} {{student.materno}} {{student.nombre}} </h3>
+                                            </div>
+                                            <div class="col-md-2 ">
+                                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                                    <strong><i class='fa fa-user'></i></strong>
+                                                    <a href="#" onclick="newApoderado('{{student.codigoRude}}', '{{gestionSelected}}','{{studentInscId}}','{{dataselected}}' );">Nuevo</a>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <table class="table table-bordered table-hover cf">
+                                            <thead class="cf">
+                                                <tr class="info">
+                                                    <th class="text-center">No</th>
+                                                    <th class="text-center">Paterno</th>
+                                                    <th class="text-center">Materno</th>
+                                                    <th class="text-center">Nombre</th>
+                                                    <th class="text-center">CI</th>
+                                                    <th class="text-center">F. Nacimiento</th>
+                                                    <th class="text-center">Parentesco</th>
+                                                    <th class="text-center">&nbsp;</th>
+                                                    <th class="text-center">&nbsp;</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {%for apoderado in apoderados %}
+                                                    <tr ><td data-title="No">{{loop.index}}</td>
+
+                                                        <td data-title="Paterno"> {{apoderado.paterno}}</td>
+                                                        <td data-title="Materno"> {{apoderado.materno}}</td>
+                                                        <td data-title="Nombre"> {{apoderado.nombre}}</td>
+                                                        <td data-title="Carnet"> {{apoderado.carnet}}</td>
+                                                        <td data-title="F. Nac."> {{apoderado.fechaNacimiento | date('d-m-Y')}}</td>
+                                                        <td data-title="Parentesco"> {{apoderado.apoderado}}</td>
+                                                        <td data-title="Opcion" class="success" >
+                                                            <strong><i class='fa fa-plus-circle'></i></strong>
+                                                            <a href="#" onclick="updateApoderado('{{apoderado.pid}}', '{{apoderado.aid}}', '{{apoderado.codigoRude}}', '{{gestionSelected}}');">Datos</a>
+                                                        </td>
+                                                        <td data-title="Opcion" class="success" >
+                                                            <strong><i class='fa fa-minus-circle'></i></strong>
+                                                            <a href="#" onclick="removeApoderado('{{apoderado.pid}}', '{{apoderado.aid}}', '{{apoderado.codigoRude}}', '{{gestionSelected}}','{{studentInscId}}', '{{dataselected}}');">Eliminar</a>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor%}
+                                            </tbody>
+                                        </table>
+
+                                        {{form_start(form)}}
+                                        {{form_end(form)}}
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->

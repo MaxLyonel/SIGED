@@ -1,0 +1,43 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaNoacreditadosDdjj:
+    type: entity
+    table: institucioneducativa_noacreditados_ddjj
+    indexes:
+        IDX_7F4CCCC33AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestionTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        fecha:
+            type: datetime
+            nullable: false
+            comment: ''
+            default: now()
+        esabierta:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

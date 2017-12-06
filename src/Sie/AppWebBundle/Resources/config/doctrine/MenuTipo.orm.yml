@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\MenuTipo:
+    type: entity
+    table: menu_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombre:
+            type: string
+            nullable: false
+            length: 48
+            fixed: false
+            comment: ''
+        ruta:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        icono:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        menuTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: menu_tipo_id
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        control:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

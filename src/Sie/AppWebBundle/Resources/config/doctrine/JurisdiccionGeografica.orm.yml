@@ -1,0 +1,165 @@
+Sie\AppWebBundle\Entity\JurisdiccionGeografica:
+    type: entity
+    table: jurisdiccion_geografica
+    indexes:
+        relationship_108_fk:
+            columns:
+                - lugar_tipo_id_localidad
+        fk_dat_ifr_jurisdiccion_geograf:
+            columns:
+                - lugar_tipo_id_distrito
+        IDX_C972078780B2359C:
+            columns:
+                - validacion_geografica_tipo_id
+        IDX_C9720787623A29BC:
+            columns:
+                - juridiccion_acreditacion_tipo_id
+        IDX_C97207877281438B:
+            columns:
+                - circunscripcion_tipo_id
+        IDX_C9720787FE19D46C:
+            columns:
+                - distrito_tipo_id
+    uniqueConstraints:
+        le_juridicciongeografica_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            #generator:
+                #strategy: SEQUENCE
+    fields:
+        lugarTipoIdDistrito:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: lugar_tipo_id_distrito
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        cordx:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+        cordy:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+        lugarTipoIdLocalidad2012:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: lugar_tipo_id_localidad2012
+        codNuc:
+            type: string
+            nullable: true
+            length: 5
+            fixed: true
+            comment: ''
+            column: cod_nuc
+        desNuc:
+            type: string
+            nullable: true
+            length: 60
+            fixed: false
+            comment: ''
+            column: des_nuc
+        direccion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        zona:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaModificacionLocalizacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion_localizacion
+        fechaModificacionCoordenada:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion_coordenada
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        usuarioId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id
+    manyToOne:
+        validacionGeograficaTipo:
+            targetEntity: ValidacionGeograficaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                validacion_geografica_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        juridiccionAcreditacionTipo:
+            targetEntity: JurisdiccionGeograficaAcreditacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                juridiccion_acreditacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        circunscripcionTipo:
+            targetEntity: CircunscripcionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                circunscripcion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        distritoTipo:
+            targetEntity: DistritoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                distrito_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lugarTipoLocalidad:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_tipo_id_localidad:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

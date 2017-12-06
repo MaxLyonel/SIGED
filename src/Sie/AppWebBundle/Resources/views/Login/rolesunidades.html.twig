@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="{{asset('favicon.ico')}}" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Siged Autenticación</title>
+
+        <!-- GLOBAL STYLES -->
+        <link href="{{asset('css/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel="stylesheet" type="text/css">
+        <link href="{{asset('icons/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+
+        <!-- PAGE LEVEL PLUGIN STYLES -->
+
+        <!-- THEME STYLES -->
+        <link href="{{asset('css/style.css')}}" rel="stylesheet">
+        <link href="{{asset('css/plugins.css')}}" rel="stylesheet">
+
+        <!-- THEME DEMO STYLES -->
+        <link href="{{asset('css/demo.css')}}" rel="stylesheet">
+
+        <!--[if lt IE 9]>
+        <script src="{{asset('js/html5shiv.js')}}"></script>
+        <script src="{{asset('js/respond.min.js')}}"></script>
+        <![endif]-->
+
+    </head>
+
+    <body class="login">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="login-banner text-center">
+                        <h1><i class="fa fa-gears"></i> SIGED : AUTENTICACIÓN DE SUS ROLES.</h1>
+                    </div>
+                    
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading login-heading">
+                            <div class="portlet-title">
+                                <h4><strong>NOMBRE DE USUARIO</strong> : {{ user }} -- <strong>NOMBRE Y APELLIDO</strong> : {{ persona }} <strong>CI</strong>  : {{ carnet }}</h4>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% for flashMessage in app.session.flashbag.get('info') %}
+                                        <div class="alert alert-success alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <strong>Bien!</strong> {{ flashMessage }}
+                                        </div>
+                                    {% endfor %}
+                                    {% for flashMessage in app.session.flashbag.get('error') %}
+                                        <div class="alert alert-danger alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <strong>¡Observaciones encontradas!</strong> {{ flashMessage }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="portlet portlet-default">
+                                {% for flashMessage in app.session.flashbag.get('errorcontraexp') %}
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <strong>¡Su contraseña ha expirado!</strong> {{ flashMessage }} <strong>DESACTIVACIÓN DE SU CUENTA.</strong>
+                                        <form action="{{path('usuariopasswd')}}" method="post">
+                                            <button type="submit" class="btn btn-primary"><i class="fa fa-gear"></i> Solucionar</button>
+                                        </form>
+                                    </div>
+                                {% endfor %}
+
+                                {% for flashMessage in app.session.flashbag.get('errorusername') %}
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <strong>¡Su nombre de usuario es distinto a su número de carnet!</strong> {{ flashMessage }} <strong>DESACTIVACIÓN DE SU CUENTA.</strong>
+                                        <form action="{{path('sie_usuarios_update_username_login', {'usuarioid': app.session.get('userId')})}}" method="post">
+                                            <button type="submit" class="btn btn-primary" onclick="return confirm('Está por actualizar su nombre del usuario :{{ user }} por el numero de carnet :{{ carnet }}.  Nota: recuerde que a partir de la fecha el usuario de esta cuenta sera el numero de carnet.\n\n ¿Esta seguro de continuar? ');"><i class="fa fa-gear"></i> Solucionar</button>
+                                        </form>
+                                    </div>
+                                {% endfor %}
+
+                                {% for flashMessage in app.session.flashbag.get('errorusernameexistente') %}
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <strong>¡Su nombre de usuario es distinto a su número de carnet!</strong> {{ flashMessage }}                                        
+                                    </div>
+                                {% endfor %}
+
+                                <div class="portlet-heading">
+                                    <div class="portlet-title">
+                                        <h4>Usted tiene asignados los siguientes roles y/o instituciónes educativas. Selecciones su tipo de acceso al sistema.</h4>
+                                    </div>
+                                    <div class="portlet-widgets">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#formControls"><i class="fa fa-chevron-down"></i></a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+
+                                <div id="formControls" class="panel-collapse collapse in">
+                                    <div class="portlet-body">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Rol</th>
+                                                    <th>Nivel</th>                                            
+                                                    <th>Lugar</th>
+                                                    <th>Cod. Sie.</th>
+                                                    <th>Institución Educativa</th>                                            
+                                                    <th>Sub sistema</th>
+                                                    <th></th>                                            
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for ue in roles %}
+                                                    <tr>
+                                                        <td>{{ ue.rol }}</td>
+                                                        <td>{{ ue.nivel }}</td>
+                                                        <td>{{ ue.lugar }}</td>
+                                                        <td>{{ ue.sie }}</td>
+                                                        <td>{{ ue.institucioneducativa }}</td>
+                                                        <td>{{ ue.orgcurricula }}</td>
+                                                        <td class="text-center"> 
+                                                            <a href="{{ path('login_rol_select', {'key': ue.key }) }}" class="btn btn-success btn-xs" data-original-title="Ver" data-placement="top" data-toggle="tooltip" href="#">
+                                                                <i class="fa fa-sign-in"> Registrar mi ingreso -></i>
+                                                            </a>                                                                                                        
+                                                        </td> 
+                                                    </tr>                                                
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <form action="{{path('logout')}}" method="post">
+                                            <button type="submit" class="btn btn-primary"><i class="fa fa-gear"></i> Salir del SIGED.</button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GLOBAL SCRIPTS -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="{{asset('js/plugins/bootstrap/bootstrap.min.js')}}"></script>
+        <script src="{{asset('js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>        
+        <script src="{{asset('js/plugins/hisrc/hisrc.js')}}"></script>
+        <script src="{{asset('js/flex.js')}}"></script>        
+        <script src="{{asset('validator/js/validator.js')}}"></script>
+        <script>
+            //CAMBIA NOMBRE DE USUARIO AL CARNET
+                function usernameUpdate(usuarioid){
+                        var formData = $('#myModalNotas').serialize();                        
+                        $("#divAlertUser").empty();
+                        $("#menprincipal").empty(); 
+                        if (confirm('')) {
+                            $.ajax({
+                                type: 'get',
+                                url: Routing.generate('sie_usuarios_update_username', {'usuarioid': usuarioid}),
+                                data: formData,
+                                beforeSend: function () {
+
+                                },
+                                success: function (data) {
+                                    window.document.location = Routing.generate('logout');
+                                    //var numfila = $("#tablaListadoPersonas_fil").text();
+                                    //alert('OK');
+                                    //$("#divAlertUser").empty();
+                                    //$("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                                    //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[1].innerHTML = data.username;
+                                },
+                                error: function(){
+                                    //$("#divAlertUser").empty();
+                                    //$("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');                                    
+                                }
+                            });
+                        }                            
+                        //$('#ModalUser').modal('show');
+                    }
+        </script>
+    </body>
+
+</html>

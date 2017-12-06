@@ -1,0 +1,309 @@
+{# extends 'SieJuegosBundle:Default:Registros.html.twig' #}
+{% extends 'layoutJuegos.html.twig' %}
+
+{% block contentoption %} 
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="glyphicon glyphicon-pencil"></i> Registro <span>Juegos Deportivos Plurinacionales</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('sie_juegos_comision_nacional_lista_index') }}">Registro</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Primera Fase</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-primary shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Busqueda</h3>
+                    </div><!-- /.pull-left -->
+                    <div class="pull-right">
+
+                    </div><!-- /.pull-right -->
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <!-- Start project overview -->
+                    <ol class="breadcrumb">
+                    </ol>
+                    <!-- Start datatable -->                    
+                    <form role="form" action="{{ path('sie_juegos_acreditacion_busca_registro') }}" method="POST">
+                        <label class="control-label">
+                            C.I./Rude                                   
+                        </label>    
+                        <input type="number" name="ci" id="ci" value="" />  
+                        <button type="submit" title="Buscar" class="btn btn-success"><i class="fa fa-search"></i> Buscar</button>  
+                    </form> 
+                    <!--/ End datatable -->
+                    <div id="no-more-tables">  
+                    </div>
+                    <!-- /.portlet -->
+                    <!--/ End project overview -->  
+                </div><!-- /.panel-body -->
+            </div>                    
+        </div> 
+        {% if objDelegados is defined  %}
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="panel panel-success shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Listado</h3>
+                        </div><!-- /.pull-left -->
+                        <div class="pull-right">
+
+                        </div><!-- /.pull-right -->
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <!-- Start project overview -->
+                        <ol class="breadcrumb">
+                        </ol>
+                        <!-- Start datatable -->  
+                            <table id="datatable-delegados" class="table table-striped table-success">
+                                <thead>
+                                    <tr>                            
+                                        <th data-class="expand">#</th>                                
+                                        <th>C.I. - Rude</th>
+                                        <th>Comisión</th>  
+                                        <th>Nombre</th>                             
+                                        <th style="width: 30px">&nbsp;</th> 
+                                        <th style="width: 30px">&nbsp;</th>    
+                                        <th style="width: 30px">&nbsp;</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in objDelegados%}
+                                        {% set id = data.id %}    
+                                        {% set nombre = data.nombre %}
+                                        {% set comision = data.comision %} 
+                                        {% set comisionId = data.comision_id %}                            
+                                        {% set documento = data.documento %}  
+                                        <tr>
+                                            <td align="">{{loop.index}}</td>                                    
+                                            <td align="">{{documento}}</td>
+                                            <td align="">{{nombre}}</td>                                    
+                                            <td align="">{{comision}}</td>                            
+                                            <td align="">
+                                                <form role="form" action="{{ path('sie_juegos_acreditacion_registro_impresion') }}" method="POST">
+                                                    <input type="hidden" name="id" value="{{ id }}" />  
+                                                    <input type="hidden" name="comision" value="{{ comisionId }}" /> 
+                                                    <button type="submit" title="{{nombre}}" class="btn btn-success"><i class="fa fa-print"></i></button>  
+                                                </form>
+                                            </td>
+                                            <td align="">    
+                                                {% if comisionId != 111 %}                             
+                                                    <form role="form" action="{{ path('sie_juegos_acreditacion_registro_edita') }}" method="POST">
+                                                        <input type="hidden" name="id" value="{{ id }}" />  
+                                                        <input type="hidden" name="comision" value="{{ comisionId }}" /> 
+                                                        <button type="submit" title="{{nombre}}" class="btn btn-warning"><i class="fa fa-edit"></i></button>  
+                                                    </form>
+                                                {% endif %}
+                                            </td>
+                                            <td align="">
+                                                {% if comisionId != 101 and comisionId != 111 %}  
+                                                    <form role="form" action="{{ path('sie_juegos_acreditacion_registro_elimina') }}" method="POST">
+                                                        <input type="hidden" name="id" value="{{ id }}" />  
+                                                        <input type="hidden" name="comision" value="{{ comisionId }}" /> 
+                                                        <button type="submit" title="{{nombre}}" class="btn btn-danger"><i class="fa fa-remove"></i></button>  
+                                                    </form>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {%endfor%}
+                                </tbody>
+                            </table>                        
+                        <!--/ End datatable -->
+                        <div id="no-more-tables">  
+                        </div>
+                        <!-- /.portlet -->
+                        <!--/ End project overview -->  
+                    </div><!-- /.panel-body -->
+                </div>                    
+            </div> 
+        {% endif %}  
+        {% if formFoto is defined  %}
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="panel panel-success shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Listado</h3>
+                        </div><!-- /.pull-left -->
+                        <div class="pull-right">
+
+                        </div><!-- /.pull-right -->
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <!-- Start project overview -->
+                        <ol class="breadcrumb">
+                        </ol>
+                        <!-- Start datatable -->                      
+                        <!--/ End datatable -->
+                        <div id="no-more-tables"> 
+                        {{form_start(formFoto, { 'attr': { 'role': "form", 'class': 'form-horizontal form-bordered'} } )}}   
+                            <input type="hidden" name="estudiante" value="{{estudiante}}"/>  
+                            <input type="hidden" name="inscripcion" value="{{inscripcion}}"/>                                   
+                            <div class="form-group">
+                                <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">
+                                    <label class="control-label">
+                                        {{form_label(formFoto.foto)}}                                    
+                                    </label>     
+                                    {{ form_widget(formFoto.foto, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}} ) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>   
+                            </div>                            
+                            <div class="form-group">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    {{ form_widget(formFoto.submit,{ 'attr':{'class':'btn btn-success col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                                </div>   
+                            </div>
+                        {{form_end(formFoto)}} 
+                        </div>
+                        <!-- /.portlet -->
+                        <!--/ End project overview -->  
+                    </div><!-- /.panel-body -->
+                </div>                    
+            </div> 
+        {% endif %}  
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-primary shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Registro</h3>
+                    </div><!-- /.pull-left -->
+                    <div class="pull-right">
+
+                    </div><!-- /.pull-right -->
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    {{form_start(form, { 'attr': { 'role': "form", 'class': 'form-horizontal form-bordered'} } )}}
+                        <input type="hidden" name="fase" value="{{fase}}"/>  
+                        <input type="hidden" name="entidad" value="{{codigoEntidad}}"/>                    
+                        <input type="hidden" name="gestion" value="{{gestion}}"/>                                       
+                        <div class="form-group">
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">
+                                <label class="control-label">
+                                    {{form_label(form.carnetIdentidad)}}                                    
+                                </label>     
+                                {{ form_widget(form.carnetIdentidad, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}} ) }}
+                                <div class="help-block with-errors"></div>
+                            </div>       
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">                          
+                                <label class="control-label">
+                                    {{form_label(form.departamentoTipo)}}                                    
+                                </label>
+                                {{ form_widget(form.departamentoTipo, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div>  
+                        </div>
+                        <div class="form-group">      
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">                          
+                                <label class="control-label">
+                                    {{form_label(form.nombre)}}                                    
+                                </label>
+                                {{ form_widget(form.nombre, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div>    
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">
+                                <label class="control-label">
+                                    {{form_label(form.paterno)}}                                    
+                                </label>
+                                {{ form_widget(form.paterno, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div>  
+                        </div> 
+                        <div class="form-group">  
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">  
+                                <label class="control-label">
+                                    {{form_label(form.materno)}}                                    
+                                </label>
+                                {{ form_widget(form.materno, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div>      
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">
+                                <label class="control-label">
+                                    {{form_label(form.generoTipo)}}                                    
+                                </label>
+                                {{ form_widget(form.generoTipo, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div>  
+                        </div>  
+                        <div class="form-group">   
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12"> 
+                                <label class="control-label">
+                                    {{form_label(form.celular)}}                                    
+                                </label>
+                                {{ form_widget(form.celular, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div>      
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">
+                                <label class="control-label">
+                                    {{form_label(form.correo)}}                                    
+                                </label>
+                                {{ form_widget(form.correo, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div> 
+                        </div>  
+                        <div class="form-group">  
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">  
+                                <label class="control-label">
+                                    {{form_label(form.comisionTipoId)}}                                    
+                                </label>
+                                {{ form_widget(form.comisionTipoId, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div>     
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">
+                                <label class="control-label">
+                                    {{form_label(form.obs)}}                                    
+                                </label>
+                                {{ form_widget(form.obs, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div> 
+                        </div> 
+                        <div class="form-group">      
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">  
+                                <label class="control-label">
+                                    {{form_label(form.pruebaTipo)}}                                    
+                                </label>
+                                {{ form_widget(form.pruebaTipo, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div>          
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">  
+                                <label class="control-label">
+                                    {{form_label(form.posicion)}}                                    
+                                </label>
+                                {{ form_widget(form.posicion, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div>    
+                        </div>  
+                        <div class="form-group">
+                            <div class="col-lg-6 col-md-8 col-sm-6 col-xs-12">
+                                <label class="control-label">
+                                    {{form_label(form.foto)}}                                    
+                                </label>
+                                {{ form_widget(form.foto, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                <div class="help-block with-errors"></div>
+                            </div>  
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                {{ form_widget(form.submit,{ 'attr':{'class':'btn btn-success col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                            </div>   
+                        </div>
+                    {{form_end(form)}}
+                </div><!-- /.panel-body -->
+            </div>                               
+        </div>                              
+    </div> 
+    <!-- /.row -->
+{% endblock %}

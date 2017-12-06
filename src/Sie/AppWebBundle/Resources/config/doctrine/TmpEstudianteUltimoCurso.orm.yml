@@ -1,0 +1,65 @@
+Sie\AppWebBundle\Entity\TmpEstudianteUltimoCurso:
+    type: entity
+    table: tmp_estudiante_ultimo_curso
+    indexes:
+        fk_estudiante_ultimo_curso:
+            columns:
+                - codigo_rude_id
+    id:
+        id:
+            type: bigint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestionId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: gestion_id
+        codigoRudeId:
+            type: string
+            nullable: false
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude_id
+        nivelId:
+            type: decimal
+            nullable: false
+            precision: 3
+            scale: 0
+            comment: ''
+            column: nivel_id
+        cicloId:
+            type: decimal
+            nullable: false
+            precision: 3
+            scale: 0
+            comment: ''
+            column: ciclo_id
+        gradoId:
+            type: decimal
+            nullable: false
+            precision: 3
+            scale: 0
+            comment: ''
+            column: grado_id
+        nivMat:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: niv_mat
+        estadoMatriculaFinId:
+            type: decimal
+            nullable: false
+            precision: 3
+            scale: 0
+            comment: ''
+            column: estado_matricula_fin_id
+    lifecycleCallbacks: {  }

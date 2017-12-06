@@ -1,0 +1,104 @@
+{% extends 'layoutJuegos.html.twig' %}
+
+{% block contentoption %} 
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="glyphicon glyphicon-pencil"></i> Registro de datos personales <span>Juegos Deportivos Plurinacionales</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('estudiantedatopersonal_juegos_deportistas_fase3') }}">Listado</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Primera Fase</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">     
+                <div class="panel panel-primary shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">{{ estudiante['estudiante'] }}</h3>
+                        </div><!-- /.pull-left -->
+                        <div class="pull-right">
+
+                        </div><!-- /.pull-right -->
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                    	<div class="form-body">
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'class': 'form-horizontal form-bordered'} } )}}
+                             <input type="hidden" name="id" value="{{ estudiante['estudiante_id'] }}" />  
+                             <input type="hidden" name="fase" value="{{ fase }}" />  
+                        	<div class="form-group">
+                                <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                                    {{form_label(form.estatura)}}                                    
+                                </label>
+                                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                                    {{ form_widget(form.estatura, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}} ) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>    
+                            </div>
+                        	<div class="form-group">                                
+                                <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                                    {{form_label(form.peso)}}                                    
+                                </label>
+                                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                                    {{ form_widget(form.peso, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>    
+                            </div> 
+                        	<div class="form-group">    
+                                <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                                    {{form_label(form.talla)}}                                    
+                                </label>
+                                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                                    {{ form_widget(form.talla, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>      
+                            </div>  
+                        	<div class="form-group">
+                                <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                                    {{form_label(form.foto)}}                                    
+                                </label>
+                                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                                    {{ form_widget(form.foto, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>  
+                            </div>
+                        	<div class="form-group">
+                                <label class="col-lg-2 col-md-4 col-sm-6 col-xs-12 control-label">
+                                    {{form_label(form.gestionTipo)}}                                    
+                                </label>
+                                <div class="col-lg-10 col-md-8 col-sm-6 col-xs-12">
+                                    {{ form_widget(form.gestionTipo, { 'attr': {'class': 'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12'}}) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>  
+                            </div>
+                        	<div class="form-group">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    {{ form_widget(form.submit,{ 'attr':{'class':'btn btn-success col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                                </div>   
+                            </div>
+                        {{form_end(form)}}
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div>                  
+            </div>
+        </div>                          
+        <!--/div-->
+        <!--/ End mail page -->
+    </div>
+    <!-- Start body content -->
+    <!--/ End body content -->
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+
+    </div><!-- /.modal -->
+    <!--/ End body content -->
+{% endblock %}

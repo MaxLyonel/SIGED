@@ -1,0 +1,69 @@
+Sie\AppWebBundle\Entity\Institucioneducativanoacreditado:
+    type: entity
+    table: institucioneducativanoacreditado
+    indexes:
+        IDX_602CE4458363F807:
+            columns:
+                - dependencia_tipo_id
+        IDX_602CE445E653442:
+            columns:
+                - orgcurricular_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        institucioneducativa:
+            type: string
+            nullable: true
+            length: 70
+            fixed: false
+            comment: ''
+        codDis:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_dis
+        codRue:
+            type: string
+            nullable: true
+            length: 12
+            fixed: false
+            comment: ''
+            column: cod_rue
+        gestionId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_id
+        esimpreso:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        dependenciaTipo:
+            targetEntity: DependenciaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                dependencia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        orgcurricularTipo:
+            targetEntity: OrgcurricularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                orgcurricular_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

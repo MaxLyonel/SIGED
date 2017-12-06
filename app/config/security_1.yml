@@ -1,0 +1,32 @@
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\User: Plaintext
+        Sie\AppWebBundle\Entity\Usuario: md5
+    role_hierarchy:
+        ROLE_ADMIN: ['ROLE_USER']
+    providers:
+        chain_providers:
+            chain:
+                providers: [in_memory, user_db]
+        in_memory:
+            memory:
+                users:
+                    admin: { password: adminpass, roles: ROLE_ADMIN }
+        user_db:
+            entity: { class: SieAppWebBundle:Usuario, property:username }
+    firewalls:
+        main:
+            pattern: /.*
+            form_login:
+                login_path: /login
+                check_path: /login_check
+                default_target_path: /sie
+            logout:
+                path: /logout
+                target: /login
+            security: true
+            anonymous: true
+    access_control:
+        - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /searchlibreta, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: /.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }

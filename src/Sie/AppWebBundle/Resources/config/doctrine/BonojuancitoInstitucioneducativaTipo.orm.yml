@@ -1,0 +1,31 @@
+Sie\AppWebBundle\Entity\BonojuancitoInstitucioneducativaTipo:
+    type: entity
+    table: bonojuancito_institucioneducativa_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        bonojuancitoInstitucioneducativa:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: bonojuancito_institucioneducativa
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

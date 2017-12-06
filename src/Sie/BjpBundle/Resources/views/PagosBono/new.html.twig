@@ -1,0 +1,512 @@
+{% extends 'SieBjpBundle:Default:reclamoinstitucioneducativa.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet">
+{% endblock %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Inscripción de Estudiantes
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('estudianteinscripcion')}}">{{ app.session.get('tituloTipo') }}</a>
+                    </li>
+                    <li class="active">Nuevo</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('errorEstudiante') %}
+                <div class="alert alert-danger text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %} 
+            {% for flashMessage in app.session.flashbag.get('errorInscripcion') %}
+                <div class="alert alert-danger text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!-- Website Stats  Widget -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Nueva Inscripción</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <ul id="myTab" class="nav nav-tabs">
+                                <li class="active"><a href="tabs-accordions.html#conRude" data-toggle="tab">Estudiante con Rude</a>
+                                </li>
+                                <li><a href="tabs-accordions.html#sinRude" data-toggle="tab">Estudiante sin Rude</a>
+                                </li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content">
+                                <div class="tab-pane fade in active" id="conRude">
+                                    {{form_start(formConRude, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                    <fieldset><legend>1. Institución Educativa</legend>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{form_label(formConRude.c_codigoIns)}}
+                                                {{form_widget(formConRude.c_codigoIns) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-6 col-md-6">
+                                                {{form_label(formConRude.c_nombreIns)}}
+                                                {{form_widget(formConRude.c_nombreIns) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{form_label(formConRude.c_sucursalIns)}}
+                                                {{form_widget(formConRude.c_sucursalIns) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <filedset><legend>2. Datos del Estudiante</legend>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{form_label(formConRude.c_rude)}}
+                                                {{form_widget(formConRude.c_rude,{'attr':{'onkeyup':'buscarEstudiante(this.value)'} }) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formConRude.c_paterno)}}
+                                                {{form_widget(formConRude.c_paterno) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formConRude.c_materno)}}
+                                                {{form_widget(formConRude.c_materno) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formConRude.c_nombre)}}
+                                                {{form_widget(formConRude.c_nombre) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formConRude.c_fechaNacimiento)}}
+                                                {{form_widget(formConRude.c_fechaNacimiento) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                    </filedset>
+                                    <fieldset><legend>3. Nivel Año/Grado escolar de la o el Estudiante</legend>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formConRude.c_nivel)}}
+                                                {{form_widget(formConRude.c_nivel,{ 'attr':{'onchange':'gradosMostrar(this.value)'}  }) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formConRude.c_grado)}}
+                                                {{form_widget(formConRude.c_grado) }}    
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formConRude.c_paralelo)}}
+                                                {{form_widget(formConRude.c_paralelo) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formConRude.c_turno)}}
+                                                {{form_widget(formConRude.c_turno) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formConRude.c_periodo)}}
+                                                {{form_widget(formConRude.c_periodo)}}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formConRude.c_fechaInscripcion)}}
+                                                <div id="sandbox-container">
+                                                    {{form_widget(formConRude.c_fechaInscripcion)}}
+                                                </div>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <div class="form-group">
+                                        <div class="col-lg-12 text-center">
+                                            {{ form_widget(formConRude.c_guardar ) }}
+                                            <a href="{{path('estudianteinscripcion')}}" class="btn btn-default">Cancelar</a>
+                                        </div>
+                                    </div>
+                                    {{form_end(formConRude)}}
+                                </div>
+                                <div class="tab-pane fade" id="sinRude">
+                                    {{form_start(formSinRude, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                    <fieldset><legend>1. Institución Educativa</legend>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{form_label(formSinRude.codigoIns)}}
+                                                {{form_widget(formSinRude.codigoIns) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-6 col-md-6">
+                                                {{form_label(formSinRude.nombreIns)}}
+                                                {{form_widget(formSinRude.nombreIns) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{form_label(formSinRude.sucursalIns)}}
+                                                {{form_widget(formSinRude.sucursalIns) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <filedset><legend>2. Datos del Estudiante</legend>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{form_label(formSinRude.carnetIdentidad)}}
+                                                {{form_widget(formSinRude.carnetIdentidad) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{form_label(formSinRude.complemento)}}
+                                                {{form_widget(formSinRude.complemento) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.paterno)}}
+                                                {{form_widget(formSinRude.paterno) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.materno)}}
+                                                {{form_widget(formSinRude.materno) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.nombre)}}
+                                                {{form_widget(formSinRude.nombre) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.generoTipo)}}
+                                                {{form_widget(formSinRude.generoTipo) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.pais)}}
+                                                {{form_widget(formSinRude.pais,{'attr':{'onchange':'departamento(this.value)'} }) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.departamento)}}
+                                                {{form_widget(formSinRude.departamento,{'attr':{'onchange':'provincia(this.value)'} }) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.provincia)}}
+                                                {{form_widget(formSinRude.provincia) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.localidad)}}
+                                                {{form_widget(formSinRude.localidad) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.fechaNacimiento)}}
+                                                <div id="sandbox-container">
+                                                    {{form_widget(formSinRude.fechaNacimiento) }}
+                                                </div>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.idiomaMaternoId)}}
+                                                {{form_widget(formSinRude.idiomaMaternoId) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.sangreTipoId)}}
+                                                {{form_widget(formSinRude.sangreTipoId) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.estadoCivil)}}
+                                                {{form_widget(formSinRude.estadoCivil) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.oficialia)}}
+                                                {{form_widget(formSinRude.oficialia) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.libro)}}
+                                                {{form_widget(formSinRude.libro) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.partida)}}
+                                                {{form_widget(formSinRude.partida) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.folio)}}
+                                                {{form_widget(formSinRude.folio) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.celular)}}
+                                                {{form_widget(formSinRude.celular) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.correo)}}
+                                                {{form_widget(formSinRude.correo) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.carnetCodepedis)}}
+                                                {{form_widget(formSinRude.carnetCodepedis) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.carnetIbc)}}
+                                                {{form_widget(formSinRude.carnetIbc) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                    </filedset>
+                                    <fieldset><legend>3. Nivel Año/Grado escolar de la o el Estudiante</legend>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.nivel)}}
+                                                {{form_widget(formSinRude.nivel,{ 'attr':{'onchange':'gradosMostrar1(this.value)'}  }) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.grado)}}
+                                                {{form_widget(formSinRude.grado) }}    
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.paralelo)}}
+                                                {{form_widget(formSinRude.paralelo) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.turno)}}
+                                                {{form_widget(formSinRude.turno) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.periodo)}}
+                                                {{form_widget(formSinRude.periodo) }}
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-3 col-md-6">
+                                                {{ form_label(formSinRude.fechaInscripcion)}}
+                                                <div id="sandbox-container">
+                                                    {{form_widget(formSinRude.fechaInscripcion) }}
+                                                </div>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <div class="form-group">
+                                        <div class="col-lg-12 text-center">
+                                            {{ form_widget(formSinRude.guardar ) }}
+                                            <a href="{{path('estudianteinscripcion')}}" class="btn btn-default">Cancelar</a>
+                                        </div>
+                                    </div>
+                                    {{form_end(formSinRude)}}
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('js/jquery-ui.min.js')}}"></script>
+    <script>
+        $(function () {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('buscarestudiantes_institucion'),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $("#form_c_rude").autocomplete({
+                        source: data
+                    });
+                }
+            });
+        })
+
+        var contador = 0;
+        var peticion;
+        function buscarEstudiante(id) {
+            if (id.length > 13) {
+                contador++;
+                peticion = 'peticion' + contador;
+                peticion = $.ajax({
+                    type: 'get',
+                    url: Routing.generate('buscarestudianteinscripcion', {'id': id}),
+                    beforeSend: function () {
+                        $("#form_c_paterno").val("");
+                        $("#form_c_materno").val("");
+                        $("#form_c_nombre").val("");
+                        $("#form_c_fechaNacimiento").val("");
+                    },
+                    success: function (data) {
+                        $("#form_c_paterno").val(data.paterno);
+                        $("#form_c_materno").val(data.materno);
+                        $("#form_c_nombre").val(data.nombre);
+                        $("#form_c_fechaNacimiento").val(data.fechaNacimiento);
+                    }
+                });
+            } else {
+                $("#form_c_paterno").val("");
+                $("#form_c_materno").val("");
+                $("#form_c_nombre").val("");
+                $("#form_c_fechaNacimiento").val("");
+            }
+
+            //peticion.abort();
+        }
+
+        function departamento(p) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_departamentos', {'pais': p}),
+                beforeSend: function () {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    $("#form_departamento").append('<option value="">Buscando...</option>');
+                    $("#form_provincia").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    $("#form_departamento").append('<option value="">Seleccionar...</option>');
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                    $.each(data.departamento, function (i, value) {
+                        $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        function provincia(d) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_provincias', {'departamento': d}),
+                beforeSend: function () {
+                    $("#form_provincia").empty();
+                    $("#form_provincia").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_provincia").empty();
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+
+        function gradosMostrar(nivel) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('listargrados', {'nivel': nivel}),
+                beforeSend: function () {
+                    $("#form_c_grado").empty();
+                    $("#form_c_grado").append('<option value="">Buscando...</option>');
+                    //$("#form_grado").attr('disabled', 'disabled');
+                },
+                success: function (data) {
+                    $("#form_c_grado").empty();
+                    //$("#form_grado").removeAttr('disabled');
+                    $("#form_c_grado").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listagrados, function (i, value) {
+                        $("#form_c_grado").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+        function gradosMostrar1(nivel) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('listargrados', {'nivel': nivel}),
+                beforeSend: function () {
+                    $("#form_grado").empty();
+                    $("#form_grado").append('<option value="">Buscando...</option>');
+                    //$("#form_grado").attr('disabled', 'disabled');
+                },
+                success: function (data) {
+                    $("#form_grado").empty();
+                    //$("#form_grado").removeAttr('disabled');
+                    $("#form_grado").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listagrados, function (i, value) {
+                        $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}
+
+
+

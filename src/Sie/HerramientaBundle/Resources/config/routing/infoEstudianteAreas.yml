@@ -1,0 +1,29 @@
+herramienta_infoEstudianteAreas_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreas:index"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteAreas_new:
+    path:     /new
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreas:new"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteAreas_delete:
+    path:     /delete
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreas:delete"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteAreas_maestros:
+    path:     /maestros
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreas:maestros"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteAreas_maestros_asignar:
+    path:     /maestrosAsignar
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteAreas:maestrosAsignar"}
+    options:
+         expose: true

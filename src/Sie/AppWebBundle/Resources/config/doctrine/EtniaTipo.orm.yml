@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\EtniaTipo:
+    type: entity
+    table: etnia_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        etnia:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

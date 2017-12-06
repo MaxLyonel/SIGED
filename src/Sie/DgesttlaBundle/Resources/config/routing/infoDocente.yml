@@ -1,0 +1,102 @@
+dgesttla_info_docente_index:
+    path:     /
+    defaults: { _controller: SieDgesttlaBundle:InfoDocente:index}
+
+dgesttla_info_docente_tsie_index:
+    path:     /tsie
+    defaults: { _controller: SieDgesttlaBundle:InfoDocente:indexTecSie}    
+
+dgesttla_info_docente_second:
+    path:     /sie/second
+    defaults: { _controller: SieDgesttlaBundle:InfoDocente:second}
+
+dgesttla_info_docente_third:
+    path:     /sie/third
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:loadThird"}
+    options:
+         expose: true
+
+dgesttla_info_docente_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:show" }
+
+dgesttla_info_docente_new:
+    path:     /new/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:new" }
+    methods:  [POST, PUT]
+
+dgesttla_info_docente_create:
+    path:     /create/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:create" }
+    methods:  POST
+
+dgesttla_info_docente_edit:
+    path:     /edit/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:edit" }
+    methods:  [POST, PUT]
+
+dgesttla_info_docente_update:
+    path:     /update/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:update" }
+    methods:  [POST, PUT]
+
+dgesttla_info_docente_delete:
+    path:     /delete/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:delete" }
+    methods:  [POST, DELETE]
+    
+dgesttla_info_docente_search:
+    path:     /search/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:search" }
+    methods:  POST
+
+dgesttla_info_docente_find:
+    path:     /find/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:find" }
+    
+dgesttla_info_docente_result:
+    path:     /result/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:result" }    
+
+dgesttla_listaridiomasleehablaescribe:
+     path:    /idiomas/
+     defaults: { _controller: SieDgesttlaBundle:InfoDocente:listaridiomasleehablaescribe }
+     options:
+         expose: true
+
+dgesttla_listaridiomasleehablaescribe_edit:
+     path:    /idiomasmaestro/{idMaestroInscripcion}/
+     defaults: { _controller: SieDgesttlaBundle:InfoDocente:listaridiomasleehablaescribeedit }
+     options:
+         expose: true
+
+dgesttla_verificar_existe_persona:
+     path:    /verificar_existe_persona/{carnet}/
+     defaults: { _controller: SieDgesttlaBundle:InfoDocente:verificar_existe_persona }
+     options:
+         expose: true    
+
+dgesttla_info_docente_es_vigente:
+    path:     /vigenteDoc/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:esVigenteDocente" }
+    methods:  [POST, PUT]         
+
+dgesttla_info_docente_migrar_index:
+    path:     /maestromigrar/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocenteMigrar:index" }
+
+dgesttla_info_docente_ratificar:
+    path:     /ratificarMaestro/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocenteMigrar:ratificarMaestro" }
+
+dgesttla_info_docente_ddjj:
+    path:     /maestroDDJJ/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocenteMigrar:maestroDDJJ" }
+
+dgesttla_info_docente_ratificar_currentyear:
+    path:     /ratificarMaestroCurrent/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocenteMigrar:ratificarMaestroCurrent" }
+
+dgesttla_info_docente_habilitar_ddjj:
+    path:     /maestrohabilitarDDJJ/
+    defaults: { _controller: "SieDgesttlaBundle:InfoDocente:maestroHabilitarDDJJ" }

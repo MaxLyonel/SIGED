@@ -1,0 +1,61 @@
+<p>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Datos Personales</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-3">
+                <h4><small>NOMBRES :</small><br>{{ persona.nombre }}</h4>
+            </div>
+            <div class="col-xs-3">
+                <h4><small>APELLIDO PATERNO :</small><br>{{ persona.paterno }}</h4>
+            </div>
+            <div class="col-xs-3">
+                <h4><small>APELLIDO MATERNO :</small><br>{{ persona.materno }}</h4>
+            </div>
+            <div class="col-md-3">
+                <h4><small>NUMERO DE CARNET :</small><br>{{ persona.carnet }}</h4>
+            </div>
+        </div>
+    </div>
+</div>         
+<p> 
+{#{{ form_start(form,{'attr':{'id':'formAreas','onsubmit':'return validateForm()'} })}}#}
+{{ form_start(form, {'method': 'GET'}) }}    
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Datos de la cuenta del usuario</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-4">            
+                {{ form_row(form.usuario, { 'id': 'username'}) }}                    
+            </div>
+            <div class="col-xs-4">            
+                {{ form_row(form.password, { 'id': 'password' }) }}                  
+            </div>
+            <div class="col-xs-4">            
+                {{ form_row(form.rolTipo, { 'id': 'roltipo' }) }}
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+<div id="roles" style="visibility: hidden;">    
+    {{rolesids}}
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-4">                
+            </div>
+            <div class="col-xs-4">
+                <a role="button" class="btn btn-default btn-large glyphicon glyphicon-remove-sign" href="#" onclick="modaluserclose();"> Cerrar</a>
+            </div>                        
+            <div class="col-xs-4">                
+            </div>
+        </div>
+    </div>
+</div>   
+{{ form_end(form) }}

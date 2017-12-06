@@ -1,0 +1,31 @@
+Sie\AppWebBundle\Entity\EstadoinstitucionTipo:
+    type: entity
+    table: estadoinstitucion_tipo
+    uniqueConstraints:
+        estadoinstitucion_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estadoinstitucion:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+        obsCerrada:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: obs_cerrada
+    lifecycleCallbacks: {  }

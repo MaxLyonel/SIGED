@@ -1,0 +1,20 @@
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-info btn-xs dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" aria-haspopup="true">
+                                                Acciones <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                {% if [persona.carnet,persona.complemento]|join|trim != persona.username %}
+                                                    <li><a class="glyphicon glyphicon-star-empty" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> <span class="label label-danger">Debe actualizar el Nombre de usuario por número de carnet.</span></a></li>
+                                                {% endif %}
+                                                <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li> 
+                                                <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li> 
+                                                <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>                                            
+                                                <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                                                                        
+                                                
+                                                {% if is_granted('ROLE_TECSS_USU')  %}
+                                                    <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioDesactivar({{persona.usuarioid}})"> Activar/Desactivar Usuario {{persona.usuarioesactivo}} </a></li>
+                                                {% elseif persona.usuarioesactivo is not null and is_granted('ROLE_TECSN_USU')  %}
+                                                    <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioDesactivar({{persona.usuarioid}})"> Activar/Desactivar Usuario {{persona.usuarioesactivo}} </a></li>
+                                                {% endif %}
+                                            </ul>
+                                        </div>

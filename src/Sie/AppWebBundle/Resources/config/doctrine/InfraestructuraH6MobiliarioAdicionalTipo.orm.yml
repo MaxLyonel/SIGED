@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH6MobiliarioAdicionalTipo:
+    type: entity
+    table: infraestructura_h6_mobiliario_adicional_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraMobiliarioAdicional:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_mobiliario_adicional
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,38 @@
+Sie\AppWebBundle\Entity\IdiomaoriginarioTipo:
+    type: entity
+    table: idiomaoriginario_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        idioma:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+        nivelTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: nivel_tipo_id
+        cicloTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: ciclo_tipo_id
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

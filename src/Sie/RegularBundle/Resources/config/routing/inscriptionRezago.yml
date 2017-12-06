@@ -1,0 +1,49 @@
+inscription_rezago_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InscriptionRezago:index }
+
+inscription_rezago_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InscriptionRezago:result }
+
+inscription_rezago_findIE:
+     path:    /findIE/{id}/{nivel}/{grado}/{lastue}
+     defaults: { _controller: SieRegularBundle:InscriptionRezago:findIE }
+     options:
+         expose: true
+
+inscription_rezago_saveMateriasNotas:
+    path: /saveMateriasNotas
+    defaults: { _controller: SieRegularBundle:InscriptionRezago:saveMateriasNotas }
+
+inscription_rezago_norude:
+    path:    /norude
+    defaults: { _controller: SieRegularBundle:InscriptionRezago:norude }
+
+inscription_rezago_regNotas:
+    path:    /regNotas
+    defaults: { _controller: SieRegularBundle:InscriptionRezago:regNotas }
+    options:
+        expose: true
+
+inscription_rezago_saveData:
+    path: /saveData
+    defaults: { _controller: SieRegularBundle:InscriptionRezago:saveData }
+
+inscription_rezago_saveext:
+    path: /saveext
+    defaults: { _controller: SieRegularBundle:InscriptionRezago:saveext }
+
+inscription_rezago_savenew:
+    path:    /saveNew
+    defaults: { _controller: SieRegularBundle:InscriptionRezago:savenew }
+
+inscription_rezago_savenewextranjero:
+    path:    /saveNewExtranjero
+    defaults: { _controller: SieRegularBundle:InscriptionRezago:savenewextranjero }
+
+inscription_rezago_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieRegularBundle:InscriptionRezago:findturno }
+    options:
+        expose: true

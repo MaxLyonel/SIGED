@@ -1,0 +1,25 @@
+infra_ambientesPedagogicos_index:
+    path:     /
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesPedagogicos:index" }
+
+infra_ambientesPedagogicos_adicionar:
+    path:     /adicionar
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesPedagogicos:adicionar" }
+    options:
+        expose: true
+
+infra_ambientesPedagogicos_saveAmbientesPedagogicos:
+    path:     /saveData/
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesPedagogicos:saveAmbientesPedagogicos" }
+    options:
+        expose: true
+
+infra_ambientesPedagogicos_deleteAmbientesPedagogicos:
+    path:     /deleteData/
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesPedagogicos:deleteAmbientesPedagogicos" }
+    options:
+        expose: true
+
+infra_ambientesPedagogicos_infosave:
+    path:     /infosave/
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesPedagogicos:infoSave" }

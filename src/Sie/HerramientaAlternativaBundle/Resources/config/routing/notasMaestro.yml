@@ -1,0 +1,20 @@
+herramienta_alter_notas_maestro_index:
+    path:     /
+    defaults: { _controller: "SieHerramientaAlternativaBundle:NotasMaestro:index" }
+    methods:  [GET, POST]
+
+herramienta_alter_notas_maestro_new:
+    path:     /new
+    defaults: { _controller: "SieHerramientaAlternativaBundle:NotasMaestro:new" }
+    methods:  POST
+
+herramienta_alter_notas_maestro_createUpdate:
+    path:     /createUpdate
+    defaults: { _controller: "SieHerramientaAlternativaBundle:NotasMaestro:createUpdate" }
+    methods:  POST
+
+herramienta_alter_notas_maestro_ajax:
+    path:     /ajax
+    defaults: { _controller: SieHerramientaAlternativaBundle:NotasMaestro:ajax }
+    options:
+         expose: true

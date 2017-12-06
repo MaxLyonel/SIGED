@@ -1,0 +1,220 @@
+Sie\AppWebBundle\Entity\InfraestructuraH1Datosgenerales:
+    type: entity
+    table: infraestructura_h1_datosgenerales
+    indexes:
+        IDX_2CED21CF53BED532:
+            columns:
+                - infraestructura_juridiccion_geografica_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n110Zonabarrio:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: n110_zonabarrio
+        n111Macrodistrito:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: n111_macrodistrito
+        n112Distritomun:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: n112_distritomun
+        n21Calleavenida:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: n21_calleavenida
+        n22Descripcionacceso:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n22_descripcionacceso
+        n31Tramotroncal:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n31_tramotroncal
+        n32Tramocomplementaria:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n32_tramocomplementaria
+        n33Tramovecinal:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n33_tramovecinal
+        n34TerrestreDias:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_terrestre_dias
+        n34TerrestreHrs:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_terrestre_hrs
+        n34TerrestreMin:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_terrestre_min
+        n34TerrestreCosto:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_terrestre_costo
+        n34TerrestreDescripcion:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n34_terrestre_descripcion
+        n34FluvialDias:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_fluvial_dias
+        n34FluvialHrs:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_fluvial_hrs
+        n34FluvialMin:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_fluvial_min
+        n34FluvialCosto:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_fluvial_costo
+        n34FluvialDescripcion:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n34_fluvial_descripcion
+        n34AereoDias:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_aereo_dias
+        n34AereoHrs:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_aereo_hrs
+        n34AereoMin:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_aereo_min
+        n34AereoCosto:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_aereo_costo
+        n34AereoDescripcion:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n34_aereo_descripcion
+        n34CombinacionDias:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_combinacion_dias
+        n34CombinacionHrs:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_combinacion_hrs
+        n34CombinacionMin:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_combinacion_min
+        n34CombinacionCosto:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_combinacion_costo
+        n34CombinacionDescripcion:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n34_combinacion_descripcion
+        n5Obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: n5_obs
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        infraestructuraJuridiccionGeografica:
+            targetEntity: InfraestructuraJuridiccionGeografica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_juridiccion_geografica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

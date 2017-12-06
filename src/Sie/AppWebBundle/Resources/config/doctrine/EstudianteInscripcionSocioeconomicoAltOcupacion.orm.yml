@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltOcupacion:
+    type: entity
+    table: estudiante_inscripcion_socioeconomico_alt_ocupacion
+    indexes:
+        IDX_7FA390D416B5DBE3:
+            columns:
+                - estudiante_inscripcion_socioeconomico_alternativa_id
+        IDX_7FA390D454FA9595:
+            columns:
+                - estudiante_inscripcion_socioeconomico_alt_ocupacion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        estudianteInscripcionSocioeconomicoAlternativa:
+            targetEntity: EstudianteInscripcionSocioeconomicoAlternativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_socioeconomico_alternativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcionSocioeconomicoAltOcupacionTipo:
+            targetEntity: EstudianteInscripcionSocioeconomicoAltOcupacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_socioeconomico_alt_ocupacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

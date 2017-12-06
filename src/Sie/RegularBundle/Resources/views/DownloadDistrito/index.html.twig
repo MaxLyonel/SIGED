@@ -1,0 +1,120 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %} 
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-home animated flip"></i>Reporte Total de Estudiantes
+                    <small> Bono Juancito Pinto</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar por Distrito</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag.get('noticeddjj') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successddjj') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+
+
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div class="panel panel-icon panel-primary">
+                <div class="panel-heading">
+                    <i class="fa fa-search"></i>
+                </div>
+                <div class="panel-body">
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form'} } )}}
+                    <div class="row">
+                        <div class="col-md-4 col-md-offset-4">
+                            <label for="">{{form_label(form.distrito)}}</label>
+                            {{form_widget(form.distrito )}}
+                        </div>
+                        <div class="col-md-4">
+                            <p></p>
+                            {{ form_widget(form.search) }}
+
+                        </div>
+                        {{form_end(form)}}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="geneFile"></div>
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+
+
+
+        var generateFile = function () {
+            //get the values
+            distrito = $('#form_distrito').val();
+            if (distrito.length < 3) {
+                alert("Necesita código Distrito para generar el archivo");
+                return false;
+            }
+
+
+            $.ajax({
+                type: 'post',
+                data: ({distrito: distrito}),
+                url: Routing.generate('download_distrito_sie_build'),
+                beforeSend: function () {
+                    $("#geneFile").empty();
+                    $("#geneFile").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#geneFile").empty();
+                    $("#geneFile").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+    </script>
+{%endblock%}
+

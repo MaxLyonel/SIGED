@@ -1,0 +1,155 @@
+{% extends "::layoutTramites.html.twig"%}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+    </style>
+{% endblock %}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('sie_tramites_homepage')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+        </li>        
+        {% block contentSearchBread %}
+        {% endblock %} 
+    </ol>
+{% endblock %} 
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel shadow">
+                <div id="tour-15" style="display: block;" class="panel-body"> 
+                    {% if formBusqueda is defined  %}     
+                        {{form_start(formBusqueda, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                            <form class="form-horizontal">
+                                <div class="form-body">
+                                    <div class="form-group no-margin">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {{ form_widget(formBusqueda.rude) }}
+                                            </div>                                            
+                                            <div class="col-md-6">
+                                                {{ form_widget(formBusqueda.search,{ 'attr':{'class':'btn btn-primary mb-15 btn-block' } } ) }}
+                                            </div>
+                                        </div>
+                                    </div><!-- /.form-group -->                                
+                                </div><!-- /.form-body -->                            
+                            </form>                        
+                        {{form_end(formBusqueda)}}
+                    {% endif %}
+                </div><!-- /.panel-body -->
+            </div>           
+        </div>
+    </div><!-- /.row -->
+    {% if listaBusqueda is defined  %}   
+        <div class="row">    
+            <div class="col-lg-12 col-md-12 col-sm-12">  
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h4 class="panel-title">Resultado de búsqueda</h4>
+                        </div>
+                        <div class="pull-right">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">  
+                        <table id="listaBusqueda" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px; text-align:center;">#</th>
+                                    <th style="text-align:center;">Tipo trámite</th>
+                                    <th style="text-align:center;">Trámite</th>
+                                    <th style="text-align:center;">Número y Serie</th>
+                                    <th style="text-align:center;">Código Rude</th>
+                                    <th style="text-align:center;">Paterno</th>
+                                    <th style="text-align:center;">Materno</th>
+                                    <th style="text-align:center;">Nombre</th>
+                                    <th style="width:50px; text-align:center;">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tipo trámite</th>
+                                    <th>Trámite</th>
+                                    <th>Número y Serie</th>
+                                    <th>Código Rude</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>Nombre</th>
+                                    <th style="text-align:center;">
+                                        &nbsp; 
+                                    </th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for registro in listaBusqueda %}
+                                    <tr>
+                                        <td style="text-align:center;">{{ loop.index }}</td>
+                                        <td>{{ registro.tramiteTipo }}</td>
+                                        <td>{{ registro.tramite }}</td>
+                                        <td>{{ registro.serie }}</td>
+                                        <td>{{ registro.rude }}</td>
+                                        <td>{{ registro.paterno }}</td>
+                                        <td>{{ registro.materno }}</td>
+                                        <td>{{ registro.nombre }}</td>
+                                        <td style="text-align:center;">   
+                                            <form name="form" role="form" action="{{ path('sie_tramite_seguimiento_rude_detalle') }}" method="POST"> 
+                                                <input type="hidden" name="codigo" value="{{ registro.id|base64_encode }}" />
+                                                <button type="submit" class="btn btn-success btn-xs" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>   
+                                            </form>                     
+                                        </td>
+                                    </tr> 
+                                {% endfor %} 
+                            </tbody>  
+                        </table>  
+                    </div><!-- /.panel-body -->
+                    <div class="panel-footer"> 
+                    </div><!-- /.panel-foot -->
+                </div>
+            </div> 
+        </div><!-- /.row -->    
+    {% endif %}   
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>        
+       $(window).load(function(){
+            // Setup - add a text input to each footer cell
+            $('#listaBusqueda tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "#"){   
+                    $(this).html('');
+                } else {     
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );            
+                }
+            } );
+         
+            // DataTable
+            var table = $('#listaBusqueda').DataTable( {
+                    //"order": [[ 3, "asc" ]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": 7 }
+                    ],
+                }
+            );
+         
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+         
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        });
+    </script>
+{%endblock%}

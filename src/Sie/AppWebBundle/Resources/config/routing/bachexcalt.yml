@@ -1,0 +1,72 @@
+bach_exc_alt:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:index" }
+
+bach_exc_alt_dir:
+    path:     /index-dir
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:indexDir" }
+    
+bach_exc_alt_rst:
+    path:     /index-rst
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:indexRst" }    
+
+bach_exc_alt_ddjj:
+    path:     /index-ddjj
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:declaracionJurada" }
+
+bach_exc_alt_ddjj_dir:
+    path:     /index-ddjj-dir
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:declaracionJuradaDir" }
+    
+bach_exc_alt_ie_search:
+    path:     /ie-search
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:resultSearchIe" }
+    methods:  POST
+
+bach_exc_alt_ie_dir_search:
+    path:     /ie-dir-search
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:resultSearchIeDir" }
+    methods:  POST  
+    
+bach_exc_alt_ie_rst_search:
+    path:     /ie-rst-search
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:resultSearchIeRst" }
+    methods:  POST      
+
+bach_exc_alt_create:
+    path:     /be-create
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:beCreate" }
+    options:
+         expose: true
+
+bach_exc_alt_student_info:
+    path:     /be-student/{estId}/{estinsId}/{instId}/{genId}
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:infoStudent" }    
+    options:
+        expose: true
+        
+alt_ie_autocomplete:
+    path: /ie-autocomplete
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:getIes" }
+
+alt_cta_banc_dir_create:
+    path:     /cta-create
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:dirCtaCreate" }
+    options:
+         expose: true        
+
+bach_exc_alt_imprime:
+    path:     /imprime-ddj
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:impresionDDJJ" }
+    
+bach_exc_alt_imprime_dir:
+    path:     /imprime-ddj-dir
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:impresionDDJJDir" }    
+
+alt_cta_banc_dir_rst:
+    path:     /{ie}/estado-dir
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:dirCtaRst" }    
+
+bach_exc_alt_pf_rst:    
+    path:     /{ie}/{ed}/{g}/estado-be
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelenciaAlternativa:beRst" }    

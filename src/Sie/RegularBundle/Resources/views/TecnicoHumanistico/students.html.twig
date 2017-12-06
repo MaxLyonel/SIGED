@@ -1,0 +1,36 @@
+<h4>
+    <small>Estudiantes</small>
+</h4>
+<div id="no-more-tables">
+    <table id="myTableStudent" class="table table-bordered table-hover cf ">
+
+        <thead class="">
+            <tr class="">
+                <th><small>No.</small></th>
+                <th><small>Nombre</small></th>
+                <th><small>RUDE</small></th>
+                <th><small>F. Nac.</small></th>
+                <th><small>Opción</small></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for entity in students %}
+                <tr>
+                    <td data-title="No."><small>{{loop.index}}</small></td>
+                    <td data-title="Nombre"><small>{{entity.paterno}} {{entity.materno}} {{entity.nombre}}</small></td>
+                    <td data-title="Rude"><small>{{entity.codigoRude}}</small></td>
+                    <td data-title="Fec. Nac."><small>{{entity.fechaNacimiento | date('d-m-y')}}</small></td>
+
+                    <td data-title="Opción">
+                        <div id="ansInscription{{loop.index}}">
+                            <a href="#"  onclick="openRegistro({{entity.idIns}}, '{{entity.codigoRude}}',{{loop.index}} )"><small>Registro</small></a>
+                        </div>
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>

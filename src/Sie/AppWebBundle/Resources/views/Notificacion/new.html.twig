@@ -1,0 +1,127 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Notificación
+                    <small>Crear</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-edit"></i> Crear</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4><i class="fa fa-plus-square"></i> Nueva Notificación</h4>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+                            {{ form_start(form, { 'attr': {'class': 'form-horizontal'} } ) }}
+                            {{ form_errors(form) }}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(form.titulo) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.titulo, { 'attr': {'class': 'form-control'} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(form.mensaje) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.mensaje, { 'attr': {'class': 'form-control'} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(form.fechaCrea) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.fechaCrea) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(form.fechaPub) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.fechaPub) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(form.adjunto) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.adjunto) }}
+                                </div>
+                            </div>                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(form.noticiaTipo) }}</label>
+                                <div class="col-sm-3">
+                                    {{ form_widget(form.noticiaTipo, { 'attr': {'class': 'form-control'} }) }}
+                                </div>
+                            </div>
+                                <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(form.envioTipo) }}</label>
+                                <div class="col-sm-3">
+                                    {{ form_widget(form.envioTipo, { 'attr': {'class': 'form-control'} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(form.rolTipo) }}</label>
+                                <div class="col-sm-6">
+                                    {{ form_widget(form.rolTipo, { 'attr': {'class': 'form-control js-example-basic-multiple' } }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <div class="checkbox">
+                                        <label>
+                                            {{ form_widget(form.estado) }} {{ form_label(form.estado) }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(form.usuarioId) }}</label>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.usuarioId, { 'attr': {'class': 'form-control', 'value': app.session.get('userId') } }) }}
+                                    <p class="form-control-static">{{app.session.get('lastname')}} {{app.session.get('lastname2')}} {{app.session.get('name')}}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    {{ form_widget(form.submit, { 'attr': {'class': 'btn btn-default'} }) }}
+                                </div>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <a href="{{ path('notificacion') }}" class="btn btn-link">
+                <i class="fa fa-hand-o-left"></i> Retornar al listado
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block autocompletar %}
+    <script>
+        $(document).ready(function () {
+            $(".js-example-basic-multiple").select2();
+        });
+    </script>
+{% endblock %}

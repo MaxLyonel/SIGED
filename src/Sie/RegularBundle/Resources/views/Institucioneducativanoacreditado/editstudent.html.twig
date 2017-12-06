@@ -1,0 +1,104 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption%}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Unidades Educativas en Proceso de Apertura
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="index.html">U.E. No Acreditadas</a>
+                    </li>
+                    <li class="active">Lista </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag().get('warning') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag().get('success') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>U.E no Acreditadas</h4>
+                    </div>
+                    <div class="portlet-widgets">
+
+                        <span class="divider"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+                        {{form_start(form)}}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{form_label(form.ci)}}
+                                {{form_widget(form.ci)}}
+                            </div>
+                            <div class="col-md-6">
+                                {{form_label(form.fnac)}}
+                                <div class="sandbox-container">
+                                    {{form_widget(form.fnac)}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class="col-md-4">
+                                {{form_label(form.nombre)}}
+                                {{form_widget(form.nombre)}}
+                            </div>
+                            <div class='col-md-4'>
+                                {{form_label(form.paterno)}}
+                                {{form_widget(form.paterno)}}
+                            </div>
+                            <div class='col-md-4'>
+                                {{form_label(form.materno)}}
+                                {{form_widget(form.materno)}}
+                            </div>
+
+                        </div>
+                        <br />
+                        {{form_widget(form.save)}}
+                        <button type="button" class="btn btn-white" onclick="history.back()"> Cancelar</button>
+
+                        {{form_end(form)}}
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--div class="row">
+    <div class="col-md-12">
+        <a href="{{path('sie_ienoacreditadas')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+    </div>
+</div-->
+{% endblock %}

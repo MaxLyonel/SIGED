@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH3FuenteElectricaTipo:
+    type: entity
+    table: infraestructura_h3_fuente_electrica_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraFuenteelectrica:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_fuenteelectrica
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,4 @@
+services:
+#    sie_juegos.example:
+#        class: Sie\JuegosBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

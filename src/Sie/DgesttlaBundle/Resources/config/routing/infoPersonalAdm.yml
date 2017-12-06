@@ -1,0 +1,87 @@
+dgesttla_info_personal_adm_index:
+    path:     /
+    defaults: { _controller: SieDgesttlaBundle:InfoPersonalAdm:index}
+
+dgesttla_info_personal_adm_tsie_index:
+    path:     /tsie
+    defaults: { _controller: SieDgesttlaBundle:InfoPersonalAdm:indexTecSie}
+
+dgesttla_info_personal_adm_second:
+    path:     /sie/second
+    defaults: { _controller: SieDgesttlaBundle:InfoPersonalAdm:second}
+
+dgesttla_info_personal_adm_third:
+    path:     /sie/third
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:loadThird"}
+    options:
+         expose: true
+         
+dgesttla_info_personal_adm_index:
+    path:     /
+    defaults: { _controller: SieDgesttlaBundle:InfoPersonalAdm:index }
+
+dgesttla_info_personal_adm_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:show" }
+
+dgesttla_info_personal_adm_new:
+    path:     /new/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:new" }
+
+dgesttla_info_personal_adm_create:
+    path:     /create/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:create" }
+    methods:  POST
+
+dgesttla_info_personal_adm_edit:
+    path:     /edit/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:edit" }
+    methods:  [POST, PUT]
+
+dgesttla_info_personal_adm_update:
+    path:     /update/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:update" }
+    methods:  [POST, PUT]
+
+dgesttla_info_personal_adm_es_vigente_administrativo:
+    path:     /administrativo/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:esVigenteAdministrativo" }
+    methods:  [POST, PUT]         
+
+dgesttla_info_personal_adm_delete:
+    path:     /delete/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:delete" }
+    methods:  [POST, DELETE]    
+    
+dgesttla_info_personal_adm_search:
+    path:     /search/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:search" }
+    methods:  POST
+
+dgesttla_info_personal_adm_find:
+    path:     /find/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:find" }
+    
+dgesttla_info_personal_adm_result:
+    path:     /result/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:result" }
+
+dgesttla_info_personal_adm_migrar_index:
+    path:     /admmigrar/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmMigrar:index" }
+
+dgesttla_info_personal_adm_ratificar:
+    path:     /ratificarAdm/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmMigrar:ratificarAdm" }
+
+dgesttla_info_personal_adm_ddjj:
+    path:     /admDJJ/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmMigrar:admDDJJ" }
+
+dgesttla_info_personal_adm_ratificar_currentyear:
+    path:     /ratificarAdmCurrent/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmMigrar:ratificarAdmCurrent" }
+
+dgesttla_info_personal_adm_habilitar_ddjj:
+    path:     /admhabilitarDDJJ/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdm:admHabilitarDDJJ" }

@@ -1,0 +1,87 @@
+{% extends 'SieRueBundle:Default:rue.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="block-header">
+        <h2>REGISTRO DE LOCAL EDUCATIVO</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('le')}}">Registro de Local Educativo</a></li>
+        <li class="active">Resultado de la búsqueda</li>
+    </ol>
+
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        LOCAL(ES) EDUCATIVO(S)
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <table class="table table-bordered table-striped table-hover js-exportable dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Acciones</th>
+                                        <th>Código Local</th>
+                                        <th>Departamento</th>
+                                        <th>Provincia</th>
+                                        <th>Municipio</th>
+                                        <th>Cantón</th>
+                                        <th>Localidad</th>
+                                        <th>Zona</th>
+                                        <th>Dirección</th>
+                                        <th>Distrito</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Acciones</th>
+                                        <th>Código Local</th>
+                                        <th>Departamento</th>
+                                        <th>Provincia</th>
+                                        <th>Municipio</th>
+                                        <th>Cantón</th>
+                                        <th>Localidad</th>
+                                        <th>Zona</th>
+                                        <th>Dirección</th>
+                                        <th>Distrito</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for entity in entities %}
+                                        <tr>
+                                            <td class="text-center">
+                                                <form action="{{path('le_edit')}}" method="post" style="display:inline-block">
+                                                    <input type="hidden" name="idLe" value="{{entity.id}}">
+                                                    <button type="submit" class="btn btn-xs bg-pink waves-effect">
+                                                        <i class="material-icons">mode_edit</i> Editar
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td>{{ entity.id }}</td>
+                                            <td>{{ entity.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>
+                                            <td>{{ entity.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>
+                                            <td>{{ entity.lugarTipoLocalidad.lugarTipo.lugarTipo.lugar }}</td>
+                                            <td>{{ entity.lugarTipoLocalidad.lugarTipo.lugar }}</td>
+                                            <td>{{ entity.lugarTipoLocalidad.lugar }}</td>
+                                            <td>{{ entity.zona }}</td>
+                                            <td>{{ entity.direccion }}</td>
+                                            <td>{{ entity.distritoTipo.distrito }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Basic Examples -->
+
+   {% endblock %}

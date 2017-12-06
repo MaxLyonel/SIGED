@@ -1,0 +1,60 @@
+Sie\AppWebBundle\Entity\Permiso:
+    type: entity
+    table: permiso
+    indexes:
+        IDX_FD7AAB9E6FB5AA13:
+            columns:
+                - menu_objeto_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        permiso:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        create:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: _create
+        read:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: _read
+        delete:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: _delete
+        update:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: _update
+        obs:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    manyToOne:
+        menuObjeto:
+            targetEntity: MenuObjeto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                menu_objeto_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

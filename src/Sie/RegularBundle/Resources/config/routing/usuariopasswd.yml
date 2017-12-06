@@ -1,0 +1,9 @@
+usuariopasswd:
+    path:     /
+    defaults: { _controller: "SieUsuariosBundle:Usuariopasswd:index" }
+
+usuario_update_passwd:
+    path:     /update
+    defaults: { _controller: "SieUsuariosBundle:Usuariopasswd:updatepasswd" }
+
+    

@@ -1,0 +1,131 @@
+sie_usuarios_homepage:
+    path:     /acceso/usuarios_index/
+    defaults: { _controller: SieUsuariosBundle:Default:index }
+
+sie_usuarios_show:
+    path:     /ususie/{usuarioid}/usershow/
+    defaults: { _controller: SieUsuariosBundle:Default:usershow }
+    options:
+         expose: true
+  
+sie_usuarios_usuario_nuevo:
+    path:     /ususie/{personaid}/usuarionuevo/
+    defaults: { _controller: SieUsuariosBundle:Default:usuarionuevo }
+    options:
+         expose: true
+
+sie_usuarios_insert:
+    path:     /ususie/userinsert/
+    defaults: { _controller: SieUsuariosBundle:Default:userinsert }
+    options:
+         expose: true
+         
+sie_usuarios_rol_edit:
+    path:     /ususie/{usuarioid}/userroledit/
+    defaults: { _controller: SieUsuariosBundle:Default:userroledit }
+    options:
+         expose: true
+    
+sie_usuarios_reset_login:
+    path:     /acceso/{usuarioid}/userresetlogin/
+    defaults: { _controller: SieUsuariosBundle:Usuariopasswd:userresetlogin }    
+    
+sie_usuarios_reset:
+    path:     /ususie/{usuarioid}/userreset/
+    defaults: { _controller: SieUsuariosBundle:Default:userreset }
+    options:
+         expose: true
+         
+sie_usuarios_reset_update:
+    path:     /ususie/userresetupdate/
+    defaults: { _controller: SieUsuariosBundle:Default:userresetupdate }
+    options:
+         expose: true
+         
+sie_usuarios_cambio_estado:
+    path:     /ususie/{usuarioid}/userchangestate/
+    defaults: { _controller: SieUsuariosBundle:Default:userchangestate }    
+    options:
+         expose: true         
+         
+sie_usuarios_desactivar_rol:
+    path:     /ususie/{usuarioid}/{usuariorolid}/userroldisable/
+    defaults: { _controller: SieUsuariosBundle:Default:userroldisable }    
+    options:
+         expose: true         
+         
+sie_usuarios_desactivar_rol_modal:
+    path:     /ususie/{usuarioid}/{usuariorolid}/userroldisable/
+    defaults: { _controller: SieUsuariosBundle:Default:userroldisable }    
+    options:
+         expose: true             
+         
+sie_usuarios_guardar_locacion:
+    path:     /ususie/{usuariorolid}/{lugar_tipoid}/userrollocacion/
+    defaults: { _controller: SieUsuariosBundle:Default:userrollocacion }    
+    options:
+         expose: true
+
+sie_usuarios_guardar_sub_sistema:
+    path:     /ususie/{usuariorolid}/{value}/userrolsubsistema/
+    defaults: { _controller: SieUsuariosBundle:Default:userrolsubsistema }    
+    options:
+         expose: true           
+         
+sie_usuarios_rol_lugar_tipo_id:
+    path:     /ususie/{ids}/{depid}/{disid}/lugar_tipo_id/
+    defaults: { _controller: SieUsuariosBundle:Default:rollugartipo }
+    options:
+         expose: true
+
+sie_usuarioid_rol_lugar_tipo_id:
+    path:     /ususie/{usuarioid}/lugar_tipo_id/
+    defaults: { _controller: SieUsuariosBundle:Default:usuarioroles }
+    options:
+         expose: true
+
+sie_usuarios_rol_lugar_dis_id:
+    path:     /ususie/{id}/{d}/lugar_dis_id/
+    defaults: { _controller: SieUsuariosBundle:Default:rollugardisid }
+    options:
+         expose: true
+    
+sie_usuario_persona:
+    resource: "@SieUsuariosBundle/Resources/config/routing/persona.yml"
+    prefix:   /ususie/usuarios/persona
+    
+sie_usuario_busquedas:
+    resource: "@SieUsuariosBundle/Resources/config/routing/busquedas.yml"
+    prefix:   /ususie/usuarios/busquedas
+    
+sie_usuario_roladmin:
+    resource: "@SieUsuariosBundle/Resources/config/routing/roladmin.yml"
+    prefix:   /ususie/usuarios/roladmin    
+
+sie_usuario_listas:
+    resource: "@SieUsuariosBundle/Resources/config/routing/listas.yml"
+    prefix:   /ususie/usuarios/listas
+         
+usuariopasswd:
+    path:     /
+    defaults: { _controller: "SieUsuariosBundle:Usuariopasswd:index" }      
+    
+sie_usuarios_update_username:
+    path:     /ususie/{usuarioid}/usernameupdate/
+    defaults: { _controller: SieUsuariosBundle:Default:usernameupdate }
+    options:
+         expose: true
+
+sie_usuarios_update_username_login:
+    path:     /ususie/{usuarioid}/usernameupdatelogin/
+    defaults: { _controller: SieUsuariosBundle:Default:usernameupdatelogin }
+    options:
+         expose: true         
+         
+sie_gestion_estudiante:
+    resource: "@SieUsuariosBundle/Resources/config/routing/estudiante.yml"
+    prefix:   /ususie/usuarios/estudiante
+    
+sie_usuarios_estadisticas:
+    path:     /estadisticasusuarios
+    defaults: { _controller: SieUsuariosBundle:Default:estadisticasusuarios }    

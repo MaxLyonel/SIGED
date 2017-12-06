@@ -1,0 +1,46 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+    <h1>Mensaje list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Asunto</th>
+                <th>Mensaje</th>
+                <th>Fecha</th>
+                <th>Adjunto1</th>
+                <th>Adjunto2</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entity in entities %}
+                <tr>
+                    <td><a href="{{ path('mensaje_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                    <td>{{ entity.asunto }}</td>
+                    <td>{{ entity.mensaje }}</td>
+                    <td>{% if entity.fecha %}{{ entity.fecha|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{{ entity.adjunto1 }}</td>
+                    <td>{{ entity.adjunto2 }}</td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href="{{ path('mensaje_show', { 'id': entity.id }) }}">show</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('mensaje_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+{% endblock %}

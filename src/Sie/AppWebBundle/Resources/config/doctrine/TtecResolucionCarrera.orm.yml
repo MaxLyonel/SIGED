@@ -1,0 +1,120 @@
+Sie\AppWebBundle\Entity\TtecResolucionCarrera:
+    type: entity
+    table: ttec_resolucion_carrera
+    indexes:
+        IDX_42499A4621D3AF8:
+            columns:
+                - ttec_resolucion_tipo_id
+        IDX_42499A426F78EC0:
+            columns:
+                - ttec_regimen_estudio_tipo_id
+        IDX_42499A49FA24E7C:
+            columns:
+                - ttec_institucioneducativa_carrera_autorizada_id
+        IDX_42499A46DD9B3B9:
+            columns:
+                - nivel_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcion:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        numero:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        path:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fecha:
+            type: date
+            nullable: true
+            comment: ''
+        resuelve:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        tiempoEstudio:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tiempo_estudio
+        cargaHoraria:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: carga_horaria
+        operacion:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    manyToOne:
+        ttecResolucionTipo:
+            targetEntity: TtecResolucionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_resolucion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecRegimenEstudioTipo:
+            targetEntity: TtecRegimenEstudioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_regimen_estudio_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecInstitucioneducativaCarreraAutorizada:
+            targetEntity: TtecInstitucioneducativaCarreraAutorizada
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_institucioneducativa_carrera_autorizada_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,17 @@
+inscription_rezago_index:
+    path:    /
+    defaults: { _controller: SieAppWebBundle:InscriptionRezago:index }
+
+inscription_rezago_result:
+    path:    /result
+    defaults: { _controller: SieAppWebBundle:InscriptionRezago:result }
+
+inscription_rezago_findIE:
+     path:    /findIE/{id}/{nivel}/{grado}/{lastue}
+     defaults: { _controller: SieAppWebBundle:InscriptionRezago:findIE }
+     options:
+         expose: true   
+
+inscription_rezago_saveMateriasNotas:
+    path: /saveMateriasNotas
+    defaults: { _controller: SieAppWebBundle:InscriptionRezago:saveMateriasNotas }

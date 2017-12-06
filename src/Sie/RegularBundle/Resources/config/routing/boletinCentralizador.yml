@@ -1,0 +1,7 @@
+boletin_centralizador_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:BoletinCentralizador:index }
+    
+boletin_centralizador_find:
+    path:    /find
+    defaults: { _controller: SieRegularBundle:BoletinCentralizador:find }

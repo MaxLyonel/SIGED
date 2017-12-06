@@ -1,0 +1,244 @@
+<p>  
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4>NOTAS DEL PARTICIPANTE.</h4>
+    </div>
+    <div class="panel-body">
+        <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+            <table  id="tablaListadoPersonas" class="display" cellspacing="0" border="0" width="100%">    
+                <small><strong>TG:</strong> Trabajo Grupal; <strong>TI:</strong> Trabajo Individual; <strong>PG:</strong> Prueba Final; <strong>AS: </strong>Asistencia; <strong>NF: </strong>Nota Final.</small>
+                <tr>
+                    <td><br/><strong>ASIGNATURA</strong></td>
+                    <td align="center"><strong>TG</strong></td>
+                    <td align="center"><strong>TI</strong></td>
+                    <td align="center"><strong>PF</strong></td>
+                    <td align="center"><strong>AS</strong></td>
+                    <td align="center"><strong>NF</strong></th></div>
+                </tr>
+                
+                {% if cant_notas == 21 %}
+                    <tbody>
+                        <tr>
+                            <td>Matemáticas</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'MATEMATICAS' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}  
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Lengua Castellano</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'LENGUA CASTELLANO' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Lenguas Originarias</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'LENGUAS ORIGINARIAS' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Ciencias Naturales</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'CIENCIAS NATURALES' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}   
+                            {% endfor %}
+                        </tr> 
+                       
+                        <tr><td colspan="6"><hr></td></tr>
+                        <tr>
+                            <td><strong>Promedio Final</strong></td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'PROMEDIO FINAL' %}
+                                    <td align="center"><strong>{{ nota.nota_cuantitativa }}</strong></td>
+                                {% endif %}   
+                            {% endfor %}
+                        </tr> 
+                    </tbody>
+                {% endif %}
+
+                {% if cant_notas == 31 %}
+                    <tbody>
+                        <tr>
+                            <td>Matemáticas</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'MATEMATICAS' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Castellano</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'CASTELLANO' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Lenguas Originarias</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'LENGUAS ORIGINARIAS' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Geografía</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'GEOGRAFIA' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                         <tr>
+                            <td>Historia</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'HISTORIA' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Ciencias Naturales</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'CIENCIAS NATURALES' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr><td colspan="6"><hr></td></tr>
+                        <tr>
+                            <td><strong>Promedio Final</strong></td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'PROMEDIO FINAL' %}
+                                    <td align="center"><strong>{{ nota.nota_cuantitativa }}</strong></td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        <tbody>
+                {% endif %}
+
+                {% if cant_notas == 26 %}
+                    <tbody>
+                        <tr>
+                            <td>Matemáticas</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'MATEMATICAS' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Castellano</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'CASTELLANO' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Lenguas Originarias</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'LENGUAS ORIGINARIAS' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr>
+                            <td>Geografía</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'GEOGRAFIA' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                         <tr>
+                            <td>Historia</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'HISTORIA' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                        
+                        <tr><td colspan="6"><hr></td></tr>
+                        <tr>
+                            <td><strong>Promedio Final</strong></td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'PROMEDIO FINAL' %}
+                                    <td align="center"><strong>{{ nota.nota_cuantitativa }}</strong></td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                                            </tbody>
+                {% endif %}
+
+                {% if cant_notas == 16 %}
+                    <tbody>
+                        <tr>
+                            <td>Matemáticas</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'MATEMATICAS' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>Lengua Castellano</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'LENGUA CASTELLANO' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>Lenguas Originarias</td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'LENGUAS ORIGINARIAS' %}
+                                    <td align="center">{{ nota.nota_cuantitativa }}</td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+
+                        <tr><td colspan="6"><hr></td></tr>
+                        <tr>
+                            <td><strong>Promedio Final</strong></td>
+                            {% for nota in notas %}
+                                {% if nota.asignatura == 'PROMEDIO FINAL' %}
+                                    <td align="center"><strong>{{ nota.nota_cuantitativa }}</strong></td>
+                                {% endif %}    
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <a role="button" class="btn btn-default btn-large glyphicon glyphicon-remove-sign" href="#" onclick="modaluserclose();"> Cerrar</a>
+    </div>
+</div>

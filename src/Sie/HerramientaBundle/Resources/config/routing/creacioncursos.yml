@@ -1,0 +1,30 @@
+herramienta_creacioncursos:
+    path:     /{op}
+    defaults: { _controller: SieHerramientaBundle:CreacionCursos:index, op:search }
+
+herramienta_creacioncursos_new:
+    path:     /new/
+    defaults: { _controller: "SieHerramientaBundle:CreacionCursos:new" }
+    methods:  POST
+
+herramienta_creacioncursos_create:
+    path:     /create/
+    defaults: { _controller: "SieHerramientaBundle:CreacionCursos:create" }
+    methods:  POST
+
+herramienta_creacioncursos_delete:
+    path:     /delete/
+    defaults: { _controller: "SieHerramientaBundle:CreacionCursos:delete" }
+    methods:  [POST, DELETE]
+
+herramienta_clistarniveles:
+    path:     /clistarniveles/{turno}
+    defaults: { _controller: "SieHerramientaBundle:CreacionCursos:listarniveles" }
+    options:
+         expose: true
+
+herramienta_clistargrados:
+    path:     /clistargrados/{nivel}
+    defaults: { _controller: "SieHerramientaBundle:CreacionCursos:listargrados" }
+    options:
+         expose: true

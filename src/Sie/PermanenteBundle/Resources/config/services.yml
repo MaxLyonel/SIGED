@@ -1,0 +1,4 @@
+services:
+#    sie_permanente.example:
+#        class: Sie\PermanenteBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

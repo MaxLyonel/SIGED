@@ -1,0 +1,15 @@
+reporte_rue_index:
+  path:     /
+  defaults: { _controller: SieRueBundle:Reportes:index }
+
+reporte_rue_uno:
+    path:     /rptUno
+    defaults: { _controller: SieRueBundle:Reportes:rptUno }
+  
+reporte_rue_dos:
+    path:     /rptDos
+    defaults: { _controller: SieRueBundle:Reportes:rptDos }
+
+reporte_rue_info_gral:
+    path:     /repinfoGral
+    defaults: { _controller: SieRueBundle:Reportes:repinfoGral }

@@ -1,0 +1,64 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5AmbienteadministrativoParque:
+    type: entity
+    table: infraestructura_h5_ambienteadministrativo_parque
+    indexes:
+        IDX_30EE096EE0D16486:
+            columns:
+                - n23_piso_estadogeneral_tipo_id
+        IDX_30EE096E2A5835E7:
+            columns:
+                - n23_material_piso_tipo_id
+        IDX_30EE096E1DBD8CC2:
+            columns:
+                - infraestructura_h5_ambienteadministrativo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n23AreaCanchaMt2:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n23_area_cancha_mt2
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        n23PisoEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n23_piso_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n23MaterialPisoTipo:
+            targetEntity: InfraestructuraH5MaterialPisoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n23_material_piso_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH5Ambienteadministrativo:
+            targetEntity: InfraestructuraH5Ambienteadministrativo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h5_ambienteadministrativo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

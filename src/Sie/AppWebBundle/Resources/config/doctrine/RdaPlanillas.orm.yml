@@ -1,0 +1,56 @@
+Sie\AppWebBundle\Entity\RdaPlanillas:
+    type: entity
+    table: rda_planillas
+    uniqueConstraints:
+        rda_planillas_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        ci:
+            type: string
+            nullable: true
+            length: 10
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        fechaNacimiento:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: fecha_nacimiento
+        genero:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

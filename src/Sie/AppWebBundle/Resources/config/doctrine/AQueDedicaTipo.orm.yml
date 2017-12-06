@@ -1,0 +1,30 @@
+Sie\AppWebBundle\Entity\AQueDedicaTipo:
+    type: entity
+    table: a_que_dedica_tipo
+    uniqueConstraints:
+        a_que_dedica_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        actividad:
+            type: string
+            nullable: false
+            length: 170
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

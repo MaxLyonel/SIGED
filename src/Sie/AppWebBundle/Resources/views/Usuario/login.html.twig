@@ -1,0 +1,10 @@
+
+    <h1>Login</h1>
+    {% if error %}
+        {{error.message}}
+    {% endif %}
+    <form action="{{ path('login_check') }}" method="post">
+        <p>Usuario <input type="text" name="_username" value="{{last_username}}"></p>
+        <p>Contraseña <input type="password" name="_password"></p>
+        <p><input type="submit" value="Enviar"></p>
+    </form>

@@ -1,0 +1,158 @@
+<div class="panel-body"> 
+ <form role="form" method="post" action="{{path('sie_pnp_crear_curso_automatico')}}"> 
+    {% if op == 2 %}
+    <div class="row">
+        <div class="form-group col-lg-4 col-md-6">
+            {{ form_row(form.departamento,{'attr': {'class':'form-control'},'id':'form_departamento2'}) }}
+        </div>
+        <div class="form-group col-lg-4 col-md-6">
+            {{ form_row(form.provincia, {'attr': {'class':'form-control'},'id': 'form_provincia2'}) }}
+        </div>
+        <div class="form-group col-lg-4 col-md-6">
+            {{ form_row(form.municipio, {'attr': {'class':'form-control'},'id': 'form_municipio2'}) }}
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        {% if op == 2 %}
+        <div class="form-group col-lg-4 col-md-6">
+            {{ form_row(form.localidad, {'attr': {'class':'form-control'},'id': 'form_localidad2'}) }}
+        </div>        
+        {% endif %}
+        <div class="form-group {% if op == 2 %} col-lg-4 {% else %} col-lg.6 {% endif %} col-md-6">
+            {{ form_row(form.fecha_inicio, { 'attr': {'class':'form-control'},'id': 'form_fecha_inicio2'}) }}
+        </div>
+        <div class="form-group {% if op == 2 %} col-lg-4 {% else %} col-lg.6 {% endif %} col-md-6">
+            {{ form_row(form.fecha_fin, { 'attr': {'class':'form-control'},'id': 'form_fecha_fin2'}) }}
+        </div>
+    </div>
+    <br>
+    <input name="op" style="display: none" value="{{ op }}"></input>
+    <input name="id_curso" style="display: none" value="{{ id_curso }}"></input>
+    <div class="row">            
+            <div class="col-xs-12" align="center">
+                {{ form_row(form.save, { 'id': 'save','attr': { 'onclick':'return validar_fecha2()' }}) }}
+            </div>
+    </div>
+</form>
+</div>  
+
+<script type="text/javascript">
+ $(document).ready(function() {
+        $("#form_fecha_inicio2").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd/mm/yyyy',
+            language: "es",
+        });
+         $("#form_fecha_fin2").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd/mm/yyyy',
+            language: "es",
+        });
+    });
+
+ 
+ function validar_fecha(){
+    var f1 = document.getElementById("form_fecha_inicio2").value;
+    var f2 = document.getElementById("form_fecha_fin2").value;
+    var aFecha1 = f1.split('/'); 
+    var aFecha2 = f2.split('/'); 
+    var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]); 
+    var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]); 
+    var dif = fFecha2 - fFecha1;
+    var dias = Math.floor(dif / (1000 * 60 * 60 * 24)); 
+    if(isNaN(dias)){
+        document.getElementById("save").style.visibility = 'hidden';
+        return true;
+    }
+    else{
+        if(dias>60){
+            document.getElementById("save").style.visibility = 'hidden';
+            return true;
+        }
+        else{
+            alert("La fecha final debe ser mínimo 60 dias mayor que la fecha inicial");
+            return false;
+        }
+    }
+ }
+
+  function validar_fecha2(){
+    var f2 = document.getElementById("form_fecha_inicio2").value;
+    var f1 = document.getElementById("fecha_anterior_fin").value;
+    var aFecha1 = f1.split('/'); 
+    var aFecha2 = f2.split('/'); 
+    var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]); 
+    var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]); 
+    var dif = fFecha2 - fFecha1;
+    var dias = Math.floor(dif / (1000 * 60 * 60 * 24)); 
+    if(dias>0){
+        var f22 = document.getElementById("form_fecha_fin2").value;
+        var f11 = document.getElementById("form_fecha_inicio2").value;
+        var aFecha11 = f11.split('/'); 
+        var aFecha22 = f22.split('/'); 
+        var fFecha11 = Date.UTC(aFecha11[2],aFecha11[1]-1,aFecha11[0]); 
+        var fFecha22 = Date.UTC(aFecha22[2],aFecha22[1]-1,aFecha22[0]); 
+        var dif = fFecha22 - fFecha11;
+        var dias1 = Math.floor(dif / (1000 * 60 * 60 * 24));         
+        if(dias1>60){
+            document.getElementById("save").style.visibility = 'hidden';
+            return true;
+        }
+        else{
+            alert("La fecha final debe ser mínimo 60 dias mayor que la fecha inicial");
+            return false;
+        }       
+    //alert("si es mayor osea bien");
+    }
+    else{
+        alert("La Fecha Inicial del nuevo curso debe ser mayor a la fecha de conclusión ("+ f1 +") del anterior curso realizado");
+            //alert("La fecha inicial del nuevo curso debe ser mínimo 60 dias mayor que la fecha inicial");
+        return false;
+    }
+ }
+
+    $(function(){            
+        $("#form_departamento2").change(function(){                            
+            var iddep = $(this).val();            
+            var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: iddep });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_provincia2").html('');                       
+                        var $province_selector = $('#form_provincia2');
+                        $province_selector.html('<option value="">Provincia</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                        $('#form_municipio').html("<option>Municipio</option>");
+                    }
+                });            
+            });
+        $("#form_provincia2").change(function(){                            
+            var iddep = $(this).val();            
+            var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: iddep });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_municipio2").html('');                       
+                        var $province_selector = $('#form_municipio2');
+                        $province_selector.html('<option value="">Municipio</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                    }
+                });            
+            });
+        })
+</script>

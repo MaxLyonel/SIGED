@@ -1,0 +1,32 @@
+certificado_rue:
+    path:     /
+    defaults: { _controller: "SieRueBundle:CertificadoInstitucionEducativa:index" }
+
+certificado_rue_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieRueBundle:CertificadoInstitucionEducativa:show" }
+
+certificado_rue_new:
+    path:     /new
+    defaults: { _controller: "SieRueBundle:CertificadoInstitucionEducativa:new" }
+
+certificado_rue_create:
+    path:     /create
+    defaults: { _controller: "SieRueBundle:CertificadoInstitucionEducativa:create" }
+    methods:  POST
+
+certificado_rue_edit:
+    path:     /edit/
+    defaults: { _controller: "SieRueBundle:CertificadoInstitucionEducativa:edit" }
+
+certificado_rue_delete:
+    path:     /delete/
+    defaults: { _controller: "SieRueBundle:CertificadoInstitucionEducativa:delete" }
+    methods:  [POST, DELETE]
+
+certificado_rue_update:
+    path:     /update/
+    defaults: { _controller: "SieRueBundle:CertificadoInstitucionEducativa:update" }
+    methods:  [POST, PUT]
+
+    

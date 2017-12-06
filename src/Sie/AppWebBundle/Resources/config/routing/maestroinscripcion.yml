@@ -1,0 +1,35 @@
+maestroinscripcion:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:MaestroInscripcion:index" }
+
+maestroinscripcion_show:
+    path:     /show/
+    defaults: { _controller: "SieAppWebBundle:MaestroInscripcion:show" }
+
+maestroinscripcion_new:
+    path:     /new/
+    defaults: { _controller: "SieAppWebBundle:MaestroInscripcion:new" }
+
+maestroinscripcion_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:MaestroInscripcion:create" }
+    methods:  POST
+
+maestroinscripcion_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:MaestroInscripcion:edit" }
+
+maestroinscripcion_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:MaestroInscripcion:update" }
+    methods:  [POST, PUT]
+
+maestroinscripcion_delete:
+    path:     /delete/
+    defaults: { _controller: "SieAppWebBundle:MaestroInscripcion:delete" }
+    methods:  [POST, DELETE]
+
+maestroinscripcion_delete1:
+    path:     /delete/
+    defaults: { _controller: "SieAppWebBundle:MaestroInscripcion:delete1" }
+    methods:  [GET, DELETE]    

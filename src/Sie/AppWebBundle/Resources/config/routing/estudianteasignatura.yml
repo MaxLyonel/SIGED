@@ -1,0 +1,34 @@
+nota_main:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:EstudianteAsignatura:index" }
+
+nota_main_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:EstudianteAsignatura:show" }
+
+nota_main_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:EstudianteAsignatura:new" }
+
+nota_main_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:EstudianteAsignatura:create" }
+    methods:  POST
+
+nota_main_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:EstudianteAsignatura:edit" }
+
+nota_main_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:EstudianteAsignatura:update" }
+    methods:  [POST, PUT]
+
+nota_main_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:EstudianteAsignatura:delete" }
+    methods:  [POST, DELETE]
+
+nota_main_find:
+    path:     /findmaterianota
+    defaults: { _controller: "SieAppWebBundle:EstudianteAsignatura:findmaterianota" }    

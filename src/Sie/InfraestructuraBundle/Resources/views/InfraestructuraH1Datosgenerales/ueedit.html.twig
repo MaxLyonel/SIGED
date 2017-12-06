@@ -1,0 +1,60 @@
+{{form_start(form,{'attr': {'id':'formUeDatosGenerales','onsubmit':'ueupdate(); return false'} }) }}
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Asociar Unidad Educativa</h4>
+        </div>
+        <div class="modal-body">
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <div class="form-group">
+                        {{form_label(form.codUe)}}
+                        {{form_widget(form.codUe)}}
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-8">
+                    <div class="form-group">
+                        {{form_label(form.unidadEducativa)}}
+                        {{form_widget(form.unidadEducativa)}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="form-group">
+                        {{form_label(form.persona)}}
+                        {{form_widget(form.persona)}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <div class="form-group">
+                        {{form_label(form.telefono)}}
+                        {{form_widget(form.telefono)}}
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="form-group">
+                        {{form_label(form.tenencia)}}
+                        {{form_widget(form.tenencia)}}
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="form-group">
+                        {{form_label(form.orgCurricular)}}
+                        {{form_widget(form.orgCurricular)}}
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default-alt" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+    </div>
+</div>
+{{form_end(form)}}

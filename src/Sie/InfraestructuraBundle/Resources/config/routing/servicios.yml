@@ -1,0 +1,14 @@
+infra_servicios_index:
+    path:     /
+    defaults: { _controller: "SieInfraestructuraBundle:Servicios:index" }
+
+infra_servicios_create_update:
+    path:     /create_update
+    defaults: { _controller: "SieInfraestructuraBundle:Servicios:createUpdate" }
+    methods: POST
+
+infra_servicios_bateriasbanos:
+    path:     /bateriasbanos
+    defaults: { _controller: "SieInfraestructuraBundle:Servicios:bateriasbanos" }
+    options:
+        expose: true

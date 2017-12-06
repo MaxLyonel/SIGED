@@ -1,0 +1,27 @@
+<small>
+    <div class="row">
+
+        {% for flashMessage in app.session.flashbag.get('changestate') %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Verificar!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+    <p><b>Cambio de estado realizado exitosamente !</b></p>
+
+
+      {% if newStatus == 4 %}
+      <center>
+          <p><b><br> Continue registrando las Notas</b></p>
+
+          <div class="col-lg-12">
+            {{form_start(setNotasForm)}}
+              <input type='hidden' id='idInscripcion' name='idInscripcion' value='{{idInscripcion}}'>
+            {{form_end(setNotasForm)}}
+          </div>
+      </center>
+      {% endif %}
+
+
+</small>

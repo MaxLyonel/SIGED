@@ -1,0 +1,282 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo %}            
+            
+            {#PARA INSERT#}
+            {#PARA INSERT#}
+            {#PARA INSERT#}
+            <table id="tablaListadoPersonas" class="table table-hover">    
+                <thead>
+                    <tr>
+                        <th>Listados segun Jurisdicción Geografica de los Usuarios</th>            
+                    </tr>
+                </thead>
+        
+                <tbody>                
+                    <tr>
+                        <td>                           
+                            {# NIVEL NACIONAL #}                            
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4>
+                                        <span class="label label-primary">
+                                            NACIONAL
+                                        </span>
+                                        </h4>
+                                    </div>    
+                                </div>
+                                    
+                                <div class="row">
+                                    <p>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <select  class="form-control lugar_final" id="lug_nac" onchange="lug_rol_dis_onchange();"> 
+                                            <option value="1">                                            
+                                                    COBERTURA NACIONAL                                                
+                                            </option>
+                                        </select>
+                                    </div>    
+                                    <div class="col-xs-6">
+                                        <div id="listarcobnac" class="col-xs-12">                                            
+                                           <a class="glyphicon glyphicon-search" href="{{ path('sie_usuarios_lista_jurisdiccion_nacional') }}"> Ver listado</a>                                        
+                                        </div> 
+                                    </div>    
+                                </div>
+                            {# NIVELES DEPARTAMENTALES #}                            
+                                <div class="row">
+                                    <div class="col-xs-12"> 
+                                        <h4>
+                                        <span class="label label-primary">
+                                            DEPARTAMENTO
+                                        </span>
+                                        </h4>
+                                    </div>
+                                </div>      
+                                            
+                                <div class="row">
+                                    <p>
+                                </div>
+                                            
+                                <div class="row">
+                                    <form id="busquedaDatosForm" data-toggle="validator" role="form" name="busquedaDatosForm" method="get" class="navbar-form" onsubmit="return enviaformdatosbasicos();">
+                                        <div class="col-xs-6">
+                                            <div class="input-group input-group-sm">
+                                                
+                                                <span class="input-group-addon" id="sizing-addon3">Departamento</span>
+                                                    <select class="form-control lugar_final" id="listadeptousuario">
+                                                        <option value="-999">Elija el Departamento</option>
+                                                        <option value="31353">Chuquisaca</option>
+                                                        <option value="31354">La Paz</option>
+                                                        <option value="31355">Cochabamba</option>
+                                                        <option value="31356">Oruro</option>
+                                                        <option value="31357">Potosí</option>
+                                                        <option value="31358">Tarija</option>
+                                                        <option value="31359">Santa Cruz</option>
+                                                        <option value="31360">Beni</option>
+                                                        <option value="31361">Pando</option>
+                                                    </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">                                            
+                                            <button type="submit" class="btn btn-themeglyphicon glyphicon-search form-control-feedback rounded"> Ver listado</button>                                                                                        
+                                        </div>
+                                    </form> 
+                                </div>            
+                            {# NIVELES DISTRITALES DIRECTORES, APODERADOS, MAESTROS #}                            
+                                <div class="row"> 
+                                    <div class="col-xs-12"> 
+                                        <h4>
+                                        <span class="label label-primary">
+                                            DISTRITO
+                                        </span>
+                                        </h4>
+                                    </div>  
+                                </div> 
+                                
+                                <div class="row">
+                                    <p>
+                                </div>
+                                        
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-addon" id="sizing-addon3">Departamento</span>
+                                            {% if app.session.get('dep_id') == '0' %} {# SIN PARAMETROS #}
+
+
+
+
+                                                
+
+
+
+                                                
+                                            {% else %} {# CON PARAMETROS ENVIADOS #}
+                                                <select class="form-control" id="sel_lug_dep_">                                                     
+                                                    {% for deplug in departamento %}    
+                                                        <option value="{{ app.session.get('dep_id') }}">{{ app.session.get('dep_nombre') }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div> 
+                                
+                                <div class="row">
+                                    <p>
+                                </div>
+                                            
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-addon" id="sizing-addon3">Distrito</span>
+                                            <div id="lug_dis_">
+                                                {% if app.session.get('dep_id') == '0' %} {# SIN PARAMETROS #} 
+                                                    <select  class="form-control lugar_final" id="sel_lug_dis_">
+                                                        <option value="-999">Elija el Distrito</option> 
+                                                    </select>
+                                                {% else %} {# CON PARAMETROS ENVIADOS #}
+                                                    <select class="form-control lugar_final" id="sel_lug_dis_">                                                     
+                                                        {% for dislug in distrito %}    
+                                                            <option selected="selected" value="{{ app.session.get('dis_id') }}">{{ app.session.get('dis_nombre') }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                {% endif %}   
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div id="guardarbuttonedit" class="col-xs-12" id="div_lug_guardar">
+                                           <a class="glyphicon glyphicon-search" href="#" onclick=""> Ver listado</a>                                        
+                                        </div> 
+                                    </div> 
+                                </div>                            
+                        </td>
+                    </tr>                
+                </tbody>
+            </table>  
+
+    <div id="listadosegunjurisdiccion" class="col-xs-12">
+        
+    </div>     
+
+{% endblock %}            
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+
+    function ListarDepartamento(){                
+        var iddepto = document.getElementById("listadeptousuario").value;        
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_usuarios_lista_jurisdiccion_lugar', {'iddepto': iddepto}),
+            data: iddepto,
+            beforeSend: function () {
+                
+            },
+            success: function (data) {
+                $("#listadosegunjurisdiccion").empty();
+                $("#listadosegunjurisdiccion").html(data);
+                //InicializarLista();
+            },
+            error: function(data){
+                //$("#facilitador").empty();
+                //$("#facilitador").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+    }
+
+    /*function InicializarLista(){ 
+                $('#tablaListadoPersonas tbody').on( 'click', 'tr', function () {
+                    if ( $(this).hasClass('selected') ) {
+                        $(this).removeClass('selected');
+                    }
+                    else {
+                        table.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                        $('#tablaListadoPersonas_fil').text($(this).index());
+                        
+                    }
+                });
+                
+                var table = $('#tablaListadoPersonas').DataTable({
+                    language: {
+                        "sProcessing":     "Procesando...",
+                        "sLengthMenu":     "Mostrar _MENU_ registros",
+                        "sZeroRecords":    "No se encontraron resultados",
+                        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix":    "",
+                        "sSearch":         "Buscar:",
+                        "sUrl":            "",
+                        "sInfoThousands":  ",",
+                        "sLoadingRecords": "Cargando...",                
+                        "oPaginate": {
+                            "sFirst":    "Primero",
+                            "sLast":     "Último",
+                            "sNext":     "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        }
+                    },
+                    'dom': 'lBfrtip <"clear">',
+                    'buttons': [
+                        {   
+                            extend: 'colvis',
+                            text:'Visibilizar Columnas'
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Imprimir',
+                            autoPrint: true,
+                            title: 'SIGED - LISTA DE USUARIO',
+                            header:true,
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend:'pdf',
+                            title: 'SIGED - LISTA DE USUARIO',
+                            filename:'Lista de usuarios filtrados',
+                            orientation:'landscape',
+                            exportOptions: {
+                            modifier: {
+                                page: 'Lista de usuarios filtrados'
+                                }
+                            }
+                        },
+                        {
+                        extend: 'excel',
+                        text: 'Excel',
+                        filename:'Lista de usuarios filtrados',
+                        exportOptions: {
+                            modifier: {
+                                page: 'Lista de usuarios filtrados'
+                                }
+                            }
+                        },
+                    ]            
+                });
+                
+                // Apply the search
+                table.columns().every( function () {
+                    var that = this;
+                    $( 'input', this.footer() ).on( 'keyup change', function () {
+                        that
+                            .search( this.value )
+                            .draw();
+                    } );
+                });
+
+    }    */            
+
+</script>                    
+{% endblock %}                   

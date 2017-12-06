@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+
+    <!-- START @HEAD -->
+    {% block stylesheets %}
+        <head>
+            <!-- START @META SECTION -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+            <meta name="description" content="Juegos Deportivos Estudiantiles Plurinacionales Presidente Evo">
+            <meta http-equiv="refresh" content="1200; url={{path('sie_juegos_fixture_index')}}">
+            <meta name="keywords" content="Ministerio de Eduación">
+            <meta name="author" content="Djava UI">
+            <title>MinEdu | Juegos Deportivos Estudiantiles Plurinacionales Presidente Evo</title>
+            <!--/ END META SECTION -->
+
+            <!-- START @FAVICONS -->
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-144x144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-114x114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-72x72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-57x57-precomposed.png" rel="apple-touch-icon-precomposed">
+            <link href="{{asset('favicon.ico')}}" rel="shortcut icon">
+            <!--/ END FAVICONS -->
+
+            <!-- START @FONT STYLES -->
+            <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet">
+            <link href="http://fonts.googleapis.com/css?family=Oswald:700,400" rel="stylesheet">
+            <!--/ END FONT STYLES -->
+
+            <!-- START @GLOBAL MANDATORY STYLES -->
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+            <!--/ END GLOBAL MANDATORY STYLES -->
+
+            <!-- START @PAGE LEVEL STYLES -->
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/animate.css/animate.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
+
+
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+
+            <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet">
+            <!--/ END PAGE LEVEL STYLES -->
+
+            <!-- START @THEME STYLES -->
+            <link href="{{asset('juegos/assets/admin/css/layout.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/admin/css/components.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/admin/css/plugins.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/admin/css/themes/default.theme.css')}}" rel="stylesheet" id="theme">
+            <link href="{{asset('juegos/assets/admin/css/custom.css')}}" rel="stylesheet">
+            <!--/ END THEME STYLES -->
+
+            <!-- START @IE SUPPORT -->
+            <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+            <!--[if lt IE 9]>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/html5shiv/dist/html5shiv.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/respond-minmax/dest/respond.min.js')}}"></script>
+            <![endif]-->
+            <!--/ END IE SUPPORT -->
+
+            <style>
+                .boby{
+                    background:linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,linear-gradient(90deg, #1b1b1b 10px, transparent 10px),linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);background-color: #131313;background-size: 20px 20px;
+                }
+                
+                @font-face {
+                    font-family: 'SFSportsNight'; src: url('../font/SFSportsNight.ttf');
+                }
+
+                @font-face {
+                    font-family: 'AGENCYB'; src: url('../font/AGENCYB.ttf');
+                }
+                
+                #carousel_10 {
+                    margin: 0 auto;
+                    width: 600px;
+                    height: 140px;
+                    overflow: hidden; 
+                }
+                
+                .profile-img
+                {
+                    background: #015f9c;
+                    width: 250px;
+                    height: 250px;
+                    margin: 0 auto 10px;
+                    display: block;
+                    -moz-border-radius: 50%;
+                    -webkit-border-radius: 50%;
+                    border-radius: 50%;
+                }
+                
+                .titulo_central{
+                    color: #fff;
+                    font-family: SFSportsNight;
+                    font-size: 30px;
+                    text-shadow: 1px 2px 3px rgba(0,0,0,0.8);
+                }
+                
+                .titulo_central1{
+                    color: #fff;
+                    font-family: AGENCYB;
+                    font-size: 25px;
+                    text-shadow: 1px 2px 3px rgba(0,0,0,0.8);
+                }                
+
+                .titulo_central2{
+                    color: #33CCCC;
+                    font-family: AGENCYB;
+                    font-size: 35px;
+                }               
+
+                .titulo_central2_a{
+                    color: #E3DA0E;
+                    font-family: AGENCYB;
+                    font-size: 35px;
+                    text-shadow: 1px 2px 3px rgba(0,0,0,0.8);
+                }              
+
+                .titulo_central2_b{
+                    color: #66FF00;
+                    font-family: AGENCYB;
+                    font-size: 35px;
+                    text-shadow: 1px 2px 3px rgba(0,0,0,0.8);
+                }            
+
+                .titulo_central2_c{
+                    color: #66FF00;
+                    font-family: AGENCYB;
+                    font-size: 40px;
+                    text-shadow: 1px 2px 3px rgba(0,0,0,0.8);
+                }
+
+                .titulo_central3{
+                    color: #FF4F00;
+                    font-family: AGENCYB;
+                    font-size: 40px;
+                    text-shadow: 1px 2px 3px rgba(0,0,0,0.8);
+                }
+
+                .titulo_central3_a{
+                    color: #FF4F00;
+                    font-family: AGENCYB;
+                    font-size: 30px;
+                    text-shadow: 1px 2px 3px rgba(0,0,0,0.8);
+                }
+                
+                .carousel .carousel_indicator {
+                    padding-top: 5px;
+                    text-align: center; }
+                
+                .carousel .carousel_indicator span {
+                  margin: 0 2px;
+                  border-radius: 5px;
+                  display: inline-block;
+                  width: 10px;
+                  height: 10px;
+                  background: #888;
+                  text-indent: -1000em; }
+                
+                .carousel .carousel_indicator span.active {
+                  background: #000; }
+                
+                .carousel .btns {
+                  padding-top: 5px;
+                  text-align: center; }
+
+                .carousel_content {
+                    margin: 0 auto;
+                    width: 1070px;
+                    height: 310px;
+                    overflow: hidden; }
+ 
+
+                .carousel_content .carousel_box {
+                    width: 1070px;
+                    height: 310px;
+                    color: #fff;
+                    text-align: center;
+                    font-size: 123%; }
+
+
+            </style>
+        </head>
+    {%endblock%}
+    <!--/ END HEAD -->
+
+    <!--
+
+    |=========================================================================================================================|
+    |  TABLE OF CONTENTS (Use search to find needed section)                                                                  |
+    |=========================================================================================================================|
+    |  01. @HEAD                        |  Container for all the head elements                                                |
+    |  02. @META SECTION                |  The meta tag provides metadata about the HTML document                             |
+    |  03. @FAVICONS                    |  Short for favorite icon, shortcut icon, website icon, tab icon or bookmark icon    |
+    |  04. @FONT STYLES                 |  Font from google fonts                                                             |
+    |  05. @GLOBAL MANDATORY STYLES     |  The main 3rd party plugins css file                                                |
+    |  06. @PAGE LEVEL STYLES           |  Specific 3rd party plugins css file                                                |
+    |  07. @THEME STYLES                |  The main theme css file                                                            |
+    |  08. @IE SUPPORT                  |  IE support of HTML5 elements and media queries                                     |
+    |=========================================================================================================================|
+    |  09. @BODY                        |  Contains all the contents of an HTML document                                      |
+    |  10. @WRAPPER                     |  Wrapping page section                                                              |
+    |  11. @HEADER                      |  Header page section contains about logo, top navigation, notification menu         |
+    |  12. @SIDEBAR LEFT                |  Sidebar page section contains all sidebar menu left                                |
+    |  13. @PAGE CONTENT                |  Contents page section contains breadcrumb, content page, footer page               |
+    |  14. @SIDEBAR RIGHT               |  Sidebar page section contains all sidebar menu right                               |
+    |  15. @BACK TOP                    |  Element back to top and action                                                     |
+    |========================================================================================================================|
+    |  16. @CORE PLUGINS                |  The main 3rd party plugins script file                                             |
+    |  17. @PAGE LEVEL PLUGINS          |  Specific 3rd party plugins script file                                             |
+    |  18. @PAGE LEVEL SCRIPTS          |  The main theme script file                                                         |
+    |=========================================================================================================================|
+
+    START @BODY
+    |=========================================================================================================================|
+        |  TABLE OF CONTENTS (Apply to body class)                                                                                |
+        |=========================================================================================================================|
+    |  01. page-boxed                   |  Page into the box is not full width screen                                         |
+        |  02. page-header-fixed            |  Header element become fixed position                                               |
+        |  03. page-sidebar-fixed           |  Sidebar element become fixed position with scroll support                          |
+        |  04. page-sidebar-minimize        |  Sidebar element become minimize style width sidebar                                |
+        |  05. page-footer-fixed            |  Footer element become fixed position with scroll support on page content           |
+        |  06. page-sound                   |  For playing sounds on user actions and page events                                 |
+        |=========================================================================================================================|
+
+    -->
+    <body style="background-size: 100%; background-image: url('{{ asset('img/BG.jpg') }}')">
+
+        <!--[if lt IE 9]>
+        <p class="upgrade-browser">Upps!! You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" target="_blank">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        
+        {% block contentoption %}
+            <!-- here the iptions content -->
+        {% endblock %}
+
+
+        {% block javascripts %}
+
+            <!-- START JAVASCRIPT SECTION (Load javascripts at bottom to reduce load time) -->
+            <!-- START @CORE PLUGINS -->
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/typehead.js/dist/handlebars.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/typehead.js/dist/typeahead.bundle.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-nicescroll/jquery.nicescroll.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery.sparkline.min/index.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-easing-original/jquery.easing.1.3.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/bootbox/bootbox.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/retina.js/dist/retina.min.js')}}"></script>
+            <!--/ END CORE PLUGINS -->
+
+            <!-- START @PAGE LEVEL PLUGINS -->
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/js/jasny-bootstrap.fileinput.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/holderjs/holder.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js')}}"></script>
+
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
+            <!--/ END PAGE LEVEL PLUGINS -->
+
+            <!-- START @PAGE LEVEL SCRIPTS -->
+            <script src="{{asset('juegos/assets/admin/js/apps.js')}}"></script>
+            <script src="{{asset('juegos/assets/admin/js/pages/blankon.form.element.js')}}"></script>
+            <script src="{{asset('juegos/assets/admin/js/demo.js')}}"></script>
+            <script src="{{asset('juegos/assets/admin/js/menuTree.js')}}"></script>
+            <!--/ END PAGE LEVEL SCRIPTS -->
+            <!--/ END JAVASCRIPT SECTION -->
+
+            <!-- START GOOGLE ANALYTICS -->
+            <script>
+
+            </script>
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+            <!--/ END GOOGLE ANALYTICS -->
+
+            <script src="{{ asset('js/jq.carousel.js') }}"></script>
+            <script type="text/javascript" charset="utf-8">//<![CDATA[
+                (function() {
+                    var $carousel1 = $('#carousel_1').carousel({
+                        indicator: false,
+                        duration: 0.5
+                    });
+                    
+                    
+                    var $carousel2 = $('#carousel_2').carousel({
+                        indicator: false,
+                        duration: 0.5
+                    });
+
+                    setInterval(function() {
+                        $carousel1.carousel('next');
+                    }, 8000);   
+
+                    setInterval(function() {
+                        $carousel2.carousel('next');
+                    }, 8000);  
+                }());
+            </script>
+        {%endblock%}
+    </body>
+    <!--/ END BODY -->
+
+</html>

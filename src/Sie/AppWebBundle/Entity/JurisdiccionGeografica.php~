@@ -1,0 +1,576 @@
+<?php
+
+
+namespace Sie\AppWebBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * JurisdiccionGeografica
+ *
+ * @ORM\Table(name="jurisdiccion_geografica", uniqueConstraints={@ORM\UniqueConstraint(name="le_juridicciongeografica_pk", columns={"id"})}, indexes={@ORM\Index(name="fk_dat_ifr_jurisdiccion_geograf", columns={"lugar_tipo_id_distrito"}), @ORM\Index(name="relationship_108_fk", columns={"lugar_tipo_id_localidad"}), @ORM\Index(name="IDX_C97207877281438B", columns={"circunscripcion_tipo_id"}), @ORM\Index(name="IDX_C9720787FE19D46C", columns={"distrito_tipo_id"})})
+ * @ORM\Entity
+ */
+class JurisdiccionGeografica
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="lugar_tipo_id_distrito", type="integer", nullable=false)
+     */
+    private $lugarTipoIdDistrito;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="obs", type="string", length=45, nullable=true)
+     */
+    private $obs;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="cordx", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $cordx;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="cordy", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $cordy;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="lugar_tipo_id_localidad2012", type="integer", nullable=true)
+     */
+    private $lugarTipoIdLocalidad2012;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cod_nuc", type="string", length=5, nullable=true)
+     */
+    private $codNuc;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="des_nuc", type="string", length=60, nullable=true)
+     */
+    private $desNuc;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="direccion", type="string", length=255, nullable=true)
+     */
+    private $direccion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="zona", type="string", length=255, nullable=true)
+     */
+    private $zona;
+
+    /**
+     * @var \CircunscripcionTipo
+     *
+     * @ORM\ManyToOne(targetEntity="CircunscripcionTipo")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="circunscripcion_tipo_id", referencedColumnName="id")
+     * })
+     */
+    private $circunscripcionTipo;
+
+    /**
+     * @var \DistritoTipo
+     *
+     * @ORM\ManyToOne(targetEntity="DistritoTipo")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="distrito_tipo_id", referencedColumnName="id")
+     * })
+     */
+    private $distritoTipo;
+
+    /**
+     * @var \LugarTipo
+     *
+     * @ORM\ManyToOne(targetEntity="LugarTipo")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="lugar_tipo_id_localidad", referencedColumnName="id")
+     * })
+     */
+    private $lugarTipoLocalidad;
+
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+	public function setId($id)
+	{
+	    $this->id = $id;
+	}
+	/**
+     * Set lugarTipoIdDistrito
+     *
+     * @param integer $lugarTipoIdDistrito
+     * @return JurisdiccionGeografica
+     */
+    public function setLugarTipoIdDistrito($lugarTipoIdDistrito)
+    {
+        $this->lugarTipoIdDistrito = $lugarTipoIdDistrito;
+    
+        return $this;
+    }
+
+    /**
+     * Get lugarTipoIdDistrito
+     *
+     * @return integer 
+     */
+    public function getLugarTipoIdDistrito()
+    {
+        return $this->lugarTipoIdDistrito;
+    }
+
+    /**
+     * Set obs
+     *
+     * @param string $obs
+     * @return JurisdiccionGeografica
+     */
+    public function setObs($obs)
+    {
+        $this->obs = $obs;
+    
+        return $this;
+    }
+
+    /**
+     * Get obs
+     *
+     * @return string 
+     */
+    public function getObs()
+    {
+        return $this->obs;
+    }
+
+    /**
+     * Set cordx
+     *
+     * @param float $cordx
+     * @return JurisdiccionGeografica
+     */
+    public function setCordx($cordx)
+    {
+        $this->cordx = $cordx;
+    
+        return $this;
+    }
+
+    /**
+     * Get cordx
+     *
+     * @return float 
+     */
+    public function getCordx()
+    {
+        return $this->cordx;
+    }
+
+    /**
+     * Set cordy
+     *
+     * @param float $cordy
+     * @return JurisdiccionGeografica
+     */
+    public function setCordy($cordy)
+    {
+        $this->cordy = $cordy;
+    
+        return $this;
+    }
+
+    /**
+     * Get cordy
+     *
+     * @return float 
+     */
+    public function getCordy()
+    {
+        return $this->cordy;
+    }
+
+    /**
+     * Set lugarTipoIdLocalidad2012
+     *
+     * @param integer $lugarTipoIdLocalidad2012
+     * @return JurisdiccionGeografica
+     */
+    public function setLugarTipoIdLocalidad2012($lugarTipoIdLocalidad2012)
+    {
+        $this->lugarTipoIdLocalidad2012 = $lugarTipoIdLocalidad2012;
+    
+        return $this;
+    }
+
+    /**
+     * Get lugarTipoIdLocalidad2012
+     *
+     * @return integer 
+     */
+    public function getLugarTipoIdLocalidad2012()
+    {
+        return $this->lugarTipoIdLocalidad2012;
+    }
+
+    /**
+     * Set codNuc
+     *
+     * @param string $codNuc
+     * @return JurisdiccionGeografica
+     */
+    public function setCodNuc($codNuc)
+    {
+        $this->codNuc = $codNuc;
+    
+        return $this;
+    }
+
+    /**
+     * Get codNuc
+     *
+     * @return string 
+     */
+    public function getCodNuc()
+    {
+        return $this->codNuc;
+    }
+
+    /**
+     * Set desNuc
+     *
+     * @param string $desNuc
+     * @return JurisdiccionGeografica
+     */
+    public function setDesNuc($desNuc)
+    {
+        $this->desNuc = $desNuc;
+    
+        return $this;
+    }
+
+    /**
+     * Get desNuc
+     *
+     * @return string 
+     */
+    public function getDesNuc()
+    {
+        return $this->desNuc;
+    }
+
+    /**
+     * Set direccion
+     *
+     * @param string $direccion
+     * @return JurisdiccionGeografica
+     */
+    public function setDireccion($direccion)
+    {
+        $this->direccion = $direccion;
+    
+        return $this;
+    }
+
+    /**
+     * Get direccion
+     *
+     * @return string 
+     */
+    public function getDireccion()
+    {
+        return $this->direccion;
+    }
+
+    /**
+     * Set zona
+     *
+     * @param string $zona
+     * @return JurisdiccionGeografica
+     */
+    public function setZona($zona)
+    {
+        $this->zona = $zona;
+    
+        return $this;
+    }
+
+    /**
+     * Get zona
+     *
+     * @return string 
+     */
+    public function getZona()
+    {
+        return $this->zona;
+    }
+
+    /**
+     * Set circunscripcionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\CircunscripcionTipo $circunscripcionTipo
+     * @return JurisdiccionGeografica
+     */
+    public function setCircunscripcionTipo(\Sie\AppWebBundle\Entity\CircunscripcionTipo $circunscripcionTipo = null)
+    {
+        $this->circunscripcionTipo = $circunscripcionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get circunscripcionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\CircunscripcionTipo 
+     */
+    public function getCircunscripcionTipo()
+    {
+        return $this->circunscripcionTipo;
+    }
+
+    /**
+     * Set distritoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\DistritoTipo $distritoTipo
+     * @return JurisdiccionGeografica
+     */
+    public function setDistritoTipo(\Sie\AppWebBundle\Entity\DistritoTipo $distritoTipo = null)
+    {
+        $this->distritoTipo = $distritoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get distritoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\DistritoTipo 
+     */
+    public function getDistritoTipo()
+    {
+        return $this->distritoTipo;
+    }
+
+    /**
+     * Set lugarTipoLocalidad
+     *
+     * @param \Sie\AppWebBundle\Entity\LugarTipo $lugarTipoLocalidad
+     * @return JurisdiccionGeografica
+     */
+    public function setLugarTipoLocalidad(\Sie\AppWebBundle\Entity\LugarTipo $lugarTipoLocalidad = null)
+    {
+        $this->lugarTipoLocalidad = $lugarTipoLocalidad;
+    
+        return $this;
+    }
+
+    /**
+     * Get lugarTipoLocalidad
+     *
+     * @return \Sie\AppWebBundle\Entity\LugarTipo 
+     */
+    public function getLugarTipoLocalidad()
+    {
+        return $this->lugarTipoLocalidad;
+    }
+    /**
+     * @var \Sie\AppWebBundle\Entity\JurisdiccionGeograficaAcreditacionTipo
+     */
+    private $juridiccionAcreditacionTipo;
+
+
+    /**
+     * Set juridiccionAcreditacionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\JurisdiccionGeograficaAcreditacionTipo $juridiccionAcreditacionTipo
+     * @return JurisdiccionGeografica
+     */
+    public function setJuridiccionAcreditacionTipo(\Sie\AppWebBundle\Entity\JurisdiccionGeograficaAcreditacionTipo $juridiccionAcreditacionTipo = null)
+    {
+        $this->juridiccionAcreditacionTipo = $juridiccionAcreditacionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get juridiccionAcreditacionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\JurisdiccionGeograficaAcreditacionTipo 
+     */
+    public function getJuridiccionAcreditacionTipo()
+    {
+        return $this->juridiccionAcreditacionTipo;
+    }
+    /**
+     * @var \Sie\AppWebBundle\Entity\ValidacionGeograficaTipo
+     */
+    private $validacionGeograficaTipo;
+
+
+    /**
+     * Set validacionGeograficaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\ValidacionGeograficaTipo $validacionGeograficaTipo
+     * @return JurisdiccionGeografica
+     */
+    public function setValidacionGeograficaTipo(\Sie\AppWebBundle\Entity\ValidacionGeograficaTipo $validacionGeograficaTipo = null)
+    {
+        $this->validacionGeograficaTipo = $validacionGeograficaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get validacionGeograficaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\ValidacionGeograficaTipo 
+     */
+    public function getValidacionGeograficaTipo()
+    {
+        return $this->validacionGeograficaTipo;
+    }
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacionLocalizacion;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacionCoordenada;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistro;
+
+
+    /**
+     * Set fechaModificacionLocalizacion
+     *
+     * @param \DateTime $fechaModificacionLocalizacion
+     * @return JurisdiccionGeografica
+     */
+    public function setFechaModificacionLocalizacion($fechaModificacionLocalizacion)
+    {
+        $this->fechaModificacionLocalizacion = $fechaModificacionLocalizacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacionLocalizacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacionLocalizacion()
+    {
+        return $this->fechaModificacionLocalizacion;
+    }
+
+    /**
+     * Set fechaModificacionCoordenada
+     *
+     * @param \DateTime $fechaModificacionCoordenada
+     * @return JurisdiccionGeografica
+     */
+    public function setFechaModificacionCoordenada($fechaModificacionCoordenada)
+    {
+        $this->fechaModificacionCoordenada = $fechaModificacionCoordenada;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacionCoordenada
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacionCoordenada()
+    {
+        return $this->fechaModificacionCoordenada;
+    }
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return JurisdiccionGeografica
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
+
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     * @return JurisdiccionGeografica
+     */
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+}

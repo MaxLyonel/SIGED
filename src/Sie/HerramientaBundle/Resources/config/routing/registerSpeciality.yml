@@ -1,0 +1,23 @@
+herramienta_info_register_speciality_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaBundle:RegisterSpeciality:index"}
+    options:
+         expose: true
+
+herramienta_info_register_speciality_create_update:
+    path:     /createUpdate
+    defaults: { _controller: "SieHerramientaBundle:RegisterSpeciality:createUpdate"}
+    options:
+         expose: true
+
+herramienta_info_register_speciality_delete:
+    path:     /delete
+    defaults: { _controller: "SieHerramientaBundle:RegisterSpeciality:delete"}
+    options:
+         expose: true
+
+herramienta_info_register_speciality_save:
+    path:     /save
+    defaults: { _controller: "SieHerramientaBundle:RegisterSpeciality:save" }
+    options:
+         expose: true

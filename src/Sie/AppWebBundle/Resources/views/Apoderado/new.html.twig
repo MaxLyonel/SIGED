@@ -1,0 +1,335 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Información {{ app.session.get('tituloTipo') }}
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('apoderado',{'op':'result'})}}"> {{ app.session.get('tituloTipo') }}</a>
+                    </li>
+                    <li>Nuevo</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>{{ app.session.get('estudiante') }}</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <h4 class="text-blue">Datos Personales</h4>
+                            <hr style="margin-top:0px;">
+                            <div id="no-more-tables">
+                                <table class="table table-bordered cf">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>Código Rude</th>
+                                            <th>C.I.</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>Nombre(s)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <td data-title="Rude">{{estudiante.codigoRude}}</td>
+                                    <td data-title="Carnet">{{estudiante.carnetIdentidad}}</td>
+                                    <td data-title="Paterno">{{estudiante.paterno}}</td>
+                                    <td data-title="Materno">{{estudiante.materno}}</td>
+                                    <td data-title="Nombre(s)">{{estudiante.nombre}}</td>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h4 class="text-blue">Datos de Inscripcion</h4>
+                            <hr style="margin-top:0px">
+                            <div id="no-more-tables">
+                                <table class="table table-bordered cf">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>Gestión</th>
+                                            <th>{{app.session.get('institucion')}}</th>
+                                            <th>Nivel</th>
+                                            <th>Grado</th>
+                                            <th>Paralelo</th>
+                                            <th>Turno</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <td data-title="Gestion">{{inscripcion.institucioneducativaCurso.gestionTipo.gestion}}</td>
+                                    <td data-title="{{app.session.get('institucion')}}">{{inscripcion.institucioneducativaCurso.institucioneducativa.institucioneducativa}}</td>
+                                    <td data-title="Nivel">{{inscripcion.institucioneducativaCurso.nivelTipo.nivel}}</td>
+                                    <td data-title="Grado">{{inscripcion.institucioneducativaCurso.gradoTipo.grado}}</td>
+                                    <td data-title="Paralelo">{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo}}</td>
+                                    <td data-title="Turno">{{inscripcion.institucioneducativaCurso.turnoTipo.turno}}</td>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Datos {{ app.session.get('tituloTipo') }}</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelapoderado"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelapoderado" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                            <div class="panel-body">
+                                <h4 class="text-blue">Datos Personales</h4>
+                                <hr style="margin-top:0px">
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="carnet">Carnet</label>
+                                        <input value="{{ persona.carnet }}" id="carnet" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="complemento">Complemento</label>
+                                        <input value="{{ persona.complemento }}" id="complemento" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="paterno">Apellido Paterno</label>
+                                        <input value="{{ persona.paterno }}" id="paterno" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="materno">Apellido Materno</label>
+                                        <input value="{{ persona.materno }}" id="materno" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="nombre">Nombre(s)</label>
+                                        <input value="{{ persona.nombre }}" id="nombre" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="genero">Género</label>
+                                        <input value="{{ persona.generoTipo }}" id="genero" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="fechanac">Fecha de Nacimiento</label>
+                                        <input value="{{ persona.fechaNacimiento|date('d-m-Y') }}" id="fechanac" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="idiomaMaterno">Idioma Materno</label>
+                                        <input value="{{ persona.idiomaMaterno }}" id="idiomaMaterno" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="estadocivilTipo">Estado Civil</label>
+                                        <input value="{{ persona.estadocivilTipo }}" id="estadocivilTipo" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="sangreTipo">Tipo Sangre</label>
+                                        <input value="{{ persona.sangreTipo }}" id="sangreTipo" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-6">
+                                        <label class="control-label" for="direccion">Dirección</label>
+                                        <input value="{{ persona.direccion }}" id="direccion" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="celular">Celular</label>
+                                        <input value="{{ persona.celular }}" id="celular" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="correo">Correo</label>
+                                        <input value="{{ persona.correo }}" id="correo" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <h4 class="text-blue">Otros</h4>
+                                <hr style="margin-top:0px">
+                                <div class="row">
+                                    <div class="form-group col-lg-4 col-md-4">
+                                        {{ form_label(form.apoderadoTipo) }}
+                                        {{ form_widget(form.apoderadoTipo) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-4 col-md-4">
+                                        {{ form_label(form.empleo) }}
+                                        {{ form_widget(form.empleo) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-4 col-md-4">
+                                        {{ form_label(form.instruccionTipo) }}
+                                        {{ form_widget(form.instruccionTipo) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-lg-12 text-center">
+                                        {{ form_widget(form.guardar ) }}
+                                        <a href="{{path('apoderado',{'op':'result'})}}" class="btn btn-default">Cancelar</a>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="datosPersonas">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function () {
+            /* Funcion para averiguar si existe la persona */
+            var xhrVerificar;
+            $('#btnVerificar').on('click', function (e) {
+
+                e.preventDefault();
+                var carnet = $('#form_carnetIdentidad').val();
+                var complemento = $('#form_complemento').val();
+
+                complemento = 'ninguno'
+
+                xhrVerificar = $.ajax({
+                    type: 'get',
+                    url: Routing.generate('verificar_existe_persona_carnet_complemento', {'carnet': carnet, 'complemento': complemento}),
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        if (data.encontrado == 'si') {
+                            $("#form_direccion").prop('disabled', false);
+                            $("#form_celular").prop('disabled', false);
+                            $("#form_correo").prop('disabled', false);
+                            $("#form_paterno").prop('disabled', false);
+                            $("#form_materno").prop('disabled', false);
+                            $("#form_nombre").prop('disabled', false);
+                            $("#form_fechaNacimiento").prop('disabled', false);
+
+                            $("#tableApo").empty();
+                            $.each(data.personasArray, function (i, value) {
+                                $("#tableApo").append('<tr><td>' + i + ': ' + value + '</td></tr>');
+                            });
+
+
+                            var tablaP = '<table class="table table-bordered table-striped cf dataTable" id="tableApo"><thead class="cf"><tr><th>Persona(s)</th></tr></thead><tbody>';
+                            $.each(data.personasArray, function (i, value) {
+                                tablaP += '<tr><td>' + i + ': ' + value + '</td></tr>';
+                            });
+                            tablaP += '</tbody></table>';
+                            $("#datosPersonas").append(tablaP);
+
+                            //$("#datosPersonas").append(data.tablaP);
+                            /*$("#form_paterno").val(data.paterno);
+                             $("#form_materno").val(data.materno);
+                             $("#form_nombre").val(data.nombre);
+                             $("#form_fechaNacimiento").val(data.fechaNacimiento);*/
+                            $("#form_genero").empty();
+                            $.each(data.generosArray, function (i, value) {
+                                if (i == data.genero) {
+                                    sel = 'selected';
+                                } else {
+                                    sel = '';
+                                }
+                                $("#form_genero").append('<option value="' + i + '"' + sel + '>' + value + '</option>');
+                            });
+                            $("#form_idiomaMaterno").empty();
+                            $.each(data.idiomasArray, function (i, value) {
+                                if (i == data.idiomaMaterno) {
+                                    sel = 'selected';
+                                } else {
+                                    sel = '';
+                                }
+                                $("#form_idiomaMaterno").append('<option value="' + i + '"' + sel + '>' + value + '</option>');
+                            });
+                            $("#form_estadoCivil").empty();
+                            $.each(data.estadoCivilArray, function (i, value) {
+                                if (i == data.estadoCivil) {
+                                    sel = 'selected';
+                                } else {
+                                    sel = '';
+                                }
+                                $("#form_estadoCivil").append('<option value="' + i + '"' + sel + '>' + value + '</option>');
+                            });
+                            $("#form_tipoSangre").empty();
+                            $.each(data.tipoSangreArray, function (i, value) {
+                                if (i == data.tipoSangre) {
+                                    sel = 'selected';
+                                } else {
+                                    sel = '';
+                                }
+                                $("#form_tipoSangre").append('<option value="' + i + '"' + sel + '>' + value + '</option>');
+                            });
+                            /*$("#form_direccion").val(data.direccion);
+                             $("#form_celular").val(data.celular);
+                             $("#form_correo").val(data.correo);*/
+                        } else {
+                            $("#form_direccion").prop('disabled', true);
+                            $("#form_celular").prop('disabled', true);
+                            $("#form_correo").prop('disabled', true);
+                            $("#form_paterno").prop('disabled', true);
+                            $("#form_materno").prop('disabled', true);
+                            $("#form_nombre").prop('disabled', true);
+                            $("#form_fechaNacimiento").prop('disabled', true);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

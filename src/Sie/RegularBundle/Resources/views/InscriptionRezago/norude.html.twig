@@ -1,0 +1,132 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Inscripción Rezago Educativo
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('inscription_rezago_index')}}">Buscar</a></li> 
+                    <li class="active">Sin Rude</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <!-- Website Stats  Widget -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i> Inserte Datos Estudiante
+                            </div>
+                            <div class="panel-body">
+
+                                {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form'  } } )}}
+
+
+                                <div class="row">
+
+                                    <div class="col-md-3 form-group">
+                                        {{form_label(form.paterno)}}
+                                        {{form_widget(form.paterno)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        {{form_label(form.materno)}}
+                                        {{form_widget(form.materno)}}
+                                        <div class="help-block with-errors "></div>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        {{form_label(form.nombre)}}
+                                        {{form_widget(form.nombre)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        {{form_label(form.fnac)}}
+                                        <div id="sandbox-container">
+                                            {{form_widget(form.fnac )}}
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 form-group">
+                                        {{form_label(form.ci)}}
+                                        {{form_widget(form.ci)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="col-md-2 form-group">
+                                        {{form_label(form.complemento)}}
+                                        {{form_widget(form.complemento)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="col-md-3 ">
+                                        {{form_label(form.genero)}}
+                                        {{form_widget(form.genero)}}
+                                    </div>
+                                </div>
+
+
+                                </br>
+
+                                {{form_widget(form.save, {'attr':{'class':'btn btn-default'} }) }}
+                                {{form_end(form)}}
+
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- End of Website Stats Widget -->
+
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $('#form_save').click(function (e) {
+            if (($('#form_paterno').val().length) == 0 && $('#form_materno').val().length == 0) {
+                alert('Necesita Apellido Paterno o Materno');
+                return false;
+            }
+        });
+
+
+        $('#form').validator().on('submit', function (e) {
+            if (e.isDefaultPrevented()) {
+                return false;
+                // handle the invalid form...
+            } else {
+                return false;
+                // everything looks good!
+            }
+
+        })
+
+
+    </script>
+
+
+{% endblock %}

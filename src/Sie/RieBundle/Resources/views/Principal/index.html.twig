@@ -1,0 +1,152 @@
+{% extends 'layoutRie.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="block-header">
+        <h2>INICIO</h2>
+    </div>
+
+    <!-- Widgets -->
+    <div class="row clearfix">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="info-box bg-cyan hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">domain</i>
+                </div>
+                <div class="content">
+                    <div class="text">TOTAL INSTITUTOS A NIVEL NACIONAL</div>
+                    <div class="number count-to" data-from="0" data-to="257" data-speed="1000" data-fresh-interval="20">{{rie.NAL.fiscal + rie.NAL.convenio + rie.NAL.privado}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="info-box bg-light-green hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">location_city</i>
+                </div>
+                <div class="content">
+                    <div class="text">TOTAL INSTITUTOS FISCAL/CONVENIO</div>
+                    <div class="number count-to" data-from="0" data-to="243" data-speed="1000" data-fresh-interval="20">{{rie.NAL.fiscal + rie.NAL.convenio}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <div class="info-box bg-orange hover-expand-effect">
+                <div class="icon">
+                    <i class="material-icons">view_week</i>
+                </div>
+                <div class="content">
+                    <div class="text">TOTAL DE INSTITUTOS PRIVADOS</div>
+                    <div class="number count-to" data-from="0" data-to="1225" data-speed="1000" data-fresh-interval="20">{{rie.NAL.privado}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Widgets -->
+
+    <div class="row clearfix">
+        <!-- Task Info -->
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2>DATOS GENERALES DEPARTAMENTALES DE INSTITUTOS TÉCNICOS/TECNOLÓGICOS</h2>
+                    <ul class="header-dropdown m-r--5">
+                        <!--
+                        <li class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">more_vert</i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a href="javascript:void(0);">Action</a></li>
+                                <li><a href="javascript:void(0);">Another action</a></li>
+                                <li><a href="javascript:void(0);">Something else here</a></li>
+                            </ul>
+                        </li>
+                        -->
+                    </ul>
+                </div>
+                <div class="body">
+
+                    <div class="table-responsive">
+                        <table class="table table-hover dashboard-task-infos">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Departamento</th>
+                                    <th>Nro. Total</th>
+                                    <th>Fiscal/Convenio</th>
+                                    <th>Privados</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Beni</td>
+                                    <td><span class="label bg-green">{{rie.BNI.fiscal + rie.BNI.convenio + rie.BNI.privado}}</span></td>
+                                    <td><span class="label bg-green">{{rie.BNI.fiscal + rie.BNI.convenio}}</span></td>
+                                    <td><span class="label bg-green">{{rie.BNI.privado}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Chuquisaca</td>
+                                    <td><span class="label bg-blue">{{rie.CHQ.fiscal + rie.CHQ.convenio + rie.CHQ.privado}}</span></td>
+                                    <td><span class="label bg-blue">{{rie.CHQ.fiscal + rie.CHQ.convenio}}</span></td>
+                                    <td><span class="label bg-blue">{{rie.CHQ.privado}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Cochabamba</td>
+                                    <td><span class="label bg-pink">{{rie.CBA.fiscal + rie.CBA.convenio + rie.CBA.privado}}</span></td>
+                                    <td><span class="label bg-pink">{{rie.CBA.fiscal + rie.CBA.convenio}}</span></td>
+                                    <td><span class="label bg-pink">{{rie.CBA.privado}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>La Paz</td>
+                                    <td><span class="label bg-orange">{{rie.LPZ.fiscal + rie.LPZ.convenio + rie.LPZ.privado}}</span></td>
+                                    <td><span class="label bg-orange">{{rie.LPZ.fiscal + rie.LPZ.convenio}}</span></td>
+                                    <td><span class="label bg-orange">{{rie.LPZ.privado}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Oruro</td>
+                                    <td><span class="label bg-deep-orange">{{rie.ORU.fiscal + rie.ORU.convenio + rie.ORU.privado}}</span></td>
+                                    <td><span class="label bg-deep-orange">{{rie.ORU.fiscal + rie.ORU.convenio}}</span></td>
+                                    <td><span class="label bg-deep-orange">{{rie.ORU.privado}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>Pando</td>
+                                    <td><span class="label bg-blue-grey">{{rie.PND.fiscal + rie.PND.convenio + rie.PND.privado}}</span></td>
+                                    <td><span class="label bg-blue-grey">{{rie.PND.fiscal + rie.PND.convenio}}</span></td>
+                                    <td><span class="label bg-blue-grey">{{rie.PND.privado}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>Potosí</td>
+                                    <td><span class="label bg-light-green">{{rie.PSI.fiscal + rie.PSI.convenio + rie.PSI.privado}}</span></td>
+                                    <td><span class="label bg-light-green">{{rie.PSI.fiscal + rie.PSI.convenio}}</span></td>
+                                    <td><span class="label bg-light-green">{{rie.PSI.privado}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td>Santa Cruz</td>
+                                    <td><span class="label bg-blue">{{rie.SCZ.fiscal + rie.SCZ.convenio + rie.SCZ.privado}}</span></td>
+                                    <td><span class="label bg-blue">{{rie.SCZ.fiscal + rie.SCZ.convenio}}</span></td>
+                                    <td><span class="label bg-blue">{{rie.SCZ.privado}}</span></td>
+                                </tr>                                                                                                
+                                <tr>
+                                    <td>9</td>
+                                    <td>Tarija</td>
+                                    <td><span class="label bg-teal">{{rie.TJA.fiscal + rie.TJA.convenio + rie.TJA.privado}}</span></td>
+                                    <td><span class="label bg-teal">{{rie.TJA.fiscal + rie.TJA.convenio}}</span></td>
+                                    <td><span class="label bg-teal">{{rie.TJA.privado}}</span></td>
+                                </tr>                                                                                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Task Info -->
+{% endblock %}

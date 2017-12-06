@@ -1,0 +1,24 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionAlternativaExcepcionalTipo:
+    type: entity
+    table: estudiante_inscripcion_alternativa_excepcional_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcion:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

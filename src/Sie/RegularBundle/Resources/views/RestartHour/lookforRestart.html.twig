@@ -1,0 +1,50 @@
+<div class="col-md-12 col-sm-12">
+    <!-- Start toolbar location top sub -->
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">Resetear horas registradas</h3>
+        </div><!-- /.panel-heading -->
+        <div class="panel-sub-heading inner-all">
+
+            <div class="clearfix"></div>
+        </div><!-- /.panel-sub-heading -->
+        <div class="panel-body">
+
+          <div class="table-responsive mb-20">
+                              <table class="table" border=1>
+                                  <thead>
+                                  <tr>
+                                      <th class="text-center" style="width: 45px">#</th>
+                                      <th>Rude</th>
+                                      <th>Paterno</th>
+                                      <th>Materno</th>
+                                      <th>Nombre(s)</th>
+
+                                      <th>Resetear</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr class="active">
+                                      <td class="text-center">1</td>
+                                      <td>{{objStudentInscription.codigoRude}}</td>
+                                      <td>{{objStudentInscription.paterno}}</td>
+                                      <td>{{objStudentInscription.materno}}</td>
+                                      <td>{{objStudentInscription.nombre}}</td>
+
+                                      <td>
+                                        <div id="doneReset">
+                                          <a href="#" onclick=" resetHour('{{inscriptionId}}'); ">Resetear</a>
+                                        </div>
+                                      </td>
+                                  </tr>
+
+                                  </tbody>
+                              </table>
+                          </div>
+
+
+
+        </div><!-- /.panel-body -->
+    </div><!-- /.panel -->
+    <!--/ End toolbar location top sub -->
+</div>

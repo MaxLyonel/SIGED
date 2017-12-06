@@ -1,0 +1,23 @@
+sie_diploma_tramite_seguimiento_busqueda:
+    path:     /busqueda
+    defaults: { _controller: SieDiplomaBundle:Seguimiento:busquedaDiploma }
+    
+sie_diploma_tramite_seguimiento_busqueda_rude:
+    path:     /busqueda/tramite
+    defaults: { _controller: SieDiplomaBundle:Seguimiento:busquedaDiplomaRude }
+    
+sie_diploma_tramite_seguimiento_busqueda_serie:
+    path:     /busqueda/tramite/serie
+    defaults: { _controller: SieDiplomaBundle:Seguimiento:busquedaDiplomaSerie }
+
+sie_diploma_tramite_seguimiento_busqueda_detalle:
+    path:     /busqueda/detalle
+    defaults: { _controller: SieDiplomaBundle:Seguimiento:busquedaDiplomaDetalle }
+    
+sie_diploma_tramite_seguimiento_busqueda_rude_detalle:
+    path:     /busqueda/detalle/tramite
+    defaults: { _controller: SieDiplomaBundle:Seguimiento:busquedaDiplomaRudeDetalle }
+    
+sie_diploma_tramite_seguimiento_busqueda_serie_detalle:
+    path:     /busqueda/detalle/tramite/serie
+    defaults: { _controller: SieDiplomaBundle:Seguimiento:busquedaDiplomaSerieDetalle }

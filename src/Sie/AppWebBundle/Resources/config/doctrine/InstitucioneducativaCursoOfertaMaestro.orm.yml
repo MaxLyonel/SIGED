@@ -1,0 +1,79 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaCursoOfertaMaestro:
+    type: entity
+    table: institucioneducativa_curso_oferta_maestro
+    indexes:
+        institucioneducativa_curso_oferta_id_fk:
+            columns:
+                - institucioneducativa_curso_oferta_id
+        IDX_5CC3C439A4B6FF2:
+            columns:
+                - maestro_inscripcion_id
+        IDX_5CC3C439756DFBFA:
+            columns:
+                - nota_tipo_id
+    uniqueConstraints:
+        uq_institucioneducativa_curso_oferta_maestro:
+            columns:
+                - institucioneducativa_curso_oferta_id
+                - maestro_inscripcion_id
+                - nota_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        horasMes:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: horas_mes
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        esVigenteMaestro:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente_maestro
+    manyToOne:
+        maestroInscripcion:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestro_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        notaTipo:
+            targetEntity: NotaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nota_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaCursoOferta:
+            targetEntity: InstitucioneducativaCursoOferta
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_oferta_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,123 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption -%}
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="jumbotron">
+                    <div class="container">
+                        <h2>Unidad Educativa: {{ uedesc }} </h2>
+                        <p>Código SIE: {{ sie }}</p>
+                    </div>                    
+                </div>         
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Información</a></li>
+                </ol> 
+            </div>
+        </div>    
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4><i class="fa fa-circle text-dpl"></i> Lista de alumnos con observaciones.</h4>
+                        </div>
+{#                        <div class="portlet-widgets">
+                            <span class="divider"></span>
+                            <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                        </div>#}
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table  id="tablaListadoestobservados" class="table table-bordered table-hover cf">    
+                                <thead class="cf">
+                                    <tr>
+                                        <th>Código Rude</th>                        
+                                        <th>Nombres</th>
+                                        <th>Apellido Paterno</th>
+                                        <th>Apellido Materno</th>                                                                                
+                                        <th>Gestión</th>
+                                        <th>Observación</th>                              
+                                        {#<th>Posible Causa</th>#}
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for persona in eoEntity %}
+                                        {% if (persona.id  == '1') or (persona.id  == '3') or (persona.id  == '4')%} 
+                                            <tr class = "warning">     
+                                        {% endif %}
+                                        {% if (persona.id  == '2') or (persona.id == '5') %} 
+                                            <tr class = "danger">     
+                                        {% endif %} 
+                                            <td>{{ persona.codigo_rude }}</td>
+                                            <td>{{ persona.nombre }}</td>                        
+                                            <td>{{ persona.paterno }}</td>
+                                            <td>{{ persona.materno }}</td>
+                                            <td>{{ persona.gestion_tipo_id  }}</td>
+                                            <td>{{ persona.observacion  }}</td>
+                                            {#<td>{{ persona.obs  }}</td>#}
+                                            <td data-title="VerNota" class="text-left">
+                                                 <a href="{{ path('history_inscription_quest', { 'rude': persona.codigo_rude }) }}" ><span class="glyphicon glyphicon-eye-open"></span> Ver Historial</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     }
+                    };
+
+    var currentLang = espanol;    
+        
+    $(document).ready(function() {
+        var dtable = $('#tablaListadoestobservados').dataTable( {"oLanguage": espanol} );
+       
+        $('#tablaListadoestobservados tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                dtable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        {#$('#btn').click(function(){
+            dtable.fnDestroy();
+            dtable = null;
+            currentLang = (currentLang == english) ? espanol : english;
+            dtable = $('#tablaListadoestobservados').dataTable( {"oLanguage": currentLang} );
+        });#}
+        
+    });
+    </script>
+{% endblock %}

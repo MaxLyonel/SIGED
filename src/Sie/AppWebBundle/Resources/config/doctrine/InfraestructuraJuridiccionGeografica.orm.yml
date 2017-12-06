@@ -1,0 +1,60 @@
+Sie\AppWebBundle\Entity\InfraestructuraJuridiccionGeografica:
+    type: entity
+    table: infraestructura_juridiccion_geografica
+    indexes:
+        IDX_8023A89B179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_8023A89BFCA06947:
+            columns:
+                - juridiccion_geografica_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaoperativo:
+            type: date
+            nullable: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+        infraestructura:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+    manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        juridiccionGeografica:
+            targetEntity: JurisdiccionGeografica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                juridiccion_geografica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,38 @@
+institucioneducativa:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:Institucioneducativa:index" }
+
+institucioneducativa_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:Institucioneducativa:show" }
+
+institucioneducativa_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:Institucioneducativa:new" }
+
+institucioneducativa_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:Institucioneducativa:create" }
+    methods:  POST
+
+institucioneducativa_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:Institucioneducativa:edit" }
+
+institucioneducativa_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:Institucioneducativa:update" }
+    methods:  [POST, PUT]
+
+institucioneducativa_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:Institucioneducativa:delete" }
+    methods:  [POST, DELETE]
+
+institucioneducativa_result:
+    path:     /findieducativa
+    defaults: { _controller: "SieAppWebBundle:Institucioneducativa:findieducativa" }
+    
+institucioneducativa_view:
+    path:     /view/
+    defaults: { _controller: "SieAppWebBundle:Institucioneducativa:view" }

@@ -1,0 +1,61 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionExtranjero:
+    type: entity
+    table: estudiante_inscripcion_extranjero
+    indexes:
+        IDX_A00716A3A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_A00716A392548EB1:
+            columns:
+                - pais_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        institucioneducativaOrigen:
+            type: string
+            nullable: false
+            length: 200
+            fixed: false
+            comment: ''
+            column: institucioneducativa_origen
+        cursoVencido:
+            type: text
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            column: curso_vencido
+        rutaImagen:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+            column: ruta_imagen
+    manyToOne:
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        paisTipo:
+            targetEntity: PaisTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                pais_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,15 @@
+restart_hour_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:RestartHour:index }
+
+restart_hour_lookfor_restart:
+    path:     /lookforRestart
+    defaults: { _controller: SieRegularBundle:RestartHour:lookforRestart }
+    options:
+         expose: true
+
+restart_hour_restart:
+    path:     /restart
+    defaults: { _controller: SieRegularBundle:RestartHour:restart }
+    options:
+         expose: true

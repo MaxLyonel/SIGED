@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+
+    <!-- START @HEAD -->
+    {% block stylesheets %}
+        <head>
+            <!-- START @META SECTION -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+            <meta name="description" content="Juegos Deportivos Estudiantiles Plurinacionales Presidente Evo">
+            <meta name="keywords" content="Ministerio de Eduación">
+            <meta name="author" content="Djava UI">
+            <title>MinEdu | Juegos Deportivos Estudiantiles Plurinacionales Presidente Evo</title>
+            <!--/ END META SECTION -->
+
+            <!-- START @FAVICONS -->
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-144x144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-114x114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-72x72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-57x57-precomposed.png" rel="apple-touch-icon-precomposed">
+            <link href="{{asset('favicon.ico')}}" rel="shortcut icon">
+            <!--/ END FAVICONS -->
+
+            <!-- START @FONT STYLES -->
+            <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet">
+            <link href="http://fonts.googleapis.com/css?family=Oswald:700,400" rel="stylesheet">
+            <!--/ END FONT STYLES -->
+
+            <!-- START @GLOBAL MANDATORY STYLES -->
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+            <!--/ END GLOBAL MANDATORY STYLES -->
+
+            <!-- START @PAGE LEVEL STYLES -->
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/animate.css/animate.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
+
+
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+
+            <!-- <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet"> -->
+            <link rel="stylesheet" type="text/css" href="{{asset('juegos/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css')}}">
+            <!--/ END PAGE LEVEL STYLES -->
+
+            <!-- START @THEME STYLES -->
+            <link href="{{asset('juegos/assets/admin/css/reset.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/admin/css/layout.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/admin/css/components.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/admin/css/plugins.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/admin/css/themes/default.theme.css')}}" rel="stylesheet" id="theme">
+            <link href="{{asset('juegos/assets/admin/css/custom.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/admin/css/menuTree.css')}}" rel="stylesheet">
+            <!--/ END THEME STYLES -->
+
+            <!-- START @IE SUPPORT -->
+            <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+            <!--[if lt IE 9]>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/html5shiv/dist/html5shiv.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/respond-minmax/dest/respond.min.js')}}"></script>
+            <![endif]-->
+            <!--/ END IE SUPPORT -->
+        </head
+    {%endblock%}
+    <!--/ END HEAD -->
+
+    <!--
+
+    |=========================================================================================================================|
+    |  TABLE OF CONTENTS (Use search to find needed section)                                                                  |
+    |=========================================================================================================================|
+    |  01. @HEAD                        |  Container for all the head elements                                                |
+    |  02. @META SECTION                |  The meta tag provides metadata about the HTML document                             |
+    |  03. @FAVICONS                    |  Short for favorite icon, shortcut icon, website icon, tab icon or bookmark icon    |
+    |  04. @FONT STYLES                 |  Font from google fonts                                                             |
+    |  05. @GLOBAL MANDATORY STYLES     |  The main 3rd party plugins css file                                                |
+    |  06. @PAGE LEVEL STYLES           |  Specific 3rd party plugins css file                                                |
+    |  07. @THEME STYLES                |  The main theme css file                                                            |
+    |  08. @IE SUPPORT                  |  IE support of HTML5 elements and media queries                                     |
+    |=========================================================================================================================|
+    |  09. @BODY                        |  Contains all the contents of an HTML document                                      |
+    |  10. @WRAPPER                     |  Wrapping page section                                                              |
+    |  11. @HEADER                      |  Header page section contains about logo, top navigation, notification menu         |
+    |  12. @SIDEBAR LEFT                |  Sidebar page section contains all sidebar menu left                                |
+    |  13. @PAGE CONTENT                |  Contents page section contains breadcrumb, content page, footer page               |
+    |  14. @SIDEBAR RIGHT               |  Sidebar page section contains all sidebar menu right                               |
+    |  15. @BACK TOP                    |  Element back to top and action                                                     |
+    |========================================================================================================================|
+    |  16. @CORE PLUGINS                |  The main 3rd party plugins script file                                             |
+    |  17. @PAGE LEVEL PLUGINS          |  Specific 3rd party plugins script file                                             |
+    |  18. @PAGE LEVEL SCRIPTS          |  The main theme script file                                                         |
+    |=========================================================================================================================|
+
+    START @BODY
+    |=========================================================================================================================|
+        |  TABLE OF CONTENTS (Apply to body class)                                                                                |
+        |=========================================================================================================================|
+    |  01. page-boxed                   |  Page into the box is not full width screen                                         |
+        |  02. page-header-fixed            |  Header element become fixed position                                               |
+        |  03. page-sidebar-fixed           |  Sidebar element become fixed position with scroll support                          |
+        |  04. page-sidebar-minimize        |  Sidebar element become minimize style width sidebar                                |
+        |  05. page-footer-fixed            |  Footer element become fixed position with scroll support on page content           |
+        |  06. page-sound                   |  For playing sounds on user actions and page events                                 |
+        |=========================================================================================================================|
+
+    -->
+    <body>
+
+        <!--[if lt IE 9]>
+        <p class="upgrade-browser">Upps!! You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" target="_blank">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- START @WRAPPER -->
+        <section id="wrapper">
+            <!-- Start page header -->
+            <div class="header-content">
+                <h2><i class="glyphicon glyphicon-pencil"></i> Seguimiento <span>Juegos Deportivos Plurinacionales</span></h2>
+                <div class="breadcrumb-wrapper hidden-xs">
+                    <span class="label">Usted esta aqui:</span>
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-home"></i>
+                            <a href="#">Seguimiento</a>
+                            <i class="fa fa-angle-right"></i>
+                        </li>
+                        <li class="active">Fase nacional</li>
+                    </ol>
+                </div><!-- /.breadcrumb-wrapper -->
+            </div><!-- /.header-content -->
+            <!--/ End page header -->
+
+            <div class="body-content animated fadeIn">                 
+                <small>                      
+                    {% if entity is defined %}
+                        <div class="panel rounded shadow">                                
+                            <div class="panel-body no-padding">
+                                <div class="form-body">  
+                                    <div class="form-group no-margin">
+                                        <div class="row">
+                                            <div class="col-md-2 text-center">
+                                                <strong>DELEGACIÓN</strong>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <strong>ESTUDIANTE SALIDA</strong>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <strong>ESTUDIANTE RETORNO</strong>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <strong>SUB TOTAL ESTUDIANTE</strong>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <strong>DELEGADO SALIDA</strong>
+                                            </div>   
+                                            <div class="col-md-1 text-center">
+                                                <strong>DELEGADO RETORNO</strong>
+                                            </div>   
+                                            <div class="col-md-1 text-center">
+                                                <strong>SUB TOTAL DELEGADO</strong>
+                                            </div>     
+                                            <div class="col-md-2 text-center">
+                                                <strong>TOTAL</strong>
+                                            </div> 
+                                            <div class="col-md-2 text-center">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% set totalEstSalida = 0 %}
+                                    {% set totalEstRetorno = 0 %}   
+                                    {% set totalEst = 0 %}                           
+                                    {% set totalDelSalida = 0 %}                             
+                                    {% set totalDelRetorno = 0 %}                            
+                                    {% set totalDel = 0 %}                            
+                                    {% set totalGeneral = 0 %} 
+
+                                    {% for data in entity%}
+                                        {% set id = data.id %}    
+                                        {% set departamento = data.departamento %}
+                                        {% set estSalida = data.delegado_cantidad_salida %}
+                                        {% set estRetorno = data.estudiante_cantidad_llegada %}   
+                                        {% set subTotalEst = data.delegado_cantidad_salida + data.estudiante_cantidad_llegada %}                           
+                                        {% set delSalida = data.delegado_cantidad_salida %}                             
+                                        {% set delRetorno = data.delegado_cantidad_llegada %}                            
+                                        {% set subTotalDel = data.delegado_cantidad_salida + data.delegado_cantidad_llegada %}  
+                                        {% set total = subTotalDel + subTotalEst %}   
+
+                                        {% set totalEstSalida = totalEstSalida + estSalida %}
+                                        {% set totalEstRetorno = totalEstRetorno + estRetorno %}   
+                                        {% set totalEst = totalEst + subTotalEst %}                           
+                                        {% set totalDelSalida = totalDelSalida + delSalida %}                             
+                                        {% set totalDelRetorno = totalDelRetorno + delRetorno %}                            
+                                        {% set totalDel = totalDel + subTotalDel %}                              
+                                        {% set totalGeneral = totalGeneral + totalEst + totalDel %}                                       
+                                       
+                                        <form role="form" action="{{ path('sie_juegos_seguimiento_save_index') }}" method="POST" class="form-horizontal form-bordered">
+                                            <input type="hidden" name="id" value="{{ id }}" /> 
+                                            <div class="form-group no-margin">
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        {{departamento}}
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input placeholder="0" class="form-control" type="number" name="est_salida_{{id}}" value="{{estSalida}}">
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input placeholder="0" class="form-control" type="number" name="est_retorno_{{id}}" value="{{estRetorno}}">
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <button type="button" class="btn btn-warning btn-block"><strong>{{ subTotalEst }}</strong></button>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <input placeholder="0" class="form-control" type="number" name="del_salida_{{id}}" value="{{delSalida}}">
+                                                    </div>   
+                                                    <div class="col-md-1">
+                                                        <input placeholder="0" class="form-control" type="number" name="del_retorno_{{id}}" value="{{delRetorno}}">
+                                                    </div>   
+                                                    <div class="col-md-1">
+                                                        <button type="button" class="btn btn-info btn-block"><strong>{{ subTotalDel }}</strong></button>
+                                                    </div>
+                                                    <div class="col-md-2 text-center">                                                
+                                                        <button type="button" class="btn btn-lilac btn-block"><strong>{{ totalGeneral }}</strong></button>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button class="btn btn-success btn-block" type="submit"><strong>Guardar</strong></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    {%endfor%}
+                                    <div class="form-group no-margin">
+                                        <div class="row">
+                                            <div class="col-md-2 text-center">
+                                                <strong>TOTAL GENERAL</strong>
+                                            </div>
+                                            <div class="col-md-1 text-center">                                                
+                                                <button type="button" class="btn btn-lilac btn-block"><strong>{{ totalEstSalida }}</strong></button>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <button type="button" class="btn btn-lilac btn-block"><strong>{{ totalEstRetorno }}</strong></button>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <button type="button" class="btn btn-lilac btn-block"><strong>{{ totalEst }}</strong></button>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <button type="button" class="btn btn-lilac btn-block"><strong>{{ totalDelSalida }}</strong></button>
+                                            </div>   
+                                            <div class="col-md-1 text-center">
+                                                <button type="button" class="btn btn-lilac btn-block"><strong>{{ totalDelRetorno }}</strong></button>
+                                            </div>   
+                                            <div class="col-md-1 text-center">
+                                                <button type="button" class="btn btn-lilac btn-block"><strong>{{ totalDel }}</strong></button>
+                                            </div>   
+                                            <div class="col-md-2 text-center">
+                                                <button type="button" class="btn btn-inverse btn-block"><strong>{{ totalGeneral }}</strong></button>
+                                            </div>   
+                                            <div class="col-md-2 text-center">
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- /.form-body -->
+                            </div><!-- /.panel-body -->
+                        </div>
+                    {% endif %}      
+                </small>
+            </div>                          
+            <!--/div-->
+            <!--/ End mail page -->
+            <!-- Start body content -->
+            <!--/ End body content -->
+        </section><!-- /#wrapper -->
+        <!--/ END WRAPPER -->
+
+        <!-- START @BACK TOP -->
+        <div id="back-top" class="animated pulse circle">
+            <i class="fa fa-angle-up"></i>
+        </div><!-- /#back-top -->
+        <!--/ END BACK TOP -->
+
+        {% block javascripts %}
+
+            <!-- START JAVASCRIPT SECTION (Load javascripts at bottom to reduce load time) -->
+            <!-- START @CORE PLUGINS -->
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/typehead.js/dist/handlebars.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/typehead.js/dist/typeahead.bundle.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-nicescroll/jquery.nicescroll.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery.sparkline.min/index.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-easing-original/jquery.easing.1.3.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/bootbox/bootbox.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/retina.js/dist/retina.min.js')}}"></script>
+            <!--/ END CORE PLUGINS -->
+
+            <script src="{{asset('juegos/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js')}}"></script>
+
+            <!-- START @PAGE LEVEL PLUGINS -->
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/js/jasny-bootstrap.fileinput.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/holderjs/holder.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js')}}"></script>
+
+
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
+            <!--/ END PAGE LEVEL PLUGINS -->
+
+            <!-- START @PAGE LEVEL SCRIPTS -->
+            <script src="{{asset('juegos/assets/admin/js/apps.js')}}"></script>
+            <script src="{{asset('juegos/assets/admin/js/pages/blankon.form.element.js')}}"></script>
+            <script src="{{asset('juegos/assets/admin/js/demo.js')}}"></script>
+            <script src="{{asset('juegos/assets/admin/js/menuTree.js')}}"></script>
+            <!--/ END PAGE LEVEL SCRIPTS -->
+            <!--/ END JAVASCRIPT SECTION -->
+
+            <!-- START GOOGLE ANALYTICS -->
+            <script>
+
+            </script>
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+            <!--/ END GOOGLE ANALYTICS -->
+        {%endblock%}
+    </body>
+    <!--/ END BODY -->
+
+</html>

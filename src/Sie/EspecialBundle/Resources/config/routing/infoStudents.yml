@@ -1,0 +1,33 @@
+info_students_index:
+    path:     /
+    defaults: { _controller:SieEspecialBundle:InfoStudents:index }
+
+info_students_see_students:
+    path:     /sie/seestudents/
+    defaults: { _controller: SieEspecialBundle:InfoStudents:seeStudents }
+    options:
+         expose: true
+
+info_students_open_inscription:
+    path:     /sie/openinscription/
+    defaults: { _controller: "SieEspecialBundle:InfoStudents:openInscription"}
+    options:
+         expose: true
+
+info_students_findstudent:
+    path:     /sie/findstudent
+    defaults: { _controller: "SieEspecialBundle:InfoStudents:findStudent"}
+    options:
+         expose: true
+
+info_students_saveinscription:
+    path:     /save
+    defaults: { _controller: "SieEspecialBundle:InfoStudents:saveInscription"}
+    options:
+         expose: true
+
+info_students_removeinscription:
+    path:     /sie/removeInscription/
+    defaults: { _controller: SieEspecialBundle:InfoStudents:removeInscription }
+    options:
+         expose: true

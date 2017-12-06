@@ -1,0 +1,15 @@
+sie_herramienta_upfile_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:UpFileUe:index }
+
+sie_herramienta_upfile_upfileweb:
+    path:    /upfileweb
+    defaults: { _controller: SieHerramientaBundle:UpFileUe:upfileweb }
+
+sie_herramienta_upfile_checkit_web:
+    path:    /thinkit
+    defaults: { _controller: SieHerramientaBundle:UpFileUe:greeting }
+
+sie_herramienta_upfile_find:
+    path:    /find
+    defaults: { _controller: SieHerramientaBundle:UpFileUe:find }

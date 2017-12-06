@@ -1,0 +1,42 @@
+<p>  
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4>ESTUDIANTE A REGISTRAR EN EL CURSO.</h4>
+    </div>
+    <div class="panel-body">
+        <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+            <table id="tablaListadoPersonas" class="display" border="0" cellspacing="0" width="100%">    
+                    <tr>
+                        <td align="center"><strong>Paterno</strong></td>
+                        <td align="center"><strong>Materno</strong></td>
+                        <td align="center"><strong>Nombre</strong></td>
+                    </tr>             
+                    <tr>
+                        <td align="center">{{ filas.paterno }}</td>
+                        <td align="center">{{ filas.materno }}</td>
+                        <td align="center">{{ filas.nombre }}</td>
+                    </tr>                
+                    <tr>
+                        <td align="center"><br/><strong>Fecha Nacimiento</strong></td>
+                        <td align="center"><br/><strong>C.I.</strong></td>
+                        <td align="center"><br/><strong>Codigo Rude</strong></td>
+                    </tr>
+                    <tr>
+                        <td align="center">{{ filas.fecha_nac }}</td>
+                        <td align="center">{{ filas.ci }}{% if filas.complemento != '' %}-{{filas.complemento}}{% endif %}</td></td>
+                        <td align="center">{{ filas.rude }}</td>
+                    </tr>               
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row"
+    <div class="col-xs-12">
+        <a role="button" onclick="cambio()" id="boton" class="btn btn-success btn-large glyphicon glyphicon-ok" href="{{ path('sie_pnp_registrar_estudiante_curso', { 'rude': filas.rude,'curso_id':curso_id,'tipo':0}) }}"> Registrar estudiante</a>
+    </div>
+</div>
+<script type="text/javascript">
+    function cambio(){
+        document.getElementById("boton").style.visibility = 'hidden';
+    }
+</script>

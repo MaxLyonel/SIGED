@@ -1,0 +1,32 @@
+Sie\AppWebBundle\Entity\PeriodoTipo:
+    type: entity
+    table: periodo_tipo
+    uniqueConstraints:
+        periodo_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        periodo:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        fechainicio:
+            type: date
+            nullable: false
+            comment: ''
+        fechafin:
+            type: date
+            nullable: false
+            comment: ''
+    lifecycleCallbacks: {  }

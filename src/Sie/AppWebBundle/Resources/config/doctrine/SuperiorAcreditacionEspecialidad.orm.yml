@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\SuperiorAcreditacionEspecialidad:
+    type: entity
+    table: superior_acreditacion_especialidad
+    indexes:
+        IDX_19A306284E185555:
+            columns:
+                - superior_acreditacion_tipo_id
+        IDX_19A30628E4E33BC4:
+            columns:
+                - superior_especialidad_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        superiorAcreditacionTipo:
+            targetEntity: SuperiorAcreditacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_acreditacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        superiorEspecialidadTipo:
+            targetEntity: SuperiorEspecialidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_especialidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

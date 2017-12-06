@@ -1,0 +1,108 @@
+ReasignarInstitucionBono:
+    path:     /{op}
+    defaults: { _controller: SieBjpBundle:ReasignarInstitucionBono:index, op:search }
+
+ReasignarInstitucionBono_webForm:
+    path:     /webForm/
+    defaults: { _controller: SieBjpBundle:ReasignarInstitucionBono:webForm }
+
+ReasignarInstitucionBono_new:
+    path:     /new/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:new" }
+    methods:  POST
+
+ReasignarInstitucionBono_create:
+    path:     /create/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:create" }
+    methods:  POST
+
+listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:listargrados" }
+    options:
+         expose: true
+
+ReasignarInstitucionBono_cargar_niveles:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}/{turno}/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:cargarNiveles"}
+    options:
+         expose: true
+
+ReasignarInstitucionBono_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{nivel}/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:cargarGrados"}
+    options:
+         expose: true
+
+ReasignarInstitucionBono_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{nivel}/{grado}/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:cargarParalelos"}
+    options:
+         expose: true
+
+ReasignarInstitucionBono_listar_areas_curso:
+    path:     /lista_areas_curso_a/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:lista_areas_curso" }
+    options:
+         expose: true
+
+ReasignarInstitucionBono_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:lista_areas_nivel" }
+    options:
+         expose: true
+
+ReasignarInstitucionBono_listar_areas_curso_adicionar_eliminar:
+    path:     /lista_areas_curso_adicionar_eliminar/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:lista_areas_curso_adicionar_eliminar" }
+    options:
+         expose: true
+
+ReasignarInstitucionBono_asignar_maestro_area:
+    path:     /asignar_maestro_area/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:asignar_maestro" }
+    options:
+         expose: true
+
+ReasignarInstitucionBono_delete:
+    path:     /delete/{idCursoOferta}
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:delete" }
+    options:
+         expose: true
+
+ReasignarInstitucionBono_file:
+    path:     /sie/build/
+    defaults: { _controller: SieBjpBundle:ReasignarInstitucionBono:build }
+    options:
+         expose: true          
+
+ReasignarInstitucionBono_maestros:
+    path:     /maestros_materia/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:maestros"}
+    options:
+         expose: true
+
+ReasignarInstitucionBono_maestros_asignar_siged:
+    path:     /maestros_asignar_siged/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:maestrosAsignar"}
+    options:
+         expose: true
+
+
+ReasignarInstitucionBono_buscar_infoUe:
+    path:     /buscar_infoUe/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:buscarInfoUe"}
+    options:
+         expose: true  
+
+ReasignarInstitucionBono_mover_habilitados:
+    path:     /mover_habilitados/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:moverHabilitados"}
+    options:
+         expose: true                
+
+reasignar_ue:
+    path:     /reasignar_ue/{id}/{idunimil}/
+    defaults: { _controller: "SieBjpBundle:ReasignarInstitucionBono:reasignarue"}
+    options:
+         expose: true   

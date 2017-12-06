@@ -1,0 +1,146 @@
+  
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Busqueda de persona</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active">
+                        <a href="#nacional" role="tab" data-toggle="tab" onclick="nacional()">
+                            <icon class="fa fa-home"></icon> Nacionales
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#nacional" role="tab" data-toggle="tab" onclick="extranjero()">
+                            <i class="fa fa-user"></i> Extranjero
+                        </a>
+                    </li>
+                    {# <li>
+                        <a href="#sincarnet" role="tab" data-toggle="tab">
+                            <i class="glyphicon glyphicon-eye-open"></i> Sin carnet
+                        </a>
+                    </li> #}
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="nacional">
+                        {{ form_start(formBuscarPersona) }}  
+                        <div class="row">                            
+                            <div class="col-xs-6">            
+                                {{ form_row(formBuscarPersona.ci, { 'id': 'ci'}) }}                 
+                            </div>
+                            <div class="col-xs-6">
+                                {{ form_row(formBuscarPersona.complemento, { 'id': 'complemento'}) }}
+                                {{ form_row(formBuscarPersona.extranjero, { 'id': 'extranjero','value':0}) }}
+                            </div>                                                         
+                        </div>
+                        <p>
+                        <div class="row">
+                            <div class="col-xs-12">            
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <p class="text-center"></p>
+                                            </div>                        
+                                            <div class="col-xs-6">
+                                                {{ form_row(formBuscarPersona.buscar, { 'id': 'buscar'}) }}                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                                    
+                        </div>
+                        {{ form_end(formBuscarPersona) }}    
+                    </div>
+                            
+                    {#<div class="tab-pane fade" id="extranjero">
+                        {{ form_start(formExtranjero) }} 
+                        <div id="row">
+                            <div class="col-xs-12">            
+                                {{ form_row(formExtranjero.ci, { 'id': 'ci'}) }}                  
+                            </div>                            
+                        </div>
+                        <p>
+                        <div class="row">
+                            <div class="col-xs-12">            
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <p class="text-center"></p>
+                                            </div>                        
+                                            <div class="col-xs-6">
+                                                {{ form_row(formExtranjero.buscar, { 'id': 'buscar'}) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                                    
+                        </div>
+                        {{ form_end(formExtranjero) }}                       
+                    </div>
+
+                    {#<div class="tab-pane fade" id="sincarnet">
+                            {{ form_start(formSinCarnet) }} 
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    {{ form_row(formSinCarnet.nombre, { 'id': 'nombre'}) }}                                      
+                                </div>                                  
+                                <div class="col-lg-4">
+                                    {{ form_row(formSinCarnet.paterno, { 'id': 'paterno'}) }}                                       
+                                </div>    
+                                <div class="col-lg-4">
+                                    {{ form_row(formSinCarnet.materno, { 'id': 'materno'}) }}                                       
+                                </div>                                
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    {{ form_row(formSinCarnet.fechaNacimiento, { 'id': 'fechaNacimiento'}) }}                                                                             
+                                </div>
+                                <div class="col-lg-6">
+                                    {{ form_row(formSinCarnet.genero, { 'id': 'genero'}) }}  
+                                </div>                                                                                                   
+                            </div>
+                            <p>
+                            <div class="row">
+                                <div class="col-xs-12">            
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <p class="text-center"></p>
+                                                </div>                        
+                                                <div class="col-xs-6">
+                                                    {{ form_row(formSinCarnet.buscar, { 'id': 'buscar'}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                                    
+                            </div>
+                            {{ form_end(formSinCarnet) }} #}
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function extranjero(){
+        document.getElementById('complemento').type = 'hidden';
+        document.getElementById('l_complemento').innerHTML = '';
+        document.getElementById('extranjero').value = 1;
+        document.getElementById('complemento').value = "";
+        document.getElementById('ci').value = "";
+    }
+
+    function nacional(){
+        document.getElementById('complemento').type = 'text';
+        document.getElementById('l_complemento').innerHTML = 'Complemento :';
+        document.getElementById('extranjero').value = 0;
+        document.getElementById('complemento').value = "";
+        document.getElementById('ci').value = "";
+    }
+</script>

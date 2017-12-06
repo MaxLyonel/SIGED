@@ -1,0 +1,53 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>MaestroInscripcion list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Rdaplanillasid</th>
+                <th>Ref</th>
+                <th>Idioma</th>
+                <th>Lee</th>
+                <th>Habla</th>
+                <th>Escribe</th>
+                <th>Estudia</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('maestroinscripcion_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.rdaPlanillasId }}</td>
+                <td>{{ entity.ref }}</td>
+                <td>{{ entity.idioma }}</td>
+                <td>{{ entity.lee }}</td>
+                <td>{{ entity.habla }}</td>
+                <td>{{ entity.escribe }}</td>
+                <td>{{ entity.estudia }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('maestroinscripcion_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('maestroinscripcion_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('maestroinscripcion_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

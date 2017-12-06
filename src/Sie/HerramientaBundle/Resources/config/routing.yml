@@ -1,0 +1,115 @@
+sie_herramienta_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SieHerramientaBundle:Default:index }
+
+sie_app_web_inscription_ue_all:
+    resource: "@SieHerramientaBundle/Resources/config/routing/inscriptionUeAll.yml"
+    prefix:   /sie/inscriptionUeAll
+
+sie_app_web_areas:
+    resource: "@SieHerramientaBundle/Resources/config/routing/adicioneliminacionareas.yml"
+    prefix:   /sie/adicionEliminacionAreas
+
+sie_regular_notas_cualitativas:
+    resource: "@SieHerramientaBundle/Resources/config/routing/notascualitativas.yml"
+    prefix:   /sie/notascualitativas
+
+sie_regular_notas:
+    resource: "@SieHerramientaBundle/Resources/config/routing/notas.yml"
+    prefix:   /sie/notas
+
+sie_herramienta_inbox:
+    resource: "@SieHerramientaBundle/Resources/config/routing/inbox.yml"
+    prefix:   /sie/inbox
+
+sie_herramienta_inboxrequest:
+    resource: "@SieHerramientaBundle/Resources/config/routing/inboxrequest.yml"
+    prefix:   /sie/inboxrequest
+
+sie_herramienta_info_ueducativa:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoUeducativa.yml"
+    prefix:   /sie/infoUeducativa
+
+sie_herramienta_info_personal_adm:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoPersonalAdm.yml"
+    prefix:   /acceso/infoPersonalAdm
+
+sie_herramienta_info_maestro:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoMaestro.yml"
+    prefix:   /acceso/infoMaestro
+
+sie_herramienta_info_estudiante:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudiante.yml"
+    prefix:   /sie/infoEstudiante
+
+sie_herramienta_info_estudianterequest:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianterequest.yml"
+    prefix:   /sie/infoEstudianteRequest
+
+sie_herramienta_ieducativa:
+    resource: "@SieHerramientaBundle/Resources/config/routing/ieducativa.yml"
+    prefix:   /sie/infoIeducativa
+
+sie_herramienta_mallacurricular:
+    resource: "@SieHerramientaBundle/Resources/config/routing/mallacurricular.yml"
+    prefix:   /sie/malla
+
+sie_herramienta_creacion_cursos:
+    resource: "@SieHerramientaBundle/Resources/config/routing/creacioncursos.yml"
+    prefix:   /sie/crearCursos
+
+sie_herramienta_inscription_tecnica:
+    resource: "@SieHerramientaBundle/Resources/config/routing/inscriptionTecnica.yml"
+    prefix:   /sie/inscriptiontec
+
+sie_herramienta_info_tecnica:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoTecnica.yml"
+    prefix:   /sie/infotecnica
+
+sie_herramienta_cursos_tecnica:
+    resource: "@SieHerramientaBundle/Resources/config/routing/cursosTecnica.yml"
+    prefix:   /sie/cursostecnica
+
+sie_herramienta_estudiantes_tecnica:
+    resource: "@SieHerramientaBundle/Resources/config/routing/estudiantesTecnica.yml"
+    prefix:   /sie/estudiantestecnica
+
+sie_herramienta_change_paralelo:
+    resource: "@SieHerramientaBundle/Resources/config/routing/cambioParalelo.yml"
+    prefix:   /sie/cambioparalelo
+
+sie_herramienta_tramite:
+    resource: "@SieHerramientaBundle/Resources/config/routing/tramite.yml"
+    prefix:   /sie/tramiteAcademico
+
+sie_herramienta_findsie:
+    resource: "@SieHerramientaBundle/Resources/config/routing/findsie.yml"
+    prefix:   /sie/findsie
+
+sie_herramienta_newspeciality:
+    resource: "@SieHerramientaBundle/Resources/config/routing/newspeciality.yml"
+    prefix:   /sie/newspeciality
+
+sie_herramienta_apoderado_estudiante:
+    resource: "@SieHerramientaBundle/Resources/config/routing/apoderadoestudiante.yml"
+    prefix:   /sie/apoderadoestudiante
+
+sie_herramienta_info_estudiante_bjp:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteBjp.yml"
+    prefix:   /sie/infoEstudianteBjp
+
+sie_herramienta_up_file_bjp:
+    resource: "@SieHerramientaBundle/Resources/config/routing/upfileue.yml"
+    prefix:   /sie/upfileue
+
+sie_herramienta_infoconsolidation:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoConsolidation.yml"
+    prefix:   /sie/infoConsolidation
+
+sie_herramienta_donwload_file_sie:
+    resource: "@SieHerramientaBundle/Resources/config/routing/downloadFileSieAcademico.yml"
+    prefix:   /sie/downloadFileSieAcademico
+
+sie_herramienta_estudiante_socieconomico:
+    resource: "@SieHerramientaBundle/Resources/config/routing/estudianteSocioeconomico.yml"
+    prefix:   /sie/estudiantesocioeconomico

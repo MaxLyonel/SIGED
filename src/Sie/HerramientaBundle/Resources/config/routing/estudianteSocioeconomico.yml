@@ -1,0 +1,63 @@
+estudianteSocioeconomico_index:
+    path:     /
+    defaults: { _controller: "SieHerramientaBundle:EstudianteSocioeconomico:index" }
+    options:
+         expose: true
+
+estudianteSocioeconomico_create:
+    path:     /create
+    defaults: { _controller: "SieHerramientaBundle:EstudianteSocioeconomico:create" }
+    options:
+        expose: true
+
+estudianteSocioeconomico_update:
+    path:     /update
+    defaults: { _controller: "SieHerramientaBundle:EstudianteSocioeconomico:update" }
+    options:
+        expose: true
+
+estudianteSocioeconomico_options:
+    path:     /options
+    defaults: { _controller: "SieHerramientaBundle:EstudianteSocioeconomico:options" }
+    options:
+        expose: true
+
+estudianteSocioeconomico_result:
+    path:    /result
+    defaults: { _controller: "SieHerramientaBundle:EstudianteSocioeconomico:result" } 
+    options:
+         expose: true   
+
+estudianteSocioeconomico_list_dptos_nac:
+    path:     /altlistardptosnac/{pais}
+    defaults: { _controller: "SieHerramientaBundle:EstudianteSocioeconomico:listarDepartamentosNac" }
+
+estudianteSocioeconomico_buscar_persona:
+    path:     /socioeconomico_buscar_persona
+    defaults: { _controller: "SieHerramientaBundle:EstudianteSocioeconomico:buscarPersona" }
+    options:
+        expose: true
+
+estudianteSocioeconomico_buscar_actividad:
+    path:     /buscaractividad
+    defaults: { _controller: "SieHerramientaBundle:EstudianteSocioeconomico:buscarActividad" }
+    options:
+        expose: true
+
+estudianteSocioeconomico_buscar_ocupaciones:
+    path:     /buscarocupaciones
+    defaults: { _controller: "SieHerramientaBundle:EstudianteSocioeconomico:buscarOcupaciones" }
+    options:
+        expose: true
+
+estudianteSocioeconomico_search_departamentos_nac:
+     path:    /depto/departamentos/{pais}/
+     defaults: { _controller: SieHerramientaBundle:EstudianteSocioeconomico:departamentosNac }
+     options:
+         expose: true
+
+estudianteSocioeconomico_search_provincias_nac:
+     path:    /provin/provincias/{departamento}/
+     defaults: { _controller: SieHerramientaBundle:EstudianteSocioeconomico:provinciasNac }
+     options:
+         expose: true 

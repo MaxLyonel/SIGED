@@ -1,0 +1,91 @@
+<small>
+{%if exist %}
+  <div class='row'>
+    <div class='col-md-4 col-md-offset-8'></div>
+  </div>
+<div class="col-md-12">
+
+    <!-- Start horizontal form -->
+    <div class="panel rounded shadow">
+        <div class="panel-heading">
+            <div class="pull-center">
+                <h3 class="panel-title"><p class='text-inverse'> Resultado de la Busqueda</p> <code></code></h3>
+            </div>
+            <div class="pull-right">
+                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'idInscriptionForm', 'class':'form-inline'} } )}}
+                {{form_end(form)}}
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="panel-body no-padding">
+            <!-- here the content -->
+
+                  <table id="datatable-ajax" class="table table-striped table-success dataTable" role="grid" aria-describedby="datatable-ajax_info">
+                    <thead>
+                        <tr role="row">
+                          <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Rude</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending">Paterno</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending">Materno</th>
+                          <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Nombre</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending">CI</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending">Fecha Nacimiento</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending">Opcion</th>
+                        </tr>
+                    </thead>
+                    <!--tbody section is required-->
+                    <tbody>
+                      {#init the array info student #}
+                    {% if objStudent %}
+                    {% for data in objStudent %}
+                      {# set the array student info and convert on json string #}
+
+                      <tr role="row" class="odd">
+                          <td >{{data.codigoRude}}</td>
+                          <td>{{data.paterno}}</td>
+                          <td>{{data.materno}}</td>
+                          <td >{{data.nombre}}</td>
+                          <td>{{data.carnetIdentidad}}</td>
+                          <td>{{data.fechaNacimiento | date('d-m-Y')}}</td>
+
+                          <td  align="">
+                              <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                  <button type="button" class="btn btn btn-warning " data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionByStudent('{{ data.id|json_encode(data.id) }}', '{{dataUe}}' );" >
+                                     Inscribir
+                                  </button>
+                              </div>
+                          </td>
+
+
+                      </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr role="row" class="odd" >
+                        <td  align="center" colspan='5'>
+                            <--  No existe resultado de la busqueda -->
+                        </td>
+                    </tr>
+
+                    {% endif %}
+                    </tbody>
+                    <!--tfoot section is optional-->
+                    <tfoot>
+                    </tfoot>
+                </table>
+        </div><!-- /.panel-body -->
+    </div><!-- /.panel -->
+    <!--/ End horizontal form -->
+
+</div>
+{% else %}
+<div class='row'>
+  <div class="col-md-12">
+  {% for flashMessage in app.session.flashbag.get('noinscription') %}
+      <div class="alert alert-warning alert-dismissible" >
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          <strong>Alerta!</strong> {{ flashMessage }}
+      </div>
+  {% endfor %}
+  </div>
+</div>
+{% endif %}
+</small>

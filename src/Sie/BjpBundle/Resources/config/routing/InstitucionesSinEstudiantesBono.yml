@@ -1,0 +1,98 @@
+InstitucionesSinEstudiantesBono:
+    path:     /{op}
+    defaults: { _controller: SieBjpBundle:InstitucionesSinEstudiantesBono:index, op:search }
+
+InstitucionesSinEstudiantesBono_new:
+    path:     /new/
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:new" }
+    methods:  POST
+
+InstitucionesSinEstudiantesBono_create:
+    path:     /create/
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:create" }
+    methods:  POST
+
+listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:listargrados" }
+    options:
+         expose: true
+
+InstitucionesSinEstudiantesBono_cargar_niveles:
+    path:     /cargarNiveles/{fuerza}/
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:cargarNiveles"}
+    options:
+         expose: true
+
+InstitucionesSinEstudiantesBono_cargar_um:
+    path:     /cargarUm/{gum}/
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:cargarUm"}
+    options:
+         expose: true         
+
+InstitucionesSinEstudiantesBono_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{turno}/{nivel}/
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:cargarGrados"}
+    options:
+         expose: true
+
+InstitucionesSinEstudiantesBono_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:cargarParalelos"}
+    options:
+         expose: true
+
+InstitucionesSinEstudiantesBono_listar_areas_curso:
+    path:     /lista_areas_curso_a/
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:lista_areas_curso" }
+    options:
+         expose: true
+
+InstitucionesSinEstudiantesBono_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:lista_areas_nivel" }
+    options:
+         expose: true
+
+InstitucionesSinEstudiantesBono_listar_areas_curso_adicionar_eliminar:
+    path:     /lista_areas_curso_adicionar_eliminar/
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:lista_areas_curso_adicionar_eliminar" }
+    options:
+         expose: true
+
+InstitucionesSinEstudiantesBono_asignar_maestro_area:
+    path:     /asignar_maestro_area/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:asignar_maestro" }
+    options:
+         expose: true
+
+InstitucionesSinEstudiantesBono_delete:
+    path:     /delete/{idCursoOferta}
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:delete" }
+    options:
+         expose: true
+
+InstitucionesSinEstudiantesBono_file:
+    path:     /sie/build/
+    defaults: { _controller: SieBjpBundle:InstitucionesSinEstudiantesBono:build }
+    options:
+         expose: true          
+
+InstitucionesSinEstudiantesBono_maestros:
+    path:     /maestros_materia/
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:maestros"}
+    options:
+         expose: true
+
+InstitucionesSinEstudiantesBono_maestros_asignar_siged:
+    path:     /maestros_asignar_siged/
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:maestrosAsignar"}
+    options:
+         expose: true
+
+
+InstitucionesSinEstudiantesBono_buscar_infoUe:
+    path:     /buscar_infoUe/
+    defaults: { _controller: "SieBjpBundle:InstitucionesSinEstudiantesBono:buscarInfoUe"}
+    options:
+         expose: true         

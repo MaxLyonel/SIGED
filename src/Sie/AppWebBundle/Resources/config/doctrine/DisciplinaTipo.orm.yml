@@ -1,0 +1,48 @@
+Sie\AppWebBundle\Entity\DisciplinaTipo:
+    type: entity
+    table: disciplina_tipo
+    indexes:
+        fk_disciplina_tipo_nivel_tipo1_:
+            columns:
+                - nivel_tipo_id
+    uniqueConstraints:
+        disciplina_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        disciplina:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        estado:
+            type: boolean
+            nullable: true
+            comment: ''
+        cantidad:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    manyToOne:
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

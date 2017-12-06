@@ -1,0 +1,1 @@
+$(document).ready(function(){"use strict";var i=$("#drive-grid-toggle"),e=$("#drive-list-toggle"),t=$(".drive-grid-view"),g=$(".drive-list-view");g.hide(),i.on("click",function(){i.toggleClass("active",!0),e.toggleClass("active",!1),t.show(),g.hide()}),e.on("click",function(){i.toggleClass("active",!1),e.toggleClass("active",!0),g.show(),t.hide()})});

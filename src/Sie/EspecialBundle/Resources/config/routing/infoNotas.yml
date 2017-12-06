@@ -1,0 +1,11 @@
+especialInfoNotas:
+     path:    /
+     defaults: { _controller: SieEspecialBundle:InfoNotas:index }
+     options:
+         expose: true
+
+especialInfoNotas_create_update:
+     path:    /create_update
+     defaults: { _controller: SieEspecialBundle:InfoNotas:createUpdate }
+     options:
+         expose: true

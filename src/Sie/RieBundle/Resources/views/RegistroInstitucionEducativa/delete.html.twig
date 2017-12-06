@@ -1,0 +1,286 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="block-header">
+        <h2>ELIMINAR {{datoSede.titulo}}</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('rie_list')}}">Listado de Institutos</a></li>
+        <li class="active">Eliminar</li>
+    </ol>
+
+    {{ form_start(form) }}
+
+    {% for flashMessage in app.session.flashbag.get('registroInstitucionError') %}
+        <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+	{% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('msgSearch') %}
+        <div class="alert alert-danger">
+            <strong>¡IMPORTANTE!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}    
+	
+    
+
+    {% if datoSede.codSede != '' %}
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12">
+            <div class="card">
+                <div class="header bg-blue-grey">    
+                    <h2>
+                    SEDE: {{datoSede.codSede}} - {{datoSede.nombreSede}} 
+                    </h2>
+                </div>        
+            </div>
+        </div>
+    </div>        
+    {% endif %}
+
+    <div class="row clearfix">
+        <div class="col-lg-6 col-md-6">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                    1. DATOS GENERALES
+                    </h2>
+                </div>
+
+                <div class="body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="form-label">{{form_label(form.rie)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.rie)}}
+                            </div>
+
+                            <label class="form-label">{{form_label(form.institucionEducativaTipo)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.institucionEducativaTipo,{'attr':{'onchange':'buscareditTF(this.value, "80730001")'} })}}
+                            </div>							
+
+                            <label class="form-label">{{form_label(form.institucionEducativa)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.institucionEducativa)}}
+                            </div>							
+
+                            <label class="form-label">{{form_label(form.nroResolucion)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.nroResolucion)}}
+                            </div>
+
+                            <label class="form-label">{{form_label(form.fechaResolucion)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.fechaResolucion)}}
+                            </div>
+
+                            <label class="form-label">{{form_label(form.dependenciaTipo)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.dependenciaTipo)}}
+                            </div>
+
+                            <label class="form-label">{{form_label(form.estadoInstitucionTipo)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.estadoInstitucionTipo)}}
+                            </div>
+
+                            <label class="form-label">{{form_label(form.obsRue)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.obsRue)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>			
+
+    <div class="col-lg-6 col-md-6">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                    2. LOCALIZACIÓN DE LOCAL EDUCATIVO
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="form-label">{{form_label(form.leJuridicciongeograficaId)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.leJuridicciongeograficaId)}}                              
+                            </div>     
+
+                            <label class="form-label">{{form_label(form.departamento)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.departamento)}}                              
+                            </div>    							
+
+                            <label class="form-label">{{form_label(form.provincia)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.provincia)}}                              
+                            </div>    							
+
+                            <label class="form-label">{{form_label(form.municipio)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.municipio)}}                              
+                            </div>   
+
+                            <label class="form-label">{{form_label(form.canton)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.canton)}}                              
+                            </div>   							
+
+                            <label class="form-label">{{form_label(form.localidad)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.localidad)}}                              
+                            </div>   
+
+                            <label class="form-label">{{form_label(form.zona)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.zona)}}                              
+                            </div> 
+
+                            <label class="form-label">{{form_label(form.direccion)}}</label>
+                            <div class="form-line">
+								{{form_widget(form.direccion)}}                              
+                            </div> 							  							
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+		
+    <div class="row clearfix">
+        <div class="col-lg-6 col-md-6">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                    3. NIVELES DE FORMACIÓN
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="row">
+                        <div class="form-group">
+                            <ul>
+                            {% for r in form.nivelTipo %}
+                                <div>
+                                    {{ form_widget(r) }}
+                                    {{ form_label(r) }}
+                                </div>
+                            {% endfor %}   
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+
+        <div class="col-lg-6 col-md-6">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                    4. AREAS DE FORMACIÓN
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="row">
+                        <div class="form-group">
+                            <ul>
+                            <div id="divAreas">
+								{% for r in form.areaFormacionTipo %}
+									<div>
+										{{ form_widget(r) }}
+										{{ form_label(r) }}
+									</div>
+								{% endfor %}   
+
+                            </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-md-6">
+        {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-danger btn-lg m-l-15 waves-effect'} }) }}
+    </div>
+
+	{{ form_end(form) }}
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function buscarEdificioEscolar(idLe) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('rie_buscar_edificio', {'idLe': idLe}),
+                beforeSend: function () {
+                    $("#form_departamento").val("");
+                    $("#form_provincia").val("");
+                    $("#form_municipio").val("");
+                    $("#form_canton").val("");
+                    $("#form_localidad").val("");
+                    $("#form_zona").val("");
+                    $("#form_direccion").val("");
+                    
+                },
+                success: function (data) {
+                	$("#form_departamento").val(data.departamento);
+                    $("#form_provincia").val(data.provincia);
+                    $("#form_municipio").val(data.municipio);
+                    $("#form_canton").val(data.canton);
+                    $("#form_localidad").val(data.localidad);
+                    $("#form_zona").val(data.zona);
+                    $("#form_direccion").val(data.direccion);
+                }
+            });
+        }
+
+		function buscareditTF(idArea, idRie){
+            var iditt = document.getElementById('form_idRie').value;
+			$.ajax({
+				type: 'get',
+				url: Routing.generate('rie_buscar_area_formacion_edit', {'idArea':idArea, 'idRie':iditt }),
+				success: function (data) {
+					$("#divAreas").empty();
+					console.log(data.areasArray, data.idArea, data.idRie);
+					$.each(data.areasArray, function(i, item) {
+						//alert(i+' - '+item.id+' - '+item.areaf+' - ')
+						checked = ''; 
+						if(item.elegido == 1){	checked = 'checked = checked'; }	
+						$("#divAreas").append("<div>");
+						$("#divAreas").append("<input type='checkbox' name='form[areaFormacionTipo][]' id='form_areaFormacionTipo_"+item.id+"' value='"+item.id+"' "+checked+" >");
+						$("#divAreas").append("<label for='form_areaFormacionTipo_"+item.id+"'>"+item.area+"</label>");
+						$("#divAreas").append("</div>");
+					});
+					if($("#divAreas").html() == ""){
+						//alert("El elemento esta vació");
+						$("#divAreas").append("<label>Debe elegir Tipo de Instituto Técnico/Tecnológico</label>");
+					}
+
+				}
+			});
+		}
+
+    $('#form_leJuridicciongeograficaId').on('keyup keypress', function(e) {
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13) { 
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    </script>
+{% endblock %}
+
+
+

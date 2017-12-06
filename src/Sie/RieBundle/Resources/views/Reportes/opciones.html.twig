@@ -1,0 +1,55 @@
+
+    <div class="block-header">
+        <h2>REPORTES</h2>
+    </div>
+
+    <div class = "top_box" >
+        {% block top %}
+            <div class="row clearfix">
+                <!-- Basic Examples -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <a href="{{path('reporte_rie_general', {'opc' : 9 } )}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Beni">
+                                BNI
+                            </a>
+                            <a href="{{path('reporte_rie_general', {'opc' : 2 } )}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Chuquisaca">
+                                CHQ
+                            </a>					
+                            <a href="{{path('reporte_rie_general', {'opc' : 4 } )}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Cochabamba">
+                                CBA
+                            </a>					
+                            <a href="{{path('reporte_rie_general', {'opc' : 3 } )}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="La Paz">
+                                LPZ
+                            </a>					
+                            <a href="{{path('reporte_rie_general', {'opc' : 5 } )}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Oruro">
+                                ORU
+                            </a>					
+                            <a href="{{path('reporte_rie_general', {'opc' : 10 } )}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Pando">
+                                PND
+                            </a>					
+                            <a href="{{path('reporte_rie_general', {'opc' : 6 } )}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Potosí">
+                                PSI
+                            </a>					
+                            <a href="{{path('reporte_rie_general', {'opc' : 8 } )}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Santa Cruz">
+                                SCZ
+                            </a>					
+                            <a href="{{path('reporte_rie_general', {'opc' : 7 } )}}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Tarija">
+                                TJA
+                            </a>					
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </div >
+
+    <div class = "bottom_box" >
+        {% block bottom %}
+            CONTENIDO POR DEFECTO
+        {% endblock %}
+    </div >
+
+
+
+

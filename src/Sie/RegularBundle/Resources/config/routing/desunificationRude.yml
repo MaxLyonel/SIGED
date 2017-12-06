@@ -1,0 +1,21 @@
+desunification_rude_sie_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:DesunificationRude:index }
+
+desunification_rude_sie_build:
+    path:     /sie/buildfile/
+    defaults: { _controller: SieRegularBundle:DesunificationRude:build }
+    options:
+         expose: true 
+    
+desunification_rude_sie_getgestion:
+    path:     /getGestion/{sie}
+    defaults: { _controller: SieRegularBundle:DesunificationRude:getgestion }       
+    options:
+         expose: true 
+         
+desunification_rude_sie_exect:
+    path:     /sie/exect/
+    defaults: { _controller: SieRegularBundle:DesunificationRude:exect }
+    options:
+         expose: true 

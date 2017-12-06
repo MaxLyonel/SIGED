@@ -1,0 +1,255 @@
+Sie\AppWebBundle\Entity\SocioeconomicoAlternativa:
+    type: entity
+    table: socioeconomico_alternativa
+    indexes:
+        fk_dat_rde_socio_economico_alt6:
+            columns:
+                - idioma_tipo_id5
+        relationship_111_fk:
+            columns:
+                - sangre_tipo_id
+        fk_dat_rde_socio_economico_alt5:
+            columns:
+                - idioma_tipo_id3
+        fk_dat_rde_socio_economico_alt8:
+            columns:
+                - idioma_tipo_id
+        fk_dat_rde_socio_economico_alt3:
+            columns:
+                - idioma_tipo_id4
+        fk_dat_rde_socio_economico_alt7:
+            columns:
+                - idioma_tipo_id6
+        fk_socioeconomico_alternativa_e:
+            columns:
+                - estudiante_inscripcion_id
+        fk_socioeconomico_alternativa_g:
+            columns:
+                - gestion_tipo_id
+        fk_dat_rde_socio_economico_alt4:
+            columns:
+                - idioma_tipo_id2
+        fk_dat_rde_socio_economico_alt1:
+            columns:
+                - atenmedica_tipo_id
+        fk_dat_rde_socio_economico_alt2:
+            columns:
+                - etnia_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        atenmedicaTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: atenmedica_tipo_id
+        sangreTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: sangre_tipo_id
+        gestionId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: gestion_id
+        dicapacidadId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: dicapacidad_id
+        direccionZona:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: direccion_zona
+        direccionCalle:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: direccion_calle
+        direccionNro:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: direccion_nro
+        direccionTelefono:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: direccion_telefono
+        direccionCelular:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: direccion_celular
+        nroHijos:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: nro_hijos
+        seguro:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+        empleo:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+        motivoInterrupcion:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: motivo_interrupcion
+        aniosInterrupcion:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: anios_interrupcion
+        ultimoCurso:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: ultimo_curso
+        estadoCivilId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: estado_civil_id
+        modalidadId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: modalidad_id
+        usuarioId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        fechaLastUpdate:
+            type: date
+            nullable: false
+            comment: ''
+            column: fecha_last_update
+    manyToOne:
+        etniaTipo:
+            targetEntity: EtniaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                etnia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo2:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id2:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo3:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id3:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo4:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id4:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo5:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id5:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo6:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id6:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

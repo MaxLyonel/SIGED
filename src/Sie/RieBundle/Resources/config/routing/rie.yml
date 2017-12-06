@@ -1,0 +1,86 @@
+
+rie:
+    path:     /
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:index" }
+
+rie_list:
+    path:     /list
+    defaults: { _controller: SieRieBundle:RegistroInstitucionEducativa:list }    
+
+rie_new:
+    path:     /new/{idRie}
+    defaults: { _controller: SieRieBundle:RegistroInstitucionEducativa:new, idRie:0 }    
+
+rie_create:
+    path:     /create
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:create" }
+    methods:  POST  
+
+rie_edit:
+    path:     /edit/{idRie}
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:edit" }
+    methods:  GET
+
+rie_new_subsede:
+    path:     /new/{idRie}
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:new" }
+    methods:  GET
+
+rie_update:
+    path:     /update/
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:update" }
+    methods:  [POST, PUT]
+
+rie_delete:
+    path:     /delete/{idRie}
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:delete" }
+    methods:  GET
+    
+rie_delete_itt:
+    path:     /deleteitt
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:deleteitt" }
+    methods:  POST
+
+
+rie_result:
+    path:     /findinstitucion
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:findinstitucion" }
+
+rie_certificado:
+    path:     /certificado/{idRie}
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:certificado" }
+    methods:  GET
+
+rie_buscar_edificio:
+     path:    /buscaredificio/{idLe}/
+     defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:buscaredificio" }
+     options:
+         expose: true   
+
+rie_buscar_area_formacion:
+     path:    /buscarareaf/{idArea}/
+     defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:buscarareaf" }
+     options:
+         expose: true      
+
+rie_buscar_area_formacion_edit:
+     path:    /buscarareafedit/{idArea}/{idRie}
+     defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:buscarareafedit" }
+     options:
+         expose: true  
+
+rie_new_historico:
+    path:     /newhistorico/{idRie}
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:newhistorico" }
+    methods:  [GET, POST, HEAD]
+
+rie_create_historico:
+    path:     /createhistorico/
+    defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:createhistorico" }
+    methods:  POST     
+
+rie_elimina_historico:
+     path:    /eliminahistorico/{idHistorico}/
+     defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:eliminahistorico" }
+     options:
+         expose: true                   

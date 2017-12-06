@@ -1,0 +1,41 @@
+Sie\AppWebBundle\Entity\BonojuancitoGranUnidadmilitar:
+    type: entity
+    table: bonojuancito_gran_unidadmilitar
+    indexes:
+        IDX_2E48782B92F027F1:
+            columns:
+                - bonojuancito_fuerza_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        granUnidadmilitar:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+            column: gran_unidadmilitar
+        obs:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+    manyToOne:
+        bonojuancitoFuerzaTipo:
+            targetEntity: BonojuancitoFuerzaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bonojuancito_fuerza_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

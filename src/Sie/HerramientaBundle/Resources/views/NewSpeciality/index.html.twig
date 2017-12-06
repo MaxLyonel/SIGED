@@ -1,0 +1,196 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id='modal'>
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Especialidad</h4>
+                        </div>
+                        <div id='specialtiyId'>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <!-- Start page header -->
+   <div class="header-content">
+       <h2><i class="fa fa-find"></i>Registro de Especialidad<span></span></h2>
+       <div class="breadcrumb-wrapper hidden-xs">
+           <span class="label">Usted esta aqui:</span>
+           <ol class="breadcrumb">
+               <li>
+                   <i class="fa fa-home"></i>
+                   <a href="{{path('herramienta_newspeciality_index')}}">
+                     Registro de Especialidad
+                   </a>
+                   <i class="fa fa-angle-right"></i>
+               </li>
+
+               <li class="active">Principal</li>
+           </ol>
+       </div><!-- /.breadcrumb-wrapper -->
+   </div><!-- /.header-content -->
+   <!--/ End page header -->
+
+   <div class="body-content animated fadeIn">
+
+     <div class="row">
+       <div class="col-md-12">
+         <!-- Start bordered form -->
+         <div class="panel rounded shadow">
+             <div class="panel-heading">
+                 <div class="pull-left">
+                     <h3 class="panel-title"></h3>
+                 </div>
+                 <div class="pull-right">
+                 </div>
+                 <div class="clearfix"></div>
+             </div><!-- /.panel-heading -->
+             <div class="panel-body no-padding">
+               {{form_start(form, {'attr': {'class':'form-horizontal form-bordered', 'role':'form', 'id':'newSpecialityId'} } )}}
+
+                     <div class="panel rounded shadow">
+                         <div class="panel-heading">
+                             <div class="pull-left">
+                                 <h3 class="panel-title">Especialidad</h3>
+                             </div>
+                             <div class="pull-right">
+                             </div>
+                             <div class="clearfix"></div>
+                         </div><!-- /.panel-heading -->
+                         <div class="panel-body no-padding">
+
+                                 <div class="form-body">
+                                     <div class="form-group">
+                                         <div class="row">
+                                             <div class="col-md-6">
+                                                     {{form_widget(form.sie)}}
+                                             </div>
+                                             <div class="col-md-6">
+                                                     {{form_widget(form.gestion)}}
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div><!-- /.form-body -->
+                                 <div class="form-footer">
+                                     <div class="pull-right">
+
+                                           {{form_widget(form.find)}}
+                                     </div>
+                                     <div class="clearfix"></div>
+                                 </div><!-- /.form-footer -->
+                             </form>
+
+                         </div><!-- /.panel-body -->
+                     </div>
+               {{form_end(form)}}
+             </div><!-- /.panel-body -->
+             <div id="specialities">
+             </div>
+         </div><!-- /.panel -->
+         <!--/ End bordered form -->
+     </div>
+
+
+
+
+   </div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    var findSpeciality = function(){
+      var newSpecialityIdForm = $('#newSpecialityId').serialize();
+      $.ajax({
+        type:'get',
+        url: Routing.generate('herramienta_newspeciality_find'),
+        data: newSpecialityIdForm,
+        beforeSend: function(){
+          $("#specialities").empty();
+          $("#specialities").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+        },
+        success: function(data){
+          $("#specialities").empty();
+          $("#specialities").append(data);
+        },
+        error: function(data){
+          $("#specialities").empty();
+          $("#specialities").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no existe o no hay conexion con el servidor</div>');
+        }
+      });
+
+    };
+
+    var newSpeciality = function(dataForm){
+      $.ajax({
+        type:'get',
+        url: Routing.generate('herramienta_newspeciality_new'),
+        data: ({dataForm: dataForm}),
+        beforeSend: function(){
+          $("#specialtiyId").empty();
+          $("#specialtiyId").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+        },
+        success: function(data){
+          $("#specialtiyId").empty();
+          $("#specialtiyId").append(data);
+        },
+        error: function(data){
+          $("#specialtiyId").empty();
+          $("#specialtiyId").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no existe o no hay conexion con el servidor</div>');
+        }
+      });
+    };
+
+    var saveSpeciality = function(){
+      var newForm = $('#newFormId').serialize();
+      $.ajax({
+        type:'get',
+        url: Routing.generate('herramienta_newspeciality_save'),
+        data: newForm,
+        beforeSend: function(){
+          $("#specialities").empty();
+          $("#specialities").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+          $('#modal').modal('hide');
+        },
+        success: function(data){
+          $('#modal').modal('hide');
+          $("#specialities").empty();
+          $("#specialities").append(data);
+        },
+        error: function(data){
+          $("#specialities").empty();
+          $("#specialities").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no existe o no hay conexion con el servidor</div>');
+        }
+      });
+
+    };
+
+    var removeSpeciality2 = function(id, dataForm){
+      if(confirm('Esta seguro de eliminar la Especialidad?')){
+            $.ajax({
+              type:'get',
+              url: Routing.generate('herramienta_newspeciality_remove'),
+              data: ({specialityId: id,dataForm: dataForm}),
+              beforeSend: function(){
+                $("#specialities").empty();
+                $("#specialities").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+              },
+              success: function(data){
+                $("#specialities").empty();
+                $("#specialities").append(data);
+              },
+              error: function(data){
+                $("#specialities").empty();
+                $("#specialities").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no existe o no hay conexion con el servidor</div>');
+              }
+            });
+
+      }else{
+        return false;
+      }
+    };
+    </script>
+{%endblock%}

@@ -1,0 +1,88 @@
+Sie\AppWebBundle\Entity\PersonaObservacion:
+    type: entity
+    table: persona_observacion
+    indexes:
+        IDX_489407EA179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_489407EABAB0F664:
+            columns:
+                - observacion_persona_tipo_id
+        IDX_489407EAF5F88DB9:
+            columns:
+                - persona_id
+        IDX_489407EAEF3F27EB:
+            columns:
+                - rol_tipo_id
+        IDX_489407EADB38439E:
+            columns:
+                - usuario_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: false
+            comment: ''
+            default: now()
+            column: fecha_registro
+        obs:
+            type: string
+            nullable: true
+            length: 1000
+            fixed: false
+            comment: ''
+    manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        observacionPersonaTipo:
+            targetEntity: ObservacionPersonaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                observacion_persona_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rolTipo:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rol_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

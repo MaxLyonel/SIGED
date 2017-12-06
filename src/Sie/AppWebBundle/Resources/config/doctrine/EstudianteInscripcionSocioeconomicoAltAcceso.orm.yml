@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltAcceso:
+    type: entity
+    table: estudiante_inscripcion_socioeconomico_alt_acceso
+    indexes:
+        IDX_53CE660916B5DBE3:
+            columns:
+                - estudiante_inscripcion_socioeconomico_alternativa_id
+        IDX_53CE66097E17273A:
+            columns:
+                - estudiante_inscripcion_socioeconomico_alt_acceso_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        estudianteInscripcionSocioeconomicoAlternativa:
+            targetEntity: EstudianteInscripcionSocioeconomicoAlternativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_socioeconomico_alternativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcionSocioeconomicoAltAccesoTipo:
+            targetEntity: EstudianteInscripcionSocioeconomicoAltAccesoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_socioeconomico_alt_acceso_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

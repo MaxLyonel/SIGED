@@ -1,0 +1,23 @@
+inscription_omitidos_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InscriptionOmitidos:index }
+
+inscription_omitidos_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InscriptionOmitidos:result }
+
+inscription_omitidos_findIE:
+     path:    /findIE/{id}/{nivel}/{grado}/{lastue}
+     defaults: { _controller: SieRegularBundle:InscriptionOmitidos:findIE }
+     options:
+         expose: true
+
+inscription_omitidos_saveOmitidos:
+    path: /saveOmitidos
+    defaults: { _controller: SieRegularBundle:InscriptionOmitidos:saveOmitidos }
+
+inscription_omitidos_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieRegularBundle:InscriptionOmitidos:findturno }
+    options:
+        expose: true

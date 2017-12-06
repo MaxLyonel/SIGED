@@ -1,0 +1,61 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+    	<div class="modal-header">
+		  	<h6 class="modal-title" id="exampleModalLabel"> <b class="numeroPaso">Paso 1: </b> Editar Ubicación Geográfica </h6>
+		  	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		    	<span aria-hidden="true">&times;</span>
+		  	</button>
+		</div>
+		<form id="formGeografica" action="" method="post" onsubmit="enviarFormGeografica(); return false;">
+			<div class="modal-body">
+				<div class="text-center" style="padding:5px; background-color:#F9F5F1;">
+					<small>Código de Edificio</small> 
+					<h1>{{jurisdiccion.id}}</h1>
+				</div>
+			  	<div class="text-right"><b class="text-info">Censo 2012</b></div>
+		  		<div class="form-group">
+		  			{{form_label(form.departamento)}}
+		  			{{form_widget(form.departamento)}}
+		  		</div>
+		  		<div class="form-group">
+		  			{{form_label(form.provincia)}}
+		  			{{form_widget(form.provincia)}}
+		  		</div>
+		  		<div class="form-group">
+		  			{{form_label(form.municipio)}}
+		  			{{form_widget(form.municipio)}}
+		  		</div>
+		  		<div class="form-group">
+		  			{{form_label(form.comunidad)}}
+		  			{{form_widget(form.comunidad)}}
+		  		</div>
+		  		{#<small>
+		  		<div class="form-check alert alert-info">
+		  		  	<label class="form-check-label">
+		  		    	<input class="form-check-input" type="checkbox" value="" required="required">
+		  		    	Yo {{app.user.persona.nombre}} {{app.user.persona.paterno}} {{app.user.persona.materno}} declaro que la información ingresada es correcta.
+		  		  	</label>
+		  		</div>
+		  		</small>#}
+
+			</div>
+			<div class="modal-footer">
+			  	<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><small>Cancelar</small></button>
+			  	<button type="submit" class="btn btn-primary btn-sm"><small>Continuar</small></button>
+			</div>
+		{{form_end(form)}}
+	</div>
+</div>
+
+<script type="text/javascript">
+	function enviarFormGeografica(){
+		//var formData = new FormData(document.getElementById("formGeografica"));
+		var formComunidad = $('#form_comunidad').val();
+
+		idComunidadNext = formComunidad;
+
+		$('#modal').modal('hide');
+
+		actualizarGeoreferencial(codigoEdificio, true);
+	}
+</script>

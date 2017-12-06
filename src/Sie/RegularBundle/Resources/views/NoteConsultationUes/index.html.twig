@@ -1,0 +1,218 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %} 
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-home"></i>Boletín Centralizador - Unidad Educativa
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><span class="glyphicon glyphicon-search"></span>  <a href="#">Buscar </a>
+                    </li>
+
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag.get('warningconsultaue') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successremoveins') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div class="panel panel-icon panel-primary">
+                <div class="panel-heading">
+                    <i class="fa fa-search"></i>
+                </div>
+                <div class="panel-body">
+
+
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">
+                            {{form_label(form.sie)}}
+                        </label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.sie) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">
+                            {{form_label(form.gestion)}}
+                        </label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.gestion) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+
+                            {{ form_widget(form.search,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                        </div>
+                    </div>
+                    {{form_end(form)}}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="result"></div>
+    </div>
+</div>
+
+
+<div class="modal modal-flex fade" id="myModalNotas" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+    <div class="modal-dialog higherWider">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="flexModalLabel">Notas</h4>
+
+            </div>
+            <div class="modal-body">
+                <div id="idNotas"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+
+
+        var findInscription = function () {
+            //get the values
+            sie = $('#form_sie').val();
+            gestion = $('#form_gestion').val();
+            if (sie.length <= 0) {
+                alert("Necesita código SIE para realizar la busqueda");
+                return false;
+            }
+
+            $.ajax({
+                type: 'post',
+                data: ({sie: sie, gestion: gestion}),
+                url: Routing.generate('note_consultation_ues_sie_result'),
+                beforeSend: function () {
+                    $("#result").empty();
+                    $("#result").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#result").empty();
+                    $("#result").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+
+        var seeNota = function (idstudent, nivel, grado, paralelo, turno, gestion) {
+
+            $('#myModalNotas').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('note_consultation_parents_sie_nota', {'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'gestion': gestion}),
+                beforeSend: function () {
+                    $("#idNotas").empty();
+                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#idNotas").empty();
+                    $("#idNotas").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+
+
+        var removeit = function (idstudent, nivel, grado, paralelo, turno, sie) {
+            if (confirm('¿Esta seguro de eliminar la inscripción?')) {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('remove_inscription_sie_remove', {'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'sie': sie}),
+                    beforeSend: function () {
+                        $("#result").empty();
+                        $("#result").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+                        return false;
+                        $("#result").empty();
+                        $("#result").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            } else {
+                return false;
+            }
+
+        }
+
+
+
+    </script>
+{%endblock%}
+

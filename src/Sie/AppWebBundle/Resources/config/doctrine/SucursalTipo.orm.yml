@@ -1,0 +1,30 @@
+Sie\AppWebBundle\Entity\SucursalTipo:
+    type: entity
+    table: sucursal_tipo
+    uniqueConstraints:
+        sucursal_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcion:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

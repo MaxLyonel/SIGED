@@ -1,0 +1,109 @@
+
+<!-- GLOBAL STYLES - Include these on every page. -->
+<link href="{{ asset('css/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+<link href="{{ asset('css/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+
+<!-- PAGE LEVEL PLUGIN STYLES -->
+<link href="{{ asset('css/plugins/messenger/messenger-theme-flat.css') }}" rel="stylesheet">
+<link href="{{ asset('css/plugins/messenger/messenger.css') }}" rel="stylesheet">
+<link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
+<link href="{{ asset('css/plugins/morris/morris.css') }}" rel="stylesheet">
+<link href="{{ asset('css/plugins/jvectormap/jquery-jvectormap-1.2.2.css') }}" rel="stylesheet">
+<link href="{{ asset('css/plugins/datatables/datatables.css') }}" rel="stylesheet">
+<link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+<link href="{{asset('css/plugins/bootstrap-tokenfield/tokenfield-typeahead.css') }}" rel="stylesheet">
+<link href="{{asset('css/plugins/bootstrap-tokenfield/bootstrap-tokenfield.css') }}" rel="stylesheet">
+<!-- THEME STYLES - Include these on every page. -->
+<link href="{{ asset('css/style.css') }}" rel="stylesheet">
+<link href="{{ asset('css/plugins.css') }}" rel="stylesheet">
+
+<!-- THEME DEMO STYLES - Use these styles for reference if needed. Otherwise they can be deleted. -->
+<link href="{{ asset('css/demo.css') }}" rel="stylesheet">
+
+
+<div class="row">
+    <div class="col-md-12">
+        {% for flashMessage in app.session.flashbag.get('wrongftpupload') %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('gooduploadftp') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-xs-12 col-lg-12">
+        <div class="portlet portlet-white">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4 class=''>Registro de Archivos - {{depto|upper}} </h4>
+
+                </div>
+                <div class="portlet-widgets">
+
+                    <span class="divider"></span>
+                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="pinfoestudiante" class="panel-collapse collapse in">
+                <div class="portlet-body">
+
+                    <div id="no-more-tables">
+
+                        <small>
+                            <table id="myTable" class="table table-bordered table-hover cf dataTable">
+
+                                <thead class="">
+                                    <tr class="">
+                                        <th>No.</th>
+                                        <th>Archivo</th>
+                                        <th>Subir</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for entity in filesemp %}
+                                        {% if entity !='..'  and entity !='.' %}
+                                            <tr>
+                                                <td data-title="No.">{{loop.index}}</td>
+                                                <td data-title="Departamento">{{entity}}</td>
+                                                <td data-title="Est. Matricula" class="text-left">
+                                                    <a href="#" onclick="upFiles('{{entity}}', '{{depto}}')" ><span class="glyphicon glyphicon-upload"></span> {{entity}}</a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </small>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- DataTables -->
+<script src="{{ asset('js/plugins/datatables/jquery.dataTables.js') }}"></script>
+<script src="{{ asset('js/plugins/datatables/datatables-bs3.js') }}"></script>
+<!-- THEME SCRIPTS -->
+<script src="{{ asset('js/flex.js') }}"></script>
+<script src="{{asset('js/funciones.js')}}"></script>
+<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+<script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+<script src="{{ asset('js/initialize.js')}}"></script>

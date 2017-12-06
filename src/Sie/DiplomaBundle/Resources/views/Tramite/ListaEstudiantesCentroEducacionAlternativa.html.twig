@@ -1,0 +1,173 @@
+{% extends 'SieDiplomaBundle:Default:Registros.html.twig' %}
+{% block contenttitulo %}{{ titulo }}{% endblock %}
+{% block contenttitulosmall %}{{ subtitulo }}{% endblock %}
+{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Listado de Estudiantes</li>{% endblock %}  
+{% block contentbuscador %}    
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4><i class="fa fa-circle text-dpl"></i> Búsqueda de Unidad Educativa</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <span class="divider"></span>
+                            <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                            <div class="form-group">
+                                {{ form_widget(form.identificador) }}
+                                <label class="col-lg-1 col-md-2 col-sm-3 col-xs-12 control-label">
+                                    {{form_label(form.sie)}}                                    
+                                </label>
+                                <div class="col-lg-11 col-md-10 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.sie) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>               
+                                <label class="col-lg-1 col-md-2 col-sm-3 col-xs-12 control-label">
+                                    {{form_label(form.sucursal)}}                                    
+                                </label>
+                                <div class="col-lg-11 col-md-10 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.sucursal) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>    
+                                <label class="col-lg-1 col-md-2 col-sm-3 col-xs-12 control-label">
+                                    {{form_label(form.periodo)}}                                    
+                                </label>
+                                <div class="col-lg-11 col-md-10 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.periodo) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>    
+                                <label class="col-lg-1 col-md-2 col-sm-3 col-xs-12 control-label">
+                                    {{form_label(form.gestion)}}                                    
+                                </label>
+                                <div class="col-lg-11 col-md-10 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.gestion) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>      
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    {{ form_widget(form.search,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                                </div>
+                            </div>
+                        {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+{% endblock %} 
+{% block contentregistros %} 
+    {% if bachilleres is defined  %}
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                {% if identificador == 13 or identificador == 14 %}
+                    {% set nombreBotonPrincipal = "Recepcionar los marcados" %}
+                {% endif %}  
+                {% if identificador == 15 %}
+                    {% set nombreBotonPrincipal = "Autorizar los marcados" %}
+                {% endif %}                                      
+                {% if identificador == 16 %}
+                    {% set nombreBotonPrincipal = "Imprimir los marcados" %}
+                {% endif %}  
+                <form name="formtable" role="form" action="{{ path('sie_diploma_tramite_recepcion_distrito_registra') }}" method="POST" onsubmit="return verificaCampos()">
+                    <div class="col-lg-12 col-md-12">                
+                        <div class="portlet portlet-default">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4><i class="fa fa-circle text-dpl"></i> Bachilleres - {{ gestion }} </h4>
+                                </div>
+                                <div class="portlet-widgets">
+
+                                    <div class="btn-group">
+                                        <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                        <input type="hidden" name="identificador" value="{{ identificador }}" />
+                                        <input type="hidden" name="sie" value="{{ unidadEducativa.id }}" />    
+                                        <input type="hidden" name="flujo" id="flujo" value="1" />    
+                                        <!--<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">-->
+                                        {# if identificador == 13 #} 
+                                            <!--<select class="form-control" name="flujo" id="flujo">-->
+                                                {# for flu in flujos #}
+                                                    {#if flu.id == gestion #}
+                                                        <!--<option value="{# flu.id #}" selected>{# flu.flujo #}</option>-->
+                                                    {#else #}
+                                                        <!--<option value="{# flu.id #}">{# flu.flujo #}</option>-->
+                                                    {#endif #}
+                                                {# endfor #}
+                                            <!--</select>-->
+                                        {# endif #} 
+                                        <!--</div>-->
+                                        <input type="submit" name="botonAceptar" class="btn btn-warning" value="{{nombreBotonPrincipal}}" disabled="true" />
+                                        <a class="btn btn-success" href="{{ path('sie_diploma_tramite_descarga_reporte_distrito_pdf', {'sie': unidadEducativa.id, 'gestion':gestion}) }}">
+                                            Imprimir Enviados
+                                        </a>
+                                    </div>
+                                    <span class="divider"></span>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <div id="no-more-tables"> 
+                                    <table id="myTable" class="table table-bordered table-hover cf dataTable">
+                                        <thead class="">
+                                            <tr class="">
+                                                <th>#</th>
+                                                <th>Codigo Rude</th>
+                                                <th>C.I.</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Nombre(s)</th>
+                                                <th>Fecha Nacimiento</th>
+                                                <th>Estado</th>
+                                                <th>Sub Sistema</th>
+                                                <th>Ciclo</th>
+                                                <th style="width:50px; text-align: center;"><input type="checkbox" id="marcarTodos" name="marcarTodos" onclick="marcarTodasAreas()"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% set cont = 0 %}
+                                            {% for bachiller in bachilleres %}
+                                                {% set cont = cont +1 %}
+                                                {% if bachiller.complemento == "" %}
+                                                    {% set ci = bachiller.carnet_identidad %}
+                                                {% else %}
+                                                    {% set ci = bachiller.carnet_identidad~'-'~bachiller.complemento%}
+                                                {% endif %}
+                                                <tr>
+                                                    <td data-title="#">{{ cont }}</td>
+                                                    <td data-title="Codigo Rude">{{ bachiller.codigo_rude }}</td>
+                                                    <td data-title="C.I.">{{ ci }}</td>
+                                                    <td data-title="Paterno">{{ bachiller.paterno }}</td>
+                                                    <td data-title="Materno">{{ bachiller.materno }}</td>
+                                                    <td data-title="Nombre(s)" >{{ bachiller.nombre }}</td>
+                                                    <td data-title="Fecha Nacimiento">{{bachiller.fecha_nacimiento|date('d-m-Y')}} - {{ bachiller.depto_nacimiento }}</td>
+                                                    <td data-title="Estado">{{bachiller.estadomatricula}}</td>
+                                                    <td data-title="Sub Sistema">{{bachiller.subsistema}}</td>
+                                                    <td data-title="Ciclo">{{bachiller.ciclo}}</td>
+                                                    <td class="text-center" style="width: 50px">
+                                                        {% if identificador == 13 %}
+                                                            {% set id = bachiller.estudiante_inscripcion_id %}
+                                                        {% else %}
+                                                            {% set id = bachiller.tramite_id %}
+                                                        {% endif %}
+                                                        <input type="checkbox" name="estudiantes[]" value="{{id}}" onclick="habilitarBotones()">
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>                                                                                      
+                                </div>  
+                            </div>
+                        </div>           
+                    </div>
+                </form>                             
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

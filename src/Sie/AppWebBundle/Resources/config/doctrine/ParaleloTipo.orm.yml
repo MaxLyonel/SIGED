@@ -1,0 +1,31 @@
+Sie\AppWebBundle\Entity\ParaleloTipo:
+    type: entity
+    table: paralelo_tipo
+    uniqueConstraints:
+        paralelo_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 2
+            fixed: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        paralelo:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

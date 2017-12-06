@@ -1,0 +1,169 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>SocioeconomicoRegular list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Discapacidadtipoid</th>
+                <th>Atenmedicatipoid</th>
+                <th>Certificadonac</th>
+                <th>Libretaescolar</th>
+                <th>Libretafamiliar</th>
+                <th>Libretamilitar</th>
+                <th>Libretavacunas</th>
+                <th>Mediocomunicacioncelular</th>
+                <th>Mediocomunicaciontelefono</th>
+                <th>Mediocomunicaciontelevision</th>
+                <th>Mediocomunicacioncomputadora</th>
+                <th>Mediocomunicacionradio</th>
+                <th>Mediocomunicacioninternet</th>
+                <th>Segurosalud</th>
+                <th>Discapacidadid</th>
+                <th>Servicioaguadomicilio</th>
+                <th>Servicioaguapileta</th>
+                <th>Servicioagualagolaguna</th>
+                <th>Servicioaguapozo</th>
+                <th>Servicioaguasisterna</th>
+                <th>Servicioaguavertiente</th>
+                <th>Servicioenergiaredpublica</th>
+                <th>Servicioenergiageneradorelectr</th>
+                <th>Servicioenergiapanelsolar</th>
+                <th>Serviciogasdomicilio</th>
+                <th>Serviciogaslicuado</th>
+                <th>Serviciogasnatural</th>
+                <th>Serviciosanitarioalcantarill</th>
+                <th>Serviciosanitariopozoseptico</th>
+                <th>Direcciondepartamentoid</th>
+                <th>Direccionprovinciaid</th>
+                <th>Direccionseccionid</th>
+                <th>Direccioncantonid</th>
+                <th>Direccionlocalidadid</th>
+                <th>Empleo</th>
+                <th>Direcciondesclocalidad</th>
+                <th>Direccionzona</th>
+                <th>Direccioncallenro</th>
+                <th>Direcciontelefono</th>
+                <th>Transporteid</th>
+                <th>Transportetiempo</th>
+                <th>Transportedistancia</th>
+                <th>Numerohijo</th>
+                <th>Servicioaguacaneria</th>
+                <th>Servicioaguaotro</th>
+                <th>Serviciosanitariopozo</th>
+                <th>Serviciosanitariocalle</th>
+                <th>Serviciosanitariorio</th>
+                <th>Direccionnrovivienda</th>
+                <th>Centrosalud</th>
+                <th>Frecuenciasaludid</th>
+                <th>Discapacidadsensorial</th>
+                <th>Discapacidadmotriz</th>
+                <th>Discapacidadmental</th>
+                <th>Origendiscapacidadid</th>
+                <th>Actividadid</th>
+                <th>Frecuenciaactividadid</th>
+                <th>Actividadpago</th>
+                <th>Internetdomicilio</th>
+                <th>Internetue</th>
+                <th>Internetpublico</th>
+                <th>Internetno</th>
+                <th>Frecuenciainternetid</th>
+                <th>Frecuenciatransporteid</th>
+                <th>Servicioenergia</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('socioeconomicoregular_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.discapacidadTipoId }}</td>
+                <td>{{ entity.atenmedicaTipoId }}</td>
+                <td>{{ entity.certificadoNac }}</td>
+                <td>{{ entity.libretaEscolar }}</td>
+                <td>{{ entity.libretaFamiliar }}</td>
+                <td>{{ entity.libretaMilitar }}</td>
+                <td>{{ entity.libretaVacunas }}</td>
+                <td>{{ entity.medioComunicacionCelular }}</td>
+                <td>{{ entity.medioComunicacionTelefono }}</td>
+                <td>{{ entity.medioComunicacionTelevision }}</td>
+                <td>{{ entity.medioComunicacionComputadora }}</td>
+                <td>{{ entity.medioComunicacionRadio }}</td>
+                <td>{{ entity.medioComunicacionInternet }}</td>
+                <td>{{ entity.seguroSalud }}</td>
+                <td>{{ entity.discapacidadId }}</td>
+                <td>{{ entity.servicioAguadomicilio }}</td>
+                <td>{{ entity.servicioAguapileta }}</td>
+                <td>{{ entity.servicioAgualagolaguna }}</td>
+                <td>{{ entity.servicioAguapozo }}</td>
+                <td>{{ entity.servicioAguasisterna }}</td>
+                <td>{{ entity.servicioAguavertiente }}</td>
+                <td>{{ entity.servicioEnergiaredpublica }}</td>
+                <td>{{ entity.servicioEnergiageneradorelectr }}</td>
+                <td>{{ entity.servicioEnergiapanelsolar }}</td>
+                <td>{{ entity.servicioGasdomicilio }}</td>
+                <td>{{ entity.servicioGaslicuado }}</td>
+                <td>{{ entity.servicioGasnatural }}</td>
+                <td>{{ entity.servicioSanitarioalcantarill }}</td>
+                <td>{{ entity.servicioSanitariopozoseptico }}</td>
+                <td>{{ entity.direccionDepartamentoId }}</td>
+                <td>{{ entity.direccionProvinciaId }}</td>
+                <td>{{ entity.direccionSeccionId }}</td>
+                <td>{{ entity.direccionCantonId }}</td>
+                <td>{{ entity.direccionLocalidadId }}</td>
+                <td>{{ entity.empleo }}</td>
+                <td>{{ entity.direccionDescLocalidad }}</td>
+                <td>{{ entity.direccionZona }}</td>
+                <td>{{ entity.direccionCalleNro }}</td>
+                <td>{{ entity.direccionTelefono }}</td>
+                <td>{{ entity.transporteId }}</td>
+                <td>{{ entity.transporteTiempo }}</td>
+                <td>{{ entity.transporteDistancia }}</td>
+                <td>{{ entity.numeroHijo }}</td>
+                <td>{{ entity.servicioAguacaneria }}</td>
+                <td>{{ entity.servicioAguaotro }}</td>
+                <td>{{ entity.servicioSanitariopozo }}</td>
+                <td>{{ entity.servicioSanitariocalle }}</td>
+                <td>{{ entity.servicioSanitariorio }}</td>
+                <td>{{ entity.direccionNroVivienda }}</td>
+                <td>{{ entity.centrosalud }}</td>
+                <td>{{ entity.frecuenciaSaludId }}</td>
+                <td>{{ entity.discapacidadSensorial }}</td>
+                <td>{{ entity.discapacidadMotriz }}</td>
+                <td>{{ entity.discapacidadMental }}</td>
+                <td>{{ entity.origenDiscapacidadId }}</td>
+                <td>{{ entity.actividadId }}</td>
+                <td>{{ entity.frecuenciaActividadId }}</td>
+                <td>{{ entity.actividadPago }}</td>
+                <td>{{ entity.internetDomicilio }}</td>
+                <td>{{ entity.internetUe }}</td>
+                <td>{{ entity.internetPublico }}</td>
+                <td>{{ entity.internetNo }}</td>
+                <td>{{ entity.frecuenciaInternetId }}</td>
+                <td>{{ entity.frecuenciaTransporteId }}</td>
+                <td>{{ entity.servicioEnergia }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('socioeconomicoregular_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('socioeconomicoregular_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('socioeconomicoregular_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

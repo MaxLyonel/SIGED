@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\IdiomaconoceTipo:
+    type: entity
+    table: idiomaconoce_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        idiomaconoce:
+            type: string
+            nullable: true
+            length: 10
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

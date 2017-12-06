@@ -1,0 +1,35 @@
+dgesttla_index:
+    path:   /
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:index" }
+
+dgesttla_inst_search:
+    path:   /searchinst
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:index" }
+
+dgesttla_inst_result:
+    path:   /resultinst
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:findieducativa" }
+
+dgesttla_inst_grales:
+    path:   /gralesinst
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:gralesieducativa" }
+
+dgesttla_inst_grales_carrera:
+    path:   /gralescarr
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:gralescarrera" }
+
+dgesttla_inst_carreras:
+    path:   /carrerasinst
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:carrerasieducativa" }
+
+dgesttla_inst_info:
+    path:   /infoinst
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:infoInstituto" }
+
+dgesttla_inst_info_update:
+    path:   /infoinstupd
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:update" }
+
+dgesttla_inst_info_rep_caratula:
+    path:   /infoRepCaratula
+    defaults:   { _controller: "SieDgesttlaBundle:Reportes:infoRepCaratula" }

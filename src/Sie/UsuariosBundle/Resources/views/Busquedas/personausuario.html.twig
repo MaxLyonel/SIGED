@@ -1,0 +1,21 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo %}    
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Introduzca el usuario de la persona</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            {{ form_start(form) }}  
+            <div class="col-xs-6">
+                {{ form_row(form.username, { 'id': 'username'}) }}
+            </div>
+            <div class="col-xs-6">
+                {{ form_row(form.buscar, { 'id': 'buscar'}) }}
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>                   
+{% endblock %}

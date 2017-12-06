@@ -1,0 +1,18 @@
+
+inscriptionSpecialNew_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:InscriptionSpecialNew:index }
+
+inscriptionSpecialNew_find:
+    path:     /find
+    defaults: { _controller: SieRegularBundle:InscriptionSpecialNew:find }
+
+inscriptionSpecialNew_result:
+    path:     /result
+    defaults: { _controller: SieRegularBundle:InscriptionSpecialNew:result }
+
+inscriptionSpecialNew_do_inscription:
+    path:     /doInscription
+    defaults: { _controller: SieRegularBundle:InscriptionSpecialNew:doInscription }
+    options:
+         expose: true

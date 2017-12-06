@@ -1,0 +1,68 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-tab panel-tab-double">
+            <div class="panel-heading no-padding">
+                <div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;">
+                    <h4 style="padding:10px 0px 0px 10px; text-align:center">RUDE
+                    </h4>
+                </div>
+            </div>
+            <div class="panel-body no-padding" id="modal-body">
+                <table class="table table-condensed table-bordered" style="background:#EEEEEE; display:none">
+                    <tr>
+                        <th>Rude</th><td>{{student.codigoRude|upper}}</td>
+                        
+                        <th>Curso</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel|upper}} - {{inscripcion.institucioneducativaCurso.gradoTipo.grado|upper}} - {{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo|upper}}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th><td>{{student.paterno|upper}} {{student.materno|upper}} {{student.nombre|upper}}</td>
+                        <th>Turno</th><td>{{inscripcion.institucioneducativaCurso.turnoTipo.turno|upper}}</td>
+                    </tr>
+                </table>
+                <div style="text-align:center; padding:15px 0px 0px 0px; color:#6D99DB; font-size:1.3em">
+                    <div style="color: #BEB9C5; padding:5px; font-size: 0.7em">CÓDIGO RUDE</div>
+                    {{student.codigoRude|upper}}<br>
+                    <div style="color: #BEB9C5; padding:5px; font-size: 0.7em">NOMBRE DEL ESTUDIANTE</div>
+                    {{student.paterno|upper}} {{student.materno|upper}} {{student.nombre|upper}}
+                </div>
+                <div style="text-align:center; padding:20px">
+                    {% for flashMessage in app.session.flashbag.get('newOk') %}
+                        <div class="alert alert-success" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                    {% for flashMessage in app.session.flashbag.get('newError') %}
+                        <div class="alert alert-danger" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                    <br>
+                    {# if cierreOperativoRude and socioeconomico.registroFinalizado == 1 #}
+                    {% if cierreOperativoRude %}
+                        <a class="btn btn-info" style="padding:20px" href="{{path('download_rude', {'codue': inscripcion.institucioneducativaCurso.institucioneducativa.id, 'rude': inscripcion.estudiante.codigoRude, 'gestion': inscripcion.institucioneducativaCurso.gestionTipo.id, 'eins':inscripcion.id} )}}">
+                            <i class="fa fa-print" style="font-size:40px" ></i><br>Imprimir
+                        </a>
+                    {% else %}
+                        <button class="btn btn-warning" style="padding:20px" onclick="socioeconomico('{{infoUe}}','{{infoStudent}}',1);"><i class="fa fa-edit" style="font-size:40px"></i><br>Actualizar</button><br><br>
+                        <small style="color:#9A9FC5"><b>La opción de imprimir se habilitara cuando cierre el operativo RUDE</b></small>
+                    {% endif %}
+                    <div>
+                        <a href="" class="btn btn-default" data-dismiss="modal" style="float:right;">Cerrar</a>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="infoUe" value="{{infoUe}}">
+
+{% if actualizar is defined and actualizar == true %}
+    <script type="text/javascript">
+        var infoUe = $('#infoUe').val();
+        seeStudents(infoUe);
+    </script>
+{% endif %}

@@ -1,0 +1,40 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaTipo:
+    type: entity
+    table: institucioneducativa_tipo
+    indexes:
+        fki_orgcurricular_tipo:
+            columns:
+                - orgcurricular_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcion:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        orgcurricularTipo:
+            targetEntity: OrgcurricularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                orgcurricular_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

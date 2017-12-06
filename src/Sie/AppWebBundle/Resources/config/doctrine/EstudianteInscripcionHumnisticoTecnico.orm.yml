@@ -1,0 +1,55 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico:
+    type: entity
+    table: estudiante_inscripcion_humnistico_tecnico
+    indexes:
+        IDX_9977FBBD72DBC59:
+            columns:
+                - especialidad_tecnico_humanistico_tipo_id
+        IDX_9977FBBA1104027:
+            columns:
+                - estudiante_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        institucioneducativaHumanisticoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_humanistico_id
+        horas:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        esvalido:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        especialidadTecnicoHumanisticoTipo:
+            targetEntity: EspecialidadTecnicoHumanisticoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                especialidad_tecnico_humanistico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

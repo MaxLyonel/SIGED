@@ -1,0 +1,17 @@
+herramienta_alter_infoEstudianteNotas_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteNotas:index"}
+    options:
+         expose: true
+
+herramienta_alter_infoEstudianteNotas_create_update:
+    path:     /createUpdate
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteNotas:createUpdate"}
+    options:
+         expose: true
+
+herramienta_alter_infoEstudianteNotas_delete:
+    path:     /delete
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteNotas:delete"}
+    options:
+         expose: true

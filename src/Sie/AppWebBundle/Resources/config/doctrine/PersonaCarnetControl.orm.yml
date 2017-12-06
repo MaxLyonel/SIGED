@@ -1,0 +1,38 @@
+Sie\AppWebBundle\Entity\PersonaCarnetControl:
+    type: entity
+    table: persona_carnet_control
+    indexes:
+        IDX_92E61355F5F88DB9:
+            columns:
+                - persona_id
+    uniqueConstraints:
+        persona_carnet_control_carnet_key:
+            columns:
+                - carnet
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        carnet:
+            type: string
+            nullable: false
+            length: 15
+            fixed: false
+            comment: ''
+    manyToOne:
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

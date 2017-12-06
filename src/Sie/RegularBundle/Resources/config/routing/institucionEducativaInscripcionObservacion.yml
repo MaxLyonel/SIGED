@@ -1,0 +1,19 @@
+sie_ue_informacion_observados:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInscripcionObservados:index" }
+    
+sie_ue_inscripcion_observados_busqueda:
+    path:     /inscripcionobservadosbusqueda
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInscripcionObservados:buscainscripcionobservados" }
+    
+sie_ue_inscripcion_observados_busqueda_ie:
+    path:     /{ie}/inscripcionobservadosbusquedaie
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInscripcionObservados:buscainscripcionobservadosie" }    
+    
+sie_ue_inscripcion_observados_busqueda_dis:
+    path:     /{dis}/inscripcionobservadosbusquedadis
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInscripcionObservados:buscainscripcionobservadosdis" }        
+    
+sie_ue_inscripcion_observados_validar:
+    path:     /{rude}/{inscripcionid}/inscripcionobservadosvalidar
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInscripcionObservados:buscainscripcionvalidar" }    

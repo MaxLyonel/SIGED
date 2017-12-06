@@ -1,0 +1,306 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1 class="glyphicon glyphicon-list"> VER CURSOS</h1>
+                <ol class="breadcrumb">
+                    <li>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div style="width: 100%;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger alert-dismissible" role="alert" id="result" style="display: none;">
+                    <strong>¡Advertencia!</strong> <input type="text" id="errorxls" class="form-control input-sm" readonly='true'>
+                </div>
+            </div>
+        </div>
+          {% for flashMessage in app.session.flashbag.get('success') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+
+        <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Lista de Archivo RUP-4 (Gestión de fecha fin del curso)</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation0"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinformation0" class="panel-collapse collapse in">
+                    <div class="portlet-body" align="center">
+                        <div class="row">
+                <div class="col-lg-12">
+                    <ul class="nav nav-tabs">
+                        {% for i in gestion_ini_t..gestion_fin_t %}
+                            <li {% if(gestion == i) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':i})}}" >{{i}}</a></li>
+                        {% endfor %}
+                        {#}
+                        <li {% if(gestion == 2009) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':2009})}}" >2009</a></li>
+                        <li {% if(gestion == 2010) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':2010})}}" >2010</a></li>
+                        <li {% if(gestion == 2011) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':2011})}}" >2011</a></li>
+                        <li {% if(gestion == 2012) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':2012})}}" >2012</a></li>  
+                        <li {% if(gestion == 2013) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':2013})}}" >2013</a></li>
+                        <li {% if(gestion == 2014) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':2014})}}" >2014</a></li>
+                        <li {% if(gestion == 2015) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':2015})}}" >2015</a></li>
+                        <li {% if(gestion == 2016) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':2016})}}" >2016</a></li>
+                        <li {% if(gestion == 2017) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':2017})}}" >2017</a></li>  
+                        <li {% if(gestion == 2018) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':2018})}}" >2018</a></li>
+                        {#}
+                    </ul>
+                </div>
+            </div>
+            </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if (totales) %}
+         <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet portlet-blue">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>Lista de Cursos con fecha fin {{ gestion }}</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="pinformation" class="panel-collapse collapse in">
+                        <div class="portlet-body" align="center">
+                            <div class="row">
+                {% if (totales) %}
+                <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
+                    <thead>
+                        <tr>
+                            <th>Id del Curso</th>
+                            <th>Consolidado</th>
+                            <th>Participantes (Regsitrar)</th>
+                            <th>Carnet</th>
+                            <th>Nombre</th>
+                            <th>Paterno</th>
+                            <th>Materno</th>                            
+                            <th>Fecha Inicio</th>                            
+                            <th>Fecha Fin</th>                            
+                            <th>Bloque</th>                            
+                            <th>Parte</th>                            
+                            <th>Departamento</th>  
+                            <th>Provincia</th>
+                            <th>Municipio</th>
+                            <th>localidad</th>
+                            <th>Editar Fecha Fin</th>
+                            <th>Usuario Curso</th>
+                            <th>Cerrar Curso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for fila in totales %}
+                        {% if fila.esactivo != 1 %} {% set op=0 %} {% else %} {% set op=1 %} {% endif %}
+                        <tr>
+                           <td>{{ fila.id }}</td>
+                           <td><a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': fila.id~fila.ciclo_tipo_id~fila.grado_tipo_id,'esactivo':op}) }}" > Imprimir Consolidado</a></td>
+                            <td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id,'val':0 }) }}" > Ver participantes</a></td>
+                            <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
+                            <td>{{ fila.nombre }}</td>                            
+                            <td>{{ fila.paterno }}</td>
+                            <td>{{ fila.materno }}</td> 
+                            <td>{{ fila.fecha_inicio|date('d-m-Y') }}</td>
+                            <td>{{ fila.fecha_fin|date('d-m-Y') }}</td>
+                            <td>{{ fila.ciclo_tipo_id }}</td>
+                            <td>{{ fila.grado_tipo_id }}</td>
+                            <td>{{ fila.depto }}</td>
+                            <td>{{ fila.provincia }}</td>
+                            <td>{{ fila.lugar }}</td>
+                            <td>{{ fila.localidad }}</td>
+                            {% if fila.esactivo != 1 %}
+                                <td><a role="button" class="btn btn-info btn-xs" href="#" onclick="ver_fecha_fin({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}','{{ fila.fecha_inicio|date("d/m/Y") }}');" > Editar Fecha</a></td>
+                            {% else %}
+                                <td>Finalizado</td>
+                            {% endif %}
+                            <td>{{ fila.usu_a }}</td>
+                            {% if fila.esactivo != 1 %}
+                            <td><a role="button" class="btn btn-warning btn-xs" href="{{ path('sie_pnp_listar_archivos_editnew', { 'id': fila.id }) }}" onclick="return confirm('Está seguro de CERRAR EL CURSO?, si cierra el curso POR TEMAS DE SEGURIDAD SE GUARDARÁ SU NOMBRE, ya no tendrá las opciones de editar; Pero podrá imprimir el PDF original para sus firmas respectivas. No olvide que 10 estudiantes mínimo para áreas concentradas y 8 para desconcentradas.');" > Cerrar Curso</a></td>
+                            {% else %}
+                                <td>Cerrado por {{ fila.usu_c }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+             {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal modal-flex fade" id="Modal_fecha" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">EDITAR CURSO (FECHA FIN).</h4>             
+                </div>
+                <div class="modal-body">
+                    <div id="editar-Modal">
+                        <form role="form" method="post" action="{{path('sie_pnp_listar_archivos_editnew')}}">
+                            <div align="center"><input type="text" id="curso_id" name="curso_id" value="" required="required" style="display:none" />
+                            <input type="hidden" id="fecha_inicio" name="fecha_inicio" placeholder="Digite Fecha Final" required="required" value=""/>
+                            <input type="text" id="fecha_fin" name="fecha_fin" placeholder="Digite Fecha Final" required="required" value=""/>
+                            <button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil" onclick="return validar_fecha()"> Guardar Cambios</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="editar-pie">
+                    <HR>
+                </div>                    
+            </div>                
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     },
+                     "buttons":{
+                        "copy": "Copiar",
+                        "print":"Imprimir"
+                     }
+                    };
+
+    var currentLang = espanol;    
+        
+    $(document).ready(function() {
+        $("#fecha_fin").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd/mm/yyyy',
+            language: "es",
+        });
+        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol,
+         'dom': 'lBfrtip <"clear">',
+        'buttons': [
+             {   
+                extend: 'colvis',
+                text:'Visibilizar Columnas'
+            },
+            {
+                extend: 'print',
+                text: 'Imprimir',
+                autoPrint: true,
+                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
+                header:true,
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend:'pdf',
+                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
+                filename:'Lista de archivos subidos RUP-4',
+                orientation:'landscape',
+                exportOptions: {
+                modifier: {
+                    page: 'Lista de archivos subidos RUP-4'
+                    }
+                }
+            },
+            {
+            extend: 'excel',
+            text: 'Excel',
+            filename:'Lista de archivos subidos RUP-4',
+            exportOptions: {
+                modifier: {
+                    page: 'Lista de archivos subidos RUP-4'
+                    }
+                }
+            },
+        ]} );
+        
+        $('#tablaTotales tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                dtable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        {#$('#btn').click(function(){
+            dtable.fnDestroy();
+            dtable = null;
+            currentLang = (currentLang == english) ? espanol : english;
+            dtable = $('#tablaTotales').dataTable( {"oLanguage": currentLang} );
+        });#}
+        
+    });
+    function ver_fecha_fin(id,fecha_fin,fecha_inicio){
+         $('#Modal_fecha').modal('show');
+         $('#curso_id').val(id);
+         $('#fecha_fin').val(fecha_fin);
+         $('#fecha_inicio').val(fecha_inicio);
+    }
+
+    function validar_fecha(){
+    var f1 = document.getElementById("fecha_inicio").value;
+    var f2 = document.getElementById("fecha_fin").value;
+    var aFecha1 = f1.split('/'); 
+    var aFecha2 = f2.split('/'); 
+    var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]); 
+    var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]); 
+    var dif = fFecha2 - fFecha1;
+    var dias = Math.floor(dif / (1000 * 60 * 60 * 24)); 
+    if(dias>=90 && dias<240){
+        return true;
+    }
+    else{
+        alert("La fecha final debe ser mínimo 90 días mayor que la fecha inicial pero no mayor a 240 días (3 meses a 8 meses)");
+        return false;
+    }
+    }
+    
+    </script>
+{% endblock %}

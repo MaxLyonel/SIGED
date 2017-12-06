@@ -1,0 +1,49 @@
+{% extends '::layoutDiplomas.html.twig' %}  
+{% block contentoption %}   
+    <!-- begin PAGE TITLE ROW -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h4>
+                    Reporte diplomas de bachiller humanístico {% block grid_title %}{% endblock %}
+                    </br>
+                    <small style="font-size:small;">{{ "now"|date("d/m/Y  g:i a", "America/La_Paz") }}</small>
+                </h4>
+                <ol class="breadcrumb">
+                    {% block grid_panel_menu %}{% endblock %}
+                    {% if nivel == "Nacional" %}  
+                        <li class="pull-right">
+                            <div class="btn-green date-picker">
+                                <form name="formtable" role="form" action="{{ path('sie_diploma_tramite_reporte_nacional_impreso') }}" action="" method="POST" >
+                                    <select class="form-control btn-dpl" name="gestion" onchange="this.form.submit();">
+                                        {% for ges in gestiones %}
+                                            {% if ges.id == periodo %}
+                                                <option value="{{ ges.id }}" selected>{{ ges.id }}</option>
+                                            {% else %}
+                                                <option value="{{ ges.id }}">{{ ges.id }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+                        </li>  
+                    {% else %}  
+                        <li class="pull-right">
+                            <div class="btn btn-dpl date-picker">
+                                {{ periodo }}
+                            </div>
+                        </li> 
+                    {% endif %}  
+                </ol>
+            </div>
+            <div class="page-content">
+                {% block grid_panel_content %}{% endblock %}
+            </div>                
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+{% endblock %}
+{% block javascriptssec %}     
+    {% block javascriptsnew %}
+    {% endblock %}
+{% endblock %}

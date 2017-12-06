@@ -1,0 +1,54 @@
+<div class="row">
+    <div class="col-md-12"> <div id="no-more-tables">
+            <div id="doblepromo" class="panel-collapse collapse in">
+                <div class="portlet-body">
+
+
+                    {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form' } } )}}
+
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            {{form_label(form.institucionEducativa)}}
+                            {{form_widget(form.institucionEducativa, {'attr':{'onchange':'institucionEducativa(this.value)','onkeyUp':'institucionEducativa(this.value)'}  } )}}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="col-md-6">
+                            {{form_label(form.institucionEducativaName)}}
+                            {{form_widget(form.institucionEducativaName)}}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{form_label(form.nivel)}}
+                            {{form_widget(form.nivel)}}
+                        </div>
+                        <div class="col-md-6">
+                            {{form_label(form.grado)}}
+                            {{form_widget(form.grado)}}
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            {{form_label(form.paralelo)}}
+                            {{form_widget(form.paralelo, {'attr':{'required':'true','onchange':'getTurno(this.value)','onmousedown':'getTurno(this.value)'} })}}
+                            <div class="help-block with-errors "></div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            {{form_label(form.turno)}}
+                            {{form_widget(form.turno, {'attr':{'required':'true'} })}}
+                            <div class="help-block with-errors "></div>
+                        </div>
+                    </div>
+
+
+                    {{form_widget(form.save, {'attr':{'class':'btn btn-default'} }) }}
+                    {{form_end(form)}}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

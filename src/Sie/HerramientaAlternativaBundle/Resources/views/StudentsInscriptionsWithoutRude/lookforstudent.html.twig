@@ -1,0 +1,276 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="col-md-12">
+                                  <!-- Start input grid -->
+                                  <div class="panel rounded shadow">
+                                      <div class="panel-heading">
+                                          <div class="pull-left">
+                                              <h3 class="panel-title">Buscar Estudiante</h3>
+                                          </div>
+                                          <div class="pull-right">
+                                              <button title="" data-original-title="" class="btn btn-sm" data-container="body" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                                              <button title="" data-original-title="" class="btn btn-sm" data-container="body" data-action="remove" data-toggle="tooltip" data-placement="top" data-title="Remove"><i class="fa fa-times"></i></button>
+                                          </div>
+                                          <div class="clearfix"></div>
+                                      </div><!-- /.panel-heading -->
+                                      <div class="panel-body no-padding">
+
+                                          {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'idSearchStudentForm', 'class':'form'} } )}}
+                                              <div class="form-body">
+                                                  <div class="form-group">
+                                                      <div class="row">
+                                                          <div class="col-md-6">
+                                                            {{form_widget(form.carnetIdentidad)}}
+                                                          </div>
+                                                          <div class="col-md-6">
+                                                            {{form_widget(form.generoTipo)}}
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                  <div class="form-group">
+                                                      <div class="row">
+                                                          <div class="col-md-2">
+                                                              {{form_widget(form.paterno)}}
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                              {{form_widget(form.materno)}}
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                              {{form_widget(form.nombre)}}
+                                                          </div>
+                                                          <div class="col-md-6">
+                                                            <div class="row">
+                                                                <div class="col-md-2">
+                                                                    {{form_widget(form.day)}}
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    {{form_widget(form.month)}}
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    {{form_widget(form.year)}}
+                                                                </div>
+                                                            </div>
+                                                          </div>
+
+                                                      </div>
+                                                  </div>
+                                                  <div class="form-group">
+                                                    <div class="row">
+                                                      <div class="col-md-3">
+                                                        {{form_widget(form.pais,{'attr':{'onchange':'dep(this.value)'} })}}
+                                                      </div>
+                                                      <div class="col-md-3">
+                                                        {{form_widget(form.departamento,{'attr':{'onchange':'prov(this.value)'} })}}
+                                                      </div>
+                                                      <div class="col-md-3">
+                                                        {{form_widget(form.provincia)}}
+                                                      </div>
+                                                      <div class="col-md-3">
+                                                        {{form_widget(form.localidad)}}
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div><!-- /.form-body -->
+                                              <div class="form-footer">
+                                                  <div class="pull-right">
+                                                      {{form_widget(form.find)}}
+                                                      <button class="btn btn-danger mr-5" data-dismiss="modal">Cancel</button>
+                                                  </div>
+                                                  <div class="clearfix"></div>
+                                              </div><!-- /.form-footer -->
+                                          {{form_end(form)}}
+                                      </div><!-- /.panel-body -->
+                                  </div><!-- /.panel -->
+                                  <!--/ End input grid -->
+                              </div>
+
+      <!-- krlos code to here-->
+      <div class='row'>
+        <div class='col-md-12'>
+          <div id='idanswerwr'></div>
+        </div>
+      </div>
+    </div><!-- /.modal-dialog -->
+</div>
+<script>
+
+  var findStudent = function() {
+	   var formData = $('#idSearchStudentForm').serialize();
+     $.ajax({
+         type: 'post',
+         url: Routing.generate('alter_inscriptionstudent_without_rude_findstudent'),
+         data: formData,
+         beforeSend: function () {
+             $("#idanswerwr").empty();
+             $("#idanswerwr").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+         },
+         success: function (data) {
+             $("#idanswerwr").empty();
+             $("#idanswerwr").append(data);
+         },
+         statusCode: {
+             500: function () {
+
+             },
+             404: function () {
+
+             }
+         }
+     });
+  };
+
+  var doInscription = function (){
+
+    nombre          = $('#form_nombre').val();
+    paterno         = $('#form_paterno').val();
+    materno         = $('#form_materno').val();
+    carnetIdentidad = $('#form_carnetIdentidad').val();
+    fnac            = $('#form_year').val()+'-'+$('#form_month').val()+'-'+$('#form_day').val()
+    pais            = $('#form_pais').val();
+    departamento    = $('#form_departamento').val();
+    provincia       = $('#form_provincia').val();
+    localidad       = $('#form_localidad').val();
+    genero          = $('#form_generoTipo').val();
+    //create the json object
+    var studentObject={"nombre":nombre,"paterno":paterno,"materno":materno,"fnac":fnac, 'carnetIdentidad':carnetIdentidad,
+                       "pais":pais,"departamento":departamento,"provincia":provincia,"localidad":localidad,"genero":genero
+                      };
+    $('#form_infoStudent').val(JSON.stringify(studentObject));
+
+    if((nombre.length>0 && paterno.length>0) || (nombre.length>0 && materno.length>0)){
+
+      if(confirm('Esta completamente seguro de realizar la inscripción?')){
+        var formData = $('#idInscriptionForm').serialize() + '&=nombre' + nombre;
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('alter_inscriptionstudent_without_rude_saveinscription'),
+            data: formData,
+            beforeSend: function () {
+                $('#modal-body').empty();
+                $('.modal-footer').empty();
+                $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+                $("#idstudents").empty();
+                $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+            },
+            success: function (data) {
+                $('#modal').modal('hide');
+                $("#idstudents").empty();
+                $("#idstudents").append(data);
+            },
+            error: function (data) {
+
+            }
+        });
+      }else{
+        return false;
+      }
+    }else{
+      alert('Necesita datos del estudiante');
+      return false;;
+    }
+
+  };
+
+
+
+  var doInscriptionByStudent = function(idStudent, dataUe){
+
+    if(confirm('Esta completamente seguro de realizar la inscripción?')){
+      $.ajax({
+          type: 'post',
+          url: Routing.generate('alter_inscriptionstudent_without_rude_saveinscriptionstudent', {'idStudent':idStudent, 'dataUe':dataUe}),
+          //data: formData,
+          beforeSend: function () {
+              $('#modal-body').empty();
+              $('.modal-footer').empty();
+              $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+              $("#idstudents").empty();
+              $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+          },
+          success: function (data) {
+              $('#modal').modal('hide');
+              $("#idstudents").empty();
+              $("#idstudents").append(data);
+          },
+          error: function (data) {
+
+          }
+      });
+    }else{
+      return false;
+    }
+
+
+  };
+
+  function dep(es) {
+
+      $.ajax({
+          type: 'get',
+          url: Routing.generate('search_departamentos_st', {'pais': parseInt(es)}),
+          beforeSend: function () {
+              $("#form_departamento").empty();
+              $("#form_provincia").empty();
+              /*$("#localidad").empty();*/
+              $("#div-load").parent().append('<div class="loading"></div>');
+          },
+          success: function (data) {
+              $("#form_departamento").empty();
+              $("#form_provincia").empty();
+
+              $.each(data.departamento, function (i, value) {
+                  $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+              });
+              $(".loading").remove();
+          }
+      });
+  }
+
+  function prov(d) {
+      $.ajax({
+          type: 'get',
+          url: Routing.generate('search_provincias_st', {'departamento': parseInt(d)}),
+          beforeSend: function () {
+              $("#form_provincia").empty();
+              $("#div-load-prov").parent().append('<div class="loading"></div>');
+          },
+          success: function (data) {
+              $("#form_provincia").empty();
+              $.each(data.provincia, function (i, value) {
+                  $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+              });
+              $(".loading").remove();
+          }
+      });
+  }
+
+
+	$(".jnumbersletters").keypress(function (key) {
+        var key = key || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 97 || k > 122)//letras minusculas
+            && (k < 65 || k > 90) //letras mayusculas
+            && (k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+            && (k != 241) //ñ
+             && (k != 209) //Ñ
+             && (k != 32) //espacio
+             && (k != 225) //á
+             && (k != 233) //é
+             && (k != 237) //í
+             && (k != 243) //ó
+             && (k != 250) //ú
+             && (k != 193) //Á
+             && (k != 201) //É
+             && (k != 205) //Í
+             && (k != 211) //Ó
+             && (k != 218) //Ú
+             && (k != 44) //coma ,
+             && (k != 46) //punto .
+            )
+            return false;
+    });
+</script>

@@ -1,0 +1,42 @@
+Sie\AppWebBundle\Entity\Usuarios:
+    type: entity
+    table: usuarios
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:        
+        username:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        salt:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        password:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''        
+        email:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        isactive:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

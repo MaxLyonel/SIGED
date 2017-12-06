@@ -1,0 +1,15 @@
+infra_info_index:
+  path: /index
+  defaults: { _controller: SieInfraestructuraBundle:Info:index }
+
+infra_info_acceder:
+  path: /acceder
+  defaults: { _controller: SieInfraestructuraBundle:Info:acceder }
+
+infra_info_acceder_principal:
+  path: /principal
+  defaults: { _controller: SieInfraestructuraBundle:Info:principal }
+
+infra_info_adicionarInfraestructura:
+  path: /adicionarInfraestructura
+  defaults: { _controller: SieInfraestructuraBundle:Info:adicionarInfraestructura }

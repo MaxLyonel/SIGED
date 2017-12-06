@@ -1,0 +1,98 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Cambiar Matrícula </h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body no-padding">
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                        <tr>
+                            <th>{{infoStudent.nivel}}</th>
+                        </tr>
+                        <tr>
+                            <td>{{infoStudent.grado}} {{infoStudent.paralelo}} </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                  </div>
+              </div>
+                <div class="col-md-6">
+                  <div class="table-responsive">
+
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                        <tr>
+                            <th>Codigo Rude</th>
+                            <th>{{infoStudent.codigoRude}}</th>
+                        </tr>
+                        <tr>
+                            <th>Estudiante</th>
+                            <td>{{student.paterno}} {{student.materno}} {{student.nombre}} </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                  </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="col-md-8 col-md-offset-4">
+                {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form', 'id':'matriculaForm'} } )}}
+                {{form_end(form)}}
+              </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <!--button type="button" class="btn btn-primary" data-dismiss="modal">Guardar Cambios</button-->
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+<script>
+    var saveChangeMatricula = function(){
+      if(confirm('...Esta seguro de realizar el cambio?')){
+        matriculaForm = $('#matriculaForm').serialize();
+        $.ajax({
+            type: 'post',
+            data: matriculaForm,
+            url: "{{ path('herramienta_changeMatricula_updatematricula') }}",
+            beforeSend: function () {
+                $("#idstudents").empty();
+                $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+            },
+            success: function (data) {
+                $("#idstudents").empty();
+                $("#idstudents").append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+        $('#modal').modal('hide');
+      } else {
+        return false;
+      }
+
+
+    }
+
+</script>

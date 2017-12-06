@@ -1,0 +1,9 @@
+alternativa_inscriptionObservado_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:inscriptionExcepcionales:index}
+
+alternativa_inscriptionObservado_result:
+    path:     /cargarTurnos/{idInstitucion}/{gestion}/
+    defaults: { _controller: "SieHerramientaBundle:inscriptionExcepcionales:result"}
+    options:
+         expose: true

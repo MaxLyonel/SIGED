@@ -1,0 +1,500 @@
+{% extends 'layoutInfraestructura.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .modal-dialog{
+            width: 80%;
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+    <h2><img src="{{asset('webInfraestructura/assets/images/home1.png')}}" class="img-header"> DATOS GENERALES <small>OPERATIVO 2013</small></h2>
+    {{form_start(form)}}
+    <div class="module-wrapper">
+    <section class="module module-headings">
+    <div class="module-inner">
+    <div class="module-content">
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs nav-tabs-theme-3" role="tablist">
+            <li role="presentation" class="active"><a href="#datos" aria-controls="datos" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-map-marker"></i><br><span class="hidden-xs hidden-sm">1. Datos de ubicación del edificio educativo (EE)</span></a></li>
+            <li role="presentation" class=""><a href="#direccion" aria-controls="direccion" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-location-arrow"></i><br><span class="hidden-xs hidden-sm">2. Dirección específica del edificio</span></a></li>
+            <li role="presentation" class=""><a href="#vias" aria-controls="vias" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-plane"></i><br><span class="hidden-xs hidden-sm">3. Vías de acceso</span></a></li>
+            <li class="presentation" role="presentation"><a href="#unidades" aria-controls="unidades" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-bank"></i><br><span class="hidden-xs hidden-sm">4. Unidades educativas que operan en este edificio aducativo</span></a></li>
+            <li class="last" role="presentation"><a href="#observacion" aria-controls="observacion" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-file-text-o"></i><br><span class="hidden-xs hidden-sm">5. Observaciones</span></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="datos">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>1.2 Código edificio educativo</legend>
+                            <div class="form-group">
+                                <input type="text" value="{{ubicacion[0]['codigo_le']}}" class="form-control" disabled="disabled">
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.3 Departamento</legend>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <input type="text" value="{{ubicacion[0]['codigo_departamento']}}" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        <input type="text" value="{{ubicacion[0]['departamento']}}" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.4 Provincia</legend>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <input type="text" value="{{ubicacion[0]['codigo_provincia']}}" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        <input type="text" value="{{ubicacion[0]['provincia']}}" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.5 Secc. Municipal</legend>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <input type="text" value="{{ubicacion[0]['codigo_seccion']}}" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        <input type="text" value="{{ubicacion[0]['seccion']}}" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.6 Cantón</legend>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <input type="text" value="{{ubicacion[0]['codigo_canton']}}" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        <input type="text" value="{{ubicacion[0]['canton']}}" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.7 Ciudad o localidad</legend>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <input type="text" value="{{ubicacion[0]['codigo_localidad']}}" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        <input type="text" value="{{ubicacion[0]['localidad']}}" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>1.8 Distrito Escolar</legend>
+                            <div class="form-group">
+                                <input type="text" value="{{ubicacion[0]['distrito']}}" class="form-control" disabled="disabled">
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.9 Área geográfica</legend>
+                            <div class="form-group">
+                                <input type="text" value="{{ubicacion[0]['area2001']}}" class="form-control" disabled="disabled">
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.10 Zona/Barrio</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n110Zonabarrio)}}
+                            </div>
+                        </fieldset>
+                        <p>Los siguientes 2 datos completar sólo en caso de ser área urbana</p>
+                        <fieldset>
+                            <legend>1.11 Macrodistrito municipal</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n111Macrodistrito)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.12 Distrito municipal</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n112Distritomun)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="direccion">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>2.1 Calle o Avenida y Número</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n21Calleavenida)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.2 Descripción del acceso a partir de un lugar fácilmente reconocible en la zona</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n22Descripcionacceso)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="vias">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>3.1 Tramo red troncal</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n31Tramotroncal)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>3.2 Tramo red complementaria - Red departamental</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n32Tramocomplementaria)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>3.3 Tramo red vecinal</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n33Tramovecinal)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>3.4 Tipo de acceso desde la Dirección Distrital. (Puede llenar uno o más tipos de accesos)</legend>
+                        </fieldset>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>días</th>
+                                        <th>hrs.</th>
+                                        <th>min.</th>
+                                        <th>Costo Bs.</th>
+                                        <th>Descripcion del medio de acceso</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Terrestre</td>
+                                        <td>{{form_widget(form.n34TerrestreDias)}}</td>
+                                        <td>{{form_widget(form.n34TerrestreHrs)}}</td>
+                                        <td>{{form_widget(form.n34TerrestreMin)}}</td>
+                                        <td>{{form_widget(form.n34TerrestreCosto)}}</td>
+                                        <td>{{form_widget(form.n34TerrestreDescripcion)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fluvial</td>
+                                        <td>{{form_widget(form.n34FluvialDias)}}</td>
+                                        <td>{{form_widget(form.n34FluvialHrs)}}</td>
+                                        <td>{{form_widget(form.n34FluvialMin)}}</td>
+                                        <td>{{form_widget(form.n34FluvialCosto)}}</td>
+                                        <td>{{form_widget(form.n34FluvialDescripcion)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Aéreo</td>
+                                        <td>{{form_widget(form.n34AereoDias)}}</td>
+                                        <td>{{form_widget(form.n34AereoHrs)}}</td>
+                                        <td>{{form_widget(form.n34AereoMin)}}</td>
+                                        <td>{{form_widget(form.n34AereoCosto)}}</td>
+                                        <td>{{form_widget(form.n34AereoDescripcion)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Combinación de dos o más medios</td>
+                                        <td>{{form_widget(form.n34CombinacionDias)}}</td>
+                                        <td>{{form_widget(form.n34CombinacionHrs)}}</td>
+                                        <td>{{form_widget(form.n34CombinacionMin)}}</td>
+                                        <td>{{form_widget(form.n34CombinacionCosto)}}</td>
+                                        <td>{{form_widget(form.n34CombinacionDescripcion)}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="unidades">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>4.1 Unidades educativas que operan en este edificio educativo</legend>
+                            <div>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal" onclick="adicionar({{entity.id}});">Asociar UE</button>
+                            </div>
+                            <div class="table-responsive" id="uesAsociadas">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Cod. UE</th>
+                                            <th>Unidad Educativa</th>
+                                            <th>Junta Escolar</th>
+                                            <th>Teléfono Ref.</th>
+                                            <th>Tenencia</th>
+                                            <th>Organización Curricular</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for ie in institucionesEducativas %}
+                                            <tr>
+                                                <td>{{ie.institucioneducativa.id}}</td>
+                                                <td>{{ie.institucioneducativa.institucioneducativa}}</td>
+                                                <td>{{ie.persona.paterno}} {{ie.persona.materno}} {{ie.persona.nombre}}</td>
+                                                <td>{{ie.telefonoJe}}</td>
+                                                <td>{{ie.tenenciaTipo.tenenciaTipo}}</td>
+                                                <td>{{ie.orgcurricularTipo.orgcurricula}}</td>
+                                                <td>
+                                                	<button type="button" class="btn btn-info" onclick="uedelete({{ie.id}});">Excluir UE</button>
+                                					<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal" onclick="ueeditar({{ie.id}});">Actualizar Datos UE</button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="observacion">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>Observaciones</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n5Obs)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    </div>
+    </div>
+    </section>
+    {{form_end(form)}}
+    <div class="modal fade bs-example-modal-lg" id="modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+
+    </div>
+    
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var adicionar = function(datosGeneralesId){
+            $.ajax({
+               type: 'get',
+               //url: Routing.generate('infraestructurah1datosgenerales_ue_new'),
+               url: "{{ path('infraestructurah1datosgenerales_ue_new') }}",
+               data: ({id:datosGeneralesId}),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+
+        var uecreate = function(){
+            $.ajax({
+               type: 'get',
+               data: $('#formUeDatosGenerales').serialize(),
+               url: "{{ path('infraestructurah1datosgenerales_ue_create') }}",               
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $('#modal').modal('hide');
+                    $("#uesAsociadas").empty();
+	                $("#uesAsociadas").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+
+        var ueeditar = function(id){
+            $.ajax({
+               type: 'get',
+               data: {id:id},
+               url: "{{ path('infraestructurah1datosgenerales_ue_edit') }}",
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+
+
+        var ueupdate = function(){
+            $.ajax({
+               type: 'get',
+               data: $('#formUeDatosGenerales').serialize(),
+               url: "{{ path('infraestructurah1datosgenerales_ue_update') }}",               
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $('#modal').modal('hide');
+                    $("#uesAsociadas").empty();
+	                $("#uesAsociadas").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+
+        var uedelete = function(id){
+        	if(confirm('Esta seguro de eliminar el registro?')){
+	            $.ajax({
+	               type: 'get',
+	               data: {'id':id},
+	               url: "{{ path('infraestructurah1datosgenerales_ue_delete') }}",               
+	               beforeSend: function () {
+
+	               },
+	               success: function (data) {
+	                    $("#uesAsociadas").empty();
+	                    $("#uesAsociadas").append(data);
+	               },
+	               statusCode: {
+	                   500: function () {
+
+	                   },
+	                   404: function () {
+
+	                   }
+	               }
+	            });
+	        }
+        }
+    </script>
+    <script>
+        /* Validaciones */
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n110Zonabarrio").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n111Macrodistrito").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n112Distritomun").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n21Calleavenida").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n22Descripcionacceso").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n31Tramotroncal").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n32Tramocomplementaria").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n33Tramovecinal").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34TerrestreDias").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34TerrestreHrs").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34TerrestreMin").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34TerrestreCosto").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34TerrestreDescripcion").alphanum({allowOtherCharSets : true, allow:'-.,'});
+
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34FluvialDias").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34FluvialHrs").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34FluvialMin").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34FluvialCosto").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34FluvialDescripcion").alphanum({allowOtherCharSets : true, allow:'-.,'});
+
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34AereoDias").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34AereoHrs").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34AereoMin").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34AereoCosto").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34AereoDescripcion").alphanum({allowOtherCharSets : true, allow:'-.,'});
+
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34CombinacionDias").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34CombinacionHrs").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34CombinacionMin").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34CombinacionCosto").numeric("positiveInteger");
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n34CombinacionDescripcion").alphanum({allowOtherCharSets : true, allow:'-.,'});
+
+        $("#sie_appwebbundle_infraestructurah1datosgenerales_n5Obs").alphanum({allowOtherCharSets : true, allow:'-.,'});
+    </script>
+{% endblock %}

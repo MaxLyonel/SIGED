@@ -1,0 +1,279 @@
+<?php
+
+namespace Sie\AppWebBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TtecDocentePersona
+ */
+class TtecDocentePersona
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var boolean
+     */
+    private $docExperienciaLaboral;
+
+    /**
+     * @var boolean
+     */
+    private $docCursosRespaldo;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistro;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+    /**
+     * @var boolean
+     */
+    private $esVigente;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Persona
+     */
+    private $persona;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecDocente
+     */
+    private $ttecDocente;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set docExperienciaLaboral
+     *
+     * @param boolean $docExperienciaLaboral
+     * @return TtecDocentePersona
+     */
+    public function setDocExperienciaLaboral($docExperienciaLaboral)
+    {
+        $this->docExperienciaLaboral = $docExperienciaLaboral;
+    
+        return $this;
+    }
+
+    /**
+     * Get docExperienciaLaboral
+     *
+     * @return boolean 
+     */
+    public function getDocExperienciaLaboral()
+    {
+        return $this->docExperienciaLaboral;
+    }
+
+    /**
+     * Set docCursosRespaldo
+     *
+     * @param boolean $docCursosRespaldo
+     * @return TtecDocentePersona
+     */
+    public function setDocCursosRespaldo($docCursosRespaldo)
+    {
+        $this->docCursosRespaldo = $docCursosRespaldo;
+    
+        return $this;
+    }
+
+    /**
+     * Get docCursosRespaldo
+     *
+     * @return boolean 
+     */
+    public function getDocCursosRespaldo()
+    {
+        return $this->docCursosRespaldo;
+    }
+
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     * @return TtecDocentePersona
+     */
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return TtecDocentePersona
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
+
+    /**
+     * Set esVigente
+     *
+     * @param boolean $esVigente
+     * @return TtecDocentePersona
+     */
+    public function setEsVigente($esVigente)
+    {
+        $this->esVigente = $esVigente;
+    
+        return $this;
+    }
+
+    /**
+     * Get esVigente
+     *
+     * @return boolean 
+     */
+    public function getEsVigente()
+    {
+        return $this->esVigente;
+    }
+
+    /**
+     * Set persona
+     *
+     * @param \Sie\AppWebBundle\Entity\Persona $persona
+     * @return TtecDocentePersona
+     */
+    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
+    {
+        $this->persona = $persona;
+    
+        return $this;
+    }
+
+    /**
+     * Get persona
+     *
+     * @return \Sie\AppWebBundle\Entity\Persona 
+     */
+    public function getPersona()
+    {
+        return $this->persona;
+    }
+
+    /**
+     * Set ttecDocente
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecDocente $ttecDocente
+     * @return TtecDocentePersona
+     */
+    public function setTtecDocente(\Sie\AppWebBundle\Entity\TtecDocente $ttecDocente = null)
+    {
+        $this->ttecDocente = $ttecDocente;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecDocente
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecDocente 
+     */
+    public function getTtecDocente()
+    {
+        return $this->ttecDocente;
+    }
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecParaleloMateria
+     */
+    private $ttecParaleloMateria;
+
+
+    /**
+     * Set ttecParaleloMateria
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecParaleloMateria $ttecParaleloMateria
+     * @return TtecDocentePersona
+     */
+    public function setTtecParaleloMateria(\Sie\AppWebBundle\Entity\TtecParaleloMateria $ttecParaleloMateria = null)
+    {
+        $this->ttecParaleloMateria = $ttecParaleloMateria;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecParaleloMateria
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecParaleloMateria 
+     */
+    public function getTtecParaleloMateria()
+    {
+        return $this->ttecParaleloMateria;
+    }
+    /**
+     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
+     */
+    private $institucioneducativa;
+
+
+    /**
+     * Set institucioneducativa
+     *
+     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
+     * @return TtecDocentePersona
+     */
+    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
+    {
+        $this->institucioneducativa = $institucioneducativa;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativa
+     *
+     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
+     */
+    public function getInstitucioneducativa()
+    {
+        return $this->institucioneducativa;
+    }
+}

@@ -1,0 +1,275 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Inscripción Extranjero
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar</a></li>
+                    <li class="active"> Inscripcion</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    <div class="row">
+        {% for flashMessage in app.session.flashbag.get('newUser') %}
+            <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ flashMessage.mensaje }}<br>
+                <button class="btn-link" data-toggle="tooltip" data-placement="top" title="Descargar declaracion jurada"><img src="{{asset('assets/images/pdf.png')}}"> Declaración jurada</button>
+                    {# flashMessage.nombre #}
+                    {# flashMessage.usuario #}
+                    {# flashMessage.password #}
+            </div>
+        {% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <!--th>Rude</th-->
+                                        <th>Nombre</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>
+                                        <th>CI</th>
+                                        <th>Genero</th>
+                                        <th>Complemento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <!--td data-title="Rude"></td-->
+                                        <td data-title="Nombre">{{ datastudent.nombre|e }} </td>
+                                        <td data-title="Nombre"> {{datastudent.paterno|e}} </td>
+                                        <td data-title="Nombre"> {{datastudent.materno|e}}</td>
+                                        <td data-title="CI">{{datastudent.ci}} </td>
+                                        <td data-title="Complemento">{{datastudent.complemento}}</td>
+                                        {% if (datastudent.genero ==1)%}
+                                            <td data-title="Genero">MASCULINO </td>
+                                        {%else%}
+                                            <td data-title="Genero">FEMENINO </td>
+                                        {%endif%}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Inscripcion Extranjeros</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#omitidos"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div id="omitidos" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+
+                        {{form_start(formExtranjeros, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form' } } )}}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{form_label(formExtranjeros.institucionEducativa)}}
+                                {{form_widget(formExtranjeros.institucionEducativa, {'attr':{'onchange':'institucionEducativa(this.value)','onkeyUp':'institucionEducativa(this.value)'}  } )}}
+                                <div class="help-block without-errors"></div>
+                            </div>
+                            <div class="col-md-6">
+                                {{form_label(formExtranjeros.institucionEducativaName)}}
+                                {{form_widget(formExtranjeros.institucionEducativaName)}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{form_label(formExtranjeros.nivel)}}
+                                {{form_widget(formExtranjeros.nivel,{'attr':{'onchange':'getGrado(this.value)'} })}}
+                            </div>
+                            <div class="col-md-3">
+                                {{form_label(formExtranjeros.grado)}}
+                                {{form_widget(formExtranjeros.grado, {'attr':{'onchange':'getParalelo(this.value)' } } )}}
+                            </div>
+                            <div class="col-md-2">
+                                {{form_label(formExtranjeros.paralelo)}}
+                                {{form_widget(formExtranjeros.paralelo,{'attr':{'onchange':'getTurno(this.value)','onmousedown':'getTurno(this.value)' } } )}}
+                            </div>
+                            <div class="col-md-3">
+                                {{form_label(formExtranjeros.turno)}}
+                                {{form_widget(formExtranjeros.turno)}}
+                            </div>
+                        </div>
+                        </br>
+
+                        {{form_widget(formExtranjeros.save, {'attr':{'class':'btn btn-default'} }) }}
+                        {{form_end(formExtranjeros)}}
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('inscription_extranjeros_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        //call the ajax function by krlos
+        function institucionEducativa(id) {
+            if (id.length > 7) {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('inscription_extranjeros_findIE', {'id': id}),
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        $("#form_institucionEducativaName").val(data.nombre);
+
+                        $("#form_nivel").empty();
+                        $("#form_nivel").append('<option value="">Seleccionar</option>');
+                        $.each(data.aniveles, function (i, value) {
+                            $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $("#form_grado").empty();
+                        $("#form_paralelo").empty();
+                        $("#form_turno").empty();
+                    }
+                });
+            }
+
+        }
+
+        function getGrado(idnivel) {
+
+            sie = $('#form_institucionEducativa').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_extranjeros_findgrado', {'idnivel': idnivel, 'sie': sie}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_grado").empty();
+                    $("#form_grado").append('<option value="">Seleccionar</option>');
+                    $.each(data.agrados, function (i, value) {
+                        $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $("#form_paralelo").empty();
+                    $("#form_turno").empty();
+                }
+            });
+
+        }
+
+        function getParalelo(grado) {
+
+            sie = $('#form_institucionEducativa').val();
+            nivel = $('#form_nivel').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_extranjeros_findparalelo', {'grado': grado, 'sie': sie, 'nivel': nivel}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_paralelo").empty();
+                    $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                    $.each(data.aparalelos, function (i, value) {
+                        $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        }
+
+        function getTurno(paralelo) {
+
+            sie = $('#form_institucionEducativa').val();
+            nivel = $('#form_nivel').val();
+            grado = $('#form_grado').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_extranjeros_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_turno").empty();
+                    $("#form_turno").append('<option value="">Seleccionar</option>');
+                    $.each(data.aturnos, function (i, value) {
+                        $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        }
+
+
+    </script>
+
+
+{% endblock %}

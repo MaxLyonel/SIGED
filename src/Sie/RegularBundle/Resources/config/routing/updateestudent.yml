@@ -1,0 +1,15 @@
+update_student_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:UpdateEstudent:index }
+
+update_student_lookfor_restart:
+    path:     /lookforRestart
+    defaults: { _controller: SieRegularBundle:UpdateEstudent:lookforRestart }
+    options:
+         expose: true
+
+update_student_restart:
+    path:     /restart
+    defaults: { _controller: SieRegularBundle:UpdateEstudent:restart }
+    options:
+         expose: true

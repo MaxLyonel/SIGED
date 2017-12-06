@@ -1,0 +1,30 @@
+##    
+information_ue_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:InformationUe:index }
+
+information_ue_result:
+    path:     /sie/result/
+    defaults: { _controller: SieRegularBundle:InformationUe:result }
+    options:
+         expose: true 
+         
+information_ue_nota:
+    path:     /seeNota/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}/{sie}
+    defaults: { _controller: SieRegularBundle:InformationUe:nota }           
+    options:
+         expose: true 
+         
+information_ue_download:
+    path:     /download/{file}
+    defaults: { _controller: SieRegularBundle:InformationUe:download }         
+    
+information_ue_remove:
+    path: /remove
+    defaults: { _controller: SieRegularBundle:InformationUe:remove }  
+    
+information_ue_inscription:
+    path:     /inscription/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}/{sie}/{matricula}/{ciclo}
+    defaults: { _controller: SieRegularBundle:InformationUe:inscription }           
+    options:
+         expose: true     

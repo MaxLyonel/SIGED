@@ -1,0 +1,47 @@
+Sie\AppWebBundle\Entity\RolTipo:
+    type: entity
+    table: rol_tipo
+    indexes:
+        IDX_62B520E856960A5:
+            columns:
+                - lugar_nivel_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        rol:
+            type: string
+            nullable: true
+            length: 105
+            fixed: false
+            comment: ''
+        subSistema:
+            type: string
+            nullable: true
+            length: 100
+            fixed: true
+            comment: ''
+            column: sub_sistema
+        diminutivo:
+            type: string
+            nullable: true
+            length: 5
+            fixed: true
+            comment: ''
+    manyToOne:
+        lugarNivelTipo:
+            targetEntity: LugarNivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

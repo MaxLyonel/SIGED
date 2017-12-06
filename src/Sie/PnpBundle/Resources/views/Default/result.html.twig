@@ -1,0 +1,27 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+    <p>  
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('success') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+        <div class="col-xs-12">
+            <a role="button" class="btn btn-default btn-large glyphicon glyphicon-circle-arrow-left" href="{{ path('sie_pnp_homepage') }}" > Volver</a>
+        </div>
+    </div>
+    <p>
+{% endblock %}

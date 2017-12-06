@@ -1,0 +1,96 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>{{app.session.get('tituloTipo')}}
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-list"></i>  <a href="{{path('cursosparalelos',{'op':'result'})}}">{{ app.session.get('tituloTipo') }}</a>
+                    </li>
+                    <li class="active">Nuevo</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Nuevo Paralelo</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelnuevocurso"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-collapse collapse in" id="panelnuevocurso">
+                    <div class="portlet-body">
+                        <div class="panel-body">
+                            {{form_start(form)}}
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.turno)}}
+                                        {{form_widget(form.turno) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.nivel)}}
+                                        {{form_widget(form.nivel) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.grado)}}
+                                        {{form_widget(form.grado) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.paralelo)}}
+                                        {{form_widget(form.paralelo) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12" style="text-align:center">
+                                        {{form_widget(form.guardar)}}
+                                        <a href="{{path('cursosparalelos',{'op':'result'})}}" class="btn btn-default"> Cancelar</a>
+                                    </div>
+                                </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var peticion;
+        $('#form_nivel').on('change',function(){
+            if(peticion && peticion.readyState != 4) { 
+                peticion.abort();
+            }
+            var idNivel = $(this).val();
+            peticion = $.ajax({
+                type: 'get',
+                url: Routing.generate('listargrados',{'nivel': idNivel}),
+                beforeSend: function(){
+
+                },
+                success: function(data){
+                    $('#form_grado').empty();
+                    $.each(data.listagrados, function (i, value) {
+                        $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,148 @@
+            {#PARA INSERT#}
+            {#PARA INSERT#}
+            {#PARA INSERT#}
+            <table id="tablaListadoPersonas" class="table table-hover">    
+                <thead>
+                    <tr>
+                        <th>Nuevos Roles y Asignacion Geografica</th>            
+                    </tr>
+                </thead>
+                <tbody>
+                {% for rollugar in roltiplug %}
+                    <tr>
+                        <td>                       
+                            {# NIVEL NACIONAL #}
+                            {% if rollugar.lugniveltip == '0' %}
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4>
+                                        <span class="label label-primary">
+                                            {{ rollugar.rol }}
+                                        </span>
+                                        </h4>
+                                    </div>    
+                                </div>
+                                    
+                                <div class="row">
+                                    <p>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <select  class="form-control lugar_final" id="lug_nac" onchange="lug_rol_dis_onchange();"> 
+                                            <option value="1">                                            
+                                                    COBERTURA NACIONAL                                                
+                                            </option>
+                                        </select>
+                                    </div>    
+                                </div>
+                            {# NIVELES DEPARTAMENTALES #}
+                            {% elseif rollugar.lugniveltip == '8' %}
+                                <div class="row">
+                                    <div class="col-xs-12"> 
+                                        <h4>
+                                        <span class="label label-primary">
+                                            {{ rollugar.rol }}
+                                        </span>
+                                        </h4>
+                                    </div>
+                                </div>      
+                                            
+                                <div class="row">
+                                    <p>
+                                </div>
+                                            
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-addon" id="sizing-addon3">{{ rollugar.nivel }}</span>
+                                            <select class="form-control lugar_final" id="sel_lug_dep_{{ rollugar.id }}" onchange="lug_rol_dis_onchange();">
+                                                <option value="-999">Elija el Departamento</option>
+                                                <option value="31353">Chuquisaca</option>
+                                                <option value="31354">La Paz</option>
+                                                <option value="31355">Cochabamba</option>
+                                                <option value="31356">Oruro</option>
+                                                <option value="31357">Potosí</option>
+                                                <option value="31358">Tarija</option>
+                                                <option value="31359">Santa Cruz</option>
+                                                <option value="31360">Beni</option>
+                                                <option value="31361">Pando</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>            
+                            {# NIVELES DISTRITALES DIRECTORES, APODERADOS, MAESTROS #}
+                            {% elseif rollugar.lugniveltip == '7' %}
+                                <div class="row"> 
+                                    <div class="col-xs-12"> 
+                                        <h4>
+                                        <span class="label label-primary">
+                                            {{ rollugar.rol }}
+                                        </span>
+                                        </h4>
+                                    </div>  
+                                </div> 
+                                
+                                <div class="row">
+                                    <p>
+                                </div>
+                                        
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-addon" id="sizing-addon3">Departamento</span>
+                                            {% if app.session.get('dep_id') == '0' %} {# SIN PARAMETROS #}
+                                                <select class="form-control" id="sel_lug_dep_{{ rollugar.id }}" onchange="lug_dep_onchange({{ rollugar.id }}, this.options[this.selectedIndex].value);">
+                                                    <option value="-999">Elija el Departamento</option>
+                                                    <option value="31353">Chuquisaca</option>
+                                                    <option value="31354">La Paz</option>
+                                                    <option value="31355">Cochabamba</option>
+                                                    <option value="31356">Oruro</option>
+                                                    <option value="31357">Potosí</option>
+                                                    <option value="31358">Tarija</option>
+                                                    <option value="31359">Santa Cruz</option>
+                                                    <option value="31360">Beni</option>
+                                                    <option value="31361">Pando</option>
+                                                </select>
+                                            {% else %} {# CON PARAMETROS ENVIADOS #}
+                                                <select class="form-control" id="sel_lug_dep_{{ rollugar.id }}" onchange="lug_dep_onchange({{ rollugar.id }}, this.options[this.selectedIndex].value);">                                                     
+                                                    {% for deplug in departamento %}
+                                                        <option value="-999">Elija el Departamento</option>   
+                                                        <option value="{{ app.session.get('dep_id') }}">{{ app.session.get('dep_nombre') }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div> 
+                                
+                                <div class="row">
+                                    <p>
+                                </div>
+                                            
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-addon" id="sizing-addon3">{{ rollugar.nivel }}</span>
+                                            <div id="lug_dis_{{ rollugar.id }}">
+                                                {% if app.session.get('dep_id') == '0' %} {# SIN PARAMETROS #} 
+                                                    <select  class="form-control lugar_final" id="sel_lug_dis_{{ rollugar.id }}">
+                                                        <option value="-999">Elija el Distrito</option> 
+                                                    </select>
+                                                {% else %} {# CON PARAMETROS ENVIADOS #}
+                                                    <select class="form-control lugar_final" id="sel_lug_dis_{{ rollugar.id }}">                                                     
+                                                        {% for dislug in distrito %}    
+                                                            <option selected="selected" value="{{ app.session.get('dis_id') }}">{{ app.session.get('dis_nombre') }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                {% endif %}   
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>  

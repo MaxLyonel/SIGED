@@ -1,0 +1,25 @@
+Sie\AppWebBundle\Entity\EstadoCivilTipo:
+    type: entity
+    table: estado_civil_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estadoCivil:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: estado_civil
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

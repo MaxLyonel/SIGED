@@ -1,0 +1,76 @@
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="row">
+                        <div class="col-md-12">
+
+                            <!-- Start inline form -->
+                            <div class="panel rounded shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">Buscar Estudiante por codigo RUDE</h3>
+                                    </div>
+                                    <div class="pull-right">
+                                        <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                        <button class="btn btn-sm" data-action="remove" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Remove" data-original-title="" title=""><i class="fa fa-times"></i></button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding">
+                                            {{form_start(formEstudianteForm,{'attr':{'data-toggle': 'validator','form':'role', 'id':'idNuevoEstudianteForm'} })}}
+
+                                                <table class="table">
+                                                       <tbody>
+                                                           <tr>
+                                                               <td>Rude</td>
+                                                               <td colspan="3">{{form_widget(formEstudianteForm.rude)}}</td>
+                                                           </tr>
+                                                           <tr>
+                                                               <td>Paterno</td>
+                                                               <td>{{form_widget(formEstudianteForm.paterno)}}</td>
+                                                               <td>Materno</td>
+                                                               <td>{{form_widget(formEstudianteForm.materno)}}</td>                                                               
+                                                           </tr>
+                                                           <tr>                                                               
+                                                               <td>Nombre</td>
+                                                               <td>{{form_widget(formEstudianteForm.nombre)}}</td>
+                                                               <td>Fecha Nacimiento<br/>(dd-mm-aaaa)</td>
+                                                               <td>{{form_widget(formEstudianteForm.fnac)}}</td>
+                                                           </tr>
+                                                           <tr>
+                                                               <td>Genero</td>
+                                                               <td>{{form_widget(formEstudianteForm.generoTipo)}}</td>
+                                                               <td>Observación</td>
+                                                               <td>{{form_widget(formEstudianteForm.observacion)}}</td>                                                               
+                                                           </tr>
+                                                           <tr>
+                                                               <td>
+                                                                   {{form_widget(formEstudianteForm.buscar)}} <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">Cerrar</button>
+                                                               </td>
+                                                           </tr>
+
+
+                                                       </tbody>
+                                                     </table>
+
+                                            {{form_end(formEstudianteForm)}}
+
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                            <!--/ End inline form -->
+
+                        </div>
+                    </div>
+
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-12'>
+          <div id='idBuscarNuevoEstudiante'></div>
+        </div>
+      </div>
+    </div><!-- /.modal-dialog -->
+</div>

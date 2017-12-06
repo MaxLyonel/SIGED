@@ -1,0 +1,86 @@
+Sie\AppWebBundle\Entity\EstudianteNota:
+    type: entity
+    table: estudiante_nota
+    repositoryClass: Sie\AppWebBundle\Entity\EstudianteNotaRepository
+    indexes:
+        nota_estudiante_idx_estudiante_saignatura:
+            columns:
+                - estudiante_asignatura_id
+        IDX_A68FB053756DFBFA:
+            columns:
+                - nota_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: estudiante_inscripcion_id_seq
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        notaCuantitativa:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: nota_cuantitativa
+        notaCualitativa:
+            type: string
+            nullable: true
+            length: 400
+            fixed: false
+            comment: ''
+            column: nota_cualitativa
+        recomendacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        usuarioId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: usuario_id
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        notaTipo:
+            targetEntity: NotaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nota_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteAsignatura:
+            targetEntity: EstudianteAsignatura
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_asignatura_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

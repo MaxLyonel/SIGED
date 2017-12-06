@@ -1,0 +1,742 @@
+{% extends 'layoutInfraestructura.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .modal-dialog{
+            width: 80%;
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+    {% include 'SieInfraestructuraBundle:Info:cabecera.html.twig' %}
+    <ol class="breadcrumb">
+        <li><a href="{{path('infra_info_index')}}">Pincipal</a></li>
+        <li><a href="{{path('infra_info_acceder')}}">Panel de Acceso Rápido</a></li>
+        <li class="active">Hoja 6 - Equipamiento de Amb. Pedagógicos y otros</li>
+    </ol>
+    <h2 class="view-title"><img src="{{asset('webInfraestructura/assets/images/mobiliario.png')}}" class="img-header"> HOJA 6 - EQUIPAMIENTO DE AMB. PEDAGÓGICOS Y OTROS</h2>
+    {{form_start(form)}}
+    {{form_widget(form.save)}}
+    <a  class="btn btn-danger-alt" href="{{path('infra_info_acceder')}}">Cancelar</a>
+    <div class="module-wrapper">
+    <section class="module module-headings">
+    <div class="module-inner">
+    <div class="module-content">
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs nav-tabs-theme-3" role="tablist">
+            <li role="presentation" class="active"><a href="#vivienda" aria-controls="vivienda" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-home"></i><br><span class="hidden-xs hidden-sm">1. Vivienda de maestros</span></a></li>
+            <li role="presentation" class=""><a href="#dormitorio" aria-controls="dormitorio" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-bank"></i><br><span class="hidden-xs hidden-sm">2. Dormitorios para estudiantes</span></a></li>
+            <li role="presentation" class=""><a href="#alimentacion" aria-controls="alimentacion" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-ship"></i><br><span class="hidden-xs hidden-sm">3. Servicio de alimentación</span></a></li>
+            <li role="presentation" class=""><a href="#pedagogico" aria-controls="pedagogico" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-suitcase"></i><br><span class="hidden-xs hidden-sm">4. Mobiliario y equipamiento en ambientes pedagógicos</span></a></li>
+            <li role="presentation" class=""><a href="#pedagogicoAdicional" aria-controls="pedagogicoAdicional" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-briefcase"></i><br><span class="hidden-xs hidden-sm">5. Mobiliario y equipamiento pedagógico adicional</span></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="vivienda">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <section class="module module-headings">
+                        <div class="module-inner">
+                          <div class="module-heading">
+                            <legend>1.1 Vivienda de maestros</legend>
+                            <ul class="actions list-inline">
+                              <li>
+                                <button class="btn btn-primary btn-xs" type="button" onclick="agregarFila();">Adicionar</button>
+                                <!-- <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modal" onclick="viviendaAdicionar();">Adicionar</button> -->
+                              </li>
+                            </ul>
+                          </div>
+                          <div class="module-content collapse in" id="content-1" aria-expanded="true">
+                            <div class="module-content-inner no-padding-bottom">
+                              <div class="table-responsive">
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Pared</th>
+                                            <th>Techo</th>
+                                            <th>Piso</th>
+                                            <th>Cielo Raso</th>
+                                            <th>Ambientes</th>
+                                            <th>Habitantes</th>
+                                            <th>Baño</th>
+                                            <th>Ducha</th>
+                                            <th>Cocina</th>
+                                            <th>Àrea(m2</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id='viviendasId'>
+                                    </tbody>
+                                </table>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        </section>
+
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="dormitorio">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                      <section class="module module-headings">
+                      <div class="module-inner">
+                        <div class="module-heading">
+                          <legend>2.1 Dormitorios para estudiantes (Estudiantes en modalidad de internado)</legend>
+                          <ul class="actions list-inline">
+                            <li>
+                              <button class="btn btn-primary btn-xs" type="button" onclick="agregarFilaDormitorio();">Adicionar</button>
+                              <!-- <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modal" onclick="viviendaAdicionar();">Adicionar</button> -->
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="module-content collapse in" id="content-1" aria-expanded="true">
+                          <div class="module-content-inner no-padding-bottom">
+                            <div class="table-responsive">
+
+                              <table class="table">
+                                  <thead>
+                                      <tr>
+                                          <th></th>
+                                          <th>Dormitorios</th>
+                                          <th>Cantidad</th>
+                                          <th>Pared</th>
+                                          <th>Techo</th>
+                                          <th>Piso</th>
+                                          <th>Cielo Raso</th>
+                                          <th>Camas Literas</th>
+                                          <th>Camas Simples</th>
+                                          <th>Camas Otros</th>
+                                          <th>Àrea(m2</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody id='dormitoriosId'>
+                                  </tbody>
+                              </table>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      </section>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="alimentacion">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                      <section class="module module-headings">
+                      <div class="module-inner">
+                        <div class="module-heading">
+                          <legend>3.1 Servicio de alimentación </legend>
+                          <ul class="actions list-inline">
+                            <li>
+                              <button class="btn btn-primary btn-xs" type="button" onclick="agregarFilaAlimentacion();">Adicionar</button>
+                              <!-- <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modal" onclick="viviendaAdicionar();">Adicionar</button> -->
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="module-content collapse in" id="content-1" aria-expanded="true">
+                          <div class="module-content-inner no-padding-bottom">
+                            <div class="table-responsive">
+
+                              <table class="table">
+                                  <thead>
+                                      <tr>
+                                          <th></th>
+                                          <th>Servicio</th>
+                                          <th>Nro. de Ambientes</th>
+                                          <th>Estado Ambientes</th>
+                                          <th>Àrea(m2)</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody id='alimentacionId'>
+                                  </tbody>
+                              </table>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      </section>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="pedagogico">
+                <div class="row">
+                    <div class="col-sm-12">
+
+
+                      <section class="module module-headings">
+                      <div class="module-inner">
+                        <div class="module-heading">
+                          <legend>4.1 Mobiliario y equipamiento en ambientes pedagógicos </legend>
+                          <ul class="actions list-inline">
+                            <li>
+                              <button class="btn btn-primary btn-xs" type="button" onclick="agregarFilaMobiliario();">Adicionar</button>
+                              <!-- <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modal" onclick="viviendaAdicionar();">Adicionar</button> -->
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="module-content collapse in" id="content-1" aria-expanded="true">
+                          <div class="module-content-inner no-padding-bottom">
+                            <div class="table-responsive">
+                              <table class="table">
+                                  <thead>
+                                      <tr>
+                                          <th></th>
+                                          <th>Equipamiento</th>
+                                          <th>Aulas</th>
+                                          <th>Talleres</th>
+                                          <th>Laboratorios</th>
+                                          <th>Bibliotecas</th>
+                                          <th>Salas</th>
+                                          <th>Estado</th>
+
+                                      </tr>
+                                  </thead>
+                                  <tbody id="pedagogicoId">
+                                  </tbody>
+                              </table>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      </section>
+                    </div>
+                </div>
+
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="pedagogicoAdicional">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                      <section class="module module-headings">
+                      <div class="module-inner">
+                        <div class="module-heading">
+                          <legend>5.1 Moviliario y equipamiento pedagógico adicional</legend>
+                          <ul class="actions list-inline">
+                            <li>
+                              <button class="btn btn-primary btn-xs" type="button" onclick="agregarFilaMobiliarioAdicional();">Adicionar</button>
+                              <!-- <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modal" onclick="viviendaAdicionar();">Adicionar</button> -->
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="module-content collapse in" id="content-1" aria-expanded="true">
+                          <div class="module-content-inner no-padding-bottom">
+                            <div class="table-responsive">
+                              <table class="table">
+                                  <thead>
+                                      <tr>
+                                          <th></th>
+                                          <th>Equipamiento</th>
+                                          <th>Cantidad</th>
+                                          <th>Estado</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody id="pedagogicoAdicionalId">
+                                  </tbody>
+                              </table>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      </section>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </section>
+    {{form_end(form)}}
+    <div class="modal fade bs-example-modal-lg" id="modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var viviendaAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_equipamiento_viviendaAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+
+        var dormitorioAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_equipamiento_dormitorioAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+
+        var alimentacionAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_equipamiento_alimentacionAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+
+        var moviliarioAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_equipamiento_moviliarioAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+
+        var moviliarioAdicionalAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_equipamiento_moviliarioAdicionalAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+
+
+        var cont = 0;
+        var contAmbiente = 0;
+        var contEquipaimento = 0;
+        var contCancha = 0;
+        var contPatio = 0;
+        var contParque = 0;
+        var contColiseo = 0;
+        var contPiscina = 0;
+
+        arrayAmbientes = [];
+        arrayAmbientesAdm = [];
+        arrayEquipamientoAdm = [];
+        arrayMaterialPiso = [];
+        arrayEstadoPiso = [];
+        arrayTechado = [];
+        arrayGraderias = [];
+        arrayEstadoGeneral = [];
+        arrayYesNoBoll = [];
+        arrayGeneroDataType = [];
+        arrayServicioType = [];
+        arrayMobiliarioType = [];
+        arrayMobiliarioAdiType = [];
+
+
+        $(function(){
+
+            var idEntidad = $('#form_id').val();
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_equipamiento_infoComplete',{id: idEntidad}),
+               beforeSend: function () {
+                   $("#ambientesId").empty();
+               },
+               success: function (data) {
+
+                    // arrayPisos = data.piso;
+                    // arrayParedes = data.pared;
+                    // arrayCielos = data.cielo;
+                    // arrayTechos = data.techo;
+                    arrayAmbientesAdm     = data.ambientesAdm;
+                    arrayEquipamientoAdm  = data.equipamientosAdm;
+                    arrayMaterialPiso     = data.materialpiso;
+                    arrayEstadoPiso    = data.estadoGeneral;
+                    arrayYesNoBoll    = data.yesnobool;
+                    arrayGeneroDataType    = data.generoDataType;
+                    arrayServicioType    = data.servicioTipo;
+                    arrayMobiliarioType    = data.mobiliarioTipo;
+                    arrayMobiliarioAdiType    = data.arrMobiliarioAdi;
+
+                    //load values ambiente form
+                    $.each(data.dataVivienda, function (i, valores) {
+                      var arrViviendas = [];
+                      $.each(valores, function (j, valores1) {
+                        arrViviendas[j]=valores1;
+                      });
+
+                      cont++;
+                      var paredes = 'paredes' + cont;
+                      var techo = 'techo' + cont;
+                      var piso = 'piso' + cont;
+                      var cieloraso = 'cieloraso' + cont;
+                      var ambientes = 'ambientes' + cont;
+                      var habitantes = 'habitantes' + cont;
+                      var toilet = 'toilet' + cont;
+                      var ducha = 'ducha' + cont;
+                      var cocina = 'cocina' + cont;
+                      var area = 'area' + cont;
+
+                      $("#viviendasId").append('<tr id="'+cont+'">\n\
+                          <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                          <td><select            name="formVivienda['+cont+'][]" id="formVivienda_'+paredes+'" required="true"></select>\n\
+                          <td><select            name="formVivienda['+cont+'][]" id="formVivienda_'+techo+'" required="true"></select>\n\
+                          <td><select            name="formVivienda['+cont+'][]" id="formVivienda_'+piso+'" required="true"></select>\n\
+                          <td><select            name="formVivienda['+cont+'][]" id="formVivienda_'+cieloraso+'" required="true"></select>\n\
+                          <td><input type="text" name="formVivienda['+cont+'][]" id="formVivienda_'+ambientes+'" value="'+arrViviendas[4]+'" size="5" maxlength="4" required="true"></td>\n\
+                          <td><input type="text" name="formVivienda['+cont+'][]" id="formVivienda_'+habitantes+'" value="'+arrViviendas[5]+'" size="5" maxlength="4" required="true"></td>\n\
+                          <td><select            name="formVivienda['+cont+'][]" id="formVivienda_'+toilet+'" required="true"></select>\n\
+                          <td><select            name="formVivienda['+cont+'][]" id="formVivienda_'+ducha+'" required="true"></select>\n\
+                          <td><select            name="formVivienda['+cont+'][]" id="formVivienda_'+cocina+'" required="true"></select>\n\
+                          <td><input type="text" name="formVivienda['+cont+'][]" id="formVivienda_'+area+'" value="'+arrViviendas[9]+'" size="5" maxlength="4" required="true"></td>\n\
+                          </tr>');
+
+                          $("#formVivienda_" + paredes).empty();
+                          $("#formVivienda_" + paredes).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayEstadoPiso, function (i, value) {
+                            if(i==arrViviendas[0]){sel = 'selected';}else{sel = '';}
+                              $("#formVivienda_" + paredes).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                          });
+
+                          $("#formVivienda_" + techo).empty();
+                          $("#formVivienda_" + techo).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayEstadoPiso, function (i, value) {
+                            if(i==arrViviendas[1]){sel = 'selected';}else{sel = '';}
+                              $("#formVivienda_" + techo).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                          });
+
+                          $("#formVivienda_" + piso).empty();
+                          $("#formVivienda_" + piso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayEstadoPiso, function (i, value) {
+                            if(i==arrViviendas[2]){sel = 'selected';}else{sel = '';}
+                              $("#formVivienda_" + piso).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                          });
+
+                          $("#formVivienda_" + cieloraso).empty();
+                          $("#formVivienda_" + cieloraso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayEstadoPiso, function (i, value) {
+                            if(i==arrViviendas[3]){sel = 'selected';}else{sel = '';}
+                              $("#formVivienda_" + cieloraso).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                          });
+
+                          $("#formVivienda_" + toilet).empty();
+                          $("#formVivienda_" + toilet).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayYesNoBoll, function (i, value) {
+                            if(i==arrViviendas[6]){sel = 'selected';}else{sel = '';}
+                              $("#formVivienda_" + toilet).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                          });
+
+                          $("#formVivienda_" + ducha).empty();
+                          $("#formVivienda_" + ducha).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayYesNoBoll, function (i, value) {
+                            if(i==arrViviendas[7]){sel = 'selected';}else{sel = '';}
+                              $("#formVivienda_" + ducha).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                          });
+
+                          $("#formVivienda_" + cocina).empty();
+                          $("#formVivienda_" + cocina).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayYesNoBoll, function (i, value) {
+                            if(i==arrViviendas[8]){sel = 'selected';}else{sel = '';}
+                              $("#formVivienda_" + cocina).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                          });
+
+
+
+
+                    });
+
+
+                    //load values dormitorios form
+                  $.each(data.dataDormitorios, function (i, valores) {
+                    var arrDormitorios = [];
+                    $.each(valores, function (j, valores1) {
+                      arrDormitorios[j]=valores1;
+                    });
+
+                    cont++;
+                    var dormitorios = 'dormitorios' + cont;
+                    var cantidad = 'cantidad' + cont;
+                    var paredes = 'paredes' + cont;
+                    var techo = 'techo' + cont;
+                    var piso = 'piso' + cont;
+                    var cieloraso = 'cieloraso' + cont;
+                    var ambientes = 'ambientes' + cont;
+                    var camaslitera = 'camaslitera' + cont;
+                    var camassimples = 'camassimples' + cont;
+                    var camasotro = 'camasotro' + cont;
+                    var area = 'area' + cont;
+
+                    $("#dormitoriosId").append('<tr id="'+cont+'">\n\
+                        <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                        <td><select            name="formDormitorios['+cont+'][]" id="formDormitorios_'+dormitorios+'" required="true"></select>\n\
+                        <td><input type="text" name="formDormitorios['+cont+'][]" id="formDormitorios_'+cantidad+'" value="'+arrDormitorios[1]+'" size="5" maxlength="4" required="true"></td>\n\
+                        <td><select            name="formDormitorios['+cont+'][]" id="formDormitorios_'+paredes+'" required="true"></select>\n\
+                        <td><select            name="formDormitorios['+cont+'][]" id="formDormitorios_'+techo+'" required="true"></select>\n\
+                        <td><select            name="formDormitorios['+cont+'][]" id="formDormitorios_'+piso+'" required="true"></select>\n\
+                        <td><select            name="formDormitorios['+cont+'][]" id="formDormitorios_'+cieloraso+'" required="true"></select>\n\
+                        <td><input type="text" name="formDormitorios['+cont+'][]" id="formDormitorios_'+camaslitera+'"  value="'+arrDormitorios[6]+'" size="5" maxlength="4" required="true"></td>\n\
+                        <td><input type="text" name="formDormitorios['+cont+'][]" id="formDormitorios_'+camassimples+'" value="'+arrDormitorios[7]+'" size="5" maxlength="4" required="true"></td>\n\
+                        <td><input type="text" name="formDormitorios['+cont+'][]" id="formDormitorios_'+camasotro+'"    value="'+arrDormitorios[8]+'" size="5" maxlength="4" required="true"></td>\n\
+                        <td><input type="text" name="formDormitorios['+cont+'][]" id="formDormitorios_'+area+'"         value="'+arrDormitorios[9]+'" size="5" maxlength="4" required="true"></td>\n\
+                        </tr>');
+
+
+                                $("#formDormitorios_" + dormitorios).empty();
+                                $("#formDormitorios_" + dormitorios).append('<option value="">Seleccionar...</option>');
+                                $.each(arrayGeneroDataType, function (i, value) {
+                                  if(i==arrDormitorios[0]){sel = 'selected';}else{sel = '';}
+                                    $("#formDormitorios_" + dormitorios).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                                });
+
+                                $("#formDormitorios_" + paredes).empty();
+                                $("#formDormitorios_" + paredes).append('<option value="">Seleccionar...</option>');
+                                $.each(arrayEstadoPiso, function (i, value) {
+                                  if(i==arrDormitorios[2]){sel = 'selected';}else{sel = '';}
+                                    $("#formDormitorios_" + paredes).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                                });
+
+                                $("#formDormitorios_" + techo).empty();
+                                $("#formDormitorios_" + techo).append('<option value="">Seleccionar...</option>');
+                                $.each(arrayEstadoPiso, function (i, value) {
+                                  if(i==arrDormitorios[3]){sel = 'selected';}else{sel = '';}
+                                    $("#formDormitorios_" + techo).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                                });
+
+                                $("#formDormitorios_" + piso).empty();
+                                $("#formDormitorios_" + piso).append('<option value="">Seleccionar...</option>');
+                                $.each(arrayEstadoPiso, function (i, value) {
+                                  if(i==arrDormitorios[4]){sel = 'selected';}else{sel = '';}
+                                    $("#formDormitorios_" + piso).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                                });
+
+                                $("#formDormitorios_" + cieloraso).empty();
+                                $("#formDormitorios_" + cieloraso).append('<option value="">Seleccionar...</option>');
+                                $.each(arrayEstadoPiso, function (i, value) {
+                                  if(i==arrDormitorios[5]){sel = 'selected';}else{sel = '';}
+                                    $("#formDormitorios_" + cieloraso).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                                });
+
+
+                  });
+
+                  //load values dataAlimientacion form
+                  $.each(data.dataAlimientacion, function (i, valores) {
+                    var arrAlimentation = [];
+                    $.each(valores, function (j, valores1) {
+                      arrAlimentation[j]=valores1;
+                    });
+
+                    cont++;
+                    contColiseo++;
+                    var servicio = 'servicio' + cont;
+                    var nroambientes = 'nroambientes' + cont;
+                    var estadoambiente = 'estadoambiente' + cont;
+                    var area = 'area' + cont;
+
+                    $("#alimentacionId").append('<tr id="'+cont+'">\n\
+                        <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                        <td><select             name="formServicios['+cont+'][]" id="formServicios_'+servicio+'" required="true"></select>\n\
+                        <td><input type="text"  name="formServicios['+cont+'][]" id="formServicios_'+nroambientes+'" value="'+arrAlimentation[1]+'" size="5" maxlength="4" required="true"></td>\n\
+                        <td><select             name="formServicios['+cont+'][]" id="formServicios_'+estadoambiente+'" required="true"></select>\n\
+                        <td><input type="text"  name="formServicios['+cont+'][]" id="formServicios_'+area+'" value="1" size="5" maxlength="4" required="true"></td>\n\
+                        </tr>');
+
+                        $("#formServicios_" + servicio).empty();
+                        $("#formServicios_" + servicio).append('<option value="">Seleccionar...</option>');
+                        $.each(arrayServicioType, function (i, value) {
+                          if(i==arrAlimentation[0]){sel = 'selected';}else{sel = '';}
+                            $("#formServicios_" + servicio).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                        });
+
+                        $("#formServicios_" + estadoambiente).empty();
+                        $("#formServicios_" + estadoambiente).append('<option value="">Seleccionar...</option>');
+                        $.each(arrayEstadoPiso, function (i, value) {
+                          if(i==arrAlimentation[2]){sel = 'selected';}else{sel = '';}
+                            $("#formServicios_" + estadoambiente).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                        });
+
+                  });
+
+
+                  //load values dataMobiliario form
+                  $.each(data.dataMobiliario, function (i, valores) {
+                    var arrMobiliario = [];
+                    $.each(valores, function (j, valores1) {
+                      arrMobiliario[j]=valores1;
+                    });
+
+                    cont++;
+                    var equipamiento = 'equipamiento' + cont;
+                    var aulas = 'aulas' + cont;
+                    var talleres = 'talleres' + cont;
+                    var laboratorios = 'laboratorios' + cont;
+                    var bibliotecas = 'bibliotecas' + cont;
+                    var salas = 'salas' + cont;
+                    var estado = 'estado' + cont;
+
+                    $("#pedagogicoId").append('<tr id="'+cont+'">\n\
+                        <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                        <td><select            name="formMobiliario['+cont+'][]" id="formMobiliario_'+equipamiento+'" required="true"></select>\n\
+                        <td><input type="text" name="formMobiliario['+cont+'][]" id="formMobiliario_'+aulas+'"        value="'+arrMobiliario[1]+'" size="5" maxlength="4" required="true"></td>\n\
+                        <td><input type="text" name="formMobiliario['+cont+'][]" id="formMobiliario_'+talleres+'"     value="'+arrMobiliario[2]+'" size="5" maxlength="4" required="true"></td>\n\
+                        <td><input type="text" name="formMobiliario['+cont+'][]" id="formMobiliario_'+laboratorios+'" value="'+arrMobiliario[3]+'" size="5" maxlength="4" required="true"></td>\n\
+                        <td><input type="text" name="formMobiliario['+cont+'][]" id="formMobiliario_'+bibliotecas+'"  value="'+arrMobiliario[4]+'" size="5" maxlength="4" required="true"></td>\n\
+                        <td><input type="text" name="formMobiliario['+cont+'][]" id="formMobiliario_'+salas+'"        value="'+arrMobiliario[5]+'" size="5" maxlength="4" required="true"></td>\n\
+                        <td><select            name="formMobiliario['+cont+'][]" id="formMobiliario_'+estado+'" required="true"></select>\n\
+                        </tr>');
+
+                        $("#formMobiliario_" + equipamiento).empty();
+                        $("#formMobiliario_" + equipamiento).append('<option value="">Seleccionar...</option>');
+                        $.each(arrayMobiliarioType, function (i, value) {
+                          if(i==arrMobiliario[0]){sel = 'selected';}else{sel = '';}
+                            $("#formMobiliario_" + equipamiento).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                        });
+
+                        $("#formMobiliario_" + estado).empty();
+                        $("#formMobiliario_" + estado).append('<option value="">Seleccionar...</option>');
+                        $.each(arrayEstadoPiso, function (i, value) {
+                          if(i==arrMobiliario[6]){sel = 'selected';}else{sel = '';}
+                            $("#formMobiliario_" + estado).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                        });
+
+                  });
+
+                  //load values dataMobiliariosAdicional form
+                  $.each(data.dataMobiliariosAdicional, function (i, valores) {
+                    var arrMobiliariosAdicional = [];
+                    $.each(valores, function (j, valores1) {
+                      arrMobiliariosAdicional[j]=valores1;
+                    });
+
+                    cont++;
+                    contParque++;
+                    var equipamiento = 'equipamiento' + cont;
+                    var cantidad = 'cantidad' + cont;
+                    var estado = 'estado' + cont;
+
+
+                    $("#pedagogicoAdicionalId").append('<tr id="'+cont+'">\n\
+                        <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                        <td><select             name="formMobiliarioAdicional['+cont+'][]" id="formMobiliarioAdicional_'+equipamiento+'" required="true"></select>\n\
+                        <td><input type="text"  name="formMobiliarioAdicional['+cont+'][]" id="formMobiliarioAdicional_'+cantidad+'" value="'+arrMobiliariosAdicional[1]+'" size="5" maxlength="4" required="true"></td>\n\
+                        <td><select             name="formMobiliarioAdicional['+cont+'][]" id="formMobiliarioAdicional_'+estado+'" required="true"></select>\n\
+                        </tr>');
+
+                        $("#formMobiliarioAdicional_" + equipamiento).empty();
+                        $("#formMobiliarioAdicional_" + equipamiento).append('<option value="">Seleccionar...</option>');
+                        $.each(arrayMobiliarioAdiType, function (i, value) {
+                          if(i==arrMobiliariosAdicional[0]){sel = 'selected';}else{sel = '';}
+                            $("#formMobiliarioAdicional_" + equipamiento).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                        });
+
+                        $("#formMobiliarioAdicional_" + estado).empty();
+                        $("#formMobiliarioAdicional_" + estado).append('<option value="">Seleccionar...</option>');
+                        $.each(arrayEstadoPiso, function (i, value) {
+                          if(i==arrMobiliariosAdicional[2]){sel = 'selected';}else{sel = '';}
+                            $("#formMobiliarioAdicional_" + estado).append('<option value="' + i + '" '+sel+'>' + value + '</option>');
+                        });
+
+                  });
+
+
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+
+        });
+
+
+    </script>
+
+
+
+
+
+
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfrah6/viviendasjs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfrah6/dormitoriosjs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfrah6/serviciosalimentojs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfrah6/mobiliariojs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfrah6/mobiliarioadicionaljs.js') }}"></script>
+{% endblock %}

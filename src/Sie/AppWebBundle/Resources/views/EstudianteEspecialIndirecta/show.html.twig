@@ -1,0 +1,84 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>EstudianteEspecialIndirecta</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Institucioneducativaid</th>
+                <td>{{ entity.institucioneducativaId }}</td>
+            </tr>
+            <tr>
+                <th>Institucioneducativatipoid</th>
+                <td>{{ entity.institucioneducativaTipoId }}</td>
+            </tr>
+            <tr>
+                <th>Disintelectualgenerlal</th>
+                <td>{{ entity.disIntelectualGenerlal }}</td>
+            </tr>
+            <tr>
+                <th>Disintelectualdown</th>
+                <td>{{ entity.disIntelectualDown }}</td>
+            </tr>
+            <tr>
+                <th>Disintelectualautismo</th>
+                <td>{{ entity.disIntelectualAutismo }}</td>
+            </tr>
+            <tr>
+                <th>Disvisualtotal</th>
+                <td>{{ entity.disVisualTotal }}</td>
+            </tr>
+            <tr>
+                <th>Disvisualbaja</th>
+                <td>{{ entity.disVisualBaja }}</td>
+            </tr>
+            <tr>
+                <th>Disauditiva</th>
+                <td>{{ entity.disAuditiva }}</td>
+            </tr>
+            <tr>
+                <th>Disfisicomotora</th>
+                <td>{{ entity.disFisicomotora }}</td>
+            </tr>
+            <tr>
+                <th>Dismultiple</th>
+                <td>{{ entity.disMultiple }}</td>
+            </tr>
+            <tr>
+                <th>Disotros</th>
+                <td>{{ entity.disOtros }}</td>
+            </tr>
+            <tr>
+                <th>Obs</th>
+                <td>{{ entity.obs }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioid</th>
+                <td>{{ entity.usuarioId }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('estudianteespecialindirecta') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('estudianteespecialindirecta_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

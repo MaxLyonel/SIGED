@@ -1,0 +1,26 @@
+infra_datosGenerales_index:
+    path:     /
+    defaults: { _controller: "SieInfraestructuraBundle:DatosGenerales:index" }
+
+infra_datosGenerales_create_update:
+    path:     /create_update
+    defaults: { _controller: "SieInfraestructuraBundle:DatosGenerales:createUpdate" }
+    methods: POST
+
+infra_datosGenerales_uesasociadas:
+    path:     /uesasociadas
+    defaults: { _controller: "SieInfraestructuraBundle:DatosGenerales:uesasociadas" }
+    options:
+        expose: true
+
+infra_datosGenerales_seleccionarUE:
+    path:     /seleccionarUE
+    defaults: { _controller: "SieInfraestructuraBundle:DatosGenerales:seleccionarUE" }
+    options:
+        expose: true
+
+infra_datosGenerales_seleccionarPersona:
+    path:     /seleccionarPersona
+    defaults: { _controller: "SieInfraestructuraBundle:DatosGenerales:seleccionarPersona" }
+    options:
+        expose: true

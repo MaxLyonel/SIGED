@@ -1,0 +1,48 @@
+Sie\AppWebBundle\Entity\LogError:
+    type: entity
+    table: log_error
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        error:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        usuario:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        rude:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        ie:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        inscripcionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: inscripcion_id
+    lifecycleCallbacks: {  }

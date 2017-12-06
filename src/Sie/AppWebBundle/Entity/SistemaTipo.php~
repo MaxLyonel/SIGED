@@ -1,0 +1,83 @@
+<?php
+
+namespace Sie\AppWebBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SistemaTipo
+ */
+class SistemaTipo
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $sistema;
+
+    /**
+     * @var string
+     */
+    private $obs;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set sistema
+     *
+     * @param string $sistema
+     * @return SistemaTipo
+     */
+    public function setSistema($sistema)
+    {
+        $this->sistema = $sistema;
+    
+        return $this;
+    }
+
+    /**
+     * Get sistema
+     *
+     * @return string 
+     */
+    public function getSistema()
+    {
+        return $this->sistema;
+    }
+
+    /**
+     * Set obs
+     *
+     * @param string $obs
+     * @return SistemaTipo
+     */
+    public function setObs($obs)
+    {
+        $this->obs = $obs;
+    
+        return $this;
+    }
+
+    /**
+     * Get obs
+     *
+     * @return string 
+     */
+    public function getObs()
+    {
+        return $this->obs;
+    }
+}

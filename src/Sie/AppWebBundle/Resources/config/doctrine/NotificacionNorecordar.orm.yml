@@ -1,0 +1,45 @@
+Sie\AppWebBundle\Entity\NotificacionNorecordar:
+    type: entity
+    table: notificacion_norecordar
+    indexes:
+        IDX_65930E6DDB38439E:
+            columns:
+                - usuario_id
+        IDX_65930E6D5E61BFFA:
+            columns:
+                - notif_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaLectura:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_lectura
+    manyToOne:
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        notif:
+            targetEntity: Notificacion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                notif_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

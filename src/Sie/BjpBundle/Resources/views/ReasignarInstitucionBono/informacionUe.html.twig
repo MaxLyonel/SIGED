@@ -1,0 +1,187 @@
+
+  
+  {{form_start(formUe,{'attr':{'id':'formAreas'} })}}
+
+                                            <div class="row">
+                                              
+                                              
+                                                {# {%if terminado == false %}
+                                                <div class="col-md-2 col-md-offset-9" style="text-align:center; display:none">
+                                                  {{form_widget(formUe.abrir)}}
+                                                 </div>
+                                                 {% else %} 
+                                                  <div class="col-md-2 col-md-offset-9" style="text-align:center; display:block">
+                                                    {{form_widget(formUe.abrir)}}
+                                                  </div>  
+                                                 {% endif %}  #}
+                                              
+                                            </div>
+                                          </br></br></br>
+                                           <div class="row">
+                                                <div class="col-lg-3 col-md-3">
+                                                {{form_label(formUe.rue)}}
+                                                </div>
+                                                <div class="col-lg-3 col-md-3">
+                                                {{form_widget(formUe.rue)}}              
+                                                </div>
+                                                <div class="col-lg-3 col-md-3">
+                                                  Estado
+                                                </div>
+                                                <div class="col-lg-3 col-md-3">
+                                                  <h3><p style="color:red;">
+                                                    {%if terminado == false %}
+                                                      EN PROCESO
+                                                    {% else %} 
+                                                      TERMINADO
+                                                    {% endif %} 
+                                                    
+
+                                                  </p> </h3>
+                                                </div>
+                                            </div>  
+                                            </div></br>
+                                            <div class="row">
+                                             {# <div class="col-lg-3 col-md-4">
+                                              Nombre Institución Educativa :
+                                              </div>#}
+                                              <div class="col-lg-3 col-md-3">
+                                                {{form_label(formUe.institucioneducativa)}}
+                                                </div>
+                                              <div class="col-lg-3 col-md-3">
+                                                {{form_widget(formUe.institucioneducativa)}}
+                                              </div>
+                                              {#   
+                                               <div class="col-lg-3 col-md-4">
+                                              Departamento :
+                                              </div>
+                                              #}
+                                               <div class="col-lg-3 col-md-3">
+                                                {{form_label(formUe.departamento1)}}
+                                                </div>
+                                              <div class="col-lg-3 col-md-3">
+                                                {{form_widget(formUe.departamento1)}}
+                                              </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                              {# 
+                                              <div class="col-lg-3 col-md-4">
+                                               Provincia : 
+                                              </div>
+                                              #}
+                                              <div class="col-lg-3 col-md-3">
+                                                {{form_label(formUe.provincia)}}
+                                                </div>
+                                              <div class="col-lg-3 col-md-3">
+                                                 {{form_widget(formUe.provincia)}}
+                                              </div>
+                                              {# 
+                                               <div class="col-lg-3 col-md-4">
+                                                Municipio : 
+                                              </div>
+                                              #}
+                                              <div class="col-lg-3 col-md-3">
+                                                {{form_label(formUe.municipio)}}
+                                              </div> 
+                                              <div class="col-lg-3 col-md-3">
+                                                {{form_widget(formUe.municipio)}}
+                                              </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                              {#
+                                              <div class="col-lg-3 col-md-4">
+                                               Cantón : 
+                                              </div>
+                                              #}
+                                              <div class="col-lg-3 col-md-4">
+                                                {{form_label(formUe.canton)}}
+                                              </div>
+                                              <div class="col-lg-3 col-md-4">
+                                                {{form_widget(formUe.canton)}}
+                                              </div>
+                                              {#
+                                               <div class="col-lg-3 col-md-4">
+                                                Localidad : 
+                                              </div>
+                                              #}
+                                              <div class="col-lg-3 col-md-4">
+                                                {{form_label(formUe.localidad1)}}
+                                              </div>
+                                              <div class="col-lg-3 col-md-4">
+                                                {{form_widget(formUe.localidad1)}}
+                                              </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                              {#
+                                              <div class="col-lg-3 col-md-4">
+                                               Fuerza : 
+                                              </div>
+                                              #}
+                                              <div class="col-lg-3 col-md-4">
+                                               {{form_label(formUe.unidadmilitar)}}
+                                              </div>
+                                              <div class="col-lg-3 col-md-4">
+                                               {{form_widget(formUe.unidadmilitar)}}
+                                              </div>
+                                              {#}
+                                               <div class="col-lg-3 col-md-4">
+                                                Unidad  Militar : 
+                                              </div>
+                                              #}
+                                              <div class="col-lg-3 col-md-4">
+                                                {{form_label(formUe.fuerzamilitar)}}
+                                              </div>
+                                              <div class="col-lg-3 col-md-4">
+                                           	    {{form_widget(formUe.fuerzamilitar)}}
+                                              </div>
+                                            </div>
+
+                                            {{ form_end(formUe) }}
+
+</div>
+
+{% block javascripts %}
+  {#
+    {{parent()}}
+    <script src="{{asset('js/chosen.jquery.js')}}"></script>
+    <script src="{{asset('bootstrap-wizard/js/bwizard.js')}}"></script>
+    <script src="{{asset('bootstrap-wizard/jquery-ui.min.js')}}"></script>
+    <script>
+    function informacionUe()
+    {
+       sie=$('#form_sie').val();
+       formData = $('#formUe').serialize();
+       $.ajax(
+       {
+              type: 'post',
+              url: Routing.generate('PagosBono_buscar_infoUe'),
+              data: formData,
+              beforeSend: function () 
+              {
+                  $("#resultInfoUe").empty();
+                  $("#resultInfoUe").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+              },
+              success: function (data) 
+              {
+                  $("#resultInfoUe").empty();
+                  $("#resultInfoUe").append(data);
+                  //location.reload(true);
+              },
+              statusCode: 
+              {
+                  500: function () 
+                  {
+
+                  },
+                  404: function () 
+                  {
+
+                  }
+              }
+          });
+
+    }
+    #}
+{% endblock %}    

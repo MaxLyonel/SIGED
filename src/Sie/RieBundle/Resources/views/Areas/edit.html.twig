@@ -1,0 +1,54 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption%}
+
+{{ form_start(form) }}
+
+    <div class="block-header">
+        <h2>OFERTA ACADÉMICA DE CARRERAS</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('area_rie_list')}}">Listado de Carreras</a></li>
+        <li class="active">Nuevo</li>
+    </ol>
+
+    <div class="row clearfix">
+        <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        Editar Area
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="row">
+                        <fieldset>
+
+                            <label class="form-label">{{form_label(form.institucioneducativaTipo)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.institucioneducativaTipo) }}  
+                                </div>
+                            </div>
+
+                            <label class="form-label">{{form_label(form.area)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.area)}}  
+                                </div>
+                            </div>
+
+                        </fieldset>
+                            {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+                            <a href="{{path('area_rie_list')}}" class="btn btn-danger btn-lg m-l-15 waves-effect">Cancelar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>            
+
+{{ form_end(form) }}
+{% endblock %}
+
+

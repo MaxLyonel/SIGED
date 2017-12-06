@@ -1,0 +1,19 @@
+.badge {
+	.rounded(2px);
+	font-size: 10px;
+	&.badge-primary { background-color: @primaryBgColor; }
+	&.badge-success { background-color: @successBgColor; }
+	&.badge-info { background-color: @infoBgColor; }
+	&.badge-warning { background-color: @warningBgColor; }
+	&.badge-danger { background-color: @dangerBgColor; }
+
+	&.badge-notification {
+		position: relative;
+		top: -6px;
+		left: -2px;
+		z-index: 1;
+		.rounded(2px);
+		padding: 4px 6px;
+		font-size: 10px;
+	}
+}

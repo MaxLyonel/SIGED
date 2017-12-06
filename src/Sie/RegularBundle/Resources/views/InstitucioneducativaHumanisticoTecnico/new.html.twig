@@ -1,0 +1,15 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption -%}
+    <h1>InstitucioneducativaHumanisticoTecnico creation</h1>
+
+    {{ form(form) }}
+
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('sie_ueHumTec') }}">
+                Back to the list
+            </a>
+        </li>
+    </ul>
+{% endblock %}

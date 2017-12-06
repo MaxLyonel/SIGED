@@ -1,0 +1,48 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo %}
+
+{% include 'SieAppWebBundle:Persona:buscarPersona.html.twig' with {'formBuscarPersona': formBuscarPersona} %}
+   
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        initialise();
+    } );
+    
+
+    function BuscarPersona(){        
+        var ci = document.getElementById("ci").value;
+        var complemento = document.getElementById("complemento").value;
+        var extranjero = document.getElementById("extranjero").value;
+
+        //alert(opcion);
+        if (complemento=="")complemento=0;
+
+        var formData = $('#formxls').serialize();
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_persona_apropiacion_buscar', {'ci': ci,'complemento':complemento,'extranjero': extranjero}),
+            data: formData,
+            beforeSend: function () {
+                $("#usuarioModal").empty();
+                $("#usuarioModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                //$("#facilitador").empty();
+                //$("#facilitador").append(data);
+
+                $("#usuarioModal").empty();
+                $("#usuarioModal").append(data);
+            },
+            error: function(data){
+                //$("#facilitador").empty();
+                //$("#facilitador").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+        $('#ModalUser').modal('show');
+    }
+    </script>                    
+{% endblock %}    

@@ -1,0 +1,464 @@
+ <div class="row">
+    <div class="col-lg-12">
+        <div class="portlet portlet-blue">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Datos del Facilitador</h4>
+                </div>
+                <div class="portlet-widgets">
+                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation1"><i class="fa fa-chevron-down"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="pinformation1" class="panel-collapse collapse in">
+                <div class="portlet-body" align="center">
+                <div class="row" align="center">
+                    <div class="form-group col-lg-4 col-md-6" align="center">
+                       <h4>Nombre(s): <small>{{ persona.nombre }}</small></h4>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-6" align="center">
+                        <h4>Primer Apellido: <small>{{ persona.paterno }}</small></h4>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-6" align="center">
+                        <h4>Segundo Apellido: <small>{{ persona.materno }}</small></h4>
+                    </div>
+                </div>
+                <div class="row" align="center">
+                    <div class="form-group col-lg-6 col-md-6" align="center">
+                        <h4>Fecha Nacimiento: <small>{{ persona.fechaNacimiento|date("d/m/Y") }}</small></h4>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6" align="center">
+                        <h4>Carnet de Identidad: <small>{{ persona.carnet }}{% if persona.complemento != '' %}-{{persona.complemento}}{% endif %}</small></h4>
+                    </div>
+                </div>
+                <hr style="background-color: #3B78B0; height: 5px;" />
+                <div align="center"><h3 style="color: #3B78B0; text-decoration: underline;">NUEVO CURSO</h3></div>
+                <div class="panel-body"> 
+                {{ form_start(form) }} 
+                    <input name="persona_id" value="{{ persona_id }}" style="visibility:hidden" />
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_row(form.departamento,{'attr': {'class':'form-control'},'id':'form_departamento'}) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_row(form.provincia, {'attr': {'class':'form-control'},'id': 'form_provincia'}) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_row(form.municipio, {'attr': {'class':'form-control'},'id': 'form_municipio'}) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_row(form.localidad, {'attr': {'class':'form-control'},'id': 'form_localidad'}) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_row(form.bloque, { 'attr': {'class':'form-control'},'id': 'form_bloque'}) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+
+                            {{ form_row(form.parte, { 'attr': {'class':'form-control'},'id': 'form_parte'}) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_row(form.fecha_inicio, { 'attr': {'class':'form-control'},'id': 'form_fecha_inicio'}) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_row(form.fecha_fin, { 'attr': {'class':'form-control'},'id': 'form_fecha_fin'}) }}
+                        </div>
+
+    <br>
+    <div class="row">            
+            <div class="col-xs-12" align="center">
+                {{ form_row(form.save, { 'id': 'save','attr': { 'onclick':'return validar_fecha()' }}) }}
+            </div>
+        {{ form_end(form) }}
+    </div>
+    </div>
+   <div align="left"> <small align="left" style="color: red;">Por temas de <strong>SEGURIDAD</strong> se guardará su <strong>NOMBRE</strong> al crear el curso o al crear curso posterior.</small></div>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+
+
+ <div class="row">
+    <div class="col-lg-12">
+        <div class="portlet portlet-blue">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Cursos del Facilitador (Crear Curso Posterior)</h4>
+                </div>
+                <div class="portlet-widgets">
+                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation2"><i class="fa fa-chevron-down"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="pinformation2" class="panel-collapse collapse in">
+                <div class="portlet-body" align="center">
+                </div><input type="hidden" name="fecha_anterior_fin" id="fecha_anterior_fin" value="" />
+             <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
+                    <thead>
+                        <tr>
+                            <th>Id del Curso</th>
+                            <th>Consolidado</th>
+                            <!--<th>Lista Participantes</th>-->
+                            <th>Carnet</th>
+                            <th>Nombre</th>
+                            <th>Paterno</th>
+                            <th>Materno</th>                            
+                            <th>Fecha Inicio</th>                            
+                            <th>Fecha Fin</th>                            
+                            <th>Bloque</th>                            
+                            <th>Parte</th>                            
+                            <th>Departamento</th>  
+                            <th>Lugar</th>
+                            <th>Crear Curso Posterior</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for fila in filas %}
+                        <tr>
+                            <td>{{ fila.id }}</td>
+                            <td><a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': fila.id~fila.ciclo_tipo_id~fila.grado_tipo_id}) }}" > Imprimir Consolidado</a></td>
+                            <!--<td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado', { 'id': fila.id }) }}" > Ver participantes</a></td>-->
+                            <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
+                            <td>{{ fila.nombre }}</td>                            
+                            <td>{{ fila.paterno }}</td>
+                            <td>{{ fila.materno }}</td> 
+                            <td>{{ fila.fecha_inicio }}</td>
+                            <td>{{ fila.fecha_fin }}</td>                            
+                            <td>{{ fila.ciclo_tipo_id }}</td>
+                            <td>{{ fila.grado_tipo_id }}</td>
+                            <td>{{ fila.depto }}</td>
+                            <td>{{ fila.lugar }}</td>
+                            {% if fila.ciclo_tipo_id == 2 and fila.grado_tipo_id == 2 %}
+                                <td>Último Curso</td>
+                            {% else %}
+                                {% if fila.esactivo == 1 %}
+                                    <td><a role="button" onclick="vermodal({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}')" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" > Crear Curso Posterior</a></td>
+                                {% else %}
+                                    <td>Curso Abierto.</td>
+                                {% endif %}
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+ <div class="modal modal-flex fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">Creación de Curso Posterior.</h4>             
+                </div>
+                <div class="modal-body">
+                    <div id="notasModal">
+                            
+                    </div>
+                </div>
+                <div class="modal-pie">
+                    <HR>
+                </div>                    
+            </div>                
+        </div>
+    </div>
+
+
+<!--<div class="modal modal-flex fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="flexModalLabel">NUEVO CURSO (FECHAS).</h4>             
+            </div>
+            <div class="modal-body">
+                <div id="notasModal">
+                     <form role="form" method="post" action="{{path('sie_pnp_crear_curso_automatico')}}" class="form-inline">
+                        <input type="text" style="display:none" name="id_curso" id="id_curso" value="" />
+                        <input type="text" style="display:none" name="fecha_anterior_fin" id="fecha_anterior_fin" value="" />
+                      <div class="form-group">
+                        <label for="fecha_inicio">Fecha Inicio</label>
+                        <input type="text" required="required" class="form-control" name="fecha_inicio" id="fecha_inicio" placeholder="Digite Fecha Inicial (dd/mm/YYYY)">
+                      </div>
+                      <div class="form-group">
+                        <label for="fecha_fin">Fecha Final</label>
+                        <input type="text" class="form-control" required="required" name="fecha_fin" id="fecha_fin" placeholder="Digite Fecha Final (dd/mm/YYYY)">
+                      </div>
+                      <br/>
+                      <div align="center"><br/><button type="submit" onclick="return validar_fecha2()" class="btn btn-success">Registrar Curso</button></div>
+                    </form>
+                    <!--<a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{# path('sie_pnp_crear_curso_automatico', { 'id_curso': fila.id }) #}}" > Crear Curso Posterior</a>
+                </div>
+            </div>
+            <div class="modal-pie">
+                <HR>
+            </div>                    
+        </div>                
+    </div>
+</div>-->
+<script type="text/javascript">
+ $(document).ready(function() {
+        $("#fecha_inicio").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd/mm/yyyy',
+            language: "es",
+        });
+         $("#fecha_fin").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd/mm/yyyy',
+            language: "es",
+        });
+    });
+function vermodal(id_curso,fecha_anterior_fin){
+        
+        $('#fecha_anterior_fin').val(fecha_anterior_fin);
+        var formData = $('#formxls').serialize();
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_pnp_verificar_form', {'id_curso': id_curso}),
+            data: formData,
+            beforeSend: function () {
+                $("#notasModal").empty();
+                $("#notasModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#notasModal").empty();
+                $("#notasModal").append(data);
+            },
+            error: function(data){
+                $("#notasModal").empty();
+                $("#notasModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+        $('#ModalUser').modal('show');
+    }
+    
+function modaluserclose(){            
+    $('#ModalUser').modal('hide');
+}
+
+ var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     },
+                     "buttons":{
+                        "copy": "Copiar",
+                        "print":"Imprimir"
+                     }
+                    };
+
+    var currentLang = espanol;    
+        
+    $(document).ready(function() {
+        
+        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol,
+         'dom': 'lfrtip <"clear">',
+        'buttons': [
+             {   
+                extend: 'colvis',
+                text:'Visibilizar Columnas'
+            },
+            {
+                extend: 'print',
+                text: 'Imprimir',
+                autoPrint: true,
+                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
+                header:true,
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend:'pdf',
+                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
+                filename:'Lista de archivos subidos RUP-4',
+                orientation:'landscape',
+                exportOptions: {
+                modifier: {
+                    page: 'Lista de archivos subidos RUP-4'
+                    }
+                }
+            },
+            {
+            extend: 'excel',
+            text: 'Excel',
+            filename:'Lista de archivos subidos RUP-4',
+            exportOptions: {
+                modifier: {
+                    page: 'Lista de archivos subidos RUP-4'
+                    }
+                }
+            },
+        ]} );
+        
+        
+
+        $('#tablaTotales tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                dtable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        {#$('#btn').click(function(){
+            dtable.fnDestroy();
+            dtable = null;
+            currentLang = (currentLang == english) ? espanol : english;
+            dtable = $('#tablaTotales').dataTable( {"oLanguage": currentLang} );
+        });#}
+        
+    });
+
+ function validar_fecha(){
+    var f1 = document.getElementById("form_fecha_inicio").value;
+    var f2 = document.getElementById("form_fecha_fin").value;
+    //validamos primero q la fecha (año) inicio no sea mayor que la fecha actual (año)
+    var array_fechasol = f1.split("/")
+    var anio = parseInt(array_fechasol[2])
+    var fecha_actual = new Date();
+    var anio_actual = fecha_actual.getFullYear();
+    if(anio>anio_actual){
+        alert("La gestión de la fecha inicial no puede ser mayor que la gestión de la fecha actual");
+        return false;
+    }
+    if(anio<2009){
+        alert("La gestión de la fecha inicial no puede ser menor que la gestión 2009");
+        return false;
+    }
+
+    //Validamos que fecha final deb ser minimo 90 dias que el incial y no menors a 240 dias
+    var aFecha1 = f1.split('/'); 
+    var aFecha2 = f2.split('/'); 
+    var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]); 
+    var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]); 
+    var dif = fFecha2 - fFecha1;
+    var dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+    if(isNaN(dias)){
+        document.getElementById("save").style.visibility = 'hidden';
+        return true;
+    }
+    else{
+        if(dias>=90 && dias<240){
+            document.getElementById("save").style.visibility = 'hidden';
+            return true;
+        }
+        else{
+            alert("La fecha final debe ser mínimo 90 días mayor que la fecha inicial pero no mayor a 240 días (3 meses a 8 meses)");
+            return false;
+        }
+    }
+ }
+
+  function validar_fecha2(){
+    var f2 = document.getElementById("fecha_inicio").value;
+    var f1 = document.getElementById("fecha_anterior_fin").value;
+    var aFecha1 = f1.split('/'); 
+    var aFecha2 = f2.split('/'); 
+    var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]); 
+    var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]); 
+    var dif = fFecha2 - fFecha1;
+    var dias = Math.floor(dif / (1000 * 60 * 60 * 24)); 
+    if(dias>0){
+        var f22 = document.getElementById("fecha_fin").value;
+        var f11 = document.getElementById("fecha_inicio").value;
+        var aFecha11 = f11.split('/'); 
+        var aFecha22 = f22.split('/'); 
+        var fFecha11 = Date.UTC(aFecha11[2],aFecha11[1]-1,aFecha11[0]); 
+        var fFecha22 = Date.UTC(aFecha22[2],aFecha22[1]-1,aFecha22[0]); 
+        var dif = fFecha22 - fFecha11;
+        var dias1 = Math.floor(dif / (1000 * 60 * 60 * 24));         
+        if(dias1>=90 && dias1<240){
+            document.getElementById("save").style.visibility = 'hidden';
+            return true;
+        }
+        else{
+            alert("La fecha final debe ser mínimo 90 días mayor que la fecha inicial pero no mayor a 240 días (3 meses a 8 meses)");
+            return false;
+        }       
+    //alert("si es mayor osea bien");
+    }
+    else{
+        alert("La Fecha Inicial del nuevo curso debe ser mayor a la fecha de conclusión ("+ f1 +") del anterior curso realizado");
+            //alert("La fecha inicial del nuevo curso debe ser mínimo 60 dias mayor que la fecha inicial");
+        return false;
+    }
+ }
+
+ $(function() {
+$("#form_fecha_inicio").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd/mm/yyyy',
+            language: "es",
+        });
+$("#form_fecha_fin").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd/mm/yyyy',
+            language: "es"
+        });
+});
+    $(function(){            
+        $("#form_departamento").change(function(){                            
+            var iddep = $(this).val();            
+            var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: iddep });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_provincia").html('');                       
+                        var $province_selector = $('#form_provincia');
+                        $province_selector.html('<option value="">Provincia</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                        $('#form_municipio').html("<option>Municipio</option>");
+                    }
+                });            
+            });
+        $("#form_provincia").change(function(){                            
+            var iddep = $(this).val();            
+            var route = Routing.generate('sie_pnp_buscar_provincia', { ieid: iddep });                    
+            var data;
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);
+                        $("#form_municipio").html('');                       
+                        var $province_selector = $('#form_municipio');
+                        $province_selector.html('<option value="">Municipio</option>');
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }
+                    }
+                });            
+            });
+        })
+</script>

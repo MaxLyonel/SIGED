@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\ApoderadoTipo:
+    type: entity
+    table: apoderado_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        apoderado:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

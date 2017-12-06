@@ -1,0 +1,51 @@
+estudianteespecialindirecta:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:EstudianteEspecialIndirecta:index" }
+
+estudianteespecialindirecta_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:EstudianteEspecialIndirecta:show" }
+
+estudianteespecialindirecta_new:
+    path:     /new/
+    defaults: { _controller: "SieAppWebBundle:EstudianteEspecialIndirecta:new" }
+
+estudianteespecialindirecta_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:EstudianteEspecialIndirecta:create" }
+    methods:  POST
+
+estudianteespecialindirecta_edit:
+    path:     /edit/
+    defaults: { _controller: "SieAppWebBundle:EstudianteEspecialIndirecta:edit" }
+    methods:  POST
+
+estudianteespecialindirecta_update:
+    path:     /update/
+    defaults: { _controller: "SieAppWebBundle:EstudianteEspecialIndirecta:update" }
+    methods:  [POST, PUT]
+
+estudianteespecialindirecta_delete:
+    path:     /delete/
+    defaults: { _controller: "SieAppWebBundle:EstudianteEspecialIndirecta:delete" }
+    methods:  [POST, DELETE]
+
+
+
+buscarinstitucioneducativa:
+     path:    /buscarInsEdu/{id}/
+     defaults: { _controller: SieAppWebBundle:EstudianteEspecialIndirecta:buscarInstitucionEducativa }
+     options:
+         expose: true
+         
+buscarestudianteinscripcion:
+     path:    /buscarEstudiante/{id}/
+     defaults: { _controller: SieAppWebBundle:EstudianteEspecialIndirecta:buscarEstudiante }
+     options:
+         expose: true
+
+buscarestudianteinscripcioncarnet:
+     path:    /buscarEstudianteCarnet/{carnet}/
+     defaults: { _controller: SieAppWebBundle:EstudianteEspecialIndirecta:buscarEstudianteCarnet }
+     options:
+         expose: true

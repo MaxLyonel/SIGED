@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\InstruccionTipo:
+    type: entity
+    table: instruccion_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        instruccion:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

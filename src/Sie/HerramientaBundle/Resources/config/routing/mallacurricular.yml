@@ -1,0 +1,31 @@
+herramienta_mallacurricular_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:MallaCurricular:index}
+    
+herramienta_mallacurricular_getspecilidad:
+    path:    /getspecialidad/{idSpecialidad}
+    defaults: { _controller: SieHerramientaBundle:MallaCurricular:getSpecialidad }
+    options:
+         expose: true   
+
+herramienta_mallacurricular_getacreditation:
+    path:    /getacreditation/{idAcreditation}
+    defaults: { _controller: SieHerramientaBundle:MallaCurricular:getAcreditation }
+    options:
+         expose: true
+         
+herramienta_mallacurricular_createMalla:
+    path:    /createmalla
+    defaults: { _controller: SieHerramientaBundle:MallaCurricular:createMalla }
+    options:
+         expose: true           
+
+herramienta_mallacurricular_create:
+    path:   /create
+    defaults: {_controller: SieHerramientaBundle:MallaCurricular:buildMalla }
+    
+herramienta_mallacurricular_setMateria:
+    path:   /setmateria
+    defaults: { _controller: SieHerramientaBundle:MallaCurricular:setMateria}
+    options:
+         expose: true

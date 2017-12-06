@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegHablaNinezTipo:
+    type: entity
+    table: estudiante_inscripcion_socioeconomico_reg_habla_ninez_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        hablaNiñez:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: habla_niñez
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

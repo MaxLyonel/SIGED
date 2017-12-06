@@ -1,0 +1,351 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Inscripcion Excepcional<span>Inscripcion</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Inscripcion Excepcional</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Inscripcion</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+<!-- krlosssss -->
+
+    <div class="body-content animated fadeIn">
+
+    <!-- Start mail page -->
+    <!--div class="container" style="margin-top:30px;"-->
+
+    <div class="row">
+    <div class="body-content animated fadeIn">
+      <div class="row">
+          <div class="col-md-12">
+
+          <div class="panel panel-success rounded shadow">
+
+              <div class="panel-heading">
+                  <div class="pull-center">
+                      <h3 class="panel-title">Inscripcion Excepcional<code></code></h3>
+                  </div>
+                  <div class="clearfix"></div>
+              </div><!-- /.panel-heading -->
+              <div class="panel-body no-padding">
+                  <!-- here the content -->
+                          <table id="datatable-ajax" class="table table-striped table-success dataTable" role="grid" aria-describedby="datatable-ajax_info">
+                            <thead>
+                                <tr role="row">
+                                  <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Nombre</th>
+                                  <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Paterno</th>
+                                  <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Materno</th>
+                                  <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">CI</th>
+                                  <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Complemento</th>
+                                  <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Genero</th>
+                                  <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Fecha Nacimiento</th>
+                                </tr>
+                            </thead>
+                            <!--tbody section is required-->
+                            <tbody>
+
+                              <tr role="row" class="odd">
+                                <td data-title="Nombre">{{ datastudent.nombre|e }} </td>
+                                <td data-title="Nombre"> {{datastudent.paterno|e}} </td>
+                                <td data-title="Nombre"> {{datastudent.materno|e}}</td>
+                                <td data-title="CI">{{datastudent.ci}} </td>
+                                <td data-title="Complemento">{{datastudent.complemento}}</td>
+                                {% if (datastudent.genero ==1)%}
+                                    <td data-title="Genero">MASCULINO </td>
+                                {%else%}
+                                    <td data-title="Genero">FEMENINO </td>
+                                {%endif%}
+                                <td data-title='F. Nacimiento'> {{datastudent.fnac}}
+                                </td>
+                              </tr>
+
+                            </tbody>
+                            <!--tfoot section is optional-->
+                            <tfoot>
+                            </tfoot>
+                        </table>
+
+                      <table id="datatable-ajax" class="table table-striped table-success dataTable" role="grid" aria-describedby="datatable-ajax_info">
+                        <thead>
+                            <tr role="row" class="odd">
+                              <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending">Informacion de la Inscripcion</td>
+                            </tr>
+                        </thead>
+                        <!--tbody section is required-->
+
+
+                          <tr role="row" class="odd">
+                              <td >
+                              {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form' } } )}}
+
+                              <div class="row">
+                                  <div class="col-md-4 form-group">
+                                      {{form_label(form.institucionEducativa)}}
+                                      {{form_widget(form.institucionEducativa, {'attr':{'onchange':'getInstitucionEducativa(this.value)','onkeyUp':'getInstitucionEducativa(this.value)'}  } )}}
+                                      <div class="help-block with-errors"></div>
+                                  </div>
+                                  <div class="col-md-4">
+                                      {{form_label(form.institucionEducativaName)}}
+                                      {{form_widget(form.institucionEducativaName)}}
+                                  </div>
+                                  <div class="col-md-2">
+                                      {{form_label(form.subcea)}}
+                                      {{form_widget(form.subcea)}}
+                                  </div>
+                                  <div class="col-md-2">
+                                      {{form_label(form.semestre)}}
+                                      {{form_widget(form.semestre)}}
+                                  </div>
+                              </div>
+
+                              <div class="row">
+                                  <div class="col-md-4">
+                                      {{form_label(form.nivel)}}
+                                      {{form_widget(form.nivel)}}
+                                  </div>
+                                  <div class="col-md-3">
+                                      {{form_label(form.grado)}}
+                                      {{form_widget(form.grado)}}
+                                  </div>
+                                  <div class="col-md-2 form-group">
+                                      {{form_label(form.paralelo)}}
+                                      {{form_widget(form.paralelo, {'attr':{'required':'true','onchange':'getTurno(this.value)','onmousedown':'getTurno(this.value)'} })}}
+                                      <div class="help-block with-errors "></div>
+                                  </div>
+                                  <div class="col-md-3 form-group">
+                                      {{form_label(form.turno)}}
+                                      {{form_widget(form.turno, {'attr':{'required':'true'} })}}
+                                      <div class="help-block with-errors "></div>
+                                  </div>
+                              </div>
+                              {{form_widget(form.save, {'attr':{'':''} }) }}
+                              {{form_end(form)}}
+                              </td>
+                          </tr>
+
+
+                        <!--tfoot section is optional-->
+                        <tfoot>
+                        </tfoot>
+                    </table>
+
+              </div><!-- /.panel-body -->
+          </div><!-- /.panel -->
+          <!--/ End horizontal form -->
+
+          </div>
+      </div>
+
+    <!-- End of Website Stats Widget -->
+    </div>
+  </div>
+  <!--/div-->
+<!--/ End mail page -->
+</div>
+<!-- Start body content -->
+<!--/ End body content -->
+<div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+</div><!-- /.modal -->
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+
+    var getInstitucionEducativa = function(id) {
+
+        if (id.length > 7) {
+            //get the nivel and grado to do the search
+            nivel = $('#form_nivelId').val();
+            ciclo = $('#form_cicloId').val();
+            grado = $('#form_gradoId').val();
+            gestion = $('#form_gestion').val();
+            /*lastue = $('#form_lastue').val();*/
+
+            //call the ajax function by krlos
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('alternativa_inscriptionExcepcionales_findIE', {'id': id, 'nivel': nivel, 'ciclo': ciclo, 'grado': grado, 'gestion':gestion}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $("#form_institucionEducativaName").val(data.nombre);
+                    //fill the paralelos
+                    $("#form_paralelo").empty();
+                    $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                    $.each(data.paralelo, function (i, value) {
+                        $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    //fill the subceas
+                    $("#form_subcea").empty();
+                    $("#form_subcea").append('<option value="">Seleccionar</option>');
+                    $.each(data.arrsubcea, function (i, value) {
+                        $("#form_subcea").append('<option value="' + i + '">' + value + '</option>');
+                    });
+
+                    /*
+                     $("#form_turno").empty();
+                     $.each(data.turno, function (i, value) {
+                     $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                     });*/
+
+                }
+            });
+        } else {
+            nivel = $('#form_nivelId').val();
+            grado = $('#form_gradoId').val();
+            lastue = $('#form_lastue').val();
+            $("#form_institucionEducativaName").val('');
+            $("#form_paralelo").empty();
+            $("#form_turno").empty();
+            $("#form_subcea").empty();
+
+        }
+    };
+
+
+    var getTurno = function(paralelo) {
+
+        sie = $('#form_institucionEducativa').val();
+        nivel = $('#form_nivelId').val();
+        ciclo = $('#form_cicloId').val();
+        grado = $('#form_gradoId').val();
+        gestion = $('#form_gestion').val();
+
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('alternativa_inscriptionExcepcionales_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel,'ciclo':ciclo, 'grado': grado,'gestion':gestion}),
+            beforeSend: function () {
+                $("#form_turno").empty();
+            },
+            success: function (data) {
+                $("#form_turno").empty();
+                $("#form_turno").append('<option value="">Seleccionar</option>');
+                $.each(data.aturnos, function (i, value) {
+                    $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+
+    };
+
+
+
+
+
+
+    /* this is the older*/
+        //call the ajax function by krlos
+        function institucionEducativa(id) {
+            if (id.length > 7) {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('inscription_extranjeros_findIE', {'id': id}),
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        $("#form_institucionEducativaName").val(data.nombre);
+
+                        $("#form_nivel").empty();
+                        $("#form_nivel").append('<option value="">Seleccionar</option>');
+                        $.each(data.aniveles, function (i, value) {
+                            $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $("#form_grado").empty();
+                        $("#form_paralelo").empty();
+                        $("#form_turno").empty();
+                    }
+                });
+            }
+
+        }
+
+        function getGrado(idnivel) {
+
+            sie = $('#form_institucionEducativa').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_extranjeros_findgrado', {'idnivel': idnivel, 'sie': sie}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_grado").empty();
+                    $("#form_grado").append('<option value="">Seleccionar</option>');
+                    $.each(data.agrados, function (i, value) {
+                        $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $("#form_paralelo").empty();
+                    $("#form_turno").empty();
+                }
+            });
+
+        }
+
+        function getParalelo(grado) {
+
+            sie = $('#form_institucionEducativa').val();
+            nivel = $('#form_nivel').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_extranjeros_findparalelo', {'grado': grado, 'sie': sie, 'nivel': nivel}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_paralelo").empty();
+                    $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                    $.each(data.aparalelos, function (i, value) {
+                        $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        }
+
+        function getTurno(paralelo) {
+
+            sie = $('#form_institucionEducativa').val();
+            nivel = $('#form_nivel').val();
+            grado = $('#form_grado').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_extranjeros_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_turno").empty();
+                    $("#form_turno").append('<option value="">Seleccionar</option>');
+                    $.each(data.aturnos, function (i, value) {
+                        $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        }
+
+
+    </script>
+
+
+{% endblock %}

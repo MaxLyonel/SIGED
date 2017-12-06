@@ -1,0 +1,92 @@
+ImpresionAvanceEstudianteFuerzaBono:
+    path:     /{op}
+    defaults: { _controller: SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:index, op:search }
+
+ImpresionAvanceEstudianteFuerzaBono_new:
+    path:     /new/
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:new" }
+    methods:  POST
+
+ImpresionAvanceEstudianteFuerzaBono_create:
+    path:     /create/
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:create" }
+    methods:  POST
+
+listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:listargrados" }
+    options:
+         expose: true
+
+ImpresionAvanceEstudianteFuerzaBono_cargar_niveles:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}/{turno}/
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:cargarNiveles"}
+    options:
+         expose: true
+
+ImpresionAvanceEstudianteFuerzaBono_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{turno}/{nivel}/
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:cargarGrados"}
+    options:
+         expose: true
+
+ImpresionAvanceEstudianteFuerzaBono_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:cargarParalelos"}
+    options:
+         expose: true
+
+ImpresionAvanceEstudianteFuerzaBono_listar_areas_curso:
+    path:     /lista_areas_curso_a/
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:lista_areas_curso" }
+    options:
+         expose: true
+
+ImpresionAvanceEstudianteFuerzaBono_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:lista_areas_nivel" }
+    options:
+         expose: true
+
+ImpresionAvanceEstudianteFuerzaBono_listar_areas_curso_adicionar_eliminar:
+    path:     /lista_areas_curso_adicionar_eliminar/
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:lista_areas_curso_adicionar_eliminar" }
+    options:
+         expose: true
+
+ImpresionAvanceEstudianteFuerzaBono_asignar_maestro_area:
+    path:     /asignar_maestro_area/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:asignar_maestro" }
+    options:
+         expose: true
+
+ImpresionAvanceEstudianteFuerzaBono_delete:
+    path:     /delete/{idCursoOferta}
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:delete" }
+    options:
+         expose: true
+
+ImpresionAvanceEstudianteFuerzaBono_file:
+    path:     /sie/build/
+    defaults: { _controller: SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:build }
+    options:
+         expose: true          
+
+ImpresionAvanceEstudianteFuerzaBono_maestros:
+    path:     /maestros_materia/
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:maestros"}
+    options:
+         expose: true
+
+ImpresionAvanceEstudianteFuerzaBono_maestros_asignar_siged:
+    path:     /maestros_asignar_siged/
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:maestrosAsignar"}
+    options:
+         expose: true
+
+
+ImpresionAvanceEstudianteFuerzaBono_buscar_infoUe:
+    path:     /buscar_infoUe/
+    defaults: { _controller: "SieBjpBundle:ImpresionAvanceEstudianteFuerzaBono:buscarInfoUe"}
+    options:
+         expose: true           

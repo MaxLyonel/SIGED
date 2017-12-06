@@ -1,0 +1,161 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Información General <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">
+                    Información Unidad Educativa
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+
+
+    <div class="body-content animated fadeIn">
+      {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Información Consolidada', 'gestion': data.gestion,'sie': data.ieducativa.id, 'ieducativa': data.ieducativa.institucioneducativa, 'opcion': 'Consolidación Info'} %}
+      <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <!-- Lista de tramites aprobados por la DDE -->
+        {% if infoConsolidations %}
+          <div class="panel">
+              <div class="panel-heading">
+                  <div class="pull-left">
+                      <h3 class="panel-title">Información Consolidada</h3>
+                  </div>
+
+                  <div class="clearfix"></div>
+              </div><!-- /.panel-heading -->
+                <div class="panel-body no-padding">
+                    <div class="table-responsive" style="margin-top: -1px;">
+                        <table class="table table-primary">
+                            <thead>
+                            <tr>
+                                <th class="text-center border-right" style="width: 1%;">No.</th>
+                                <th>Código SIE</th>
+                                <th>Gestión</th>
+                                <th>1er bim</th>
+                                <th>2do bim</th>
+                                <th>3er bim</th>
+                                <th>4to bim</th>
+                                <th class="text-center" style="width: 12%;">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% set cont = 1 %}
+                            {% for infoConsolidation in infoConsolidations %}
+
+                            <tr class="border-primary">
+                                            <td class="text-center border-right"><strong>{{ loop.index }}</strong></td>
+                                            <td>{{ infoConsolidation.unidadEducativa }}</td>
+                                            <td>{{ infoConsolidation.gestion }}</td>
+                                            <td>{% if infoConsolidation.bim1 > 1 %}
+                                                  WEB
+                                                {% else %}
+                                                  ESCRITORIO
+                                                {% endif %}
+                                            </td>
+                                            <td>{% if infoConsolidation.bim2 > 1 %}
+                                                  WEB
+                                                {% else %}
+                                                  ESCRITORIO
+                                                {% endif %}
+                                            </td>
+                                            <td>{% if infoConsolidation.bim3 > 1 %}
+                                                  WEB
+                                                {% else %}
+                                                  ESCRITORIO
+                                                {% endif %}
+                                            </td>
+                                            <td>{% if infoConsolidation.bim4 > 1 %}
+                                                  WEB
+                                                {% else %}
+                                                  ESCRITORIO
+                                                {% endif %}
+                                            </td>
+
+                                            <td class="text-center">
+                                            {% set items = {
+                                                            'gestion': infoConsolidation.gestion,
+                                                            'id'     : infoConsolidation.unidadEducativa,
+                                                            'tipo'   : 'krlos'
+                                            } %}
+                                            {% set jsnFullUeInfo = items|json_encode() %}
+                                            {% if( infoConsolidation.gestion == app.session.get('currentyear')-1 )  and (app.session.get('ue_modular') or app.session.get('ue_plena') or app.session.get('ue_tecteg')) %}
+                                                <form action="{{path('herramienta_inbox_open')}}" method="post" style="display: inline-block">
+                                                    <!-- this is the new start-->
+                                                    <input type="hidden" id="form_data" name="form[data]" required="required" value="{{jsnFullUeInfo}}">
+                                                    <!-- this is the new end-->
+                                                    <button type="submit" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Ver Información {{infoConsolidation.gestion}}"><i class="fa fa-pencil"> Ver Información</i></button>
+                                                </form>
+                                            {% endif %}
+                                            </td>
+                                        </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- /.panel-body -->
+              </div><!-- /.panel -->
+                              <!--/ End team table -->
+          {% else %}
+            <div class="callout callout-info">
+              <p><strong>¡Información!</strong> No tiene solicitudes aprobadas por la DDE.</p>
+              <p>Ir a <a href="{{path('sie_herramienta_tramite_index')}}"><strong>Seguimiento de solicitudes</strong></a></p>
+            </div>
+            {% endif %}
+            <div id="logs"></div>
+                  <!--end lista tramites aprobados por la DDE -->
+                </div>
+      </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    var xhr1;
+    function validateForm(contador) {
+        if (xhr1 && xhr1.readyState != 4) {
+            xhr1.abort();
+        }
+
+        var formData = $('#formVal'+contador).serialize();
+
+        xhr1 = $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_herramienta_tramite_validacionue'),
+            data: formData,
+            beforeSend: function () {
+                $("#logs").empty();
+                $("#logs").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#logs").empty();
+                $("#logs").html(data);
+            },
+            error: function (data) {
+                $("#logs").empty();
+                $("#logs").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+            }
+        });
+
+        return false;
+    }
+    </script>
+{% endblock %}

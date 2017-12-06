@@ -1,0 +1,683 @@
+{% extends 'layoutInfraestructura.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .modal-dialog{
+
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+    {% include 'SieInfraestructuraBundle:Info:cabecera.html.twig' %}
+    <ol class="breadcrumb">
+        <li><a href="{{path('infra_info_index')}}">Pincipal</a></li>
+        <li><a href="{{path('infra_info_acceder')}}">Panel de Acceso Rápido</a></li>
+        <li class="active">Hoja 1 - Datos Generales</li>
+    </ol> 
+    <h2 class="view-title"><img src="{{asset('webInfraestructura/assets/images/home1.png')}}" class="img-header"> HOJA 1 - DATOS GENERALES</h2>
+    {{form_start(form,{'attr':{'id':'formDatosGenerales'} })}}
+    <div class="form-group">
+        {{form_widget(form.guardar)}}
+        <a href="{{path('infra_info_acceder')}}" class="btn btn-danger-alt" >Cancelar</a>
+    </div>
+    <div class="module-wrapper">
+    <section class="module module-headings">
+    <div class="module-inner">
+    <div class="module-content">
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs nav-tabs-theme-3" role="tablist">
+            <li role="presentation" class="active"><a href="#datos" aria-controls="datos" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-map-marker"></i><br><span class="hidden-xs hidden-sm">1. Datos de ubicación del edificio educativo (EE)</span></a></li>
+            <li role="presentation" class=""><a href="#direccion" aria-controls="direccion" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-location-arrow"></i><br><span class="hidden-xs hidden-sm">2. Dirección específica del edificio</span></a></li>
+            <li role="presentation" class=""><a href="#vias" aria-controls="vias" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-car"></i><br><span class="hidden-xs hidden-sm">3. Vías de acceso</span></a></li>
+            <li class="presentation" role="presentation"><a href="#unidades" aria-controls="unidades" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-bank"></i><br><span class="hidden-xs hidden-sm">4. Unidades educativas que operan en este edificio aducativo</span></a></li>
+            <li class="last" role="presentation"><a href="#observacion" aria-controls="observacion" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-file-text-o"></i><br><span class="hidden-xs hidden-sm">5. Observaciones</span></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="datos">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>1.2 Código edificio educativo</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n12codigoEdificio)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.3 Departamento</legend>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        {{form_widget(form.n13codDepartamento)}}
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        {{form_widget(form.n13departamento)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.4 Provincia</legend>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        {{form_widget(form.n14codProvincia)}}
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        {{form_widget(form.n14provincia)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.5 Secc. Municipal</legend>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        {{form_widget(form.n15codMunicipal)}}
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        {{form_widget(form.n15municipal)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.6 Cantón</legend>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        {{form_widget(form.n16codCanton)}}
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        {{form_widget(form.n16canton)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.7 Ciudad o localidad</legend>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        {{form_widget(form.n17codCuidad)}}
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        {{form_widget(form.n17cuidad)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>1.8 Distrito Escolar</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n18distrito)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.9 Área geográfica</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n19areaGeografica)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.10 Zona/Barrio</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n110Zonabarrio)}}
+                            </div>
+                        </fieldset>
+                        <p>Los siguientes 2 datos completar sólo en caso de ser área urbana</p>
+                        <fieldset>
+                            <legend>1.11 Macrodistrito municipal</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n111Macrodistrito)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.12 Distrito municipal</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n112Distritomun)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="direccion">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>2.1 Calle o Avenida y Número</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n21Calleavenida)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.2 Descripción del acceso a partir de un lugar fácilmente reconocible en la zona</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n22Descripcionacceso)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="vias">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>3.1 Tramo red troncal <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Escribir el nombre de la(s) carretera(s) interdepartamental(es)." data-original-title="Tramo red troncal"></i></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n31Tramotroncal)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>3.2 Tramo red complementaria - Red departamental <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Escribir el nombre de la(s) carrera(s) que lleva(n) a la zona urbana." data-original-title="Tramo red complementaria"></i></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n32Tramocomplementaria)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>3.3 Tramo red vecinal <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Escribir el nombre de la(s) carretera(s) que lleva(n) a la zona rural." data-original-title="Tramo red vecinal"></i></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n33Tramovecinal)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>3.4 Tipo de acceso desde la Dirección Distrital. (Puede llenar uno o más tipos de accesos) <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Indique cuál(es) son los tipos de transporte utilizados por un administrativo para llegar desde el Edificio Educativo a la Dirección Distrital." data-original-title="Tipo de acceso"></i></legend>
+                        </fieldset>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr class="">
+                                        <th></th>
+                                        <th>días</th>
+                                        <th>hrs.</th>
+                                        <th>min.</th>
+                                        <th>Costo Bs.</th>
+                                        <th>Descripcion del medio de acceso</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Terrestre</td>
+                                        <td>{{form_widget(form.n34TerrestreDias)}}</td>
+                                        <td>{{form_widget(form.n34Terrestrehrs)}}</td>
+                                        <td>{{form_widget(form.n34Terrestremin)}}</td>
+                                        <td>{{form_widget(form.n34Terrestrecosto)}}</td>
+                                        <td>{{form_widget(form.n34Terrestredescripcion)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fluvial</td>
+                                        <td>{{form_widget(form.n34Fluvialdias)}}</td>
+                                        <td>{{form_widget(form.n34Fluvialhrs)}}</td>
+                                        <td>{{form_widget(form.n34Fluvialmin)}}</td>
+                                        <td>{{form_widget(form.n34Fluvialcosto)}}</td>
+                                        <td>{{form_widget(form.n34Fluvialdescripcion)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Aéreo</td>
+                                        <td>{{form_widget(form.n34Aereodias)}}</td>
+                                        <td>{{form_widget(form.n34Aereohrs)}}</td>
+                                        <td>{{form_widget(form.n34Aereomin)}}</td>
+                                        <td>{{form_widget(form.n34Aereocosto)}}</td>
+                                        <td>{{form_widget(form.n34Aereodescripcion)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Combinación de dos o más medios</td>
+                                        <td>{{form_widget(form.n34Combinaciondias)}}</td>
+                                        <td>{{form_widget(form.n34Combinacionhrs)}}</td>
+                                        <td>{{form_widget(form.n34Combinacionmin)}}</td>
+                                        <td>{{form_widget(form.n34Combinacioncosto)}}</td>
+                                        <td>{{form_widget(form.n34Combinaciondescripcion)}} <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Escribir de manera detallada cada uno de los medios de acceso que utiliza." data-original-title="Combinación de medios de acceso"></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="unidades">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>4.1 Unidades educativas que operan en este edificio educativo <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Debe asociar al Edificio Educativo y al número de infraestructura la(s) Unidad(es) Educativa(s) que funcionan en ella, y actualizar sus datos." data-original-title="UEs asociadas al LE"></i></legend>
+                            <!--button type="button" class="btn btn-info" onclick="agregarFila();">Asociar UE</button-->
+                            <div class="alert alert-info">Unidades Educativas asociadas</div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <!--th></th-->
+                                            <th>Sie - Unidad Educativa</th>
+                                            <th>Director</th>
+                                            <th>Representante Junta Escolar</th>
+                                            <th>Teléfono Ref.</th>
+                                            <th>Tenencia del Predio</th>
+                                            <th>Sub Sistema (Ámbito)</th>
+                                            <th>Observaciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="uesasociadas">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="observacion">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>Observaciones</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n5Obs)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    </div>
+    </div>
+    </section>
+    
+    {{form_end(form)}}
+    <div class="modal fade bs-example-modal-lg" id="modalUE" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Buscar Unidad Educativa</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-2 col-md2-2">
+                            <i class="fa fa-search fa-5x text-info"></i>
+                        </div>
+                        <div class="col-lg-10 col-md-10">
+                            <input type="text" id="siemodal" class="form-control" size="10" placeholder="Ingrese código SIE" onkeyup="buscarUE(this,this.value)">
+                            <br>
+                            <input type="text" id="uemodal" class="form-control" readonly="readonly" style="color:#52B3DD">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info btn-block" data-dismiss="modal" onclick="seleccionarUE();" id="botonModalUE" style="display:none">Seleccionar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bs-example-modal-lg" id="modalPersona" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Buscar<br>Representante de la Junta Escolar</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-2 col-md2-2">
+                            <i class="fa fa-search fa-5x text-info"></i>
+                        </div>
+                        <div class="col-lg-10 col-md-10">
+                            <input type="text" id="carnetmodal" class="form-control" size="10" placeholder="Ingrese el Número de Carnet" onkeyup="buscarPersona(this,this.value)" autocomplete="off" maxlength="10">
+                            <br>
+                            <input type="hidden" id="personaIdmodal" class="form-control" readonly="readonly" style="color:#52B3DD">
+                            <input type="text" id="personamodal" class="form-control" readonly="readonly" style="color:#52B3DD">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info btn-block" data-dismiss="modal" onclick="seleccionarPersona();" id="botonModalPersona" style="display:none">Seleccionar</button>
+                    <div class="alert alert-info" id="avisoPersonamodal" style="display:none; text-align:center"> <i class="fa fa-info-circle"></i> La persona con el número de carnet ingresado no fue encontrado, debe comunicarse con su Técnico de Distrito para que lo registre en el sistema. </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        /* Validaciones */
+        $("#form_n110Zonabarrio").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#form_n111Macrodistrito").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#form_n112Distritomun").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#form_n21Calleavenida").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#form_n22Descripcionacceso").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#form_n31Tramotroncal").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#form_n32Tramocomplementaria").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#form_n33Tramovecinal").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+
+        $("#form_n34TerrestreDias").numeric("positiveInteger");
+        $("#form_n34Terrestrehrs").numeric("positiveInteger");
+        $("#form_n34Terrestremin").numeric("positiveInteger");
+        $("#form_n34Terrestrecosto").numeric({
+            allowDecSep: true,
+            allowDecimalPlaces: 2
+        });
+        $("#form_n34Terrestredescripcion").alphanum({allowOtherCharSets : true, allow:'-.,'});
+
+        $("#form_n34Fluvialdias").numeric("positiveInteger");
+        $("#form_n34Fluvialhrs").numeric("positiveInteger");
+        $("#form_n34Fluvialmin").numeric("positiveInteger");
+        $("#form_n34Fluvialcosto").numeric("positiveInteger");
+        $("#form_n34Fluvialdescripcion").alphanum({allowOtherCharSets : true, allow:'-.,'});
+
+        $("#form_n34Aereodias").numeric("positiveInteger");
+        $("#form_n34Aereohrs").numeric("positiveInteger");
+        $("#form_n34Aereomin").numeric("positiveInteger");
+        $("#form_n34Aereocosto").numeric("positiveInteger");
+        $("#form_n34Aereodescripcion").alphanum({allowOtherCharSets : true, allow:'-.,'});
+
+        $("#form_n34Combinaciondias").numeric("positiveInteger");
+        $("#form_n34Combinacionhrs").numeric("positiveInteger");
+        $("#form_n34Combinacionmin").numeric("positiveInteger");
+        $("#form_n34Combinacioncosto").numeric("positiveInteger");
+        $("#form_n34Combinaciondescripcion").alphanum({allowOtherCharSets : true, allow:'-.,'});
+
+        $("#form_n5Obs").alphanum({allowOtherCharSets : true, allow:'-.,'});
+
+
+        $("#carnetmodal").numeric("positiveInteger");
+
+    </script>
+    <script>
+
+    var cont = 0;
+    var arrayTenenciaTipo = [];
+    var arrayOrgCurricularTipo = [];
+
+    var elementoSieUE;
+    var elementoNomUE;
+
+    var elementoIdPersona;
+    var elementoCarPersona;
+    var elementoNomPersona;
+
+    $(function(){
+        var idEntidad = $('#form_id').val();
+        $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_datosGenerales_uesasociadas',{id: idEntidad}),
+               beforeSend: function () {
+                   $("#uesasociadas").empty();
+               },
+               success: function (data) {
+                    arrayTenenciaTipo = data.tenenciaTipo;
+                    arrayOrgCurricularTipo = data.orgCurricularTipo;
+
+                    $.each(data.uesasociadas, function (i, valores) {
+                        cont++;
+                        var sie = 'sie' + cont;
+                        var institucion = 'institucion' + cont;
+                        var director = 'director' + cont;
+                        var personaId = 'personaId' + cont;
+                        var personaCarnet = 'personaCarnet' + cont;
+                        var persona = 'persona' + cont;
+                        var telefono = 'telefono' + cont;
+                        var tenenciaTipo = 'tenenciaTipo' + cont;
+                        var orgCurricularTipo = 'orgCurricularTipo' + cont;
+                        var obs = 'obs' + cont;
+
+                        $("#uesasociadas").append('<tr id="'+cont+'">\n\
+                            <!--td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td-->\n\
+                            <input type="hidden" name="sie[]" id="'+sie+'" value="'+valores.sie+'" required="true">\n\
+                            <td><input type="text" name="institucion[]" id="'+institucion+'" value="'+valores.institucion+'" size="50" maxlength="40" required="true" disabled="disabled" class="" style="background:#F2F2F2; cursor:not-allowed; color:#B8B8B8"></td>\n\
+                            <td><input type="text" name="director[]" id="'+director+'" value="'+valores.director+'" size="50" maxlength="40" required="true" disabled="disabled" class="" style="background:#F2F2F2; cursor:not-allowed; color:#B8B8B8"></td>\n\
+                            <input type="hidden" name="personaId[]" id="'+personaId+'" value="'+valores.personaId+'" required="true">\n\
+                            <input type="hidden" name="personaCarnet[]" id="'+personaCarnet+'" value="'+valores.personaCarnet+'" required="true">\n\
+                            <td><div class="input-group"><input type="text" name="persona[]" id="'+persona+'" value="'+valores.persona+'" size="50" required="true" class="" style="background:#F2F2F2; cursor:not-allowed; color:#B8B8B8" onfocus="this.blur()" title="4.1 Representante Junta Escolar"><div class="input-group-addon" onclick="openModalPersona('+personaId+','+personaCarnet+','+persona+')" style="cursor:pointer"><i class="fa fa-search text-info"></i> </div></div></td>\n\
+                            <td><input type="text" name="telefono[]" id="'+telefono+'" value="'+valores.telefono+'" size="16" maxlength="8" pattern="[0-9]{4,8}" autocomplete="off" class="" title="4.1 Teléfono Ref. (Debe tener de 4 a 8 dígitos)"></td>\n\
+                            <td><select name="tenenciaTipo[]" id="'+tenenciaTipo+'" required="true" class="jupper" title="4.1 Tenencia"></select></td>\n\
+                            <td><select name="orgCurricularTipo[]" id="'+orgCurricularTipo+'" required="true" class="jupper" title="4.1 Organización Curricular" style="display:none"></select><input type="text" value="'+valores.orgCurricularNombre+'" class="jupper" disabled="disabled" style="background:#F2F2F2; cursor:not-allowed; color:#B8B8B8"></td>\n\
+                            <td><textarea name="obs[]" id="'+obs+'" value="'+valores.obs+'" size="5" maxlength="100" autocomplete="off" class="jupper" title="4.1 Observaciones"></textarea></td>\n\
+                            </tr>');
+
+                        $("#" + tenenciaTipo).empty();
+                        $("#" + tenenciaTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.tenenciaTipo, function (i, value) {
+                            if(i==valores.tenencia){sel = 'selected';}else{sel = '';}
+                            $("#" + tenenciaTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+                        $("#" + orgCurricularTipo).empty();
+                        $("#" + orgCurricularTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.orgCurricularTipo, function (i, value) {
+                            if(i==valores.orgCurricular){sel = 'selected';}else{sel = '';}
+                            $("#" + orgCurricularTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+                        $("#"+sie).numeric("positiveInteger");
+                        $("#"+telefono).numeric("positiveInteger");
+                    });
+
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+    });
+
+    function agregarFila(){
+        cont++;
+        var sie = 'sie' + cont;
+        var institucion = 'institucion' + cont;
+        var personaId = 'personaId' + cont;
+        var persona = 'persona' + cont;
+        var telefono = 'telefono' + cont;
+        var tenenciaTipo = 'tenenciaTipo' + cont;
+        var orgCurricularTipo = 'orgCurricularTipo' + cont;
+        var obs = 'obs' + cont;
+
+        $("#uesasociadas").append('<tr id="'+cont+'">\n\
+            <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+            <input type="hidden" name="sie[]" id="'+sie+'" value="" required="true">\n\
+            <td><div class="input-group"><input type="text" name="institucion[]" id="'+institucion+'" value="" size="5" maxlength="50" required="true" autocomplete="off" class="form-control" disabled="disabled"><div class="input-group-addon" style="cursor:pointer" onclick="openModalUe('+sie+','+institucion+')"><i class="fa fa-search"></i> </div></div></td>\n\
+            <input type="hidden" name="personaId[]" id="'+personaId+'" value="" size="5" maxlength="10" required="true" autocomplete="off" class="form-control">\n\
+            <td><div class="input-group"><input type="text" name="persona[]" id="'+persona+'" value="" size="5" maxlength="20" required="true" autocomplete="off" class="form-control" disabled="disabled"><div class="input-group-addon"><i class="fa fa-search"></i> </div></div></td>\n\
+            <td><input type="text" name="telefono[]" id="'+telefono+'" value="" size="10" maxlength="8" required="true" autocomplete="off" class="form-control"></td>\n\
+            <td><select name="tenenciaTipo[]" id="'+tenenciaTipo+'" required="true" class="form-control"></select>\n\
+            <td><select name="orgCurricularTipo[]" id="'+orgCurricularTipo+'" required="true" class="form-control"></select>\n\
+            <td><input type="text" name="obs[]" id="'+obs+'" value="" size="5" maxlength="4" required="true" autocomplete="off" class="form-control"></td>\n\
+            </tr>');
+
+        $("#" + tenenciaTipo).empty();
+        $("#" + tenenciaTipo).append('<option value="">Seleccionar...</option>');
+        $.each(arrayTenenciaTipo, function (i, value) {
+            $("#" + tenenciaTipo).append('<option value="' + i + '">' + value + '</option>');
+        });
+        $("#" + orgCurricularTipo).empty();
+        $("#" + orgCurricularTipo).append('<option value="">Seleccionar...</option>');
+        $.each(arrayOrgCurricularTipo, function (i, value) {
+            $("#" + orgCurricularTipo).append('<option value="' + i + '">' + value + '</option>');
+        });
+
+        $("#"+sie).numeric("positiveInteger");
+        $("#"+telefono).numeric("positiveInteger");
+    }
+
+    function eliminarFila(id){
+        //cont--;
+        $("#" + id).remove();
+    }
+
+    function openModalUe(idSie, idNombre){
+        elementoSieUE = idSie.id;
+        elementoNomUE = idNombre.id;
+
+        $('#siemodal').val(idSie.value);
+        $('#uemodal').val(idNombre.value);
+
+        $('#modalUE').modal('show');
+    }
+
+    function buscarUE(elemento, sie){
+        if(sie.length > 7){
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('infra_datosGenerales_seleccionarUE',{sie: sie}),
+                beforeSend: function () {
+                    $("#uemodal").empty();
+                },
+                success: function (data) {
+                    $("#uemodal").val(data.institucion);
+                    if(data.existe == 1){
+                        $('#botonModalUE').css('display','block');
+                    }else{
+                        $('#botonModalUE').css('display','none');
+                    }
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }else{
+            $('#botonModalUE').css('display','none');
+        }
+    }
+
+    function seleccionarUE(){
+        $('#'+elementoSieUE).val($('#siemodal').val());
+        $('#'+elementoNomUE).val($('#siemodal').val()+' - '+$('#uemodal').val());
+    }
+
+    function openModalPersona(idPersona,idCarnetPersona, idNombrepersona){
+        elementoIdPersona = idPersona.id;
+        elementoCarnetPersona = idCarnetPersona.id;
+        elementoNomPersona = idNombrepersona.id;
+
+        $('#personaIdmodal').val(idPersona.value);
+        $('#carnetmodal').val(idCarnetPersona.value);
+        $('#personamodal').val(idNombrepersona.value);
+
+        $('#modalPersona').modal('show');
+    }
+
+    var xhr;
+    function buscarPersona(elemento, carnet){
+        if(carnet.length >= 5){
+            if (xhr && xhr.readyState != 4) {
+                xhr.abort();
+            }
+            xhr = $.ajax({
+                type: 'post',
+                url: Routing.generate('infra_datosGenerales_seleccionarPersona',{carnet: carnet}),
+                beforeSend: function () {
+                    $("#personaIdmodal").empty();
+                    $("#personamodal").empty();
+                },
+                success: function (data) {
+                    $("#personaIdmodal").val(data.id);
+                    $("#personamodal").val(data.nombre);
+                    if(data.existe == 1){
+                        $('#avisoPersonamodal').css('display','none');
+                        $('#botonModalPersona').css('display','block');
+                    }else{
+                        $('#avisoPersonamodal').css('display','block');
+                        $('#botonModalPersona').css('display','none');
+                    }
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }else{
+            $('#botonModalPersona').css('display','none');
+        }
+    }
+
+    function seleccionarPersona(){
+        $('#'+elementoIdPersona).val($('#personaIdmodal').val());
+        $('#'+elementoCarnetPersona).val($('#carnetmodal').val());
+        $('#'+elementoNomPersona).val($('#personamodal').val());
+    }
+
+    /* Invalidamos los mensajes html5 */
+    var form = document.querySelector('#formDatosGenerales');
+    form.addEventListener('invalid',function(event){
+        event.preventDefault();
+    },true);
+
+    var button = form.querySelector('#form_guardar');
+    button.addEventListener('click', function(){
+        var invalid = form.querySelectorAll(':invalid');
+        var mensajes = "";
+        // Reiteramos sobre ellos
+        for(var i = 0; i < invalid.length;i++){
+            var titleElemento = invalid[i].title;
+            mensajes = mensajes +'<div>'+titleElemento+'</div>';
+        };
+        if(mensajes !== ""){
+        $('.notifyjs-corner').empty();
+            $.notify('<div style="border-bottom:1px solid #FFB89B"><i class="fa fa-warning"></i> Debe Completar</div><br>'+mensajes,{style:"appkit",className:"warn",hideAnimation:"fadeOut",showAnimation:"fadeIn",autoHide:!1,clickToHide:!0});
+        }
+    });
+
+    </script>
+
+{% endblock %}

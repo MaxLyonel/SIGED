@@ -1,0 +1,15 @@
+consolidation_web:
+    path:    /
+    defaults: { _controller: SieRegularBundle:Consolidation:index }
+    
+consolidation_upfile_web:
+    path:    /upfile
+    defaults: { _controller: SieRegularBundle:Consolidation:upfile }    
+
+consolidation_checkit_web:
+    path:    /thinkit
+    defaults: { _controller: SieRegularBundle:Consolidation:greeting }
+    
+consolidation_find:
+    path:    /find
+    defaults: { _controller: SieRegularBundle:Consolidation:find }         

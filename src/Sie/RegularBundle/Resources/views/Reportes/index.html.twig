@@ -1,0 +1,95 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:800px;
+            margin-top:100px;
+        }
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Reportes
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  Buscar</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i> Reporte de cantidad de inscritos por Departamento segun distrito y estado matricula
+                            </div>
+                            <div class="panel-body">
+                                {{ form_start(formdepto) }}  
+                                <div class="form-group">
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">
+                                        {{ form_row(formdepto.depto, { 'id': 'depto'}) }}
+                                    </label>
+                                    
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">
+                                        {{ form_row(formdepto.gestion, { 'id': 'gestion'}) }} 
+                                    </label>
+                                        
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">
+                                         {{ form_row(formdepto.generar, { 'id': 'generar'}) }}
+                                    </label>
+                                </div>
+                                {{ form_end(formdepto) }}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+                            
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i> Reporte de cantidad de inscritos por Distrito segun Unidad Educativa y estado matricula
+                            </div>
+                            <div class="panel-body">
+                                {{ form_start(formdistri) }}  
+                                <div class="form-group">
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">
+                                        {{ form_row(formdistri.coddis, { 'id': 'coddis'}) }}
+                                    </label>
+                                    
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">
+                                        {{ form_row(formdistri.gestion, { 'id': 'gestion'}) }} 
+                                    </label>
+                                        
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">
+                                         {{ form_row(formdistri.generar, { 'id': 'generar'}) }}
+                                    </label>
+                                </div>
+                                {{ form_end(formdistri) }}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+                            
+        </div>
+    </div>
+{% endblock %}

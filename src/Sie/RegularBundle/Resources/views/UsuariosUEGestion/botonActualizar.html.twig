@@ -1,0 +1,5 @@
+{% if estado == 'Si' %}
+    <button class="label green" onclick="activarUsuario({{idUsuarioRol}},{{div}})">{{ estado }}&nbsp;</button>
+{% else %}
+    <button class="label red" onclick="activarUsuario({{idUsuarioRol}},{{div}})">{{ estado }}&nbsp;</button>
+{% endif %}

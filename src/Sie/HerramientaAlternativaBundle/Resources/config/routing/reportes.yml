@@ -1,0 +1,51 @@
+herramienta_alter_reporte_siecaratula:
+    path:     /sie100
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:siecaratula }
+    
+herramienta_alter_reporte_sieadministrativos:
+    path:     /sieadminsitrativos
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:sieadministrativos }
+    
+herramienta_alter_reporte_siemaestros:
+    path:     /siemaestros
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:siemaestros }    
+    
+herramienta_alter_reporte_siecaratula:
+    path:     /sie100
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:siecaratula }    
+    
+herramienta_alter_reporte_mallatecnica:
+    path:     /mallatecnica
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:mallatecnica }
+    
+herramienta_alter_reporte_observacionesoperativo:
+    path:     /observacionesoperativo
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:observacionesoperativo }    
+    
+herramienta_alter_reporte_centralizadores:
+    path:     /centralizadores
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:centralizadores }
+    
+herramienta_alter_reporte_sieparticipantes:
+    path:     /sieparticipantes
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:sieparticipantes }       
+    
+herramienta_alter_libretas:
+    path:     /{eInsId}/{nivel}/siealtlibretas
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:siealtlibretas }         
+    
+herramienta_alter_reporte_observacionesoperativoinicio:
+    path:     /observacionesoperativoinicio
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:observacionesoperativoinicio }      
+    
+herramienta_alter_reporte_ddjj_hum:
+    path:     /ddjjhum
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:ddjjhum }  
+    
+herramienta_alter_reporte_ddjj_tec:
+    path:     /ddjjtec
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:ddjjtec }  
+    
+herramienta_alter_reporte_socioeconomico:
+    path:     /socioeconomico
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:socioeconomico }     

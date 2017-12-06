@@ -1,0 +1,42 @@
+Sie\AppWebBundle\Entity\EspecialidadTecnicoHumanisticoTipo:
+    type: entity
+    table: especialidad_tecnico_humanistico_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        especialidad:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        descAbrev:
+            type: string
+            nullable: true
+            length: 7
+            fixed: false
+            comment: ''
+            column: desc_abrev
+        oficial:
+            type: boolean
+            nullable: false
+            comment: ''
+        areaTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: area_tipo_id
+        esobligatorio:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: true
+    lifecycleCallbacks: {  }

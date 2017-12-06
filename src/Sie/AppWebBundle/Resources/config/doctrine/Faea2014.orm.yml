@@ -1,0 +1,53 @@
+Sie\AppWebBundle\Entity\Faea2014:
+    type: entity
+    table: faea2014
+    id:
+        codUe:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            id: true
+            column: cod_ue
+            generator:
+                strategy: SEQUENCE
+    fields:
+        dpto:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        distrito:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        descUe:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: desc_ue
+        matricula:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        categoria:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        monto:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

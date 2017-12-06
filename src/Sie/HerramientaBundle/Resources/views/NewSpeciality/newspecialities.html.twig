@@ -1,0 +1,12 @@
+{{form_start(form, {'attr': {'class':'form-horizontal form-bordered', 'role':'form', 'id':'newFormId'} } )}}
+<div class="modal-body">
+
+
+  {{form_widget(form.especialidad)}}
+</div>
+<div class="modal-footer">
+
+    {{form_widget(form.cancel)}}
+    {{form_widget(form.save)}}
+</div>
+{{form_end(form)}}

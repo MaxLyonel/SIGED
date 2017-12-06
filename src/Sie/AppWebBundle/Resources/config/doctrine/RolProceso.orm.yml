@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\RolProceso:
+    type: entity
+    table: rol_proceso
+    indexes:
+        IDX_D4040D5EABAB05DC:
+            columns:
+                - proceso_tipo_id
+        IDX_D4040D5EEF3F27EB:
+            columns:
+                - rol_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    manyToOne:
+        procesoTipo:
+            targetEntity: ProcesoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                proceso_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rolTipo:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rol_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

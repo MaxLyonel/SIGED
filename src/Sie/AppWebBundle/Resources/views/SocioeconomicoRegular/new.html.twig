@@ -1,0 +1,664 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>REGISTRO ÚNICO DE ESTUDIANTES
+                    <small>RUDE ELECTRÓNICO</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i> <a href="{{ path('socioeconomicoregular') }}">Buscar Estudiante</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <div class="well well-lg text-dark-blue">
+                <h4>FORMULARIO DE INSCRIPCIÓN / ACTUALIZACIÓN</h4>
+                <h3>REGISTRO ÚNICO DE ESTUDIANTES</h3>
+                <h5>Resolución Ministerial Nº 311/2006</h5>
+                <p>LA INFORMACIÓN RECABADA POR EL RUDE SERÁ UTILIZADA ÚNICA Y EXCLUSIVAMENTE<br />PARA FINES DE DISEÑO Y EJECUCIÓN DE POLÍTICAS PÚBLICAS EDUCATIVAS Y SOCIALES</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="well text-center">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <span class="text-dark-blue">CÓDIGO SIE DE LA UNIDAD EDUCATIVA:</span> <span class="text-green">{{ sie }}</span>
+                    </div>
+                    <div class="col-lg-4">
+                        <span class="text-dark-blue">CÓDIGO RUDE DE LA O EL ESTUDIANTE:</span> <span class="text-green">{{ rude }}</span>
+                    </div>
+                    <div class="col-lg-4">
+                        <span class="text-dark-blue">GESTIÓN:</span> <span class="text-green">{{ gestion }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div calss="row">
+        <div class="col-lg-12">
+            <div class="alert alert-info">
+                <strong>Información:</strong> Antes de comenzar con el llenado del formulario, asegúrese de ...
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="well well-lg">
+
+                <ul id=myTab" class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="tabs-accordions.html#home">I. DATOS DE LA UNIDAD EDUCATIVA</a></li>
+                    <li><a data-toggle="tab" href="tabs-accordions.html#datosestudiante">II. DATOS DE LA O EL ESTUDIANTE</a></li>
+                    <li><a data-toggle="tab" href="tabs-accordions.html#datosinscripcion">III. DATOS DE INSCRIPCIÓN EN LA GESTIÓN ACTUAL</a></li>
+                    <li><a data-toggle="tab" href="tabs-accordions.html#direccionactual">IV. DIRECCIÓN ACTUAL DE LA O EL ESTUDIANTE</a></li>
+                    <li><a data-toggle="tab" href="tabs-accordions.html#aspectosociales">V. ASPECTOS SOCIALES</a></li>
+                    <li class="hide"><a data-toggle="tab" href="tabs-accordions.html#rudeanterior">FORMULARIO RUDE ANTERIOR</a></li>
+                    <li><a data-toggle="tab" href="tabs-accordions.html#padremadre">VI. DATOS DEL PADRE, MADRE O TUTOR (a) DE LA O EL ESTUDIANTE</a></li>
+                </ul>
+
+                {{ form_start(edit_form) }}
+                <div id="myTabContent" class="tab-content">
+                    <div id="home" class="tab-pane fade in active">
+                        <div class="portlet portlet-green">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4>I. DATOS DE LA UNIDAD EDUCATIVA</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td class="text-blue col-lg-4">1.1. DEPENDENCIA DE LA UNIDAD EDUCATIVA</td>
+                                            <td class="col-lg-8"><strong>{{ institucion.dependencia }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">1.2. NOMBRE DE LA UNIDAD EDUCATIVA</td>
+                                            <td><strong>{{ institucion.ieducativa}}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">1.3. DISTRITO EDUCATIVO</td>
+                                            <td><strong>{{ institucion.distritoId }} - {{ institucion.distrito }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue" colspan="2">UBICACIÓN GEOGRÁFICA:</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                {% if (institucion.cordx and institucion.cordy) %}
+                                                    <div id="lienzoMapa" style="width: auto; height: 450px;"></div>
+                                                {% else %}
+                                                    <div class="text-center"><span class="label label-danger">No cuenta con coordenadas</span></div>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="datosestudiante" class="tab-pane fade">
+                        <div class="portlet portlet-green">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4>II. DATOS DE LA O EL ESTUDIANTE</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td class="text-blue col-lg-6">2.1. APELLIDO(S) Y NOMBRE(S)</td>
+                                            <td class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-4">Apellido Paterno:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.paterno }}</strong></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Apellido Materno:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.materno }}</strong></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Nombre(s):</div>
+                                                    <div class="col-lg-8"><strong>{{ student.nombre }}</strong></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">2.2. LUGAR DE NACIMIENTO</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Pais:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.paisTipo }}</strong></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Departamento:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.lugarNacTipo }}</strong></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Provincia:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.lugarProvNacTipo }}</strong></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Localidad:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.localidadNac }}</strong></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">2.3. CÓDIGO ESTUDIANTIL RUDE <small>(Este código lo generará automáticamente el sistema)</small></td>
+                                            <td class="text-green"><strong>{{ student.codigoRude}}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">2.4. DOCUMENTO DE IDENTIFICACIÓN</td>
+                                            <td>{% if(student.carnetIdentidad) %}{{ student.carnetIdentidad }}{% elseif(student.pasaporte) %}{{ student.pasaporte }}{% else %}<span class="label label-danger">No cuenta con identificación</span>{% endif %}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">2.5. FECHA DE NACIMIENTO</td>
+                                            <td>{{ student.fechaNacimiento|date('d-m-Y') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">2.6. SEXO</td>
+                                            <td>{{ student.generoTipo }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">2.7. CERTIFICADO DE NACIMIENTO</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Oficialia:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.oficialia }}</strong></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Libro Nº:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.libro }}</strong></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Partida Nº:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.partida }}</strong></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Folio Nº:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.folio }}</strong></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="datosinscripcion" class="tab-pane fade">
+                        <div class="portlet portlet-green">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4>III. DATOS DE INSCRIPCIÓN EN LA GESTIÓN ACTUAL</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td class="text-blue col-lg-4">3.1. NIVEL Y AÑO/GRADO ESCOLAR DE LA O EL ESTUDIANTE</td>
+                                            <td class="col-lg-8"><strong>{{ inscription.nivel }} - {{ inscription.grado }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">3.2. PARALELO</td>
+                                            <td><strong>{{ inscription.paralelo }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">3.3. TURNO</td>
+                                            <td><strong>{{ inscription.turno }}</strong></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="direccionactual" class="tab-pane fade">
+                        <div class="portlet portlet-green">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4>IV. DIRECCIÓN ACTUAL DE LA O EL ESTUDIANTE</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td class="text-blue col-lg-4">Provincia</td>
+                                            <td class="col-lg-8">
+                                                <div class="col-lg-6">
+                                                    {{ form_widget(edit_form.direccionProvinciaId, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">Zona / Villa</td>
+                                            <td>
+                                                <div class="col-lg-6">
+                                                    {{ form_widget(edit_form.direccionZona, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">Sección / Municipio</td>
+                                            <td>
+                                                <div class="col-lg-6">
+                                                    {{ form_widget(edit_form.direccionSeccionId, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">Avenida / Calle</td>
+                                            <td>
+                                                <div class="col-lg-8">
+                                                    {{ form_widget(edit_form.direccionCalleNro, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">Localidad / Comunidad</td>
+                                            <td>
+                                                <div class="col-lg-6">
+                                                    {{ form_widget(edit_form.direccionDescLocalidad, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">Teléfono / Celular</td>
+                                            <td>
+                                                <div class="col-lg-4">
+                                                    {{ form_widget(edit_form.direccionTelefono, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="aspectosociales" class="tab-pane fade">
+                        <div class="portlet portlet-green">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4>V. ASPECTOS SOCIALES</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="table-responsive">
+                                    <h5 class="text-red">5.1. IDIOMAS Y PERTENENCIA DE LA O EL ESTUDIANTE</h5>
+                                    <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td class="text-blue col-lg-4">5.1.1. ¿Cuál es el idioma que prendió a hablar en su niñez la o el estudiante?</td>
+                                            <td class="col-lg-8">
+                                                <div class="col-lg-4">
+                                                    {{ form_widget(edit_form.idiomaTipo, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.1.2. ¿Qué idiomas habla freccuentemente la o el estudiante?</td>
+                                            <td>
+                                                <div class="col-lg-4">{{ form_widget(edit_form.idiomaTipo2, { 'attr': {'class': 'form-control'} }) }}</div>
+                                                <div class="col-lg-4">{{ form_widget(edit_form.idiomaTipo3, { 'attr': {'class': 'form-control'} }) }}</div>
+                                                <div class="col-lg-4">{{ form_widget(edit_form.idiomaTipo4, { 'attr': {'class': 'form-control'} }) }}</div>
+                                                <div class="col-lg-4">{{ form_widget(edit_form.idiomaTipo5, { 'attr': {'class': 'form-control'} }) }}</div>
+                                                <div class="col-lg-4">{{ form_widget(edit_form.idiomaTipo6, { 'attr': {'class': 'form-control'} }) }}</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.1.3. ¿Pertenece a alguna nación, pueblo indígena originario campesino o afroboliviano?</td>
+                                            <td>
+                                                <div class="col-lg-6">
+                                                    {{ form_widget(edit_form.etniaTipo, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <hr />    
+                                    <h5 class="text-red">5.2. SALUD</h5>
+                                    <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td class="text-blue col-lg-5">5.2.1. ¿Existe centro de Salud / Posta / Hospital en su comunidad?</td>
+                                            <td class="col-lg-7">
+                                                <div class="col-lg-10">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.centrosalud) }} (Si/No)
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.2.2. ¿Cuántas veces fue la o el estudiante al centro de salud el año pasado?</td>
+                                            <td>
+                                                <div class="col-lg-4">{{ form_widget(edit_form.frecuenciaSaludId, { 'attr': {'class': 'form-control'} }) }}</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.2.3. Presenta la o el estudiante alguna discapacidad:</td>
+                                            <td>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.discapacidadSensorial) }} Sensorial y de la comunicación
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.discapacidadMotriz) }} Motriz
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.discapacidadMental) }} Mental
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.2.4. Su discapacidad es:</td>
+                                            <td><div class="col-lg-4">{{ form_widget(edit_form.origenDiscapacidadId, { 'attr': {'class': 'form-control'} }) }}</div></td>
+                                        </tr>
+                                    </table>
+                                    <hr />
+                                    <h5 class="text-red">5.3. ACCESO A SERVICIOS BÁSICOS</h5>
+                                    <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td class="col-lg-5 text-blue">5.3.1. El agua de su casa proviene de:</td>
+                                            <td class="col-lg-7">
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioAguadomicilio) }} Domicilio
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioAguacaneria) }} Cañería de red
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioAguapileta) }} Pileta pública
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioAguasisterna) }} Carro repartidor (aguatero)
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioAguapozo) }} Pozo (con o sin bomba)
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioAgualagolaguna) }} Rio, vertiente, acequia, lago, laguna, curiche
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioAguaotro) }} Otra
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.3.2. ¿La o el estudiante tiene energía eléctrica en su vivienda?</td>
+                                            <td>{{ form_widget(edit_form.servicioEnergia) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.3.3. El baño, water o letrina de su casa tiene desagüe a:</td>
+                                            <td>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioSanitarioalcantarill) }} Alcantarillado
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioSanitariopozoseptico) }} Cámara séptica
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioSanitariopozo) }} Pozo ciego
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioSanitariocalle) }} A la calle
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.servicioSanitariorio) }} A quebrada, rio, lago, laguna, curiche
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <hr />
+                                    <h5 class="text-red">5.4. EMPLEO</h5>
+                                    <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td class="col-lg-5 text-blue">5.4.1. ¿Realizó la o el estudiante e los últimos 3 meses alguna de las siguientes actividades?</td>
+                                            <td class="col-lg-7">
+                                                <div class="col-lg-4">
+                                                    {{ form_widget(edit_form.actividadId, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.4.2. La semana pasada ¿Cuántos días trabajó o ayudó a la familia la o el estudiante?</td>
+                                            <td>
+                                                <div class="col-lg-4">
+                                                    {{ form_widget(edit_form.frecuenciaActividadId, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.4.3. ¿Recibió algún pago por el trabajo realizado?</td>
+                                            <td>
+                                                <div class="col-lg-10">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.actividadPago) }} (Si/No)
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <hr />
+                                    <h5 class="text-red">5.5. ACCESO A MEDIOS DE COMUNICACIÓN Y TRANSPORTE</h5>
+                                    <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td class="col-lg-5 text-blue">5.5.1. ¿La o el estudiante accede a internet en:</td>
+                                            <td class="col-lg-7">
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.internetDomicilio) }} Su domicilio
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.internetUe) }} En la Unidad Educativa
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.internetPublico) }} Lugares públicos
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="checkbox">
+                                                        {{ form_widget(edit_form.internetNo) }} No accede a internet
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.5.2. Con qué frecuencia la o el estudiante accede a internet?</td>
+                                            <td>
+                                                <div class="col-lg-4">
+                                                    {{ form_widget(edit_form.frecuenciaInternetId, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.5.3. ¿Cómo llega la o el estudiante a la Unidad Educativa?</td>
+                                            <td>
+                                                <div class="col-lg-4">
+                                                    {{ form_widget(edit_form.transporteId, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-blue">5.5.4. En el medio de transporte señalado ¿Cuál es el tiempo máximo que demora en llegar de su casa a la Unidad Educativa o viceversa?</td>
+                                            <td>
+                                                <div class="col-lg-4">
+                                                    {{ form_widget(edit_form.transporteTiempo, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="rudeanterior" class="tab-pane fade hide">
+                        <h3>FORMULARIO RUDE ANTERIOR</h3>
+                        {{ form_widget(edit_form.atenmedicaTipoId) }}
+                        {{ form_widget(edit_form.certificadoNac) }}
+                        {{ form_widget(edit_form.libretaEscolar) }}
+                        {{ form_widget(edit_form.libretaFamiliar) }}
+                        {{ form_widget(edit_form.libretaMilitar) }}
+                        {{ form_widget(edit_form.libretaVacunas) }}
+                        {{ form_widget(edit_form.medioComunicacionCelular) }}
+                        {{ form_widget(edit_form.medioComunicacionTelefono) }}
+                        {{ form_widget(edit_form.medioComunicacionTelevision) }}
+                        {{ form_widget(edit_form.medioComunicacionComputadora) }}
+                        {{ form_widget(edit_form.medioComunicacionRadio) }}
+                        {{ form_widget(edit_form.medioComunicacionInternet) }}
+                        {{ form_widget(edit_form.seguroSalud) }}
+                        {{ form_widget(edit_form.servicioAguavertiente) }}
+                        {{ form_widget(edit_form.servicioEnergiaredpublica) }}
+                        {{ form_widget(edit_form.servicioEnergiageneradorelectr) }}
+                        {{ form_widget(edit_form.servicioEnergiapanelsolar) }}
+                        {{ form_widget(edit_form.servicioGasdomicilio) }}
+                        {{ form_widget(edit_form.servicioGaslicuado) }}
+                        {{ form_widget(edit_form.servicioGasnatural) }}
+                        {{ form_widget(edit_form.direccionDepartamentoId) }}
+                        {{ form_widget(edit_form.direccionCantonId) }}
+                        {{ form_widget(edit_form.direccionLocalidadId) }}
+                        {{ form_widget(edit_form.empleo) }}
+                        {{ form_widget(edit_form.numeroHijo) }}
+                        {{ form_widget(edit_form.direccionNroVivienda) }}
+                        {{ form_widget(edit_form.gestionTipo) }}
+                        {{ form_widget(edit_form.discapacidadId) }}
+                        {{ form_widget(edit_form.discapacidadTipoId) }}
+                        {{ form_widget(edit_form.transporteDistancia) }}
+                        {{ form_widget(edit_form.frecuenciaTransporteId) }}
+                    </div>
+                    <div id="padremadre" class="tab-pane fade">
+                        <div class="portlet portlet-green">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4>VI. DATOS DEL PADRE, MADRE O TUTOR (a) DE LA O EL ESTUDIANTE</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="table-responsive">
+                                    {% if apoderados is not empty %}
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="cf">
+                                                <tr>
+                                                    <th>N°</th>
+                                                    <th>Carnet de Identidad</th>
+                                                    <th>Paterno</th>
+                                                    <th>Materno</th>
+                                                    <th>Nombre(s)</th>
+                                                    <th>Parentesco</th>
+                                                    <th>Empleo</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for apoderado in apoderados %}
+                                                    <tr>
+                                                        <td data-title="N°">{{ loop.index }}</td>
+                                                        <td data-title="Carnet">{{ apoderado.personaApoderado.carnet }}</td>
+                                                        <td data-title="Paterno">{{ apoderado.personaApoderado.paterno }}</td>
+                                                        <td data-title="Materno">{{ apoderado.personaApoderado.materno }}</td>
+                                                        <td data-title="Nombre(s)">{{ apoderado.personaApoderado.nombre }}</td>
+                                                        <td data-title="Parentesco">{{ apoderado.apoderadoTipo.apoderado }}</td>
+                                                        <td data-title="Empleo">{{apoderado.empleo}}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <span class="label label-danger">No hay apoderados registrados</span>
+                                    {% endif %}
+                                </div>
+                                <div class="alert alert-warning">
+                                    <strong>Atención:</strong> Estoy segura/o de que la información introducida en este formulario es correcta.
+                                </div>
+                                <div class="text-center">
+                                    {{ form_widget(edit_form.submit, { 'attr': {'class': 'btn btn-green btn-square'} }) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(edit_form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if (institucion.cordx and institucion.cordy) %}
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+        <script type="text/javascript">
+            function initialize() {
+                var marcadores = [['{{institucion.ieducativa}}', {{institucion.cordx}}, {{institucion.cordy}}]];
+                var map = new google.maps.Map(document.getElementById('lienzoMapa'), {
+                    zoom: 16,
+                    center: new google.maps.LatLng({{institucion.cordx}}, {{institucion.cordy}}),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
+                var infowindow = new google.maps.InfoWindow();
+                var marker, i;
+                for (i = 0; i < marcadores.length; i++) {
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(marcadores[i][1], marcadores[i][2]),
+                        map: map
+                    });
+                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                        return function () {
+                            infowindow.setContent('<div><b>Unidad Educativa: </b>' + marcadores[i][0] + '</div>');
+                            infowindow.open(map, marker);
+                        }
+                    })(marker, i));
+                }
+            }
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+    {% endif %}
+{% endblock %}

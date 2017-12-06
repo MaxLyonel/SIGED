@@ -1,0 +1,115 @@
+
+oac:
+    path:     /
+    defaults: { _controller: "SieRieBundle:OfertaAcademica:index" }
+
+oac_list_instituto:
+    path:     /listinstituto
+    defaults: { _controller: SieRieBundle:OfertaAcademica:listinstituto }   
+
+oac_list:
+    path:     /list/{idRie}
+    defaults: { _controller: SieRieBundle:OfertaAcademica:list } 
+
+oac_new:
+    path:     /new/{idRie}
+    defaults: { _controller: SieRieBundle:OfertaAcademica:new } 
+    methods:  GET      
+
+oac_create:
+    path:     /create
+    defaults: { _controller: "SieRieBundle:OfertaAcademica:create" }
+    methods:  POST      
+
+#oac_edit:
+#    path:     /edit
+#    defaults: { _controller: SieRieBundle:OfertaAcademica:edit } 
+#    methods:  POST
+
+oac_edit:
+    path:     /edit/{idresolucion}
+    defaults: { _controller: SieRieBundle:OfertaAcademica:edit } 
+    methods:  GET   
+
+oac_update:
+    path:     /update
+    defaults: { _controller: "SieRieBundle:OfertaAcademica:update" }
+    methods:  POST      
+
+oac_delete:
+    path:     /delete/{idAutorizado}
+    defaults: { _controller: "SieRieBundle:OfertaAcademica:delete" }
+    methods:  GET      
+
+oac_list_resolucion:
+    path:     /listresoluciones
+    defaults: { _controller: SieRieBundle:OfertaAcademica:listresoluciones } 
+
+oac_new_resolucion:
+    path:     /newresolucion
+    defaults: { _controller: SieRieBundle:OfertaAcademica:newresolucion } 
+    methods:  POST                 
+
+oac_create_resolucion:
+    path:     /createresolucion
+    defaults: { _controller: SieRieBundle:OfertaAcademica:createresolucion } 
+    methods:  POST   
+
+oac_edit_resolucion:
+    path:     /editresolucion
+    defaults: { _controller: SieRieBundle:OfertaAcademica:editresolucion } 
+    methods:  POST                 
+
+oac_update_resolucion:
+    path:     /updateresolucion
+    defaults: { _controller: SieRieBundle:OfertaAcademica:updateresolucion } 
+    methods:  POST  
+
+oac_delete_resolucion:
+    path:     /deleteresolucion/{idResolucion}
+    defaults: { _controller: "SieRieBundle:OfertaAcademica:deleteresolucion" }
+    methods:  GET  
+
+
+
+
+
+
+
+oac_cierrapertura:
+    path:     /cierrapertura
+    defaults: { _controller: "SieRieBundle:OfertaAcademica:cierrapertura" }
+    methods:  GET   
+
+oac_buscar_carrera:
+     path:    /buscarcarrera/{idArea}/
+     defaults: { _controller: "SieRieBundle:OfertaAcademica:buscarcarrera" }
+     options:
+         expose: true 
+
+oac_list_tramite:
+    path:     /listtramite
+    defaults: { _controller: SieRieBundle:OfertaAcademica:listtramite } 
+    methods:  GET                 
+
+oac_edit_tramite:
+    path:     /edittramite
+    defaults: { _controller: SieRieBundle:OfertaAcademica:edittramite } 
+    methods:  POST                 
+
+oac_update_tramite:   
+    path:     /updatetramite
+    defaults: { _controller: "SieRieBundle:OfertaAcademica:updatetramite" }
+    methods:  POST    
+
+oac_edit_tramite_edit:   
+    path:     /editresolucion
+    defaults: { _controller: "SieRieBundle:OfertaAcademica:editresolucion" }
+    methods:  POST  
+
+oac_edit_tramite_update:   
+    path:     /updateresolucion
+    defaults: { _controller: "SieRieBundle:OfertaAcademica:updateresolucion" }
+    methods:  POST          
+
+     

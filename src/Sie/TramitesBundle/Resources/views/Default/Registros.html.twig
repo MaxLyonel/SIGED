@@ -1,0 +1,459 @@
+{% extends '::layoutCertification.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('tramite_cert/css/reset.css')}}" rel="stylesheet" />
+    <link href="{{asset('tramite_cert/css/style_cert.css')}}" rel="stylesheet" />
+    <script src="{{asset('tramite_cert/js/modernizr.js')}}"></script>
+{% endblock %}
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>{% block contenttitulo %}{{titutlo}}{% endblock %}
+                    <small>{% block contenttitulosmall %}{{subtitutlo}}{% endblock %}</small>
+                </h1>
+                <ol class="breadcrumb">
+                    {% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li>{% endblock %}                    
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-content">
+                {% for type, flashMessage in app.session.flashbag.all() %}
+                    <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {% if flashMessage.title is defined %}
+                            <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                            {{ flashMessage.message }}
+                        {% else %}
+                            {{ type }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>        
+    </div>
+    <!-- /.row -->
+
+    <div class="row">        
+        {% block contentbuscador %}
+            <!-- here the iptions content -->
+        {% endblock %}
+    </div>
+    <div class="row">        
+        {% block contentregistros %}
+            <!-- here the iptions content -->
+        {% endblock %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var arrayEstudiantes = new Array();
+        var contador = 0;
+        var resultado =0;
+        function marcarTodasAreas() {
+            var marcar = document.getElementById('marcarTodos');
+            var botonAceptar = document.getElementsByName('botonAceptar')[0];
+            var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
+            var estudiantes = document.getElementsByName('estudiantes[]');
+            if (marcar.checked) {
+                for (var i = 0; i < estudiantes.length; i++) {
+                    estudiantes[i].checked = true;
+                }
+                botonAceptar.disabled = false;
+                botonModalDevolver.disabled = false;
+            } else {
+                for (var i = 0; i < estudiantes.length; i++) {
+                    estudiantes[i].checked = false;
+                }
+                botonAceptar.disabled = true;
+                botonModalDevolver.disabled = true;
+            }
+        }
+
+        function reset_check(check) {
+            $('#' + check).popover('toggle');
+            $('#' + check).prop('checked', false);
+        }
+        function popover_mostrar(check) {
+  {#          $('#' + check).css({
+                'background-color': 'rgba(0,0,0,.8)',
+                'z-index': '1000'
+            });#}
+            $('#' + check).popover('show');
+        }
+        function popover_ocultar(check) {
+            $('#' + check).popover('hide');
+        }
+
+        function habilitarBotones() {
+
+            var estudiantes = document.getElementsByName('estudiantes[]');
+            var botonAceptar = document.getElementsByName('botonAceptar')[0];
+            var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
+            var numeroSerie = document.getElementsByName('numeroSerie')[0];
+            var botonAnular = document.getElementsByName('botonAnular')[0];
+            var botonEntregar = document.getElementsByName('botonEntregar')[0];
+            var fecha = document.getElementsByName('fecha')[0];
+            var cant = 0;
+            for (var i = 0; i < estudiantes.length; i++) {
+                if (estudiantes[i].checked == true) {
+                    cant = 1;
+                }
+            }
+            if (cant == 1) {
+                botonAceptar.disabled = false;
+                botonModalDevolver.disabled = false;
+                if (botonEntregar) {
+                    botonEntregar.disabled = false;
+                }
+                if (botonAnular) {
+                    botonAnular.disabled = false;
+                }
+                if (numeroSerie) {
+                    if (numeroSerie.value === "") {
+                        botonAceptar.disabled = true;
+                    }
+                }
+                if (fecha) {
+                    if (fecha.value === "") {
+                        botonAceptar.disabled = true;
+                    }
+                }
+            } else {
+                botonAceptar.disabled = true;
+                botonModalDevolver.disabled = true;
+                if (botonAnular) {
+                    botonAnular.disabled = true;
+                }
+                if (botonEntregar) {
+                    botonEntregar.disabled = true;
+                }
+            }
+        }
+
+        $(document).ready(function () {
+            $('.tabla_dis').DataTable({
+                responsive: true,
+                "bSort": false,
+                "oLanguage": {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": 'Mostrar <select>' +
+                            '<option value="10">10</option>' +
+                            '<option value="20">20</option>' +
+                            '<option value="30">30</option>' +
+                            '<option value="40">40</option>' +
+                            '<option value="50">50</option>' +
+                            '<option value="-1">Todos</option>' +
+                            '</select> registros',
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ning&uacute;n dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Ultimo",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+
+                }
+            });
+        });
+
+
+        function habilitarBotones_alter(id, gestion, sie, nivel, especialidad) {
+
+            var especialidad = $('#especialidad').val();
+            var estudiantes = document.getElementsByName('estudiantes[]');
+            var botonAceptar = document.getElementsByName('botonAceptar')[0];
+            var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
+            var numeroSerie = document.getElementsByName('numeroSerie')[0];
+            var botonAnular = document.getElementsByName('botonAnular')[0];
+            var botonEntregar = document.getElementsByName('botonEntregar')[0];
+            var fecha = document.getElementsByName('fecha')[0];
+            var peticion4;
+            if (peticion4 && peticion4.readyState != 4) {
+                peticion4.abort();
+            }
+            if ($("#cargaHoraria_" + id).html() == '') {
+
+                peticion4 = $.ajax({
+                    type: 'POST',
+                    url: '{{ path('sie_tramite_verificar_carga_horaria') }}',
+                    data: {'estudiante': id, 'gestiones': gestion, 'sies': sie, 'nivel': nivel, 'esp': especialidad},
+                    beforeSend: function () {
+                        $("#cargaHoraria_" + id).empty();
+                        $("#cargaHoraria_" + id).append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (datas) {
+                        var arrayResultado = new Array();
+                        arrayResultado.empty;
+                        var carga_horaria_e = 0 ;
+                        var d = datas.resultadoDatos.general[0];
+                        var e = datas.resultadoDatos.homologacion[0];
+                        console.log(e.carga_horaria);
+                        console.log(d.carga_horaria);
+                        if (e.carga_horaria == '' || e.carga_horaria == null) {
+                            carga_horaria_e = 0
+                        } else {
+                            carga_horaria_e = e.carga_horaria
+                        }
+                        var carga_horaria = '0';
+                        if (d.carnet_identidad == '' || d.carnet_identidad == null) {
+                            arrayResultado.push('<li>Carnet de Identidad</li>');
+                            carga_horaria = d.carga_horaria;
+                        }
+                        if (d.fecha_nacimiento == '' || d.fecha_nacimiento == null) {
+                            arrayResultado.push('<li>Fecha de Nacimiento</li>')
+                            carga_horaria = d.carga_horaria;
+                        }
+                        if (d.depto_nacimiento == '' || d.depto_nacimiento == null) {
+                            arrayResultado.push('<li>Departamento de Nacimiento</li>')
+                            carga_horaria = d.carga_horaria;
+                        }
+                        var a = parseInt(d.carga_horaria);
+                        var b = parseInt(carga_horaria_e);
+                        a = (isNaN(a))?0:a;
+                        b = (isNaN(b))?0:b;
+                        resultado = a + b;
+                        console.log(a)
+                        console.log(b)
+                        console.log(resultado)
+                        console.log(nivel)
+                        console.log(resultado < 800)
+                        console.log(resultado < 1200)
+                        console.log(resultado < 2000)
+                        
+                        switch (nivel) {
+                            case '1':
+                                if (resultado < 800) {
+                                    arrayResultado.push('<li>No cuenta con la Carga Horaria para  Técnico Básico '+resultado+' Hrs.</li>')
+                                    if (resultado == 0 || resultado == null) {
+                                        carga_horaria = 0;
+                                    } else {
+                                        carga_horaria = d.carga_horaria;
+                                    }
+                                }
+                                break;
+                            case '2':
+                                if (resultado < 1200) {
+                                    arrayResultado.push('<li>No cuenta con la Carga Horaria para Técnico Auxiliar con '+resultado+' Hrs.</li>')
+                                    if (resultado == 0 || resultado == null) {
+                                        carga_horaria = 0;
+                                    } else {
+                                        carga_horaria = d.carga_horaria;
+                                    }
+                                }
+                                break;
+                            case '3':
+                                if (resultado < 2000) {
+                                    arrayResultado.push('<li>No cuenta con la Carga Horaria para Técnico Medio con '+resultado+' Hrs.</li>')
+                                    if (resultado == 0 || resultado == null) {
+                                        carga_horaria = 0;
+                                    } else {
+                                        carga_horaria = d.carga_horaria;
+                                    }
+                                }
+                                break;
+                        }
+                        console.log(carga_horaria)
+                        $("#cargaHoraria_" + id).empty();
+                        console.log((arrayResultado.length > 0))
+                        if ((arrayResultado.length > 0)) {
+                            $('#' + id).attr('data-toggle', "popover");
+                            $('#' + id).attr('title', "Error");
+                            $('#' + id).attr('data-html', "true");
+                            $('#' + id).attr('data-placement', "top");
+                            $('#' + id).attr('data-content', "<ul>" + arrayResultado + "</ul>");
+                            $('#' + id).attr('data-original-title', "Error");
+                            $('#' + id).css('cursor', "not-allowed");
+                            $('#' + id).prop('checked', false);
+                            $('#' + id).attr('onclick', 'reset_check(' + id + ')');
+                            var color = '#DD4B39';
+                            $('#fila_' + id).attr('onmouseover', 'popover_mostrar(' + id + ')');
+                            $('#fila_' + id).attr('onmouseout', 'popover_ocultar(' + id + ')');
+                            $('#' + id).css('border', '1px solid ' + color);
+                            $('#' + id).css('background', color);
+                            $('#fila_' + id).css('border', '2px solid rgb(221,75,57)');
+                            $("#cargaHoraria_" + id).append(carga_horaria);
+                        } else {
+                            var cant = 0;
+                            carga_horaria = d.carga_horaria;
+                            $("#cargaHoraria_" + id).append(carga_horaria);
+
+                            if ($('#' + id).is(':checked')) {
+                                $("#" + id).prop("checked", true);
+                                $("#" + id).css('border', '1px solid #209B81');
+                                arrayEstudiantes[contador] = id
+                                contador += 1;
+                            }
+                            $('#students').val(arrayEstudiantes);
+                            for (var i = 0; i < estudiantes.length; i++) {
+                                if (estudiantes[i].checked == true) {
+                                    cant = 1;
+                                }
+                            }
+
+
+                            if (cant == 1) {
+                                botonAceptar.disabled = false;
+
+                                if (botonEntregar) {
+                                    botonEntregar.disabled = false;
+                                }
+                                if (botonAnular) {
+                                    botonAnular.disabled = false;
+                                }
+                                if (numeroSerie) {
+                                    if (numeroSerie.value === "") {
+                                        botonAceptar.disabled = true;
+                                    }
+                                }
+                                if (fecha) {
+                                    if (fecha.value === "") {
+                                        botonAceptar.disabled = true;
+                                    }
+                                }
+                            } else {
+
+                                botonAceptar.disabled = true;
+                                botonModalDevolver.disabled = true;
+                                if (botonAnular) {
+                                    botonAnular.disabled = true;
+                                }
+                                if (botonEntregar) {
+                                    botonEntregar.disabled = true;
+                                }
+                            }
+                        }
+
+                    },
+                    {#statusCode: {
+                        500: function () {
+                            alert('500');
+                        },
+                        404: function () {
+                            alert('400');
+                        }
+                    }#}
+
+                });
+
+            }
+            if (!($('#' + id).is(':checked'))) {
+                var pos = $.inArray(id, arrayEstudiantes);
+                arrayEstudiantes.splice(pos, 1)
+                $('#students').val(arrayEstudiantes);
+            }
+        }
+
+        function eliminateDuplicates(arr) {
+            var i,
+                    len = arr.length,
+                    out = [],
+                    obj = {};
+
+            for (i = 0; i < len; i++) {
+                obj[arr[i]] = 0;
+            }
+            for (i in obj) {
+                out.push(i);
+            }
+            return out;
+        }
+
+        function verificaCampos() {
+            var estudiantes = document.getElementsByName('estudiantes[]');
+            var botonAceptar = document.getElementsByName('botonAceptar')[0];
+            var botonDevolver = document.getElementsByName('botonDevolver')[0];
+            var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
+            var botonCancelar = document.getElementsByName('botonCancelar')[0];
+            var botonAnular = document.getElementsByName('botonAnular')[0];
+            var botonEntregar = document.getElementsByName('botonEntregar')[0];
+            var textObs = document.getElementsByName('obs')[0];
+            var botonPrint;
+            var btn_print_distrito = document.getElementById('btn_imprimir_distrito').value;
+            var peticion3;
+
+            if (peticion3 && peticion3.readyState != 4) {
+                peticion3.abort();
+            }
+            for (var i = 0; i < estudiantes.length; i++) {
+                if (estudiantes[i].checked == true) {
+                    //estudiantes[i].readOnly = true;
+        {#                    estudiantes[i].style.visibility = 'hidden';#}
+        {#                    botonPrint = document.getElementsByName('boton' + estudiantes[i].value)[0];#}
+
+                    }
+                }
+
+                var r = confirm("¿ Está seguro que todas las carpetas de los Estudiantes/Participantes seleccionados se enviaran a la DDE?");
+                if (r == false) {
+                    if (botonAceptar) {
+                        botonAceptar.style.display = "";
+                    }
+                    if (botonDevolver) {
+                        botonDevolver.style.display = "";
+                    }
+                    if (botonAnular) {
+                        botonAnular.style.display = "";
+                    }
+                    if (botonCancelar) {
+                        botonCancelar.style.display = "";
+                    }
+                    if (botonModalDevolver) {
+                        botonModalDevolver.style.display = "";
+                    }
+                    if (botonEntregar) {
+                        botonEntregar.style.display = "";
+                    }
+                    return false;
+                } else {
+                    for (var i = 0; i < estudiantes.length; i++) {
+                        if (estudiantes[i].checked == true) {
+                            //estudiantes[i].readOnly = true;
+                            estudiantes[i].style.visibility = 'hidden';
+                            botonPrint = document.getElementsByName('boton' + estudiantes[i].value)[0];
+                            if (botonPrint) {
+                                botonPrint.style.display = "";
+                            }
+
+                        }
+                    }
+                    if (botonAceptar) {
+                        botonAceptar.style.display = "none";
+                    }
+                    if (botonDevolver) {
+                        botonDevolver.style.display = "none";
+                    }
+                    if (botonAnular) {
+                        botonAnular.style.display = "none";
+                    }
+                    if (botonCancelar) {
+                        botonCancelar.style.display = "none";
+                    }
+                    if (botonModalDevolver) {
+                        botonModalDevolver.style.display = "none";
+                    }
+                    if (botonEntregar) {
+                        botonEntregar.style.display = "none";
+                    }
+        {#                return true;#}
+                }
+            }
+    </script>
+{% endblock %}

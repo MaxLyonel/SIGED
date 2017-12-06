@@ -1,0 +1,54 @@
+{% extends 'layoutJuegos.html.twig' %}
+
+{% block contentoption %} 
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="glyphicon glyphicon-pencil"></i> Registro <span>Juegos Deportivos Plurinacionales</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('sie_juegos_inscripcion_index') }}">Registro</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Primera Fase</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+
+        <!-- Start mail page -->
+        <!--div class="container" style="margin-top:30px;"-->
+         <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div class="panel panel-icon panel-primary">
+                <div class="panel-heading">
+                    <i class="fa fa-search"></i> Buscar SIE
+                </div>
+                <div class="panel-body">
+                    <form name="form" method="post" action="{{ path('sie_juegos_representacion_cultural_busca_ue') }}" data-toggle="validator" role="form">
+                        <div class="form-group">
+                            <label for="form_codigoRude" class="col-sm-1 control-label">Sie</label>
+                            <div class="col-sm-11">
+                                <input type="text" id="sie" name="sie" required="required" class="form-control" placeholder="Inserte SIE" pattern="[0-9]{6,8}" />
+                                <div class="help-block with-errors"></div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-0 col-sm-12">
+                                <button type="submit" id="form_buscar" name="form[buscar]" class="btn btn-primary col-sm-12">Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+                          
+{% endblock %}

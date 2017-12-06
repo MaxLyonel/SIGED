@@ -1,0 +1,65 @@
+Sie\AppWebBundle\Entity\TtecDocentePersona:
+    type: entity
+    table: ttec_docente_persona
+    indexes:
+        IDX_C019EF343AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_C019EF34F5F88DB9:
+            columns:
+                - persona_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        docExperienciaLaboral:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: doc_experiencia_laboral
+        docCursosRespaldo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: doc_cursos_respaldo
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

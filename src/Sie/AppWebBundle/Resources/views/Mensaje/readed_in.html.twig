@@ -1,0 +1,78 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Mensaje
+                    <small>Ver</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-edit"></i> Ver</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="portlet portlet-blue">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4><i class="fa fa-rss-square"></i> Mensaje</h4>
+                </div>
+                <div class="portlet-widgets">
+                    <!-- Button Dropdown -->
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <tbody>
+                            <tr>
+                                <th>Asunto</th>
+                                <td>{{ entity.asunto }}</td>
+                            </tr>
+                            <tr>
+                                <th>Mensaje</th>
+                                <td>{{ entity.mensaje|raw }}</td>
+                            </tr>
+                            <tr>
+                                <th>Adjunto1</th>
+                                <td>
+                                    {% if entity.adjunto1 %}
+                                        <a href="{{ asset('uploads/mensaje/adjuntos/' ~ entity.adjunto1) }}" target="_blank"><i class="fa fa-download fa-2x"></i></a>
+                                        {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Adjunto2</th>
+                                <td>
+                                    {% if entity.adjunto2 %}
+                                        <a href="{{ asset('uploads/mensaje/adjuntos/' ~ entity.adjunto2) }}" target="_blank"><i class="fa fa-download fa-2x"></i></a>
+                                        {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Fecha envío</th>
+                                <td>{{ entity.fecha|date('Y-m-d H:i:s') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>                
+                <div>
+                    <a href="{{ path('mensaje_inbox') }}" class="btn btn-default"><i class="fa fa-hand-o-left"></i> Volver</a>
+                    <a class="btn btn-orange" href="{{ path('mensaje_reply', { 'id': mu.usId }) }}"><i class="fa fa-edit"></i> Responder</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

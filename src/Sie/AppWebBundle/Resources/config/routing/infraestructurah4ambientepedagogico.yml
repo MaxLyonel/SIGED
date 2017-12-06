@@ -1,0 +1,30 @@
+infraestructurah4ambientepedagogico:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Ambientepedagogico:index" }
+
+infraestructurah4ambientepedagogico_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Ambientepedagogico:show" }
+
+infraestructurah4ambientepedagogico_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Ambientepedagogico:new" }
+
+infraestructurah4ambientepedagogico_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Ambientepedagogico:create" }
+    methods:  POST
+
+infraestructurah4ambientepedagogico_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Ambientepedagogico:edit" }
+
+infraestructurah4ambientepedagogico_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Ambientepedagogico:update" }
+    methods:  [POST, PUT]
+
+infraestructurah4ambientepedagogico_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Ambientepedagogico:delete" }
+    methods:  [POST, DELETE]

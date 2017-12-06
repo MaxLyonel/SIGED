@@ -1,0 +1,12 @@
+ <table>
+  <tr>
+	<td><p class="text-danger">Observaciones</p>
+	</td>
+  </tr>
+  <ul class="">
+
+  {% for inconsistencia in inconsistenciaRude %}
+	<tr><td><li class="text-inverse">{{inconsistencia.observacion}}</li></td></tr>
+  {% endfor %}
+  </ul>
+ </table>

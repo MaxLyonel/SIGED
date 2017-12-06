@@ -1,0 +1,1242 @@
+{% extends 'layoutInfraestructura.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .modal-dialog{
+            width: 80%;
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+    {% include 'SieInfraestructuraBundle:Info:cabecera.html.twig' %}
+    <ol class="breadcrumb">
+        <li><a href="{{path('infra_info_index')}}">Pincipal</a></li>
+        <li><a href="{{path('infra_info_acceder')}}">Panel de Acceso Rápido</a></li>
+        <li class="active">Hoja 3 - Servicios del Edificio</li>
+    </ol>
+    <h2 class="view-title"><img src="{{asset('webInfraestructura/assets/images/servicio.png')}}" class="img-header"> HOJA 3 - SERVICIOS DEL EDIFICIO</h2>
+    {{form_start(form, {'attr': {'method':'post','id':'formServicios','onsubmit':'return validarForm();'} })}}
+
+    <div class="form-group">
+        {{form_widget(form.guardar)}}
+        <a href="{{path('infra_info_acceder')}}" class="btn btn-danger-alt" >Cancelar</a>
+    </div>
+
+    <div class="module-wrapper">
+    <section class="module module-headings">
+    <div class="module-inner">
+    <div class="module-content">
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs nav-tabs-theme-3" role="tablist">
+            <li role="presentation" class="active"><a href="#energiaElectrica" aria-controls="energiaElectrica" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-plug"></i><br><span class="hidden-xs hidden-sm">1. Disponibilidad de energía eléctrica</span></a></li>
+            <li role="presentation" class=""><a href="#agua" aria-controls="agua" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-tint"></i><br><span class="hidden-xs hidden-sm">2. Disponibilidad de servicio agua</span></a></li>
+            <li role="presentation" class=""><a href="#saneamiento" aria-controls="saneamiento" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-tag"></i><br><span class="hidden-xs hidden-sm">3. Saneamiento</span></a></li>
+            <li class="presentation" role="presentation"><a href="#basura" aria-controls="basura" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-trash-o"></i><br><span class="hidden-xs hidden-sm">4. Eliminación de basura</span></a></li>
+            <li class="last" role="presentation"><a href="#otros" aria-controls="otros" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-file-text-o"></i><br><span class="hidden-xs hidden-sm">5. Otros servicios</span></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="energiaElectrica">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <fieldset>
+                            <legend>1.1 ¿El edificio educativo dispone de energía eléctrica?</legend>
+                            <div class="form-group">
+
+                                {{form_widget(form.n11EsEnergiaelectrica)}} 
+                            </div>
+                        </fieldset>
+                        <fieldset id="f12">
+                            <legend>1.2 Fuente Eléctrica</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n12FuenteElectricaTipo)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n12FuenteElectricaOtro)}}
+                                {{form_widget(form.n12FuenteElectricaOtro)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-4">
+                        <fieldset id="f13">
+                            <legend>1.3 Disponibilidad de servicio</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n13DisponibilidadTipo)}} 
+                            </div>
+                        </fieldset>
+                        <fieldset id="f14">
+                            <legend>1.4 Número de Ambientes que tienen luz eléctrica</legend>
+                            <div class="form-group">
+                                {{form_label(form.n14NumeroAmbientesPedagogicos)}}
+                                {{form_widget(form.n14NumeroAmbientesPedagogicos)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n14NumeroAmbientesNoPedagogicos)}}
+                                <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Dirección Administrativa (rectora, sala de espera, secretaria, espacio para profesores, consejos directivos, contabilidad, etc.) dirección académica, áreas de almacenamiento temporal de materiales y medios de transporte (porteria, talleres de mantenimiento, cobertizos para equipos, bombas, depósitos de basura, aseo, etc.), áreas de bienestar estudiantil (consejeria, consultorios, enfermeria, cafeteria, cocina) y servicios sanitarios." data-original-title="Ambientes no Pedagógicos"></i>
+                                {{form_widget(form.n14NumeroAmbientesNoPedagogicos)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n14NumeroBanios)}}
+                                {{form_widget(form.n14NumeroBanios)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-4">
+                        <fieldset id="f15">
+                            <legend>1.5 ¿Cuántos medidores de consumo eléctrico existen en el Edificio Educativo?</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n15NumeroMedidores)}} 
+                            </div>
+                        </fieldset>
+                        <fieldset id="f16">
+                            <legend>1.6 Cuántos de estos medidores de consumo eléctrico: </legend>
+                            <div class="form-group">
+                                {{form_label(form.n16NumeroMedidoresFuncionan)}}
+                                {{form_widget(form.n16NumeroMedidoresFuncionan)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n16NumeroMedidoresNoFuncionan)}}
+                                {{form_widget(form.n16NumeroMedidoresNoFuncionan)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="agua">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>2.1 ¿El edificio educativo dispone de servicio de agua?</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n21EsDiponeAgua)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.2 El medio o sistema de suministro de agua es por:</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n22MedioAguaTipo)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n22MedioAguaOtro)}}
+                                {{form_widget(form.n22MedioAguaOtro)}}
+                            </div>
+                        </fieldset>
+                        <h4>El Edificio Educativo cuenta con:</h4>
+                        <fieldset>
+                            <legend>2.3 ¿Tanque de almacenamiento de agua?</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n23EsCuentaTanqueAgua)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.4 ¿Bomba de agua? <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="LA respuesta debe estar relacionada con lo reportado en la pregunta 2.2. Suministro de agua" data-original-title="¿Tiene Bomba de Agua?"></i></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n24EsCuentaBombaAgua)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.5 ¿Red interna de distribución de agua?</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n25EsCuentaRedAgua)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>2.6 ¿Número de ambientes que cuentan con servicio de agua, pero no son baños? <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="No incluir bebederos u otros que esten al aire libre." data-original-title="Ambientes con agua"></i></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n26NumeroAmbientesAgua)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.7 El acceso al servicio de provisión de agua es:</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n27AccesoAguaTipo)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.8 El agua del EE, es utilizada mayormente para:</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n28UsoAguaTipo)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.9 ¿Utiliza algún tipo de purificador de agua?</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n29PurificadorAguaTipo)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="saneamiento">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>3.1 ¿El edificio educativo cuenta con instalaciones de saneamiento (baños)?</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n31EsInstalacionSaneamiento)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        
+                        <fieldset>
+                            <legend>3.2 Baterias de baños</legend>
+                            <button class="btn btn-primary btn-xs" type="button" onclick="agregarFila();" id="btnAdicionar">Adicionar</button>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Ambiente</th>
+                                            <th>Área(m2)</th>
+                                            <th>Estado paredes</th>
+                                            <th>Estado techo</th>
+                                            <th>Estado piso</th>
+                                            <th>Estado cielo raso</th>
+                                            <th>Baños con agua</th>
+                                            <th>Baños sin agua</th>
+                                            <th>Letrinas que funcionan</th>
+                                            <th>Letrinas que no funcionan</th>
+                                            <th>Inodoros que funcionan</th>
+                                            <th>Inodoros que no funcionan</th>
+                                            <th>Urinarios que funcionan</th>
+                                            <th>Urinarios que no funcionan</th>
+                                            <th>Lavamanos que funcionan</th>
+                                            <th>Lavamanos que no funcionan</th>
+                                            <th>Duchas que funcionan</th>
+                                            <th>Duchas que no funcionan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bateriasbanos">
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>3.3 ¿Cuál es el medio para la eliminación de excretas?</legend>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        {{form_widget(form.n33ExcretasEsAlcantarillado)}}
+                                        {{form_label(form.n33ExcretasEsAlcantarillado)}}
+                                    </div>
+                                    <div class="form-group">
+                                        {{form_widget(form.n33ExcretasEsSeptica)}}
+                                        {{form_label(form.n33ExcretasEsSeptica)}}
+                                    </div>
+                                    <div class="form-group">
+                                        {{form_widget(form.n33ExcretasEsPozo)}}
+                                        {{form_label(form.n33ExcretasEsPozo)}}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        {{form_widget(form.n33ExcretasEsSuperficie)}}
+                                        {{form_label(form.n33ExcretasEsSuperficie)}}
+                                    </div>
+                                    <div class="form-group">
+                                        {{form_widget(form.n33ExcretasEsOtro)}}
+                                        {{form_label(form.n33ExcretasEsOtro)}}
+                                    </div>
+                                    <div class="form-group">
+                                        {{form_widget(form.n33ExcretasEsNosabe)}}
+                                        {{form_label(form.n33ExcretasEsNosabe)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>3.4 ¿Las instalaciones de saneamiento estan generalmente en buen estado y accesibles para los estudiantes?</legend>
+                            <div class="form-group">
+                                {{form_label(form.n34EsBuenascondiciones)}}
+                                {{form_widget(form.n34EsBuenascondiciones)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n34EsBuenasventilacion)}}
+                                {{form_widget(form.n34EsBuenasventilacion)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n34EsPrivacidad)}}
+                                {{form_widget(form.n34EsPrivacidad)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="basura">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>4.1 ¿Como se realiza la eliminación de basura?</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n41EliminacionBasuraTipo)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n41EliminacionBasuraOtro)}}
+                                {{form_widget(form.n41EliminacionBasuraOtro)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>4.2 Periodicidad de la eliminación de basura</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n42PeriodicidadTipo)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="otros">
+                <h5>Señale la distancia en metros a los servicios que se encuentran próximos al Edificio Educativo. Se considerá "próximo", al servicio que se encuentra en un radio de 1000 metros aproximadamente respecto al edificio educativo.</h5>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>5.1 ¿Existe un centro de salud próximo?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n51EsCentroSalud)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <div class="input-group">
+                                    {{form_widget(form.n51MetrosCentroSalud)}}
+                                    <div class="input-group-addon">
+                                        Metros
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.2 ¿Existe un centro policial próximo?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n52EsCentroPolicial)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <div class="input-group">
+                                    {{form_widget(form.n52MetrosCentroPolicial)}}
+                                    <div class="input-group-addon">
+                                        Metros
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.3 ¿Existe un centro de esparcimiento próximo?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n53EsCentroEsparcimiento)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <div class="input-group">
+                                    {{form_widget(form.n53MetrosCentroEsparcimiento)}}
+                                    <div class="input-group-addon">
+                                        Metros
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.4 ¿Existe un centro de cultura público próximo?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n54EsCentroCultural)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <div class="input-group">
+                                    {{form_widget(form.n54MetrosCentroCultural)}}
+                                    <div class="input-group-addon">
+                                        Metros
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.5 ¿Existe una iglesia próxima?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n55EsCentroIglesia)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <div class="input-group">
+                                    {{form_widget(form.n55MetrosCentroIglesia)}}
+                                    <div class="input-group-addon">
+                                        Metros
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-6">
+                        <fieldset>
+                            <legend>5.6 ¿Existe algún centro de acceso a internet próximo?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n56EsCentroInternet)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <div class="input-group">
+                                    {{form_widget(form.n56MetrosCentroInternet)}}
+                                    <div class="input-group-addon">
+                                        Metros
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.7 ¿Existe un centro de correo próximo?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n57EsCentroCorreo)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <div class="input-group">
+                                    {{form_widget(form.n57MetrosCentroCorreo)}}
+                                    <div class="input-group-addon">
+                                        Metros
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.8 ¿Existe teléfono público próximo?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n58EsCentroTelefono)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <div class="input-group">
+                                    {{form_widget(form.n58MetrosCentroTelefono)}}
+                                    <div class="input-group-addon">
+                                        Metros
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.9 ¿La central del núcleo educativo esta próxima? <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="El Núcleo y la Red Educativos son el conjunto de UEs que constituyen entre si una oferta de servicios educativos integrales complementarios destinados a asegurar la interacción permanente para optimizar el uso de los recursos humanos, materiales, financieros, tecnológicos, equipamiento e infraestructura del Servicio de Educación Pública." data-original-title="Núcleo Educativo"></i></legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n59EsCentroNucleoEducativo)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <div class="input-group">
+                                    {{form_widget(form.n59MetrosCentroNucleoEducativo)}}
+                                    <div class="input-group-addon">
+                                        Metros
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.10 ¿Existe un correo de radiocomunicación próximo?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n510EsCentroRadiocomunicacion)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <div class="input-group">
+                                    {{form_widget(form.n510MetrosCentroRadiocomunicacion)}}
+                                    <div class="input-group-addon">
+                                        Metros
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>Señale si el edificio cuenta con algúno de los siguientes tipos de servicio</h5>
+                        <fieldset>
+                            <legend>5.11 ¿Servicio de enfermeria?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n511EsServicioEnfermeria)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.12 ¿Servicio de internet?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n512EsServicioInternet)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.13 ¿Telecentro? <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Se refiere al Telecentro implementado por el Ministerio de Educación." data-original-title=""></i></legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n513EsServicioTelecentro)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.14 ¿Gas?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n514EsServicioGas)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-8">
+                        <h5>Otros servicios, señale si cuenta con alguno de los siguientes tipos de servicio. En el punto 5.15 seleccione adicionalmente el idioma en el que esta la señalización</h5>
+                        <fieldset>
+                            <legend>5.15 ¿Cuenta con señalización vial para personas con discapacidad?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n515EsSenalDiscapacidad)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n515EsSenaliomaTipo)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.16 ¿Funciona en Centro de Educación Especial?</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n516EsFuncionaCee)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.17 ¿Posee rampas de acceso par silla de ruedas?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n517EsRampasacceso)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n517RampasaccesoEnlugarTipo)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.18 ¿Posee pasamanos/guias para personas con discapacidad visual?</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n518EsGuiasDiscapicidadVisual)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                {{form_widget(form.n518GuiasDiscapicidadEnlugarTipo)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>5.19 ¿Posee ambientes pedagógicos apropiados para estudiantes con discapacidad?</legend>
+                            <div class="form-group">
+                                {{form_widget(form.n519EsAmbientesPedagogicosDiscapacidad)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    </div>
+    </div>
+    </section>
+    {{form_end(form)}}
+    <div class="modal fade bs-example-modal-lg" id="modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        
+    </div>
+    
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var cont = 0;
+
+        $("#form_n12FuenteElectricaOtro").alphanum({allowOtherCharSets : true, allow:'-.,'});
+        $("#form_n14NumeroAmbientesPedagogicos").numeric("positiveInteger");        
+        $("#form_n14NumeroAmbientesNoPedagogicos").numeric("positiveInteger");      
+        $("#form_n14NumeroBanios").numeric("positiveInteger");  
+        $("#form_n15NumeroMedidores").numeric("positiveInteger");        
+        $("#form_n16NumeroMedidoresFuncionan").numeric("positiveInteger");        
+        $("#form_n16NumeroMedidoresNoFuncionan").numeric("positiveInteger");                
+
+        $("#form_n22MedioAguaOtro").alphanum({allowOtherCharSets : true, allow:'-.,'});
+        $("#form_n26NumeroAmbientesAgua").numeric("positiveInteger");        
+
+        $("#form_n41EliminacionBasuraOtro").alphanum({allowOtherCharSets : true, allow:'-.,'});
+
+        $("#form_n51MetrosCentroSalud").numeric("positiveInteger");
+        $("#form_n52MetrosCentroPolicial").numeric("positiveInteger");
+        $("#form_n53MetrosCentroEsparcimiento").numeric("positiveInteger");
+        $("#form_n54MetrosCentroCultural").numeric("positiveInteger");
+        $("#form_n55MetrosCentroIglesia").numeric("positiveInteger");
+        $("#form_n56MetrosCentroInternet").numeric("positiveInteger");
+        $("#form_n57MetrosCentroCorreo").numeric("positiveInteger");
+        $("#form_n58MetrosCentroTelefono").numeric("positiveInteger");
+        $("#form_n59MetrosCentroNucleoEducativo").numeric("positiveInteger");
+        $("#form_n510MetrosCentroRadiocomunicacion").numeric("positiveInteger");
+
+        function fuenteElectricaOtro(valor){
+            if(valor == 6){
+                $('#form_n12FuenteElectricaOtro').removeAttr('readonly');
+                $('#form_n12FuenteElectricaOtro').attr('required','required');
+                $('#form_n12FuenteElectricaOtro').focus();
+            }else{
+                $('#form_n12FuenteElectricaOtro').removeAttr('required');
+                $('#form_n12FuenteElectricaOtro').val('');
+                $('#form_n12FuenteElectricaOtro').attr('readonly','readonly');
+            }
+        }
+
+        function suministroAguaOtro(valor){
+            if(valor == 12){
+                $('#form_n22MedioAguaOtro').removeAttr('readonly');
+                $('#form_n22MedioAguaOtro').attr('required','required');
+                $('#form_n22MedioAguaOtro').focus();
+            }else{
+                $('#form_n22MedioAguaOtro').removeAttr('required');
+                $('#form_n22MedioAguaOtro').val('');
+                $('#form_n22MedioAguaOtro').attr('readonly','readonly');
+            }
+        }
+
+        function eliminacionBasuraOtro(valor){
+            if(valor == 9){
+                $('#form_n41EliminacionBasuraOtro').removeAttr('readonly');
+                $('#form_n41EliminacionBasuraOtro').attr('required','required');
+                $('#form_n41EliminacionBasuraOtro').focus();
+            }else{
+                $('#form_n41EliminacionBasuraOtro').removeAttr('required');
+                $('#form_n41EliminacionBasuraOtro').val('');
+                $('#form_n41EliminacionBasuraOtro').attr('readonly','readonly');
+            }
+        }
+
+        fuenteElectricaOtro($('#form_n12FuenteElectricaTipo').val());
+        suministroAguaOtro($('#form_n22MedioAguaTipo').val());
+        eliminacionBasuraOtro($('#form_n41EliminacionBasuraTipo').val());
+
+
+        function enaDisEletrica(){
+            if($("#form_n11EsEnergiaelectrica_1").is(':checked')){
+
+                $('#form_n12FuenteElectricaTipo').attr('disabled','disabled');
+                $('#form_n12FuenteElectricaOtro').attr('readonly','readonly');
+                $('#form_n13DisponibilidadTipo').attr('disabled','disabled');
+                $('#form_n14NumeroAmbientesPedagogicos').attr('readonly','readonly');
+                $('#form_n14NumeroAmbientesNoPedagogicos').attr('readonly','readonly');
+                $('#form_n14NumeroBanios').attr('readonly','readonly');
+                $('#form_n15NumeroMedidores').attr('readonly','readonly');
+                $('#form_n16NumeroMedidoresFuncionan').attr('readonly','readonly');
+                $('#form_n16NumeroMedidoresNoFuncionan').attr('readonly','readonly');
+
+                $('#form_n12FuenteElectricaTipo').val(0);
+                $('#form_n12FuenteElectricaOtro').val('');
+                $('#form_n12FuenteElectricaOtro').attr('readonly','readonly');
+                $('#form_n13DisponibilidadTipo').val(0);
+                $('#form_n14NumeroAmbientesPedagogicos').val('');
+                $('#form_n14NumeroAmbientesNoPedagogicos').val('');
+                $('#form_n14NumeroBanios').val('');
+                $('#form_n15NumeroMedidores').val('');
+                $('#form_n16NumeroMedidoresFuncionan').val('');
+                $('#form_n16NumeroMedidoresNoFuncionan').val('');
+
+                $('#form_n12FuenteElectricaOtro').removeAttr('required');
+                $('#form_n14NumeroAmbientesPedagogicos').removeAttr('required');
+                $('#form_n14NumeroAmbientesNoPedagogicos').removeAttr('required');
+                $('#form_n14NumeroBanios').removeAttr('required');
+                $('#form_n15NumeroMedidores').removeAttr('required');
+                $('#form_n16NumeroMedidoresFuncionan').removeAttr('required');
+                $('#form_n16NumeroMedidoresNoFuncionan').removeAttr('required');
+            }else{
+
+                $('#form_n12FuenteElectricaTipo').removeAttr('disabled');
+
+                $('#form_n13DisponibilidadTipo').removeAttr('disabled');
+                $('#form_n14NumeroAmbientesPedagogicos').removeAttr('readonly');
+                $('#form_n14NumeroAmbientesNoPedagogicos').removeAttr('readonly');
+                $('#form_n14NumeroBanios').removeAttr('readonly');
+                $('#form_n15NumeroMedidores').removeAttr('readonly');
+                $('#form_n16NumeroMedidoresFuncionan').removeAttr('readonly');
+                $('#form_n16NumeroMedidoresNoFuncionan').removeAttr('readonly');
+
+                $('#form_n12FuenteElectricaOtro').attr('required','required');
+                $('#form_n14NumeroAmbientesPedagogicos').attr('required','required');
+                $('#form_n14NumeroAmbientesNoPedagogicos').attr('required','required');
+                $('#form_n14NumeroBanios').attr('required','required');
+                $('#form_n15NumeroMedidores').attr('required','required');
+                $('#form_n16NumeroMedidoresFuncionan').attr('required','required');
+                $('#form_n16NumeroMedidoresNoFuncionan').attr('required','required');
+            }
+        }
+
+        function enaDisAgua(){
+            if($("#form_n21EsDiponeAgua_1").is(':checked')){
+
+                $('#form_n22MedioAguaTipo').attr('disabled','disabled');
+                $('#form_n22MedioAguaTipo').val(0);
+                $('#form_n22MedioAguaTipo').removeAttr('required');
+                $('#form_n22MedioAguaOtro').attr('readonly','readonly');
+                $('#form_n22MedioAguaOtro').val('');
+                $('#form_n23EsCuentaTanqueAgua_0').attr('disabled','disabled');
+                $('#form_n23EsCuentaTanqueAgua_1').attr('disabled','disabled');
+                $('#form_n23EsCuentaTanqueAgua_0').prop('checked',false);
+                $('#form_n23EsCuentaTanqueAgua_1').prop('checked',false);
+                $('#form_n23EsCuentaTanqueAgua').removeAttr('required');
+                $('#form_n24EsCuentaBombaAgua_0').attr('disabled','disabled');
+                $('#form_n24EsCuentaBombaAgua_1').attr('disabled','disabled');
+                $('#form_n24EsCuentaBombaAgua_0').prop('checked',false);
+                $('#form_n24EsCuentaBombaAgua_1').prop('checked',false);
+                $('#form_n24EsCuentaBombaAgua').removeAttr('required');
+                $('#form_n25EsCuentaRedAgua_0').attr('disabled','disabled');
+                $('#form_n25EsCuentaRedAgua_1').attr('disabled','disabled');
+                $('#form_n25EsCuentaRedAgua_0').prop('checked',false);
+                $('#form_n25EsCuentaRedAgua_1').prop('checked',false);
+                $('#form_n25EsCuentaRedAgua').removeAttr('required');
+                $('#form_n26NumeroAmbientesAgua').attr('readonly','readonly');
+                $('#form_n26NumeroAmbientesAgua').val('');
+                $('#form_n27AccesoAguaTipo').attr('disabled','disabled');
+                $('#form_n27AccesoAguaTipo').val(0);
+                $('#form_n27AccesoAguaTipo').removeAttr('required');
+                $('#form_n28UsoAguaTipo').attr('disabled','disabled');
+                $('#form_n28UsoAguaTipo').val(0);
+                $('#form_n28UsoAguaTipo').removeAttr('required');
+                $('#form_n29PurificadorAguaTipo').attr('disabled','disabled');
+                $('#form_n29PurificadorAguaTipo').val(0);
+                $('#form_n29PurificadorAguaTipo').removeAttr('required');
+
+            }else{
+
+                
+                $('#form_n22MedioAguaTipo').removeAttr('disabled');
+                $('#form_n22MedioAguaTipo').attr('required','required');
+                $('#form_n22MedioAguaOtro').attr('readonly','readonly');
+                $('#form_n23EsCuentaTanqueAgua_0').removeAttr('disabled');
+                $('#form_n23EsCuentaTanqueAgua_1').removeAttr('disabled');
+                $('#form_n23EsCuentaTanqueAgua_0').prop('checked',false);
+                $('#form_n23EsCuentaTanqueAgua_1').prop('checked',false);
+                $('#form_n23EsCuentaTanqueAgua').attr('required','required');
+                $('#form_n24EsCuentaBombaAgua_0').removeAttr('disabled');
+                $('#form_n24EsCuentaBombaAgua_1').removeAttr('disabled');
+                $('#form_n24EsCuentaBombaAgua_0').prop('checked',false);
+                $('#form_n24EsCuentaBombaAgua_1').prop('checked',false);
+                $('#form_n24EsCuentaBombaAgua').attr('required','required');
+                $('#form_n25EsCuentaRedAgua_0').removeAttr('disabled');
+                $('#form_n25EsCuentaRedAgua_1').removeAttr('disabled');
+                $('#form_n25EsCuentaRedAgua_0').prop('checked',false);
+                $('#form_n25EsCuentaRedAgua_1').prop('checked',false);
+                $('#form_n25EsCuentaRedAgua').attr('required','required');
+                $('#form_n26NumeroAmbientesAgua').removeAttr('readonly');
+                $('#form_n27AccesoAguaTipo').removeAttr('disabled');
+                $('#form_n27AccesoAguaTipo').attr('required','required');
+                $('#form_n28UsoAguaTipo').removeAttr('disabled');
+                $('#form_n28UsoAguaTipo').attr('required','required');
+                $('#form_n29PurificadorAguaTipo').removeAttr('disabled');
+                $('#form_n29PurificadorAguaTipo').attr('required','required');
+            }
+        }
+
+        function enaDisSaneamiento(){
+            if($("#form_n31EsInstalacionSaneamiento_1").is(':checked')){
+
+                $('#form_n33ExcretasEsAlcantarillado').attr('disabled','disabled');
+                $('#form_n33ExcretasEsAlcantarillado').prop('checked',false);
+                $('#form_n33ExcretasEsSeptica').attr('disabled','disabled');
+                $('#form_n33ExcretasEsSeptica').prop('checked',false);
+                $('#form_n33ExcretasEsPozo').attr('disabled','disabled');
+                $('#form_n33ExcretasEsPozo').prop('checked',false);
+                $('#form_n33ExcretasEsSuperficie').attr('disabled','disabled');
+                $('#form_n33ExcretasEsSuperficie').prop('checked',false);
+                $('#form_n33ExcretasEsOtro').attr('disabled','disabled');
+                $('#form_n33ExcretasEsOtro').prop('checked',false);
+                $('#form_n33ExcretasEsNosabe').attr('disabled','disabled');
+                $('#form_n33ExcretasEsNosabe').prop('checked',false);
+
+                $('#form_n34EsBuenascondiciones_0').attr('disabled','disabled');
+                $('#form_n34EsBuenascondiciones_1').attr('disabled','disabled');
+                $('#form_n34EsBuenascondiciones_0').prop('checked',false);
+                $('#form_n34EsBuenascondiciones_1').prop('checked',false);
+                $('#form_n34EsBuenascondiciones').removeAttr('required');
+                $('#form_n34EsBuenasventilacion_0').attr('disabled','disabled');
+                $('#form_n34EsBuenasventilacion_1').attr('disabled','disabled');
+                $('#form_n34EsBuenasventilacion_0').prop('checked',false);
+                $('#form_n34EsBuenasventilacion_1').prop('checked',false);
+                $('#form_n34EsBuenasventilacion').removeAttr('required');
+                $('#form_n34EsPrivacidad_0').attr('disabled','disabled');
+                $('#form_n34EsPrivacidad_1').attr('disabled','disabled');
+                $('#form_n34EsPrivacidad_0').prop('checked',false);
+                $('#form_n34EsPrivacidad_1').prop('checked',false);
+                $('#form_n34EsPrivacidad').removeAttr('required');
+                
+                $('#btnAdicionar').attr('disabled','disabled');
+                $('#bateriasbanos').empty();
+                cont = 0 ;
+            }else{
+
+                
+                $('#form_n33ExcretasEsAlcantarillado').removeAttr('disabled');
+                $('#form_n33ExcretasEsSeptica').removeAttr('disabled');
+                $('#form_n33ExcretasEsPozo').removeAttr('disabled');
+                $('#form_n33ExcretasEsSuperficie').removeAttr('disabled');
+                $('#form_n33ExcretasEsOtro').removeAttr('disabled');
+                $('#form_n33ExcretasEsNosabe').removeAttr('disabled');
+
+                $('#form_n34EsBuenascondiciones_0').removeAttr('disabled');
+                $('#form_n34EsBuenascondiciones_1').removeAttr('disabled');
+                $('#form_n34EsBuenascondiciones').attr('required','required');
+                $('#form_n34EsBuenasventilacion_0').removeAttr('disabled');
+                $('#form_n34EsBuenasventilacion_1').removeAttr('disabled');
+                $('#form_n34EsBuenasventilacion').removeAttr('required','required');
+                $('#form_n34EsPrivacidad_0').removeAttr('disabled');
+                $('#form_n34EsPrivacidad_1').removeAttr('disabled');
+                $('#form_n34EsPrivacidad').removeAttr('required','required');
+
+                $('#btnAdicionar').removeAttr('disabled');
+            }
+        }
+
+        function enaDisSalud(){
+            if($("#form_n51EsCentroSalud_1").is(':checked')){
+                $('#form_n51MetrosCentroSalud').attr('readonly','readonly');
+                $('#form_n51MetrosCentroSalud').val('');
+            }else{
+                $('#form_n51MetrosCentroSalud').removeAttr('readonly');
+            }
+        }
+        function enaDisPolicial(){
+            if($("#form_n52EsCentroPolicial_1").is(':checked')){
+                $('#form_n52MetrosCentroPolicial').attr('readonly','readonly');
+                $('#form_n52MetrosCentroPolicial').val('');
+            }else{
+                $('#form_n52MetrosCentroPolicial').removeAttr('readonly');
+            }
+        }
+        function enaDisEsparcimiento(){
+            if($("#form_n53EsCentroEsparcimiento_1").is(':checked')){
+                $('#form_n53MetrosCentroEsparcimiento').attr('readonly','readonly');
+                $('#form_n53MetrosCentroEsparcimiento').val('');
+            }else{
+                $('#form_n53MetrosCentroEsparcimiento').removeAttr('readonly');
+            }
+        }
+        function enaDisCultura(){
+            if($("#form_n54EsCentroCultural_1").is(':checked')){
+                $('#form_n54MetrosCentroCultural').attr('readonly','readonly');
+                $('#form_n54MetrosCentroCultural').val('');
+            }else{
+                $('#form_n54MetrosCentroCultural').removeAttr('readonly');
+            }
+        }
+        function enaDisIglesia(){
+            if($("#form_n55EsCentroIglesia_1").is(':checked')){
+                $('#form_n55MetrosCentroIglesia').attr('readonly','readonly');
+                $('#form_n55MetrosCentroIglesia').val('');
+            }else{
+                $('#form_n55MetrosCentroIglesia').removeAttr('readonly');
+            }
+        }
+        function enaDisInternet(){
+            if($("#form_n56EsCentroInternet_1").is(':checked')){
+                $('#form_n56MetrosCentroInternet').attr('readonly','readonly');
+                $('#form_n56MetrosCentroInternet').val('');
+            }else{
+                $('#form_n56MetrosCentroInternet').removeAttr('readonly');
+            }
+        }
+        function enaDisCorreo(){
+            if($("#form_n57EsCentroCorreo_1").is(':checked')){
+                $('#form_n57MetrosCentroCorreo').attr('readonly','readonly');
+                $('#form_n57MetrosCentroCorreo').val('');
+            }else{
+                $('#form_n57MetrosCentroCorreo').removeAttr('readonly');
+            }
+        }
+        function enaDisTelefono(){
+            if($("#form_n58EsCentroTelefono_1").is(':checked')){
+                $('#form_n58MetrosCentroTelefono').attr('readonly','readonly');
+                $('#form_n58MetrosCentroTelefono').val('');
+            }else{
+                $('#form_n58MetrosCentroTelefono').removeAttr('readonly');
+            }
+        }
+        function enaDisNucleo(){
+            if($("#form_n59EsCentroNucleoEducativo_1").is(':checked')){
+                $('#form_n59MetrosCentroNucleoEducativo').attr('readonly','readonly');
+                $('#form_n59MetrosCentroNucleoEducativo').val('');
+            }else{
+                $('#form_n59MetrosCentroNucleoEducativo').removeAttr('readonly');
+            }
+        }
+        function enaDisRadiocomunicacion(){
+            if($("#form_n510EsCentroRadiocomunicacion_1").is(':checked')){
+                $('#form_n510MetrosCentroRadiocomunicacion').attr('readonly','readonly');
+                $('#form_n510MetrosCentroRadiocomunicacion').val('');
+            }else{
+                $('#form_n510MetrosCentroRadiocomunicacion').removeAttr('readonly');
+            }
+        }
+
+        function enaDisSenalizacion(){
+            if($("#form_n515EsSenalDiscapacidad_1").is(':checked')){
+                $('#form_n515EsSenaliomaTipo').attr('disabled','disabled');
+                $('#form_n515EsSenaliomaTipo').val(0);
+            }else{
+                $('#form_n515EsSenaliomaTipo').removeAttr('disabled');
+            }
+        }
+        function enaDisRampas(){
+            if($("#form_n517EsRampasacceso_1").is(':checked')){
+                $('#form_n517RampasaccesoEnlugarTipo').attr('disabled','disabled');
+                $('#form_n517RampasaccesoEnlugarTipo').val(0);
+            }else{
+                $('#form_n517RampasaccesoEnlugarTipo').removeAttr('disabled');
+            }
+        }
+        function enaDisPasamanos(){
+            if($("#form_n518EsGuiasDiscapicidadVisual_1").is(':checked')){
+                $('#form_n518GuiasDiscapicidadEnlugarTipo').attr('disabled','disabled');
+                $('#form_n518GuiasDiscapicidadEnlugarTipo').val(0);
+            }else{
+                $('#form_n518GuiasDiscapicidadEnlugarTipo').removeAttr('disabled');
+            }
+        }
+
+        enaDisEletrica();
+        enaDisAgua();
+        enaDisSaneamiento();
+
+        enaDisSalud();
+        enaDisPolicial();
+        enaDisEsparcimiento();
+        enaDisCultura();
+        enaDisIglesia();
+        enaDisInternet();
+        enaDisCorreo();
+        enaDisTelefono();
+        enaDisNucleo();
+        enaDisRadiocomunicacion();
+        enaDisSenalizacion();
+        enaDisRampas();
+        enaDisPasamanos();
+
+    </script>
+
+    <script>
+
+    
+    var arrayBanioTipo = [];
+    var arrayEstado = [];
+
+    $(function(){
+        var idEntidad = $('#form_id').val();
+        $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_servicios_bateriasbanos',{id: idEntidad}),
+               beforeSend: function () {
+                   $("#bateriasbanos").empty();
+               },
+               success: function (data) {
+                    
+                    arrayBanioTipo = data.banioTipo;
+                    arrayEstado = data.estado;
+
+                    $.each(data.banios, function (i, valores) {
+                        cont++;
+                        var banioTipo = 'banioTipo' + cont;
+                        var area = 'area' + cont;
+                        var pisos = 'pisos' + cont;
+                        var paredes = 'paredes' + cont;
+                        var cielos = 'cielos' + cont;
+                        var techos = 'techos' + cont;
+                        var banioConagua = 'banioConagua' + cont;
+                        var banioSinagua = 'banioSinagua' + cont;
+                        var literaFunciona = 'literaFunciona' + cont;
+                        var literaNoFunciona = 'literaNoFunciona' + cont;
+                        var inodoroFunciona = 'inodoroFunciona' + cont;
+                        var inodoroNoFunciona = 'inodoroNoFunciona' + cont;
+                        var urinarioFunciona = 'urinarioFunciona' + cont;
+                        var urinarioNoFunciona = 'urinarioNoFunciona' + cont;
+                        var lavamanoFunciona = 'lavamanoFunciona' + cont;
+                        var lavamanoNoFunciona = 'lavamanoNoFunciona' + cont;
+                        var duchaFunciona = 'duchaFunciona' + cont;
+                        var duchaNoFunciona = 'duchaNoFunciona' + cont;
+
+                        $("#bateriasbanos").append('<tr id="'+cont+'">\n\
+                            <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                            <td><select name="banioTipo[]" id="'+banioTipo+'" required="true"></select>\n\
+                            <td><input type="text" name="area[]" id="'+area+'" value="'+valores.area+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><select name="paredes[]" id="'+pisos+'" required="true"></select>\n\
+                            <td><select name="pisos[]" id="'+paredes+'" required="true"></select>\n\
+                            <td><select name="cielos[]" id="'+cielos+'" required="true"></select>\n\
+                            <td><select name="techos[]" id="'+techos+'" required="true"></select>\n\
+                            <td><input type="text" name="banioConagua[]" id="'+banioConagua+'" value="'+valores.banioConagua+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><input type="text" name="banioSinagua[]" id="'+banioSinagua+'" value="'+valores.banioSinagua+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><input type="text" name="literaFunciona[]" id="'+literaFunciona+'" value="'+valores.literaFunciona+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><input type="text" name="literaNoFunciona[]" id="'+literaNoFunciona+'" value="'+valores.literaNoFunciona+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><input type="text" name="inodoroFunciona[]" id="'+inodoroFunciona+'" value="'+valores.inodoroFunciona+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><input type="text" name="inodoroNoFunciona[]" id="'+inodoroNoFunciona+'" value="'+valores.inodoroNoFunciona+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><input type="text" name="urinarioFunciona[]" id="'+urinarioFunciona+'" value="'+valores.urinarioFunciona+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><input type="text" name="urinarioNoFunciona[]" id="'+urinarioNoFunciona+'" value="'+valores.urinarioNoFunciona+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><input type="text" name="lavamanoFunciona[]" id="'+lavamanoFunciona+'" value="'+valores.lavamanoFunciona+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><input type="text" name="lavamanoNoFunciona[]" id="'+lavamanoNoFunciona+'" value="'+valores.lavamanoNoFunciona+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><input type="text" name="duchaFunciona[]" id="'+duchaFunciona+'" value="'+valores.duchaFunciona+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            <td><input type="text" name="duchaNoFunciona[]" id="'+duchaNoFunciona+'" value="'+valores.duchaNoFunciona+'" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+                            </tr>');
+
+                        $("#" + banioTipo).empty();
+                        $("#" + banioTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.banioTipo, function (i, value) {
+                            if(i==valores.banioTipo){sel = 'selected';}else{sel = '';}
+                            $("#" + banioTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+                        $("#" + pisos).empty();
+                        $("#" + pisos).append('<option value="">Seleccionar...</option>');
+                        $.each(data.estado, function (i, value) {
+                            if(i==valores.piso){sel = 'selected';}else{sel = '';}
+                            $("#" + pisos).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+                        $("#" + paredes).empty();
+                        $("#" + paredes).append('<option value="">Seleccionar...</option>');
+                        $.each(data.estado, function (i, value) {
+                            if(i==valores.pared){sel = 'selected';}else{sel = '';}
+                            $("#" + paredes).append('<option value="' + i + '"'+ sel +'>' + value + '</option>');
+                        });
+                        $("#" + cielos).empty();
+                        $("#" + cielos).append('<option value="">Seleccionar...</option>');
+                        $.each(data.estado, function (i, value) {
+                            if(i==valores.cielo){sel = 'selected';}else{sel = '';}
+                            $("#" + cielos).append('<option value="' + i + '"'+ sel +'>' + value + '</option>');
+                        });
+                        $("#" + techos).empty();
+                        $("#" + techos).append('<option value="">Seleccionar...</option>');
+                        $.each(data.estado, function (i, value) {
+                            if(i==valores.techo){sel = 'selected';}else{sel = '';}
+                            $("#" + techos).append('<option value="' + i + '"'+ sel +'>' + value + '</option>');
+                        });
+
+                        $("#"+area).numeric("positiveInteger");
+                        $("#"+banioConagua).numeric("positiveInteger");
+                        $("#"+banioSinagua).numeric("positiveInteger");
+                        $("#"+literaFunciona).numeric("positiveInteger");
+                        $("#"+literaNoFunciona).numeric("positiveInteger");
+                        $("#"+inodoroFunciona).numeric("positiveInteger");
+                        $("#"+inodoroNoFunciona).numeric("positiveInteger");
+                        $("#"+urinarioFunciona).numeric("positiveInteger");
+                        $("#"+urinarioNoFunciona).numeric("positiveInteger");
+                        $("#"+lavamanoFunciona).numeric("positiveInteger");
+                        $("#"+lavamanoNoFunciona).numeric("positiveInteger");
+                        $("#"+duchaFunciona).numeric("positiveInteger");
+                        $("#"+duchaNoFunciona).numeric("positiveInteger");
+                    });
+
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+    });
+
+    function agregarFila(){
+        cont++;
+        var banioTipo = 'banioTipo' + cont;
+        var area = 'area' + cont;
+        var pisos = 'pisos' + cont;
+        var paredes = 'paredes' + cont;
+        var cielos = 'cielos' + cont;
+        var techos = 'techos' + cont;
+        var banioConagua = 'banioConagua' + cont;
+        var banioSinagua = 'banioSinagua' + cont;
+        var literaFunciona = 'literaFunciona' + cont;
+        var literaNoFunciona = 'literaNoFunciona' + cont;
+        var inodoroFunciona = 'inodoroFunciona' + cont;
+        var inodoroNoFunciona = 'inodoroNoFunciona' + cont;
+        var urinarioFunciona = 'urinarioFunciona' + cont;
+        var urinarioNoFunciona = 'urinarioNoFunciona' + cont;
+        var lavamanoFunciona = 'lavamanoFunciona' + cont;
+        var lavamanoNoFunciona = 'lavamanoNoFunciona' + cont;
+        var duchaFunciona = 'duchaFunciona' + cont;
+        var duchaNoFunciona = 'duchaNoFunciona' + cont;
+
+        $("#bateriasbanos").append('<tr id="'+cont+'">\n\
+            <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+            <td><select name="banioTipo[]" id="'+banioTipo+'" required="true"></select>\n\
+            <td><input type="text" name="area[]" id="'+area+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><select name="paredes[]" id="'+pisos+'" required="true"></select>\n\
+            <td><select name="pisos[]" id="'+paredes+'" required="true"></select>\n\
+            <td><select name="cielos[]" id="'+cielos+'" required="true"></select>\n\
+            <td><select name="techos[]" id="'+techos+'" required="true"></select>\n\
+            <td><input type="text" name="banioConagua[]" id="'+banioConagua+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><input type="text" name="banioSinagua[]" id="'+banioSinagua+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><input type="text" name="literaFunciona[]" id="'+literaFunciona+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><input type="text" name="literaNoFunciona[]" id="'+literaNoFunciona+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><input type="text" name="inodoroFunciona[]" id="'+inodoroFunciona+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><input type="text" name="inodoroNoFunciona[]" id="'+inodoroNoFunciona+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><input type="text" name="urinarioFunciona[]" id="'+urinarioFunciona+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><input type="text" name="urinarioNoFunciona[]" id="'+urinarioNoFunciona+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><input type="text" name="lavamanoFunciona[]" id="'+lavamanoFunciona+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><input type="text" name="lavamanoNoFunciona[]" id="'+lavamanoNoFunciona+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><input type="text" name="duchaFunciona[]" id="'+duchaFunciona+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            <td><input type="text" name="duchaNoFunciona[]" id="'+duchaNoFunciona+'" value="" size="5" maxlength="4" required="true" autocomplete="off"></td>\n\
+            </tr>');
+
+        $("#" + banioTipo).empty();
+        $("#" + banioTipo).append('<option value="">Seleccionar...</option>');
+        $.each(arrayBanioTipo, function (i, value) {
+            $("#" + banioTipo).append('<option value="' + i + '">' + value + '</option>');
+        });
+        $("#" + pisos).empty();
+        $("#" + pisos).append('<option value="">Seleccionar...</option>');
+        $.each(arrayEstado, function (i, value) {
+            $("#" + pisos).append('<option value="' + i + '">' + value + '</option>');
+        });
+        $("#" + paredes).empty();
+        $("#" + paredes).append('<option value="">Seleccionar...</option>');
+        $.each(arrayEstado, function (i, value) {
+            $("#" + paredes).append('<option value="' + i + '">' + value + '</option>');
+        });
+        $("#" + cielos).empty();
+        $("#" + cielos).append('<option value="">Seleccionar...</option>');
+        $.each(arrayEstado, function (i, value) {
+            $("#" + cielos).append('<option value="' + i + '">' + value + '</option>');
+        });
+        $("#" + techos).empty();
+        $("#" + techos).append('<option value="">Seleccionar...</option>');
+        $.each(arrayEstado, function (i, value) {
+            $("#" + techos).append('<option value="' + i + '">' + value + '</option>');
+        });
+
+        $("#"+area).numeric("positiveInteger");
+        $("#"+banioConagua).numeric("positiveInteger");
+        $("#"+banioSinagua).numeric("positiveInteger");
+        $("#"+literaFunciona).numeric("positiveInteger");
+        $("#"+literaNoFunciona).numeric("positiveInteger");
+        $("#"+inodoroFunciona).numeric("positiveInteger");
+        $("#"+inodoroNoFunciona).numeric("positiveInteger");
+        $("#"+urinarioFunciona).numeric("positiveInteger");
+        $("#"+urinarioNoFunciona).numeric("positiveInteger");
+        $("#"+lavamanoFunciona).numeric("positiveInteger");
+        $("#"+lavamanoNoFunciona).numeric("positiveInteger");
+        $("#"+duchaFunciona).numeric("positiveInteger");
+        $("#"+duchaNoFunciona).numeric("positiveInteger");
+    };
+
+    function eliminarFila(id){
+        //cont--;
+        $("#" + id).remove();
+    };
+
+    /* Invalidamos los mensajes html5 
+    var form = document.querySelector('#formServicios');
+    form.addEventListener('invalid',function(event){
+        event.preventDefault();
+    },true);*/
+
+    var button = form.querySelector('#form_guardar');
+    button.addEventListener('click', function(){
+        var invalid = form.querySelectorAll(':invalid');
+        var mensajes = "";
+        // Reiteramos sobre ellos
+        for(var i = 0; i < invalid.length;i++){
+            var titleElemento = invalid[i].title;
+
+            // Condicion para los radios
+            var tagElemento = invalid[i].tagName;
+            if(titleElemento == '' && tagElemento != 'FIELDSET'){
+                var idElementoInvalido = invalid[i+1].id;
+                var padre = $('#'+idElementoInvalido).parent();
+                var tagNombre = $('#'+idElementoInvalido).attr('tagName');
+                var titulo = padre.attr('title')
+                if(titulo != "undefined"){
+                    titleElemento = titulo;
+                    i = i + 2;
+                }
+                
+            }
+            //
+            mensajes = mensajes +'<div>'+titleElemento+'</div>';
+        };
+        if(mensajes !== ""){
+            $('.notifyjs-corner').empty();
+            $.notify('<div style="border-bottom:1px solid #FFB89B"><i class="fa fa-warning"></i> Debe Completar</div><br>'+mensajes,{style:"appkit",className:"warn",hideAnimation:"fadeOut",showAnimation:"fadeIn",autoHide:!1,clickToHide:!0});
+        }
+    });
+
+    function validarForm(){
+        var mensajes = "";
+        var enviar = true;
+        //console.log($('#form_n12FuenteElectricaTipo').attr('disabled'));
+        //var estadon12 = $('#form_n12FuenteElectricaTipo').attr('disabled');
+        if($('#form_n12FuenteElectricaTipo').val() == 0 && $('#form_n12FuenteElectricaTipo').is(':enabled')){
+            mensajes = mensajes +'<div>1.2 Fuente Eléctrica (SE ENCUENTRA SIN DATO)</div>';
+            enviar = false;
+        }
+        if($('#form_n13DisponibilidadTipo').val() == 0 && $('#form_n13DisponibilidadTipo').is(':enabled')){
+            mensajes = mensajes +'<div>1.3 Disponibilidad de servicio (SE ENCUENTRA SIN DATO)</div>';
+            enviar = false;
+        }
+        if($('#form_n22MedioAguaTipo').val() == 0 && $('#form_n22MedioAguaTipo').is(':enabled')){
+            mensajes = mensajes +'<div>2.2 El medio o sistema de suministro de agua es por: (SE ENCUENTRA SIN DATO)</div>';
+            enviar = false;
+        }
+        if($('#form_n27AccesoAguaTipo').val() == 0 && $('#form_n27AccesoAguaTipo').is(':enabled')){
+            mensajes = mensajes +'<div>2.7 El acceso al servicio de provisión de agua es: (SE ENCUENTRA SIN DATO)</div>';
+            enviar = false;
+        }
+        if($('#form_n28UsoAguaTipo').val() == 0 && $('#form_n28UsoAguaTipo').is(':enabled')){
+            mensajes = mensajes +'<div>2.8 El agua del EE, es utilizada mayormente para: (SE ENCUENTRA SIN DATO)</div>';
+            enviar = false;
+        }
+        if($('#form_n29PurificadorAguaTipo').val() == 0 && $('#form_n29PurificadorAguaTipo').is(':enabled')){
+            mensajes = mensajes +'<div>2.9 ¿Utiliza algún tipo de purificador de agua? (SE ENCUENTRA SIN DATO)</div>';
+            enviar = false;
+        }
+        if($('#form_n41EliminacionBasuraTipo').val() == 0 && $('#form_n41EliminacionBasuraTipo').is(':enabled')){
+            mensajes = mensajes +'<div>4.1 ¿Como se realiza la eliminación de basura? (SE ENCUENTRA SIN DATO)</div>';
+            enviar = false;
+        }
+        if($('#form_n42PeriodicidadTipo').val() == 0 && $('#form_n42PeriodicidadTipo').is(':enabled')){
+            mensajes = mensajes +'<div>4.2 Periodicidad de la eliminación de basura (SE ENCUENTRA SIN DATO)</div>';
+            enviar = false;
+        }
+        if($('#form_n517RampasaccesoEnlugarTipo').val() == 0 && $('#form_n517RampasaccesoEnlugarTipo').is(':enabled')){
+            mensajes = mensajes +'<div>5.17 ¿Posee rampas de acceso par silla de ruedas? (SE ENCUENTRA SIN DATO)</div>';
+            enviar = false;
+        }
+        if($('#form_n518GuiasDiscapicidadEnlugarTipo').val() == 0 && $('#form_n518GuiasDiscapicidadEnlugarTipo').is(':enabled')){
+            mensajes = mensajes +'<div>5.18 ¿Posee pasamanos/guias para personas con discapacidad visual? (SE ENCUENTRA SIN DATO)</div>';
+            enviar = false;
+        }
+        /*
+        // Validacion de los selects dinamicos
+        $('select[name="pisos[]"]').each(function(){
+            if(this.value == 0){
+                mensajes = mensajes +'<div>3.1 Pisos (SE ENCUENTRA SIN DATO)</div>';
+                enviar = false;
+            }
+        });
+        $('select[name="paredes[]"]').each(function(){
+            if(this.value == 0){
+                mensajes = mensajes +'<div>3.1 Paredes (SE ENCUENTRA SIN DATO)</div>';
+                enviar = false;
+            }
+        });
+        $('select[name="cielos[]"]').each(function(){
+            if(this.value == 0){
+                mensajes = mensajes +'<div>3.1 Cielos (SE ENCUENTRA SIN DATO)</div>';
+                enviar = false;
+            }
+        });
+        $('select[name="techos[]"]').each(function(){
+            if(this.value == 0){
+                mensajes = mensajes +'<div>3.1 Techos (SE ENCUENTRA SIN DATO)</div>';
+                enviar = false;
+            }
+        });
+*/
+        if(enviar == false){
+            $('.notifyjs-corner').empty();
+            $.notify('<div style="border-bottom:1px solid #FFB89B"><i class="fa fa-warning"></i> Debe Seleccionar</div>'+mensajes,{style:"appkit",className:"info",hideAnimation:"fadeOut",showAnimation:"fadeIn",autoHide:!1,clickToHide:!0});
+            return false;
+        }else{
+            $('.notifyjs-corner').empty();
+            return true;
+        }
+    }
+
+    </script>
+
+{% endblock %}

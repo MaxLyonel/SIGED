@@ -1,0 +1,494 @@
+Sie\AppWebBundle\Entity\SocioeconomicoRegular:
+    type: entity
+    table: socioeconomico_regular
+    indexes:
+        fk_dat_rde_socio_economico_cla5:
+            columns:
+                - idioma_tipo_id2
+        fk_dat_rde_socio_economico_cla8:
+            columns:
+                - idioma_tipo_id5
+        fk_dat_rde_socio_economico_cla3:
+            columns:
+                - idioma_tipo_id4
+        fk_dat_rde_socio_economico_cla4:
+            columns:
+                - idioma_tipo_id6
+        fk_socioeconomico_regular_gesti:
+            columns:
+                - gestion_tipo_id
+        fk_dat_rde_socio_economico_cla6:
+            columns:
+                - idioma_tipo_id3
+        fk_dat_rde_socio_economico_cla7:
+            columns:
+                - idioma_tipo_id
+        fk_dat_rde_socio_economico_cla9:
+            columns:
+                - discapacidad_tipo_id
+        fk_socioeconomico_regular_estud:
+            columns:
+                - estudiante_inscripcion_id
+        fk_dat_rde_socio_economico_cla2:
+            columns:
+                - etnia_tipo_id
+        fk_dat_rde_socio_economico_cla1:
+            columns:
+                - atenmedica_tipo_id
+    uniqueConstraints:
+        socioeconomico_regular_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        discapacidadTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: discapacidad_tipo_id
+        atenmedicaTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: atenmedica_tipo_id
+        certificadoNac:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: certificado_nac
+        libretaEscolar:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: libreta_escolar
+        libretaFamiliar:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: libreta_familiar
+        libretaMilitar:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: libreta_militar
+        libretaVacunas:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: libreta_vacunas
+        medioComunicacionCelular:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: medio_comunicacion_celular
+        medioComunicacionTelefono:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: medio_comunicacion_telefono
+        medioComunicacionTelevision:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: medio_comunicacion_television
+        medioComunicacionComputadora:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: medio_comunicacion_computadora
+        medioComunicacionRadio:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: medio_comunicacion_radio
+        medioComunicacionInternet:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: medio_comunicacion_internet
+        seguroSalud:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: seguro_salud
+        discapacidadId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: discapacidad_id
+        servicioAguadomicilio:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_aguadomicilio
+        servicioAguapileta:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_aguapileta
+        servicioAgualagolaguna:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_agualagolaguna
+        servicioAguapozo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_aguapozo
+        servicioAguasisterna:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_aguasisterna
+        servicioAguavertiente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_aguavertiente
+        servicioEnergiaredpublica:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_energiaredpublica
+        servicioEnergiageneradorelectr:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_energiageneradorelectr
+        servicioEnergiapanelsolar:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_energiapanelsolar
+        servicioGasdomicilio:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_gasdomicilio
+        servicioGaslicuado:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_gaslicuado
+        servicioGasnatural:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_gasnatural
+        servicioSanitarioalcantarill:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_sanitarioalcantarill
+        servicioSanitariopozoseptico:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_sanitariopozoseptico
+        direccionDepartamentoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: direccion_departamento_id
+        direccionProvinciaId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: direccion_provincia_id
+        direccionSeccionId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: direccion_seccion_id
+        direccionCantonId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: direccion_canton_id
+        direccionLocalidadId:
+            type: string
+            nullable: false
+            length: 6
+            fixed: false
+            comment: ''
+            column: direccion_localidad_id
+        empleo:
+            type: string
+            nullable: true
+            length: 80
+            fixed: false
+            comment: ''
+        direccionDescLocalidad:
+            type: string
+            nullable: true
+            length: 125
+            fixed: false
+            comment: ''
+            column: direccion_desc_localidad
+        direccionZona:
+            type: string
+            nullable: true
+            length: 80
+            fixed: false
+            comment: ''
+            column: direccion_zona
+        direccionCalleNro:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: direccion_calle_nro
+        direccionTelefono:
+            type: string
+            nullable: true
+            length: 8
+            fixed: false
+            comment: ''
+            column: direccion_telefono
+        transporteId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: transporte_id
+        transporteTiempo:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: transporte_tiempo
+        transporteDistancia:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: transporte_distancia
+        numeroHijo:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: numero_hijo
+        servicioAguacaneria:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_aguacaneria
+        servicioAguaotro:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_aguaotro
+        servicioSanitariopozo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_sanitariopozo
+        servicioSanitariocalle:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_sanitariocalle
+        servicioSanitariorio:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_sanitariorio
+        direccionNroVivienda:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: direccion_nro_vivienda
+        centrosalud:
+            type: boolean
+            nullable: true
+            comment: ''
+        frecuenciaSaludId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: frecuencia_salud_id
+        discapacidadSensorial:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: discapacidad_sensorial
+        discapacidadMotriz:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: discapacidad_motriz
+        discapacidadMental:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: discapacidad_mental
+        origenDiscapacidadId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: origen_discapacidad_id
+        actividadId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: actividad_id
+        frecuenciaActividadId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: frecuencia_actividad_id
+        actividadPago:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: actividad_pago
+        internetDomicilio:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: internet_domicilio
+        internetUe:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: internet_ue
+        internetPublico:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: internet_publico
+        internetNo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: internet_no
+        frecuenciaInternetId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: frecuencia_internet_id
+        frecuenciaTransporteId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: frecuencia_transporte_id
+        servicioEnergia:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: servicio_energia
+    manyToOne:
+        etniaTipo:
+            targetEntity: EtniaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                etnia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo2:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id2:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo3:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id3:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo4:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id4:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo5:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id5:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaTipo6:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_tipo_id6:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

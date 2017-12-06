@@ -1,0 +1,132 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo -%}
+    <div id="tablaListadoPersonas_fil" style="visibility: hidden;">        
+    </div>    
+      
+    {#<div id="idmaestrodir_fil" style="visibility: hidden;">
+    </div>#}
+    
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4>Distrito observado por contar con mas de un técnico SIE asignado.</h4>
+        </div>
+        <div class="panel-body">
+            <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+                <thead>
+                    <tr>
+                        <th>Acciones</th>
+                        <th>Nombre de Usuario</th>                        
+                        <th>Estado</th>
+                        <th>Nombre, Apellidos y Carnet</th>                        
+                        <th>Observación</th>                                                
+                    </tr>
+                </thead>
+                <tbody>
+                {% for persona in po %}
+                    <tr>
+                        <td>                           
+                            {% if persona.username %}
+                                {% if persona.usuarioesactivo == true or 1 == 1 %}
+                                    {% include 'SieUsuariosBundle:Default:menuprincipalusuario.html.twig' with {'persona': persona} %}
+                                    {#<div class="btn-group">
+                                        <button type="button" class="btn btn-info btn-xs dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" aria-haspopup="true">
+                                            Acciones <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">                                        
+                                            <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li>                                        
+                                            <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>
+                                            <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>                                                                                    
+                                            {% if [persona.carnet,persona.complemento]|join|trim != persona.username %}
+                                                <li><a class="glyphicon glyphicon-star-empty" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> Actualizar nombre de usuario</a></li>
+                                            {% endif %}                                            
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li>
+                                        </ul>
+                                    </div>#}
+                                {% else %}
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-info btn-xs dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" aria-haspopup="true">
+                                            Acciones <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">                                        
+                                            <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li>                                      
+                                        </ul>
+                                    </div> 
+                                {% endif %}
+                            {% else %}                                
+                                <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="usuarioForm('{{persona.personaid}}')"> Asignar Usuario</a>
+                            {% endif %}
+                        </td>
+                        <td>{{ persona.username }}</td>
+                        <td>
+                        {% if persona.usuarioesactivo is not null  %}
+                            {% if persona.usuarioesactivo == true %}
+                                <span class="label label-success">Activado</span>
+                            {% else %}
+                                <span class="label label-default">Desactivado</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="label label-warning">Sin usuario</span>
+                        {% endif %}  
+                        </td>
+                        <td>{{ persona.nombre }} {{ persona.paterno }} {{ persona.materno }}, CI:{{ [persona.carnet,persona.complemento]|join|trim}}</td>                           
+                        <td>Técnico distrital de :{{ persona.jurisdiccion }} Cod.:{{ persona.jurisdiccion_codigo }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+     
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#tablaListadoPersonas').find('tr').click( function(){
+            $('#tablaListadoPersonas_fil').text($(this).index());
+            //$('#idmaestrodir_fil').text($("td:eq(8)", this).text()); 
+        });
+        
+        $('#tablaListadoPersonas tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        var table = $('#tablaListadoPersonas').DataTable({
+            language: {
+                "sProcessing":     "Procesando...",
+                "sLengthMenu":     "Mostrar _MENU_ registros",
+                "sZeroRecords":    "No se encontraron resultados",
+                "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix":    "",
+                "sSearch":         "Buscar:",
+                "sUrl":            "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Cargando...",                
+                "oPaginate": {
+                    "sFirst":    "Primero",
+                    "sLast":     "Último",
+                    "sNext":     "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        });
+        
+        initialise();
+    } );
+    </script>
+{% endblock %}

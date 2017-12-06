@@ -1,0 +1,23 @@
+adicionNotas:
+    path:     /{op}
+    defaults: { _controller: SieRegularBundle:AdicionNotas:index, op:search }
+
+adicionNotas_search:
+    path:     /search/
+    defaults: { _controller: "SieRegularBundle:AdicionNotas:search" }
+    methods:  POST
+
+adicionNotas_edit:
+    path:     /edit/
+    defaults: { _controller: "SieRegularBundle:AdicionNotas:edit"}
+
+adicionNotas_create:
+    path:     /create/
+    defaults: { _controller: "SieRegularBundle:AdicionNotas:create" }
+    methods:  [POST]
+
+adicionNotas_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieRegularBundle:Notas:cargarParalelos"}
+    options:
+         expose: true

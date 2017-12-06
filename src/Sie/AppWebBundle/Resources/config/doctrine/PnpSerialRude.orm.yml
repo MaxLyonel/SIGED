@@ -1,0 +1,19 @@
+Sie\AppWebBundle\Entity\PnpSerialRude:
+    type: entity
+    table: pnp_serial_rude
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        seqrude:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+    lifecycleCallbacks: {  }

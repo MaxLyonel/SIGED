@@ -1,0 +1,124 @@
+{% extends 'SieRueBundle:Default:rue.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="block-header">
+        <h2>CERTIFICADO DE INSTITUCIONES EDUCATIVAS</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('principal_web')}}">Inicio</a></li>
+        <li><a href="{{path('certificado_rue')}}">Certificado RUE</a></li>
+        <li class="active">Editar</li>
+    </ol>
+
+    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %} 
+
+    {% for flashMessage in app.session.flashbag.get('deleteOk') %}
+        <div class="alert alert-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('deleteError') %}
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        Datos creación de certificados
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="row clearfix">
+                        {{ form_start(form) }}
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                Fecha de Corte:
+                                {{form_widget(form.fechaCorte) }}
+                            </div>            
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                Nro. certificado inicio:
+                                {{form_widget(form.nroCertificadoInicio) }}
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                Observaciones:
+                                {{form_widget(form.observacion) }}
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+                                <a href="{{path('certificado_rue')}}" class="btn btn-default btn-lg m-l-15 waves-effect">Cancelar</a>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <table class="table table-bordered table-striped table-hover js-exportable dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Acciones</th>
+                                        <th>No. Certificado</th>
+                                        <th>Código RUE</th>
+                                        <th>Institución Educativa</th>
+                                        <th>No. Resolución</th>
+                                        <th>Dependencia</th>
+                                        <th>Tipo</th>
+                                        <th>Niveles</th>
+                                        <th>Áreas</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Acciones</th>
+                                        <th>No. Certificado</th>
+                                        <th>Código RUE</th>
+                                        <th>Institución Educativa</th>
+                                        <th>No. Resolución</th>
+                                        <th>Dependencia</th>
+                                        <th>Tipo</th>
+                                        <th>Niveles</th>
+                                        <th>Áreas</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for ce in entity.certificados %}
+                                        <tr>
+                                            <td>
+                                                <form action="{{path('certificado_rue_delete')}}" method="post" style="display: inline-block">
+                                                    <input type="hidden" name="idCertificadoRue" value="{{ ce.id }}"></input>
+                                                    <button type="submit" class="btn btn-xs bg-red waves-effect" onclick="return confirm('Se eliminara el registro!. Desea continuar?');">
+                                                        <i class="material-icons">delete</i> Eliminar
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td>{{ ce.nroCertificado }}&nbsp;</td>
+                                            <td>{{ ce.institucioneducativa.id }}&nbsp;</td>
+                                            <td>{{ ce.institucioneducativades }}&nbsp;</td>
+                                            <td>{{ ce.nroResolucion }}&nbsp;</td>
+                                            <td>{{ ce.dependencia }}&nbsp;</td>
+                                            <td>{{ ce.institucioneducativatipo }}&nbsp;</td>
+                                            <td>{{ ce.niveles }}&nbsp;</td>
+                                            <td>{{ ce.areas }}&nbsp;</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Basic Examples -->
+{% endblock %}

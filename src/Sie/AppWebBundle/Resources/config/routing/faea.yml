@@ -1,0 +1,8 @@
+faea_index:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:Faea:index" }
+    
+faea_ie_search:
+    path:     /ie-search
+    defaults: { _controller: "SieAppWebBundle:Faea:resultSearchIe" }
+    methods:  POST

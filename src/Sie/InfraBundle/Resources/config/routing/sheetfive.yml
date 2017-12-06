@@ -1,0 +1,7 @@
+infra_sheet_five_index:
+    path:     /index
+    defaults: { _controller: SieInfraBundle:SheetFive:index }
+
+infra_sheet_five_access:
+    path:     /access
+    defaults: { _controller: SieInfraBundle:SheetFive:access }

@@ -1,0 +1,151 @@
+{% extends 'layoutBjp.html.twig' %}
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Registro de resultados preliminares
+                    <small>Formulario de registro de totales preliminares</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('RegistroResultados')}}"> Registro de Resultados</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('correcto') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('incorrecto') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>    
+
+<p>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Información de agente pagador e Institución Educativa</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-3">
+                <h4><small>FUERZA :</small><br>{{ info.fuerza }}</h4>
+            </div>
+            <div class="col-xs-3">
+                <h4><small>MODALIDAD:</small><br>{{ info.orgcurricularTipo }}</h4>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col-xs-3">
+                <h4><small>GRAN UNIDAD MILITAR :</small><br>{{ info.unidadmilitar }}</h4>
+            </div>
+            <div class="col-xs-3">
+                <h4><small>TURNO :</small><br>{{ info.turno }}</h4>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col-xs-3">
+                <h4><small>UNIDAD MILITAR PAGADORA :</small><br>{{ info.unidadmilitar }}</h4>
+            </div>
+            <div class="col-xs-3">
+                <h4><small>DEPARTAMENTO :</small><br>{{ info.departamentoTipo }}</h4>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col-xs-3">
+                <h4><small>SIE :</small><br>{{ info.rue }}</h4>
+            </div>
+            <div class="col-xs-3">
+                <h4><small>MUNICIPIO :</small><br>{{ info.municipio }}</h4>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col-xs-3">
+                <h4><small>INSTITUCIÓN EDUCATIVA :</small><br>{{ info.institucioneducativa }}</h4>
+            </div>
+            <div class="col-xs-3">
+                <h4><small>DISTRITO :</small><br>{{ info.distrito }}</h4>
+            </div>            
+        </div>
+        
+        <div class="row">
+            <div class="col-xs-3">
+                <h4><small>TIPO AREA</small><br>{{ info.areaGeografica }}</h4>
+            </div>
+            <div class="col-xs-3">
+                
+            </div>            
+        </div>
+    </div>
+</div>         
+<p>
+{{ form_start(form, {'action': path('sie_bono_resultado_insert'), 'method': 'POST'}) }}    
+{#{{ form_start(form, { 'attr': {'id':'sie_resultados_form', 'data-toggle': 'validator', 'role': "form", 'onsubmit': 'enviaformuser(); return false;', 'class':'form-horizontal' } } )}}#}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Resultados a registrar</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-4">                            
+                {{ form_row(form.c_registros, { 'id': 'c_registros'}) }}
+            </div>
+            <div class="col-xs-4">
+                {{ form_row(form.c_pagados, { 'id': 'c_pagados'}) }}
+            </div>        
+            <div class="col-xs-4">
+                {{ form_row(form.c_rezagados, { 'id': 'c_rezagados'}) }}
+            </div>            
+        </div>
+    </div>
+</div>
+<p>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-6">
+                 {{ form_row(form.c_guardar, { 'id': 'c_guardar'}) }}
+                {#<a role="button" class="btn btn-default btn-large glyphicon glyphicon-remove-sign" href="#" onclick="modaluserclose();"> Guardar</a>                #}
+            </div>                        
+            <div class="col-xs-6">
+                <a role="button" class="btn btn-default btn-large glyphicon glyphicon-remove-sign" href="{{path('RegistroResultados')}}"> Volver</a>
+            </div>
+        </div>
+    </div>
+</div>   
+{{ form_end(form) }}
+<script>
+function enviaformuser() {
+    if (confirm('Está seguro de registrar los resultados')) {
+        var formData = $('#sie_resultados_form').serialize();
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_bono_resultado_insert'),
+            data: formData,
+            beforeSend: function () {
+               
+            },
+            success: function (data) {
+                window.location.href =  Routing.generate('RegistroResultados');
+            },
+            error: function () {
+                $("#divAlertUser").empty();
+                $("#divAlertUser").append('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Proceso detenido. Se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+    }
+    return false;
+}
+</script>
+
+{% endblock %}

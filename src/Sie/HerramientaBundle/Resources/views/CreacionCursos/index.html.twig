@@ -1,0 +1,256 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/chosen.css')}}" rel="stylesheet">
+
+{% endblock %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>{{ app.session.get('tituloTipo') }}
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('creacioncursos')}}">Buscar</a></li>
+                    <li><i class="fa fa-list"></i>  <a href="{{path('creacioncursos',{'op':'result'})}}">{{ app.session.get('tituloTipo') }}</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!--  cursos -->
+            {% for flashMessage in app.session.flashbag.get('newCursoOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newCursoError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteCursoOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteCursoError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Institución Educativa</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div id="no-more-tables">
+                                <table class="table table-bordered cf">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>Código SIE</th>
+                                            <th>Institución Educativa</th>
+                                            <th>Gestión</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <td data-title="Código SIE">{{institucion.id}}</td>
+                                    <td data-title="Ins.Educativa">{{institucion.institucioneducativa}}</td>
+                                    <td data-title="Gestión">{{gestion}}</td>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    
+    <div class="row">
+        <div class="col-lg-12 text-right">
+            <form action="{{path('creacioncursos_new')}}" style="display: inline-block" method="post">
+                <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                <input type="hidden" name="idGestion" value="{{gestion}}">
+                <button type="submit" class="btn btn-green"><i class="fa fa-plus-square"></i> Nuevo Curso</button>
+            </form>
+        </div>
+        <hr>
+        <div class="col-lg-12">
+            {% if cursos is not empty %}
+                {% set turno = cursos[0].turnoTipo.id %}
+                {% set turnoNombre = cursos[0].turnoTipo.turno %}
+                <div class="portlet portlet-blue">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panel{{turno}}">
+                            <h4>Turno - {{turnoNombre}}</h4>
+                            </a>
+                        </div>
+                        <div class="portlet-widgets">
+                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panel{{turno}}"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-collapse collapse in" id="panel{{turno}}">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                        <table class="table table bordered cf dataTable">
+                            <thead class="cf">
+                                <tr>
+                                    
+                                    <th>Nivel</th>
+                                    <th>Grado</th>
+                                    <th>Paralelo</th>
+                                    <th>Turno</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                        {% for c in cursos %}
+                        {% if c.turnoTipo.id != turno %}
+
+                            {% set turno = c.turnoTipo.id %}
+                            </tbody>
+                            </table>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+                            <div class="portlet portlet-blue">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panel{{turno}}">
+                                    <h4>Turno - {{c.turnoTipo.turno}}</h4>
+                                    </a>
+                                </div>
+                                <div class="portlet-widgets">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panel{{turno}}"><i class="fa fa-chevron-down"></i></a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-collapse collapse in" id="panel{{turno}}">
+                            <div class="portlet-body">
+                            <div id="no-more-tables">
+                                <table class="table table bordered cf dataTable">
+                                    <thead class="cf">
+                                        <tr>
+                                            
+                                            <th>Nivel</th>
+                                            <th>Grado</th>
+                                            <th>Paralelo</th>
+                                            <th>Turno</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr {% if c.nivelTipo.id == 11 %} 
+                                        class="success" 
+                                    {% else %}
+                                        {% if c .nivelTipo.id == 12 %}
+                                            class="warning"
+                                        {% else %}
+                                            class="info"
+                                        {% endif %}
+                                    {% endif %}>
+                                    
+                                    <td data-title="Nivel">{{c.nivelTipo.nivel}}</td>
+                                    <td data-title="Grado">{{c.gradoTipo.grado|upper}}</td>
+                                    <td data-title="Paralelo">{{c.paraleloTipo.paralelo}}</td>
+                                    <td data-title="Turno">{{c.turnoTipo.turno}}</td>
+                                    <td data-title="Acciones">
+                                        <form action="{{path('creacioncursos_delete')}}" style="display: inline-block;" method="post">
+                                            <input type="hidden" name="idCurso" value="{{c.id}}">
+                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                        {% else %}
+                            <tr {% if c.nivelTipo.id == 11 %} 
+                                    class="success" 
+                                {% else %}
+                                    {% if c .nivelTipo.id == 12 %}
+                                        class="warning"
+                                    {% else %}
+                                        class="info"
+                                    {% endif %}
+                                {% endif %}>
+                                
+                                <td data-title="Nivel">{{c.nivelTipo.nivel}}</td>
+                                <td data-title="Grado">{{c.gradoTipo.grado|upper}}</td>
+                                <td data-title="Paralelo">{{c.paraleloTipo.paralelo}}</td>
+                                <td data-title="Turno">{{c.turnoTipo.turno}}</td>
+                                <td data-title="Acciones">
+                                    <form action="{{path('creacioncursos_delete')}}" style="display: inline-block;" method="post">
+                                        <input type="hidden" name="idCurso" value="{{c.id}}">
+                                        <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+            {% else %}
+                <div class="alert alert-info">
+                    No hay cursos registrados
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

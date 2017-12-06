@@ -1,0 +1,3 @@
+sie_regular_validate:
+    resource: "@SieValidacionBundle/Resources/config/routing/regular.yml"
+    prefix:   /sie/validate

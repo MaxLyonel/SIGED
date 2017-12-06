@@ -1,0 +1,47 @@
+notificacion:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:Notificacion:index" }
+
+notificacion_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:Notificacion:show" }
+
+notificacion_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:Notificacion:new" }
+
+notificacion_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:Notificacion:create" }
+    methods:  POST
+
+notificacion_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:Notificacion:edit" }
+
+notificacion_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:Notificacion:update" }
+    methods:  [POST, PUT]
+
+notificacion_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:Notificacion:delete" }
+    methods:  [POST, DELETE]
+
+notificacion_list:
+    path:     /list
+    defaults: { _controller: "SieAppWebBundle:Notificacion:list" }
+
+notificacion_show_all:
+    path:     /{id}/show_all
+    defaults: { _controller: "SieAppWebBundle:Notificacion:showall" }
+    
+notificacion_estado:
+    path:     /{id}/estado
+    defaults: { _controller: "SieAppWebBundle:Notificacion:estado" }
+    
+notificacion_readed:
+    path:     /readed
+    defaults: { _controller: "SieAppWebBundle:Notificacion:readed" }
+    methods:  POST

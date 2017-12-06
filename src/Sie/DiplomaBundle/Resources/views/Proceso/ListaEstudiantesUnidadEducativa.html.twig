@@ -1,0 +1,71 @@
+{% extends 'SieDiplomaBundle:Proceso:recepcionDistrito.html.twig' %}
+
+{% block contentnavegacion %}<li class="active"><a href="{{ path('sie_diploma_proceso_recepcion_distrito') }}"><i class="fa fa-dashboard"></i> Principal</a></li><li class="active">Listado de Estudiantes</li>{% endblock %}  
+{% block contentregistros %}    
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <form name="formtable" role="form" action="{{ path('sie_diploma_proceso_recepcion_distrito_registra') }}" method="POST">
+                <div class="col-lg-12 col-md-12">                
+                    <div class="portlet portlet-dpl">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4><i class="fa fa-circle text-orange"></i> Bachilleres ({{unidadEducativa.id}} - {{unidadEducativa.institucioneducativa}})</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <div class="btn-group">
+                                    <input type="submit" class="btn btn-warning" value="Registrar los marcados" />
+                                </div>
+                                <span class="divider"></span>
+                                <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="no-more-tables"> 
+                                <table id="myTable" class="table table-bordered table-hover cf dataTable">
+                                    <thead class="">
+                                        <tr class="">
+                                            <th>#</th>
+                                            <th>Codigo Rude</th>
+                                            <th>C.I.</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>Nombre(s)</th>
+                                            <th>Fecha Nacimiento</th>
+                                            <th>Estado</th>
+                                            <th style="width:50px; text-align: center;"><input type="checkbox" name="marcarTodos" id="marcarTodos" onclick="marcarTodasAreas()"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% set cont = 0 %}
+                                        {% for entity in bachilleres %}
+                                            {% set cont = cont +1 %}
+                                            {% if entity.complemento == "" %}
+                                                {% set ci = entity.carnet_identidad %}
+                                            {% else %}
+                                                {% set ci = entity.carnet_identidad~'-'~entity.complemento%}
+                                            {% endif %}
+                                            <tr>
+                                                <td data-title="#">{{ cont }}</td>
+                                                <td data-title="Codigo Rude">{{ entity.codigo_rude }}</td>
+                                                <td data-title="C.I.">{{ ci }}</td>
+                                                <td data-title="Paterno">{{ entity.paterno }}</td>
+                                                <td data-title="Materno">{{ entity.materno }}</td>
+                                                <td data-title="Nombre(s)" >{{ entity.nombre }}</td>
+                                                <td data-title="Fecha Nacimiento">{{entity.fecha_nacimiento|date('d-m-Y')}}</td>
+                                                <td data-title="Estado">{{entity.desc_estado_matricula}}</td>
+                                                <td class="text-center" style="width: 50px">
+                                                    <input type="checkbox" name="estudiantes[]" value="{{entity.estudiante_inscripcion_id}}">
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>                                                                                      
+                            </div>  
+                        </div>
+                    </div>           
+                </div>
+            </form>                             
+        </div>
+    </div>
+{% endblock %}

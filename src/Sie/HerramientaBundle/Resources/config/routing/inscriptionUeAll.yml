@@ -1,0 +1,71 @@
+inscription_ue_all_sie_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:index }
+
+inscription_ue_all_sie_result:
+    path:     /sie/result/
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:result }
+    options:
+         expose: true 
+         
+inscription_ue_all_sie_nota:
+    path:     /seeNota/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}/{sie}
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:nota }           
+    options:
+         expose: true 
+         
+inscription_ue_all_sie_download:
+    path:     /download/{file}
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:download }         
+    
+inscription_ue_all_sie_remove:
+    path:     /remove/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{sie}/{gestion}/{eiid}
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:remove }
+    
+inscription_ue_all_sie_get_turnos:
+    path:     /sie/getturnos/
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:getTurnos }
+    options:
+         expose: true 
+         
+inscription_ue_all_sie_get_paralelos:
+    path:     /sie/getparalelos/
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:getParalelos }
+    options:
+         expose: true 
+         
+inscription_ue_all_sie_get_students:
+    path:     /sie/getstudents/
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:getStudents }
+    options:
+         expose: true 
+         
+inscription_ue_all_sie_get_inscription:         
+    path:     /sie/inscription/
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:inscription }
+    options:
+         expose: true  
+         
+inscription_ue_all_sie_see_students:
+    path:     /sie/seestudents/
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:seeStudents }
+    options:
+         expose: true
+         
+inscription_ue_all_sie_inscription_with_rude:
+    path:     /sie/inscription_with_rude/
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:inscriptionWithRude }
+    options:
+         expose: true
+         
+inscription_ue_all_sie_rude_inscription:
+    path:     /sie/inscription_rude_inscription/
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:rudeInscription }
+    options:
+         expose: true
+         
+inscription_ue_all_sie_exe_inscription:
+    path:     /sie/inscription_exe_inscription/
+    defaults: { _controller: SieHerramientaBundle:InscriptionUeAll:exeInscription }
+    options:
+         expose: true         

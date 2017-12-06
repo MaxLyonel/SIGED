@@ -1,0 +1,15 @@
+sie_diploma_tramite_tecnico_recepcion:
+    path:     /tramite/recepcion
+    defaults: { _controller: SieDiplomaBundle:TramiteTecnico:recepcionTramite }
+
+sie_diploma_tramite_tecnico_recepcion_registro:
+    path:     /tramite/recepcion/registro
+    defaults: { _controller: SieDiplomaBundle:TramiteTecnico:recepcionTramiteRegistro }
+
+sie_diploma_tramite_tecnico_impresion_formulario:
+    path:     /tramite/impresion/fomulario
+    defaults: { _controller: SieDiplomaBundle:TramiteTecnico:impresionTramiteFormulario }
+
+sie_diploma_tramite_tecnico_impresion_pdf:
+    path:     /tramite/impresion/pdf
+    defaults: { _controller: SieDiplomaBundle:TramiteTecnico:impresionDocumentoPdf }

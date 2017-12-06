@@ -1,0 +1,43 @@
+solicitudModificacionCalificaciones:
+    path:     /
+    defaults: { _controller: SieRegularBundle:SolicitudModificacionCalificaciones:index }
+
+solicitudModificacionCalificaciones_search:
+    path:     /search/{op}
+    defaults: { _controller: SieRegularBundle:SolicitudModificacionCalificaciones:search, op:find }
+
+solicitudModificacionCalificaciones_new:
+    path:     /new/
+    defaults: { _controller: "SieRegularBundle:SolicitudModificacionCalificaciones:new" }
+    methods:  POST
+
+solicitudModificacionCalificaciones_enviar:
+    path:     /enviar/
+    defaults: { _controller: "SieRegularBundle:SolicitudModificacionCalificaciones:enviar"}
+    methods:  POST
+
+solicitudModificacionCalificaciones_update:
+    path:     /update/
+    defaults: { _controller: "SieRegularBundle:SolicitudModificacionCalificaciones:update" }
+    methods:  [POST]
+
+solicitudModificacionCalificaciones_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieRegularBundle:Notas:cargarParalelos"}
+    options:
+         expose: true
+
+detalleSolicitud:
+    path:     /detalle/
+    defaults: { _controller: "SieRegularBundle:SolicitudModificacionCalificaciones:detalleSolicitud"}
+    methods:  [POST]
+
+solicitudCambiarestado:
+    path:     /solicitudCambiarestado/
+    defaults: { _controller: "SieRegularBundle:SolicitudModificacionCalificaciones:solicitudCambiarestado"}
+    methods:  [POST]
+
+solicitudesEstudiante:
+    path:     /solicitudesEstudiante/
+    defaults: { _controller: "SieRegularBundle:SolicitudModificacionCalificaciones:solicitudesEstudiante"}
+    methods:  [POST]

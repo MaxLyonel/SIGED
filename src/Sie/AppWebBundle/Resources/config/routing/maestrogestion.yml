@@ -1,0 +1,63 @@
+maestrogestion:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:MaestroGestion:index }
+
+maestrogestion_list:
+    path:     /list
+    defaults: { _controller: "SieAppWebBundle:MaestroGestion:list" }
+    methods:  [POST]
+
+maestrogestion_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:MaestroGestion:show" }
+
+maestrogestion_new:
+    path:     /new/
+    defaults: { _controller: "SieAppWebBundle:MaestroGestion:new" }
+
+maestrogestion_create:
+    path:     /create/
+    defaults: { _controller: "SieAppWebBundle:MaestroGestion:create" }
+    methods:  POST
+
+maestrogestion_edit:
+    path:     /edit/
+    defaults: { _controller: "SieAppWebBundle:MaestroGestion:edit" }
+    methods:  [POST, PUT]
+
+maestrogestion_update:
+    path:     /update/
+    defaults: { _controller: "SieAppWebBundle:MaestroGestion:update" }
+    methods:  [POST, PUT]
+
+maestrogestion_delete:
+    path:     /delete/
+    defaults: { _controller: "SieAppWebBundle:MaestroGestion:delete" }
+    methods:  [POST, DELETE]
+
+maestrogestion_search:
+    path:     /search/
+    defaults: { _controller: "SieAppWebBundle:MaestroGestion:search" }
+    methods:  POST
+
+maestrogestion_find:
+    path:     /find/
+    defaults: { _controller: "SieAppWebBundle:MaestroGestion:find" }
+
+listaridiomasleehablaescribe:
+     path:    /idiomas/
+     defaults: { _controller: SieAppWebBundle:MaestroGestion:listaridiomasleehablaescribe }
+     options:
+         expose: true
+
+listaridiomasleehablaescribe_edit:
+     path:    /idiomasmaestro/{idMaestroInscripcion}/
+     defaults: { _controller: SieAppWebBundle:MaestroGestion:listaridiomasleehablaescribeedit }
+     options:
+         expose: true
+
+verificar_existe_persona:
+     path:    /verificar_existe_persona/{carnet}/
+     defaults: { _controller: SieAppWebBundle:MaestroGestion:verificar_existe_persona }
+     options:
+         expose: true

@@ -1,0 +1,8 @@
+
+infra_sheet_one_index:
+    path:     /index
+    defaults: { _controller: SieInfraBundle:SheetOne:index }
+
+infra_sheet_one_access:
+    path:     /access
+    defaults: { _controller: SieInfraBundle:SheetOne:access }

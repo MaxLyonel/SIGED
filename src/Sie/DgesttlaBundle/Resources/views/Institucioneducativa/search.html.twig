@@ -1,0 +1,69 @@
+{% extends 'layoutDgesttla.html.twig' %}
+
+{% block headercontent %}
+<!-- Start header content -->
+<div class="header-content">
+    <h2><i class="fa fa-file-o"></i>Formación Técnica Tecnológica <span>Buscar Instituto</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Estás aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('principal_web')}}">Inicio</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Buscar Instituto</li>
+        </ol>
+    </div>
+</div><!-- /.header-content -->
+<!--/ End header content -->
+{% endblock %}
+
+{% block bodycontent %}
+
+    {% for flashMessage in app.session.flashbag.get('searchOk') %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>¡Advertencia!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('searchWarn') %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>¡Advertencia!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('searchErr') %}
+        <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-xs-12">
+            <div class="panel panel-primary rounded shadow">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Buscar Instituto</h3>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body no-padding rounded-bottom">
+                    {{ form_start(formInstitucioneducativaId,{ 'attr':{'class': 'form-horizontal form-bordered'} }) }}
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Código RIE:</label>
+                                <div class="col-sm-3">
+                                    {{ form_widget(formInstitucioneducativaId.institucioneducativaId,{ 'attr':{'class': 'form-control rounded','placeholder':'Ingresar código RIE...','pattern':'[0-9]{8,17}'}  }) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ form_widget(formInstitucioneducativaId.buscarId,{ 'attr':{'class': 'btn btn-success'} }) }}
+                                </div>
+                            </div><!-- /.form-group -->
+                        </div><!-- /.form-body -->
+                    {{ form_end(formInstitucioneducativaId) }}
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+        </div>
+    </div>
+
+{% endblock %}

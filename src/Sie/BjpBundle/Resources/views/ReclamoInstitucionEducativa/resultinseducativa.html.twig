@@ -1,0 +1,70 @@
+{% extends 'SieBjpBundle:Default:reclamoinstitucioneducativa.html.twig' %}
+
+{% block contentoption%}
+<!--      <div id="page-wrapper">-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Registro de Instituciones Educativas
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('ReclamoInstitucionEducativa')}}">Buscar</a></li>
+					<li class="active">Resultado de la Busqueda</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+   <div class="row">
+       <div class="col-md-12">
+            <div id="no-more-tables">
+                 <table id="myTable" class="table table-bordered table-hover cf dataTable">
+
+                        <thead class="">
+                               <tr class="">
+                                   <th>No.</th>
+                                   <th>Codigo RUE</th>
+                                   <th>Institucion Educativa</th>
+                                   <th>Codigo LE</th>
+                                   <th>Fecha Resolucion</th>
+                                   <th>Dependencia</th>
+                                   <th>Tipo</th>
+                                   <th>Departamento</th>
+                                   <th>Distrito</th>
+                                   <th>Acciones</th>
+                                   
+{#                                                    
+                                                    <th >Form</th>
+#}
+                               </tr>
+                        </thead>
+                        <tbody>
+                                  {% for entity in entities %}
+                                  <tr>
+                                     <td data-title="No.">{{ loop.index }}</td>
+                                     <td data-title="Codigo RUE">{{ entity.id }}</td>
+                                     <td data-title="Institucion Educativa" >{{ entity.institucioneducativa }}</td>
+                                     <td data-title="Codigo LE" >{{ entity.leJuridicciongeografica.id }}</td>
+                                     <td data-title="Fecha Resolucion" >{% if entity.fechaResolucion %}{{ entity.fechaResolucion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                     <td data-title="Dependencia" >{{ entity.dependenciaTipo.dependencia }}</td>
+                                     <td data-title="Tipo" >{{ entity.institucioneducativaTipo.descripcion }}</td>
+                                     <td data-title="Departamento" >{{ entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>
+                                     <td data-title="Distrito" >{{ entity.leJuridicciongeografica.distritoTipo.distrito }}</td>
+                                     <td class="text-center">
+	                                     <form action="{{path('bjp_reclamo_edit')}}" method="post" style="display:inline-block">
+	                                           <input type="hidden" name="idRue" value="{{entity.id}}">
+	                                           <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
+	                                     </form>
+                                     </td>
+                                  </tr>
+                                  {% endfor %}
+                        </tbody>
+                 </table>
+            </div>
+       </div>
+   </div>
+{% endblock %}

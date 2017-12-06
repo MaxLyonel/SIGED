@@ -1,0 +1,882 @@
+{% extends 'layoutInfraestructura.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .modal-dialog{
+            width: 80%;
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+    {% include 'SieInfraestructuraBundle:Info:cabecera.html.twig' %}
+    <ol class="breadcrumb">
+        <li><a href="{{path('infra_info_index')}}">Pincipal</a></li>
+        <li><a href="{{path('infra_info_acceder')}}">Panel de Acceso Rápido</a></li>
+        <li class="active">Hoja 5 - Ambientes Administrativos y Recreativos</li>
+    </ol>
+    <h2 class="view-title"><img src="{{asset('webInfraestructura/assets/images/ambienteadministrativo.png')}}" class="img-header"> HOJA 5 - AMBIENTES ADMINISTRATIVOS Y RECREATIVOS</h2>
+    {{form_start(form)}}
+    {{form_widget(form.save)}}
+    <a  class="btn btn-danger-alt" href="{{path('infra_info_acceder')}}">Cancelar</a>
+    <div class="module-wrapper">
+    <section class="module module-headings">
+    <div class="module-inner">
+    <div class="module-content">
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs nav-tabs-theme-3" role="tablist">
+            <li role="presentation" class="active"><a href="#administrativos" aria-controls="administrativos" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-codepen"></i><br><span class="hidden-xs hidden-sm">1. Ambientes administrativos (no pedagógicos)</span></a></li>
+            <li role="presentation" class=""><a href="#recreativos" aria-controls="recreativos" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-futbol-o"></i><br><span class="hidden-xs hidden-sm">2. Áreas recreacionales</span></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+
+            <div role="tabpanel" class="tab-pane active" id="administrativos">
+
+                <div class="row">
+                    <div class="col-sm-6">
+
+                      <section class="module module-headings">
+                      <div class="module-inner">
+                        <div class="module-heading">
+                          <legend>1.1 Cantidad y estado de ambientes</legend>
+                          <ul class="actions list-inline">
+                            <li>
+                              <!-- <button class="btn btn-primary btn-xs" type="button" data-toggle="modal" data-target="#modal" onclick="">Adicionar</button> -->
+                              <button class="btn btn-primary btn-xs" type="button" onclick="agregarFila();">Adicionar</button>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="module-content collapse in" id="content-1" aria-expanded="true">
+                          <div class="module-content-inner no-padding-bottom">
+                            <div class="table-responsive">
+
+                              <table class="table">
+                                  <thead>
+                                      <tr>
+                                          <th></th>
+                                          <th>Ambiente</th>
+                                          <th>Bueno</th>
+                                          <th>Regular</th>
+                                          <th>Malo</th>
+
+                                      </tr>
+                                  </thead>
+                                  <tbody id='ambientesId'>
+
+                                  </tbody>
+                              </table>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
+                    </div>
+                    <div class="col-sm-6">
+
+                      <section class="module module-headings">
+                      <div class="module-inner">
+                        <div class="module-heading">
+                          <legend>1.2 Cantidad y estado del equipamiento y mobiliario</legend>
+                          <ul class="actions list-inline">
+                            <li>
+                              <!-- <button class="btn btn-primary btn-xs" type="button" data-toggle="modal" data-target="#modal" onclick="equipamientoAdicionar();">Adicionar</button> -->
+                              <button class="btn btn-primary btn-xs" type="button" onclick="agregarFilaEquipo();">Adicionar</button>
+                            </li>
+                          </ul>
+
+                        </div>
+
+                        <div class="module-content collapse in" id="content-1" aria-expanded="true">
+                          <div class="module-content-inner no-padding-bottom">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Equipamiento</th>
+                                            <th>Bueno</th>
+                                            <th>Regular</th>
+                                            <th>Malo</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id='equipamientoId'>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                    </div>
+                </div>
+
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="recreativos">
+                <div class="row">
+                    <div class="col-sm-12">
+
+
+                      <section class="module module-headings">
+                            <div class="module-inner">
+                              <div class="module-heading">
+                                <legend>2.1 Canchas</legend>
+                                <ul class="actions list-inline">
+                                  <li>
+                                 <!-- <button class="btn btn-primary btn-xs" type="button" data-toggle="modal" data-target="#modal" onclick="canchaAdicionar();">Adicionar</button> -->
+                                 <button class="btn btn-primary btn-xs" type="button" onclick="agregarFilaCanchas();">Adicionar</button>
+                                  </li>
+                                </ul>
+
+                              </div>
+
+                              <div class="module-content collapse in" id="content-1" aria-expanded="true">
+                                <div class="module-content-inner no-padding-bottom">
+                                  <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>No.</th>
+                                                <th>Canchas</th>
+                                                <th>Destinado a</th>
+                                                <th>Material Piso</th>
+                                                <th>Estado Piso</th>
+                                                <th>¿Techado?</th>
+                                                <th>¿Graderias?</th>
+                                                <th>Capacidad</th>
+                                                <th>Área(m2)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id='canchasId'>
+                                        </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                      </section>
+                    </div>
+                </div>
+                <br><br>
+                <div class="row">
+                    <div class="col-sm-6">
+
+                        <section class="module module-headings">
+                              <div class="module-inner">
+                                <div class="module-heading">
+                                  <legend>2.2 Patios</legend>
+                                  <ul class="actions list-inline">
+                                    <li>
+                                   <!-- <button class="btn btn-primary btn-xs" type="button" data-toggle="modal" data-target="#modal" onclick="patioAdicionar();">Adicionar</button> -->
+                                   <button class="btn btn-primary btn-xs" type="button" onclick="agregarFilaPatios();">Adicionar</button>
+                                    </li>
+                                  </ul>
+
+                                </div>
+
+                                <div class="module-content collapse in" id="content-1" aria-expanded="true">
+                                  <div class="module-content-inner no-padding-bottom">
+                                    <div class="table-responsive">
+                                      <table class="table">
+                                          <thead>
+                                              <tr>
+                                                  <th></th>
+                                                  <th>Nro</th>
+                                                  <th>Patios</th>
+                                                  <th>Material Piso</th>
+                                                  <th>Estado Piso</th>
+                                                  <th>Área(m2)</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody id='patiosId'>
+                                          </tbody>
+                                      </table>
+
+                                    </div>
+
+                                  </div>
+
+                                </div>
+
+                              </div>
+
+                        </section>
+
+                    </div>
+                    <div class="col-sm-6">
+
+                      <section class="module module-headings">
+                            					<div class="module-inner">
+                            						<div class="module-heading">
+                            							<legend>2.3 Parques</legend>
+                            							<ul class="actions list-inline">
+                                            <li>
+                                           <!-- <button class="btn btn-primary btn-xs" type="button" data-toggle="modal" data-target="#modal" onclick="parqueAdicionar();">Adicionar</button> -->
+                                           <button class="btn btn-primary btn-xs" type="button" onclick="agregarFilaParques();">Adicionar</button>
+                                            </li>
+                            							</ul>
+
+                            						</div>
+
+                            						<div class="module-content collapse in" id="content-1" aria-expanded="true">
+                            							<div class="module-content-inner no-padding-bottom">
+                            								<div class="table-responsive">
+                                              <table class="table">
+                                                  <thead>
+                                                      <tr>
+                                                          <th></th>
+                                                          <th>Nro</th>
+                                                          <th>Parques</th>
+                                                          <th>Material Piso</th>
+                                                          <th>Estado Piso</th>
+                                                          <th>Área(m2)</th>
+
+                                                      </tr>
+                                                  </thead>
+                                                  <tbody id='parquesId'>
+                                                  </tbody>
+                                              </table>
+                            								</div>
+
+                            							</div>
+
+                            						</div>
+
+                            					</div>
+
+                            		</section>
+
+                    </div>
+                </div>
+                <br><br>
+                <div class="row">
+                    <div class="col-sm-12">
+                      <section class="module module-headings">
+                            					<div class="module-inner">
+                            						<div class="module-heading">
+                            							<legend>2.4 Coliseos</legend>
+                            							<ul class="actions list-inline">
+                                            <li>
+                                           <!-- <button class="btn btn-primary btn-xs" type="button" data-toggle="modal" data-target="#modal" onclick="coliseoAdicionar();">Adicionar</button> -->
+                                           <button class="btn btn-primary btn-xs" type="button" onclick="agregarFilaColiseos();">Adicionar</button>
+                                            </li>
+                            							</ul>
+
+                            						</div>
+
+                            						<div class="module-content collapse in" id="content-1" aria-expanded="true">
+                            							<div class="module-content-inner no-padding-bottom">
+                            								<div class="table-responsive">
+                                              <table class="table">
+                                                  <thead>
+                                                      <tr>
+                                                          <th></th>
+                                                          <th>Nro</th>
+                                                          <th>Coliseos</th>
+                                                          <th>Material Piso</th>
+                                                          <th>Estado Piso</th>
+                                                          <th>¿Techado?</th>
+                                                          <th>Capacidad</th>
+                                                          <th>Área(m2)</th>
+                                                      </tr>
+                                                  </thead>
+                                                  <tbody id='coliseosId'>
+                                                  </tbody>
+                                              </table>
+                            								</div>
+                            							</div>
+                            						</div>
+                            					</div>
+                            		</section>
+                    </div>
+                </div>
+                <br><br>
+                <div class="row">
+                    <div class="col-sm-12">
+
+                      <section class="module module-headings">
+                      <div class="module-inner">
+                        <div class="module-heading">
+                          <legend>2.5 Piscinas</legend>
+                          <ul class="actions list-inline">
+                            <li>
+                            <!-- <button class="btn btn-primary btn-xs" type="button" data-toggle="modal" data-target="#modal" onclick="piscinaAdicionar();">Adicionar</button> -->
+                            <button class="btn btn-primary btn-xs" type="button" onclick="agregarFilaPiscinas();">Adicionar</button>
+                            </li>
+                          </ul>
+
+                        </div>
+
+                        <div class="module-content collapse in" id="content-1" aria-expanded="true">
+                          <div class="module-content-inner no-padding-bottom">
+                            <div class="table-responsive">
+                              <table class="table">
+                                  <thead>
+                                      <tr>
+                                          <th></th>
+                                          <th>Nro</th>
+                                          <th>Piscinas</th>
+                                          <th>Material Piso</th>
+                                          <th>Estado Piso</th>
+                                          <th>¿Techado?</th>
+                                          <th>Capacidad</th>
+                                          <th>Área(m2)</th>
+
+                                      </tr>
+                                  </thead>
+                                  <tbody id='piscinasId'>
+                                  </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    </div>
+    </section>
+    {{form_end(form)}}
+    <div class="modal fade bs-example-modal-lg" id="modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var ambienteAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_ambientesAdministrativosRecreativos_ambienteAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+        var equipamientoAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_ambientesAdministrativosRecreativos_equipamientoAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+        var canchaAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_ambientesAdministrativosRecreativos_canchaAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+        var patioAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_ambientesAdministrativosRecreativos_patioAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+        var parqueAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_ambientesAdministrativosRecreativos_parqueAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+        var coliseoAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_ambientesAdministrativosRecreativos_coliseoAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+        var piscinaAdicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_ambientesAdministrativosRecreativos_piscinaAdicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+
+        var cont = 0;
+        var contAmbiente = 0;
+        var contEquipaimento = 0;
+        var contCancha = 0;
+        var contPatio = 0;
+        var contParque = 0;
+        var contColiseo = 0;
+        var contPiscina = 0;
+
+        arrayAmbientes = [];
+        arrayAmbientesAdm = [];
+        arrayEquipamientoAdm = [];
+        arrayMaterialPiso = [];
+        arrayEstadoPiso = [];
+        arrayTechado = [];
+        arrayGraderias = [];
+        arrayEstadoGeneral = [];
+        arrayYesNoBoll = [];
+
+
+        $(function(){
+
+            var idEntidad = $('#form_id').val();
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_ambientesAdministrativosRecreativos_infoComplete',{id: idEntidad}),
+               beforeSend: function () {
+                   $("#ambientesId").empty();
+               },
+               success: function (data) {
+
+                    // arrayPisos = data.piso;
+                    // arrayParedes = data.pared;
+                    // arrayCielos = data.cielo;
+                    // arrayTechos = data.techo;
+                    arrayAmbientesAdm     = data.ambientesAdm;
+                    arrayEquipamientoAdm  = data.equipamientosAdm;
+                    arrayMaterialPiso     = data.materialpiso;
+                    arrayEstadoPiso    = data.estadoGeneral;
+                    arrayYesNoBoll    = data.yesnobool;
+                    //load values ambiente form
+                    $.each(data.dataAmbientes, function (i, valores) {
+                      var arrAmbjs = [];
+                      $.each(valores, function (j, valores1) {
+                        arrAmbjs[j]=valores1;
+                      });
+                      cont++;
+                      var ambiente = 'ambiente' + cont;
+                      var bueno = 'bueno' + cont;
+                      var regular = 'regular' + cont;
+                      var malo = 'malo' + cont;
+
+                      $("#ambientesId").append('<tr id="'+cont+'">\n\
+                          <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                          <td><select            name="formAmb['+cont+'][]" id="formAmb_'+ambiente+'" required="true"></select>\n\
+                          <td><input type="text" name="formAmb['+cont+'][]"    id="formAmb_'+bueno+'" value="'+arrAmbjs[1]+'" size="5" maxlength="4" required="true"></td>\n\
+                          <td><input type="text" name="formAmb['+cont+'][]"  id="formAmb_'+regular+'" value="'+arrAmbjs[2]+'" size="5" maxlength="4" required="true"></td>\n\
+                          <td><input type="text" name="formAmb['+cont+'][]"     id="formAmb_'+malo+'" value="'+arrAmbjs[3]+'" size="5" maxlength="4" required="true"></td>\n\
+                          </tr>');
+
+                          $("#formAmb_" + ambiente).empty();
+                          $("#formAmb_" + ambiente).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayAmbientesAdm, function (k, value2) {
+                            if(k==arrAmbjs[0]){sel = 'selected';}else{sel = '';}
+                              $("#formAmb_" + ambiente).append('<option value="' + k + '"'+ sel +'>' + value2 + '</option>');
+                          });
+                    });
+
+                    //load Equipoamiento
+                    $.each(data.dataEquipamientos, function (i, valores) {
+                      var arrEquipojs = [];
+                      $.each(valores, function (j, valores1) {
+                        arrEquipojs[j]=valores1;
+                      });
+
+
+                      cont++;
+                      var equipamiento = 'equipamiento' + cont;
+                      var bueno = 'bueno' + cont;
+                      var regular = 'regular' + cont;
+                      var malo = 'malo' + cont;
+
+                      $("#equipamientoId").append('<tr id="'+cont+'">\n\
+                          <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                          <td><select            name="formEquipa['+cont+'][]" id="formEquipa_'+equipamiento+'" required="true"></select>\n\
+                          <td><input type="text" name="formEquipa['+cont+'][]" id="formEquipa_'+bueno+'" value="'+arrEquipojs[1]+'" size="5" maxlength="4" required="true"></td>\n\
+                          <td><input type="text" name="formEquipa['+cont+'][]" id="formEquipa_'+regular+'" value="'+arrEquipojs[2]+'" size="5" maxlength="4" required="true"></td>\n\
+                          <td><input type="text" name="formEquipa['+cont+'][]" id="formEquipa_'+malo+'" value="'+arrEquipojs[3]+'" size="5" maxlength="4" required="true"></td>\n\
+                          </tr>');
+
+                          $("#formEquipa_" + equipamiento).empty();
+                          $("#formEquipa_" + equipamiento).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayEquipamientoAdm, function (k, value2) {
+                              if(k==arrEquipojs[0]){sel = 'selected';}else{sel = '';}
+                                $("#formEquipa_" + equipamiento).append('<option value="' + k + '" '+sel+'>' + value2 + '</option>');
+                          });
+
+
+                    });
+
+                    //load values dataCanchas form
+                    $.each(data.dataCanchas, function (i, valores) {
+                      var arrCanchajs = [];
+                      $.each(valores, function (j, valores1) {
+                        arrCanchajs[j]=valores1;
+                      });
+
+                      cont++;
+                      contCancha++;
+                      var canchas = 'canchas' + cont;
+                      var destinado = 'destinado' + cont;
+                      var materialpiso = 'materialpiso' + cont;
+                      var estadopiso = 'estadopiso' + cont;
+                      var techado = 'techado' + cont;
+                      var graderias = 'graderias' + cont;
+                      var capacidad = 'capacidad' + cont;
+                      var area = 'area' + cont;
+
+
+                      $("#canchasId").append('<tr id="'+cont+'">\n\
+                          <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                          <td>'+contCancha+'</td>\n\
+                          <td>Canchas</td>\n\
+                          <td><input type="text"  name="formCanchas['+cont+'][]" id="formCanchas_'+destinado+'" value="'+arrCanchajs[0]+'" size="10" maxlength="4" required="true"></td>\n\
+                          <td><select             name="formCanchas['+cont+'][]" id="formCanchas_'+materialpiso+'" required="true"></select>\n\
+                          <td><select             name="formCanchas['+cont+'][]" id="formCanchas_'+estadopiso+'" required="true"></select>\n\
+                          <td><select             name="formCanchas['+cont+'][]" id="formCanchas_'+techado+'"     required="true"></td>\n\
+                          <td><select             name="formCanchas['+cont+'][]" id="formCanchas_'+graderias+'" required="true"></td>\n\
+                          <td><input type="text"  name="formCanchas['+cont+'][]" id="formCanchas_'+capacidad+'" value="'+arrCanchajs[5]+'" size="5" maxlength="4" required="true"></td>\n\
+                          <td><input type="text"  name="formCanchas['+cont+'][]" id="formCanchas_'+area+'" value="'+arrCanchajs[6]+'" size="5" maxlength="4" required="true"></td>\n\
+                          </tr>');
+
+                          $("#formCanchas_" + materialpiso).empty();
+                          $("#formCanchas_" + materialpiso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayMaterialPiso, function (k, value2) {
+                            if(k==arrCanchajs[1]){sel = 'selected';}else{sel = '';}
+                            $("#formCanchas_" + materialpiso).append('<option value="' + k + '"'+sel+'>' + value2 + '</option>');
+                          });
+
+                          $("#formCanchas_" + estadopiso).empty();
+                          $("#formCanchas_" + estadopiso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayEstadoPiso, function (l, value3) {
+                            if(l==arrCanchajs[2]){sel = 'selected';}else{sel = '';}
+                              $("#formCanchas_" + estadopiso).append('<option value="' + l + '" '+sel+' >' + value3 + '</option>');
+                          });
+
+                          $("#formCanchas_" + techado).empty();
+                          $("#formCanchas_" + techado).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayYesNoBoll, function (m, value4) {
+                              if(m==arrCanchajs[3]){sel = 'selected';}else{sel = '';}
+                              $("#formCanchas_" + techado).append('<option value="' + m + '" '+sel+'>' + value4 + '</option>');
+                          });
+
+                          $("#formCanchas_" + graderias).empty();
+                          $("#formCanchas_" + graderias).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayYesNoBoll, function (n, value5) {
+                            if(n==arrCanchajs[4]){sel = 'selected';}else{sel = '';}
+                              $("#formCanchas_" + graderias).append('<option value="' + n + '" '+sel+'>' + value5 + '</option>');
+                          });
+
+                    });
+
+
+                    //load values patios form
+                    $.each(data.dataPatios, function (i, valores) {
+                      var arrPatiosjs = [];
+                      $.each(valores, function (j, valores1) {
+                        arrPatiosjs[j]=valores1;
+                      });
+
+                      cont++;
+                      contPatio++;
+                      var patios = 'patios' + cont;
+                      var materialpiso = 'materialpiso' + cont;
+                      var estadopiso = 'estadopiso' + cont;
+                      var area = 'area' + cont;
+
+
+                      $("#patiosId").append('<tr id="'+cont+'">\n\
+                          <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                          <td>'+contPatio+'</td>\n\
+                          <td>Patios</td>\n\
+                          <td><select             name="formPatios['+cont+'][]" id="formPatios_'+materialpiso+'" required="true"></select>\n\
+                          <td><select             name="formPatios['+cont+'][]"   id="formPatios_'+estadopiso+'" required="true"></select>\n\
+                          <td><input type="text"  name="formPatios['+cont+'][]"         id="formPatios_'+area+'" value="'+arrPatiosjs[2]+'" size="5" maxlength="4" required="true"></td>\n\
+                          </tr>');
+
+                          $("#formPatios_" + materialpiso).empty();
+                          $("#formPatios_" + materialpiso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayMaterialPiso, function (k, value2) {
+                            if(k==arrPatiosjs[0]){sel = 'selected';}else{sel = '';}
+                              $("#formPatios_" + materialpiso).append('<option value="' + k + '" '+sel+'>' + value2 + '</option>');
+                          });
+
+                          $("#formPatios_" + estadopiso).empty();
+                          $("#formPatios_" + estadopiso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayEstadoPiso, function (l, value3) {
+                            if(l==arrPatiosjs[1]){sel = 'selected';}else{sel = '';}
+                              $("#formPatios_" + estadopiso).append('<option value="' + l + '" '+sel+'>' + value3 + '</option>');
+                          });
+
+                    });
+
+
+
+                    //load values parques form
+                    $.each(data.dataParques, function (i, valores) {
+                      var arrParquesjs = [];
+                      $.each(valores, function (j, valores1) {
+                        arrParquesjs[j]=valores1;
+                      });
+
+                      cont++;
+                      contParque++;
+                      var parques = 'parques' + cont;
+                      var materialpiso = 'materialpiso' + cont;
+                      var estadopiso = 'estadopiso' + cont;
+                      var area = 'area' + cont;
+
+
+                      $("#parquesId").append('<tr id="'+cont+'">\n\
+                          <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                          <td>'+contParque+'</td>\n\
+                          <td>Parques</td>\n\
+                          <td><select             name="formParques['+cont+'][]" id="formParques_'+materialpiso+'" required="true"></select>\n\
+                          <td><select             name="formParques['+cont+'][]" id="formParques_'+estadopiso+'" required="true"></select>\n\
+                          <td><input type="text"  name="formParques['+cont+'][]" id="formParques_'+area+'" value="'+arrParquesjs[2]+'" size="5" maxlength="4" required="true"></td>\n\
+                          </tr>');
+
+                          $("#formParques_" + materialpiso).empty();
+                          $("#formParques_" + materialpiso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayMaterialPiso, function (k, value2) {
+                            if(k==arrParquesjs[0]){sel = 'selected';}else{sel = '';}
+                              $("#formParques_" + materialpiso).append('<option value="' + k + '" '+sel+'>' + value2 + '</option>');
+                          });
+
+                          $("#formParques_" + estadopiso).empty();
+                          $("#formParques_" + estadopiso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayEstadoPiso, function (l, value3) {
+                            if(l==arrParquesjs[1]){sel = 'selected';}else{sel = '';}
+                              $("#formParques_" + estadopiso).append('<option value="' + l + '" '+sel+'>' + value3 + '</option>');
+                          });
+
+
+                    });
+
+                    //load values coliseos form
+                    $.each(data.dataColiseos, function (i, valores) {
+                      var arrColiseosjs = [];
+                      $.each(valores, function (j, valores1) {
+                        arrColiseosjs[j]=valores1;
+                      });
+
+                      cont++;
+                      contColiseo++;
+                      var coliseos = 'coliseos' + cont;
+                      var destinado = 'destinado' + cont;
+                      var materialpiso = 'materialpiso' + cont;
+                      var estadopiso = 'estadopiso' + cont;
+                      var techado = 'techado' + cont;
+
+                      var capacidad = 'capacidad' + cont;
+                      var area = 'area' + cont;
+
+
+                      $("#coliseosId").append('<tr id="'+cont+'">\n\
+                          <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                          <td>'+contColiseo+'</td>\n\
+                          <td>Coliseos</td>\n\
+                          <td><select             name="formColiseos['+cont+'][]" id="formColiseos_'+materialpiso+'" required="true"></select>\n\
+                          <td><select             name="formColiseos['+cont+'][]" id="formColiseos_'+estadopiso+'" required="true"></select>\n\
+                          <td><select             name="formColiseos['+cont+'][]" id="formColiseos_'+techado+'"     required="true"></td>\n\
+                          <td><input type="text"  name="formColiseos['+cont+'][]" id="formColiseos_'+capacidad+'" value="'+arrColiseosjs[3]+'" size="5" maxlength="4" required="true"></td>\n\
+                          <td><input type="text"  name="formColiseos['+cont+'][]" id="formColiseos_'+area+'" value="'+arrColiseosjs[4]+'" size="5" maxlength="4" required="true"></td>\n\
+                          </tr>');
+
+                          $("#formColiseos_" + materialpiso).empty();
+                          $("#formColiseos_" + materialpiso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayMaterialPiso, function (k, value2) {
+                            if(k==arrColiseosjs[0]){sel = 'selected';}else{sel = '';}
+                              $("#formColiseos_" + materialpiso).append('<option value="' + k + '" '+sel+'>' + value2 + '</option>');
+                          });
+
+                          $("#formColiseos_" + estadopiso).empty();
+                          $("#formColiseos_" + estadopiso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayEstadoPiso, function (l, value3) {
+                            if(l==arrColiseosjs[1]){sel = 'selected';}else{sel = '';}
+                              $("#formColiseos_" + estadopiso).append('<option value="' + l + '" '+sel+'>' + value3 + '</option>');
+                          });
+
+                          $("#formColiseos_" + techado).empty();
+                          $("#formColiseos_" + techado).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayYesNoBoll, function (m, value4) {
+                            if(m==arrColiseosjs[2]){sel = 'selected';}else{sel = '';}
+                              $("#formColiseos_" + techado).append('<option value="' + m + '" '+sel+'>' + value4 + '</option>');
+                          });
+
+
+                    });
+
+                    //load values piscinas form
+                    $.each(data.dataPiscinas, function (i, valores) {
+                      var arrPiscinasjs = [];
+                      $.each(valores, function (j, valores1) {
+                        arrPiscinasjs[j]=valores1;
+                      });
+
+                      cont++;
+                      contPiscina++;
+                      var piscinas = 'piscinas' + cont;
+                      var destinado = 'destinado' + cont;
+                      var materialpiso = 'materialpiso' + cont;
+                      var estadopiso = 'estadopiso' + cont;
+                      var techado = 'techado' + cont;
+
+                      var capacidad = 'capacidad' + cont;
+                      var area = 'area' + cont;
+
+
+                      $("#piscinasId").append('<tr id="'+cont+'">\n\
+                          <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                          <td>'+contPiscina+'</td>\n\
+                          <td>Piscinas</td>\n\
+                          <td><select             name="formPiscinas['+cont+'][]" id="formPiscinas_'+materialpiso+'" required="true"></select>\n\
+                          <td><select             name="formPiscinas['+cont+'][]" id="formPiscinas_'+estadopiso+'" required="true"></select>\n\
+                          <td><select             name="formPiscinas['+cont+'][]" id="formPiscinas_'+techado+'"     required="true"></td>\n\
+                          <td><input type="text"  name="formPiscinas['+cont+'][]" id="formPiscinas_'+capacidad+'" value="'+arrPiscinasjs[3]+'" size="5" maxlength="4" required="true"></td>\n\
+                          <td><input type="text"  name="formPiscinas['+cont+'][]" id="formPiscinas_'+area+'" value="'+arrPiscinasjs[4]+'" size="5" maxlength="4" required="true"></td>\n\
+                          </tr>');
+
+                          $("#formPiscinas_" + materialpiso).empty();
+                          $("#formPiscinas_" + materialpiso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayMaterialPiso, function (k, value2) {
+                            if(k==arrPiscinasjs[0]){sel = 'selected';}else{sel = '';}
+                              $("#formPiscinas_" + materialpiso).append('<option value="' + k + '" '+sel+'>' + value2 + '</option>');
+                          });
+
+                          $("#formPiscinas_" + estadopiso).empty();
+                          $("#formPiscinas_" + estadopiso).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayEstadoPiso, function (l, value3) {
+                            if(l==arrPiscinasjs[1]){sel = 'selected';}else{sel = '';}
+                              $("#formPiscinas_" + estadopiso).append('<option value="' + l + '" '+sel+'>' + value3 + '</option>');
+                          });
+
+                          $("#formPiscinas_" + techado).empty();
+                          $("#formPiscinas_" + techado).append('<option value="">Seleccionar...</option>');
+                          $.each(arrayYesNoBoll, function (m, value4) {
+                            if(m==arrPiscinasjs[2]){sel = 'selected';}else{sel = '';}
+                              $("#formPiscinas_" + techado).append('<option value="' + m + '" '+sel+'> ' + value4 + '</option>');
+                          });
+
+
+
+
+
+                    });
+
+
+
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+
+        });
+
+    </script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/ambientesjs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/equipamientojs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/canchasjs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/patiosjs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/parquesjs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/coliseosjs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/piscinasjs.js') }}"></script>
+
+{% endblock %}

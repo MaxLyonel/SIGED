@@ -1,0 +1,92 @@
+<p>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Datos Personales</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-3">
+                <h4><small>NOMBRES :</small><br>{{ persona.nombre }}</h4>
+            </div>
+            <div class="col-xs-3">
+                <h4><small>APELLIDO PATERNO :</small><br>{{ persona.paterno }}</h4>
+            </div>
+            <div class="col-xs-3">
+                <h4><small>APELLIDO MATERNO :</small><br>{{ persona.materno }}</h4>
+            </div>
+            <div class="col-md-3">
+                <h4><small>NUMERO DE CARNET :</small><br>{{ persona.carnet }}</h4>
+            </div>
+        </div>
+    </div>
+</div>         
+<p>
+
+{{ form_start(form, { 'attr': {'data-toggle': 'validator', 'role': "form", 'class':'form-horizontal', 'onsubmit': 'enviaformreset(); return false;', 'id': 'sie_usuarios_reset_form' } } )}}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Información de la Cuenta</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-6">            
+                {{ form_row(form.usuario, { 'id': 'username'}) }}
+            </div>
+            <div class="col-xs-6">
+                <div>
+                    <label class="help-block required" for="username">CONTRASEÑA NUEVA:</label>
+                    <input class="form-control input-sm" type="text" value="**********" disabled>                     
+                </div>              
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" style="text-align: center">
+                <span class="label label-warning">Se solicitara al usuario que ingrese su nueva contraseña en su siguiente ingreso al sistema.</span>
+                <span class="label label-warning">Se establecera la contraseña igual al nombre del usuario.</span>
+            </div>            
+        </div>    
+    </div>
+</div>
+        
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-6" style="text-align: center">
+                {{ form_row(form.save) }}
+            </div>                        
+            <div class="col-xs-6" style="text-align: center">
+                <a role="button" class="btn btn-default btn-large glyphicon glyphicon-remove-sign" href="#" onclick="modaluserclose();"> Cerrar</a>
+            </div>
+        </div>
+    </div>
+</div>   
+{{ form_end(form) }}
+<script>
+function enviaformreset() {
+    var msj = '\n{{ persona.nombre }} {{ persona.paterno }} {{ persona.materno }}';    
+        msj += '\n\n ¿Esta seguro de continuar?';
+
+    if (confirm('Está por modificar la contraseña de la persona: ' + msj)) {
+        var formData = $('#sie_usuarios_reset_form').serialize();
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_usuarios_reset_update'),
+            data: formData,
+            beforeSend: function () {
+                {#$("#divAlert").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");#}
+            },
+            success: function (data) {
+                $('#ModalUser').modal('hide');
+                $("#divAlertUser").empty();
+                $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                
+            },
+            error: function () {
+                $("#divAlertUser").empty();
+                $("#divAlertUser").append('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Proceso detenido. Se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+    }
+    return false;
+}
+</script>

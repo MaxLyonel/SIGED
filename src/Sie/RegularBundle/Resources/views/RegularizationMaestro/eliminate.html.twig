@@ -1,0 +1,59 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Resetear {{ app.session.get('tituloTipo') }}
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('regularizationmaestro')}}">{{ app.session.get('tituloTipo') }}</a></li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+<small>
+    <div class="row">
+
+      <div class="col-md-12">
+          <div class="portlet portlet-blue">
+              <div class="portlet-heading">
+                  <div class="portlet-title">
+                      <h4>Información Unidad Educativa</h4>
+                  </div>
+                  <div class="clearfix"></div>
+              </div>
+              <div class="portlet-body">
+                  <div class="table-responsive">
+                      <table class="table table-bordered">
+                          <thead>
+                              <tr>
+
+                                  <th>SIE</th>
+                                  <th>Unidad Educativa</th>
+                                  <th>-</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+
+                              <tr>
+                                  <td>{{objUe.id}}</td>
+                                  <td>{{objUe.institucioneducativa}}</td>
+                                  <td>{{form(form)}}</td>
+
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+          <!-- /.portlet -->
+      </div>
+
+    </div>
+</small>
+{% endblock %}

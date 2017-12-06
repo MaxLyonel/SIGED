@@ -1,0 +1,203 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcion:
+    type: entity
+    table: estudiante_inscripcion
+    repositoryClass: Sie\AppWebBundle\Entity\EstudianteInscripcionRepository
+    indexes:
+        fk_dat_rde_inscripcion_dat_rde_:
+            columns:
+                - estudiante_id
+        fk_estudia_curso:
+            columns:
+                - institucioneducativa_curso_id
+        fk_dat_rde_inscripcion_cla_esta:
+            columns:
+                - estadomatricula_tipo_id
+        IDX_A5B4A698ED8F65AB:
+            columns:
+                - acreditacionnivel_tipo_id
+        IDX_A5B4A69880D79EDB:
+            columns:
+                - modalidad_tipo_id
+        IDX_A5B4A698F49E5134:
+            columns:
+                - permanenteprograma_tipo_id
+        IDX_A5B4A69829D729C4:
+            columns:
+                - estadomatricula_inicio_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        numMatricula:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: num_matricula
+        observacionId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: observacion_id
+        observacion:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: ''
+        fechaInscripcion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inscripcion
+        apreciacionFinal:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: apreciacion_final
+        operativoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: operativo_id
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        organizacion:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        facilitadorpermanente:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        fechaInicio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        cursonombre:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        lugar:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        lugarcurso:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        facilitadorcurso:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        fechainiciocurso:
+            type: date
+            nullable: true
+            comment: ''
+        fechafincurso:
+            type: date
+            nullable: true
+            comment: ''
+        codUeProcedenciaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_ue_procedencia_id
+    manyToOne:
+        acreditacionnivelTipo:
+            targetEntity: AcreditacionnivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                acreditacionnivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadomatriculaTipo:
+            targetEntity: EstadomatriculaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadomatricula_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modalidadTipo:
+            targetEntity: ModalidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modalidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        permanenteprogramaTipo:
+            targetEntity: PermanenteprogramaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                permanenteprograma_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaCurso:
+            targetEntity: InstitucioneducativaCurso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadomatriculaInicioTipo:
+            targetEntity: EstadomatriculaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadomatricula_inicio_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

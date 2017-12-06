@@ -1,0 +1,16 @@
+tramite_declaracion_jurada_index:
+    path:    /
+    defaults: { _controller: SieTramitesBundle:TramiteDeclaracionJurada:index}
+    
+#tramite_declaracion_jurada_upfile_web:
+#    path:    /upfile
+#    defaults: { _controller: SieTramitesBundle:DeclaracionJurada:upfile }    
+#
+#tramite_declaracion_jurada_checkit_web:
+#    path:    /thinkit
+#    defaults: { _controller: SieTramitesBundle:DeclaracionJurada:greeting }
+#    
+tramite_declaracion_jurada_find:
+    path:    /tramite/find/
+    defaults: { _controller: SieTramitesBundle:TramiteDeclaracionJurada:ListarEstudiantes }  
+    

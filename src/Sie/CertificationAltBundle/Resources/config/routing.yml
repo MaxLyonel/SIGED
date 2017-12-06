@@ -1,0 +1,3 @@
+sie_certification_alt_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SieCertificationAltBundle:Default:index }

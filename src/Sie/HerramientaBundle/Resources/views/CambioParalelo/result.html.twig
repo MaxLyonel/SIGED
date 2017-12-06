@@ -1,0 +1,160 @@
+
+{% if exist == true %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel rounded shadow panel-teal">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Información Estudiante</h3>
+                    </div>
+                    <div class="pull-right">
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="panel-body panel-primary">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Rude</th>
+                                        <th class="text-center">Nombre(s)</th>
+                                        <th class="text-center">Paterno</th>
+                                        <th class="text-center">Materno</th>
+                                        <th class="text-center">CI</th>
+                                        <th class="text-center">Complemento</th>
+                                        <th class="text-center">Género</th>
+                                        <th class="text-center">F. Nacimiento</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Rude">{{dataInscription[0].codigoRude}}</td>
+                                        <td data-title="Nombre">{{ dataInscription[0].nombre|e }} </td>
+                                        <td data-title="Paterno">{{dataInscription[0].paterno|e}}</td>
+                                        <td data-title="Materno">{{dataInscription[0].materno|e}}</td>
+                                        <td data-title="CI">{{dataInscription[0].carnetIdentidad}} </td>
+                                        <td data-title="Complemento" class="text-center">{{dataInscription[0].complemento}}</td>
+                                        <td data-title="Genero" class="text-center">{% if dataInscription[0].generoTipo == 1%}M{%else%}F{%endif%} </td>
+                                        <td data-title="F. Nacimiento" class="text-center">{{dataInscription[0].fechaNacimiento|date('d-m-Y')}}</td>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p>Historial</p>
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Gestion</th>
+                                        <th class="text-center">SIE</th>
+                                        <th class="text-center">Unidad Educativa</th>
+                                        <th class="text-center">Nivel</th>
+                                        <th class="text-center">Grado</th>
+                                        <th class="text-center">Paralelo</th>
+                                        <th class="text-center">Turno</th>
+                                        <th class="text-center">Estado Matricula</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in dataInscription%}
+                                        <tr>
+                                            <td data-title="Gestion">{{data.gestion}}</td>
+                                            <td data-title="Gestion">{{data.sie}}</td>
+                                            <td data-title="U.E.">{{data.institucioneducativa}}</td>
+                                            <td data-title="Nombre">{{ data.nivel|e }} </td>
+                                            <td data-title="Paterno">{{data.grado|e}}</td>
+                                            <td data-title="Materno">{{data.paralelo|e}}</td>
+                                            <td data-title="CI">{{data.turno}} </td>
+                                            <td data-title="Est. Matricula" class="text-center">{{data.estadoMatricula}}</td>
+                                        </tr>
+                                    {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel rounded shadow panel-primary">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Datos Nueva Inscripción</h3>
+                    </div>
+                    <div class="pull-right">
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="panel-body panel-primary">
+                        {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form' } } )}}
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{form_label(form.ue)}}
+                                {{form_widget(form.ue)}}
+                            </div>
+                            <div class="col-md-4">
+                                {{form_label(form.nivel)}}
+                                {{form_widget(form.nivel)}}
+                            </div>
+                            <div class="col-md-4">
+                                {{form_label(form.grado)}}
+                                {{form_widget(form.grado)}}
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-6 form-group">
+                                {{form_label(form.paralelo)}}
+                                {{form_widget(form.paralelo, {'attr':{'required':'true','onchange':'getTurno(this.value)','onmousedown':'getTurno(this.value)'} })}}
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                {{form_label(form.turno)}}
+                                {{form_widget(form.turno)}}
+                                <div class="help-block with-errors"></div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4 text-center">
+                                {{form_widget(form.save, {'attr':{'class':'btn  btn-success'} }) }}
+                            </div>
+                        </div>
+
+                        {{form_end(form)}}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+{%else%}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warningrein') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-ban'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{%endif%}
+
+
+
+<script>
+
+
+</script>
+

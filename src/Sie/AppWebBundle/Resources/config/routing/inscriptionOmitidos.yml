@@ -1,0 +1,17 @@
+inscription_omitidos_index:
+    path:    /
+    defaults: { _controller: SieAppWebBundle:InscriptionOmitidos:index }
+
+inscription_omitidos_result:
+    path:    /result
+    defaults: { _controller: SieAppWebBundle:InscriptionOmitidos:result }
+
+inscription_omitidos_findIE:
+     path:    /findIE/{id}/{nivel}/{grado}/{lastue}
+     defaults: { _controller: SieAppWebBundle:InscriptionOmitidos:findIE }
+     options:
+         expose: true   
+
+inscription_omitidos_saveOmitidos:
+    path: /saveOmitidos
+    defaults: { _controller: SieAppWebBundle:InscriptionOmitidos:saveOmitidos }

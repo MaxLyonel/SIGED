@@ -1,0 +1,31 @@
+sie_diploma_homepage:
+    path:     /diplomas
+    defaults: { _controller: SieDiplomaBundle:Default:index }
+
+sie_diploma_tramite:
+    resource: "@SieDiplomaBundle/Resources/config/routing/tramite.yml"
+    prefix:   /diplomas/tramite
+
+sie_diploma_tramite_seguimiento:
+    resource: "@SieDiplomaBundle/Resources/config/routing/seguimiento.yml"
+    prefix:   /diplomas/seguimiento
+
+sie_diploma_tramite_reporte:
+    resource: "@SieDiplomaBundle/Resources/config/routing/reporte.yml"
+    prefix:   /diplomas/reporte
+
+sie_diploma_homologacion:
+    resource: "@SieDiplomaBundle/Resources/config/routing/homologacion.yml"
+    prefix:   /homologaciones
+
+sie_diploma_declaracionjurada:
+    resource: "@SieDiplomaBundle/Resources/config/routing/declaracionJurada.yml"
+    prefix:   /diplomasddjj
+
+sie_diploma_tramite_tecnico:
+    resource: "@SieDiplomaBundle/Resources/config/routing/tramiteTecnico.yml"
+    prefix:   /diplomas/tecnico
+
+sie_diploma_documento:
+    resource: "@SieDiplomaBundle/Resources/config/routing/documento.yml"
+    prefix:   /diplomas/documento

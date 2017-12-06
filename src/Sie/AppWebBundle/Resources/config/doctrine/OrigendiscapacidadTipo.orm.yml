@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\OrigendiscapacidadTipo:
+    type: entity
+    table: origendiscapacidad_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        discapacidad:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: discapacidad_
+    lifecycleCallbacks: {  }

@@ -1,0 +1,33 @@
+consulta_rue:
+    path:     /
+    defaults: { _controller: "SieRueBundle:ConsultaInstitucionEducativa:index" }
+
+consulta_rue_show:
+    path:     /show/
+    defaults: { _controller: "SieRueBundle:ConsultaInstitucionEducativa:show" }
+
+consulta_rue_result:
+    path:     /findieducativa
+    defaults: { _controller: "SieRueBundle:ConsultaInstitucionEducativa:findieducativa" }
+
+consulta_rue_localizacion:
+    path:     /localizacion
+    defaults: { _controller: "SieRueBundle:ConsultaInstitucionEducativa:localizacion" }
+
+consulta_rue_formulario:
+    path:     /formulario
+    defaults: { _controller: "SieRueBundle:ConsultaInstitucionEducativa:formulario" }
+
+consulta_rue_le_formulario:
+    path:     /formulariole
+    defaults: { _controller: "SieRueBundle:ConsultaInstitucionEducativa:formulariole" }
+
+consulta_rue_buscar_edificio:
+     path:    /buscaredificio/{idLe}/
+     defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:buscaredificio" }
+     options:
+         expose: true
+
+consulta_rue_guia:
+    path:     /guia
+    defaults: { _controller: "SieRueBundle:ConsultaInstitucionEducativa:guia" }

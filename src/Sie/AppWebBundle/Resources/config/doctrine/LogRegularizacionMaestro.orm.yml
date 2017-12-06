@@ -1,0 +1,41 @@
+Sie\AppWebBundle\Entity\LogRegularizacionMaestro:
+    type: entity
+    table: log_regularizacion_maestro
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fecha:
+            type: datetime
+            nullable: false
+            comment: ''
+        institucioneducativaId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        usuarioId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        browser:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        esModificado:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: es_modificado
+    lifecycleCallbacks: {  }

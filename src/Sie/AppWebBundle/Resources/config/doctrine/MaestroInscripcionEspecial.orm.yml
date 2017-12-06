@@ -1,0 +1,53 @@
+Sie\AppWebBundle\Entity\MaestroInscripcionEspecial:
+    type: entity
+    table: maestro_inscripcion_especial
+    indexes:
+        IDX_4A293EE3FA6D71F9:
+            columns:
+                - grado_discapacidad_tipo_id
+        IDX_4A293EE3A4B6FF2:
+            columns:
+                - maestro_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        discapacidad:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        tipoDiscapacidad:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: tipo_discapacidad
+    manyToOne:
+        gradoDiscapacidadTipo:
+            targetEntity: GradoDiscapacidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_discapacidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        maestroInscripcion:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestro_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

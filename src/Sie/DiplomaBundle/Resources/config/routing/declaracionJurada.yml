@@ -1,0 +1,15 @@
+diploma_declaracion_jurada_index:
+    path:    /
+    defaults: { _controller: SieDiplomaBundle:DeclaracionJurada:index }
+    
+diploma_declaracion_jurada_upfile_web:
+    path:    /upfile
+    defaults: { _controller: SieDiplomaBundle:DeclaracionJurada:upfile }    
+
+diploma_declaracion_jurada_checkit_web:
+    path:    /thinkit
+    defaults: { _controller: SieDiplomaBundle:DeclaracionJurada:greeting }
+    
+diploma_declaracion_jurada_find:
+    path:    /find
+    defaults: { _controller: SieDiplomaBundle:DeclaracionJurada:find }         

@@ -1,0 +1,193 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+  <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1 class=" glyphicon glyphicon-check"> CERTIFICACI&Oacute;N DE RECONOCIMIENTO DE SABERES</h1>
+                <ol class="breadcrumb">
+                    <li>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div style="width: 100%;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger alert-dismissible" role="alert" id="result" style="display: none;">
+                    <strong>¡Advertencia!</strong> <input type="text" id="errorxls" class="form-control input-sm" readonly='true'>
+                </div>
+            </div>
+        </div>
+          {% for flashMessage in app.session.flashbag.get('success') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+         <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet portlet-blue">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>Reconocimiento de Saberes - Certificaci&oacute;n</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="pinformation" class="panel-collapse collapse in">
+                        <div class="portlet-body" align="center">
+            <div class="row">
+                <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
+                    <thead>
+                        <tr>
+                            <th>C&oacute;digo UE</th>
+                            <th>Lugar</th>
+                            <th>Carnet</th>
+                            <th>Rude</th>
+                            <th>Nombre</th>
+                            <th>Paterno</th>
+                            <th>Materno</th>                            
+                            <th>Fecha Nac.</th>                            
+                            <th>Homologado a</th>                            
+                            <th>Fecha</th>                            
+                            <th>Usuario</th>                            
+                            <th>Certificación</th>  
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for fila in filas %}
+                        <tr>
+                            <td>{{ fila.institucioneducativa_id }}</td>
+                            <td>{{ fila.depto }}</td>
+                            <td>{{ fila.carnet_identidad }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
+                            <td>{{ fila.codigo_rude }}</td>
+                            <td>{{ fila.nombre }}</td>                            
+                            <td>{{ fila.paterno }}</td>
+                            <td>{{ fila.materno }}</td> 
+                            <td>{{ fila.fecha_nacimiento|date('d-m-Y') }}</td>
+                            <td>{{ fila.curso_nombre }}</td>
+                            <td>{{ fila.fecha_creacion|date('d-m-Y') }}</td>
+                            <td>{{ fila.usuario_id }}</td>
+                            {% if fila.homologado == false %}    
+                                <td>En Revisi&oacute;n...</td>
+                            {% else %}
+                                <td>
+                                    <a role="button" class="btn btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_reconocimiento_saberes_imprimir', { 'id': fila.reconocimiento_saberes_id}) }}" > Certificaci&oacute;n</a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     },
+                     "buttons":{
+                        "copy": "Copiar",
+                        "print":"Imprimir"
+                     }
+                    };
+
+    var currentLang = espanol;    
+        
+    $(document).ready(function() {
+        
+        var dtable = $('#tablaTotales').dataTable( {"oLanguage": espanol,
+         'dom': 'lBfrtip <"clear">',
+        'buttons': [
+             {   
+                extend: 'colvis',
+                text:'Visibilizar Columnas'
+            },
+            {
+                extend: 'print',
+                text: 'Imprimir',
+                autoPrint: true,
+                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
+                header:true,
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend:'pdf',
+                title: 'PNP - LISTA DE ARCHIVOS SUBIDOS RUP - 4',
+                filename:'Lista de archivos subidos RUP-4',
+                orientation:'landscape',
+                exportOptions: {
+                modifier: {
+                    page: 'Lista de archivos subidos RUP-4'
+                    }
+                }
+            },
+            {
+            extend: 'excel',
+            text: 'Excel',
+            filename:'Lista de archivos subidos RUP-4',
+            exportOptions: {
+                modifier: {
+                    page: 'Lista de archivos subidos RUP-4'
+                    }
+                }
+            },
+        ]} );
+        
+        $('#tablaTotales tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                dtable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        {#$('#btn').click(function(){
+            dtable.fnDestroy();
+            dtable = null;
+            currentLang = (currentLang == english) ? espanol : english;
+            dtable = $('#tablaTotales').dataTable( {"oLanguage": currentLang} );
+        });#}
+        
+    });
+    </script>
+{% endblock %}

@@ -1,0 +1,106 @@
+{# extends 'SieJuegosBundle:Default:Registros.html.twig' #}
+{% extends 'layoutJuegos.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-home"></i>Juegos Deportivos Estudiantiles Plurinacionales "Presidente Evo" <span>Información</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Gestión:</span>
+            <ol class="breadcrumb">
+                <li class="active">2016</li>
+            </ol>
+        </div>
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <!-- Start body content -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <!-- Start widget newsletter -->
+                <div class="panel text-center rounded shadow">
+                    <div class="panel-body bg-lilac rounded">
+                        <div class="inner-all">
+                            <h4 class="text-uc">Convocatoria y Reglamento General</h4>
+                            <!--<h5 class="text-uc">Opción: Información Estudiante</h5>-->
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End widget newsletter -->
+            </div>
+        </div><!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-content">
+                    {% for type, flashMessage in app.session.flashbag.all() %}
+                        <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {% if flashMessage.title is defined %}
+                            <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                                {{ flashMessage.message }}
+                            {% else %}
+                                {{ type }}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>        
+        </div>
+
+        
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="js-grid-masonry-projects" class="cbp cbp-l-grid-masonry-projects cbp-caption-active cbp-caption-zoom cbp-ready" >
+                    <div class="cbp-wrapper-outer">
+                        <div class="cbp-wrapper">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-sx-12 col-lg-offset-1 col-md-offset-1">
+                                <div class="cbp-item">
+                                    <div class="cbp-item-wrapper">
+                                        <a href="{{asset('img/reglamento_primaria_2017.pdf')}}" class="cbp-caption cbp-singlePageInline" data-title="Primaria Comunitaria Vocacional" rel="nofollow">
+                                            <div class="cbp-caption-defaultWrap">
+                                                <img src="{{asset('img/plurispri2017.jpg')}}" alt="...">
+                                            </div>
+                                            <div class="cbp-caption-activeWrap">
+                                                <div class="cbp-l-caption-alignLeft">
+                                                    <div class="cbp-l-caption-body">
+                                                        <div class="cbp-l-caption-title text-center">Descargar</div>
+                                                        <div class="cbp-l-caption-desc text-center">Formato PDF</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Primaria Comunitaria Vocacional</div>
+                                            <div class="cbp-l-grid-masonry-projects-desc"></div>
+                                        </a>
+                                    </div>
+                                </div>   
+                            </div>  
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-sx-12 col-lg-offset-2 col-md-offset-2">
+                                <div class="cbp-item">
+                                    <div class="cbp-item-wrapper" style="height">
+                                        <a href="{{asset('img/reglamento_secundaria_2017.pdf')}}" class="cbp-caption cbp-singlePageInline" data-title="Secundaria Comunitaria Productiva" rel="nofollow">
+                                            <div class="cbp-caption-defaultWrap">
+                                                <img src="{{asset('img/plurissec2017.jpg')}}" alt="...">                                        
+                                            </div>
+                                            <div class="cbp-caption-activeWrap">
+                                                <div class="cbp-l-caption-alignLeft">
+                                                    <div class="cbp-l-caption-body">
+                                                        <div class="cbp-l-caption-title text-center">Descargar</div>
+                                                        <div class="cbp-l-caption-desc text-center">Formato PDF</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Secundaria Comunitaria Productiva</div>
+                                            <div class="cbp-l-grid-masonry-projects-desc"></div>
+                                        </a>
+                                    </div>
+                                </div> 
+                            </div>                                 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

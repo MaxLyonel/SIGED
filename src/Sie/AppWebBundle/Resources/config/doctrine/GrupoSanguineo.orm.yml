@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\GrupoSanguineo:
+    type: entity
+    table: grupo_sanguineo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        grupoSanguineo:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: grupo_sanguineo
+    lifecycleCallbacks: {  }

@@ -1,0 +1,111 @@
+<?php
+
+namespace Sie\AppWebBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * SistemaTipo
+ */
+class SistemaTipo
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $sistema;
+
+    /**
+     * @var string
+     */
+    private $obs;
+
+    /**
+     * @var string
+     */
+    private $abreviatura;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set sistema
+     *
+     * @param string $sistema
+     * @return SistemaTipo
+     */
+    public function setSistema($sistema)
+    {
+        $this->sistema = $sistema;
+    
+        return $this;
+    }
+
+    /**
+     * Get sistema
+     *
+     * @return string 
+     */
+    public function getSistema()
+    {
+        return $this->sistema;
+    }
+
+    /**
+     * Set obs
+     *
+     * @param string $obs
+     * @return SistemaTipo
+     */
+    public function setObs($obs)
+    {
+        $this->obs = $obs;
+    
+        return $this;
+    }
+
+    /**
+     * Get obs
+     *
+     * @return string 
+     */
+    public function getObs()
+    {
+        return $this->obs;
+    }
+
+    /**
+     * Set abreviatura
+     *
+     * @param string $abreviatura
+     * @return SistemaTipo
+     */
+    public function setAbreviatura($abreviatura)
+    {
+        $this->abreviatura = $abreviatura;
+    
+        return $this;
+    }
+
+    /**
+     * Get abreviatura
+     *
+     * @return string 
+     */
+    public function getAbreviatura()
+    {
+        return $this->abreviatura;
+    }
+}

@@ -1,0 +1,45 @@
+Sie\AppWebBundle\Entity\RolPersona:
+    type: entity
+    table: rol_persona
+    indexes:
+        fk_rolpersona_rol1_fk:
+            columns:
+                - rol_tipo_id
+        fk_rolpersona_persona1_fk:
+            columns:
+                - persona_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    manyToOne:
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rolTipo:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rol_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

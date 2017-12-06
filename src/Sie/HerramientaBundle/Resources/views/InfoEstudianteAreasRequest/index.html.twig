@@ -1,0 +1,301 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Adición y eliminación de Áreas / Asignación de maestros</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    <span class="alert-icon"><i class="glyphicon glyphicon-list-alt"></i></span>
+                    <div class="notification-info">
+                        <ul class="clearfix notification-meta">
+                            <li class="pull-left notification-sender"><span><a href="javascript:void()">{{nivelCurso}}</a></span></li>
+                            <li class="pull-right notification-time">
+                                
+                            </li>
+                        </ul>
+                        <p>{{gradoParaleloCurso}}</p>
+                    </div>
+                </div>
+                
+                <div class="btn-group" style="width:650px; float:right;">
+                    
+                    <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
+                        Agregar Área <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
+                        {% if asignaturas|length > 0 %}
+                            {% for a in asignaturas %}
+                                <li><button onclick="newArea({{a.id}},'{{infoUe}}')" class="btn-link">{{a.id}} - {{a.asignatura}}</button></li>
+                            {% endfor %}
+                        {% else %}
+                            <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% if app.session.get('ue_tecteg') == true %}
+                    <button type="button" class="btn btn-wordpress" onclick="verMateriaTecnica('materiasTecnicas')">
+                        Agregar Área Tecnicas <span class="caret"></span>
+                    </button>
+                    <div id="materiasTecnicas" style="display:none; padding:10px; width:500px; position:absolute; background:#FFFFFF; border:2px solid #EEEEEE" class="animated flipInX row">
+                        {% if asignaturasTecnicas|length > 0 %}
+                            <select id="materiaTecnica" class="chosen-select col-lg-10">
+                                <option value="">Seleccionar...</option>
+                                {% for at in asignaturasTecnicas %}
+                                    <option value="{{at.id}}">{{at.asignatura}}</option>
+                                {% endfor %}
+                            </select>
+                            <button onclick="enviarMateriaTecnica('{{infoUe}}')" class="btn btn-teal">Agregar</button>
+                        {% else %}
+                            <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <br>
+                
+                <h4>Áreas actuales del curso</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center border-right">No.</th>
+                                <th>Código</th>
+                                <th>Área</th>
+                                <th>Maestro(s)</th>
+                                <th class="text-center">Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for co in cursoOferta %}
+                                <tr>
+                                    <td class="text-center border-right">{{loop.index}}</td>
+                                    <td>{{co.idAsignatura}}</td>
+                                    <td>{{co.asignatura}}</td>
+                                    <td>
+                                        <button class="btn" onclick="addpop({{co.id}},'{{infoUe}}')"><i class="fa fa-users text-lilac"></i></button>
+                                        <div class="arrow-before" style="display:none; margin-left:10px;" id="before{{co.id}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="after{{co.id}}"></div>
+                                        <div id="{{co.id}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-250px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
+                                            
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <button onclick="deleteArea({{co.id}},'{{infoUe}}',new String('{{co.asignatura}}'))" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div id="mensajeModal">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-theme" data-dismiss="modal">Guardar Cambios</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+<script>
+    var newArea = function(ida, infoUe){
+        if(confirm('Realmente desea dicionar el área?\nPresione aceptar para confirmar.')){
+            $.ajax({
+                type: 'post',
+                data: ({ida:ida, infoUe: infoUe}),
+                url: "{{ path('herramienta_infoEstudianteAreasRequest_new') }}",
+                beforeSend: function () {
+                    $('#mensajeModal').empty();
+                    $('#mensajeModal').append("<div style='text-align:center; color:#5C9FFB'>Agregando área... <img src='{{asset('img/loading-sm.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $('#mensajeModal').empty();
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $('#mensajeModal').empty();
+                        $('#mensajeModal').append("<div class='alert alert-danger'>Ocurrio un error al agregar el área !!!</div>");
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+    }
+    var deleteArea = function(idco, infoUe, asignatura){
+        if(confirm('Esta seguro(a) de eliminar el área de '+ asignatura +'?\nTenga en cuenta que tambien se eliminaran las calificaciones de los estudiantes.')){
+            $.ajax({
+                type: 'post',
+                data: ({idco:idco, infoUe: infoUe}),
+                url: "{{ path('herramienta_infoEstudianteAreasRequest_delete') }}",
+                beforeSend: function () {
+                    $('#mensajeModal').empty();
+                    $('#mensajeModal').append("<div style='text-align:center; color:#FB3A6D'>Eliminando área... <img src='{{asset('img/loading-sm.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $('#mensajeModal').empty();
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {  
+                        $('#mensajeModal').empty();
+                        $('#mensajeModal').append("<div class='alert alert-danger'>Ocurrio un error al eliminar el área !!!</div>");
+                        //setTimeout("$('#mensajeModal').empty()",5000);
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+    }
+    var xhr;
+    var addpop = function(idco, infoUe){
+        if ($('#'+idco).is(':hidden')){
+            if (xhr && xhr.readyState != 4) {
+                xhr.abort();
+            }
+            xhr = $.ajax({
+                type: 'post',
+                data: ({idco: idco,  infoUe: infoUe}),
+                url: "{{ path('herramienta_infoEstudianteAreasRequest_maestros') }}",
+                beforeSend: function () {
+                    $('.divMaestros').hide();
+                    $('.arrow-before').hide();
+                    $('.arrow-after').hide();
+                    $("#"+idco).empty();
+                    $('#before'+idco).fadeIn();
+                    $('#after'+idco).fadeIn();
+                    $('#'+idco).fadeIn();
+                    $('#'+idco).append("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'>Cargando maestros<br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
+                },
+                success: function (data) {
+                    $("#"+idco).empty();
+                    $("#"+idco).append(data);
+                    $('.chosen-select').chosen({allow_single_deselect: false});
+                    $('#'+idco).fadeIn();
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }else{
+            if (xhr && xhr.readyState != 4) {
+                xhr.abort();
+            }
+            $('#'+idco).fadeOut();
+            $('#before'+idco).fadeOut();
+            $('#after'+idco).fadeOut();
+        }
+    }
+
+    var cerrarMaestros = function(idco){
+        $('#'+idco).fadeOut();
+        $('#before'+idco).fadeOut();
+        $('#after'+idco).fadeOut();
+    }
+
+    var xhr1;
+    var asignarMaestro = function(){
+        if (xhr1 && xhr1.readyState != 4) {
+            xhr1.abort();
+        }
+        var formData = $('#formMaestros').serialize();
+        xhr1 = $.ajax({
+            type: 'post',
+            data: formData,
+            url: "{{ path('herramienta_infoEstudianteAreasRequest_maestros_asignar') }}",
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                var idco = data.ieco;
+                $('#'+idco).empty();
+                $('#'+idco).append("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>Cambios guardados</div>");
+                setTimeout("cerrarMaestros('"+idco+"')",2000)
+                
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+    var validarNumero = function(e){
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+        )            
+        return false;
+    }
+
+    var verMateriaTecnica = function(id){
+        if ($('#'+id).is(':hidden')){
+            $('#'+id).fadeIn();
+        }else{
+            $('#'+id).fadeOut();
+        }
+        $('.chosen-select').chosen({allow_single_deselect: false});
+    }
+
+    var enviarMateriaTecnica = function(infoUe){
+        var materia = $('#materiaTecnica').val();
+        if(materia != ""){
+            $('#materiasTecnicas').fadeOut();
+            newArea(materia,new String(infoUe));
+        }
+    }
+
+</script>
+<style>
+    .arrow-before {
+        width:0px;
+        height:0px;
+        border-left: 6px solid transparent;  /* izquierda flecha */
+        border-right: 6px solid transparent; /* derecha flecha */
+        border-bottom: 6px solid #906094; /* base flecha y color*/
+        font-size:0px;
+        line-height:0px;
+        top: 6px;
+        left: 3px;
+        position: relative;
+    }
+    .arrow-after {
+        width:0px;
+        height:0px;
+        border-left: 6px solid transparent;  /* izquierda flecha */
+        border-right: 6px solid transparent; /* derecha flecha */
+        border-bottom: 6px solid #906094; /* base flecha y color*/
+        font-size:0px;
+        line-height:0px;
+        top: 1px;
+        left: 3px;
+        position: relative;
+    }
+    #popover-head{
+        width: 300px;
+        background-color: #6E89FF;
+    }
+</style>

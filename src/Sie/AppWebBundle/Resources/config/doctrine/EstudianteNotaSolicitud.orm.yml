@@ -1,0 +1,103 @@
+Sie\AppWebBundle\Entity\EstudianteNotaSolicitud:
+    type: entity
+    table: estudiante_nota_solicitud
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        usuarioId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        remitente:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        receptor:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        fecha:
+            type: date
+            nullable: false
+            comment: ''
+        hora:
+            type: time
+            nullable: false
+            comment: ''
+        estudianteInscripcionId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estudiante_inscripcion_id
+        detalle:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        motivo:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        estado:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: '1: Enviado  2: Aceptado  3: rechazado'
+        respuesta:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        tipo:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: '1: Modificacion  2: Adicion'
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        usuarioIdResp:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id_resp
+        fechaResp:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_resp
+        departamentoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: departamento_tipo_id
+    lifecycleCallbacks: {  }

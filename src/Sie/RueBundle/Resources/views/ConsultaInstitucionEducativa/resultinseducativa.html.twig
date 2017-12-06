@@ -1,0 +1,86 @@
+{% extends 'SieRueBundle:Default:rueConsulta.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="block-header">
+        <h2>RESULTADO DE LA BÚSQUEDA</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('consulta_rue')}}">Inicio</a></li>
+        <li class="active">Resultado de la búsqueda</li>
+    </ol>
+
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        INSTITUCION(ES) EDUCATIVA(S)
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <table class="table table-bordered table-striped table-hover js-exportable dataTable" data-page-length="5" data-order="[[ 1, &quot;asc&quot; ]]" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Acciones</th>
+                                        <th>Código RUE</th>
+                                        <th>Institución Educativa</th>
+                                        <th>Código LE</th>
+                                        <th>Fecha Resolución</th>
+                                        <th>Dependencia</th>
+                                        <th>Tipo</th>
+                                        <th>Estado</th>
+                                        <th>Departamento</th>
+                                        <th>Distrito</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Acciones</th>
+                                        <th>Código RUE</th>
+                                        <th>Institución Educativa</th>
+                                        <th>Código LE</th>
+                                        <th>Fecha Resolución</th>
+                                        <th>Dependencia</th>
+                                        <th>Tipo</th>
+                                        <th>Estado</th>
+                                        <th>Departamento</th>
+                                        <th>Distrito</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for entity in entities %}
+                                        <tr>
+                                            <td class="width:10px">
+                                                <form action="{{path('consulta_rue_show')}}" method="post" style="display:inline-block">
+                                                    <input type="hidden" name="idRue" value="{{entity.id}}">
+                                                    <button type="submit" class="btn btn-xs bg-pink waves-effect">
+                                                        <i class="material-icons">loupe</i> Ver
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td>{{ entity.id }}</td>
+                                            <td>{{ entity.institucioneducativa }}</td>
+                                            <td>{{ entity.leJuridicciongeografica.id }}</td>
+                                            <td>{% if entity.fechaResolucion %}{{ entity.fechaResolucion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                            <td>{{ entity.dependenciaTipo.dependencia }}</td>
+                                            <td>{{ entity.institucioneducativaTipo.descripcion }}</td>
+                                            <td>{{ entity.estadoinstitucionTipo.estadoinstitucion }}</td>
+                                            <td>{{ entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>
+                                            <td>{{ entity.leJuridicciongeografica.distritoTipo.distrito }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Basic Examples -->
+{% endblock %}

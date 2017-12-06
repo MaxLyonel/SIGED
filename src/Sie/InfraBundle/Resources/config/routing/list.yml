@@ -1,0 +1,11 @@
+infra_list_index:
+    path:     /index
+    defaults: { _controller: SieInfraBundle:Lista:index }
+
+infra_list_list:
+    path:     /list
+    defaults: { _controller: SieInfraBundle:Lista:list }
+
+infra_list_open:
+    path:     /open
+    defaults: { _controller: SieInfraBundle:Lista:open }

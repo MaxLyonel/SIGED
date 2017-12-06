@@ -1,0 +1,424 @@
+{% extends app.session.get('layout') %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+    {% include 'SieInfraestructuraBundle:Info:cabecera.html.twig' %}
+    <ol class="breadcrumb">
+        <li><a href="{{path('infra_info_index')}}">Pincipal</a></li>
+        <li><a href="{{path('infra_info_acceder')}}">Panel de Acceso Rápido</a></li>
+        <li class="active">Actualización Geográfica</li>
+    </ol>
+    <h2 class="view-title"><img src="{{asset('webInfraestructura/assets/images/ubicacion.png')}}" class="img-header"> ACTUALIZACIÓN GEOGRÁFICA</h2>
+
+    {{ form_start(form)}}
+    <div class="form-group">
+        <a href="{{path('infra_info_acceder')}}" class="btn btn-success-alt" >Guardar Cambios</a>
+        <a href="{{path('infra_info_acceder')}}" class="btn btn-danger-alt" >Cancelar</a>
+    </div>
+    <div id="masonry" class="row">
+        <div class="module-wrapper masonry-item col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <section class="module module-headings">
+                <div class="module-inner">
+                    <div class="module-heading">
+                        <h3 class="module-title">Ubicación Política</h3>
+                        <ul class="actions list-inline" style="display:none">
+                            <li><a class="collapse-module" data-toggle="collapse" href="#content-4" aria-expanded="false" aria-controls="content-4"><span aria-hidden="true" class="icon arrow_carrot-up"></span></a></li>
+                            <li><a class="close-module" href="#"><span aria-hidden="true" class="icon icon_close"></span></a></li>
+                        </ul>
+                        
+                    </div>
+                    
+                    <div class="module-content collapse in" id="content-4">
+                        <div class="module-content-inner no-padding-bottom">
+                            <div class="form-group">
+                                <label for="">Departamento</label>
+                                <div class="input-group">
+                                    {{form_widget(form.departamento)}}
+                                    <div class="input-group-addon"><button type="button" class="btn btn-primary-alt btn-xs" onclick="buscar(2)"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Provincia</label>
+                                <div class="input-group">
+                                    {{form_widget(form.provincia)}}
+                                    <div class="input-group-addon"><button type="button" class="btn btn-success-alt btn-xs" onclick="buscar(3)"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Municipio</label>
+                                <div class="input-group">
+                                    {{form_widget(form.municipio)}}
+                                    <div class="input-group-addon"><button type="button" class="btn btn-info-alt btn-xs" onclick="buscar(4)"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Comunidad</label>
+                                <div class="input-group">
+                                    {{form_widget(form.comunidad)}}
+                                    <div class="input-group-addon"><button type="button" class="btn btn-warning-alt btn-xs" onclick="buscar(5)"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Localidad</label>
+                                <div class="input-group">
+                                    {{form_widget(form.localidad)}}
+                                    <div class="input-group-addon"><button type="button" class="btn btn-purple-alt btn-xs" onclick="buscar(6)"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="module module-headings" style="display:none">
+                <div class="module-inner">
+                    <div class="module-heading">
+                        <h3 class="module-title">Predios</h3>
+                        <ul class="actions list-inline">
+                            <li><a class="collapse-module" data-toggle="collapse" href="#content-3" aria-expanded="false" aria-controls="content-3"><span aria-hidden="true" class="icon arrow_carrot-up"></span></a></li>
+                            <li><a class="close-module" href="#"><span aria-hidden="true" class="icon icon_close"></span></a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="module-content collapse in" id="content-3">
+                        <div class="module-content-inner no-padding-bottom">
+                            <button type="button" class="btn btn-primary-alt" onclick="predio('cancha')" data-toggle="tooltip" data-placement="top" data-original-title="Cancha deportiva"><img src="{{asset('images/cancha.png')}}" width="40" alt=""></button>
+                            <button type="button" class="btn btn-primary-alt" onclick="predio('auditorio')" data-toggle="tooltip" data-placement="top" data-original-title="Auditorio"><img src="{{asset('images/edificio.png')}}" width="40" alt=""></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="module-wrapper masonry-item col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <section class="module module-headings">
+                <div class="module-inner">
+                    <div class="module-heading">
+                        <h3 class="module-title">Ubicación Geográfica</h3>
+                        <ul class="actions list-inline" style="display:none">
+                            <li><a class="collapse-module" data-toggle="collapse" href="#content-2" aria-expanded="false" aria-controls="content-2"><span aria-hidden="true" class="icon arrow_carrot-up"></span></a></li>
+                            <li><a class="close-module" href="#"><span aria-hidden="true" class="icon icon_close"></span></a></li>
+                        </ul>
+                    </div>
+                    <div class="module-content collapse in" id="content-2">
+                            <div class="alert-info" style="padding:5px;display:none">
+                                <i class="fa fa-info-circle"></i> Para actualizar la ubicación del edificio escolar, arrastre el marcador (<img src="{{asset('images/edificio.png')}}" alt="" width="20" height="20" onclick="initMap()"> del mapa) a la nueva ubicación.
+                            </div>
+                            <div>
+                                <blockquote class="highlight-border">
+                                    <div style="float:right">
+                                        <button type="button" class="btn btn-info-alt btn-circle" onclick="initMap()"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button>
+                                    </div>
+                                    <p class="text-highlight">Coordenadas</p>
+                                    Latitud:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite title="Source Title"><span id="latitudText"></span></cite><br>
+                                    Longitud: &nbsp;&nbsp;&nbsp;<cite title="Source Title"><span id="longitudText"></span></cite>
+                                </blockquote>
+                            </div>
+                            <div id="map"></div>
+                            <input type="hidden" id="latitud" value="{{latitud}}">
+                            <input type="hidden" id="longitud" value="{{longitud}}">
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12" style="text-align:center">
+            
+        </div>
+    </div>
+
+    {{form_end(form)}}
+    
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDROD2n5aHXRd8k_LaEPmgRNnLm576G-Kc&callback=initMap">
+    </script>
+    <script>
+        var peticion1;
+        function listarProvincias(idDpto) {
+            if (peticion1 && peticion1.readyState != 4) {
+                peticion1.abort();
+            }
+            peticion1 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_provincias_2012', {'departamento': idDpto}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_provincia').empty();
+                    $('#form_municipio').empty();
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion2;
+        function listarMunicipios(provincia) {
+            if (peticion2 && peticion2.readyState != 4) {
+                peticion2.abort();
+            }
+            peticion2 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_municipios_2012', {'provincia': provincia}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_municipio').empty();
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.municipio, function (i, value) {
+                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion3;
+        function listarComunidades(municipio) {
+            if (peticion3 && peticion3.readyState != 4) {
+                peticion3.abort();
+            }
+            peticion3 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_comunidades_2012', {'municipio': municipio}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.comunidad, function (i, value) {
+                        $("#form_comunidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion4;
+        function listarLocalidades(comunidad) {
+            if (peticion4 && peticion4.readyState != 4) {
+                peticion4.abort();
+            }
+            peticion4 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_localidades_2012', {'comunidad': comunidad}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_localidad').empty();
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.localidad, function (i, value) {
+                        $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        function verificarLocalidad(){
+            if($("#form_localidad option:selected").val().trim() === ''){
+                $('#btnBuscar').css('display','none');
+            }else{
+                $('#btnBuscar').css('display','block');
+                //buscar();
+            }
+        }
+    
+        var map;
+        var myLatLng;
+        var marker;
+        var contMarker = 1;
+        var infowindow;
+        var image = "{{asset('images/marker.png')}}";
+        var contentString;
+
+        function initMap() {
+            var latitud = {{latitud}}; //parseInt($('#latitud').val());
+            var longitud = {{longitud}}; //parseInt($('#longitud').val());
+            var codigoEdificio = {{codigoEdificio}};
+
+            myLatLng = {lat: latitud, lng: longitud};
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: myLatLng,
+                zoom: 17,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            
+            marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                title: 'Edificio Escolar',
+                icon: image,
+                draggable: true
+            });
+
+            contentString = '<h5>Código Local Educativo: '+codigoEdificio+'</h5>'+
+                            '<p>Mover a la nueva ubicación</p>'+
+                            '<!--button onclick="confirmarUbicacion()" class="btn btn-success btn-xs">Confirmar</button-->';
+
+            infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+                map.setZoom(17);
+            });
+
+            // Eventos del movimiento del marker Draggable
+            marker.addListener('dragstart', function() {
+                console.log('Empezando');
+                infowindow.close();
+            });
+            marker.addListener('drag', function() {
+                console.log('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
+                //infowindow.open(map, marker);
+                $('#latitud').val(marker.getPosition().lat());
+                $('#longitud').val(marker.getPosition().lng());
+                $('#latitudText').text(marker.getPosition().lat());
+                $('#longitudText').text(marker.getPosition().lng());
+            });
+            marker.addListener('dragend', function() {
+                console.log('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
+                //infowindow.open(map, marker);
+                $('#latitud').val(marker.getPosition().lat());
+                $('#longitud').val(marker.getPosition().lng());
+                $('#latitudText').text(marker.getPosition().lat());
+                $('#longitudText').text(marker.getPosition().lng());
+            });
+
+            $('#latitud').val(marker.getPosition().lat());
+            $('#longitud').val(marker.getPosition().lng());
+
+            $('#latitudText').text(marker.getPosition().lat());
+            $('#longitudText').text(marker.getPosition().lng());
+            /*google.maps.event.addListener(marker, 'dragend', function() 
+            {
+                alert('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
+            });*/
+        }
+
+        function eliminar(){
+            marker.setMap(null);
+        }
+
+        function confirmarUbicacion(){
+            alert(marker.getPosition().lat());
+            return false;
+        }
+
+        /*
+         *
+         */
+         function buscar(niv){
+            var departamento = $('#form_departamento option:selected').text().toLowerCase();
+            var provincia = $('#form_provincia option:selected').text().toLowerCase();
+            var municipio = $('#form_municipio option:selected').text().toLowerCase();
+            var comunidad = $('#form_comunidad option:selected').text().toLowerCase();
+            var localidad = $('#form_localidad option:selected').text().toLowerCase();
+            var address = '';
+            switch(niv){
+                case 2:
+                    address = 'Bolivia, departamento '+departamento;
+                    break;
+                case 3:
+                    address = 'Bolivia, departamento '+departamento+', provincia '+provincia;
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                    address = 'Bolivia, departamento '+departamento+', provincia '+provincia+', localidad '+localidad;
+                    break;
+            }
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'address':address}, geocodeResult);
+         }
+
+         function geocodeResult(results, status){
+            if(status == 'OK'){
+                //marker.setAnimation(google.maps.Animation.BOUNCE,results[0].geometry.location);
+                //marker.animateCamera(CameraUpdateFactory.newLatLng(results[0].geometry.location));
+                map.setCenter(results[0].geometry.location);
+                map.setZoom(7);
+                marker.setPosition(results[0].geometry.location);
+
+                $('#latitud').val(marker.getPosition().lat());
+                $('#longitud').val(marker.getPosition().lng());
+
+                $('#latitudText').text(marker.getPosition().lat());
+                $('#longitudText').text(marker.getPosition().lng());
+                /*var mapOptions = {
+                    center: results[0].geometry.location,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                map = new google.maps.Map($("#map").get(0), mapOptions);
+                map.fitBounds(results[0].geometry.viewport);*/
+
+                //var markerOptions = { position: results[0].geometry.location };
+                //marker = new google.maps.Marker(markerOptions);
+                //marker.setMap(map);
+            }else{
+                console.log(status);
+            }
+         }
+        var marker1 = null;
+        var marker2 = null;
+         function predio(item){
+            var icono = '';
+            switch(item){
+                case 'cancha': icono = "{{asset('images/cancha32.png')}}";
+                                if(marker1 == null){
+                                    marker1 = new google.maps.Marker({
+                                        position: myLatLng,
+                                        map: map,
+                                        title: 'Cancha deportiva',
+                                        icon: icono,
+                                        draggable: true
+                                    });
+                                }else{
+                                    map.setCenter(marker1.getPosition().lat(),marker1.getPosition().lng());
+                                }
+                                break;
+                case 'auditorio': icono2 = "{{asset('images/edificio.png')}}";
+                                if(marker2 == null){
+                                    marker2 = new google.maps.Marker({
+                                        position: myLatLng,
+                                        map: map,
+                                        title: 'Auditorio',
+                                        icon: icono2,
+                                        draggable: true
+                                    });
+                                }else{
+                                    map.setCenter(marker2.getPosition().lat(),marker2.getPosition().lng());
+                                }
+                                break;
+                default:
+                     break;
+            }
+         }
+    </script>
+{% endblock %}

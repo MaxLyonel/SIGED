@@ -1,0 +1,4 @@
+services:
+#    sie_usuarios.example:
+#        class: Sie\UsuariosBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

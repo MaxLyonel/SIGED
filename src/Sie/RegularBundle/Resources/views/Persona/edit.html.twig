@@ -1,0 +1,164 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Datos de la Cuenta
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="index.html">Actualizar Datos</a></li>
+                    <li class="active">Modificar Datos </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-green">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Usuario</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pdatauser"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pdatauser" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+                        <div class="panel-body">
+
+                            {{ form_start(edit_form, { 'attr': {'data-toggle': 'validator','role': "form",'onsubmit':'return checkSubmitFrm()','class':'form-horizontal'} }) }}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Carnet</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.carnet, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Libreta Militar</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.libretaMilitar, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Pasaporte</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.pasaporte, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Paterno</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.paterno, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Materno</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.materno, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Nombre</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.nombre, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Fecha Nacimiento</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.fechaNacimiento, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Complemento</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.complemento, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Género</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.generoTipo, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Estado Civil</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.estadocivilTipo, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Tipo de Sangre</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.sangreTipo, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Idioma Materno</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.idiomaMaterno, { 'attr': {'class': 'form-control'} }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Fotografía</label>
+                                <div class="col-sm-9">
+                                    {{ form_widget(edit_form.foto, { 'attr': {'class': 'form-control'} }) }}
+                                   
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-12 text-center">
+                                    {{ form_widget(edit_form.submit, {'attr':{'class':'btn btn-info'} }) }}
+                                </div>
+                            </div>
+                            {{ form_end(edit_form) }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('persona_main')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function checkSubmitFrm() {
+            document.getElementById('sie_appwebbundle_persona_submit').disabled = true;
+            return true;
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,51 @@
+Sie\AppWebBundle\Entity\TtecEstudianteNota:
+    type: entity
+    table: ttec_estudiante_nota
+    indexes:
+        IDX_BFD3EEF5344D40E:
+            columns:
+                - ttec_estudiante_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        notaCuantitativa:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nota_cuantitativa
+        notaCualitativa:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: nota_cualitativa
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        ttecEstudianteInscripcion:
+            targetEntity: TtecEstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

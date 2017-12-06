@@ -1,0 +1,12 @@
+consulta_rie:
+    path:     /
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:index" }
+
+consulta_rie_result:
+    path:     /findinstituto
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:findinstituto" }
+
+consulta_rie_show:
+    path:     /show/
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:show" }    
+

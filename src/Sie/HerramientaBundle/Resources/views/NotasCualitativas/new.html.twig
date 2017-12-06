@@ -1,0 +1,173 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet">
+{% endblock %}
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2>
+            Apreciaciones - <b>{{bimestre}} Bimestre</b>
+            <span>Cualitativas</span>
+        </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Estas aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="#">A. Cualitativas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    <i class="fa fa-search"></i>
+                    <a href="{{path('notascualitativas')}}">Buscar</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-list"></i>
+                    <a href="{{path('notascualitativas',{'op':'result'})}}">A. Cualitativas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-list"></i>  
+                    <a href="#">Registro</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="tour-9" class="panel panel-primary shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Datos Generales</h3>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-condensed cf">
+                                <thead class="cf">
+                                    <tr>
+                                        <th>Institución Educativa</th>
+                                        <th>Turno</th>
+                                        <th>Nivel</th>
+                                        <th>Grado</th>
+                                        <th>Paralelo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="">
+                                        <td data-title="Institucion"><b class="text-blue">{{curso.institucioneducativa.id}} - {{curso.institucioneducativa.institucioneducativa|upper}}</b></td>
+                                        <td data-title="Turno"><b class="text-blue">{{curso.turnoTipo.turno|upper}}</b></td>
+                                        <td data-title="Nivel"><b class="text-blue">{{curso.nivelTipo.nivel|upper}}</b></td>
+                                        <td data-title="Grado"><b class="text-blue">{{curso.gradoTipo.grado|upper}}</b></td>
+                                        <td data-title="Paralelo"><b class="text-blue">{{curso.paraleloTipo.paralelo|upper}}</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-condensed cf">
+                                <thead class="cf">
+                                    <tr>
+                                        <th>Maestro</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="">
+                                        <td data-title="Maestro"><b class="text-blue">{{maestro.paterno}} {{maestro.materno}} {{maestro.nombre}}</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  Contenido  -->
+        <div class="row">
+            <div class="col-md-12">
+                <div id="tour-9" class="panel panel-lilac shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h4 class="panel-title">Estudiantes - <b>{{curso.nivelTipo.nivel}}</b></h4>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-info-circle text-orange"></i> Las apreciaciones cualitativas deben tener un maximo de 300 caracteres.
+                        </div>
+                        <form action="{{path('notascualitativas_create')}}" method="POST">
+                            <div id="no-more-tables">
+                                <table class="table table-bordered table-hover cf">
+                                    <thead>
+                                        <tr class="cf">
+                                            <th>N</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>Nombre(s)</th>
+                                            <th>Estado Mátricula</th>
+                                            <th>Apreciación Cualitativa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for e in estudiantes  %}
+                                        <input type="hidden" name="nivel" value="{{curso.nivelTipo.id}}">
+                                        <input type="hidden" name="bimestre" value="{{bimestre}}">
+                                        <input type="hidden" name="idEstudianteInscripcion[]" value="{{e.idEstudianteInscripcion}}">
+                                        <input type="hidden" name="idEstudianteNota[]" value="{{e.idEstudianteNota}}">
+                                        <tr>
+                                            <td data-title="Nro">{{loop.index}}</td>
+                                            <td data-title="Paterno">{{e.paterno}}&nbsp;</td>
+                                            <td data-title="Materno">{{e.materno}}&nbsp;</td>
+                                            <td data-title="Nombre(s)">{{e.nombre}}&nbsp;</td>
+                                            <td data-title="Est. Matricula">{{e.estadoMatricula}}&nbsp;</td>
+                                            {% if e.estadoMatriculaId == 6 or e.estadoMatriculaId == 9 %}
+                                                {% set readonly = 'readonly' %}
+                                                {% set color = 'text-red' %}
+                                            {% else %}
+                                                {% set readonly = '' %}
+                                                {% set color = '' %}
+                                            {% endif %}
+                                            <td data-title="Ap. Cualitativa">
+                                                <textarea name="nota[]" class="form-control jnumbersletters jupper" {{readonly}} style="resize: vertical; max-height: 100px" pattern="[0-9a-zA-ZñÑ\sáéíóúÁÉÍÓÚ]{2,300}" maxlength="300">{{e.nota}}</textarea>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <hr>
+                            <div style="text-align: center">
+                                <button id="btnSubmit" type="submit" class="btn btn-primary" onclick="disabledButton(this.id,'Registrando...')">Registrar Calificaciones</button>
+                                <a href="{{path('notascualitativas',{'op':'result'})}}" class="btn btn-default">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function disabledButton(id,valor){
+            if(valor){
+                $('#'+id).empty();
+                $('#'+id).append(valor);
+            }
+            $('#'+id).addClass('disabled');
+        }
+    </script>
+{% endblock %}

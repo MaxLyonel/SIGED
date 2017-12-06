@@ -1,0 +1,202 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        
+        {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Ratificar Personal Docente', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('noTuicion') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-success">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Maestros ratificados (gestión {{ gestion_aux }})</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary">
+                            {% if maestro_aux is not empty %}
+                                <div id="no-more-tables">
+                                    <table class="table table-striped table-success">
+                                        <thead>
+                                            <tr>
+                                                <th>N°</th>
+                                                <th>Carnet de Identidad</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Nombre(s)</th>
+                                                <th>Formación</th>
+                                                <th>Fecha Registro</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for maestro in maestro_aux %}
+                                                <tr>
+                                                    <td data-title="N°">{{ loop.index }}</td>
+                                                    <td data-title="Carnet">{{ maestro.carnet }}</td>
+                                                    <td data-title="Paterno">{{ maestro.paterno }}</td>
+                                                    <td data-title="Materno">{{ maestro.materno }}</td>
+                                                    <td data-title="Nombre(s)">{{ maestro.nombre }}</td>
+                                                    <td data-title="Formación">{{ maestro.formacion }}</td>
+                                                    <td data-title="FechReg">{% if maestro.fechaRegistro %}{{ maestro.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                No hay Maestros ratificados
+                            {% endif %}
+                            <div class="pull-right">
+                                <form method ="POST" action="{{path('herramienta_especial_info_maestro_ratificar_currentyear')}}" name="form" id="form">
+                                      <input type="hidden" id="ratificarMaestroG_sie" name="ratificarMaestroG[sie]" value="{{institucion.id}}">
+                                      <input type="hidden" id="ratificarMaestroG_gestion" name="ratificarMaestroG[gestion]" value="{{gestion}}">
+                                      <input type="submit" class="btn btn-md btn-success" value="Ir a gestión vigente">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Maestros a ratificar (vigentes durante la gestión 2016)</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary">
+                            {% if maestro is not empty %}
+                                <div id="no-more-tables">
+                                    <form method ="POST" action="{{path('herramienta_especial_info_maestro_ratificar')}}" name="form" id="form">
+                                      <input type="hidden" id="ratificarMaestro_sie" name="ratificarMaestro[sie]" value="{{institucion.id}}">
+                                      <input type="hidden" id="ratificarMaestro_gestion" name="ratificarMaestro[gestion]" value="{{gestion}}">
+                                    <table class="table table-primary">
+                                        <thead>
+                                            <tr>
+                                                <th>N°</th>
+                                                <th>Carnet de Identidad</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Nombre(s)</th>
+                                                <th>Formación</th>
+                                                <th>Fecha Registro</th>
+                                                <th>Fecha Modificación</th>
+                                                <th>Marcar para ratificar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for maestro in maestro %}
+                                                <tr>
+                                                    <td data-title="N°">{{ loop.index }}</td>
+                                                    <td data-title="Carnet">{{ maestro.carnet }}</td>
+                                                    <td data-title="Paterno">{{ maestro.paterno }}</td>
+                                                    <td data-title="Materno">{{ maestro.materno }}</td>
+                                                    <td data-title="Nombre(s)">{{ maestro.nombre }}</td>
+                                                    <td data-title="Formación">{{ maestro.formacion }}</td>
+                                                    <td data-title="FechReg">{% if maestro.fechaRegistro %}{{ maestro.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                                    <td data-title="FechMod">{% if maestro.fechaModificacion %}{{ maestro.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                                    <td data-title="Acciones">
+                                                        <input type="checkbox" id="ratificarMaestro_{{maestro.perId}}" name="ratificarMaestro[{{maestro.perId}}]">
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            <tr><td colspan="9"><div class="span4 pull-right"><input type="submit" class="btn btn-md btn-primary" value="Enviar Datos"></div></td></tr>
+                                        </tbody>
+                                    </table>
+                                </form>
+                                </div>
+                            {% else %}
+                                No hay Maestros a ratificar
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+    </script>
+{% endblock %}
+

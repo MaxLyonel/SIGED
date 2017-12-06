@@ -1,0 +1,14 @@
+legend{
+    font-size: 1.1em;
+    color: #2FB9AA;
+}
+
+input[type='radio']{
+    margin-left: 15px;
+}
+
+.img-header{
+	display: inline-block;
+	height: 40px;
+	width: 40px;
+}

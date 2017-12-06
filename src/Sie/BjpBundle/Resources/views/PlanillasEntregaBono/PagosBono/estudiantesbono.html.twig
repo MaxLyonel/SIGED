@@ -1,0 +1,192 @@
+<small>
+<div class='row'>
+    <div class='col-md-6 well well-md'>
+        <form name="form" method="post" action="" id="formEstudiantesHabId" >
+
+            <table class="table table-bordered cf">
+                            {#form_start(formEstudiantes,{'attr':{'id':'formEstudiantesHabId'} })#}
+
+
+
+                                    {#form_widget(formEstudiantes.data)#}
+                                    {#form_widget(formEstudiantes.movida)#}
+                                    {#form_widget(formEstudiantes.mover)#}
+
+                              {#form_end(formEstudiantes)#}
+                            <input type="hidden" id="form_data" name="form[data]" required="required" value="{{data}}">
+                            <small>
+                              <button type="button" id="form_mover" name="form[mover]" class="btn btn-success btn-" onclick="Seleccionar()">Seleccionar </button>
+                              <button type="button" id="form_mover" name="form[mover]" class="btn btn-success btn-" onclick="Deseleccionar()">Deseleccionar</button>
+                              <button type="button" id="form_mover" name="form[mover]" class="btn btn-success btn-" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoEstudiante('{{data}}')">Nuevo Estudiante</button>
+                              <button type="button" id="form_mover" name="form[mover]" class="btn btn-success btn-" onclick="EliminarEstudiante()">Eliminar Estudiante</button>
+                            </small>
+
+                            <select id="form_movida" name="form[movida]" class="form-control"><option value="">Seleccionar...</option><option value="1">En Tiempo</option><option value="2">Rezagado</option><option value="3">abandono</option><option value="4">Traspaso</option><option value="5">Otro motivo</option></select>
+                            <button type="button" id="form_mover" name="form[mover]" class="btn btn-info btn-block" onclick="moverHabilitados()">Pagar o Inhabilitar</button>
+
+                            <input type="hidden" id="form__token" name="form[_token]" value="shH0SVRumACk0mVakbNskUgmeGD8ioNO2XxLL2wdhS4">
+
+                            <table class="table table-bordered cf">
+                                <tr>
+                                     <th colspan="5">Estudiantes Habilitados</th>
+                                </tr>
+                            </table>
+                            <table class="table table-bordered cf">
+                                                                    <thead class="cf">
+                                                                        <tr>
+
+                                                                            <th>-</th>
+                                                                            <th>Nombre</th>
+                                                                            <th>paterno</th>
+                                                                            <th>materno</th>
+                                                                            <th>Código RUDE</th>
+
+                                                                        </tr>
+                                                                    </thead>
+                                                                     <tbody>
+                                                                        {% for estudianteHabilitado in estudianteHabilitados %}
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <div class="checkbox">
+
+                                                                                            <input type="checkbox" id="form_habmov_{{estudianteHabilitado.id}}" name="form[habmov_{{estudianteHabilitado.id}}]" value="{{estudianteHabilitado.id}}">
+
+                                                                                    </div>
+                                                                                </td>
+                                                                            <td data-title="Ins.Educativa">{{estudianteHabilitado.paterno}}</td>
+                                                                            <td data-title="Ins.Educativa">{{estudianteHabilitado.materno}}</td>
+                                                                            <td data-title="Ins.Educativa">{{estudianteHabilitado.nombre}}</td>
+                                                                            <td data-title="Ins.Educativa">{{estudianteHabilitado.codigoRude}}</td>
+
+
+                                                                            </tr>
+                                                                        {% endfor %}
+
+                                                                    </tbody>
+                                                                </table>
+                          </form>
+    </div>
+
+    <div class='col-md-6 well well-md'>
+        <form name="formPagados" method="post" action="" id="formEstudiantesPagadosId">
+
+                                <input type="hidden" id="form_data" name="form[data]" required="required" value="{{data}}">
+                                <button type="button" id="form_moverPagados" name="form[moverPagados]" class="btn btn-warning btn-block" onclick="moverEstPagados()">Mover</button>
+                            <table class="table table-bordered cf">
+                                <tr>
+                                     <th colspan="5">Estudiantes Pagados</th>
+                                </tr>
+                            </table>
+                                 <table class="table table-bordered cf">
+                                                        <thead class="cf">
+                                                            <tr>
+
+                                                                 <th>-</th>
+                                                                <th>Nombre</th>
+                                                                <th>paterno</th>
+                                                                <th>materno</th>
+                                                                <th>Código RUDE</th>
+                                                            </tr>
+                                                        </thead>
+                                                         <tbody>
+                                                            {% for estudiantePagado in estudiantePagados %}
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="checkbox">
+
+                                                                                        <input type="checkbox" id="form_habmov_{{estudiantePagado.id}}" name="form[habmov_{{estudiantePagado.id}}]" value="{{estudiantePagado.id}}">
+
+                                                                                </div>
+                                                                            </td>
+                                                                        <td data-title="Ins.Educativa">{{estudiantePagado.paterno}}</td>
+                                                                        <td data-title="Ins.Educativa">{{estudiantePagado.materno}}</td>
+                                                                        <td data-title="Ins.Educativa">{{estudiantePagado.nombre}}</td>
+                                                                        <td data-title="Ins.Educativa">{{estudiantePagado.codigoRude}}</td>
+
+
+                                                                        </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                          {#form_start(formEstudiantesPagados,{'attr':{'id':'formEstudiantesPagadosId' } })#}
+
+                                {#form_widget(formEstudiantesPagados.data)#}
+                                {#form_widget(formEstudiantesPagados.datakrlos)#}
+
+
+                                {#form_widget(formEstudiantesPagados.moverPagados)#}
+                        </div>
+
+                        {#form_end(formEstudiantesPagados)#}
+                </form>
+    </div>
+</div>
+
+
+<div class='row'>
+    <div class='col-md-12 well well-md'>
+        <form name="formInHabilitados" method="post" action="" id="formEstudiantesInHabilitadosId">
+
+                                <input type="hidden" id="form_data" name="form[data]" required="required" value="{{data}}">
+                                <button type="button" id="form_moverPagados" name="form[moverPagados]" class="btn btn-danger btn-block" onclick="moverEstInHablitados()">Mover</button>
+        <table class="table table-bordered cf">
+            <tr>
+                 <th colspan="5">Estudiantes Inhabilitados</th>
+            </tr>
+        </table>
+        <table class="table table-bordered cf">
+                                        <thead class="cf">
+                                            <tr>
+                                                 <th>-</th>
+                                                <th>Nombre</th>
+                                                <th>paterno</th>
+                                                <th>materno</th>
+                                                <th>Código RUDE</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {% for estudianteInHabilitado in estudianteInHabilitados %}
+                                                         <tr>
+                                                            <td>
+                                                                <div class="checkbox">
+
+                                                                        <input type="checkbox" id="form_habmov_{{estudianteInHabilitado.id}}" name="form[habmov_{{estudianteInHabilitado.id}}]" value="{{estudianteInHabilitado.id}}">
+
+                                                                </div>
+                                                            </td>
+                                                        <td data-title="Ins.Educativa">{{estudianteInHabilitado.paterno}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudianteInHabilitado.materno}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudianteInHabilitado.nombre}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudianteInHabilitado.codigoRude}}</td>
+
+
+                                                        </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </form>
+    </div>
+</div>
+
+<div class="modal modal-flex fade" id="modalNuevoEstudiante" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+       <div class="modal-dialog higherWider">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                   <h4 class="modal-title" id="flexModalLabel">Nuevo Estudiante</h4>
+
+               </div>
+               <div class="modal-body">
+                   <div id="idNuevoEstudiante"></div>
+                   <div id="idBuscarNuevoEstudiante"></div>
+               </div>
+               <div class="modal-footer">
+
+
+               </div>
+           </div>
+
+       </div>
+   </div>
+</small>

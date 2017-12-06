@@ -1,0 +1,212 @@
+{% extends '::layout.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('estilos/css.css')}}" type="text/css" rel="stylesheet"/>
+    <link href="{{asset('datepicker/css/datepicker.css')}}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block siecontent %}
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="page-header">
+                <h3 class="heading pull-left"><i class="fa fa-desktop animated flip"></i> Registrar Apoderado <span class="sub-heading">Registrar nuevo Apoderado</span></h3>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="separator bottom"></div>
+        <div class="row">
+            <div class="col-lg-12">
+                
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Ingrese los datos personales del Apoderado                      
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" method="post" action="{{path('apoderado_add2')}}">
+                            <input type="hidden" name="idEstudiante" value="{{ idEstudiante }}"/>
+                            <div class="form-group">
+                                <label for="input1" class="col-sm-2 control-label">CODIGO RUDE</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="rude" class="form-control" id="input1" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input2" class="col-sm-2 control-label">CARNET</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="carnet" class="form-control" id="input2" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group" style="display: none">
+                                <label for="input3" class="col-sm-2 control-label">RDA</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="rda" class="form-control" id="input3" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input4" class="col-sm-2 control-label">LIBRETA MILITAR</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="libMilitar" class="form-control" id="input4" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input5" class="col-sm-2 control-label">PASAPORTE</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="pasaporte" class="form-control" id="input5" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input6" class="col-sm-2 control-label">APELLIDO PATERNO</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="paterno" class="form-control" id="input6" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input7" class="col-sm-2 control-label">APELLIDO MATERNO</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="materno" class="form-control" id="input7" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input8" class="col-sm-2 control-label">NOMBRE</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="nombre" class="form-control" id="input8" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input9" class="col-sm-2 control-label">FECHA DE NACIMIENTO</label>
+                                <div class="col-sm-9">
+                                    <input type="date" name="fechaNac" id="fechaNac" class="form-control" id="input9" placeholder="" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="pais" class="col-sm-2 control-label">PAIS</label>
+                                <div class="col-sm-9">
+                                    <select name="pais" id="pais" class="form-control" onchange="dep(this.value)">
+                                        {% for p in pais %}
+                                            <option value="{{ p.id }}">{{ p.pais }}</option>
+                                        {% endfor %}  
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="departamento" class="col-sm-2 control-label" id="lbldep">DEPARTAMENTO</label>
+                                <div class="col-sm-9">
+                                    <select name="departamento" id="departamento" class="form-control" onchange="prov(this.value)">
+
+                                    </select>
+                                </div>
+                                <div id="div-load"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="provincia" class="col-sm-2 control-label">PROVINCIA</label>
+                                <div class="col-sm-9">
+                                    <select name="provincia" class="form-control" id="provincia" onchange="loc(this.value)">
+
+                                    </select>
+                                </div>
+                                <div id="div-load-prov"></div>
+                            </div>  
+                            <div class="form-group">
+                                <label for="localidad" class="col-sm-2 control-label">LOCALIDAD</label>
+                                <div class="col-sm-9">
+                                    <select name="localidad" id="localidad" class="form-control"></select>
+                                </div>
+                                <div id="div-load-loc"></div>
+                            </div> 
+                            <div class="form-group" style="display: none">
+                                <label for="input10" class="col-sm-2 control-label">SEGIP ID</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="segipid" class="form-control" id="input10" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="input11" class="col-sm-2 control-label">COMPLEMENTO</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="complemento" class="form-control" id="input11" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="genero" class="col-sm-2 control-label">GENERO</label>
+                                <div class="col-sm-9">
+                                    <select name="genero" class="form-control" id="genero">
+                                        {% for g in genero %}
+                                            <option value="{{ g.id }}">{{ g.genero|upper }}</option>
+                                        {% endfor %} 
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="estado_civil" class="col-sm-2 control-label">ESTADO CIVIL</label>
+                                <div class="col-sm-9">
+                                    <select name="estadoCivil" class="form-control" id="estado_civil">
+                                        {% for ec in estCivil %}
+                                            <option value="{{ ec.id }}">{{ ec.estadoCivil }}</option>
+                                        {% endfor %}  
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="grupoSanguineo" class="col-sm-2 control-label">GRUPO SANGUINEO</label>
+                                <div class="col-sm-9">
+                                    <select name="grupoSanguineo" class="form-control" id="grupoSanguineo">
+                                        {% for gs in gSanguineo %}
+                                            <option value="{{ gs.id }}">{{ gs.grupoSanguineo }}</option>
+                                        {% endfor %}  
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="idiomaMaterno" class="col-sm-2 control-label">IDIOMA MATERNO</label>
+                                <div class="col-sm-9">
+                                    <select name="idiomaMaterno" class="form-control" id="idiomaMaterno">
+                                        {% for im in idiomaMaterno %}
+                                            <option value="{{ im.id }}">{{ im.idiomaMaterno }}</option>
+                                        {% endfor %}  
+                                    </select>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="form-group">
+                                <label for="input12" class="col-sm-2 control-label">EMPLEO</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="empleo" class="form-control" id="input8" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <label for="input13" class="col-sm-2 control-label">TELEFONO</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="telefono" class="form-control" id="input13" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="apoderadoTipo" class="col-sm-2 control-label">PARENTESCO</label>
+                                <div class="col-sm-9">
+                                    <select name="apoderadoTipo" class="form-control" id="apoderadoTipo">
+                                        {% for apTipo in apodTipo %}
+                                            <option value="{{ apTipo.id }}">{{ apTipo.apoderado }}</option>
+                                        {% endfor %}  
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-primary">Registrar</button>
+                                    <a href="{{path('padres_buscar')}}" class="btn btn-default">Cancelar</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div> 
+            </div>
+        </div>      
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script src="{{ asset('js/funciones.js') }}"></script>
+{% endblock %}

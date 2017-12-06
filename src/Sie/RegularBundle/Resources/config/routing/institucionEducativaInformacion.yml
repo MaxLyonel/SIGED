@@ -1,0 +1,27 @@
+sie_ue_informacion_general:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInformacion:index" }
+    
+sie_ue_informacion_general_busqueda:
+    path:     /busqueda
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInformacion:buscaUnidadEducativa" }
+    
+sie_ue_informacion_general_impresion_caratula:
+    path:     /impresion/caratula
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInformacion:impresionUECaratula" }
+    
+sie_ue_informacion_general_impresion_informacionestadistica:
+    path:     /impresion/informacion/estadistica
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInformacion:impresionUEInformacionEstadistica" }
+    
+sie_ue_informacion_general_impresion_ofertacurricular:
+    path:     /impresion/oferta/curricular
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInformacion:impresionUEOfertaCurricular" }
+    
+sie_ue_informacion_general_impresion_docente:
+    path:     /impresion/docente
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInformacion:impresionUEDocente" }
+    
+sie_ue_informacion_general_impresion_administrativo:
+    path:     /impresion/administrativo
+    defaults: { _controller: "SieRegularBundle:InstitucionEducativaInformacion:impresionUEAdministrativo" }

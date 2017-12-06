@@ -1,0 +1,33 @@
+Sie\AppWebBundle\Entity\TtecCatalogoMateria:
+    type: entity
+    table: ttec_catalogo_materia
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codigo:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        catalogoMateria:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: catalogo_materia
+        obs:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

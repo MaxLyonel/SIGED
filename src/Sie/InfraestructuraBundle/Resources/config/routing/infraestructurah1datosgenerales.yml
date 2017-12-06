@@ -1,0 +1,47 @@
+infraestructurah1datosgenerales:
+    path:     /
+    defaults: { _controller: "SieInfraestructuraBundle:InfraestructuraH1Datosgenerales:index" }
+
+infraestructurah1datosgenerales_new:
+    path:     /new
+    defaults: { _controller: "SieInfraestructuraBundle:InfraestructuraH1Datosgenerales:new" }
+
+infraestructurah1datosgenerales_create:
+    path:     /create
+    defaults: { _controller: "SieInfraestructuraBundle:InfraestructuraH1Datosgenerales:create" }
+    methods:  POST
+
+infraestructurah1datosgenerales_edit:
+    path:     /edit
+    defaults: { _controller: "SieInfraestructuraBundle:InfraestructuraH1Datosgenerales:edit" }
+
+infraestructurah1datosgenerales_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieInfraestructuraBundle:InfraestructuraH1Datosgenerales:update" }
+    methods:  [POST, PUT]
+
+infraestructurah1datosgenerales_ue_new:
+    path:     /uenew
+    defaults: { _controller: "SieInfraestructuraBundle:InfraestructuraH1Datosgenerales:uenew" }
+
+infraestructurah1datosgenerales_ue_create:
+    path:     /uecreate
+    defaults: { _controller: "SieInfraestructuraBundle:InfraestructuraH1Datosgenerales:uecreate" }
+    options:
+        expose: true
+
+infraestructurah1datosgenerales_ue_edit:
+    path:     /ueedit
+    defaults: { _controller: "SieInfraestructuraBundle:InfraestructuraH1Datosgenerales:ueedit" }
+
+infraestructurah1datosgenerales_ue_update:
+    path:     /uedeletes
+    defaults: { _controller: "SieInfraestructuraBundle:InfraestructuraH1Datosgenerales:ueupdate" }
+    options:
+        expose: true
+
+infraestructurah1datosgenerales_ue_delete:
+    path:     /uedelete
+    defaults: { _controller: "SieInfraestructuraBundle:InfraestructuraH1Datosgenerales:uedelete" }
+    options:
+        expose: true

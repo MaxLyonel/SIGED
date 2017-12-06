@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH3BanoTipo:
+    type: entity
+    table: infraestructura_h3_bano_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraBano:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_bano
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

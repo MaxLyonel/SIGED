@@ -1,0 +1,66 @@
+
+inscription_extranjeros_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:index }
+
+inscription_extranjeros_main:
+    path:    /main
+    defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:main }
+
+inscription_extranjeros_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:result }
+
+inscription_extranjeros_norude:
+    path:    /norude/{optionInscription}
+    defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:norude }
+
+inscription_extranjeros_save:
+    path:    /save
+    defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:save }
+    options:
+        expose: true
+
+inscription_extranjeros_findIE:
+     path:    /findIE/{id}/{gestion}
+     defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:findIE }
+     options:
+         expose: true
+
+inscription_extranjeros_findgrado:
+     path:    /findgrado/{idnivel}/{sie}/{gestion}
+     defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:findgrado }
+     options:
+         expose: true
+
+inscription_extranjeros_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}/{gestion}
+     defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:findparalelo }
+     options:
+         expose: true
+
+inscription_extranjeros_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}/{gestion}
+    defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:findturno }
+    options:
+        expose: true
+
+inscription_extranjeros_saveext:
+    path: /saveext
+    defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:saveext }
+
+inscription_extranjeros_savenew:
+    path:    /saveNew
+    defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:savenew }
+
+inscription_extranjeros_savenewextranjero:
+    path:    /saveNewExtranjero
+    defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:savenewextranjero }
+    options:
+        expose: true
+
+inscription_extranjeros_verificarregistrar:
+     path:    /verificarregistrar
+     defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:verificarRegistrar }
+     options:
+         expose: true

@@ -1,0 +1,139 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet">
+{% endblock %}
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2>
+            Apreciaciones - <b>{{bimestre}} Bimestre</b>
+            <span>Cualitativas</span>
+        </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Estas aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="#">A. Cualitativas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    <i class="fa fa-search"></i>
+                    <a href="{{path('notascualitativas')}}">Buscar</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-list"></i>
+                    <a href="{{path('notascualitativas',{'op':'result'})}}">A. Cualitativas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-list"></i>  
+                    <a href="#">Registro</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    
+    <div class="row" style="padding:0px 10px 0px 10px">
+        <div class="col-lg-2 col-md-3">Institución Educativa</div>
+        <div class="col-lg-2 col-md-3 text-blue"><b>{{curso.institucioneducativa.id}} {{curso.institucioneducativa.institucioneducativa|upper}}</b></div>
+        <div class="col-lg-2 col-md-3">Turno</div>
+        <div class="col-lg-2 col-md-3 text-blue"><b>{{curso.turnoTipo.turno|upper}}</b></div>
+        <div class="col-lg-2 col-md-3">Nivel</div>
+        <div class="col-lg-2 col-md-3 text-blue"><b>{{curso.nivelTipo.nivel|upper}}</b></div>
+    </div>
+    <div class="row" style="padding:0px 10px 0px 10px">
+        <div class="col-lg-2 col-md-3">Grado</div>
+        <div class="col-lg-2 col-md-3 text-blue"><b>{{curso.gradoTipo.grado|upper}}</b></div>
+        <div class="col-lg-2 col-md-3">Paralelo</div>
+        <div class="col-lg-2 col-md-3 text-blue"><b>{{curso.paraleloTipo.paralelo|upper}}</b></div>
+        <div class="col-lg-2 col-md-3">Área</div>
+        <div class="col-lg-2 col-md-3 text-blue"><b>{{cursoOferta.asignaturaTipo.asignatura|upper}}</b></div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Estudiantes - <b>{{cursoOferta.asignaturaTipo.asignatura}}</b></h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelestudiantes"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelestudiantes" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary" style=" background-color: #fff">
+                            {% if curso.nivelTipo.id != 11 %}
+                                <div class="alert alert-info" role="alert">
+                                    <i class="fa fa-info-circle text-orange"></i> Las calificaciones ingresadas deben ser solo números entre 1 - 100.
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info" role="alert">
+                                    <i class="fa fa-info-circle text-orange"></i> Las apreciaciones cualitativas deben tener un maximo de 300 caracteres.
+                                </div>
+                            {% endif %}
+                            <form action="{{path('notas_update')}}" method="POST">
+                                <div id="no-more-tables">
+                                    <table class="table table-bordered table-hover cf">
+                                        <thead>
+                                            <tr class="cf">
+                                                <th>N</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Nombre(s)</th>
+                                                <th>Estado Mátricula</th>
+                                                <th>Calificación</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for e in estudiantes  %}
+                                            <input type="hidden" name="nivel" value="{{curso.nivelTipo.id}}">
+                                            <input type="hidden" name="bimestre" value="{{bimestre}}">
+                                            <input type="hidden" name="idEstudianteAsignatura[]" value="{{e.idEstudianteAsignatura}}">
+                                            <input type="hidden" name="idEstudianteNota[]" value="{{e.idEstudianteNota}}">
+                                            <tr>
+                                                <td data-title="Nro">{{loop.index}}</td>
+                                                <td data-title="Paterno">{{e.paterno}}&nbsp;</td>
+                                                <td data-title="Materno">{{e.materno}}&nbsp;</td>
+                                                <td data-title="Nombre(s)">{{e.nombre}}&nbsp;</td>
+                                                <td data-title="Est. Matricula">{{e.estadoMatricula}}&nbsp;</td>
+                                                <td data-title="Calificación">
+                                                    {% if curso.nivelTipo.id != 11 %}
+                                                        <input name="nota[]" type="number" class="form-control" min="1" max="100" step="1" value="{{e.nota}}" autocomplete="off" onkeyup="validarNumeros(this, this.value)">
+                                                    {% else %}
+                                                        <textarea name="nota[]" class="form-control" style="resize: vertical; max-height: 100px" pattern="[0-9a-zA-ZñÑ\sáéíóúÁÉÍÓÚ]{2,300}">{{e.nota}}</textarea>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div style="text-align: center">
+                                    <button class="btn btn-primary">Registrar Calificaciones</button>
+                                    <a href="{{path('notas')}}" class="btn btn-default">Cancelar</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function validarNumeros(control, valor) {
+            if (is_integer(valor)) {
+                control.value = 0;
+            }
+        }
+    </script>
+{% endblock %}

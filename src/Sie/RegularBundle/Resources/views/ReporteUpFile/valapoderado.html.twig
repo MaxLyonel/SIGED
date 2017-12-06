@@ -1,0 +1,187 @@
+{% extends 'SieRegularBundle:Default:valapoderado.html.twig' %}
+{% block stylesheetsnew %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block grid_title %} {% if nombre is defined %} - {{ nombre }} {% endif %} {% endblock %}
+{% block grid_panel_menu %}
+    <!--<li><i class="fa fa-dashboard"></i>  <a href="index.html"></a>
+    </li>-->
+
+{% endblock %}
+{% block grid_panel_content %}
+
+    {%if exist==TRUE  %}
+        <div class="row">
+            <div class="col-lg-12">
+
+                <li class="active"> Resultado de la busqueda - {{ nivel }} - {{gestion}}   </li>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="portlet portlet-blue">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4><i class="fa fa-bar-chart-o text-white"></i> Estadígrafo de Validación de Apoderados - {{gestion}} </h4>
+                                </div>
+                                <div class="portlet-widgets">
+                                    <span class="divider"></span>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#reporte"><i class="fa fa-chevron-down"></i></a>
+                                </div>                    
+                                <div class="clearfix"></div>
+
+                            </div>
+                            <div id="reporte" class="panel-collapse collapse in">
+                                <div class="portlet-body">
+                                    <div id="chartContainer" style="height: 400px; width: 100%;"> </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="portlet portlet-green">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4><i class="fa fa-circle text-white"></i> &nbsp;</h4>
+                                </div>
+                                <div class="portlet-widgets">
+
+                                    <span class="divider"></span>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#listado"><i class="fa fa-chevron-down"></i></a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div id="listado" class="panel-collapse collapse in">
+                                <div class="portlet-body">
+
+                                    <div id="no-more-tables">
+
+                                        <table id="myTable" class="col-lg-8 table table-bordered table-hover cf dataTable">
+                                            <thead class="">
+                                                <tr class="">
+                                                    <th style="width:50px;">Nro.</th> 
+                                                        {% if nivel|lower == 'unidades educativas' %}
+                                                        <th>Sie</th>
+                                                        {% endif %}
+                                                    <th>Nombre</th>
+                                                        <th>Validado</th>
+                                                        <th>No Validado</th>
+                                                    <th style="width:100px;">Avance de Validación</th>
+                                                     {% if nivel|lower == 'unidades educativas' %}
+                                                        <th>Ver PDF</th>
+                                                    {% endif %}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% set cont = 1 %}
+                                                {% set total1 = 0 %}
+                                                {% set total2 = 0 %}
+                                                {% for i in 0..((entity|length)-1) %}                                        
+                                                    {% set codigo = entity[i]['cod_depto'] %}
+                                                    {% if nivel|lower == 'unidades educativas' %}
+                                                        {% set sie = entity[i]['codigoue'] %}
+                                                    {% endif %}
+                                                    {% set nombre = entity[i]['depto'] %}
+                                                    {% set siConsolidado = entity[i]['cantidadvalidado'] %}  
+                                                    {% set noConsolidado = entity[i]['cantidadnovalidado'] %}                              
+                                                    {% set total1 = total1 + siConsolidado %}                            
+                                                    {% set total2 = total2 + noConsolidado %}
+                                                    {% if ((siConsolidado + noConsolidado) >0 )%}
+                                                        {% set porcentajeAvance = ((siConsolidado * 100)/(siConsolidado + noConsolidado))|round %}
+                                                    {% else %}
+                                                        {% set porcentajeAvance = 0 %}
+                                                    {% endif %}
+                                                    <tr>
+                                                        <td data-title="Nro.">{{ cont }}</td>                                            
+                                                        {% if nivel|lower == 'unidades educativas' %}
+                                                            <td data-title="Sie">{{ sie }}</td>
+                                                        {% endif %}
+                                                        <td data-title="Nombre">
+                                                            {% if nivelnext|lower == 'estudiantil' %}
+                                                                {{ nombre }}
+                                                            {% else %}
+                                                                
+                                                                <form action="{{ path('reporte_' ~ nivelnext|lower ~ '_regular_valapoderado') }}" method="POST">
+                                                                    <input type="hidden" name="id" value="{{ codigo }}">    
+                                                                    <input type="hidden" name="periodo" value="{{ periodo }}">    
+                                                                    <input type="hidden" name="name" value="{{ nombre }}">                                            
+                                                                    <input type="hidden" name="gestion" value="{{ gestion }}">
+                                                                    <span class="input-group-btn">
+                                                                        <button class="btn btn-default" style="width:100%; text-align:left;" type="submit">{{ nombre }}</button>
+                                                                    </span>
+                                                                </form>
+                                                            {% endif %}
+                                                        </td>
+                                                            <td data-title="Validado">{{ siConsolidado }}</td>
+                                                            <td data-title="No Validado">{{ noConsolidado }}</td>
+                                                        <td>
+                                                            <div class="progress progress-striped">
+                                                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ porcentajeAvance  }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ porcentajeAvance  }}%;">
+                                                                    <strong>&nbsp;{{ porcentajeAvance }} %</strong>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        {% if nivel|lower == 'unidades educativas' %}
+                                                        <td align="center"><a href="{{ path('reporte_valapoderado_pdf', { 'codigo_sie': codigo,'gestion':gestion}) }}" role="button"><img width="50px" src="{{ asset('img/pdf11.png') }}"></a></td>
+                                                    {% endif %}
+                                                    </tr>
+                                                    {% set cont = cont + 1 %}
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="resultUpFile">
+                </div>
+            </div>
+        </div>
+        <script>
+            window.onload = function () {
+            {% autoescape %}
+                {{ dato|raw }} {# var won't be escaped #}
+            {% endautoescape %}
+                }
+        </script>
+        <script src="{{ asset('js/canvasjs.min.js') }}"></script>
+    {% endif %}                  
+
+{% endblock %}
+{% block javascriptsnew %}
+    <script>
+                var findUpfileInfo = function () {
+
+                    //get the values
+                    var formData = $('#formReportUpFile').serialize();
+                    $.ajax({
+                        type: 'post',
+                        data: formData,
+                        url: Routing.generate('reporte_upfile_result'),
+                        beforeSend: function () {
+                            $("#resultUpFile").empty();
+                            $("#resultUpFile").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $("#resultUpFile").empty();
+                            $("#resultUpFile").append(data);
+                        },
+                        statusCode: {
+                            500: function () {
+
+                            },
+                            404: function () {
+
+                            }
+                        }
+                    });
+                }
+    </script>
+
+{% endblock %}

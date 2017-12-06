@@ -1,0 +1,195 @@
+{% extends app.session.get('layout') %}
+
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Personal Administrativo 
+                    <small>Nuevo</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('personaladministrativoinscripcion')}}"> Buscar</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('eliminarError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Distrito Educativo</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div id="no-more-tables">
+                                <table class="table table-bordered cf">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>Código del distrito educativo</th>
+                                            <th>Nombre</th>
+                                            <th>Gestión</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <td data-title="Código SIE">{{institucion.id}}</td>
+                                    <td data-title="Ins.Educativa">{{institucion.distrito}}</td>
+                                    <td data-title="Gestión">{{gestion}}</td>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel rounded shadow panel-primary">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Administrativo Nuevo</h3>
+                    </div>
+                    <div class="pull-right">
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="panel-body panel-primary">
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <label class="control-label" for="carnet">Carnet</label>
+                                    <input value="{{ persona.carnet }}" id="carnet" class="form-control" readonly="readonly" type="text">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <label class="control-label" for="complemento">Complemento</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">-</div>
+                                        <input value="{{ persona.complemento }}" id="complemento" class="form-control" readonly="readonly" type="text">
+                                    </div>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <label class="control-label" for="paterno">Apellido Paterno</label>
+                                    <input value="{{ persona.paterno }}" id="paterno" class="form-control" readonly="readonly" type="text">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <label class="control-label" for="materno">Apellido Materno</label>
+                                    <input value="{{ persona.materno }}" id="materno" class="form-control" readonly="readonly" type="text">
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <label class="control-label" for="nombre">Nombre(s)</label>
+                                    <input value="{{ persona.nombre }}" id="nombre" class="form-control" readonly="readonly" type="text">
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <label class="control-label" for="genero">Género</label>
+                                    <input value="{{ persona.generoTipo }}" id="genero" class="form-control" readonly="readonly" type="text">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <label class="control-label" for="fechanac">Fecha de Nacimiento</label>
+                                    <input value="{{ persona.fechaNacimiento|date('d-m-Y') }}" id="fechanac" class="form-control" readonly="readonly" type="text">
+                                </div>
+
+                                <div class="form-group col-lg-6 col-md-12">
+                                    <label class="control-label" for="direccion">Dirección de Domicilio</label>
+                                    {{form_widget(form.direccion) }}
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <label class="control-label" for="celular">Nro. de celular</label>
+                                    {{form_widget(form.celular) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <label class="control-label" for="correo">Correo Electrónico</label>
+                                    {{form_widget(form.correo) }}
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    {{ form_label(form.tipo)}}
+                                    {{form_widget(form.tipo) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="form-group col-lg-6 col-md-12">
+                                    {{ form_label(form.obs)}}
+                                    {{form_widget(form.obs) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-12 text-center">
+                                    {{ form_widget(form.guardar ) }}
+                                    <a href="{{ path('personaladministrativoinscripcion_list') }}" class="btn btn-default">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+                        {{form_end(form)}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+{% endblock %}

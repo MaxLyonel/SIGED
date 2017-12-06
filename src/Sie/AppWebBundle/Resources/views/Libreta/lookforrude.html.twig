@@ -1,0 +1,42 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+
+{% block contentoption %} 
+    
+        <div class="row">
+            <div class="page-header">
+                <h3 class="heading pull-left"><i class="fa fa-file-text animated flip"></i> Buscar Libreta <span class="sub-heading">{{app.session.get('fullname')}}</span></h3>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="separator bottom"></div>
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="panel" id="dashboard-tour-visits">
+
+                    <!--h1 class="page-header">Busqueda Instituci&oacute;n Educativa</h1-->
+
+                    <form class="form-inline" action="{{ path(action) }}" method="get" name="formrude" id="formrude">
+                        <div class="form-group">
+                            <label for="inputnombre" class="col-sm-4 control-label">Rude: </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="rude" name="rude" placeholder="Inserte Rude" maxlength="30" size="45">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-8 col-sm-4">
+                                <button type="summit" id="gottosearch" class="btn btn-success "><i class="fa fa-search"></i> Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- End of Website Stats Widget -->
+
+            </div>
+        </div>
+
+    
+{% endblock %}

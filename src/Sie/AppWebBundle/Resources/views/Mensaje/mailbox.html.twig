@@ -1,0 +1,115 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+    <!-- begin PAGE TITLE ROW -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>
+                    Buzón de correo
+                    <small>Centro de Mensajes</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{ path('principal_web') }}">Tablero</a>
+                    </li>
+                    <li class="active">Buzón de correo</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <!-- end PAGE TITLE ROW -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-default">
+                <div class="portlet-body">
+                    <nav class="navbar mailbox-topnav" role="navigation">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="{{ path('mensaje') }}"><i class="fa fa-inbox"></i>Buzón de correo</a>
+                        </div>
+                    </nav>
+
+                    <div id="mailbox">
+                        <ul class="nav nav-pills nav-stacked mailbox-sidenav">
+                            <li><a class="btn btn-white" href="{{ path('mensaje_new') }}"><i class="fa fa-edit"></i> Componer Mensaje</a></li>
+                            <li class="nav-divider"></li>
+                            <li class="mailbox-menu-title text-muted">Carpeta</li>
+                            <li><a href="{{ path('mensaje_inbox') }}">Recibidos</a></li>
+                            <li><a href="{{ path('mensaje_sent') }}">Enviados</a></li>
+                        </ul>
+
+                        <div id="mailbox-wrapper">
+
+                            <div class="table-responsive mailbox-messages">
+                                <table class="table table-bordered table-striped table-hover cf dataTable">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th><i class="fa fa-check"></i></th>
+                                            <th>Redactado por</th>
+                                            <th>Asunto</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for entity in entities %}
+                                            {% if(entity.leido) %}
+                                                <tr class="clickableRow">
+                                                    <td class="checkbox-col">
+                                                        <input type="checkbox" class="selectedId" name="selectedId">
+                                                    </td>
+                                                    <td class="from-col"><a href="{{ path('mensaje_readed', { 'id': entity.id }) }}">{{ entity.paterno }} {{ entity.materno }} {{ entity.nombre }}</a></td>
+                                                    <td class="msg-col">
+                                                        <a href="{{ path('mensaje_readed', { 'id': entity.id }) }}">{{ entity.asunto }}
+                                                            <span class="text-muted">- ...</span></a>
+                                                    </td>
+                                                    <td class="date-col">
+                                                        <a href="{{ path('mensaje_readed', { 'id': entity.id }) }}">
+                                                            {% if(entity.adjunto1) %}<i class="fa fa-paperclip"></i>{% endif %}{% if(entity.adjunto2) %}<i class="fa fa-paperclip"></i>{% endif %} {% if entity.fecha %}{{ entity.fecha|date('d-m-Y H:i:s') }}{% endif %}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% else %}
+                                                <tr class="unread-message clickableRow">
+                                                    <td class="checkbox-col">
+                                                        <input type="checkbox" class="selectedId" name="selectedId">
+                                                    </td>
+                                                    <td class="from-col"><a href="{{ path('mensaje_readed', { 'id': entity.id }) }}">{{ entity.paterno }} {{ entity.materno }} {{ entity.nombre }}</a></td>
+                                                    <td class="msg-col">
+                                                        <a href="{{ path('mensaje_readed', { 'id': entity.id }) }}">{{ entity.asunto }}
+                                                            <span class="text-muted">- ...</span></a>
+                                                    </td>
+                                                    <td class="date-col">
+                                                        <a href="{{ path('mensaje_readed', { 'id': entity.id }) }}">
+                                                            {% if(entity.adjunto1) %}<i class="fa fa-paperclip"></i>{% endif %}{% if(entity.adjunto2) %}<i class="fa fa-paperclip"></i>{% endif %} {% if entity.fecha %}{{ entity.fecha|date('d-m-Y H:i:s') }}{% endif %}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% else %}
+                                            <tr class="unread-message clickableRow">
+                                                <td class="checkbox-col">
+                                                    <input type="checkbox" class="selectedId" name="selectedId">
+                                                </td>
+                                                <td class="from-col">Equipo SIE</td>
+                                                <td class="msg-col">
+                                                    <span class="text-danger">No tiene mensajes nuevos.</span>
+                                                    <span class="text-muted">- ...</span>
+                                                </td>
+                                                <td class="date-col">{{ "now"|date("m/d/Y") }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+{% endblock %}

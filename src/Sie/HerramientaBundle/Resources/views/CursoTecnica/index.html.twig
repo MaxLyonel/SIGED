@@ -1,0 +1,159 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+
+        <div class="row">
+            <div class="col-md-12">
+                <section id="welcome" class="page-section">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Información Unidad Educativa</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <blockquote>
+                                        Unidad Educativa Plena
+                                    </blockquote>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <blockquote>
+                                        <ul class="list-unstyled">
+
+                                            <li>Unidad Educativa: {{institucion.institucioneducativa}}</li>
+                                            <li>SIE: {{institucion.id}}</li>
+                                            <li>gestión:  {{gestion}}</li>
+                                        </ul>
+                                    </blockquote>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--img src="../../../img/documentation/welcome/welcome-html.jpg" alt="getting started" class="img-responsive"-->
+                </section>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Start input grid -->
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Cursos</h3>
+                        </div>
+                        <div class="pull-right">
+                            {{form(form)}}
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding">
+
+
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End input grid -->
+            </div>
+        </div>
+
+        <div class='row'>
+            <div class='col-md-12'>
+                <div id='idmalla'></div>
+            </div>
+        </div>
+
+
+    </div> 
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        /**
+         * get the specilidades by area
+         * @param {type} idSpecialidad
+         * @returns {undefined} get specialidades
+         */
+        var getEspecialidad = function (idSpecialidad) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_mallacurricular_getspecilidad', {'idSpecialidad': idSpecialidad}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_especialidad").empty();
+                    $("#form_especialidad").append('<option value="">Seleccionar</option>');
+                    $.each(data.specialidades, function (i, value) {
+                        $("#form_especialidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        };
+
+        var getAcreditation = function (idAcreditation) {
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_mallacurricular_getacreditation', {'idAcreditation': idAcreditation}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_acreditation").empty();
+                    //$("#form_acreditation").append('<option value="">Seleccionar</option>');
+                    $.each(data.acreditation, function (i, value) {
+                        $("#form_acreditation").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        };
+
+        var buildMalla = function () {
+            var area = $('#form_facultadArea').val();
+            var especialidad = $('#form_especialidad').val();
+            var acreditation = $('#form_especialidad').val();
+            if (!(area.length > 0 && especialidad.length > 0 && acreditation.length > 0)) {
+                alert('Necesita seleccionar todos los datos');
+                return false;
+            }
+
+            var mallaForm = $('#mallaForm').serialize();
+            $.ajax({
+                type: 'post',
+                data: mallaForm,
+                url: Routing.generate('herramienta_mallacurricular_createMalla'),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#idmalla").empty();
+                    $("#idmalla").append(data);
+                }
+            });
+
+        };
+
+    </script>
+{% endblock %}
+

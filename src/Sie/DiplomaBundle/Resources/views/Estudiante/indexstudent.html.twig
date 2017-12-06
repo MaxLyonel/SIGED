@@ -1,0 +1,165 @@
+{% extends 'layoutDiplomas.html.twig' %}
+
+{% block contentoption%}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Modificación de Datos
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Modificar Datos</a>
+                    </li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    {% for flashMessage in app.session.flashbag.get('noticemodi') %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('okUpdate') %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Correcto!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="alert alert-info alert-dismissible" role="alert">
+
+                <i class="fa fa-warning"></i> LA MODIFICACIÓN SE DEBE REALIZAR PREVIA PRESENTACION DEL FORMULARIO DE MODIFICACION Y/O INCLUSION DE DATOS (SIE-MD-300), ESTA MODIFICACION SOLO SE REALIZA UNA VEZ POR GESTION.
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Buscar Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#inputSizing"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="inputSizing" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+
+                        {{form_start(form,{ 'attr':{'id':'formStudent'} })   }}
+                        <div class="row">
+
+                            <label for="form_codigoRude" class="col-sm-2 col-sm-offset-2 control-label">Rude</label>
+                            <div class="col-sm-4">
+                                {{ form_widget(form.codigoRude,{ 'attr':{'class': 'form-control','placeholder':'Inserte Rude','pattern':'[A-Z0-9]{7,18}'}  }) }}
+                                <div class="help-block with-errors"></div>
+                            </div>
+
+                        </div>
+                        </br>
+                        </br>
+                        <div class="row">
+                            <div class="col-sm-6 col-md-offset-2">
+                                Seleccionar el o los motivos por los que se realiza la solicitud:
+                            </div>
+                        </div>
+                        </br>
+                        </br>
+
+                        <div class="row">
+
+                            <div class="col-sm-3 col-md-offset-2">
+                                {{ form_widget(form.mode1, { 'attr':{'class':'form-control'} } ) }}
+
+                                Modificación y/o inclusión de nombre(s), apellido(s) y/o modificación de fecha de nacimiento, error(es) cometidos por personal administrativo.
+
+
+                            </div>
+                            <div class="col-sm-3">
+                                {{ form_widget(form.mode2, {'attr':{'class':'form-control'} })}}
+
+                                Modificación y/o inclusión de nombre(s), apellido(s), fecha de nacimiento por reconocimiento de padre y/o madre de familia o por cambio de nombre(s) y/o apellido(s) de manera voluntaria.
+
+
+
+                            </div>
+                            <div class="col-sm-3">
+                                {{form_widget(form.mode3, {'attr':{'class':'form-control'} }) }}
+                                Modificación y/o inclusión de datos propios del Certificado de nacimiento, Carnet de Identidad y otros datos que son parte del RUDE.
+
+
+                            </div>
+                        </div>
+                        <br>
+
+                        <br>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+
+                                    {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                </div>
+                            </div>
+                        </div>
+                        {{form_end(form)}}
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.portlet -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(function () {
+
+            $("#form_mode1").click(function () {
+                $("#form_mode2").attr('checked', false);
+            });
+            $("#form_mode2").click(function () {
+                $("#form_mode1").attr('checked', false);
+            });
+            $("#form_buscar").click(function () {
+                msg = 'Debe seleccionar:';
+                sw = 0;
+                if ($('#form_codigoRude').val() == '') {
+                    msg = msg + '\n- Rude';
+                }
+                if ((!$("#form_mode1").is(':checked')) && (!$("#form_mode2").is(':checked')) && (!$("#form_mode3").is(':checked'))) {
+                    msg = msg + '\n' + '- El motivo de la modificación';
+                }
+                if (msg != 'Debe seleccionar:') {
+                    alert('\n' + msg);
+                    return false;
+                } else {
+                    $('#formStudent').submit();
+                    return true;
+                }
+            });
+        });
+
+
+    </script>
+
+
+{% endblock %}

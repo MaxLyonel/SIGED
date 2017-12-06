@@ -1,0 +1,150 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Información {{ app.session.get('tituloTipo') }}
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('maestrogestion',{'op':'search'})}}"> Buscar</a></li>
+                    <li><i class="fa fa-users"></i>  <a href="{{path('maestrogestion',{'op':'result'})}}">{{ app.session.get('tituloTipo') }}</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>{{ app.session.get('institucion') }}</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div id="no-more-tables">
+                            <table class="table table-bordered cf">
+                                <thead class="cf">
+                                <tr>
+                                    <th>Código SIE</th>
+                                    <th>Unidad Educativa</th>
+                                    <th>Gestión</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <td data-title="Código SIE">{{institucion.id}}</td>
+                                    <td data-title="Ins.Educativa">{{institucion.institucioneducativa}}</td>
+                                    <td data-title="Gestión">{{gestion}}</td>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>{{ app.session.get('tituloTipo') }}</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a href="{{path('maestrogestion_new')}}" class="btn btn-default btn-xs"><i class="fa fa-user"></i> Nuevo {{app.session.get('tituloTipo')}}</a>
+                        <span class="divider"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelmaestro"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelmaestro" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            {% if maestro is not empty %}
+                                <div id="no-more-tables">
+                                    <table class="table table-bordered table-primary cf dataTable">
+                                        <thead>
+                                            <tr>
+                                                <th>N°</th>
+                                                <th>Carnet de Identidad</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Nombre(s)</th>
+                                                <th>Formación</th>
+                                                <th>Fecha Registro</th>
+                                                <th>Fecha Modificación</th>
+                                                <th>Observación</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for maestro in maestro %}
+                                                <tr {% if maestro.perId in maestro_no_idioma|keys or maestro.perId in maestro_no_genero|keys %}class="danger text-danger"{% endif %}>
+                                                    <td data-title="N°">{{ loop.index }}</td>
+                                                    <td data-title="Carnet">{{ maestro.carnet }}</td>
+                                                    <td data-title="Paterno">{{ maestro.paterno }}</td>
+                                                    <td data-title="Materno">{{ maestro.materno }}</td>
+                                                    <td data-title="Nombre(s)">{{ maestro.nombre }}</td>
+                                                    <td data-title="Formación">{{ maestro.formacion }}</td>
+                                                    <td data-title="FechReg">{% if maestro.fechaRegistro %}{{ maestro.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                                    <td data-title="FechMod">{% if maestro.fechaModificacion %}{{ maestro.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                                    <td data-title="Observacion" {% if maestro.perId in maestro_no_idioma|keys or maestro.perId in maestro_no_genero|keys %}class="text-danger"{% else %}class="text-success"{% endif %}>
+                                                        {% if maestro.perId in maestro_no_idioma|keys %}<i class="fa fa-fw fa-warning" aria-hidden="true"></i>No tiene idiomas{% else %}<i class="fa fa-fw fa-check" aria-hidden="true"></i>(Idiomas) Correcto{% endif %}<br />
+                                                        {% if maestro.perId in maestro_no_genero|keys %}<i class="fa fa-fw fa-warning" aria-hidden="true"></i>Corrija el género{% else %}<i class="fa fa-fw fa-check" aria-hidden="true"></i>(Género) Correcto{% endif %}
+                                                    </td>
+                                                    <td data-title="Acciones">
+                                                        {% if activar_acciones and (app.session.get('lastOperativo') != 5) %}
+                                                            <form action="{{path('herramienta_info_maestro_edit')}}" method="post" style="display:inline-block">
+                                                                <input type="hidden" name="idPersona" value="{{maestro.perId}}">
+                                                                <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                                                                <input type="hidden" name="gestion" value="{{gestion}}">
+                                                                <input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">
+                                                                <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
+                                                            </form>
+                                                            <form action="{{path('herramienta_info_maestro_delete')}}" method="post" style="display: inline-block">
+                                                                <input type="hidden" name="idPersona" value="{{maestro.perId}}">
+                                                                <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                                                                <input type="hidden" name="gestion" value="{{gestion}}">
+                                                                <input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">
+                                                                <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');" id="eliminarD{{ loop.index }}" name="eliminarD{{ loop.index }}"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
+                                                            </form>
+                                                        {% else %}
+                                                            -
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                No hay Maestros Registrados
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+{% endblock %}
+

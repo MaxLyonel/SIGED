@@ -1,0 +1,40 @@
+{% if areasCurso is not empty %}
+    <div id="no-more-tables">
+        <table class="table table-bordered table-hover cf">
+            <thead class="cf">
+                <tr>
+                    <th>Campo</th>
+                    <th>Codigo</th>
+                    <th>Area</th>
+                    <th>Maestro</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for curso in areasCurso %}
+                    {% set asignatura = curso.asignaturaTipo %}
+                    {% set campo = asignatura.areaTipo %}
+                    {% set maestro = curso.maestroInscripcion %}
+                    <tr>
+                        <td data-title="Campo">{{campo.area}}&nbsp;</td>
+                        <td data-title="Codigo">{{asignatura.id}}&nbsp;</td>
+                        <td data-title="Area">{{asignatura.asignatura}}&nbsp;</td>
+                        <td data-title="Maestro">
+                            <select class="chosen-select form-control" data-placeholder="Asignar Maestro" onchange="asignarMaestro({{curso.id}},this.value)">
+                                <option value=""></option>
+                                {% for ma in maestros %}
+                                    {% if maestro is not null and maestro.id == ma.id %}
+                                        {% set sel = 'selected' %}
+                                    {% else %}
+                                        {% set sel = '' %}
+                                    {% endif %}
+                                    <option {{sel}} value="{{ma.id}}">{{ma.persona.carnet}} - {{ma.persona.paterno}} {{ma.persona.materno}} {{ma.persona.nombre}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}

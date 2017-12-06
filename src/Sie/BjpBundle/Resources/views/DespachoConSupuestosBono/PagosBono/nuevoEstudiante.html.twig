@@ -1,0 +1,31 @@
+{{form_start(formEstudianteForm,{'attr':{'data-toggle': 'validator','form':'role', 'id':'idNuevoEstudianteForm'} })}}
+
+              <table class="table">
+                     <tbody>
+                       <tr>
+                         <td>Rude</td><td colspan="3">{{form_widget(formEstudianteForm.rude)}}</td>
+
+                       </tr>
+                         <tr>
+                             <td>Paterno</td><td>{{form_widget(formEstudianteForm.paterno)}}</td>
+                             <td>Materno</td><td>{{form_widget(formEstudianteForm.materno)}}</td>
+                             <td>Nombre</td><td>{{form_widget(formEstudianteForm.nombre)}}</td>
+                             <td>Fecha Nacimiento</td><td>{{form_widget(formEstudianteForm.fnac)}}</td>
+                         </tr>
+                         <tr>
+
+                             <td>Genero</td><td>{{form_widget(formEstudianteForm.generoTipo)}}</td>
+                             <td>Observación</td><td>{{form_widget(formEstudianteForm.observacion)}}</td>
+                             <td></td><td></td>
+                         </tr>
+                         <tr>
+                           <td>
+                             {{form_widget(formEstudianteForm.buscar)}} <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">Cerrar</button>
+                           </td>
+                         </tr>
+
+
+                     </tbody>
+                   </table>
+
+              {{form_end(formEstudianteForm)}}

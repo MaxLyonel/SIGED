@@ -1,0 +1,62 @@
+Sie\AppWebBundle\Entity\TtecEstudianteInscripcion:
+    type: entity
+    table: ttec_estudiante_inscripcion
+    indexes:
+        IDX_5AC88493F8243003:
+            columns:
+                - ttec_paralelo_materia_id
+        IDX_5AC88493F5F88DB9:
+            columns:
+                - persona_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estadomatriculaTipoInicioId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estadomatricula_tipo_inicio_id
+        estadomatriculaTipoFinId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estadomatricula_tipo_fin_id
+        fechaInscripcion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inscripcion
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    manyToOne:
+        ttecParaleloMateria:
+            targetEntity: TtecParaleloMateria
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_paralelo_materia_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

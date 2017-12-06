@@ -1,0 +1,502 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <!-- Start widget newsletter -->
+                <div class="panel text-center rounded shadow">
+                    <div class="panel-body bg-lilac rounded">
+                        <div class="inner-all">
+                            <h4 class="text-uc">Información Unidad Educativa</h4>
+                            <p>SIE : {{institucion.id}}</p>
+                            <p>Unidad Educativa :{{institucion.institucioneducativa}} - {{gestion}}</p>
+                            <h5 class="text-uc">Opción: Información Institución Educativa</h5>
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End widget newsletter -->
+            </div>
+        </div><!-- /.row -->
+
+
+
+        <!-- Start double tabs -->
+        <div class="panel panel-tab panel-tab-double rounded shadow">
+            <!-- Start tabs heading -->
+            <div class="panel-heading no-padding">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="component-tabsaccordion.html#tab2-1" data-toggle="tab">
+                            <i class="fa fa-user"></i>
+                            <div>
+                                <span class="text-strong">Información Unidad Educativa</span>
+                                <span>Paso 1</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="component-tabsaccordion.html#tab2-2" data-toggle="tab">
+                            <i class="fa fa-file-text"></i>
+                            <div>
+                                <span class="text-strong">Cursos</span>
+                                <span>Paso 2</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div><!-- /.panel-heading -->
+            <!--/ End tabs heading -->
+
+            <!-- Start tabs content -->
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="tab2-1">
+                        <div class="row">
+                            <div class="col-md-9 col-sm-9 col-xs-9">
+                                <div class="panel panel-lilac">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">1.- Datos de Identificación</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Código de la Unidad Educativa (UE)</strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input value="{{ ieducativa[0]['cod_ue_id'] }}" id="readonlyinput1" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Nombre de la Unidad Educativa (UE)</strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input value="{{ ieducativa[0]['desc_ue'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>Nombre de la Directora ó Director encargada/o de la U.E.</strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input value="{{ ieducativa[0]['director'] }}" id="readonlyinput1" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>C.I. Directora ó Director Encargada/o</strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input value="{{ ieducativa[0]['ci_director'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <strong>¿Tiene cargo de Director?</strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input value="{{ ieducativa[0]['item_director'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div><!-- /.panel -->
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-3">
+                                <div class="panel panel-lilac">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">¿La UE está cerrada?</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Abierta
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Cerrada
+                                                    </label>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div><!-- /.panel -->
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="panel panel-lilac">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">2.- Datos de Ubicación del Edificio Escolar</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Departamento:
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input value="{{ ieducativa[0]['id_departamento'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input value="{{ ieducativa[0]['desc_departamento'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Sección Municipal:
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input value="{{ ieducativa[0]['id_seccion'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input value="{{ ieducativa[0]['desc_seccion'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Ciudad o Localidad:
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input value="{{ ieducativa[0]['id_localidad'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input value="{{ ieducativa[0]['desc_localidad'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>    
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Provincia:
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input value="{{ ieducativa[0]['id_provincia'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input value="{{ ieducativa[0]['desc_provincia'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Cantón:
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input value="{{ ieducativa[0]['id_canton'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <input value="{{ ieducativa[0]['desc_canton'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        Zona:
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input value="{{ ieducativa[0]['zona'] }}" id="readonlyinput2" class="form-control" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        Código de Distrito
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input class="form-control" id="disabledInput" type="text" placeholder="{{ ieducativa[0]['cod_distrito'] }}" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        Nombre de Distrito
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input class="form-control" id="disabledInput" type="text" placeholder="{{ ieducativa[0]['distrito'] }}" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div><!-- /.panel -->
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="panel panel-lilac">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">3.- Jurisdicción Administrativa</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        Código de Distrito
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input class="form-control" id="disabledInput" type="text" placeholder="{{ ieducativa[0]['cod_distrito'] }}" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        Nombre de Distrito
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input class="form-control" id="disabledInput" type="text" placeholder="{{ ieducativa[0]['distrito'] }}" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div><!-- /.panel -->
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="panel panel-lilac">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">4.- Dependencia</h3>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        Descripción
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input class="form-control" id="disabledInput" type="text" placeholder="{{ ieducativa[0]['dependencia'] }}" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        Turno
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input class="form-control" id="disabledInput" type="text" placeholder="{{ ieducativa[0]['turno'] }}" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div><!-- /.panel -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab2-2">
+<div class="row">
+        <div class="col-lg-12 text-right">
+            <form action="{{path('herramienta_creacioncursos_new')}}" style="display: inline-block" method="post">
+                <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                <input type="hidden" name="idGestion" value="{{gestion}}">
+                <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-plus-square"></i> Nuevo Curso</button>
+            </form>
+        </div>
+        <hr>
+        <div class="col-lg-12">
+            {% if cursos is not empty %}
+                {% set turno = cursos[0].turnoTipo.id %}
+                {% set turnoNombre = cursos[0].turnoTipo.turno %}
+                <div class="panel panel-teal">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <h4>Turno - {{turnoNombre}}</h4>
+                        </div>
+                        <div class="panel-widgets">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-collapse collapse in" id="panel{{turno}}">
+                    <div class="panel-body">
+                        <div id="no-more-tables">
+                        <table class="table table bordered cf dataTable">
+                            <thead class="cf">
+                                <tr>
+                                    
+                                    <th>Nivel</th>
+                                    <th>Grado</th>
+                                    <th>Paralelo</th>
+                                    <th>Turno</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                        {% for c in cursos %}
+                        {% if c.turnoTipo.id != turno %}
+
+                            {% set turno = c.turnoTipo.id %}
+                            </tbody>
+                            </table>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+                            <div class="panel panel-blue">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panel{{turno}}">
+                                    <h4>Turno - {{c.turnoTipo.turno}}</h4>
+                                    </a>
+                                </div>
+                                <div class="panel-widgets">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panel{{turno}}"><i class="fa fa-chevron-down"></i></a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-collapse collapse in" id="panel{{turno}}">
+                            <div class="panel-body">
+                            <div id="no-more-tables">
+                                <table class="table table bordered cf dataTable">
+                                    <thead class="cf">
+                                        <tr>
+                                            
+                                            <th>Nivel</th>
+                                            <th>Grado</th>
+                                            <th>Paralelo</th>
+                                            <th>Turno</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr {% if c.nivelTipo.id == 11 %} 
+                                        class="success" 
+                                    {% else %}
+                                        {% if c .nivelTipo.id == 12 %}
+                                            class="warning"
+                                        {% else %}
+                                            class="info"
+                                        {% endif %}
+                                    {% endif %}>
+                                    
+                                    <td data-title="Nivel">{{c.nivelTipo.nivel}}</td>
+                                    <td data-title="Grado">{{c.gradoTipo.grado|upper}}</td>
+                                    <td data-title="Paralelo">{{c.paraleloTipo.paralelo}}</td>
+                                    <td data-title="Turno">{{c.turnoTipo.turno}}</td>
+                                    <td data-title="Acciones">
+                                        <form action="{{path('herramienta_creacioncursos_delete')}}" style="display: inline-block;" method="post">
+                                            <input type="hidden" name="idCurso" value="{{c.id}}">
+                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                        {% else %}
+                            <tr {% if c.nivelTipo.id == 11 %} 
+                                    class="success" 
+                                {% else %}
+                                    {% if c .nivelTipo.id == 12 %}
+                                        class="warning"
+                                    {% else %}
+                                        class="info"
+                                    {% endif %}
+                                {% endif %}>
+                                
+                                <td data-title="Nivel">{{c.nivelTipo.nivel}}</td>
+                                <td data-title="Grado">{{c.gradoTipo.grado|upper}}</td>
+                                <td data-title="Paralelo">{{c.paraleloTipo.paralelo}}</td>
+                                <td data-title="Turno">{{c.turnoTipo.turno}}</td>
+                                <td data-title="Acciones">
+                                    <form action="{{path('herramienta_creacioncursos_delete')}}" style="display: inline-block;" method="post">
+                                        <input type="hidden" name="idCurso" value="{{c.id}}">
+                                        <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+            {% else %}
+                <div class="alert alert-info">
+                    No hay cursos registrados
+                </div>
+            {% endif %}
+        </div>
+                    </div>                    
+                </div>
+            </div><!-- /.panel-body -->
+            <!--/ End tabs content -->
+        </div><!-- /.panel -->
+        <!--/ End double tabs -->
+
+    </div><!-- /.body-content -->
+    <!--/ End body content -->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    </script>
+{% endblock %}
+

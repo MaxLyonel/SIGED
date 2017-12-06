@@ -1,0 +1,7 @@
+home_validate_student:
+    path:     /student
+    defaults: { _controller: "SieValidacionBundle:Regular:index" }
+
+rude_validate_student:
+    path:     /student/hist-rude/
+    defaults: { _controller: "SieValidacionBundle:Regular:histRude" }

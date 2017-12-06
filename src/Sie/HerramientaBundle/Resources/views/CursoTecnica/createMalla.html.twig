@@ -1,0 +1,200 @@
+<div class="row">
+    <div class="col-md-12">
+        {{form(form)}}
+        <!-- Start form validation wizard -->
+        <div id="validation-wizard">
+            <h4>Crear Malla</h4>
+            <div class="panel panel-tab rounded shadow">
+                <!-- Start tabs heading -->
+                <div class="panel-heading no-padding">
+                    <ul class="nav nav-tabs nav-pills">
+                        <li class="active">
+                            <a href="form-wizard.html#tab5-1" data-toggle="tab">
+                                <i class="fa fa-file-text"></i>
+                                <div>
+                                    <span class="text-strong">Primer</span>
+                                    <span>Bimestre</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="form-wizard.html#tab5-2" data-toggle="tab">
+                                <i class="fa fa-file-text"></i>
+                                <div>
+                                    <span class="text-strong">Segundo</span>
+                                    <span>Bimestre</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="form-wizard.html#tab5-3" data-toggle="tab">
+                                <i class="fa fa-file-text"></i>
+                                <div>
+                                    <span class="text-strong">Tercer</span>
+                                    <span>Bimestre</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="form-wizard.html#tab5-4" data-toggle="tab">
+                                <i class="fa fa-file-text"></i>
+                                <div>
+                                    <span class="text-strong">Cuarto</span>
+                                    <span>Bimestre</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div><!-- /.panel-heading -->
+                <!--/ End tabs heading -->
+
+                <!-- Start tabs content -->
+                <div class="panel-body">
+                    <form action="form-wizard.html#" id="form-wizard" class="tab-content form-horizontal" novalidate="novalidate">
+                        <div class="tab-pane fade in active inner-all" id="tab5-1">
+                            <h4 class="page-header">Personal</h4>
+                            <div class="form-group">
+                                <label class="col-sm-2">First Name <span class="asterisk">*</span></label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" name="firstname">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2">Last Name</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" name="lastname">
+                                </div>
+                            </div>
+                            <div class="form-group mb-0">
+                                <label class="col-sm-2">Gender <span class="asterisk">*</span></label>
+                                <div class="col-sm-4">
+                                    <div class="rdio rdio-theme inline mr-10">
+                                        <input id="male5" name="gender" type="radio">
+                                        <label for="male5">Male</label>
+                                    </div>
+                                    <div class="rdio rdio-theme inline">
+                                        <input id="female5" name="gender" type="radio">
+                                        <label for="female5">Female</label>
+                                    </div>
+                                    <label for="gender" class="error"></label>
+                                    <input type="text" class="hide" id="gender">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade inner-all" id="tab5-2">
+                            <h4 class="page-header">Product</h4>
+                            <div class="form-group">
+                                <label class="col-sm-2">Product ID <span class="asterisk">*</span></label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" name="productid">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2">Product Name <span class="asterisk">*</span></label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" name="productname">
+                                </div>
+                            </div>
+                            <div class="form-group mb-0">
+                                <label class="col-sm-2">Category <span class="asterisk">*</span></label>
+                                <div class="col-sm-4">
+                                    <select class="form-control" name="category">
+                                        <option value="">Choose One</option>
+                                        <option value="Iphone">Iphone</option>
+                                        <option value="Android">Android</option>
+                                        <option value="Blackberry">Blackberry</option>
+                                    </select>
+                                    <label for="category" class="error"></label>
+                                    <input type="text" class="hide" id="category">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade inner-all" id="tab5-3">
+                            <h4 class="page-header">Payment</h4>
+                            <div class="form-group">
+                                <label class="col-sm-2">Credit Card Type <span class="asterisk">*</span></label>
+                                <div class="col-sm-4">
+                                    <select class="form-control" name="creditcard">
+                                        <option value="">Choose Credit Card</option>
+                                        <option value="amex">American Express</option>
+                                        <option value="discover">Discover</option>
+                                        <option value="mastercard">MasterCard</option>
+                                        <option value="visa">Visa</option>
+                                    </select>
+                                    <label for="creditcard" class="error"></label>
+                                    <input type="text" class="hide" id="creditcard">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2">Expiration</label>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <select class="form-control">
+                                                <option value="">Date Month</option>
+                                                <option value="01">01 - Jan</option>
+                                                <option value="02">02 - Feb</option>
+                                                <option value="03">03 - Mar</option>
+                                                <option value="04">04 - Apr</option>
+                                                <option value="05">05 - May</option>
+                                                <option value="06">06 - Jun</option>
+                                                <option value="07">07 - Jul</option>
+                                                <option value="08">08 - Aug</option>
+                                                <option value="09">09 - Sep</option>
+                                                <option value="10">10 - Oct</option>
+                                                <option value="11">11 - Nov</option>
+                                                <option value="12">12 - Dec</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <select class="form-control">
+                                                <option value="">Year</option>
+                                                <option value="2007">2007</option>
+                                                <option value="2008">2008</option>
+                                                <option value="2009">2009</option>
+                                                <option value="2010">2010</option>
+                                                <option value="2011">2011</option>
+                                                <option value="2012">2012</option>
+                                                <option value="2013">2013</option>
+                                                <option value="2014">2014</option>
+                                                <option value="2015">2015</option>
+                                                <option value="2016">2016</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mb-0">
+                                <label class="col-sm-2">Credit Card Number <span class="asterisk">*</span></label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" name="creditcardnumber">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade inner-all" id="tab5-4">
+                            <h4 class="page-header">Confirmation</h4>
+                            <div class="ml-10">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                            <button type="submit" class="btn btn-success ml-10">Submit</button>
+                        </div>
+                    </form>
+                </div><!-- /.panel-body -->
+                <!--/ End tabs content -->
+
+                <!-- Start pager -->
+                <div class="panel-footer">
+                    <ul class="pager wizard no-margin">
+                        <li class="previous disabled"><a href="javascript:void(0);">Previous</a></li>
+                        <li class="next"><a href="javascript:void(0);">Next</a></li>
+                    </ul>
+                </div><!-- /.panel-footer -->
+                <!--/ End pager -->
+
+            </div><!-- /.panel -->
+        </div>
+        <!--/ End form validation wizard-->
+
+    </div>
+</div>

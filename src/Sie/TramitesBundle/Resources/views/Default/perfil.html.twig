@@ -1,0 +1,147 @@
+{% extends "::layoutTramites.html.twig"%}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <!-- <i class="fa fa-user"></i> -->
+            <a href="{{path('sie_tramites_homepage')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+    </ol>
+{% endblock %} 
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-4">
+            <div class="panel rounded shadow">
+                <div class="panel-body">
+                    <div class="inner-all">
+                        <ul class="list-unstyled">
+                            <li class="text-center">
+                                <img data-no-retina="" width="100px" height="100px" class="img-circle img-bordered-primary" src="{{asset('juegos/img/avatar/35/1.png')}}" alt="usuario">
+                            </li>
+                            <li class="text-center">
+                                <h4 class="text-capitalize">{{ datosUsuario.usuarioNombre }}</h4>
+                                <p class="text-muted text-capitalize">{{ datosUsuario.personaNombre }}</p>
+                            </li>
+                            <li><br></li>
+                            <li>
+                                <div class="btn-group-vertical btn-block">
+                                    <!-- <a href="" class="btn btn-default"><i class="fa fa-cog pull-right"></i>Editar cuenta</a> -->
+                                    <a href="{{path('logout')}}" class="btn btn-default"><i class="fa fa-sign-out pull-right"></i>Cerrar sessión</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div><!-- /.panel -->
+
+            <div class="panel rounded shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Contacto</h3>
+                    </div>
+                    <div class="pull-right">
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body no-padding rounded">
+                    <ul class="list-group no-margin">
+                        <li class="list-group-item"><i class="fa fa-envelope mr-5"></i> {{ datosUsuario.personaCorreo }}</li>
+                        <li class="list-group-item"><i class="fa fa-phone mr-5"></i> {{ datosUsuario.personaCelular }}</li>
+                    </ul>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+
+        </div>
+        <div class="col-lg-9 col-md-9 col-sm-8">
+                <div class="panel shadow">
+                        <div class="panel-heading">
+                            <div id="tour-12" class="pull-left">
+                                <h3 class="panel-title"><i class="fa fa-tasks"></i> Certificados impresos</h3>
+                            </div>   
+                            <div class="pull-right">                                 
+                                <div class="btn-green date-picker">
+                                    <form name="formtable" role="form" action="{{ path('sie_tramites_homepage') }}" action="" method="POST" >
+                                        <select class="form-control btn-dpl" name="gestion" onchange="this.form.submit();">
+                                            {% for ges in gestiones %}
+                                                {% if ges.id == gestion %}
+                                                    <option value="{{ ges.id }}" selected>{{ ges.id }}</option>
+                                                {% else %}
+                                                    <option value="{{ ges.id }}">{{ ges.id }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </form>
+                                </div>
+                            </div>                          
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div id="tour-15" style="display: block; min-height: 500px;" class="panel-body"> 
+                        {% if reporte is defined  %}
+                            {% set count = 0 %}  
+                            {% set cantidadTotalGeneral = 0 %}       
+                            {% for data in reporte%}
+                                {% set count = count + 1 %} 
+                                {% set cantidadBasico = data.cantidad_basico %} 
+                                {% set cantidadAuxiliar = data.cantidad_auxiliar %} 
+                                {% set cantidadMedio = data.cantidad_medio %}  
+                                {% set cantidadTotal = data.cantidad_total %} 
+                                {% if count == 1 %}
+                                    {% set cantidadTotalGeneral = data.cantidad_total %} 
+                                    {% if cantidadTotalGeneral == 0 %}
+                                        {% set cantidadTotalGeneral = 1 %} 
+                                    {% endif %}
+                                {% endif %} 
+                                {% set porcentajeBasico = (cantidadBasico*100)/cantidadTotalGeneral %} 
+                                {% set porcentajeAuxiliar = (cantidadAuxiliar*100)/cantidadTotalGeneral %} 
+                                {% set porcentajeMedio = (cantidadMedio*100)/cantidadTotalGeneral %}  
+                                {% set id = data.id %}
+                                {% set codigo = data.codigo %}
+                                {% set lugar = data.lugar %}
+                                {% if count == 1 %}
+                                    <span class="text-primary pull-right"><b>{{ cantidadTotal }}</b></span><span class="text-primary"><b>{{ lugar }}</b></span>
+                                    {% if data.cantidad_total == 0 %}
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%">
+                                            </div>
+                                        </div><!-- /.progress --> 
+                                    {% else %}
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">{{cantidadTotalGeneral}}
+                                            </div>
+                                        </div><!-- /.progress --> 
+                                    {% endif %}
+                                {% else %}
+                                    <span class="pull-right" style="width:50px; text-align:right"><b>{{ cantidadTotal }}</b></span><span class="">{{ lugar }}</span>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar progress-bar-lilac" style="width: {{ porcentajeBasico }}%" title="Técnico Básico - {{ cantidadBasico }}">
+                                            <span class="sr-only">{{ porcentajeBasico }}%</span>
+                                        </div><!-- /.progress -->
+                                        <div class="progress-bar progress-bar-danger" style="width: {{ porcentajeAuxiliar }}%" title="Técnico Auxiliar - {{ cantidadAuxiliar }}">
+                                            <span class="sr-only">{{ porcentajeAuxiliar }}%</span>
+                                        </div><!-- /.progress -->
+                                        <div class="progress-bar progress-bar-warning" style="width: {{ porcentajeMedio }}%" title="Técnico Medio - {{ cantidadMedio }}">
+                                            <span class="sr-only">{{ porcentajeMedio }}%</span>
+                                        </div><!-- /.progress -->
+                                    </div>
+                                {% endif %}  
+                            {% endfor %}
+                        {% endif %}
+                        </div><!-- /.panel-body -->
+                        <div class="panel-footer">
+                        </div>
+                    </div>             
+            </div>
+
+        </div><!-- /.row -->
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>        
+    </script>
+{%endblock%}

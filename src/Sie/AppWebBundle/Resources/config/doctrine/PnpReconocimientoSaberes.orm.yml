@@ -1,0 +1,83 @@
+Sie\AppWebBundle\Entity\PnpReconocimientoSaberes:
+    type: entity
+    table: pnp_reconocimiento_saberes
+    indexes:
+        IDX_BC80ABEDE48F621D:
+            columns:
+                - usuario_homologado_id
+        IDX_BC80ABEDDB38439E:
+            columns:
+                - usuario_id
+        IDX_BC80ABED3AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_BC80ABED59590C39:
+            columns:
+                - estudiante_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        curso:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        homologado:
+            type: boolean
+            nullable: true
+            comment: ''
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaHomologacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_homologacion
+    manyToOne:
+        usuarioHomologado:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_homologado_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

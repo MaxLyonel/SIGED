@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\ValidacionReglaEntidadTipo:
+    type: entity
+    table: validacion_regla_entidad_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        entidad:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,11 @@
+<form action="" id="formMaestros" onsubmit="asignarMaestro(); return false;">
+	
+	{% include 'SieAppWebBundle:Services/MaestroAsignacion:maestroAsignacion.html.twig' with {'m':maestros} %}
+
+	<div style="background:#EEEEEE; text-align:right; padding:5px; margin-top:-10px">
+		<button type="button" class="btn btn-default" onclick="cerrarMaestros({{maestros.ieco}})">Cerrar</button>
+		{% if maestros.vista != 0 %}
+			<button type="submit" class="btn btn-success">Guardar Cambios</button>
+		{% endif %}
+	</div>
+</form>

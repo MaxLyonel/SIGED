@@ -1,0 +1,232 @@
+{% extends 'layoutInfraestructura.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .modal-dialog{
+            width: 80%;
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+    {% include 'SieInfraestructuraBundle:Info:cabecera.html.twig' %}
+    <ol class="breadcrumb">
+        <li><a href="{{path('infra_info_index')}}">Pincipal</a></li>
+        <li><a href="{{path('infra_info_acceder')}}">Panel de Acceso Rápido</a></li>
+        <li class="active">Hoja 4 - Ambientes Pedagógicos</li>
+    </ol>
+    <h2 class="view-title"><img src="{{asset('webInfraestructura/assets/images/ambientePedagogico.png')}}" class="img-header"> HOJA 4 - AMBIENTES PEDAGOGICOS</h2>
+    {{form_start(formMain)}}
+    {{form_widget(formMain.save)}}
+    <a  class="btn btn-danger-alt" href="{{path('infra_info_acceder')}}">Cancelar</a>
+    {{form_end(formMain)}}
+
+    <div class="module-wrapper">
+        <section class="module module-headings">
+            <div class="module-inner">
+                <div class="module-content">
+                    <div role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs nav-tabs-theme-3" role="tablist">
+                            <li role="presentation" class="active"><a href="#ambiente" aria-controls="ambiente" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-file-text-o"></i><br><span class="hidden-xs hidden-sm">1. Datos de ambientes pedagógicos</span></a></li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="ambiente">
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+
+                                      <section class="module module-headings">
+                            					<div class="module-inner">
+                            						<div class="module-heading">
+                            							<h3 class="module-title">1.1 Datos de ambientes pedagógicos</h3>
+                            							<ul class="actions list-inline">
+                                            <li>
+                                              {{ form_start(form, {'attr' : {'class':'form', 'id':'adicionarId' } } ) }}
+                                                {{ form_widget(form.adicionar, {'attr':{'class': 'fa fa-plus btn btn-primary', 'data-toggle':'modal', 'data-target':'#modalAmbientes'} }) }}
+                                              {{ form_end(form) }}
+                                            </li>
+                            							</ul>
+
+                            						</div>
+
+                            						<div class="module-content collapse in" id="content-1" aria-expanded="true">
+                            							<div class="module-content-inner no-padding-bottom">
+                            								<div class="table-responsive">
+
+                                              {% if ambientes|length > 0 %}
+                                                  <table class="table">
+                                                      <thead>
+                                                          <tr>
+                                                              <th>#</th>
+                                                              <th>Acciones</th>
+                                                              <th>Ambiente</th>
+                                                              <th>Ancho</th>
+                                                              <th>Largo</th>
+                                                              <th>Alto</th>
+                                                              <th>Estado Ambiente</th>
+                                                              <th>Iluminación natural</th>
+                                                              <th>Iluminación eléctrica</th>
+                                                              <th>Seguridad</th>
+                                                              <th>Pisos</th>
+                                                              <th>Paredes</th>
+                                                              <th>Techos</th>
+                                                              <th>Ventanas</th>
+                                                              <th>Puertas</th>
+                                                              <th>Pintura</th>
+                                                              <th>Cielo raso</th>
+                                                              <th>Capacidad</th>
+                                                              <!-- <th>Uso</th> -->
+
+                                                          </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                          {% for a in ambientes %}
+
+                                                          {% set data = {
+                                                            'ambientepedagogicoId':a.id,
+                                                            'infraestructuraJuridiccionGeograficaId':a.infraestructuraJuridiccionGeografica.id,
+                                                          }
+                                                          %}
+                                                          {% set dataJson = data|json_encode() %}
+                                                              <tr>
+
+                                                                  <td>{{loop.index}}</td>
+                                                                  <td>
+                                                                      <button type="button" id="form_delete" name="form[delete]" class="btn btn-link btn-xs" onclick="deleteObj('{{dataJson}}')">
+                                                                        <i class='fa fa-trash'></i> Eliminar
+                                                                      </button>
+                                                                  </td>
+                                                                  <td>{{a.n11ambienteTipo}}</td>
+                                                                  <td>{{a.n12AmbienteAnchoMts}}</td>
+                                                                  <td>{{a.n12AmbienteLargoMts}}</td>
+                                                                  <td>{{a.n12AmbienteAltoMts}}</td>
+                                                                  <td>{{a.n13AmbienteEstadoGeneralTipo.infraestructuraEstadogeneral}}</td>
+                                                                  <td>{{a.n13IluminacionnaturalEstadoGeneralTipo.infraestructuraEstadogeneral}}</td>
+                                                                  <td>{{a.n13IluminacionelectricaEstadoGeneralTipo.infraestructuraEstadogeneral}}</td>
+                                                                  <td>{{a.n13SeguridadEstadoGeneralTipo.infraestructuraEstadogeneral}}</td>
+                                                                  <td>{{a.n13PisoEstadoGeneralTipo.infraestructuraEstadogeneral}}</td>
+                                                                  <td>{{a.n13ParedEstadoGeneralTipo.infraestructuraEstadogeneral}}</td>
+                                                                  <td>{{a.n13TechoEstadoGeneralTipo.infraestructuraEstadogeneral}}</td>
+                                                                  <td>{{a.n13VentanasEstadoGeneralTipo.infraestructuraEstadogeneral}}</td>
+                                                                  <td>{{a.n13PuertasEstadoGeneralTipo.infraestructuraEstadogeneral}}</td>
+                                                                  <td>{{a.n13PinturaEstadoGeneralTipo.infraestructuraEstadogeneral}}</td>
+                                                                  <td>{{a.n13CielorasoEstadoGeneralTipo.infraestructuraEstadogeneral}}</td>
+                                                                  <td>{{a.n14CapacidadAmbiente}}</td>
+                                                                  <!-- <td>uso</td>
+                                                                  <td>Eliminar</td> -->
+                                                              </tr>
+                                                          {% endfor %}
+                                                      </tbody>
+                                                  </table>
+                                              {% else %}
+
+                                              {% endif %}
+
+
+
+
+                            								</div>
+
+                            							</div>
+
+                            						</div>
+
+                            					</div>
+
+                            				</section>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal fade bs-example-modal-lg" id="modalAmbientes" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+      /**
+       * [adicionar description]
+       * @return {[type]} [description]
+       */
+        var adicionar = function(){
+          var formData = $('#adicionarId').serialize();
+            $.ajax({
+               type: 'post',
+               data: formData,
+               url: Routing.generate('infra_ambientesPedagogicos_adicionar'),
+               beforeSend: function () {
+                   $("#modalAmbientes").empty();
+               },
+               success: function (data) {
+                    $("#modalAmbientes").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        };
+        /**
+         * [saveAmbientesPedagogicos description]
+         * @return {[type]} [description]
+         */
+        var saveAmbientesPedagogicos = function(){
+          var formData = $('#formAmbientesPedagogicosId').serialize();
+            $.ajax({
+               type: 'post',
+               data: formData,
+               url: Routing.generate('infra_ambientesPedagogicos_saveAmbientesPedagogicos'),
+               beforeSend: function () {
+                  //  $("#modalAmbientes").empty();
+               },
+               success: function (data) {
+                 location.reload(true);
+                    // $("#modalAmbientes").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        };
+
+        var deleteObj = function(datajson){
+          if(confirm('Esta completamente seguro de eliminar el registro?')){
+            $.ajax({
+              type: 'post',
+              data: ({datajson: datajson}),
+              url: Routing.generate('infra_ambientesPedagogicos_deleteAmbientesPedagogicos'),
+              beforeSend: function(){},
+              success: function(data){
+                location.reload(true);
+              },
+              statusCode: {
+                500: function (){},
+                404: function (){}
+              }
+            });
+          }else{
+            return false;
+          }
+
+        };
+    </script>
+{% endblock %}

@@ -1,0 +1,53 @@
+Sie\AppWebBundle\Entity\OperacionTipo:
+    type: entity
+    table: operacion_tipo
+    uniqueConstraints:
+        operacion_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        operacion:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        create:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: _create
+        read:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: _read
+        update:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: _update
+        delete:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: _delete
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+    lifecycleCallbacks: {  }

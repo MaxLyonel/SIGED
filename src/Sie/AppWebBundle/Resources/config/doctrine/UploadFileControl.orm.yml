@@ -1,0 +1,78 @@
+Sie\AppWebBundle\Entity\UploadFileControl:
+    type: entity
+    table: upload_file_control
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codUe:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_ue
+        bimestre:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        operativo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        version:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+        estadoFile:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: estado_file
+        gestion:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+        distrito:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+        path:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+        dateUpload:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: date_upload
+        remoteAddr:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+            column: remote_addr
+        userAgent:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: user_agent
+    lifecycleCallbacks: {  }

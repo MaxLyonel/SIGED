@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="{{asset('favicon.ico')}}" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Sistema de Información Educativa - Educación Alternativa</title>
+
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic' rel='stylesheet' type='text/css'>
+
+        <!-- GLOBAL STYLES - Include these on every page. -->
+        <link href="{{ asset('css/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+
+        <!-- PAGE LEVEL PLUGIN STYLES -->
+
+        <!-- THEME STYLES -->
+        <link href="{{asset('tramite_cert/css/style.css')}}" rel="stylesheet">
+        <link href="{{asset('css/plugins.css')}}" rel="stylesheet">
+
+        <!-- THEME DEMO STYLES -->
+        <link href="{{asset('css/demo.css')}}" rel="stylesheet">
+
+        <!--[if lt IE 9]>
+        <script src="{{asset('bower_components/html5shiv/dist/html5shiv.js')}}"></script>
+        <script src="{{asset('bower_components/respond/src/respond.min.js')}}"></script>
+        <![endif]-->
+
+    </head>
+
+    <body class="login"  style="background-color: #0a284a;">
+        <noscript>
+        <div class="contenedor_navegador">
+            <div class="scriptN">
+                Para utilizar las funcionalidades completas de este sitio es necesario tener
+                JavaScript habilitado. Aquí están las <a href="http://www.enable-javascript.com/es/"
+                                                         target="_blank"> instrucciones para habilitar JavaScript en tu navegador web</a>.
+            </div>
+        </div>
+        </noscript>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-md-4 col-md-offset-4">
+                    <div class="account-wall">
+                        <img src="{{asset('tramite_cert/img/logoSuperiorLogin.png')}}" class="img-responsive" alt=""/>
+                        <p class="profile-name"></p>
+                        <span class="profile-email"></span>                       
+                        
+
+                       
+
+
+            <form class="form-signin" action="{{path('login_check')}}" accept-charset="utf-8" method="post">
+                <fieldset>
+                    <div class="sign-header">
+                        <div class="form-group">
+                            <div class="sign-text">
+                                <span></span>
+                            </div>
+                            <center>
+                                <small><i class="fa fa-graduation-cap"></i> </small>
+                            </center>
+
+                        </div><!-- /.form-group -->
+                    </div><!-- /.sign-header -->
+                    <div class="sign-body">
+                        <div class="form-group">
+                            <div class="input-group input-group-lg rounded no-overflow">
+                                <input type="text" class="form-control" id="username" name="_username" autocomplete="off" value="{{ last_username }}" required placeholder="Usuario">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                            </div>
+                        </div><!-- /.form-group -->
+                        <div class="form-group">
+                            <div class="input-group input-group-lg rounded no-overflow">
+                                <input type="password" class="form-control" id="password" name="_password" autocomplete="off" value="" placeholder="Contraseña" required>
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                            </div>
+                        </div><!-- /.form-group -->
+
+                        <div style="padding:10px; background: #ffffff">
+                            <div class="checkbox" style="margin-left: 15px">
+                                <label style="color:#3174c1">
+                                    <input type="checkbox" required="required"> Validar los datos
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            {% for flashMessage in app.session.flashbag().get('info') %}
+                                <div class="alert" style="color:#FF022F; text-align:justify" role="alert">
+                                    <strong><i class="fa fa-exclamation-circle"></i> {{ flashMessage }}  </strong>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div><!-- /.sign-body -->
+                    <div class="sign-footer">
+                        <div class="form-group">
+                                <button class="btn btn-block btn-lg btn-floating-action btn-success ink-reaction" type="submit">Aceptar</button>
+                        </div><!-- /.form-group -->
+                    </div><!-- /.sign-footer -->
+                </fieldset>
+            </form>
+
+
+                        <div class="col-md-12">
+                            <img src="{{asset('tramite_cert/img/tituloInferiorLogin.png')}}" style="width: 100%;margin: 15px 0;"/>
+
+                        </div>
+                        <div style="clear: both"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="footer text-center">
+            <p >Ministerio de Educación &copy 2016 | <a href="http://www.minedu.gob.bo/index.php/2016-07-05-16-01-42" class="credits" target="_blank">Viceministerio de Educación Alternativa y Especial</a><br/>
+                Avenida Arce No. 2147 - Teléfono: 2681200 int. 321<br/>
+                La Paz - Bolivia
+            </p>
+        </footer>
+
+        <!-- GLOBAL SCRIPTS -->
+        <script src="{{asset('bower_components/jquery/dist/jquery.min.js')}}"></script>
+        <script src="{{ asset('js/plugins/bootstrap/bootstrap.min.js') }}"></script>
+        <script src="{{asset('js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
+        <!-- HISRC Retina Images -->
+        <script src="{{asset('js/plugins/hisrc/hisrc.js')}}"></script>
+
+        <!-- PAGE LEVEL PLUGIN SCRIPTS -->
+
+        <!-- THEME SCRIPTS -->
+        <script src="{{asset('js/flex.js')}}"></script>
+        <script>
+
+
+                                        $('#sie_appwebbundle_usuario_save').click(function () {
+
+                                            if ($('#sie_appwebbundle_usuario_username').val() == '' && $('#sie_appwebbundle_usuario_password').val() == '') {
+                                                $('#myModal').modal('show');
+                                                return false;
+                                            }
+                                            $('#sie_appwebbundle_usuario').submit();
+                                        });
+                                        $("#form_captcha").keyup(function () {
+                                            $("#form_captcha").val($("#form_captcha").val().toUpperCase());
+                                        });
+                                        function showCaptcha() {
+                                            element = document.getElementById("divCaptcha");
+                                            check = document.getElementById("form_check");
+                                            captcha = document.getElementById("form_captcha");
+                                            if (check.checked) {
+                                                element.style.display = 'none';
+                                                $('#form_captcha').removeAttr("required");
+                                                $('#form_captcha').val('');
+                                            } else {
+                                                element.style.display = 'block';
+                                                $('#form_captcha').attr('required', 'true');
+                                            }
+                                        }
+        </script>
+        <script src="{{asset('validator/js/validator.js')}}"></script>
+    </body>
+
+</html>
+

@@ -1,0 +1,17 @@
+traslado_web:
+    path:    /
+    defaults: { _controller: SieAppWebBundle:Traslado:index }
+    
+traslado_web_findResult:
+    path:    /findresult
+    defaults: { _controller: SieAppWebBundle:Traslado:findResult }    
+
+traslado_web_registreInscrip:
+    path:    /saveTraslado
+    defaults: { _controller: SieAppWebBundle:Traslado:registreInscrip }     
+
+traslado_web_findIE:
+     path:    /findIE/{id}/{nivel}/{grado}/{lastue}
+     defaults: { _controller: SieAppWebBundle:Traslado:findIE }
+     options:
+         expose: true    

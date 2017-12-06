@@ -1,0 +1,84 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Información {{ app.session.get('tituloTipo') }}
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('apoderado',{'op':'search'})}}"> Buscar</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('noTuicion') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Buscar {{ app.session.get('estudiante') }}</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form-horizontal'} } )}}
+                            <div class="panel-body">
+
+                                <div class="form-group">
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">Código Rude</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.codigoRude,{ 'attr':{'class': 'form-control jnumbersletters','placeholder':'Codigo RUDE del estudiante','pattern':'[A-Z0-9]{8,20}'}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-2 control-label">Gesti&oacute;n</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.gestion,{ 'attr':{'class': 'form-control','placeholder':''}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+
+                                        {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+{% endblock %}

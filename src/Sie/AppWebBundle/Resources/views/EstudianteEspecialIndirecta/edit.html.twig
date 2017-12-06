@@ -1,0 +1,441 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+{% block stylessheets %}
+    {{parent()}}
+
+{% endblock %}
+{% block contentoption %}
+    <style>
+
+        input[type=checkbox] {
+            //visibility: hidden;
+            border: 1px solid #ccc;
+            background-color: #eee;
+
+        }
+        input[type=checkbox]:checked{
+            background-color: #C4FCD9;
+            border:1px solid #C4FCD9;
+        }
+        textarea{
+            resize: vertical;
+            max-height: 200px;
+        }
+
+    </style>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>ESTUDIANTES CON DISCAPACIDAD
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('estudianteespecialindirecta')}}">Lista</a>
+                    </li>
+                    <li class="active">Formulario de Modificacion</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+
+            {% for flashMessage in app.session.flashbag.get('registroEspecialError') %}
+                <div class="alert alert-danger text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('registroEspecial') %}
+                <div class="alert alert-success text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!-- Website Stats  Widget -->
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12" style="background: #FFF">
+            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h3>FORMULARIO DE REGISTRO DE ESTUDIANTES CON DISCAPACIDAD</h3>
+                    <h4>MODALIDAD INDIRECTA - GESTIÓN 2015</h4>
+                    <p>LA INFORMACIÓN RECABADA SERÁ UTILIZADA ÚNICA Y EXCLUSIVAMENTE PARA FINES DE DISEÑO<br>
+                        Y EJECUCIÓN DE POLÍTICAS PÚBLICAS EDUCATIVAS Y SOCIALES</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet portlet-green">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4>l. DATOS DE LA INSTITUCIÓN EDUCATIVA</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelarea"><i class="fa fa-chevron-down"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div id="panelarea" class="panel-collapse collapse in">
+                            <div class="portlet-body">
+
+                                <div class="form-group">
+                                    <label>1.1 DATOS DE LA INSTITUCIÓN EDUCATIVA</label>
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            {{form_widget(form.institucionCodigo,{ 'attr':{'class': 'form-control','placeholder':'Código SIE o RUE','pattern':'[0-9]{8,12}','autocomplete':'off','onkeyUp':'institucionEducativa(this.value)','onchange':'institucionEducativa(this.value)'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            {{form_widget(form.institucionNombre,{ 'attr':{'class': 'form-control','placeholder':'Nombre','pattern':'[A-Z0-9]{2,50}','disabled':'disabled'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="area" class="col-lg-12">1.2 SUBSISTEMA/ÁREA A LA QUE PERTENECE</label>
+                                        <div class="col-lg-6">
+                                            {{ form_widget(form.area,{ 'attr':{'class': 'form-control','placeholder':'Inserte Rude','pattern':'[A-Z0-9]{13,16}'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet portlet-green">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4>ll. DATOS DE LA O EL ESTUDIANTE</h4>  
+
+                            </div>
+                            <div class="portlet-widgets">
+                                <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelestudiante"><i class="fa fa-chevron-down"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div id="panelestudiante" class="panel-collapse collapse in">
+                            <div class="portlet-body">
+                                <p><label>2.1 CÓDIGO DEL ESTUDIANTE</label></p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+
+                                            {{form_widget(form.estudianteCodigo,{ 'attr':{'class': 'form-control','pattern':'[A-Z0-9]{13,17}','autocomplete':'off','placeholder':'Código RUDE','onkeyUp':'estudianteCodigo(this.value)','onchange':'estudianteCodigo(this.value)'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p><label for="area">2.2 APELLIDO(S) Y NOMBRE(S)</label></p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-md-12 col-lg-3">
+                                                        <label>Apellido Paterno</label>
+                                                    </div>
+                                                    <div class="col-md-12 col-lg-9">
+                                                        {{form_widget(form.estudiantePaterno,{ 'attr':{'class': 'form-control','placeholder':'Apellido Paterno','pattern':'[A-Z0-9]{2,50}','disabled':'disabled'}  }) }}
+                                                        <div class="help-block with-errors"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-md-12 col-lg-3">
+                                                        <label>Apellido Materno</label>
+                                                    </div>
+                                                    <div class="col-md-12 col-lg-9">
+                                                        {{form_widget(form.estudianteMaterno,{ 'attr':{'class': 'form-control','placeholder':'Apellido Materno','pattern':'[A-Z0-9]{2,50}','disabled':'disabled'}  }) }}
+                                                        <div class="help-block with-errors"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="form-group">
+                                                    <div class="col-md-12 col-lg-3">
+                                                        <label>Nombre(s)</label>
+                                                    </div>
+                                                    <div class="col-md-12 col-lg-9">
+                                                        {{form_widget(form.estudianteNombre,{ 'attr':{'class': 'form-control','placeholder':'Nombre(s)','pattern':'[A-Z0-9]{2,50}','disabled':'disabled'}  }) }}
+                                                        <div class="help-block with-errors"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-lg-3">
+                                                    <label>2.3 NÚMERO DE CARNET DE IDENTIDAD</label>
+                                                </div>
+                                                <div class="col-md-12 col-lg-9">
+                                                    {{form_widget(form.estudianteCarnet,{ 'attr':{'class': 'form-control','placeholder':'Número de carnet','pattern':'[0-9]{3,15}','autocomplete':'off'}  }) }}
+                                                    <div class="help-block with-errors" id="mensajecarnet"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-lg-3">
+                                                    <label>2.4 NÚMERO DE TELÉFONO O CELULAR DE REFERENCIA (*)</label>
+                                                </div>
+                                                <div class="col-md-12 col-lg-9">
+                                                    {{form_widget(form.estudianteTelefono,{ 'attr':{'class': 'form-control','placeholder':'Número de Teléfono o Celular','pattern':'[0-9]{7,8}','autocomplete':'off'}  }) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet portlet-green">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4>ll1. DATOS DEL ESTUDIANTE CON DISCAPACIDAD</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#paneldiscapacidad"><i class="fa fa-chevron-down"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div id="paneldiscapacidad" class="panel-collapse collapse in">
+                            <div class="portlet-body">
+
+                                <p><label for="area">3.1 TIPO DE DISCAPACIDAD</label></p>
+                                <div class="row">
+                                    <div class="col-md-3 col-lg-3">
+                                        <p><label>INTELECTUAL</label></p>
+                                        <p>{{form_widget(form.disIntelectualGeneral)}} Intelectual en general</p>
+                                        <p>{{form_widget(form.disIntelectualDown)}} Sindrome de Down</p>
+                                        <p>{{form_widget(form.disIntelectualAutismo)}} Autismo</p>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <p><label>VISUAL</label></p>
+                                        <p>{{form_widget(form.disVisualTotal,{'attr':{'onclick':'javascript:visualTotal(this)'} })}} Ceguera total</p>
+                                        <p>{{form_widget(form.disVisualBaja,{'attr':{'onclick':'javascript:visualBaja(this)'} })}} Baja Vision</p>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <p><label>AUDITIVA</label></p>
+                                        <p>{{form_widget(form.disAuditiva)}}</p>
+                                        <p><label>MÚLTIPLE</label></p>
+                                        <p>{{form_widget(form.disMultiple)}}</p>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <p><label>FÍSICO/MOTORA</label></p>
+                                        <p>{{form_widget(form.disFisicoMotora)}}</p>
+                                        <p><label>OTROS</label></p>
+                                        <p>{{form_widget(form.disOtros)}}</p>
+                                    </div>
+                                </div>    
+
+                                <p><label>3.2 REFRENDADO POR:</label></p>
+                                <div class="row">
+                                    <div class="col-lg-2 col-md-3">
+                                        CARNET CODEPEDIS
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        {{form_widget(form.checkCodepedis,{'attr':{'onclick':'javascript:validarCodepedis(this);'} })}}
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        No.
+                                    </div>
+                                    <div class="col-lg-3 col-md-5">
+                                        <div class="form-group">
+                                            {{form_widget(form.estudianteCarnetCodepedis,{ 'attr':{'class': 'form-control','placeholder':'Número Carnet Codepedis','pattern':'[A-Z0-9]{1,15}','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-2 col-md-3">
+                                        CARNET I.B.C. dfdfsdfds
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        {{form_widget(form.checkIbc,{'attr':{'onclick':'javascript:validarIbc(this);'} })}}
+                                    </div>
+                                    <div class="col-lg-1 col-md-1">
+                                        No.
+                                    </div>
+                                    <div class="col-lg-3 col-md-5">
+                                        <div class="form-group">
+                                            {{form_widget(form.estudianteCarnetIbc,{ 'attr':{'class': 'form-control','placeholder':'Número Carnet I.B.C.','pattern':'[A-Z0-9]{1,15}','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="display:none">
+                                    <div class="col-lg-12">
+                                        <div class="checkbox-1">
+                                            <input type="checkbox" id="ejemplo-1" value="1" name="" />
+                                            <label for="ejemplo-1"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p><label>INFORMACIÓN ADICIONAL SOBRE EL ESTUDIANTE</label></p>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        {{form_widget(form.observacion,{'attr':{'class':'form-control'} })}}
+                                    </div>
+                                </div>
+                                <p>
+                                <div class="row text-center">
+                                    <div class="col-lg-12">
+                                        {{form_widget(form.aceptar,{'attr':{'class':'btn btn-primary'} })}}
+                                        <a href="{{path('estudianteespecialindirecta')}}" class="btn btn-default">Cancelar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>                
+
+            {{form_end(form)}}
+
+
+
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script src="{{ asset('js/funciones.js') }}"></script>
+    <script>
+        function institucionEducativa(id) {
+            if (id.length > 7) {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('buscarinstitucioneducativa', {'id': id}),
+                    beforeSend: function () {
+                        //$("#departamento").empty();
+                        //$("#div-load").parent().append('<div class="loading"></div>');    
+                    },
+                    success: function (data) {
+                        $("#form_institucionNombre").val(data.nombre);
+                        //$(".loading").remove();
+                    }
+                });
+            }
+        }
+
+        function estudianteCodigo(id) {
+            if (id.length > 12) {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('buscarestudianteinscripcion', {'id': id}),
+                    beforeSend: function () {
+                        //$("#departamento").empty();
+                        //$("#div-load").parent().append('<div class="loading"></div>');    
+                    },
+                    success: function (data) {
+                        $("#form_estudiantePaterno").val(data.paterno);
+                        $("#form_estudianteMaterno").val(data.materno);
+                        $("#form_estudianteNombre").val(data.nombre);
+                        $("#form_estudianteCarnet").val(data.carnet);
+                        if ((data.carnet).length > 0) {
+                            $("#form_estudianteCarnet").attr('disabled', 'disabled');
+                            $("#mensajecarnet").css('opacity', '0');
+                            $("#form_estudianteCarnet").css('border-color', '#ccc');
+                        } else {
+                            $("#form_estudianteCarnet").removeAttr('disabled');
+                            $("#mensajecarnet").css('opacity', '1');
+                        }
+                        //$(".loading").remove();
+                    }
+                });
+            }
+        }
+
+        function estudianteCarnet(carnet) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('buscarestudianteinscripcioncarnet', {'carnet': carnet}),
+                beforeSend: function () {
+                    //$("#departamento").empty();
+                    //$("#div-load").parent().append('<div class="loading"></div>');    
+                },
+                success: function (data) {
+                    $("#form_estudiantePaterno").val(data.paterno);
+                    $("#form_estudianteMaterno").val(data.materno);
+                    $("#form_estudianteNombre").val(data.nombre);
+                    $("#form_estudianteCodigo").val(data.codigo);
+                    //$(".loading").remove();
+                }
+            });
+        }
+        function validarCodepedis(obj) {
+            if (obj.checked == true) {
+
+                document.getElementById('form_estudianteCarnetCodepedis').disabled = false;
+                document.getElementById('form_estudianteCarnetCodepedis').focus();
+            } else {
+                document.getElementById('form_estudianteCarnetCodepedis').value = "";
+                document.getElementById('form_estudianteCarnetCodepedis').disabled = true;
+            }
+        }
+        function validarIbc(obj) {
+            if (obj.checked == true) {
+                document.getElementById('form_estudianteCarnetIbc').disabled = false;
+                document.getElementById('form_estudianteCarnetIbc').focus();
+            } else {
+                document.getElementById('form_estudianteCarnetIbc').value = "";
+                document.getElementById('form_estudianteCarnetIbc').disabled = true;
+            }
+        }
+
+        // visual
+        function visualTotal(obj) {
+            if (obj.checked == true) {
+                document.getElementById('form_disVisualBaja').checked = false;
+            }
+        }
+        function visualBaja(obj) {
+            if (obj.checked == true) {
+                document.getElementById('form_disVisualTotal').checked = false;
+            }
+        }
+
+    </script>
+{% endblock %}
+
+

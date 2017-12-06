@@ -1,0 +1,63 @@
+Sie\AppWebBundle\Entity\Notificacion:
+    type: entity
+    table: notificacion
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        mensaje:
+            type: text
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+        fechaCrea:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_crea
+        fechaPub:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_pub
+        titulo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        adjunto:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        estado:
+            type: boolean
+            nullable: true
+            comment: ''
+        usuarioId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        envioTipo:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: envio_tipo
+        noticiaTipo:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: noticia_tipo
+    lifecycleCallbacks: {  }

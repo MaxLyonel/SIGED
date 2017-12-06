@@ -1,0 +1,655 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+<div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1 class="glyphicon glyphicon-stats"> Estadisticas generales <small> (Consolidado a la fecha actual de las gestiónes: 2007 - 2015)</h1>
+                <ol class="breadcrumb">
+                    <li>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div style="width: 100%;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger alert-dismissible" role="alert" id="result" style="display: none;">
+                    <strong>¡Advertencia!</strong> <input type="text" id="errorxls" class="form-control input-sm" readonly='true'>
+                </div>
+            </div>
+        </div>
+
+        <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Consolidado por departamento (Cantidad de Inscritos)</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinformation" class="panel-collapse collapse in">
+                    <div class="portlet-body">           
+                        <div id="chart_div" style="width: 100%; height: 100%;"></div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+      </div>
+        
+  <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Lista de archivos RUP-4 Subidos</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation1"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinformation1" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+            <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+                    <thead>
+                        <tr>
+                        <th>Departamento</th><th>Cantidad Total</th><th>Cantidad Subido</th><th>Cantidad faltante</th><th>Cantidad Duplicados</th>
+                      </tr>
+                    </thead>
+                      {% for fila in consolidado %}
+                        {% if fila.dpto != 'TOTAL' %}
+                        <tr>
+                         <td>{{ fila.dpto }}</td>
+                         <td align="center">{{ fila.ct }}</td>
+                         <td align="center">{{ fila.cv }}</td>
+                         <td align="center">{{ fila.cf }}</td>  
+                         <td align="center">{{ fila.cd }}</td> 
+                        </tr>
+                      {% else %}
+                      <tr>
+                         <td><strong>{{ fila.dpto }}</strong></td>
+                         <td align="center"><strong>{{ fila.ct }}</strong></td>
+                         <td align="center"><strong>{{ fila.cv }}</strong></td>
+                         <td align="center"><strong>{{ fila.cf }}</strong></td>  
+                         <td align="center"><strong>{{ fila.cd }}</strong></td> 
+                        </tr>  
+                      {% endif %}
+                      {% endfor %}
+                    </table>
+                  </div></div></div></div>
+
+                  <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Gráfico de la cantidad de RUP-4 Subidos</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation2"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinformation2" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+                  <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+        </div></div>
+      <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Inscritos por genero por departamento (gestiones: 2007-2015, a la fecha de consolidación)</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation3"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinformation3" class="panel-collapse collapse in">
+                    <div class="portlet-body">                                              
+                        <div id="columnchart_material" style="width: 100%; height: 100%;">
+                        </div>                    
+                    </div>
+                  </div>                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Crecimiento poblacional por departamento y gestión (gestiones: 2007-2015, a la fecha de consolidación)</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation4"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinformation4" class="panel-collapse collapse in">
+                    <div class="portlet-body">  
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#menu1" >Chuquisaca</a></li>
+                <li><a data-toggle="tab" href="#menu2">La Paz</a></li>
+                <li><a data-toggle="tab" href="#menu3">Cochabamba</a></li>
+                <li><a data-toggle="tab" href="#menu4">Oruro</a></li>  
+                <li><a data-toggle="tab" href="#menu5">Potosí</a></li>
+                <li><a data-toggle="tab" href="#menu6">Tarija</a></li>
+                <li><a data-toggle="tab" href="#menu7">Santa Cruz</a></li>
+                <li><a data-toggle="tab" href="#menu8">Beni</a></li>
+                <li><a data-toggle="tab" href="#menu9">Pando</a></li>  
+            </ul>
+            <div class="tab-content">    
+                <div id="menu1" class="tab-pane fade in active">
+                    <p>
+                    <div class="row">                        
+                        <div class="col-lg-12">                          
+                                <div id="columnchartchu" style="width: 100%; height: 100%;">                                
+                                </div>                           
+                         </div>
+                     </div>
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                    <p>
+                    <div class="row">                        
+                        <div class="col-lg-12">                     
+                                <div id="columnchartlp" style="width: 100%; height: 100%;">                                
+                                </div>                       
+                         </div>
+                    </div>
+                </div>
+                <div id="menu3" class="tab-pane fade">
+                    <p>
+                    <div class="row">                        
+                        <div class="col-lg-12"> 
+                            <div id="columnchartco" style="width: 100%; height: 100%;">                                
+                            </div>                                                        
+                         </div>
+                    </div>
+                </div>
+                <div id="menu4" class="tab-pane fade">
+                    <p>
+                    <div class="row">                        
+                        <div class="col-lg-12 text-center">
+                            <div>
+                                <div id="columnchartor" style="width: 100%; height: 100%;">                                
+                                </div> 
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                <div id="menu5" class="tab-pane fade">
+                    <p>
+                    <div class="row">                        
+                        <div class="col-lg-12 text-center">
+                            <div>
+                                <div id="columnchartpt" style="width: 100%; height: 100%;">                                
+                                </div> 
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                <div id="menu6" class="tab-pane fade">
+                    <p>
+                    <div class="row">                        
+                        <div class="col-lg-12 text-center">
+                            <div>
+                                <div id="columncharttj" style="width: 100%; height: 100%;">                                
+                                </div> 
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                <div id="menu7" class="tab-pane fade">
+                    <p>
+                    <div class="row">                        
+                        <div class="col-lg-12 text-center">
+                            <div>
+                                <div id="columnchartsc" style="width: 100%; height: 100%;">                                
+                                </div> 
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                <div id="menu8" class="tab-pane fade">
+                    <p>
+                    <div class="row">                        
+                        <div class="col-lg-12 text-center">
+                            <div>
+                                <div id="columnchartbn" style="width: 100%; height: 100%;">                                
+                                </div> 
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                <div id="menu9" class="tab-pane fade">
+                    <p>
+                    <div class="row">                        
+                        <div class="col-lg-12 text-center">
+                            <div>
+                                <div id="columnchartpn" style="width: 100%; height: 100%;">                                
+                                </div> 
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        initialise();
+    } );
+    
+    function initialise()
+    {
+         var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     },
+                     "buttons":{
+                        "copy": "Copiar",
+                        "print":"Imprimir"
+                     }
+                    };
+
+        var currentLang = espanol;    
+
+        //var table = $('#tablaListadoPersonas').DataTable();
+        var dtable = $('#tablaListadoPersonas').dataTable( {"oLanguage": espanol,
+         'dom': 'B <"clear">',
+        'buttons': [
+             {   
+                extend: 'colvis',
+                text:'Visibilizar Columnas'
+            },
+            {
+                extend: 'print',
+                text: 'Imprimir',
+                autoPrint: true,
+                title: 'PNP - LISTA DE PARTICIPANTES',
+                header:true,
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend:'pdf',
+                title: 'PNP LISTA DE PARTICIPANTES',
+                filename:'Lista de archivos subidos RUP-4',
+                orientation:'landscape',
+                exportOptions: {
+                modifier: {
+                    page: 'Lista de Participantes'
+                    }
+                }
+            },
+            {
+            extend: 'excel',
+            text: 'Excel',
+            filename:'Lista de Participantes',
+            exportOptions: {
+                modifier: {
+                    page: 'Lista de Participantes'
+                    }
+                }
+            },
+        ]} );
+        
+        
+        $('#tablaListadoPersonas tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        } );
+        
+    }
+    </script>
+    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <script type='text/javascript'>
+
+    $(function () {
+    $('#container').highcharts({
+    
+        chart: {
+            type: 'column'
+        },
+        colors: ['black', '#3033D0'],
+        title: {
+            text: 'Consolidado de RUP-4 (Gestiones: 2007-2015, a la fecha de consolidación)'
+        },
+        xAxis: {
+            categories: [
+              {% for fila in consolidado %}
+                          '{{ fila.dpto }}',
+                        {% endfor %}
+                        ]
+            
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Total de RUP-4'
+            }
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            }
+        },
+        series: [{
+            name: 'Archivos Faltantes',
+            data: [
+                    {% for fila in consolidado %}
+                          {{ fila.cf }},
+                        {% endfor %}
+                  ]
+        },{
+            name: 'Archivos Subidos',
+            data: [
+                    {% for fila in consolidado %}
+                          {{ fila.cv }},
+                        {% endfor %}
+                  ]
+        }, ]
+    });
+});
+     
+    google.load("visualization", "1", {packages: ["geochart", "bar", "corechart"]});
+    google.setOnLoadCallback(drawMarkersMap);
+    google.setOnLoadCallback(drawChart);
+    google.setOnLoadCallback(drawChartLineChu);
+    google.setOnLoadCallback(drawChartLineLp);
+    google.setOnLoadCallback(drawChartLineCo);
+    google.setOnLoadCallback(drawChartLineOr);
+    google.setOnLoadCallback(drawChartLinePt);
+    google.setOnLoadCallback(drawChartLineTj);
+    google.setOnLoadCallback(drawChartLineSc);
+    google.setOnLoadCallback(drawChartLineBn);
+    google.setOnLoadCallback(drawChartLinePn);
+        
+    function drawMarkersMap() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'state');
+        data.addColumn('number', 'Value');
+        data.addColumn({type: 'string', role: 'tooltip'});
+
+        {% for fila in filas %}
+            data.addRows([[{v: '{{ fila.v }}', f: '{{ fila.f }}'}, {{ fila.t }}, '{{ fila.d }}']]);
+        {% endfor %}
+
+      {#data.addRows([[{v: 'BO-H', f: 'Chuquisaca'}, 331, '331']]);
+        data.addRows([[{v: 'BO-L', f: 'La Paz'}, 4910, '4.910']]);
+        data.addRows([[{v: 'BO-C', f: 'Cochabamba'}, 4371, '4.371']]);
+        data.addRows([[{v: 'BO-O', f: 'Oruro'}, 1310, '1.310']]);
+        data.addRows([[{v: 'BO-P', f: 'Potosí'}, 3688, '3.688']]);
+        data.addRows([[{v: 'BO-T', f: 'Tarija'}, 4390, '4.390']]);
+        data.addRows([[{v: 'BO-S', f: 'Santa Cruz'}, 306, '306']]);
+        data.addRows([[{v: 'BO-B', f: 'Beni'}, 11878, '11.878']]);
+        data.addRows([[{v: 'BO-N', f: 'Pando'}, 1078, '1.078']]);#}
+
+             var options = {
+                 backgroundColor: {fill: 'blue', stroke: 'red', strokeWidth: 0},
+                 region: 'BO',
+                 //displayMode: 'markers',
+                 displayMode: 'state',
+                 resolution: 'provinces',
+                 enableRegionInteractivity: 'true',
+                 keepAspectRatio: true,
+                 sizeAxis: {minSize: 3, maxSize: 20},
+                 //width: 600,
+                 //height: 400,
+                 //datalessRegionColor: '#438094',
+                 colorAxis: {colors: ['white', '#000066']}
+             };
+             var chart = new google.visualization.GeoChart(document.getElementById('chart_div'));
+             chart.draw(data, options);
+        };    
+    
+    
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Departamento', 'Femenino', 'Masculino', 'Total'],          
+          {% for filag in filasgestion %}
+                ['{{ filag.depto }}', {{ filag.femenino }}, {{ filag.masculino }}, {{ filag.total }}],
+          {% endfor %}          
+        ]);
+        
+        var options = {
+
+          bars: 'vertical',
+          vAxis: {format: 'none'},
+          height: 400,
+          colors: ['#1b9e77', '#d95f02', '#7570b3']          
+        };        
+
+        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+        chart.draw(data, options);
+    }    
+    
+    function drawChartLineChu() {
+        var data = google.visualization.arrayToDataTable([
+          ['Gestión', 'Femenino', 'Masculino', 'Total'],
+          {% for filad in filaschu %}
+                ['{{ filad.gestion_tipo_id }}', {{ filad.femenino }}, {{ filad.masculino }}, {{ filad.total }}],
+          {% endfor %}
+        ]);
+
+        var options = {
+          title: '',
+          curveType: 'function',
+          height: 400,
+          width: 800,
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('columnchartchu'));
+        chart.draw(data, options);
+    }
+    
+    function drawChartLineLp() {
+        var data = google.visualization.arrayToDataTable([
+          ['Gestión', 'Femenino', 'Masculino', 'Total'],
+          {% for filad in filaslp %}
+                ['{{ filad.gestion_tipo_id }}', {{ filad.femenino }}, {{ filad.masculino }}, {{ filad.total }}],
+          {% endfor %}
+        ]);
+
+        var options = {
+          title: '',
+          curveType: 'function',
+          height: 400,
+          width: 800,
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('columnchartlp'));
+        chart.draw(data, options);
+    }
+    
+    function drawChartLineCo() {
+        var data = google.visualization.arrayToDataTable([
+          ['Gestión', 'Femenino', 'Masculino', 'Total'],
+          {% for filad in filasco %}
+                ['{{ filad.gestion_tipo_id }}', {{ filad.femenino }}, {{ filad.masculino }}, {{ filad.total }}],
+          {% endfor %}
+        ]);
+
+        var options = {
+          title: '',
+          curveType: 'function',
+          height: 400,
+          width: 800,
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('columnchartco'));
+        chart.draw(data, options);
+    }
+    
+    function drawChartLineOr() {
+        var data = google.visualization.arrayToDataTable([
+          ['Gestión', 'Femenino', 'Masculino', 'Total'],
+          {% for filad in filasor %}
+                ['{{ filad.gestion_tipo_id }}', {{ filad.femenino }}, {{ filad.masculino }}, {{ filad.total }}],
+          {% endfor %}
+        ]);
+
+        var options = {
+          title: '',
+          curveType: 'function',
+          height: 400,
+          width: 800,
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('columnchartor'));
+        chart.draw(data, options);
+    }
+    
+    function drawChartLinePt() {
+        var data = google.visualization.arrayToDataTable([
+          ['Gestión', 'Femenino', 'Masculino', 'Total'],
+          {% for filad in filaspt %}
+                ['{{ filad.gestion_tipo_id }}', {{ filad.femenino }}, {{ filad.masculino }}, {{ filad.total }}],
+          {% endfor %}
+        ]);
+
+        var options = {
+          title: '',
+          curveType: 'function',
+          height: 400,
+          width: 800,
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('columnchartpt'));
+        chart.draw(data, options);
+    }
+    
+    function drawChartLineTj() {
+        var data = google.visualization.arrayToDataTable([
+          ['Gestión', 'Femenino', 'Masculino', 'Total'],
+          {% for filad in filastj %}
+                ['{{ filad.gestion_tipo_id }}', {{ filad.femenino }}, {{ filad.masculino }}, {{ filad.total }}],
+          {% endfor %}
+        ]);
+
+        var options = {
+          title: '',
+          curveType: 'function',
+          height: 400,
+          width: 800,
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('columncharttj'));
+        chart.draw(data, options);
+    }
+    
+    function drawChartLineSc() {
+        var data = google.visualization.arrayToDataTable([
+          ['Gestión', 'Femenino', 'Masculino', 'Total'],
+          {% for filad in filassc %}
+                ['{{ filad.gestion_tipo_id }}', {{ filad.femenino }}, {{ filad.masculino }}, {{ filad.total }}],
+          {% endfor %}
+        ]);
+
+        var options = {
+          title: '',
+          curveType: 'function',
+          height: 400,
+          width: 800,
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('columnchartsc'));
+        chart.draw(data, options);
+    }
+    
+    function drawChartLineBn() {
+        var data = google.visualization.arrayToDataTable([
+          ['Gestión', 'Femenino', 'Masculino', 'Total'],
+          {% for filad in filasbn %}
+                ['{{ filad.gestion_tipo_id }}', {{ filad.femenino }}, {{ filad.masculino }}, {{ filad.total }}],
+          {% endfor %}
+        ]);
+
+        var options = {
+          title: '',
+          curveType: 'function',
+          height: 400,
+          width: 800,
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('columnchartbn'));
+        chart.draw(data, options);
+    }
+    
+    function drawChartLinePn() {
+        var data = google.visualization.arrayToDataTable([
+          ['Gestión', 'Femenino', 'Masculino', 'Total'],
+          {% for filad in filaspn %}
+                ['{{ filad.gestion_tipo_id }}', {{ filad.femenino }}, {{ filad.masculino }}, {{ filad.total }}],
+          {% endfor %}
+        ]);
+
+        var options = {
+          title: '',
+          curveType: 'function',
+          height: 400,
+          width: 800,
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('columnchartpn'));
+        chart.draw(data, options);
+    }
+    
+    </script>
+        
+{% endblock %}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="{{asset('favicon.ico')}}" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Siged</title>
+
+        <!-- GLOBAL STYLES -->
+        <link href="{{asset('css/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel="stylesheet" type="text/css">
+        <link href="{{asset('icons/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+
+        <!-- PAGE LEVEL PLUGIN STYLES -->
+
+        <!-- THEME STYLES -->
+        <link href="{{asset('css/style.css')}}" rel="stylesheet">
+        <link href="{{asset('css/plugins.css')}}" rel="stylesheet">
+
+        <!-- THEME DEMO STYLES -->
+        <link href="{{asset('css/demo.css')}}" rel="stylesheet">
+        <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+        <!--[if lt IE 9]>
+        <script src="{{asset('js/html5shiv.js')}}"></script>
+        <script src="{{asset('js/respond.min.js')}}"></script>
+        <![endif]-->
+
+    </head>
+
+    <body class="">
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div class="portlet portlet-blue">
+                                <div class="portlet-heading">
+                                    <div class="portlet-title">
+                                        <h4>Nueva Busqueda</h4>
+                                    </div>
+                                    <div class="portlet-widgets">
+                                        <a href="{{ path('consultalibreta') }}"><i class="fa fa-arrow-circle-left text-white"></i> Volver</a>
+                                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#newseaerch"><i class="fa fa-chevron-down"></i></a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div id="newseaerch" class="panel-collapse collapse in">
+                                    <div class="portlet-body">
+                                        <div class="alert alert-warning alert-dismissible" role="alert">
+                                            <strong><i class='fa fa-lightbulb-o'></i></strong> 
+                                            Aquí usted podrá acceder solamente a las calificaciones del Estudiante. Para poder ver datos necesita acceder con su usario y contraseña a <a href="{{ path('sie_login_homepage') }}" class="btn btn-link"><span class="glyphicon glyphicon-hand-right"></span> siged.sie.gob.bo</a>
+                                        </div>
+
+
+                                        <div class="panel-body">
+                                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'class':'form-inline'} } )}}
+                                            <div class="form-group">
+                                                <label class="sr-only">Gestion</label>
+                                                <p class="form-control-static" style='color: white;'>Gestion</p>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputPassword2" class="sr-only">Password</label>
+                                                {{ form_widget(form.gestion, { 'attr': {'class': 'form-control','placeholder': "Rude o Ci"} }) }}
+                                                {{ form_widget(form.rudeoci, { 'attr': {'class': 'form-control','placeholder': "Rude o Ci"} }) }}
+                                                {{ form_widget(form.year, { 'attr': {'class': 'form-control','placeholder': "Rude o Ci"} }) }}
+                                                {{ form_widget(form.month, { 'attr': {'class': 'form-control','placeholder': "Rude o Ci"} }) }}
+                                                {{ form_widget(form.day, { 'attr': {'class': 'form-control','placeholder': "Rude o Ci"} }) }}
+                                            </div>
+                                            {{ form_widget(form.buscar, { 'attr': {'class': 'btn btn-default' } }) }}
+
+                                            {{form_end(form)}}  
+
+                                        </div>
+
+
+                                        <div class="portlet portlet-white">
+                                            <div class="portlet-heading">
+                                                <div class="portlet-title">
+                                                    <h4>Libreta Electr&oacute;nica {{gestion}}</h4>
+                                                </div>
+                                                <div class="portlet-widgets">
+                                                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#plibretaelectronica"><i class="fa fa-chevron-down"></i></a>
+                                                </div>
+                                                <div class="portlet-widgets">
+                                                    <!--a href="#" class="btn btn-red btn-xs ladda-button" data-style="expand-right" data-size="xs">
+                                                        <span class="ladda-label"> <i class="fa fa-download"></i> Descargar Libreta</span>
+                                                        <span class="ladda-spinner"></span>
+                                                    </a-->
+
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div id="plibretaelectronica" class="panel-collapse collapse in">
+                                                <div class="portlet-body">
+                                                    <div id="no-more-tables">
+                                                        <table class="table table-bordered table-hover cf">
+                                                            <thead class="cf">
+                                                                <tr class="success">
+                                                                    <th >Área</th>
+                                                                        {% for bim in bimestres %}
+                                                                        <th >
+                                                                            {{bim}}
+                                                                        </th>
+                                                                    {% endfor %}
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for key,notas in notastudent %}
+                                                                    <tr>
+                                                                        <td data-title="Asignatura">
+                                                                            <small><p class="text-blue">{{ key }}</p></small>
+                                                                        </td>
+                                                                        {% for k,nota in notas %}
+                                                                            {% if k==5 %}
+                                                                                <td data-title="Promedio" align=''> 
+                                                                                {% else %}
+                                                                                <td data-title="{{ k }}. Bimestre" align=''> 
+                                                                                {% endif %}
+                                                                                <small>{{nota}}</small>
+                                                                            </td>
+
+                                                                        {% endfor %}
+                                                                    </tr>
+                                                                {% endfor %}
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <a href="{{ path('consultalibreta') }}"><i class="fa fa-arrow-circle-left text-white"></i> Volver</a>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <!-- GLOBAL SCRIPTS -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="{{asset('js/plugins/bootstrap/bootstrap.min.js')}}"></script>
+        <script src="{{asset('js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
+        <!-- HISRC Retina Images -->
+        <script src="{{asset('js/plugins/hisrc/hisrc.js')}}"></script>
+
+        <!-- PAGE LEVEL PLUGIN SCRIPTS -->
+
+        <!-- THEME SCRIPTS -->
+        <script src="{{asset('js/flex.js')}}"></script>
+
+        <script src="{{asset('validator/js/validator.js')}}"></script>
+    </body>
+
+</html>
+

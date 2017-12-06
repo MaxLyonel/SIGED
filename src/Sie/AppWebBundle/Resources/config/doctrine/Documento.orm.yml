@@ -1,0 +1,93 @@
+Sie\AppWebBundle\Entity\Documento:
+    type: entity
+    table: documento
+    indexes:
+        IDX_B6B12EC77C9FBE9A:
+            columns:
+                - documento_tipo_id
+        IDX_B6B12EC78D486744:
+            columns:
+                - documento_serie_id
+        IDX_B6B12EC75B6F055C:
+            columns:
+                - documento_estado_id
+        IDX_B6B12EC7820C2849:
+            columns:
+                - tramite_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        documento:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        usuarioId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        fechaRegistro:
+            type: date
+            nullable: false
+            comment: ''
+            default: now
+            column: fecha_registro
+        fechaImpresion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_impresion
+    manyToOne:
+        documentoTipo:
+            targetEntity: DocumentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                documento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        documentoSerie:
+            targetEntity: DocumentoSerie
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                documento_serie_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        documentoEstado:
+            targetEntity: DocumentoEstado
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                documento_estado_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tramite:
+            targetEntity: Tramite
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

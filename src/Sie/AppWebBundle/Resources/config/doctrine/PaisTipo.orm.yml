@@ -1,0 +1,31 @@
+Sie\AppWebBundle\Entity\PaisTipo:
+    type: entity
+    table: pais_tipo
+    uniqueConstraints:
+        pais_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        pais:
+            type: string
+            nullable: false
+            length: 35
+            fixed: false
+            comment: ''
+        descAbreviada:
+            type: string
+            nullable: false
+            length: 4
+            fixed: false
+            comment: ''
+            column: desc_abreviada
+    lifecycleCallbacks: {  }

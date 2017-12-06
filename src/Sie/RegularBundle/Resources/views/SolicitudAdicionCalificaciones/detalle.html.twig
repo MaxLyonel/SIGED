@@ -1,0 +1,243 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet">
+    <style>
+		h5{
+			color: #207BFF;
+		}
+    </style>
+{% endblock %}
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Solicitud
+                    <small>Adición de Calificaciones</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-list-alt"></i>  <a href="{{path('solicitudAdicionCalificaciones')}}">Solicitudes</a>
+                    </li>
+                	<li>S-{{solicitud.id}}</li>
+                	<li>Detalle</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Detalle</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelsolicitudes"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelsolicitudes" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                        <h1>S-{{solicitud.id}}</h1>
+                        	{% if solicitud.estado == 1 %}
+								<div class="alert alert-info">Enviado</div>
+                        	{% endif %}
+                        	
+                        	<div style="text-align: right">
+								{{ solicitud.fecha|date('l, j x F x Y')|replace({
+								  	'January'  : 'Enero',
+									'February' : 'Febrero',
+									'March'	   : 'Marzo',
+									'April'    : 'Abril',
+									'May'	   : 'Mayo',
+									'June'     : 'Junio',
+									'July'	   : 'Julio',
+									'August'	:'Agosto',
+									'September'	:'Septiembre',
+									'October'	:'Octubre',
+									'November'	:'Noviembre',
+									'December'	:'Diciembre',
+
+								  	'Monday' : 'Lunes',
+									'Tuesday':'Martes',
+									'Wednesday':'Miercoles',
+									'Thursday':'Jueves',
+									'Friday':'Viernes',
+									'Saturday':'Sabado',
+								  	'Sunday'   : 'Domingo',
+								  	'x':'de'
+								}) }}
+                        	</div>
+                            <h5>Datos de Solicitud</h5>
+							<table class="table">
+								<tr>
+									<th class="col-lg-6">Solicitante</th>
+								</tr>
+								<tr>
+									<td>{{solicitud.remitente}}</td>
+								</tr>
+								<tr>
+									<th colspan="2">Motivo de la solicitud</th>
+								</tr>
+								<tr>
+									<td class="text-red">{{solicitud.motivo}}</td>
+								</tr>
+							</table>
+							<h5>Datos del Estudiante</h5>
+							<table class="table">
+								<tr><th class="col-lg-6">Rude</th><th class="col-lg-6">Estudiante</th></tr>
+								<tr style="color:#42C2DC; font-size:20px"><td>{{estudianteInscripcion.estudiante.codigoRude}}</td><td>{{estudianteInscripcion.estudiante.paterno}} {{estudianteInscripcion.estudiante.materno}} {{estudianteInscripcion.estudiante.nombre}}</td></tr>
+							</table>
+							<h5>Datos de Inscripción</h5>
+							<table class="" style="width:100%; border:1px solid #EEE; padding:4px">
+								<tr><th>Departamento</th><td>{{departamento.departamento}}</td></tr>
+								<tr><th>Sie</th><td>{{estudianteInscripcion.institucioneducativaCurso.institucioneducativa.id}}</td></tr>
+								<tr><th>Unidad Educativa</th><td>{{estudianteInscripcion.institucioneducativaCurso.institucioneducativa.institucioneducativa}}</td></tr>
+								<tr><th>Nivel</th><td>{{estudianteInscripcion.institucioneducativaCurso.nivelTipo.nivel}}</td></tr>
+								<tr><th>Grado</th><td>{{estudianteInscripcion.institucioneducativaCurso.gradoTipo.grado}}</td></tr>
+								<tr><th>Paralelo</th><td>{{estudianteInscripcion.institucioneducativaCurso.paraleloTipo.paralelo}}</td></tr>
+								<tr><th>Turno</th><td>{{estudianteInscripcion.institucioneducativaCurso.turnoTipo.turno}}</td></tr>
+								<tr><th>Gestion</th><td>{{estudianteInscripcion.institucioneducativaCurso.gestionTipo.gestion}}</td></tr>
+							</table>
+							<hr>
+							<fieldset>
+								<legend>Calificaciones y/o valoraciones a adicionar</legend>
+								{% if cuantitativas is not empty %}
+									{% if estudianteInscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+										<h5>Apreciaciones Cualitativas</h5>
+									{% else %}
+										<h5>Calificaciones Cuantitativas</h5>
+									{% endif %}
+									<table class="table table-bordered cf">
+										<thead>
+											<tr>
+												<th>Asignatura</th>
+												<th>Periodo</th>
+												{% if estudianteInscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+													<th>Apreciación</th>
+												{% else %}
+													<th>Calificación</th>
+												{% endif %}
+											</tr>
+										</thead>
+										<tbody>
+											{% for cc in cuantitativas %}
+												<tr>
+													<td>{{cc.asignatura}}</td>
+													<td>{{cc.periodo}}</td>
+													{% if estudianteInscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+														<td>{{cc.notaCualitativaNew|upper}}</td>
+													{% else %}
+														<td>{{cc.notaCuantitativaNew}}</td>
+													{% endif %}
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								{% endif %}
+								{% if cualitativas is not empty %}
+									<h5>Valoraciones Cualitativas</h5>
+									<table class="table table-bordered cf">
+										<thead>
+											<tr>
+												<th>Periodo</th>			
+												<th>Valoración</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for ccl in cualitativas %}
+												<tr>
+													<td>{{ccl.periodo}}</td>
+													<td>{{ccl.notaCualitativaNew|upper}}</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								{% endif %}
+								
+								{% if solicitud.estado == 1 and (usuarioRol == 8 or usuarioRol == 7) %}
+									<hr>
+									<div class="alert alert-info">
+										<i class="fa fa-info-circle" ></i> <b>Importante!</b> Una vez aprobada o rechazada la solicitud, esta se <span data-toggle="tooltip" data-placement="top" data-original-title="No podra aprobar o rechazar la solicitud nuevamente"><b>cierra</b></span>!
+									</div>
+									<div class="col-lg-6">
+			                        	<form action="{{path('solicitudAdicionCambiarestado')}}" method="post">
+			                        		<textarea class="form-control" required="required" placeholder="Justifique el motivo por el cual se esta rechazando la solictud" name="observacion" style="resize: vertical; border-color:#FF5454"></textarea>
+				                        	<input type="hidden" name="idSolicitud" value="{{solicitud.id}}">
+				                        	<input type="hidden" name="state" value="rejected">
+				                        	<button class="btn btn-red btn-block" onclick="return confirm('¿Esta seguro de rechazar la solicitud?');"><i class="glyphicon glyphicon-remove"></i>Rechazar</button>
+				                        </form>
+			                        </div>
+			                        <div class="col-lg-6">
+				                        <form action="{{path('solicitudAdicionCambiarestado')}}" method="post">
+				                        	<textarea class="form-control" name="observacion" style="resize: vertical; border-color:#03B967"></textarea>
+				                        	<input type="hidden" name="idSolicitud" value="{{solicitud.id}}">
+				                        	<input type="hidden" name="state" value="approved">
+				                        	<button class="btn btn-green btn-block" onclick="return confirm('¿Esta seguro de aprobar la solicitud?');"><i class="glyphicon glyphicon-ok"></i>Aprobar</button>
+				                        </form>
+			                        </div>
+		                        {% else %}
+			                    	<hr>
+		                        	{% if solicitud.estado == 2 %}
+										<div class="alert alert-success">
+											Solicitud Aprobada
+										</div>
+										<table class="table">
+			                        		<tr>
+			                        			<th>Fecha de Aprobacion</th><td>{{solicitud.fechaResp|date('d-m-Y')}}</td>
+			                        		</tr>
+			                        		<tr>
+			                        			<th>Observación</th><td>{{solicitud.respuesta}}</td>
+			                        		</tr>
+			                        		<tr>
+			                        			<th>Solicitud aprobada por:</th><td>{{responsable[0].paterno}} {{responsable[0].materno}} {{responsable[0].nombre}} ({{rol.rol}})</td>
+			                        		</tr>
+			                        	</table>
+		                        	{% else %}
+		                        		{% if solicitud.estado == 3 %}
+											<div class="alert alert-warning">
+												Solicitud Rechazada
+											</div>
+											<table class="table">
+				                        		<tr>
+				                        			<th>Fecha de Atención</th><td>{{solicitud.fechaResp|date('d-m-Y')}}</td>
+				                        		</tr>
+				                        		<tr>
+				                        			<th>Observación</th><td>{{solicitud.respuesta}}</td>
+				                        		</tr>
+				                        		<tr>
+				                        			<th>Solicitud rechazada por:</th><td>{{responsable[0].paterno}} {{responsable[0].materno}} {{responsable[0].nombre}} ({{rol.rol}})</td>
+				                        		</tr>
+				                        	</table>
+				                        {% endif %}
+		                        	{% endif %}
+		                        	
+		                        {% endif %}
+							</fieldset>
+							
+							
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal-flex fade" id="modalDetalle" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">Detalle -> <span id="numSolicitud"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <div id="detalleSolicitud">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

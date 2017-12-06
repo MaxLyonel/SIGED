@@ -1,0 +1,40 @@
+Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo:
+    type: entity
+    table: ttec_denominacion_titulo_profesional_tipo
+    indexes:
+        IDX_60BFA5D6A83B07A:
+            columns:
+                - ttec_carrera_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        denominacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        mencion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        ttecCarreraTipo:
+            targetEntity: TtecCarreraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_carrera_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

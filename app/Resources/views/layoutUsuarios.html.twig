@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    {% block stylesheets %}
+        <head>
+
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="description" content="">
+            <meta name="author" content="">
+
+            <title>SIE - Usuarios - Persona</title>
+
+            <!-- PACE LOAD BAR PLUGIN - This creates the subtle load bar effect at the top of the page. -->
+            <link href="{{ asset('css/plugins/pace/pace.css')}}" rel="stylesheet">
+            <script src="{{ asset('js/plugins/pace/pace.js')}}"></script>
+
+            <link href='http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic' rel='stylesheet' type='text/css'>
+
+            <!-- GLOBAL STYLES - Include these on every page. -->
+            <link href="{{ asset('css/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">            
+            <link href="{{ asset('css/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+
+            <!-- PAGE LEVEL PLUGIN STYLES -->
+            <link href="{{ asset('css/plugins/messenger/messenger-theme-flat.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/messenger/messenger.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/morris/morris.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/jvectormap/jquery-jvectormap-1.2.2.css') }}" rel="stylesheet">
+            
+            <link href="{{ asset('css/plugins/datatables/datatables.css') }}" rel="stylesheet">
+            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.11,af-2.1.1,b-1.1.2,b-colvis-1.1.2,b-flash-1.1.2,b-html5-1.1.2,b-print-1.1.2,cr-1.3.1,fc-3.2.1,fh-3.1.1,kt-2.1.1,r-2.0.2,rr-1.1.1,sc-1.4.1,se-1.1.2/datatables.min.css"/>   
+            {#<link href="{{ asset('css/plugins/datatables/jquery.dataTables.min.css') }}" rel="stylesheet">#}
+            <link href="{{asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
+            
+            <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+            
+            <link href="{{asset('css/plugins/bootstrap-tokenfield/tokenfield-typeahead.css') }}" rel="stylesheet">
+            <link href="{{asset('css/plugins/bootstrap-tokenfield/bootstrap-tokenfield.css') }}" rel="stylesheet">
+            <!-- THEME STYLES - Include these on every page. -->
+            <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins.css') }}" rel="stylesheet">
+
+            <!-- THEME DEMO STYLES - Use these styles for reference if needed. Otherwise they can be deleted. -->
+            <link href="{{ asset('css/demo.css') }}" rel="stylesheet">
+
+            <!--[if lt IE 9]>
+            <script src="{{asset('bower_components/html5shiv/dist/html5shiv.js')}}"></script>
+            <script src="{{asset('bower_components/respond/src/respond.min.js')}}"></script>
+            <![endif]-->
+            <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
+            <link href="{{asset('css/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css')}}" rel="stylesheet">
+
+            <link href="{{asset('css/jquery.typeahead.min.css')}}" rel="stylesheet">
+            <link href="{{asset('css/initialize.css')}}" rel="stylesheet">
+            <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+            <link href="{{asset('bower_components/summernote/dist/summernote-bs3.css') }}" rel="stylesheet">
+            <link href="{{asset('bower_components/summernote/dist/summernote.css') }}" rel="stylesheet">
+            {#BOOSTRAP ARBOL#}
+            <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet">
+        </head>
+    {% endblock %}
+    <body>
+        <div id="wrapper">
+            <nav class="navbar-top" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle pull-right" data-toggle="collapse" data-target=".sidebar-collapse">
+                        <i class="fa fa-bars"></i> Menu
+                    </button>
+                    <div class="navbar-brand">
+                        <a href="{{path('sie_usuarios_homepage')}}" style="color:#FFFFFF;">
+                            <i class="fa fa-lock"></i> GESTIÓN DE PERSONAS Y USUARIOS
+                        </a>    
+                    </div>
+                </div>
+
+                <div class="nav-top">
+                    <ul class="nav navbar-left">
+                        <li class="tooltip-sidebar-toggle">
+                            <a href="index.html#" id="sidebar-toggle" data-toggle="tooltip" data-placement="right" title="Menu principal">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-right">
+                        <li class="dropdown">
+                            <a href="index.html#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-user"></i>  <i class="fa fa-caret-down"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">      
+                                <li>
+                                    {% if app.session.get('userId') is not empty %}
+                                        <a href="{{path('principal_web')}}">                                            
+                                            <i class="fa fa-gear"></i> <span class="text-blue"> Volver-></span>
+                                        </a>                                    
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    <a class="logout_open" href="index.html#logout">
+                                        <i class="fa fa-sign-out"></i><span class="text-red"> Salir</span>
+                                        <strong>{{ app.session.get('name') }}</strong>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
+            <nav class="navbar-side" role="navigation">
+                <div class="navbar-collapse sidebar-collapse collapse">
+                    <ul id="side" class="nav navbar-nav side-nav">
+                        <li class="side-user hidden-xs">
+                            {% if app.session.get('userfoto') is empty %}
+                                <img class="img-circle" src ="/uploads/krlos.jpg " height="150" width="150" >
+                            {% else %}
+                                <img class="img-circle" src ="/uploads/personasfotos/{{app.session.get('userfoto')}} " height="150" width="150" >
+                            {% endif %}
+                            <p class="welcome">
+                                <i class="fa fa-key"></i> Bienvenida/o
+                            </p>
+                            <p class="name tooltip-sidebar-logout">
+                                {{ app.session.get('name') }}
+                                <span class="last-name"> {{ app.session.get('lastname') }} </span><a style="color: inherit" class="logout_open" href="index.html#logout" data-toggle="tooltip" data-placement="top" title="Salir"><i class="fa fa-sign-out"></i></a>                                
+                                <p><span>{{app.session.get('cuentauser')}}</span></p>
+                            </p>
+                            <div class="clearfix"></div>
+                        </li>
+                            {# SUPER USUARIO #}
+                            {% if app.session.get('roluser') == 31 %} 
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuconfiguraciones">
+                                        <i class="fa fa-cog"></i> Configuraciones <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuconfiguraciones">                                                                            
+                                        <li><a class="fa fa-gears" href="{{ path('sie_usuarios_rol_admin') }}"> Administrar asignación de Roles.</a></li>                                                                                
+                                        <li><a class="glyphicon glyphicon-eye-open" href="{{ path('sie_usuarios_nacio_lista') }}"> Listados generales.</a></li>                                                                               
+                                    </ul>
+                                </li>
+                            {% endif %}
+
+                            {# NACIONALES #}
+                            {% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 31) %} 
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
+                                        <i class="fa fa-search"></i> Busquedas <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuBusquedas">                      
+                                        <li><a class="fa fa-key" onclick="estudianteForm();"> Para la creación de nuevo RUDE. </a></li>                                        
+                                        <li><a class="fa fa-credit-card" href="{{ path('sie_personas_usuario_carnet') }}"> Por número de carnet.</a></li>
+                                        <li><a class="fa fa-user" href="{{ path('sie_usuario_busqueda_nombreusuario') }}"> Por nombre de usuario.</a></li>
+                                        <li><a class="glyphicon glyphicon-home" href="{{ path('sie_personas_usuario_cod_ie') }}"> Por código de institución educativa.</a></li>                                        
+                                    </ul>
+                                </li>                          
+                                {% if app.session.get('ie_activo') == 1 %} 
+                                    <li class="panel">
+                                        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas2">
+                                            <i class="fa fa-list-ul"></i> Unidad Educativa <i class="fa fa-caret-down"></i>
+                                        </a>
+                                        <ul class="collapse nav" id="menuListas2">                                        
+                                             <li><a class="glyphicon glyphicon-user" href="{{ path('sie_usuarios_personas_ie') }}"> Administrativos y Docentes</a></li>
+                                             <li><a class="glyphicon glyphicon-user" href="{{ path('sie_usuarios_apoderados_ie') }}"> Apoderados</a></li>                                                                                          
+                                        </ul>
+                                    </li>                                    
+                                {% endif %}
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuGestion">
+                                        <i class="fa fa-bullseye"></i> Gestión <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuGestion">                      
+                                        <li><a class="fa fa-users" href="{{ path('sie_persona_apropiacion') }}"> Apropiación de Carnet. </a></li>                              
+                                        <li><a class="glyphicon glyphicon-stats" href="{{ path('sie_usuarios_estadisticas') }}"> Estadisticas.</a></li>          
+                                        <li><a class="fa fa-frown-o" href="{{ path('sie_usuarios_dep_dis_lista_obs') }}"> Distritos observados</a></li>
+                                        <li><a class="fa fa-arrow-circle-o-right" href="{{ path('sie_usuarios_rol_change_in_hot') }}"> Cambiar Rol.</a></li>                                        
+                                    </ul>
+                                </li> 
+                            {% endif %}
+
+                            {# NACIONALES CENSO - RESPONSABLE DE EDUCACION SUPERIOR#}
+                            {% if (app.session.get('roluser') == 30) or (app.session.get('roluser') == 41) %} 
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
+                                        <i class="fa fa-search"></i> Busquedas <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuBusquedas">                                                              
+                                        <li><a class="fa fa-credit-card" href="{{ path('sie_personas_usuario_carnet') }}"> Por número de carnet.</a></li>
+                                        <li><a class="fa fa-user" href="{{ path('sie_usuario_busqueda_nombreusuario') }}"> Por nombre de usuario.</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+
+                            {# DEPARTAMENTALES #}
+                            {% if app.session.get('roluser') == 7 %}                             
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
+                                        <i class="fa fa-search"></i> Busquedas <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuBusquedas">         
+                                        <li><a class="fa fa-key" onclick="estudianteForm();"> Para la creación de nuevo RUDE. </a></li>                                         
+                                        <li><a class="fa fa-credit-card" href="{{ path('sie_personas_usuario_carnet') }}"> Por número de carnet.</a></li>
+                                        <li><a class="fa fa-user" href="{{ path('sie_usuario_busqueda_nombreusuario') }}"> Por nombre de usuario.</a></li>
+                                        <li><a class="glyphicon glyphicon-home" href="{{ path('sie_personas_usuario_cod_ie') }}"> Buscar por código de institución educativa.</a></li>
+                                    </ul>
+                                </li>
+                            
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas">
+                                        <i class="fa fa-list-ul"></i> Listas <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuListas">    
+                                        <li><a class="fa fa-meh-o" href="{{ path('sie_usuarios_dep_dis_lista') }}"> Distritales</a></li>
+                                    </ul>
+                                </li>
+                                {% if app.session.get('ie_activo') == 1 %} 
+                                    <li class="panel">
+                                        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas2">
+                                            <i class="fa fa-list-ul"></i> Unidad Educativa <i class="fa fa-caret-down"></i>
+                                        </a>
+                                        <ul class="collapse nav" id="menuListas2">                                        
+                                             <li><a class="glyphicon glyphicon-user" href="{{ path('sie_usuarios_personas_ie') }}"> Administrativos y Docentes</a></li>                                                                                          
+                                        </ul>
+                                    </li>                                    
+                                {% endif %}
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuGestion">
+                                        <i class="fa fa-bullseye"></i> Gestión <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuGestion">                      
+                                        <li><a class="fa fa-users" href="{{ path('sie_persona_apropiacion') }}"> Apropiación de Carnet. </a></li>                                        
+                                        <li><a class="glyphicon glyphicon-stats" href="{{ path('sie_usuarios_estadisticas') }}"> Estadisticas.</a></li>
+                                        <li><a class="fa fa-arrow-circle-o-right" href="{{ path('sie_usuarios_rol_change_in_hot') }}"> Cambiar Rol.</a></li>                                        
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            
+                            {# DISTRITALES #}
+                            {% if app.session.get('roluser') == 10 %}                             
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
+                                        <i class="fa fa-search"></i> Busquedas <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuBusquedas">                
+                                        <li><a class="fa fa-key" onclick="estudianteForm();"> Para la creación de nuevo RUDE. </a></li>  
+                                        <li><a class="fa fa-credit-card" href="{{ path('sie_personas_usuario_carnet') }}"> Por número de carnet.</a></li>
+                                        <li><a class="fa fa-user" href="{{ path('sie_usuario_busqueda_nombreusuario') }}"> Por nombre de usuario.</a></li>
+                                    </ul>
+                                </li>
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas">
+                                        <i class="fa fa-list-ul"></i> Listas <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuListas">    
+                                        <li><a class="glyphicon glyphicon-home" href="{{ path('sie_ie_distrito') }}"> Listar mis Unidades Educativas</a></li>                                        
+                                    </ul>
+                                </li>
+                                {% if app.session.get('ie_activo') == 1 %} 
+                                    <li class="panel">
+                                        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas2">
+                                            <i class="fa fa-list-ul"></i> Unidad Educativa <i class="fa fa-caret-down"></i>
+                                        </a>
+                                        <ul class="collapse nav" id="menuListas2">                                        
+                                             <li><a class="glyphicon glyphicon-user" href="{{ path('sie_usuarios_personas_ie') }}"> Administrativos y Docentes</a></li>                                             
+                                             {#<li><a class="glyphicon glyphicon-file" href="{{ path('sie_usuario_ie_cursos', {'usuarioid': app.session.get('userId') }) }}"> Cursos - Apoderados</a></li>#}
+                                        </ul>
+                                    </li>                                    
+                                {% endif %}
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuGestion">
+                                        <i class="fa fa-bullseye"></i> Gestión <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuGestion">                      
+                                        <li><a class="fa fa-users" href="{{ path('sie_persona_apropiacion') }}"> Apropiación de Carnet. </a></li>                                        
+                                        <li><a class="glyphicon glyphicon-stats" href="{{ path('sie_usuarios_estadisticas') }}"> Estadisticas.</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+
+                            {# PNP INFORMATICOS DEPARTAMENTALES #}
+                            {% if (app.session.get('roluser') == 21) %} 
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
+                                        <i class="fa fa-search"></i> Busquedas <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuBusquedas">                      
+                                        <li><a class="fa fa-key" onclick="estudianteForm();"> Para la creación de nuevo RUDE. </a></li>
+                                        <li><a class="fa fa-credit-card" href="{{ path('sie_personas_usuario_carnet') }}"> Por número de carnet.</a></li>                                        
+                                    </ul>
+                                </li>
+                            {% endif %}
+
+                            {# PNP Pedagogo #}
+                            {% if (app.session.get('roluser') == 29) %} 
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
+                                        <i class="fa fa-search"></i> Busquedas <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuBusquedas">                      
+                                        <li><a class="fa fa-credit-card" href="{{ path('sie_personas_usuario_carnet') }}"> Por número de carnet.</a></li>                                        
+                                    </ul>
+                                </li>
+
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuGestion">
+                                        <i class="fa fa-bullseye"></i> Gestión <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuGestion">                      
+                                        <li><a class="fa fa-users" href="{{ path('sie_persona_apropiacion') }}"> Apropiación de Carnet. </a></li>                                        
+                                        <li><a class="glyphicon glyphicon-stats" href="{{ path('sie_usuarios_estadisticas') }}"> Estadisticas.</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            
+                            {# DIRECTOR #}
+                            {% if app.session.get('roluser') == 9 %}
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
+                                        <i class="fa fa-search"></i> Crear Rude <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuBusquedas">                
+                                        <li><a class="fa fa-key" onclick="estudianteForm();"> Para la creación de nuevo RUDE. </a></li>  
+                                    </ul>
+                                </li>
+                                <li class="panel">
+                                    <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas">
+                                        <i class="fa fa-list-ul"></i> Unidad Educativa <i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuListas">                                        
+                                         <li><a class="glyphicon glyphicon-home" href="{{ path('sie_usuario_persona_unidades', {'usuarioid': app.session.get('userId') }) }}"> Listar mis Unidades Educativas</a></li>                                                                             
+                                    </ul>
+                                </li>
+                                {% if app.session.get('ie_activo') == 1 %} 
+                                    <li class="panel">
+                                        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas2">
+                                            <i class="fa fa-list-ul"></i> Listar mis usuario por :<i class="fa fa-caret-down"></i>
+                                        </a>
+                                        <ul class="collapse nav" id="menuListas2">                                        
+                                             <li><a class="glyphicon glyphicon-user" href="{{ path('sie_usuarios_personas_ie') }}"> Administrativos y Docentes</a></li>
+                                             <li><a class="glyphicon glyphicon-user" href="{{ path('sie_usuarios_apoderados_ie') }}"> Apoderados</a></li>
+                                        </ul>
+                                    </li>
+                                    {#<li class="panel">
+                                        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas3">
+                                            <i class="fa fa-list-ul"></i> Listas <i class="fa fa-caret-down"></i>
+                                        </a>
+                                        <ul class="collapse nav" id="menuListas3">                                      
+                                             <li><a class="glyphicon glyphicon-file" href="{{ path('sie_usuario_ie_cursos', {'usuarioid': app.session.get('userId') }) }}"> Cursos </a></li>
+                                        </ul>
+                                    </li>#}
+                                {% endif %}   
+                            {% endif %}    
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- /.navbar-side -->
+            <!-- end SIDE NAVIGATION -->
+
+            <!-- begin MAIN PAGE CONTENT -->
+            
+            <div id="page-wrapper">
+                <div class="page-content">                    
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="jumbotron jumbotron-cambio sinpadding">
+                                <div class="container">
+                                    {# NACIONAL #}
+                                    {% if app.session.get('roluser') == 8 %} 
+                                        <h2>Estado Plurinacional de Bolivia</h2>
+                                        <p>Acceso a todos lo usuarios</p>
+                                        {% if app.session.get('ie_activo')  == '1' %}
+                                            <h3>Unidad Educativa: {{app.session.get('ie_nombre')}} </h3>
+                                            <p>Código SIE: {{app.session.get('ie_id')}}</p>                                           
+                                        {% endif %}
+                                    {% endif %}
+                                    {# DEPARTAMENTALES #}
+                                    {% if app.session.get('roluser') == 7 %} 
+                                        <h2>Departamento: {{app.session.get('dep_nombre')}} </h2>
+                                        <p>Acceso departamental de usuarios</p>
+                                        {% if app.session.get('ie_activo')  == '1' %}
+                                            <h3>Unidad Educativa: {{app.session.get('ie_nombre')}} </h3>
+                                            <p>Código SIE: {{app.session.get('ie_id')}}</p>                                           
+                                        {% endif %}
+                                    {% endif %}
+                                    {# DISTRITALES #}
+                                    {% if app.session.get('roluser') == 10 %} 
+                                        <h2>Distrito: {{app.session.get('dis_nombre')}} </h2>
+                                        <p>Código Distrito: {{app.session.get('dis_cod')}}</p>                                            
+                                        {% if app.session.get('ie_activo')  == '1' %}
+                                            <h3>Unidad Educativa: {{app.session.get('ie_nombre')}} </h3>
+                                            <p>Código SIE: {{app.session.get('ie_id')}}</p>                                           
+                                        {% endif %} 
+                                    {% endif %}
+                                    {# DIRECTOR #}
+                                    {% if app.session.get('roluser') == 9 %} 
+                                        {% if app.session.get('ie_activo')  == '1' %}
+                                            <h2>Unidad Educativa: {{app.session.get('ie_nombre')}} </h2>
+                                            <p>Código SIE: {{app.session.get('ie_id')}}</p>                                           
+                                        {% endif %}    
+                                    {% endif %}
+                                </div>                    
+                            </div> 
+                        </div>
+                    </div>
+                    
+                    <div id= "menprincipal" class="row">
+                        <div class="col-md-12">                            
+                            {% for flashMessage in app.session.flashbag.get('success') %}
+                                <div class="alert alert-success alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>¡Proceso realizado exitosamente!</strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+
+                            {% for flashMessage in app.session.flashbag.get('message') %}
+                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>¡Aviso!</strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+                            {% for flashMessage in app.session.flashbag.get('info') %}
+                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>¡Aviso!</strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+
+                            {% for flashMessage in app.session.flashbag.get('warning') %}
+                                <div class="alert alert-warning alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>Alerta!</strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+
+                            {% for flashMessage in app.session.flashbag.get('error') %}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>Se ha detectado inconsistencia de datos.</strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+                            {% for flashMessage in app.session.flashbag.get('danger') %}
+                                <div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <strong>Se ha detectado inconsistencia de datos.</strong> {{ flashMessage }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>                    
+                        
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="divAlertUser">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    {% block cuerpo %}
+
+                    {% endblock %}
+                </div>
+            </div>
+                    
+            <!-- /#page-wrapper -->
+            <!-- end MAIN PAGE CONTENT -->
+        </div>
+        <!-- /#wrapper -->
+
+        <div class="modal modal-flex fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form name="formAreasModal" id="formAreasModal" action="">                    
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="flexModalLabel">INFORMACIÓN GENERAL DE LA PERSONA-USUARIO</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div id="usuarioModal">
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <p>
+        {% block pie %}            
+            <div id="piediv" style="width: 100%;">                
+                <p class="text-muted credit glyphicon glyphicon-copyright-mark"> Vjimenez Admin. Creado por el: Ministerio de Educación - Estado Plurinacional de Bolivia.</p>
+            </div>
+        {% endblock %}
+
+        {% block javascripts %}
+            <!-- GLOBAL SCRIPTS -->
+            {#<script src="{{asset('bower_components/jquery/dist/jquery.min.js')}}"></script>#}
+            <script src="{{ asset('js/jquery-1.11.3.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/bootstrap/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/popupoverlay/jquery.popupoverlay.js') }}"></script>
+            <script src="{{ asset('js/plugins/popupoverlay/defaults.js') }}"></script>
+            <!-- Logout Notification Box -->
+            <div id="logout">
+                <div class="logout-message">
+                    {% if app.session.get('userfoto') is empty %}
+                        <img class="img-circle" src ="/uploads/krlos.jpg " height="150" width="150" >
+                    {% else %}
+                        <img class="img-circle" src ="/uploads/{{app.session.get('userfoto')}} " height="150" width="150" >
+                    {% endif %}
+                    <!--img class="img-circle img-logout" src="{{asset('img/profile-pic.jpg') }}" alt=""-->
+                    <h3>
+                        <i class="fa fa-sign-out text-blue"></i> ¿Lista/o para salir?
+                    </h3>
+                    <p>Seleciona "Salir" si estas lista/o<br> para terminar tu sesión en el sistema.</p>
+                    <ul class="list-inline">
+                        <li>
+                            <a href="{{path('logout')}}" class="btn btn-blue">
+                                <strong>Salir</strong>
+                            </a>
+                        </li>
+                        <li>
+                            <button class="logout_close btn btn-blue">Cancel</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /#logout -->
+            <!-- Logout Notification jQuery -->
+            <script src="{{ asset('js/plugins/popupoverlay/logout.js') }}"></script>
+            <!-- HISRC Retina Images -->
+            <script src="{{ asset('js/plugins/hisrc/hisrc.js') }}"></script>
+
+            <!-- PAGE LEVEL PLUGIN SCRIPTS -->
+            <script src="{{ asset('js/plugins/bootstrap-tokenfield/bootstrap-tokenfield.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/bootstrap-tokenfield/scrollspy.js') }}"></script>
+            <script src="{{ asset('js/plugins/bootstrap-tokenfield/affix.js') }}"></script>
+            <script src="{{ asset('js/plugins/bootstrap-tokenfield/typeahead.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/bootstrap-maxlength/bootstrap-maxlength.js') }}"></script>
+            <!-- HubSpot Messenger -->
+            <script src="{{ asset('js/plugins/messenger/messenger.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/messenger/messenger-theme-flat.js') }}"></script>
+            <!-- Date Range Picker -->
+            <script src="{{ asset('js/plugins/daterangepicker/moment.js') }}"></script>
+            <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+            <!-- Morris Charts -->
+            <script src="{{ asset('js/plugins/morris/raphael-2.1.0.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/morris/morris.js') }}"></script>
+            <!-- Flot Charts -->
+            <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
+            <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+            <!-- Sparkline Charts -->
+            <script src="{{ asset('js/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
+            <!-- Moment.js -->
+            <script src="{{ asset('bower_components/moment/moment.js') }}"></script>
+            <script src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+            
+            <!-- Easy Pie Chart -->
+            <script src="{{ asset('js/plugins/easypiechart/jquery.easypiechart.min.js') }}"></script>
+            <!-- DataTables -->
+            <script src="{{ asset('js/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+            {#<script src="{{ asset('js/plugins/datatables/jquery.dataTables.js') }}"></script>#}
+            <script src="{{ asset('js/plugins/datatables/datatables-bs3.js') }}"></script>            
+            <script type="text/javascript" src="https://cdn.datatables.net/t/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.11,af-2.1.1,b-1.1.2,b-colvis-1.1.2,b-flash-1.1.2,b-html5-1.1.2,b-print-1.1.2,cr-1.3.1,fc-3.2.1,fh-3.1.1,kt-2.1.1,r-2.0.2,rr-1.1.1,sc-1.4.1,se-1.1.2/datatables.min.js"></script>
+            
+            <!-- THEME SCRIPTS -->
+            <script src="{{ asset('js/flex.js') }}"></script>
+            <script src="{{asset('js/demo/advanced-form-demo.js')}}"></script>
+            <script src="{{ asset('js/demo/dashboard-demo.js') }}"></script>
+            <!--script src="{#{{ asset('js/plugins/validate/jquery.validate.min.js')}}#}"></script>
+            <script src="{#{{ asset('js/demo/validation-demo.js')}}#}"></script-->
+            <script src="{{asset('validator/js/validator.js')}}"></script>
+
+            <script src="{{asset('js/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js')}}"></script>
+            <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
+
+            <script src="{{asset('js/jquery.typeahead.min.js')}}"></script>
+            
+            <script src="{{asset('js/funciones.js')}}"></script>
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+            <script src="{{ asset('js/initialize.js')}}"></script>
+            <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+            <script>
+                var datetime = null,
+                        date = null;
+
+                var update = function () {
+                    date = moment(new Date());
+                    date = date.locale('fr');
+                    datetime.html(date.format('dddd<br>D [de] MMMM [de] YYYY<br>h:mm:ss A'));
+                };
+
+                $(document).ready(function () {
+                    datetime = $('#datetime');
+                    update();
+                    setInterval(update, 1000);
+                });
+
+                $(document).ready(function () {
+                    datetoday = new Date(); // create new Date()
+                    timenow = datetoday.getTime(); // grabbing the time it is now
+                    datetoday.setTime(timenow); // setting the time now to datetoday variable
+                    hournow = datetoday.getHours(); //the hour it is
+
+                    if (hournow >= 18) // if it is after 6pm
+                        $('div.tile-img').addClass('evening');
+                    else if (hournow >= 12) // if it is after 12pm
+                        $('div.tile-img').addClass('afternoon');
+                    else if (hournow >= 6) // if it is after 6am
+                        $('div.tile-img').addClass('morning');
+                    else if (hournow >= 0) // if it is after midnight
+                        $('div.tile-img').addClass('midnight');
+                });
+
+                function blink()
+                {
+                    $(".number").fadeTo(100, 0.1).fadeTo(200, 1.0);
+                }
+                setInterval(blink, 2000);
+                
+                
+                //FUNCIONES PARA LA VENTANA MODAL PRINCIPAL
+                //FUNCIONES PARA LA VENTANA MODAL PRINCIPAL
+                function initialise()
+                {
+                    $(".js-example-basic-multiple").select2();
+                    
+                    $(".numericOnly").keydown(function (e) {
+                        // Allow: backspace, delete, tab, escape, enter and .
+                        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                             // Allow: Ctrl+A, Command+A
+                            (e.keyCode == 65 && ( e.ctrlKey === true || e.metaKey === true ) ) || 
+                             // Allow: home, end, left, right, down, up
+                            (e.keyCode >= 35 && e.keyCode <= 40)) {
+                                 // let it happen, don't do anything
+                                 return;
+                        }
+                        // Ensure that it is a number and stop the keypress
+                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                            e.preventDefault();
+                        }
+                    });
+                }
+                //ON CHANGE ROLES
+                //ON CHANGE ROLES
+                //ON CHANGE ROLES
+                //ON CHANGE ROLES
+                function lugarOn()
+                {   
+                    var rolesids = 0;
+                    var disid = 0; 
+                    var depid = 0;        
+                    var accion = $('#sie_usuarios_form_accion').val();                    
+                    var usuarioid = $('#sie_usuarios_form_idusuario').val();
+                    var formData = $('#myModalNotas').serialize();
+                    depid = $('#sie_usuarios_form_deptipoid').val();
+                    disid = $('#sie_usuarios_form_distipoid').val(); 
+                    if ((disid === '') || (disid === null)) {
+                        disid = 0;
+                        }
+                    if ((depid === '') || (depid === null)) {
+                        depid = 0;
+                        }
+                    //ACCION USER INSERT
+                    //ACCION USER INSERT                                        
+                    if (accion === 'userinsert'){                        
+                        var rolesids = $("#roltipo").select2("val");                                                
+                        //IDS DE LOS ROLES DEL SELECT MULTIPLE
+                        if (rolesids === null){
+                            rolesids = 0;
+                            }
+                        // depid != '0';
+                        // disid = '0' ;
+                        //alert(rolesids+','+depid+','+disid);
+                            
+                        $.ajax({
+                                type: 'get',
+                                url: Routing.generate('sie_usuarios_rol_lugar_tipo_id', {'ids': rolesids, 'depid':depid, 'disid':disid}),
+                                data: formData,
+                                beforeSend: function () {
+                                },
+                                success: function (data) {  
+                                    $("#rollugatipo").empty();
+                                    $("#rollugatipo").append(data);                                    
+                                    
+                                    var vallugar = '';
+                                    $('.lugar_final').each(function() {                        
+                                        vallugar = vallugar + $('#'+this.id+' option:selected').val() + ',';
+                                    });
+
+                                    //VALIDAD QUE TODOS LOS DATOS ESTEN CORECTAMENTE SELECCIONADOS
+                                    var n = vallugar.search("-999");
+                                    if (n === -1){//CORRECO ACTIVA BOTON GUARDAR
+                                        $("#sie_usuarios_form_save").prop('disabled', false);                       
+                                        }
+                                    else{//INCORRECTO BOTON GUARDAR DESACTIVADO
+                                        $("#sie_usuarios_form_save").prop('disabled', true);
+                                    }
+                                    
+                                },
+                                error: function(){
+                                    $("#usuarioModal").empty();
+                                    $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                                }
+                            });
+                        }
+                    
+                    //ACCION NEW ROL
+                    //ACCION NEW ROL
+                    if (accion === 'new'){
+                        var rolesids = $("#roltipo").select2("val");
+                        //IDS DE LOS ROLES DEL SELECT MULTIPLE
+                        if (rolesids === null){
+                            rolesids = 0;
+                            }
+                        depid = '0' ;
+                        disid = '0' ;
+                        $.ajax({
+                                type: 'get',
+                                url: Routing.generate('sie_usuarios_rol_lugar_tipo_id', {'ids': rolesids, 'depid':depid, 'disid':disid}),
+                                data: formData,
+                                beforeSend: function () {
+                                },
+                                success: function (data) {  
+                                    $("#rollugatipo").empty();
+                                    $("#rollugatipo").append(data);
+                                    
+                                    var vallugar = '';
+                                    $('.lugar_final').each(function() {                        
+                                        vallugar = vallugar + $('#'+this.id+' option:selected').val() + ',';
+                                    });
+
+                                    //VALIDAD QUE TODOS LOS DATOS ESTEN CORECTAMENTE SELECCIONADOS
+                                    var n = vallugar.search("-999");
+                                    if (n === -1){//CORRECO ACTIVA BOTON GUARDAR
+                                        $("#sie_usuarios_form_save").prop('disabled', false);                       
+                                        }
+                                    else{//INCORRECTO BOTON GUARDAR DESACTIVADO
+                                        $("#sie_usuarios_form_save").prop('disabled', true);
+                                    }
+                                    
+                                },
+                                error: function(){
+                                    $("#usuarioModal").empty();
+                                    $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                                }
+                            });
+                        }
+                    //ACCION UPDATE ON SHOW NEW ROL
+                    //ACCION UPDATE ON SHOW NEW ROL
+                    if (accion === 'update'){
+                        accion = 'new';
+                        $("#sie_usuarios_form_accion").prop('value', 'new');  
+                        $.ajax({
+                                type: 'get',
+                                url: Routing.generate('sie_usuarioid_rol_lugar_tipo_id', {'usuarioid':usuarioid}),
+                                data: formData,
+                                beforeSend: function () {
+                                },
+                                success: function (data) {  
+                                    $("#rolesusuario").empty();
+                                    $("#rolesusuario").append(data);
+                                    //initialise();
+                                    //VISUALIZACION DE LOS ROLES DEL USUARIO EN EL SELECT 2
+                                    //Y AUTO ACTIVACION DE LA FUNCION ON CHANGE
+                                    //var rolesidsarray = ['1'];
+                                    //var rolesids = $("#roles").text();
+                                    //var strings = rolesids.split(",");
+                                    //for (var i=0; i<rolesids.length; i++)
+                                    //    rolesidsarray.push( + strings[i] );
+                                    //$("#sistematipo").val(rolesidsarray).trigger("change");
+                                    //Y AUTO ACTIVACION DE LA FUNCION ON CHANGE
+                                    //VISUALIZACION DE LOS ROLES DEL USUARIO EN EL SELECT 2
+                                },
+                                error: function(){
+                                    $("#usuarioModal").empty();
+                                    $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                                }
+                            });
+                        }
+            
+                }
+                
+                //ON CHANGE DISTRITO
+                function lug_rol_dis_onchange(){
+                    $("#divAlertUser").empty();
+                    var vallugar = '';
+                    $('.lugar_final').each(function() {                        
+                        vallugar = vallugar + $('#'+this.id+' option:selected').val() + ',';
+                    });
+                    
+                    //VALIDAD QUE TODOS LOS DATOS ESTEN CORECTAMENTE SELECCIONADOS
+                    var n = vallugar.search("-999");
+                    //alert(accion+n);
+                    if (n === -1){//CORRECO ACTIVA BOTON GUARDAR
+                        $("#sie_usuarios_form_save").prop('disabled', false);                       
+                        }
+                    else{//INCORRECTO BOTON GUARDAR DESACTIVADO
+                        $("#sie_usuarios_form_save").prop('disabled', true);
+                    }
+                }
+                
+                function lug_dep_onchange(d,e)
+                {                    
+                    var formData = $('#myModalNotas').serialize();
+                    $("#divAlertUser").empty();
+                    $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_rol_lugar_dis_id', {'id': e, 'd':d}),
+                            data: formData,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {                                
+                                    $("#lug_dis_"+d).empty();
+                                    $("#lug_dis_"+d).append(data);
+                            },
+                            error: function(){
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                            }
+                        });
+                }
+                
+                //formulario PERSONA NEW
+                function personaFormNew(ci,complemento){                        
+                        var formData = $('#myModalNotas').serialize();
+                        $("#divAlertUser").empty();
+                        if (complemento === ''){
+                            complemento = '-1';
+                        }    
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuario_persona_new', {'ci': ci,'complemento': complemento}),
+                            data: formData,
+                            beforeSend: function () {
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                            },
+                            success: function (data) {
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append(data);
+                            },
+                            error: function(){
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                            }
+                        });
+                        $('#ModalUser').modal('show');
+                    }
+                
+                //formulario PERSONA EDIT
+                function personaFormEdit(id){                        
+                        var formData = $('#myModalNotas').serialize();
+                        $("#divAlertUser").empty();
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuario_persona_edit', {'personaid': id}),
+                            data: formData,
+                            beforeSend: function () {
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                            },
+                            success: function (data) {
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append(data);
+                            },
+                            error: function(){
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                            }
+                        });
+                        $('#ModalUser').modal('show');
+                    }
+                                
+                //formulario show
+                function usuarioFormShow(id){                        
+                        var formData = $('#myModalNotas').serialize();
+
+                        $("#divAlertUser").empty();
+
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_show', {'usuarioid': id}),
+                            data: formData,
+                            beforeSend: function () {
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                            },
+                            success: function (data) {
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append(data);
+                                initialise();                            
+                                //LECTURA DE LOS ARRAY EN usuarioForm
+                                var rolesidsarray = [];
+                                var rolesids = $("#roles").text();
+                                var strings = rolesids.split(",");
+                                for (var i=0; i<rolesids.length; i++)
+                                    rolesidsarray.push( + strings[i] );                    
+                                $("#roltipo").val(rolesidsarray).trigger("change");
+                            },
+                            error: function(){
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                            }
+                        });
+                        $('#ModalUser').modal('show');
+                    }
+                    
+                //MOSTRAR FORMULARIO USUARIO
+                //MOSTRAR FORMULARIO USUARIO
+                //MOSTRAR FORMULARIO USUARIO 
+                //MOSTRAR FORMULARIO USUARIO
+                //MOSTRAR FORMULARIO USUARIO
+                //MOSTRAR FORMULARIO USUARIO 
+                function usuarioForm(id){
+                    var formData = $('#myModalNotas').serialize();
+                    $("#divAlertUser").empty();
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('sie_usuarios_usuario_nuevo', {'personaid': id}),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#usuarioModal").empty();
+                            $("#usuarioModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            $("#usuarioModal").empty();
+                            $("#usuarioModal").append(data); 
+                            $("#sie_usuarios_form_save").prop('disabled', true);
+                            initialise();
+                        },
+                        error: function(){
+                            $("#usuarioModal").empty();
+                            $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                        }
+                    });
+                    $('#ModalUser').modal('show');
+                }
+                
+                //EDICION DE ROLES
+                function usuarioFormRolEdit(id){
+                    var formData = $('#myModalNotas').serialize();                    
+                    $("#divAlertUser").empty();
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('sie_usuarios_rol_edit', {'usuarioid': id}),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#usuarioModal").empty();
+                            $("#usuarioModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            $("#usuarioModal").empty();
+                            $("#usuarioModal").append(data);
+                            initialise();  
+                            //VISUALIZACION DE LOS ROLES DEL USUARIO EN EL SELECT 2
+                            //Y AUTO ACTIVACION DE LA FUNCION ON CHANGE
+                            var rolesidsarray = [];
+                            var rolesids = $("#roles").text();
+                            var strings = rolesids.split(",");
+                            for (var i=0; i<rolesids.length; i++)
+                                rolesidsarray.push( + strings[i] );                     
+                            $("#roltipo").val(rolesidsarray).trigger("change");                    
+                             //Y AUTO ACTIVACION DE LA FUNCION ON CHANGE
+                            //VISUALIZACION DE LOS ROLES DEL USUARIO EN EL SELECT 2
+                            
+                            //DESACTIVACIÓN DE CAMPOS USERNAME PASSWORD                    
+                            $('#username').prop("disabled", true);
+                            $('#password').prop("disabled", true);
+                            $('#roltipo').focus();
+                        },
+                        error: function(){
+                            $("#usuarioModal").empty();
+                            $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                        }
+                    });
+                    $('#ModalUser').modal('show');
+                }
+                
+                //RESETEAR CONTRASEÑA
+                function usuarioFormReset(id){
+                        //alert(id);
+                        var formData = $('#myModalNotas').serialize();
+                        $("#divAlertUser").empty(); 
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_reset', {'usuarioid': id}),
+                            data: formData,
+                            beforeSend: function () {
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                            },
+                            success: function (data) {
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append(data);
+                                initialise();                            
+                                //LECTURA DE LOS ARRAY EN usuarioForm
+                                var rolesidsarray = [];
+                                var rolesids = $("#roles").text();
+                                var strings = rolesids.split(",");
+                                for (var i=0; i<rolesids.length; i++)
+                                    rolesidsarray.push( + strings[i] );                    
+                                $("#roltipo").val(rolesidsarray).trigger("change");
+                            },
+                            error: function(){
+                                $("#usuarioModal").empty();
+                                $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                            }
+                        });
+                        $('#ModalUser').modal('show');
+                    }
+                    
+                //APODERADOS LISTAR
+                function apoderadosLista(gestion, nivel, grado, turno, paralelo){
+                        var formData = $('#myModalNotas').serialize();
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_apoderados_ie_nivel', {'gestion':gestion, 'nivel':nivel, 'grado':grado, 'turno':turno, 'paralelo':paralelo}),
+                            data: formData,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                $("#listadoapo").empty();
+                                $("#listadoapo").append(data);
+                                
+                                var table = $('#tablaListadoPersonas').DataTable({
+                                    language: {
+                                        "sProcessing":     "Procesando...",
+                                        "sLengthMenu":     "Mostrar _MENU_ registros",
+                                        "sZeroRecords":    "No se encontraron resultados",
+                                        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                                        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                                        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                                        "sInfoPostFix":    "",
+                                        "sSearch":         "Buscar:",
+                                        "sUrl":            "",
+                                        "sInfoThousands":  ",",
+                                        "sLoadingRecords": "Cargando...",                
+                                        "oPaginate": {
+                                            "sFirst":    "Primero",
+                                            "sLast":     "Último",
+                                            "sNext":     "Siguiente",
+                                            "sPrevious": "Anterior"
+                                        },
+                                        "oAria": {
+                                            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                        }
+                                    }
+                                });
+                                
+                                $('#tablaListadoPersonas tbody').on( 'click', 'tr', function () {
+                                    if ( $(this).hasClass('selected') ) {
+                                        $(this).removeClass('selected');
+                                    }
+                                    else {
+                                        table.$('tr.selected').removeClass('selected');
+                                        $(this).addClass('selected');
+                                    }
+                                } );
+                                
+                                $('#tablaListadoPersonas').find('tr').click( function(){
+                                     $('#tablaListadoPersonas_fil').text($(this).index());
+                                });                                
+                            },
+                            error: function(){
+                                $("#divAlertUser").empty();
+                                $("#divAlertUser").append('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Proceso detenido. Se ha detectado inconsistencia de datos.</div>');
+                            }
+                        });
+                    }    
+                    
+                //APODERADOS IMPRIMIR LISTAR
+                function imprimirapoderadosLista(gestion, nivel, grado, turno, paralelo){
+                        var formData = $('#myModalNotas').serialize();
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_apoderados_ie_nivel_imprimir', {'gestion':gestion, 'nivel':nivel, 'grado':grado, 'turno':turno, 'paralelo':paralelo}),
+                            data: formData,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                $("#listadoapo").empty();
+                                $("#listadoapo").append(data);
+                                var table = $('#tablaListadoPersonas').DataTable({
+                                    language: {
+                                        "sProcessing":     "Procesando...",
+                                        "sLengthMenu":     "Mostrar _MENU_ registros",
+                                        "sZeroRecords":    "No se encontraron resultados",
+                                        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                                        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                                        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                                        "sInfoPostFix":    "",
+                                        "sSearch":         "Buscar:",
+                                        "sUrl":            "",
+                                        "sInfoThousands":  ",",
+                                        "sLoadingRecords": "Cargando...",                
+                                        "oPaginate": {
+                                            "sFirst":    "Primero",
+                                            "sLast":     "Último",
+                                            "sNext":     "Siguiente",
+                                            "sPrevious": "Anterior"
+                                        },
+                                        "oAria": {
+                                            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                        }
+                                    }
+                                });
+                                $('#tablaListadoPersonas tbody').on( 'click', 'tr', function () {
+                                    if ( $(this).hasClass('selected') ) {
+                                        $(this).removeClass('selected');
+                                    }
+                                    else {
+                                        table.$('tr.selected').removeClass('selected');
+                                        $(this).addClass('selected');
+                                    }
+                                } );
+                                
+                            },
+                            error: function(){
+                                $("#divAlertUser").empty();
+                                $("#divAlertUser").append('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Proceso detenido. Se ha detectado inconsistencia de datos.</div>');
+                            }
+                        });
+                    }  
+                    
+                //LISTADO RESULTADO DE LA BUSQUEDA DE PERSONA - DESACTIVAR/ACTIVAR:USUARIO
+                function usuarioDesactivar(usuarioid){
+                        var formData = $('#myModalNotas').serialize();                        
+                        $("#divAlertUser").empty();     
+                        $("#menprincipal").empty();
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_cambio_estado', {'usuarioid': usuarioid}),
+                            data: formData,
+                            beforeSend: function () {
+            
+                            },
+                            success: function (data) {
+                                var numfila = $("#tablaListadoPersonas_fil").text();                                
+                                $("#divAlertUser").empty();
+                                $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');                                
+                                if (data.usuarioesActivo === 'true')
+                                    {                                    
+                                    $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[2].innerHTML = '<span class="label label-success">Activo</span>';    
+                                    }
+                                else
+                                    {
+                                    $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[2].innerHTML = '<span class="label label-default">Desactivado</span>';                                    
+                                    }
+                            },
+                            error: function(){
+                                
+                            }
+                        });
+                        //$('#ModalUser').modal('show');
+                    }    
+                    
+                //DESACTIVAR USUARIO EN LOS LISTADOS
+                function usuarioListChangeState(usuarioid, usuariorolid){
+                        var formData = $('#myModalNotas').serialize();
+                        $("#divAlertUser").empty();
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_desactivar', {'usuarioid': usuarioid, 'usuariorolid':usuariorolid}),
+                            data: formData,
+                            beforeSend: function () {
+            
+                            },
+                            success: function (data) {
+                                var numfila = $("#tablaListadoPersonas_fil2").text();                            
+                                $("#divAlertUser").empty();
+                                $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+
+                                //ACTUALIZANDO TABLA  JQUERY                                
+                                if (data.usuarioesActivo === 'true')
+                                    {
+                                    $($('#tablaListadoRoles').find('tbody > tr')[numfila]).children('td')[2].innerHTML = '<span class="label label-success">Activo</span>';    
+                                    }
+                                else
+                                    {
+                                    $($('#tablaListadoRoles').find('tbody > tr')[numfila]).children('td')[2].innerHTML = '<span class="label label-default">Desactivado</span>';                                    
+                                    }
+                            },
+                            error: function(){
+                                
+                            }
+                        });
+                        //$('#ModalUser').modal('show');
+                    }
+                    
+                //DESACTIVAR ROL USUARIO EN LOS LISTADOS
+                function usuarioRolListChangeState(usuarioid, usuariorolid){
+                        var formData = $('#myModalNotas').serialize();
+                        $("#divAlertUser").empty();
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_desactivar_rol', {'usuarioid': usuarioid, 'usuariorolid':usuariorolid}),
+                            data: formData,
+                            beforeSend: function () {
+                                
+                            },
+                            success: function (data) {                                
+                                var numfila = $("#tablaListadoPersonas_fil2").text();                                
+                                $("#divAlertUser").empty();
+                                $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+ 
+                                if (data.usuariorolesActivo === 'true')
+                                    {
+                                    $($('#tablaListadoRoles').find('tbody > tr')[numfila]).children('td')[3].innerHTML = '<span class="label label-success">Activo</span>';
+                                    buttonshtml = buttonshtml + '<li><a class="glyphicon glyphicon-remove-sign" href="#" onclick="usuarioRolListChangeState('+data.usuarioid+','+data.usuariorol_id+')"> Desactivar Rol</a></li>';
+                                    }
+                                else
+                                    {  
+                                    $($('#tablaListadoRoles').find('tbody > tr')[numfila]).children('td')[3].innerHTML = '<span class="label label-default">Desactivado</span>';        
+                                    buttonshtml = buttonshtml + '<li><a class="glyphicon glyphicon-ok-sign" href="#" onclick="usuarioRolListChangeState('+data.usuarioid+','+data.usuariorol_id+')"> Activar Rol</a></li>';                                    
+                                    }
+                            },
+                            error: function(){
+                                
+                            }
+                        });
+                        //$('#ModalUser').modal('show');
+                    }    
+                    
+                //DESACTIVAR ROL USUARIO MODAL
+                function usuariorolFormDesactivarModal(usuarioid, usuariorolid, rolid, lugarNivelId){
+                        var formData = $('#myModalNotas').serialize();
+                        $("#divAlertUser").empty();
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_desactivar_rol_modal', {'usuarioid': usuarioid, 'usuariorolid':usuariorolid}),
+                            data: formData,
+                            beforeSend: function () {
+                                
+                            },
+                            success: function (data) {                                
+                                $("#divAlertUser").empty();
+                                $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                                var checkid = $("#labelonoff"+rolid).text();
+                                checkid = checkid.trim();
+                                checkid = checkid.substring(0, 4);
+                                
+                                var rol = $("#rolonoff"+rolid).text();
+                                rol = rol.trim();
+                                                                
+                                {#alert(checkid);#}
+                                if (checkid === 'Acti'){                                                                        
+                                    $("#labelonoff"+rolid).empty();
+                                    $("#labelonoff"+rolid).html('<span class="label label-default">Desa.</span> <a class="glyphicon glyphicon-ok-circle" href="#" onclick="usuariorolFormDesactivarModal('+usuarioid+','+usuariorolid+','+rolid+','+lugarNivelId+')"></a>');
+        
+                                    $("#rolonoff"+rolid).empty();
+                                    $("#rolonoff"+rolid).html('<span class="label label-default">'+rol+'</span>');
+        
+                                    $("#sel_lug_dep_edit"+rolid).prop("disabled", true);
+                                    $("#sel_lug_dis_edit"+rolid).prop("disabled", true);
+                                    
+                                    $("#div_lug_guardar"+rolid).empty();
+                                    $("#div_lug_guardar"+rolid).html('.');                                    
+                                }
+                                else{
+                                    $("#labelonoff"+rolid).empty();
+                                    $("#labelonoff"+rolid).html('<span class="label label-success">Acti.</span> <a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuariorolFormDesactivarModal('+usuarioid+','+usuariorolid+','+rolid+','+lugarNivelId+')"></a>');                                    
+                                    
+                                    $("#rolonoff"+rolid).empty();
+                                    $("#rolonoff"+rolid).html('<span class="label label-info">'+rol+'</span>');
+        
+                                    $("#sel_lug_dep_edit"+rolid).prop("disabled", false);                                 
+                                    $("#sel_lug_dis_edit"+rolid).prop("disabled", false);
+                                    
+                                    $("#div_lug_guardar"+rolid).empty();                                    
+                                    if (lugarNivelId == '8'){//DEPARTAMETAL
+                                        $("#div_lug_guardar"+rolid).html('<a class="glyphicon glyphicon glyphicon-ok" href="#" onclick="usuariorolupdatedep('+usuariorolid+','+rolid+')"> Guardar</a>');
+                                    }
+                                    if (lugarNivelId == '7'){//DISTRITAL
+                                        $("#div_lug_guardar"+rolid).html('<a class="glyphicon glyphicon glyphicon-ok" href="#" onclick="usuariorolupdatedis('+usuariorolid+','+rolid+')"> Guardar</a>');
+                                    }
+                                }   
+                                
+                            },
+                            error: function(){
+                                
+                            }
+                        });
+                        //$('#ModalUser').modal('show');
+                    } 
+
+                
+                function lug_dep_onchangemodal(d) {
+                    var select = '<select class="form-control" id="sel_lug_dep_edit'+d+'" onchange="lug_dep_onchange('+d+', this.options[this.selectedIndex].value);">'+
+                                    '<option value="-999"></option>'+
+                                    '<option value="31353">Chuquisaca</option>'+
+                                    '<option value="31354">La Paz</option>'+
+                                    '<option value="31355">Cochabamba</option>'+
+                                    '<option value="31356">Oruro</option>'+
+                                    '<option value="31357">Potosí</option>'+
+                                    '<option value="31358">Tarija</option>'+
+                                    '<option value="31359">Santa Cruz</option>'+
+                                    '<option value="31360">Beni</option>'+
+                                    '<option value="31361">Pando</option>'+
+                                '</select>';                    
+                    $("#div_lug_dep"+d).empty();
+                    $("#div_lug_dep"+d).html(select);
+                    
+                    var selectdis = '<select class="form-control" id="sel_lug_dis_edit'+d+'">'+
+                                    '<option value="-999">Elija el Distrito</option>'+               
+                                    '</select>';
+                    $("#lug_dis_"+d).empty();
+                    $("#lug_dis_"+d).html(selectdis);
+                    $("#guardarbuttonedit"+d).show();                    
+                }
+                
+                //GUARDAR UPDATE LUGAR EDIT MODAL DEPTO
+                function usuariorolupdatedep(usuariorolid, lugarNivelId){
+                    var formData = $('#myModalNotas').serialize();                    
+                    var i = $("#sel_lug_dep_edit"+lugarNivelId+" option:selected").val();
+                    var itext = $("#sel_lug_dep_edit"+lugarNivelId+" option:selected").text();
+                    if (i != '-999'){
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_guardar_locacion', {'usuariorolid':usuariorolid, 'lugar_tipoid':i}),
+                            data: formData,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                
+                                var select = '<select class="form-control" id="sel_lug_dep_edit'+lugarNivelId+'" onchange="lug_dep_onchangemodal('+lugarNivelId+');">'+
+                                                '<option value="-100">Modificar...</option>'+
+                                                '<option value="'+i+'" selected>'+itext+'</option>'+                                    
+                                             '</select>';
+                                     
+                                $("#div_lug_dep"+lugarNivelId).empty();
+                                $("#div_lug_dep"+lugarNivelId).html(select);
+                                
+                                $("#guardarbuttonedit"+lugarNivelId).hide(); 
+                                
+                                $("#divAlertUser").empty();
+                                $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                            },
+                            error: function(){
+                                
+                            }
+                        });    
+                    }
+                    else{
+                        alert('¡Seleccione un departamento!');
+                    }
+                }
+
+                //GUARDAR UPDATE SUBSISTEMA EDIT MODAL
+                function usuariorolupdatesubsistema(usuariorolid){
+                    var formData = $('#myModalNotas').serialize();                    
+                    var che = $(".chesubsist"+usuariorolid);                    
+                    var keysubsis = '';
+
+                    $.each(che, function (i, obj) {
+                        if (obj.checked){
+                            keysubsis = keysubsis+','+obj.value                            
+                        }
+                    }); 
+                    keysubsis = keysubsis.substring(1);                   
+                    //alert(keysubsis);
+                    if (keysubsis != ''){
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_guardar_sub_sistema', {'usuariorolid':usuariorolid, 'value':keysubsis}),
+                            data: formData,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                $("#div_subsistema_guardar"+usuariorolid).empty();
+                                $("#div_subsistema_guardar"+usuariorolid).html('<span class="label label-info">'+data.mensaje+'</span> ');                                
+                            },
+                            error: function(){
+                                
+                            }
+                        });    
+                    }
+                    else{
+                        alert('¡Seleccione algun subsistema para el rol!');
+                    }
+
+                }
+                
+                //GUARDAR UPDATE LUGAR EDIT MODAL DISTRITO
+                function usuariorolupdatedis(usuariorolid, lugarNivelId){                    
+                    var formData = $('#myModalNotas').serialize();                    
+                    var i = $("#lug_dis_"+lugarNivelId+" option:selected").val(); 
+                    var itext = $("#lug_dis_"+lugarNivelId+" option:selected").text(); 
+                    var itextdep = $("#sel_lug_dep_edit"+lugarNivelId+" option:selected").text();
+                    if (i != '-999'){                        
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_usuarios_guardar_locacion', {'usuariorolid':usuariorolid, 'lugar_tipoid':i}),
+                            data: formData,
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                var select = '<select class="form-control" id="sel_lug_dis_edit'+lugarNivelId+'">'+                                               
+                                                '<option value="'+i+'" selected>'+itext+'</option>'+                                    
+                                             '</select>';
+                                $("#lug_dis_"+lugarNivelId).empty();
+                                $("#lug_dis_"+lugarNivelId).html(select);
+                                
+                                var selectb = '<select class="form-control" id="sel_lug_dep_edit'+lugarNivelId+'" onchange="lug_dep_onchangemodal('+lugarNivelId+');">'+
+                                                '<option value="-100">Modificar...</option>'+
+                                                '<option value="'+i+'" selected>'+itextdep+'</option>'+                                    
+                                             '</select>';
+                                     
+                                $("#div_lug_dep"+lugarNivelId).empty();
+                                $("#div_lug_dep"+lugarNivelId).html(selectb);
+                                
+                                $("#guardarbuttonedit"+lugarNivelId).hide(); 
+                                $("#divAlertUser").empty();
+                                $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                            },
+                            error: function(){
+
+                            }
+                        });    
+                    }
+                    else{
+                        alert('¡Seleccione un distrito!');
+                    }
+      
+                }
+                
+                //CAMBIA NOMBRE DE USUARIO AL CARNET
+                function usernameUpdate(usuarioid){
+                        var formData = $('#myModalNotas').serialize();                        
+                        $("#divAlertUser").empty();
+                        $("#menprincipal").empty(); 
+                        if (confirm('Está por remplazar el nombre del usuario por el numero de carnet de la persona asignada a esta cuenta.\n\n Nota: Si esta seguro de esta acción a partir de la fecha el usuario de esta cuenta sera el numero de carnet.\n\n ¿Esta seguro de continuar? ')) {
+                            $.ajax({
+                                type: 'get',
+                                url: Routing.generate('sie_usuarios_update_username', {'usuarioid': usuarioid}),
+                                data: formData,
+                                beforeSend: function () {
+
+                                },
+                                success: function (data) {
+                                    var numfila = $("#tablaListadoPersonas_fil").text();
+                                    //alert(numfila);
+                                    $("#divAlertUser").empty();
+                                    $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                                    $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[1].innerHTML = data.username;
+                                },
+                                error: function(){
+                                    $("#divAlertUser").empty();
+                                    $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');                                    
+                                }
+                            });
+                        }                            
+                        //$('#ModalUser').modal('show');
+                    }
+                
+                function personaActivarEdicion(id){
+                    var formData = $('#myModalNotas').serialize();                   
+                    $("#divAlertUser").empty();
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('sie_persona_activar_edicion', {'personaid': id}),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#usuarioModal").empty();
+                            $("#usuarioModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                        },
+                        error: function(data){
+                            $("#usuarioModal").empty();
+                            $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.' + data.mensaje + '</div>');
+                        }
+                    });
+                }
+                
+                function estudianteForm(){
+                    var formData = $('#myModalNotas').serialize();
+                    $("#divAlertUser").empty();
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('sie_usuario_estudiante_new'),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#usuarioModal").empty();
+                            $("#usuarioModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            $("#usuarioModal").empty();
+                            $("#usuarioModal").append(data);                            
+                        },
+                        error: function(){
+                            $("#usuarioModal").empty();
+                            $("#usuarioModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                        }
+                    });
+                    $('#ModalUser').modal('show');
+                }
+ 
+                //CERRAR VENTANA MODAL
+                function modaluserclose(){            
+                   $('#ModalUser').modal('hide');
+               }
+            </script>
+        {% endblock %}
+    {% block autocompletar %}{% endblock %}
+</body>
+
+</html>

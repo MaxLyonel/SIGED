@@ -1,0 +1,40 @@
+Sie\AppWebBundle\Entity\ObjetoTipo:
+    type: entity
+    table: objeto_tipo
+    uniqueConstraints:
+        objeto_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        objeto:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+        icono:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        orden:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+    lifecycleCallbacks: {  }

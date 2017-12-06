@@ -1,0 +1,111 @@
+PlanillasReposicionBono:
+    path:     /{op}
+    defaults: { _controller: SieBjpBundle:PlanillasReposicionBono:index, op:search }
+
+PlanillasReposicionBono_new:
+    path:     /new/
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:new" }
+    methods:  POST
+
+PlanillasReposicionBono_create:
+    path:     /create/
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:create" }
+    methods:  POST
+
+listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:listargrados" }
+    options:
+         expose: true
+
+PlanillasReposicionBono_cargar_niveles:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:cargarNiveles"}
+    options:
+         expose: true
+         
+PlanillasReposicionBono_cargar_gum:
+    path:     /cargarGum/{fuerza}
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:cargarGum"}
+    options:
+         expose: true
+
+PlanillasReposicionBono_cargar_um:
+    path:     /cargarum/{gum}
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:cargarUm"}
+    options:
+         expose: true
+
+PlanillasReposicionBono_cargar_ie:
+    path:     /cargarIe/{gum}
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:cargarIe"}
+    options:
+         expose: true
+
+
+PlanillasReposicionBono_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{nivel}/
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:cargarGrados"}
+    options:
+         expose: true
+
+PlanillasReposicionBono_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{nivel}/{grado}/
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:cargarParalelos"}
+    options:
+         expose: true
+
+PlanillasReposicionBono_listar_areas_curso:
+    path:     /lista_areas_curso_a/
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:lista_areas_curso" }
+    options:
+         expose: true
+
+PlanillasReposicionBono_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:lista_areas_nivel" }
+    options:
+         expose: true
+
+PlanillasReposicionBono_listar_areas_curso_adicionar_eliminar:
+    path:     /lista_areas_curso_adicionar_eliminar/
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:lista_areas_curso_adicionar_eliminar" }
+    options:
+         expose: true
+
+PlanillasReposicionBono_asignar_maestro_area:
+    path:     /asignar_maestro_area/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:asignar_maestro" }
+    options:
+         expose: true
+
+PlanillasReposicionBono_delete:
+    path:     /delete/{idCursoOferta}
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:delete" }
+    options:
+         expose: true
+
+PlanillasReposicionBono_file:
+    path:     /sie/build/
+    defaults: { _controller: SieBjpBundle:PlanillasReposicionBono:build }
+    options:
+         expose: true          
+
+PlanillasReposicionBono_maestros:
+    path:     /maestros_materia/
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:maestros"}
+    options:
+         expose: true
+
+PlanillasReposicionBono_maestros_asignar_siged:
+    path:     /maestros_asignar_siged/
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:maestrosAsignar"}
+    options:
+         expose: true
+
+
+PlanillasReposicionBono_buscar_infoUe:
+    path:     /buscar_infoUe/
+    defaults: { _controller: "SieBjpBundle:PlanillasReposicionBono:buscarInfoUe"}
+    options:
+         expose: true         

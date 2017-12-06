@@ -1,0 +1,60 @@
+    
+{% if exist == true %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel rounded shadow panel-lilac">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{nivelname}}</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered table-hover cf">
+                            <tr >
+                                {% for data in objturnos%}
+                                    <td  align="center">
+                                        <a href="#" onclick="getParalelos('{{data.nivelTipo}}', '{{sie}}', '{{gestion}}', '{{data.turnoTipo}}', '{{data.turno}}', '{{nivelname}}');" ><span class="fa fa-hand-o-right"></span> {{data.turno}}</a>
+                                    </td>
+                                {%endfor%}
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.portlet -->
+        </div>
+
+        <div class="col-lg-12">
+            <div id="no-more-tables">
+
+            </div>
+            <!-- /.portlet -->
+        </div>
+    </div>
+
+    <!-- /.row -->
+{%else%}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{%endif%}
+
+
+
+<script>
+
+
+</script>
+

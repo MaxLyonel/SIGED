@@ -1,0 +1,7 @@
+herramienta_alter_maestros_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:Maestros:index}
+
+herramienta_alter_maestros_edit:
+    path:     /editmaestro
+    defaults: { _controller: SieHerramientaAlternativaBundle:Maestros:edit}

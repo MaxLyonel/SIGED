@@ -1,0 +1,52 @@
+Sie\AppWebBundle\Entity\SuperiorInstitucioneducativaPeriodo:
+    type: entity
+    table: superior_institucioneducativa_periodo
+    indexes:
+        IDX_F29C4518AC7B3CA5:
+            columns:
+                - superior_institucioneducativa_acreditacion_id
+        IDX_F29C4518D26A1FD0:
+            columns:
+                - superior_periodo_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        horasPeriodo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: horas_periodo
+    manyToOne:
+        superiorInstitucioneducativaAcreditacion:
+            targetEntity: SuperiorInstitucioneducativaAcreditacion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_institucioneducativa_acreditacion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        superiorPeriodoTipo:
+            targetEntity: SuperiorPeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

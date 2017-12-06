@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+
+        <title>{% block title %}SIE{% endblock %}</title>
+        {% block stylesheets %}
+            <style>
+                table {
+                    border: 5px solid #0023AA;
+                }
+            </style>
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+
+    <body class="supCont">
+        <section id="ocHelp">
+            <div>
+                <div class="grd main-content zero-margin" id="ocMainContent">
+                    <div class="row">
+                        <div class="col-5-5">
+
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a name="__top">	</a>
+                                        <section class="ocpIntroduction">
+                                            <a name="bmbacktotop">	</a>
+                                            <p>Hola {{data.usernameh}}, </p>
+                                            <p>Usted ha cambiado satisfactoriamente su password en el sistema de informacin educativa SIGED.</p>
+                                            <p>Su nuevo password es: {{data.newpasswd}}</p>
+                                            <b class="ocpNote"> Gracias</b> por usar <a href="http://siged.sie.gob.bo" class="ocpExternalLink" target="_blank" title="sistema de informacion educativa">SIE - SIGED</a></p>
+                                        </section>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <section class="ocpSection">
+                                            <h3>Cuando y donde ocurri&oacute; esto:</h3>
+                                            <ul>
+                                                <li>Fecha: {{ "now"|date("m/d/Y") }}</li>
+                                                <li>Sistema Operado {{server}}</li>
+                                                <li>Direccion IP {{ip}}</li>
+                                            </ul>
+                                        </section>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4-6">
+                            <p class="ocAppliesToSection"><strong>Equipo: </strong>S.I.E</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        ﻿
+
+    </body>
+</html>

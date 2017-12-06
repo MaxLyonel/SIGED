@@ -1,0 +1,86 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="block-header">
+        <h2>REGISTRO DE DATOS HISTÓRICOS</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('historico_list_itt')}}">Listado de Institutos</a></li>
+        <li class="active">Editar Histórico</li>
+    </ol>
+
+    <div class="row clearfix">
+        <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        Formulario Registro Histórico
+                    </h2>
+                </div>
+
+                <div class="body">
+                    {{ form_start(form) }}
+                        <fieldset>
+                            <label class="form-label">Denominación del Instituto</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{entity.id}} - {{entity.institucioneducativa}}
+                                </div>
+                            </div>
+						
+                            <label class="form-label">{{form_label(form.nroResolucion)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.nroResolucion) }}
+                                </div>
+                            </div>
+
+                            <label class="form-label">{{form_label(form.fechaResolucion)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.fechaResolucion) }}
+                                </div>
+                            </div>
+                            <label class="form-label">{{form_label(form.descripcion)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.descripcion) }}
+                                </div>
+                            </div>
+                            <label class="form-label">{{form_label(form.datoAdicional)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.datoAdicional) }}
+                                </div>
+                            </div>	
+                            <label class="form-label">{{form_label(form.archivo)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.archivo) }}
+									<br>
+                                </div>
+                            </div>	
+
+                            {% if adjunto != ''  %}
+                            <div class="form-group">
+                                <div class="form-line">
+									<a href="{{asset('uploads/archivos/')}}{{adjunto}}" target="_blank"/><img src="{{asset('img/pdf11.png')}}" width="55" height="55" title="Ver archivo"/></a/>
+                                </div>
+                            </div>	
+							{% endif %}
+
+                        </fieldset>
+                        {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+                        <a href="{{path('historico_list', {'idRie': entity.id} )}}" class="btn btn-danger btn-lg m-l-15 waves-effect">Cancelar</a>
+                    {{ form_end(form) }}
+                </div>    
+            </div>
+        </div>
+    </div>                
+
+{% endblock %}
+
+
+

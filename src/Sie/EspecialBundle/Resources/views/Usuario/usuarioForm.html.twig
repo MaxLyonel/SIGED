@@ -1,0 +1,189 @@
+<p>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Datos Personales</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-3">
+                <h4><small>NOMBRES :</small><br>{{ persona.nombre }}</h4>
+            </div>
+            <div class="col-xs-3">
+                <h4><small>APELLIDO PATERNO :</small><br>{{ persona.paterno }}</h4>
+            </div>
+            <div class="col-xs-3">
+                <h4><small>APELLIDO MATERNO :</small><br>{{ persona.materno }}</h4>
+            </div>
+            <div class="col-md-3">
+                <h4><small>NUMERO DE CARNET :</small><br>{{ persona.carnet }}</h4>
+            </div>
+        </div>
+    </div>
+</div>         
+<p>
+{{ form_start(form, { 'attr': {'id':'sie_usuarios_form', 'data-toggle': 'validator', 'role': "form", 'onsubmit': 'enviaformuser(); return false;', 'class':'form-horizontal' } } )}}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Información de la Cuenta</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active">
+                        <a href="#basicos" role="tab" data-toggle="tab">
+                            <icon class="fa fa-home"></icon> Basicos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#lugares" role="tab" data-toggle="tab">
+                            <i class="fa fa-user"></i> Rol-Lugar
+                        </a>
+                    </li>
+                    <li style="visibility: hidden;">
+                        <a href="#ocultos" role="tab" data-toggle="tab">
+                            <i class="glyphicon glyphicon-eye-open"></i> Ocultos
+                        </a>
+                    </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="basicos">
+                        <div class="row">
+                            <div class="col-xs-4">            
+                                {{ form_row(form.usuario, { 'id': 'username'}) }}                    
+                            </div>
+                            <div class="col-xs-4">
+                                <label class="help-block required" for="username">CONTRASEÑA:</label>
+                                <input class="form-control input-sm" type="text" value="**********" disabled>
+                            </div>        
+                            {#<div class="col-xs-4">            
+                                {{ form_row(form.password, { 'id': 'password'}) }}                  
+                            </div>#}
+                            <div class="col-xs-4">            
+                                {{ form_row(form.rolTipo, { 'id': 'roltipo' }) }}
+                            </div>
+                        </div>
+                    </div>
+                            
+                    <div class="tab-pane fade" id="lugares">
+                        <div id="rolesusuario">
+                            
+                        </div>
+                        <div id="rollugatipo">
+
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="ocultos">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div id="roles"> 
+                                    {{rolesids}}{#IDS DE ROLES DEL USUARIO#}
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                {{ form_row(form.maestroinsid, { 'id': 'sie_usuarios_form_maestroinsid' }) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                {{ form_row(form.depid, { 'id': 'sie_usuarios_form_deptipoid' }) }}
+                            </div>
+                            <div class="col-xs-4">
+                                {{ form_row(form.disid, { 'id': 'sie_usuarios_form_distipoid' }) }}
+                            </div>
+                            <div class="col-xs-4">
+                                {{ form_row(form.lugtipids, { 'id': 'sie_usuarios_form_lugartipoid' }) }}
+                            </div>    
+                        </div>    
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+<p>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-6">
+                <p class="text-center">{{ form_row(form.save) }}</p>
+            </div>                        
+            <div class="col-xs-6">
+                <a role="button" class="btn btn-default btn-large glyphicon glyphicon-remove-sign" href="#" onclick="modaluserclose();"> Cerrar</a>
+            </div>
+        </div>
+    </div>
+</div>   
+{{ form_end(form) }}
+<script>
+function enviaformuser() {
+    //GUARDAR FORMULARIO USUARIO
+    //GUARDAR FORMULARIO USUARIO
+    //GUARDAR FORMULARIO USUARIO 
+    //GUARDAR FORMULARIO USUARIO
+    //GUARDAR FORMULARIO USUARIO
+    //GUARDAR FORMULARIO USUARIO 
+    //COPIA LOS ID DE LOS LUGARES SELECCIONADOS AL CAMPO OCULTO
+    var vallugar = '';
+    $('.lugar_final').each(function() {                        
+        vallugar = vallugar + $('#'+this.id+' option:selected').val() + ',';
+    });
+    vallugar = vallugar.substr(0, vallugar.length-1);                        
+    $("#sie_usuarios_form_lugartipoid").prop('value', vallugar);          
+    $("#sie_usuarios_form_maestroinsid").prop('value', $("#idmaestrodir_fil").text());
+        
+    var msj = '\n{{ persona.nombre }} {{ persona.paterno }} {{ persona.materno }}';    
+        msj += '\n\n ¿Esta seguro de continuar?';
+
+    if (confirm('Está por modificar un accesso al SIGED para la persona: ' + msj)) {
+        var formData = $('#sie_usuarios_form').serialize();
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_usuarios_insert'),
+            data: formData,
+            beforeSend: function () {
+                {#$("#divAlert").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");#}
+            },
+            success: function (data) {
+                $('#ModalUser').modal('hide');
+                if (data.accion === 'new'){
+                    var numfila = $("#tablaListadoPersonas_fil").text();
+                    $("#divAlertUser").empty();
+                    $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+
+                    //ACTUALIZANDO TABLA alert(numfila+data.username);                    
+                    //ACCIONES
+                    {#$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[0].innerHTML = '<div class="btn-group">\n\
+                                    <button type="button" class="btn btn-info btn-xs dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" aria-haspopup="true"> Acciones <span class="caret"></span> </button>\n\
+                                    <ul class="dropdown-menu" role="menu">\n\
+                                            <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('+data.usuarioid+')"> Ver</a></li>\n\
+                                            <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('+data.usuarioid+')"> Editar Roles</a></li>\n\
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('+data.usuarioid+')"> Resetear Contraseña</a></li>\n\
+                                        </ul>\n\
+                                    </div> ';#}
+                    $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[0].innerHTML = '<span class="label label-warning">Registro consolidado!</span>';
+                    //NOMBRE DE USUARIO                
+                    $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[1].innerHTML = data.username;
+                    //ACTIVADO
+                    $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[2].innerHTML = 'Activado';
+                    //CARGO
+                    cabtab = $($('#tablaListadoPersonas').find('thead > tr')[0]).children('th')[7].innerHTML;
+                    if ( cabtab == 'Cargo'){
+                        $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[7].innerHTML = 'DIRECTOR/A';
+                    } 
+                    
+                }
+                if (data.accion === 'update'){
+                    $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                }    
+            },
+            error: function () {
+                $("#divAlertUser").empty();
+                $("#divAlertUser").append('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Proceso detenido. Se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+    }
+    return false;
+}
+</script>

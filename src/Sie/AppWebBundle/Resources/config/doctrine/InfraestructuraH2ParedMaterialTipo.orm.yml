@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH2ParedMaterialTipo:
+    type: entity
+    table: infraestructura_h2_pared_material_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraParedMaterialTipo:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_pared_material_tipo
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,61 @@
+sie_ienoacreditadas:
+    path:     /
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:index" }
+
+sie_ienoacreditadas_show:
+    path:     /{id}/show
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:show" }
+
+sie_ienoacreditadas_new:
+    path:     /new
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:new" }
+
+sie_ienoacreditadas_create:
+    path:     /create
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:create" }
+    methods:  POST
+
+sie_ienoacreditadas_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:edit" }
+
+sie_ienoacreditadas_update:
+    path:     /{id}/update
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:update" }
+    methods:  [POST, PUT]
+
+sie_ienoacreditadas_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:delete" }
+    methods:  [GET, DELETE]
+
+sie_ienoacreditadas_newstudents:
+    path:     /newstudents
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:newstudents" }
+
+sie_ienoacreditadas_savestudents:
+    path:     /savestudents
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:savestudents" }
+  
+sie_ienoacreditadas_getgeneros:
+    path:     /getgeneros
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:getgeneros" }     
+    options:
+         expose: true
+  
+sie_ienoacreditadas_list:
+    path:     /{id}/list
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:list" }    
+
+sie_ienoacreditadas_deletestudent:
+    path:     /{id}/deletestudent
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:deletestudent" }
+    methods:  [GET, DELETE]    
+
+sie_ienoacreditadas_editstudent:
+    path:     /editstudent
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:editstudent" }    
+
+sie_ienoacreditadas_savestudent:
+    path:     /savestudent
+    defaults: { _controller: "RegularBundle:Institucioneducativanoacreditado:savestudent" }        

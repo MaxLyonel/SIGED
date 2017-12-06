@@ -1,0 +1,76 @@
+Sie\AppWebBundle\Entity\PersonaDatos:
+    type: entity
+    table: persona_datos
+    indexes:
+        relationship_109_fk:
+            columns:
+                - persona_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        telefono:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        correo:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        direccion:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        gestionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_id
+        oficialia:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        libro:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        partida:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        folio:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    manyToOne:
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

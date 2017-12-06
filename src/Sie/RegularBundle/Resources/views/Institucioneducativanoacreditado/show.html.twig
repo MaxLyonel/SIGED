@@ -1,0 +1,40 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Institucioneducativanoacreditado</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Dependenciatipoid</th>
+                <td>{{ entity.dependenciaTipoId }}</td>
+            </tr>
+            <tr>
+                <th>Orgcurriculartipoid</th>
+                <td>{{ entity.orgcurricularTipoId }}</td>
+            </tr>
+            <tr>
+                <th>Institucioneducativa</th>
+                <td>{{ entity.institucioneducativa }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('sie_ienoacreditadas') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('sie_ienoacreditadas_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

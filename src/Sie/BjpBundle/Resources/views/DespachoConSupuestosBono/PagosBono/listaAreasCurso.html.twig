@@ -1,0 +1,100 @@
+<h4 class="text-orange text-center"><ins>{{curso.nivelTipo.nivel}} - {{curso.gradoTipo.grado}} - {{curso.paraleloTipo.paralelo}}</ins></h4>
+<hr>
+
+<h4><i class="fa fa-list-alt"></i> Áreas Humanísticas
+    {% if (app.session.get('roluser') == 8 or app.session.get('roluser') == 7) and operativo < 4 %}
+    <span style="float:right; margin-bottom:10px">
+        <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Ã�rea</button>
+    </span>
+    {% endif %}   
+</h4>
+
+{% if areasCurso is not empty %}
+    {% if mensaje %}
+        <div class="alert alert-info">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <i class="fa fa-info-circle"></i> {{mensaje}}
+        </div>
+    {% endif %}
+    <div id="no-more-tables">
+        <table class="table table-bordered table-hover cf">
+            <thead class="cf">
+                <tr>
+                    <th>Nro</th>
+                    <th>Codigo</th>
+                    <th>Área</th>
+                    <!-- Opcion de eliminar solo para nacionales -->
+                    <th>Acciones</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for cursoOferta in areasCurso %}
+                    <tr style="background-color:#E5F4F9">
+                        <td data-title="Nro">{{loop.index}}</td>
+
+                        <td data-title="Codigo"><span class="text-green">{{cursoOferta.idAsignatura}}&nbsp;</span></td>
+                        <td data-title="Area">{{cursoOferta.asignatura}}&nbsp;</td>
+
+                        <td data-title="Acciones">
+                        {% if curso.gestionTipo.id == 2016 %}
+                            <button class="btn" onclick="addpop({{cursoOferta.id}})" title="Asignar maestro"><i class="fa fa-users text-lilac"></i></button>
+                            <div class="arrow-before" style="display:none; margin-left:10px;" id="before{{cursoOferta.id}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="after{{cursoOferta.id}}"></div>
+                            <div id="{{cursoOferta.id}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-460px; border:2px solid #EEEEEE; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
+
+                            </div>
+                        {% endif %}
+                        {% if curso.gestionTipo.id == 2016 and curso.nivelTipo.id == 13 and curso.turnoTipo.id == 4 and (app.session.get('roluser') == 10 or app.session.get('roluser') == 8)  %}
+
+                             {% if (curso.gradoTipo.id == 1 or curso.gradoTipo.id == 2) and (cursoOferta.idAsignatura == 1039 or cursoOferta.idAsignatura == 1045) %}
+                                <button type="button" class="btn btn-red" onclick="eliminarArea({{cursoOferta.id}},'{{cursoOferta.asignatura}}')" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                             {% endif %}
+                             {% if (curso.gradoTipo.id == 3 or curso.gradoTipo.id == 4 or curso.gradoTipo.id == 5 or curso.gradoTipo.id == 6) and (cursoOferta.idAsignatura == 1034 or cursoOferta.idAsignatura == 1035 or cursoOferta.idAsignatura == 1036 or cursoOferta.idAsignatura == 1038 or cursoOferta.idAsignatura == 1039) %}
+                                <button type="button" class="btn btn-red" onclick="eliminarArea({{cursoOferta.id}},'{{cursoOferta.asignatura}}')" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                             {% endif %}
+
+                        {% else %}
+                            {% if  (cursoOferta.idAsignatura == 1020 or cursoOferta.idAsignatura == 1021 or cursoOferta.idAsignatura == 1022 or cursoOferta.idAsignatura == 1041 or cursoOferta.idAsignatura == 1042 or cursoOferta.idAsignatura == 1046 or cursoOferta.idAsignatura == 1047 or cursoOferta.idAsignatura == 1048 or cursoOferta.idAsignatura == 1049 or cursoOferta.idAsignatura == 1050 ) and curso.gestionTipo.id == 2016 %}
+                                    <button type="button" class="btn btn-red" onclick="eliminarArea({{cursoOferta.id}},'{{cursoOferta.asignatura}}')" title="Eliminar"><i class="fa fa-trash-o"></i> Eliminar</button>
+                            {% else %}
+                                {% if cursoOferta.idAsignatura == 1038 and curso.gradoTipo.id >= 3 and curso.gestionTipo.id >= 2016 and app.session.get('roluser') != 9 and app.session.get('roluser') != 5 %}
+                                        <button type="button" class="btn btn-red" onclick="eliminarArea({{cursoOferta.id}},'{{cursoOferta.asignatura}}')" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                                {% else %}
+                                    {% if cursoOferta.idAsignatura == 1039 and curso.gradoTipo.id <= 4 and curso.gestionTipo.id == 2015 and app.session.get('roluser') != 9 and app.session.get('roluser') != 5 %}
+                                            <button type="button" class="btn btn-red" onclick="eliminarArea({{cursoOferta.id}},'{{cursoOferta.asignatura}}')" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+
+{% else %}
+    <div class="alert alert-warning"><i class="fa fa-warning"></i> El curso no tiene areas humanísticas asignadas</div>
+{% endif %}
+<hr>
+<div style="display:none">
+<h4><i class="fa fa-list-alt"></i> Áreas Técnicas
+    <span style="float:right; margin-bottom:10px">
+        <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Área</button>
+    </span>
+</h4>
+{% if areasCurso is empty %}
+
+{% else %}
+    <div class="alert alert-warning"><i class="fa fa-info-circle"></i> No hay áreas técnicas asignadas</div>
+{% endif %}
+</div>
+</strong>
+<script>
+    $(document).ready( function(){
+        $(".tooltips").tooltip();
+    });
+</script>

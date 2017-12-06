@@ -1,0 +1,30 @@
+sie_especialidadHumanisticoTecnico:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:EspecialidadTipoHumnisticoTecnico:index" }
+
+sie_especialidadHumanisticoTecnico_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieRegularBundle:EspecialidadTipoHumnisticoTecnico:show" }
+
+sie_especialidadHumanisticoTecnico_new:
+    path:     /new
+    defaults: { _controller: "SieRegularBundle:EspecialidadTipoHumnisticoTecnico:new" }
+
+sie_especialidadHumanisticoTecnico_create:
+    path:     /create
+    defaults: { _controller: "SieRegularBundle:EspecialidadTipoHumnisticoTecnico:create" }
+    methods:  POST
+
+sie_especialidadHumanisticoTecnico_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieRegularBundle:EspecialidadTipoHumnisticoTecnico:edit" }
+
+sie_especialidadHumanisticoTecnico_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieRegularBundle:EspecialidadTipoHumnisticoTecnico:update" }
+    methods:  [POST, PUT]
+
+sie_especialidadHumanisticoTecnico_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieRegularBundle:EspecialidadTipoHumnisticoTecnico:delete" }
+    methods:  [POST, DELETE]

@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\GradoDiscapacidadTipo:
+    type: entity
+    table: grado_discapacidad_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gradoDiscapacidad:
+            type: string
+            nullable: false
+            length: 70
+            fixed: false
+            comment: ''
+            column: grado_discapacidad
+    lifecycleCallbacks: {  }

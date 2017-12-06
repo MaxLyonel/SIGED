@@ -1,0 +1,47 @@
+inicial_primaria_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InicialPrimaria:index }
+
+inicial_primaria_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InicialPrimaria:result }
+
+inicial_primaria_saveMateriasNotas:
+    path: /saveMateriasNotas
+    defaults: { _controller: SieRegularBundle:InicialPrimaria:saveMateriasNotas }
+    
+inicial_primaria_new:
+    path: /new
+    defaults: { _controller: SieRegularBundle:InicialPrimaria:new }
+    
+inicial_primaria_exist:
+    path: /exist
+    defaults: { _controller: SieRegularBundle:InicialPrimaria:exist}
+    
+inicial_primaria_savenew:
+    path: /savenew
+    defaults: { _controller: SieRegularBundle:InicialPrimaria:savenew}
+    
+inicial_primaria_findIE:
+     path:    /findIE/{id}
+     defaults: { _controller: SieRegularBundle:InicialPrimaria:findIE }
+     options:
+         expose: true   
+
+inicial_primaria_findgrado:
+     path:    /findgrado/{idnivel}/{sie}
+     defaults: { _controller: SieRegularBundle:InicialPrimaria:findgrado }
+     options:
+         expose: true
+
+inicial_primaria_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}
+     defaults: { _controller: SieRegularBundle:InicialPrimaria:findparalelo }
+     options:
+         expose: true
+         
+inicial_primaria_findturno:         
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieRegularBundle:InicialPrimaria:findturno }
+    options:
+        expose: true    

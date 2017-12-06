@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaAcreditacionTipo:
+    type: entity
+    table: institucioneducativa_acreditacion_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        institucioneducativaAcreditacion:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: institucioneducativa_acreditacion
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

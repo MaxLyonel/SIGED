@@ -1,0 +1,11 @@
+{% for estudent in po %}
+    <div>
+        <div class="media-object pull-left has-notif">
+            <i class="fa fa-flash"></i>
+        </div><!-- /.media-object -->
+        <div class="media-body">
+            <span class="media-heading">{{estudent.paterno}} {{estudent.materno}} {{estudent.nombre}} :{{estudent.codigo_rude}}</span>
+            <span  class="media-meta time"> {% if estudent.fecha_registro %}{{ estudent.fecha_registro|date('d/m/Y') }}{% endif %}</span>
+        </div>
+    </div>    
+{% endfor %}

@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\FormularioRue:
+    type: entity
+    table: formulario_rue
+    indexes:
+        IDX_8D852E8C3AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        operacionRue:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: operacion_rue
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+    oneToMany:
+      registros:
+        targetEntity: RegistroRue
+        mappedBy: formularioRue
+            
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: 
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

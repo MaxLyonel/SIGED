@@ -1,0 +1,52 @@
+Sie\AppWebBundle\Entity\ConvenioTipo:
+    type: entity
+    table: convenio_tipo
+    uniqueConstraints:
+        convenio_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        convenio:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        fechaInicio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFinalizacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_finalizacion
+        duracion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        tipoConvenio:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: tipo_convenio
+        codDependenciaId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: cod_dependencia_id
+    lifecycleCallbacks: {  }

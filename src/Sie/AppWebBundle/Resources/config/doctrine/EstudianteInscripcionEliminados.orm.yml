@@ -1,0 +1,187 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionEliminados:
+    type: entity
+    table: estudiante_inscripcion_eliminados
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estudianteInscripcionId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estudiante_inscripcion_id
+        estadomatriculaTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estadomatricula_tipo_id
+        estudianteId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estudiante_id
+        numMatricula:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: num_matricula
+        observacionId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: observacion_id
+        observacion:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: ''
+        fechaInscripcion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inscripcion
+        apreciacionFinal:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: apreciacion_final
+        operativoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: operativo_id
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        organizacion:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        facilitadorpermanente:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        modalidadTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: modalidad_tipo_id
+        acreditacionnivelTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: acreditacionnivel_tipo_id
+        permanenteprogramaTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: permanenteprograma_tipo_id
+        fechaInicio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        cursonombre:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        lugar:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        lugarcurso:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        facilitadorcurso:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        fechainiciocurso:
+            type: date
+            nullable: true
+            comment: ''
+        fechafincurso:
+            type: date
+            nullable: true
+            comment: ''
+        codUeProcedenciaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_ue_procedencia_id
+        institucioneducativaCursoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_curso_id
+        estadomatriculaInicioTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estadomatricula_inicio_tipo_id
+        obsEliminacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: obs_eliminacion
+        usuarioId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        fechaEliminacion:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_eliminacion
+        doc:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

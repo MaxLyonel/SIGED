@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Registro de Unidades Educativas - RUE</title>
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="{{asset('webRue/assets/css/bootstrap.css')}}" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="{{asset('webRue/assets/css/waves.css')}}" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="{{asset('webRue/assets/css/animate.css')}}" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="{{asset('webRue/assets/css/style.css')}}" rel="stylesheet">
+</head>
+
+<body class="login-page bg-teal">
+    <div class="login-box">
+        <div class="logo">
+            <a href="javascript:void(0);"><b>RUE</b></a>
+            <small>Registro de Unidades Educativas</small>
+        </div>
+        <div class="card">
+            <div class="body">
+                <!--form id="sign_in" method="POST"-->
+                <form class="form-signin" action="{{path('login_check')}}" accept-charset="utf-8" method="post">
+                    <div class="msg font-bold text-center">Ingrese sus credenciales para iniciar sesión</div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                                <input type="text" class="form-control" id="username" name="_username" autocomplete="off" value="{{ last_username }}" required placeholder="Usuario">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                                <input type="password" class="form-control" id="password" name="_password" autocomplete="off" value="" placeholder="Contraseña" required>
+                        </div>
+                    </div>   
+                    <div class="form-group col-blue">
+                        <input id="checkbox" name="checkbox" aria-required="true" type="checkbox" required>
+                        <label for="checkbox">Validar los datos</label>
+                    </div>                 
+                    
+                    
+                    {% if error %}
+                        <div class="alert alert-danger align-center font-bold col-orange">
+                            <i class="material-icons">error</i> {{ error.message|trans }}
+                        </div>
+                    {% endif %}
+                    
+                    
+                    <div class="row">
+                        <div class="col-xs-6 col-xs-offset-3">
+                            {#{ form_widget(form.save, { 'attr': {'class': '' } }) }#}
+                            <button class="btn btn-block bg-blue waves-effect btn-floating-action ink-reaction" type="submit">Ingresar</button>
+                        </div>
+                    </div>
+                   {#<div class="row">
+                        <div class="col-xs-12 text-center font-bold">
+                            ----- ó -----
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-8 col-xs-offset-2">
+                            <a href="{{path('consulta_rue')}}" class="btn btn-block bg-orange waves-effect">Continuar como invitado</a>
+                        </div>
+                    </div>#}
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jquery Core Js -->
+    <script src="{{asset('webRue/assets/js/jquery.min.js')}}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{{asset('webRue/assets/js/bootstrap.js')}}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{{asset('webRue/assets/js/waves.js')}}"></script>
+
+    <!-- Validation Plugin Js -->
+    <script src="{{asset('webRue/assets/js/jquery.validate.js')}}"></script>
+
+    <!-- Custom Js -->
+    <script src="{{asset('webRue/assets/js/admin.js')}}"></script>
+
+    <!-- GLOBAL SCRIPTS -->
+    <script src="{{asset('js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
+    <!-- HISRC Retina Images -->
+    <script src="{{asset('js/plugins/hisrc/hisrc.js')}}"></script>
+
+    <!-- THEME SCRIPTS -->
+    <script>
+    $('#sie_appwebbundle_usuario_save').click(function () {
+
+        if ($('#sie_appwebbundle_usuario_username').val() == '' && $('#sie_appwebbundle_usuario_password').val() == '') {
+            $('#myModal').modal('show');
+            return false;
+        }
+        $('#sie_appwebbundle_usuario').submit();
+
+    });
+
+    $("#form_captcha").keyup(function () {
+        $("#form_captcha").val($("#form_captcha").val().toUpperCase());
+    });
+
+    function showCaptcha() {
+        element = document.getElementById("divCaptcha");
+        check = document.getElementById("form_check");
+        captcha = document.getElementById("form_captcha");
+        if (check.checked) {
+            element.style.display = 'none';
+            $('#form_captcha').removeAttr("required");
+            $('#form_captcha').val('');
+        }
+        else {
+            element.style.display = 'block';
+            $('#form_captcha').attr('required', 'true');
+        }
+    }
+    </script>
+    <script src="{{asset('validator/js/validator.js')}}"></script>
+</body>
+
+</html>

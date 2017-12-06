@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    {% block stylesheets %}
+        <head>
+
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="description" content="">
+            <meta name="author" content="">
+
+            <title>Bono Juancito Pinto</title>
+
+            <!-- PACE LOAD BAR PLUGIN - This creates the subtle load bar effect at the top of the page. -->
+            <link href="{{ asset('css/plugins/pace/pace.css')}}" rel="stylesheet">
+            <script src="{{ asset('js/plugins/pace/pace.js')}}"></script>
+
+            <link href='http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic' rel='stylesheet' type='text/css'>
+
+            <!-- GLOBAL STYLES - Include these on every page. -->
+            <link href="{{ asset('css/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+            <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel="stylesheet" type="text/css">
+            <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel="stylesheet" type="text/css">
+            <link href="{{ asset('css/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+
+            <!-- PAGE LEVEL PLUGIN STYLES -->
+            <link href="{{ asset('css/plugins/messenger/messenger-theme-flat.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/messenger/messenger.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/morris/morris.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/jvectormap/jquery-jvectormap-1.2.2.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/datatables/datatables.css') }}" rel="stylesheet">
+            <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+            <link href="{{asset('css/plugins/bootstrap-tokenfield/tokenfield-typeahead.css') }}" rel="stylesheet">
+            <link href="{{asset('css/plugins/bootstrap-tokenfield/bootstrap-tokenfield.css') }}" rel="stylesheet">
+            <!-- THEME STYLES - Include these on every page. -->
+            <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins.css') }}" rel="stylesheet">
+
+            <!-- THEME DEMO STYLES - Use these styles for reference if needed. Otherwise they can be deleted. -->
+            <link href="{{ asset('css/demo.css') }}" rel="stylesheet">
+
+            <!--[if lt IE 9]>
+        <script src="{{asset('bower_components/html5shiv/dist/html5shiv.js')}}"></script>
+        <script src="{{asset('bower_components/respond/src/respond.min.js')}}"></script>
+        <![endif]-->
+            <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
+            <link href="{{asset('css/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css')}}" rel="stylesheet">
+
+            <link href="{{asset('css/jquery.typeahead.min.css')}}" rel="stylesheet">
+            <link href="{{asset('css/initialize.css')}}" rel="stylesheet">
+            <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+            <link href="{{asset('bower_components/summernote/dist/summernote-bs3.css') }}" rel="stylesheet">
+            <link href="{{asset('bower_components/summernote/dist/summernote.css') }}" rel="stylesheet">
+        </head>
+    {% endblock %}
+    <body>
+        <div id="wrapper">
+
+            <!-- begin TOP NAVIGATION -->
+            <nav class="navbar-top" role="navigation">
+
+                <!-- begin BRAND HEADING -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle pull-right" data-toggle="collapse" data-target=".sidebar-collapse">
+                        <i class="fa fa-bars"></i> Menu
+                    </button>
+                    <div class="navbar-brand">
+                        <a href="{{path('principal_web')}}">
+                            <img src="{{asset('img/juancito1.png') }}" data-1x="{{asset('img/juancito1.png')}}" data-2x="{{asset('img/juancito1.png')}}" class="hisrc img-responsive" alt="">
+                        </a>
+                    </div>
+                </div>
+                <!-- end BRAND HEADING -->
+
+                <div class="nav-top">
+
+                    <!-- begin LEFT SIDE WIDGETS -->
+                    <ul class="nav navbar-left">
+                        <li class="tooltip-sidebar-toggle">
+                            <a href="index.html#" id="sidebar-toggle" data-toggle="tooltip" data-placement="right" title="Menu principal">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </li>
+                        <!-- You may add more widgets here using <li> -->
+                    </ul>
+                    <!-- end LEFT SIDE WIDGETS -->
+
+                    <!-- begin MESSAGES/ALERTS/TASKS/USER ACTIONS DROPDOWNS -->
+                    <ul class="nav navbar-right">
+
+                        <!-- begin MESSAGES DROPDOWN -->
+                        <li class="dropdown">
+                            <a href="index.html#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-envelope"></i>
+                                {% if app.session.get('mensajesNuevosT')>0 %}<span class="number">{{ app.session.get('mensajesNuevosT') }}</span>{% endif %}<i class="fa fa-caret-down"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-scroll dropdown-messages">
+
+                                <!-- Messages Dropdown Heading -->
+                                <li class="dropdown-header">
+                                    <i class="fa fa-envelope"></i> {{ app.session.get('mensajesNuevosT') }} Nuevo(s) Mensaje(s)
+                                </li>
+                                <!-- Messages Dropdown Body - This is contained within a SlimScroll fixed height box. You can change the height using the SlimScroll jQuery features. -->
+                                <li id="messageScroll">
+                                    <ul class="list-unstyled">
+                                        {% for mensaje in app.session.get('mensajesNuevos') %}
+                                            <li>
+                                                <a href="{{ path('mensaje_readed_inbox', { 'id': mensaje.id }) }}">
+                                                    <div class="row">
+                                                        <div class="col-xs-2">
+                                                            <img class="img-circle img-profile" src="{{asset('img/profile-picture.png') }}" alt="{{ mensaje.paterno }} {{ mensaje.materno }} {{ mensaje.nombre }}">
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <p>
+                                                                De: <strong>{{ mensaje.paterno }} {{ mensaje.materno }} {{ mensaje.nombre }}</strong>
+                                                            </p>
+                                                            <p>
+                                                                Asunto: <strong>{% if mensaje.asunto %}{{ mensaje.asunto }}{% else %}(sin asunto){% endif %}</strong>
+                                                            </p>
+                                                            <p class="small">
+                                                                <i class="fa fa-clock-o"></i> {% if mensaje.fecha %}{{ mensaje.fecha|date('d-m-Y H:i:s') }}{% endif %}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                <h5 class="list-group-item-heading text-danger"><i class="fa fa-info-circle fa-fw"></i> No tiene nuevos mensajes</h5>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+
+                                <!-- Messages Dropdown Footer -->
+                                <li class="dropdown-footer">
+                                    <a href="{{ path('mensaje') }}">Leer todos los mensajes</a>
+                                </li>
+
+                            </ul>
+                            <!-- /.dropdown-menu -->
+                        </li>
+                        <!-- /.dropdown -->
+                        <!-- end MESSAGES DROPDOWN -->
+
+                        <!-- begin ALERTS DROPDOWN -->
+
+                        <!-- end ALERTS DROPDOWN -->
+
+                        <!-- begin TASKS DROPDOWN -->
+
+
+                        <!-- /.dropdown -->
+                        <!-- end TASKS DROPDOWN -->
+
+                        <!-- begin USER ACTIONS DROPDOWN -->
+                        <li class="dropdown">
+                            <a href="index.html#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-user"></i>  <i class="fa fa-caret-down"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <!--li>
+{#                                    <a href="{{path('persona_main')}}">#}
+                                        <i class="fa fa-user"></i> <span class="text-blue"> Mi Perfil</span>
+                                    </a>
+                                </li-->
+                                <!--li>
+                                    <a href="mailbox.html">
+                                        <i class="fa fa-envelope"></i> My Messages
+                                        <span class="badge blue pull-right">4</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index.html#">
+                                        <i class="fa fa-bell"></i> My Alerts
+                                        <span class="badge orange pull-right">9</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index.html#">
+                                        <i class="fa fa-tasks"></i> My Tasks
+                                        <span class="badge blue pull-right">10</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="calendar.html">
+                                        <i class="fa fa-calendar"></i> My Calendar
+                                    </a>
+                                </li>
+                                <li class="divider"></li-->
+                                {% if (app.session.get('roluser') == '7')
+                                        or (app.session.get('roluser') == '8')
+                                        or (app.session.get('roluser') == '10')
+                                        or (app.session.get('roluser') == '30')
+                                        or (app.session.get('roluser') == '9')
+                                %}
+                                <li>
+                                    <a href="{{path('sie_usuarios_homepage')}}">
+                                        <i class="fa fa-gear"></i> <span class="text-blue"> Gestión de Usuarios</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                <li>
+                                    <a class="logout_open" href="index.html#logout">
+                                        <i class="fa fa-sign-out"></i><span class="text-red"> Salir</span>
+                                        <strong>{{ app.session.get('name') }}</strong>
+                                    </a>
+                                </li>
+                            </ul>
+                            <!-- /.dropdown-menu -->
+                        </li>
+                        <!-- /.dropdown -->
+                        <!-- end USER ACTIONS DROPDOWN -->
+
+                    </ul>
+                    <!-- /.nav -->
+                    <!-- end MESSAGES/ALERTS/TASKS/USER ACTIONS DROPDOWNS -->
+
+                </div>
+                <!-- /.nav-top -->
+            </nav>
+            <!-- /.navbar-top -->
+            <!-- end TOP NAVIGATION -->
+
+            <!-- begin SIDE NAVIGATION -->
+            <nav class="navbar-side" role="navigation">
+                <div class="navbar-collapse sidebar-collapse collapse">
+                    <ul id="side" class="nav navbar-nav side-nav">
+                        <!-- begin SIDE NAV USER PANEL -->
+                        <li class="side-user hidden-xs">
+                            {% if app.session.get('userfoto') is empty %}
+                                <img class="img-circle" src ="/uploads/krlos.jpg " height="150" width="150" >
+                            {% else %}
+                                <img class="img-circle" src ="/uploads/personasfotos/{{app.session.get('userfoto')}} " height="150" width="150" >
+                            {% endif %}
+                            <p class="welcome">
+                                <i class="fa fa-key"></i> Bienvenida/o
+                            </p>
+                            <p class="name tooltip-sidebar-logout">
+                                {{ app.session.get('name') }}
+                                <span class="last-name"> {{ app.session.get('lastname') }}</span> <a style="color: inherit" class="logout_open" href="index.html#logout" data-toggle="tooltip" data-placement="top" title="Salir"><i class="fa fa-sign-out"></i></a>
+                            </p>
+                            <div class="clearfix"></div>
+                        </li>
+                        <!-- end SIDE NAV USER PANEL -->
+
+                        <!-- begin DASHBOARD LINK -->
+
+                    {% if (app.session.get('roluser') == '35')
+                        
+                    %}
+                            <li class="panel">
+                              
+                              <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas0">
+                               <i class="fa fa-fw"></i> Administración <i class="fa fa-caret-down"></i>
+                           </a>
+                        
+                           <ul class="collapse nav" id="menuAreas0">
+                               <li>
+                                   <a href="{{ path('PagosBono') }}">
+                                       <i class="fa fa-fw"></i> Cargado de Datos Programados
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ path('ReclamoInstitucionEducativa') }}">
+                                       <i class="fa fa-fw"></i> Autorizacion Unidades Educativas (Reclamos)
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ path('modificacionNotasCero') }}">
+                                       <i class="fa fa-fw"></i> Consultas
+                                   </a>
+                               </li>
+                           </ul>
+
+                           <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas1">
+                            <i class="fa fa-fw"></i> Material de Entrega <i class="fa fa-caret-down"></i>
+                        </a>                        
+                        <ul class="collapse nav" id="menuAreas1">
+                            <li>
+                                <a href="{{ path('CaratulasBono') }}">
+                                    <i class="fa fa-fw"></i> Carátulas
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('InstructivoBono') }}">
+                                    <i class="fa fa-fw"></i> Instructivo
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('PlanillasEntregaBono') }}">
+                                    <i class="fa fa-fw"></i> Planillas de Entrega
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('PlanillasReposicionBono') }}">
+                                    <i class="fa fa-fw"></i> Planillas para Reposición
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('ActaBono') }}">
+                                    <i class="fa fa-fw"></i> Acta de Recepción
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('InstitucionesSinEstudiantesBono') }}">
+                                    <i class="fa fa-fw"></i> Unidades Educativas sin Estudiantes
+                                </a>
+                            </li>
+                        </ul>
+
+                        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas2">
+                               <i class="fa fa-fw"></i> Resultados Preliminares <i class="fa fa-caret-down"></i>
+                           </a>
+                           <ul class="collapse nav" id="menuAreas2">
+                               <li>
+                                   <a href="{{ path('RegistroResultados') }}">
+                                       <i class="fa fa-fw"></i> Registro de Resultados
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ path('ReportePreliminarBono') }}">
+                                       <i class="fa fa-fw"></i> Reporte Preliminar
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ path('InstitucionesPagadasBono') }}">
+                                       <i class="fa fa-fw"></i> Unidades Educativas Pagadas
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="javascript:;" data-parent="#side21" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas21">
+                                       <i class="fa fa-fw"></i> Impresión del Avance (Estudiante)<i class="fa fa-caret-down"></i>
+                                   </a>
+                                   <ul class="collapse nav" id="menuAreas21">
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceEstudianteDepartamentoBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceEstudianteAreaBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceEstudianteFuerzaBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceEstudianteUnidadBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Unidad Militar
+                                           </a>
+                                       </li>
+                                   </ul>
+
+                               </li>
+                               <li>
+                                   <a href="javascript:;" data-parent="#side22" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas22">
+                                   <i class="fa fa-fw"></i> Impresión del Avance (Unidad Educativa)
+                                   <i class="fa fa-caret-down"></i>
+                                   </a>
+                                    <ul class="collapse nav" id="menuAreas22">
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceInstitucionDepartamentoBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceInstitucionAreaBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceInstitucionFuerzaBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceInstitucionUnidadBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Unidad Militar
+                                           </a>
+                                       </li>
+                                   </ul>
+                               </li>
+                               <li>
+                                   <a href="javascript:;" data-parent="#side23" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas23">
+                                   <i class="fa fa-fw"></i>  Impresión del Avance "D" (Estudiante)
+                                   <i class="fa fa-caret-down"></i>
+                                   </a>
+                                    <ul class="collapse nav" id="menuAreas23">
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceDDepartamentoBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceDAreaBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceDFuerzaBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                           </a>
+                                       </li>
+                                   </ul>
+                               </li>
+                               <li>
+                                   <a href="javascript:;" data-parent="#side24" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas24">
+                                   <i class="fa fa-fw"></i>  DESPACHO Impresión del Avance (Unidades Educativas)
+                                   <i class="fa fa-caret-down"></i>
+                                   </a>
+                                    <ul class="collapse nav" id="menuAreas24">
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceDespachoBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Sin Supuestos
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('DespachoConSupuestosBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Con Supuesto
+                                           </a>
+                                       </li>
+                                   </ul>
+                               </li>
+                           </ul>
+
+                           <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas3">
+                                <i class="fa fa-fw"></i> Resultados Finales <i class="fa fa-caret-down"></i>
+                            </a>
+                            <ul class="collapse nav" id="menuAreas3">
+                                <li>
+                                    <a href="javascript:;" data-parent="#side31" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas31">
+                                        <i class="fa fa-fw"></i> Impresión de Reportes Finales (Unidad Educativa)<i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuAreas31">
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Municipio
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Distrito
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Subsistema
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Dependencia
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Unidad Militar
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-parent="#side32" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas32">
+                                        <i class="fa fa-fw"></i> Impresión de Reportes Finales (Estudiantes)<i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuAreas32">
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Municipio
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Distrito
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Subsistema
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Dependencia
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Unidad Militar
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-parent="#side33" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas33">
+                                        <i class="fa fa-fw"></i> Impresión de Reportes Finales (Estudiantes Inhabilitados)<i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuAreas33">
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Municipio
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Subsistema
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Dependencia
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Unidad Militar
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-parent="#side34" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas34">
+                                        <i class="fa fa-fw"></i> Impresión de Reportes Finales (Unidades Educativas sin Estudiantes)<i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuAreas34">
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Municipio
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Distrito
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-parent="#side35" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas35">
+                                        <i class="fa fa-fw "></i> Impresión de Reportes Finales (Estudiantes por Grado)<i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuAreas35">
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Municipio
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Distrito
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="{{ path('ImpresionAvanceBono') }}">
+                                        <i class="fa fa-fw"></i> Estudiantes Duplicados
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('ImpresionAvanceBono') }}">
+                                        <i class="fa fa-fw"></i> Exportar Reportes Finales
+                                    </a>
+                                    {# <a href="{{ path('areas') }}">
+                                        <i class="fa fa-fw"></i> Exportar Reportes Finales
+                                    </a> #}
+                                </li>
+                            </ul>
+
+                            <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas4">
+                               <i class="fa fa-fw"></i> Entrega del Bono <i class="fa fa-caret-down"></i>
+                           </a>
+                           <ul class="collapse nav" id="menuAreas4">
+                               <li>
+                                   <a href="{{ path('PagosBono') }}">
+                                       <i class="fa fa-fw"></i> Pago
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ path('ControlPagosBono') }}">
+                                       <i class="fa fa-fw"></i> Control de Pagos
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ path('AbrirInstitucionesBono') }}">
+                                       <i class="fa fa-fw"></i> Abrir Unidades Educativas
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ path('ReasignarInstitucionBono') }}">
+                                       <i class="fa fa-fw"></i> Reasignar Unidad Educativa
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ path('TerminarPagosBono') }}">
+                                       <i class="fa fa-fw"></i> Terminar Pago
+                                   </a>
+                               </li>
+                           </ul>
+
+
+                           <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas5">
+                               <i class="fa fa-bars"></i> Impresion de Formularios <i class="fa fa-caret-down"></i>
+                           </a>
+                           <ul class="collapse nav" id="menuAreas5">
+                               <li>
+                                   <a href="{{ path('FormularioABono') }}">
+                                       <i class="fa fa-fw"></i> Formulario "A"
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ path('FormularioBBono') }}">
+                                       <i class="fa fa-fw"></i> Formulario "B"
+                                   </a>
+                               </li>
+                           </ul>
+
+                           <a href="{{ path('PagosBono') }}">
+                               <i class="fa fa-bars"></i> Inicio
+                           </a>
+
+                </li>
+                {% endif%}
+
+                    {% if (app.session.get('roluser') == '36')
+                        
+                    %}
+                            <li class="panel">
+                              
+                              <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas0">
+                               <i class="fa fa-fw"></i> Administración <i class="fa fa-caret-down"></i>
+                           </a>
+                        
+                           <ul class="collapse nav" id="menuAreas0">
+                           <li>
+                                    <a href="{{ path('modificacionNotasCero') }}">
+                                       <i class="fa fa-fw"></i> Consultas
+                                   </a>
+                               </li>
+                           </ul>
+
+
+                        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas2">
+                               <i class="fa fa-fw"></i> Resultados Preliminares <i class="fa fa-caret-down"></i>
+                           </a>
+                           <ul class="collapse nav" id="menuAreas2">
+                               <li>
+                                   <a href="{{ path('ReportePreliminarBono') }}">
+                                       <i class="fa fa-fw"></i> Reporte Preliminar
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ path('InstitucionesPagadasBono') }}">
+                                       <i class="fa fa-fw"></i> Unidades Educativas Pagadas
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="javascript:;" data-parent="#side21" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas21">
+                                       <i class="fa fa-fw"></i> Impresión del Avance (Estudiante)<i class="fa fa-caret-down"></i>
+                                   </a>
+                                   <ul class="collapse nav" id="menuAreas21">
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Unidad Militar
+                                           </a>
+                                       </li>
+                                   </ul>
+
+                               </li>
+                               <li>
+                                   <a href="javascript:;" data-parent="#side22" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas22">
+                                   <i class="fa fa-fw"></i> Impresión del Avance (Unidad Educativa)
+                                   <i class="fa fa-caret-down"></i>
+                                   </a>
+                                    <ul class="collapse nav" id="menuAreas22">
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Unidad Militar
+                                           </a>
+                                       </li>
+                                   </ul>
+                               </li>
+                               <li>
+                                   <a href="javascript:;" data-parent="#side23" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas23">
+                                   <i class="fa fa-fw"></i>  Impresión del Avance "D" (Estudiante)
+                                   <i class="fa fa-caret-down"></i>
+                                   </a>
+                                    <ul class="collapse nav" id="menuAreas23">
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                           </a>
+                                       </li>
+                                   </ul>
+                               </li>
+                               <li>
+                                   <a href="javascript:;" data-parent="#side24" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas24">
+                                   <i class="fa fa-fw"></i>  DESPACHO Impresión del Avance (Unidades Educativas)
+                                   <i class="fa fa-caret-down"></i>
+                                   </a>
+                                    <ul class="collapse nav" id="menuAreas24">
+                                       <li>
+                                           <a href="{{ path('ImpresionAvanceBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Sin Supuestos
+                                           </a>
+                                       </li>
+                                       <li>
+                                           <a href="{{ path('DespachoConSupuestosBono') }}">
+                                               <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Con Supuesto
+                                           </a>
+                                       </li>
+                                   </ul>
+                               </li>
+                           </ul>
+
+                           <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas3">
+                                <i class="fa fa-fw"></i> Resultados Finales <i class="fa fa-caret-down"></i>
+                            </a>
+                            <ul class="collapse nav" id="menuAreas3">
+                                <li>
+                                    <a href="javascript:;" data-parent="#side31" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas31">
+                                        <i class="fa fa-fw"></i> Impresión de Reportes Finales (Unidad Educativa)<i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuAreas31">
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Municipio
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Distrito
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Subsistema
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Dependencia
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Unidad Militar
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-parent="#side32" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas32">
+                                        <i class="fa fa-fw"></i> Impresión de Reportes Finales (Estudiantes)<i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuAreas32">
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Municipio
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Distrito
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Subsistema
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Dependencia
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Unidad Militar
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-parent="#side33" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas33">
+                                        <i class="fa fa-fw"></i> Impresión de Reportes Finales (Estudiantes Inhabilitados)<i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuAreas33">
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Municipio
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Tipo de Area
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Subsistema
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Dependencia
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Fuerza Militar
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Unidad Militar
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-parent="#side34" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas34">
+                                        <i class="fa fa-fw"></i> Impresión de Reportes Finales (Unidades Educativas sin Estudiantes)<i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuAreas34">
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Municipio
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Distrito
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-parent="#side35" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas35">
+                                        <i class="fa fa-fw "></i> Impresión de Reportes Finales (Estudiantes por Grado)<i class="fa fa-caret-down"></i>
+                                    </a>
+                                    <ul class="collapse nav" id="menuAreas35">
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Departamento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Municipio
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ImpresionAvanceBono') }}">
+                                                <i class="fa fa-fw"></i><i class="fa fa-fw"></i> Por Distrito
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="{{ path('ImpresionAvanceBono') }}">
+                                        <i class="fa fa-fw"></i> Estudiantes Duplicados
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('ImpresionAvanceBono') }}">
+                                        <i class="fa fa-fw"></i> Exportar Reportes Finales
+                                    </a>
+                                    {# <a href="{{ path('areas') }}">
+                                        <i class="fa fa-fw"></i> Exportar Reportes Finales
+                                    </a> #}
+                                </li>
+                            </ul>
+
+                           <a href="{{ path('PagosBono') }}">
+                               <i class="fa fa-bars"></i> Inicio
+                           </a>
+
+                </li>
+                {% endif%}
+        {% if (app.session.get('roluser') == '37')
+                    %} 
+                            <li class="panel">
+                             
+                             
+                         
+                                   <a href="{{ path('PagosBono') }}">
+                                       <i class="fa fa-fw"></i> Pago
+                                   </a>
+                               
+                                   <a href="{{ path('ControlPagosBono') }}">
+                                       <i class="fa fa-fw"></i> Control de Pagos
+                                   </a>
+                               
+                                   <a href="{{ path('TerminarPagosBono') }}">
+                                       <i class="fa fa-fw"></i> Terminar Pago
+                                   </a>
+
+                           <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuAreas5">
+                               <i class="fa fa-bars"></i> Impresion de Formularios <i class="fa fa-caret-down"></i>
+                           </a>
+                           <ul class="collapse nav" id="menuAreas5">
+                               <li>
+                                   <a href="{{ path('FormularioABono') }}">
+                                       <i class="fa fa-fw"></i> Formulario "A"
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ path('FormularioBBono') }}">
+                                       <i class="fa fa-fw"></i> Formulario "B"
+                                   </a>
+                               </li>
+                           </ul>
+
+                           <a href="{{ path('PagosBono') }}">
+                               <i class="fa fa-bars"></i> Inicio
+                           </a>
+
+                </li>
+             {% endif%} 
+
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- /.navbar-side -->
+            <!-- end SIDE NAVIGATION -->
+
+            <!-- begin MAIN PAGE CONTENT -->
+            <div id="page-wrapper">
+
+
+
+
+                <div class="page-content">
+                    {% block contentoption %}
+                        <!-- here the iptions content -->
+                    {% endblock %}
+                </div>
+                <!-- /.page-content -->
+
+            </div>
+            <!-- /#page-wrapper -->
+            <!-- end MAIN PAGE CONTENT -->
+
+        </div>
+        <!-- /#wrapper -->
+
+
+        {% block javascripts %}
+            <!-- GLOBAL SCRIPTS -->
+            <script src="{{asset('bower_components/jquery/dist/jquery.min.js')}}"></script>
+            <script src="{{ asset('js/plugins/bootstrap/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/popupoverlay/jquery.popupoverlay.js') }}"></script>
+            <script src="{{ asset('js/plugins/popupoverlay/defaults.js') }}"></script>
+            <!-- Logout Notification Box -->
+            <div id="logout">
+                <div class="logout-message">
+                    {% if app.session.get('userfoto') is empty %}
+                        <img class="img-circle" src ="/uploads/krlos.jpg " height="150" width="150" >
+                    {% else %}
+                        <img class="img-circle" src ="/uploads/{{app.session.get('userfoto')}} " height="150" width="150" >
+                    {% endif %}
+                    <!--img class="img-circle img-logout" src="{{asset('img/profile-pic.jpg') }}" alt=""-->
+                    <h3>
+                        <i class="fa fa-sign-out text-blue"></i> ¿Lista/o para salir?
+                    </h3>
+                    <p>Seleciona "Salir" si estas lista/o<br> para terminar tu sesión en el sistema.</p>
+                    <ul class="list-inline">
+                        <li>
+                            <a href="{{path('logout')}}" class="btn btn-blue">
+                                <strong>Salir</strong>
+                            </a>
+                        </li>
+                        <li>
+                            <button class="logout_close btn btn-blue">Cancel</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /#logout -->
+            <!-- Logout Notification jQuery -->
+            <script src="{{ asset('js/plugins/popupoverlay/logout.js') }}"></script>
+            <!-- HISRC Retina Images -->
+            <script src="{{ asset('js/plugins/hisrc/hisrc.js') }}"></script>
+
+            <!-- PAGE LEVEL PLUGIN SCRIPTS -->
+            <script src="{{ asset('js/plugins/bootstrap-tokenfield/bootstrap-tokenfield.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/bootstrap-tokenfield/scrollspy.js') }}"></script>
+            <script src="{{ asset('js/plugins/bootstrap-tokenfield/affix.js') }}"></script>
+            <script src="{{ asset('js/plugins/bootstrap-tokenfield/typeahead.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/bootstrap-maxlength/bootstrap-maxlength.js') }}"></script>
+            <!-- HubSpot Messenger -->
+            <script src="{{ asset('js/plugins/messenger/messenger.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/messenger/messenger-theme-flat.js') }}"></script>
+            <!-- Date Range Picker -->
+            <script src="{{ asset('js/plugins/daterangepicker/moment.js') }}"></script>
+            <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+            <!-- Morris Charts -->
+            <script src="{{ asset('js/plugins/morris/raphael-2.1.0.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/morris/morris.js') }}"></script>
+            <!-- Flot Charts -->
+            <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
+            <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+            <!-- Sparkline Charts -->
+            <script src="{{ asset('js/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
+            <!-- Moment.js -->
+            <script src="{{ asset('bower_components/moment/moment.js') }}"></script>
+            <script src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+            <!-- jQuery Vector Map -->
+            <script src="{{ asset('js/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/jvectormap/maps/jquery-jvectormap-world-mill-en.js') }}"></script>
+            <script src="{{ asset('js/demo/map-demo-data.js') }}"></script>
+            <!-- Easy Pie Chart -->
+            <script src="{{ asset('js/plugins/easypiechart/jquery.easypiechart.min.js') }}"></script>
+            <!-- DataTables -->
+            <script src="{{ asset('js/plugins/datatables/jquery.dataTables.js') }}"></script>
+            <script src="{{ asset('js/plugins/datatables/datatables-bs3.js') }}"></script>
+
+            <!-- THEME SCRIPTS -->
+            <script src="{{ asset('js/flex.js') }}"></script>
+            <script src="{{asset('js/demo/advanced-form-demo.js')}}"></script>
+            <script src="{{ asset('js/demo/dashboard-demo.js') }}"></script>
+            <!--script src="{{ asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
+            <script src="{{ asset('js/demo/validation-demo.js')}}"></script-->
+            <script src="{{asset('validator/js/validator.js')}}"></script>
+
+            <script src="{{asset('js/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js')}}"></script>
+            <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
+
+            <script src="{{asset('js/jquery.typeahead.min.js')}}"></script>
+
+            <script src="{{asset('js/funciones.js')}}"></script>
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+            <script src="{{ asset('js/initialize.js')}}"></script>
+            <script>
+                var datetime = null,
+                        date = null;
+
+                var update = function () {
+                    date = moment(new Date());
+                    date = date.locale('fr');
+                    datetime.html(date.format('dddd<br>D [de] MMMM [de] YYYY<br>h:mm:ss A'));
+                };
+
+                $(document).ready(function () {
+                    datetime = $('#datetime');
+                    update();
+                    setInterval(update, 1000);
+                });
+
+                $(document).ready(function () {
+                    datetoday = new Date(); // create new Date()
+                    timenow = datetoday.getTime(); // grabbing the time it is now
+                    datetoday.setTime(timenow); // setting the time now to datetoday variable
+                    hournow = datetoday.getHours(); //the hour it is
+
+                    if (hournow >= 18) // if it is after 6pm
+                        $('div.tile-img').addClass('evening');
+                    else if (hournow >= 12) // if it is after 12pm
+                        $('div.tile-img').addClass('afternoon');
+                    else if (hournow >= 6) // if it is after 6am
+                        $('div.tile-img').addClass('morning');
+                    else if (hournow >= 0) // if it is after midnight
+                        $('div.tile-img').addClass('midnight');
+                });
+
+                function blink()
+                {
+                    $(".number").fadeTo(100, 0.1).fadeTo(200, 1.0);
+                }
+                setInterval(blink, 2000);
+            </script>
+            <!-- PAGE LEVEL PLUGIN SCRIPTS -->
+            <script src="{{ asset('bower_components/summernote/dist/summernote.js')}}"></script>
+            <script src="{{ asset('bower_components/summernote/lang/summernote-es-ES.js')}}"></script>
+            <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+        {% endblock %}
+    {% block autocompletar %}{% endblock %}
+</body>
+
+</html>

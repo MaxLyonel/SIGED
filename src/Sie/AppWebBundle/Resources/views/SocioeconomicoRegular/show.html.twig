@@ -1,0 +1,288 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>SocioeconomicoRegular</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Discapacidadtipoid</th>
+                <td>{{ entity.discapacidadTipoId }}</td>
+            </tr>
+            <tr>
+                <th>Atenmedicatipoid</th>
+                <td>{{ entity.atenmedicaTipoId }}</td>
+            </tr>
+            <tr>
+                <th>Certificadonac</th>
+                <td>{{ entity.certificadoNac }}</td>
+            </tr>
+            <tr>
+                <th>Libretaescolar</th>
+                <td>{{ entity.libretaEscolar }}</td>
+            </tr>
+            <tr>
+                <th>Libretafamiliar</th>
+                <td>{{ entity.libretaFamiliar }}</td>
+            </tr>
+            <tr>
+                <th>Libretamilitar</th>
+                <td>{{ entity.libretaMilitar }}</td>
+            </tr>
+            <tr>
+                <th>Libretavacunas</th>
+                <td>{{ entity.libretaVacunas }}</td>
+            </tr>
+            <tr>
+                <th>Mediocomunicacioncelular</th>
+                <td>{{ entity.medioComunicacionCelular }}</td>
+            </tr>
+            <tr>
+                <th>Mediocomunicaciontelefono</th>
+                <td>{{ entity.medioComunicacionTelefono }}</td>
+            </tr>
+            <tr>
+                <th>Mediocomunicaciontelevision</th>
+                <td>{{ entity.medioComunicacionTelevision }}</td>
+            </tr>
+            <tr>
+                <th>Mediocomunicacioncomputadora</th>
+                <td>{{ entity.medioComunicacionComputadora }}</td>
+            </tr>
+            <tr>
+                <th>Mediocomunicacionradio</th>
+                <td>{{ entity.medioComunicacionRadio }}</td>
+            </tr>
+            <tr>
+                <th>Mediocomunicacioninternet</th>
+                <td>{{ entity.medioComunicacionInternet }}</td>
+            </tr>
+            <tr>
+                <th>Segurosalud</th>
+                <td>{{ entity.seguroSalud }}</td>
+            </tr>
+            <tr>
+                <th>Discapacidadid</th>
+                <td>{{ entity.discapacidadId }}</td>
+            </tr>
+            <tr>
+                <th>Servicioaguadomicilio</th>
+                <td>{{ entity.servicioAguadomicilio }}</td>
+            </tr>
+            <tr>
+                <th>Servicioaguapileta</th>
+                <td>{{ entity.servicioAguapileta }}</td>
+            </tr>
+            <tr>
+                <th>Servicioagualagolaguna</th>
+                <td>{{ entity.servicioAgualagolaguna }}</td>
+            </tr>
+            <tr>
+                <th>Servicioaguapozo</th>
+                <td>{{ entity.servicioAguapozo }}</td>
+            </tr>
+            <tr>
+                <th>Servicioaguasisterna</th>
+                <td>{{ entity.servicioAguasisterna }}</td>
+            </tr>
+            <tr>
+                <th>Servicioaguavertiente</th>
+                <td>{{ entity.servicioAguavertiente }}</td>
+            </tr>
+            <tr>
+                <th>Servicioenergiaredpublica</th>
+                <td>{{ entity.servicioEnergiaredpublica }}</td>
+            </tr>
+            <tr>
+                <th>Servicioenergiageneradorelectr</th>
+                <td>{{ entity.servicioEnergiageneradorelectr }}</td>
+            </tr>
+            <tr>
+                <th>Servicioenergiapanelsolar</th>
+                <td>{{ entity.servicioEnergiapanelsolar }}</td>
+            </tr>
+            <tr>
+                <th>Serviciogasdomicilio</th>
+                <td>{{ entity.servicioGasdomicilio }}</td>
+            </tr>
+            <tr>
+                <th>Serviciogaslicuado</th>
+                <td>{{ entity.servicioGaslicuado }}</td>
+            </tr>
+            <tr>
+                <th>Serviciogasnatural</th>
+                <td>{{ entity.servicioGasnatural }}</td>
+            </tr>
+            <tr>
+                <th>Serviciosanitarioalcantarill</th>
+                <td>{{ entity.servicioSanitarioalcantarill }}</td>
+            </tr>
+            <tr>
+                <th>Serviciosanitariopozoseptico</th>
+                <td>{{ entity.servicioSanitariopozoseptico }}</td>
+            </tr>
+            <tr>
+                <th>Direcciondepartamentoid</th>
+                <td>{{ entity.direccionDepartamentoId }}</td>
+            </tr>
+            <tr>
+                <th>Direccionprovinciaid</th>
+                <td>{{ entity.direccionProvinciaId }}</td>
+            </tr>
+            <tr>
+                <th>Direccionseccionid</th>
+                <td>{{ entity.direccionSeccionId }}</td>
+            </tr>
+            <tr>
+                <th>Direccioncantonid</th>
+                <td>{{ entity.direccionCantonId }}</td>
+            </tr>
+            <tr>
+                <th>Direccionlocalidadid</th>
+                <td>{{ entity.direccionLocalidadId }}</td>
+            </tr>
+            <tr>
+                <th>Empleo</th>
+                <td>{{ entity.empleo }}</td>
+            </tr>
+            <tr>
+                <th>Direcciondesclocalidad</th>
+                <td>{{ entity.direccionDescLocalidad }}</td>
+            </tr>
+            <tr>
+                <th>Direccionzona</th>
+                <td>{{ entity.direccionZona }}</td>
+            </tr>
+            <tr>
+                <th>Direccioncallenro</th>
+                <td>{{ entity.direccionCalleNro }}</td>
+            </tr>
+            <tr>
+                <th>Direcciontelefono</th>
+                <td>{{ entity.direccionTelefono }}</td>
+            </tr>
+            <tr>
+                <th>Transporteid</th>
+                <td>{{ entity.transporteId }}</td>
+            </tr>
+            <tr>
+                <th>Transportetiempo</th>
+                <td>{{ entity.transporteTiempo }}</td>
+            </tr>
+            <tr>
+                <th>Transportedistancia</th>
+                <td>{{ entity.transporteDistancia }}</td>
+            </tr>
+            <tr>
+                <th>Numerohijo</th>
+                <td>{{ entity.numeroHijo }}</td>
+            </tr>
+            <tr>
+                <th>Servicioaguacaneria</th>
+                <td>{{ entity.servicioAguacaneria }}</td>
+            </tr>
+            <tr>
+                <th>Servicioaguaotro</th>
+                <td>{{ entity.servicioAguaotro }}</td>
+            </tr>
+            <tr>
+                <th>Serviciosanitariopozo</th>
+                <td>{{ entity.servicioSanitariopozo }}</td>
+            </tr>
+            <tr>
+                <th>Serviciosanitariocalle</th>
+                <td>{{ entity.servicioSanitariocalle }}</td>
+            </tr>
+            <tr>
+                <th>Serviciosanitariorio</th>
+                <td>{{ entity.servicioSanitariorio }}</td>
+            </tr>
+            <tr>
+                <th>Direccionnrovivienda</th>
+                <td>{{ entity.direccionNroVivienda }}</td>
+            </tr>
+            <tr>
+                <th>Centrosalud</th>
+                <td>{{ entity.centrosalud }}</td>
+            </tr>
+            <tr>
+                <th>Frecuenciasaludid</th>
+                <td>{{ entity.frecuenciaSaludId }}</td>
+            </tr>
+            <tr>
+                <th>Discapacidadsensorial</th>
+                <td>{{ entity.discapacidadSensorial }}</td>
+            </tr>
+            <tr>
+                <th>Discapacidadmotriz</th>
+                <td>{{ entity.discapacidadMotriz }}</td>
+            </tr>
+            <tr>
+                <th>Discapacidadmental</th>
+                <td>{{ entity.discapacidadMental }}</td>
+            </tr>
+            <tr>
+                <th>Origendiscapacidadid</th>
+                <td>{{ entity.origenDiscapacidadId }}</td>
+            </tr>
+            <tr>
+                <th>Actividadid</th>
+                <td>{{ entity.actividadId }}</td>
+            </tr>
+            <tr>
+                <th>Frecuenciaactividadid</th>
+                <td>{{ entity.frecuenciaActividadId }}</td>
+            </tr>
+            <tr>
+                <th>Actividadpago</th>
+                <td>{{ entity.actividadPago }}</td>
+            </tr>
+            <tr>
+                <th>Internetdomicilio</th>
+                <td>{{ entity.internetDomicilio }}</td>
+            </tr>
+            <tr>
+                <th>Internetue</th>
+                <td>{{ entity.internetUe }}</td>
+            </tr>
+            <tr>
+                <th>Internetpublico</th>
+                <td>{{ entity.internetPublico }}</td>
+            </tr>
+            <tr>
+                <th>Internetno</th>
+                <td>{{ entity.internetNo }}</td>
+            </tr>
+            <tr>
+                <th>Frecuenciainternetid</th>
+                <td>{{ entity.frecuenciaInternetId }}</td>
+            </tr>
+            <tr>
+                <th>Frecuenciatransporteid</th>
+                <td>{{ entity.frecuenciaTransporteId }}</td>
+            </tr>
+            <tr>
+                <th>Servicioenergia</th>
+                <td>{{ entity.servicioEnergia }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('socioeconomicoregular') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('socioeconomicoregular_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

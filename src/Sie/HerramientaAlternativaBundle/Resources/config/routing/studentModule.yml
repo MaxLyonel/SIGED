@@ -1,0 +1,23 @@
+herramienta_alter_studentModule_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentModule:index"}
+    options:
+         expose: true
+
+herramienta_alter_studentModule_create_update:
+    path:     /createUpdate
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentModule:createUpdate"}
+    options:
+         expose: true
+
+herramienta_alter_studentModule_delete:
+    path:     /delete
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentModule:delete"}
+    options:
+         expose: true
+
+herramienta_alter_studentModule_saveModulesToStudent:
+    path:     /saveModulesToStudent
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentModule:saveModulesToStudent"}
+    options:
+         expose: true

@@ -1,0 +1,300 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Inscripciones Omitidos
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('inscription_omitidos_index')}}">Buscar</a></li>
+                    <li class="active"> Resultado</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    <div class="row">
+        {% for flashMessage in app.session.flashbag.get('newUser') %}
+            <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ flashMessage.mensaje }}<br>
+                <button class="btn-link" data-toggle="tooltip" data-placement="top" title="Descargar declaracion jurada"><img src="{{asset('assets/images/pdf.png')}}"> Declaración jurada</button>
+                    {# flashMessage.nombre #}
+                    {# flashMessage.usuario #}
+                    {# flashMessage.password #}
+            </div>
+        {% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Rude</th>
+                                        <th class="text-center">Nombre(s)</th>
+                                        <th class="text-center">Paterno</th>
+                                        <th class="text-center">Materno</th>
+                                        <th class="text-center">CI</th>
+                                        <th class="text-center">Complemento</th>
+                                        <th class="text-center">Genero</th>
+                                        <th class="text-center">F. Nacimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Rude">{{datastudent.codigoRude}}</td>
+                                        <td data-title="Nombre">{{ datastudent.nombre|e }} </td>
+                                        <td data-title="Paterno">{{datastudent.paterno|e}}</td>
+                                        <td data-title="Materno">{{datastudent.materno|e}}</td>
+                                        <td data-title="CI">{{datastudent.carnetIdentidad}} </td>
+                                        <td data-title="Complemento" class="text-center">{{datastudent.complemento}}</td>
+                                        <td data-title="Genero" class="text-center">{{datastudent.generoTipo}} </td>
+                                        <td data-title="F. Nacimiento" class="text-center">{{datastudent.fechaNacimiento|date('d-m-Y')}}</td>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Inscripción</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinformation" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Gestión</th>
+                                        <th class="text-center">Sie</th>
+                                        <th class="text-center">Unidad Educativa</th>
+                                        <th class="text-center">Nivel</th>
+                                        <th class="text-center">Grado</th>
+                                        <th class="text-center">Paralelo</th>
+                                        <th class="text-center">Turno</th>
+                                        <th class="text-center">Est. Matrícula</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for inscription in currentInscription%}
+                                        <tr>
+
+                                            <td data-title="Gestión">{{inscription.gestion}}</td>
+                                            <td data-title="Sie">{{inscription.sie}}</td>
+                                            <td data-title="Institución Educativa">{{inscription.institucioneducativa}}</td>
+                                            <td data-title="Nivel" class="text-center">{{inscription.nivel}} </td>
+                                            <td data-title="Grado" class="text-center">{{inscription.grado}}</td>
+                                            <td data-title="Paralelo" class="text-center">{{inscription.paralelo}}</td>
+                                            <td data-title="Turno" class="text-center">{{inscription.turno}} </td>
+                                            <td data-title="Est. Matricula" class="text-center">{{inscription.estadoMatricula}}</td>
+                                        </tr>
+                                    {% endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Inscripcion Omitidos</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#omitidos"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div id="omitidos" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+
+                        {{form_start(formOmitidos, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form' } } )}}
+
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                {{form_label(formOmitidos.institucionEducativa)}}
+                                {{form_widget(formOmitidos.institucionEducativa, {'attr':{'onchange':'institucionEducativa(this.value)','onkeyUp':'institucionEducativa(this.value)'}  } )}}
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-6">
+                                {{form_label(formOmitidos.institucionEducativaName)}}
+                                {{form_widget(formOmitidos.institucionEducativaName)}}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                {{form_label(formOmitidos.nivel)}}
+                                {{form_widget(formOmitidos.nivel)}}
+                            </div>
+                            <div class="col-md-3">
+                                {{form_label(formOmitidos.grado)}}
+                                {{form_widget(formOmitidos.grado)}}
+                            </div>
+                            <div class="col-md-3 form-group">
+                                {{form_label(formOmitidos.paralelo)}}
+                                {{form_widget(formOmitidos.paralelo, {'attr':{'required':'true','onchange':'getTurno(this.value)','onmousedown':'getTurno(this.value)'} })}}
+                                <div class="help-block with-errors "></div>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                {{form_label(formOmitidos.turno)}}
+                                {{form_widget(formOmitidos.turno, {'attr':{'required':'true'} })}}
+                                <div class="help-block with-errors "></div>
+                            </div>
+                        </div>
+
+
+                        {{form_widget(formOmitidos.save, {'attr':{'class':'btn btn-default'} }) }}
+                        {{form_end(formOmitidos)}}
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('inicial_primaria_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        function institucionEducativa(id) {
+
+            if (id.length > 7) {
+                //get the nivel and grado to do the search
+                nivel = $('#form_nivelId').val();
+                grado = $('#form_gradoId').val();
+                lastue = $('#form_lastue').val();
+
+                //call the ajax function by krlos
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('inscription_omitidos_findIE', {'id': id, 'nivel': nivel, 'grado': grado, 'lastue': lastue}),
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        $("#form_institucionEducativaName").val(data.nombre);
+
+                        $("#form_paralelo").empty();
+                        $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                        $.each(data.paralelo, function (i, value) {
+                            $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        /*
+                         $("#form_turno").empty();
+                         $.each(data.turno, function (i, value) {
+                         $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                         });*/
+
+                    }
+                });
+            } else {
+                nivel = $('#form_nivelId').val();
+                grado = $('#form_gradoId').val();
+                lastue = $('#form_lastue').val();
+                $("#form_institucionEducativaName").val('');
+                $("#form_paralelo").empty();
+                $("#form_turno").empty();
+
+            }
+        }
+        function getTurno(paralelo) {
+
+            sie = $('#form_institucionEducativa').val();
+            nivel = $('#form_nivelId').val();
+            grado = $('#form_gradoId').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_extranjeros_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado}),
+                beforeSend: function () {
+                    $("#form_turno").empty();
+                },
+                success: function (data) {
+                    $("#form_turno").empty();
+                    $("#form_turno").append('<option value="">Seleccionar</option>');
+                    $.each(data.aturnos, function (i, value) {
+                        $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        }
+
+    </script>
+
+
+{% endblock %}

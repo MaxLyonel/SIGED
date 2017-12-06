@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="es"> <!--<![endif]-->
+
+    <!-- START @HEAD -->
+    <head>
+        <!-- START @META SECTION -->
+        <meta charset="utf-8">
+        <title>SIGEE - Login</title>
+        <!--/ END META SECTION -->
+        <!-- START @GLOBAL MANDATORY STYLES -->
+        <link rel="stylesheet" type="text/css" href="{{asset('webGis/bootstrap4/dist/css/bootstrap.min.css')}}">
+        <!--/ END GLOBAL MANDATORY STYLES -->
+
+        <!-- START @PAGE LEVEL STYLES -->
+        <link rel="stylesheet" type="text/css" href="{{asset('webGis/fontawesome/css/font-awesome.min.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('webGis/css/animate.css')}}">
+        <!--/ END PAGE LEVEL STYLES -->
+
+        <!-- START @THEME STYLES -->
+        <link href="{{asset('webGis/css/sign-type-2.css')}}" rel="stylesheet">
+        <!--/ END THEME STYLES -->
+
+        <style type="text/css">
+
+            .sign-header {
+                background-color: #0A60FE;
+                border-bottom: 10px solid #043CA3;
+            }
+            .sign-text:before {
+                background-color: #00c5fb;
+            }
+
+            .sign-text span {
+                background-color: #0A60FE;
+            }
+            .sign-text img {
+                border: 7px solid #81b71a;
+            }
+
+            .ckbox-theme input[type=checkbox]:checked + label::after {
+                border-color: #1867A2;
+                background-color: #2287D0;
+            }
+            .ckbox-theme input[type=checkbox][disabled]:checked + label::after {
+                border-color: #2287D0;
+                opacity: .5;
+                background-color: #EEEEEE;
+            }
+            .ckbox label:before {
+                border: 1px solid #CCCCCC;
+            }
+            #sign-wrapper .ckbox label {
+                color: #2287D0;
+            }
+            .sign-body{
+                background: #eeeeee;
+            }
+            .sign-footer{
+                background: #ffffff;
+            }
+            body, html{
+                background: #92BFFF;
+                opacity: 1;
+            }
+        </style>
+    </head>
+
+    <body class="page-sound page-backstretch">
+
+        
+        <div id="sign-wrapper">
+
+            <!-- Brand -->
+            <div class="brand" style="height:70px">
+
+            </div>
+            <!--/ Brand -->
+
+            <!-- Login form -->
+
+
+
+            <div class="sign-header">
+                <div class="form-group">
+                    <div class="sign-text">
+                        <span><b>SIGEE</b></span>
+                    </div>
+                    <center>
+                        <small><i class="fa fa-graduation-cap"></i> MINISTERIO DE EDUCACIÒN</small>
+                    </center>
+
+                </div><!-- /.form-group -->
+            </div><!-- /.sign-header -->
+            <form class="form-signin" action="{{path('login_check')}}" accept-charset="utf-8" method="post">
+              <div class="sign-body">
+                {% if error %}
+                    <div class="alert" style="text-align:center; color:#F90000;"> <i class="fa fa-info-circle"></i> {{ error.message|trans }}</div>
+                {% endif %}
+                  <div class="form-group">
+                      <div class="input-group input-group-lg rounded no-overflow">
+                        <input type="text" class="form-control" id="username" name="_username" autocomplete="off" value="{{ last_username }}" required placeholder="Usuario">
+                          <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                      </div>
+                  </div><!-- /.form-group -->
+                  <div class="form-group">
+                      <div class="input-group input-group-lg rounded no-overflow">
+                           <input type="password" class="form-control" id="password" name="_password" autocomplete="off" value="" placeholder="Contraseña" required>
+                          <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                      </div>
+                  </div><!-- /.form-group -->
+              </div><!-- /.sign-body -->
+
+              <div class="sign-footer">
+                <div style="padding:10px; background: #ffffff">
+                    <div class="checkbox" style="margin-left: 15px">
+                        <label style="color:#3174C1">
+                            <input type="checkbox" required="required"> <small> Validar los datos</small>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <br>
+                    <button class="btn btn-block btn-lg btn-floating-action btn-primary ink-reaction" type="submit"> <small> <i class="fa fa-unlock"></i> Ingresar</small></button>
+                </div><!-- /.form-group -->
+              </div><!-- /.sign-footer -->
+          </form>
+
+          <div style="padding: 10px; text-align: center">
+              <a href="{{path('logout')}}" style="color:#218FFCç; font-weight: bold">Ir a la página principal</a>
+          </div>
+            <!-- /.form-horizontal -->
+            <!--/ Login form -->
+
+            <!-- Content text -->
+            <!--p class="text-muted text-center sign-link">Need an account? <a href="page-signup.html"> Sign up free</a></p-->
+            <!--/ Content text -->
+
+        </div><!-- /#sign-wrapper -->
+        <!--/ END SIGN WRAPPER -->
+
+        <!-- START JAVASCRIPT SECTION (Load javascripts at bottom to reduce load time) -->
+        <!-- START @CORE PLUGINS -->
+        <script type="text/javascript" src="{{asset('webGis/js/jquery.min.js')}}"></script>
+        <script type="text/javascript" src="{{asset('webGis/bootstrap4/dist/js/popper.js')}}"></script>
+        <script type="text/javascript" src="{{asset('webGis/bootstrap4/dist/js/bootstrap.min.js')}}"></script>
+        <!--/ END CORE PLUGINS -->
+
+    </body>
+    <!-- END BODY -->
+
+</html>

@@ -1,0 +1,249 @@
+{% if exist == true %}
+    <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <div class="panel panel-primary shadow">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Estudiantes - Listado</h3>
+                </div><!-- /.pull-left -->
+                <div class="pull-right">
+
+                </div><!-- /.pull-right -->
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                <!-- Start project overview -->
+                <ol class="breadcrumb">
+                    <li>{{ nivel }}</li>
+                    <li>{{ disciplina }}</li>
+                    <li>{{ prueba }}</li>
+                    <li>{{ genero }}</li>
+                </ol>
+                <!-- Start datatable -->
+                <table id="datatable-estudiantes" class="table table-striped table-success">
+                    <thead>
+                        <tr>                            
+                            <th data-class="expand">#</th>
+                            <th>Entidad</th>
+                            <th>C.I.</th>
+                            <th>Código Rude</th>
+                            <th>Estudiante</th>
+                            <th style="width: 30px">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#init the array info student #}
+                        {% set objInfoStudent = [] %}
+                        {% for data in objStudents%}
+                            {# set the array student info and convert on json string #}
+                            {% set objInfoStudent = objInfoStudent|merge(data) %}
+                            {% set jsnInfoStudent = objInfoStudent|json_encode() %}
+                            {% set nombre = data.paterno~' '~data.materno~' '~data.nombre %}
+                            {% set rude = data.codigoRude %}           
+                            {% set paralelo = data.paralelo %}         
+                            {% set fase = data.fase %}         
+                            {% set ue = data.ue %}         
+                            {% set institucioneducativa = data.institucioneducativa %}         
+                            {% set distrito = data.distrito %}          
+                            {% set circunscripcion = data.circunscripcion %}       
+                            {% if data.complemento == "" %}
+                                {% set ci = data.carnetIdentidad %}
+                            {% else %}
+                                {% set ci = data.carnetIdentidad~'-'~data.complemento%}
+                            {% endif %}
+                            <tr>
+                                <td align="">{{loop.index}}</td>
+                                <td align="">
+                                    {% if fase == 1 %}
+                                        {{ue}} - {{institucioneducativa}}
+                                    {% endif %}
+                                    {% if fase == 2 %}
+                                        {{distrito}}
+                                    {% endif %}
+                                    {% if fase == 3 %}
+                                        {{ue}} - {{institucioneducativa}}
+                                    {% endif %}
+                                </td>
+                                <td align="">{{ci}}</td>
+                                <td align="">{{rude}}</td>
+                                <td align="">{{nombre}}</td>
+                                <td>
+                                    <div class="ckbox ckbox-primary">
+                                        <input id="id{{data.eInsJueId}}" name="estudiantes[]" type="checkbox" value="{{data.eInsJueId}}" onclick="setDeportistas(this,'{{nombre}}')">
+                                        <label for="id{{data.eInsJueId}}"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        {%endfor%}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <tr>                            
+                                <th data-class="expand">#</th>
+                                <th>Entidad</th>
+                                <th>C.I.</th>
+                                <th>Código Rude</th>
+                                <th>Estudiante</th>
+                                <th style="min-width: 50px">&nbsp;</th>
+                            </tr>
+                        </tr>
+                    </tfoot>
+                </table>
+                <!--/ End datatable -->
+                <div id="no-more-tables">  
+                </div>
+                <!-- /.portlet -->
+                <!--/ End project overview -->  
+            </div><!-- /.panel-body -->
+        </div>                    
+    </div>      
+    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-primary shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Clasificar</h3>
+                    </div><!-- /.pull-left -->
+                    <div class="pull-right">
+
+                    </div><!-- /.pull-right -->
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'class':'form-horizontal form-bordered', 'onsubmit':'return habilitarBotonSubmit()'} } )}}
+                        {{form_widget(form.fase)}}
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{form_label(form.posicion)}}
+                                    {{form_widget(form.posicion)}}
+                                </div>
+                                <div class="col-md-12">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="required">Deportistas: </label>
+                                    <div id="listaDeportistas"></div>
+                                </div>
+                            </div>
+                        </div>  
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ form_widget(form.submit,{ 'attr':{'class':'btn btn-default col-sm-12' } } ) }}
+                                </div>
+                            </div>
+                        </div>              
+                    {{form_end(form)}} 
+                </div><!-- /.panel-body -->
+            </div>  
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-teal shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Deportistas Clasificados - Fase {{ fase }}</h3>
+                    </div><!-- /.pull-left -->
+                    <div class="pull-right">
+                    </div><!-- /.pull-right -->
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <ul class="list-unstyled list-real-estate">
+                        <div id="listaInscritos">
+                            {% for data in objDeportistasFase%}
+                                {% set nombre = data.paterno~' '~data.materno~' '~data.nombre %}
+                                {% set codigo = data.eInsJueId %} 
+                                {% set posicion = data.posicion %} 
+                                <li id="list{{codigo}}" class="list-group-item">PUESTO {{posicion}} - {{nombre}}<div class="pull-right"><a href="#" onclick="getEliminarInscripcion({{codigo}});"><span class="status"><i class="fa fa-arrow-circle-down fg-danger"></i></span></a></div></li>
+                            {%endfor%}
+                        </div> 
+                    </ul>
+                </div><!-- /.panel-body -->
+            </div>
+        </div>                          
+    </div> 
+    <!-- /.row -->
+{% else %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    function getEliminarInscripcion(es) {  
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_juegos_eliminacion_clasificacion_deportista', {'inscripcion': parseInt(es)}),
+            beforeSend: function () {
+            },
+            success: function (data) {
+                dep = document.getElementById('list' + es);   
+                if (dep){        
+                    $.each(data.aregistro, function (i, value) {
+                        padre = dep.parentNode;
+                        padre.removeChild(dep);
+                    });
+                }
+            }
+        });
+    }
+
+    function setDeportistas(es,des) {
+        var deportistas = document.getElementsByName('deportistas[]');
+        var botonAceptar = document.getElementById('form_submit');
+        habilitarBotonSubmit();
+        if(es.checked){
+            $("#listaDeportistas").append('<div class="ckbox ckbox-lilac circle"><input type="checkbox" checked="chequed" id="idd' + es.value + '" name="deportistas[]" value="' + es.value + '" /><label id="lbd' + es.value + '" for="idd' + es.value + '">' + des + '</label></div>');          
+            botonAceptar.disabled = false;       
+        }else{    
+            dep = document.getElementById('idd' + es.value); 
+            lbl = document.getElementById('lbd' + es.value);              
+            if (dep){
+                padre = dep.parentNode;
+                padre.removeChild(dep);
+            }
+            if (lbl){
+                padre2 = lbl.parentNode;
+                padre2.removeChild(lbl);
+            }
+        }  
+    }
+
+    function habilitarBotonSubmit(){
+            var estudiantes = document.getElementsByName('estudiantes[]');
+            var botonAceptar = document.getElementById('form_submit');     
+            var cant = 0;
+            for (var i=0; i < estudiantes.length; i++){
+                if(estudiantes[i].checked == true){
+                    cant = 1;
+                }
+            }           
+            if(cant == 1){    
+                if(botonAceptar){
+                    botonAceptar.disabled = false; 
+                    botonAceptar.className = "btn btn-success col-sm-12 btn-slidedown";
+                }  
+                return true;
+            } else {   
+                if(botonAceptar){
+                    botonAceptar.className = "btn btn-default col-sm-12";
+                    botonAceptar.disabled = true; 
+                }    
+                return false;  
+            }
+        }
+</script>
+

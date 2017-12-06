@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH2CieloMaterialTipo:
+    type: entity
+    table: infraestructura_h2_cielo_material_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraCieloMaterialTipo:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_cielo_material_tipo
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

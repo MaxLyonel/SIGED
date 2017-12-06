@@ -1,0 +1,63 @@
+Sie\AppWebBundle\Entity\ValidacionReglaTipo:
+    type: entity
+    table: validacion_regla_tipo
+    indexes:
+        IDX_FE42D94D1FE0474B:
+            columns:
+                - validacion_regla_entidad_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcion:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        detalle:
+            type: string
+            nullable: false
+            length: 500
+            fixed: false
+            comment: ''
+        tablas:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        campos:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        llaves:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        poderacion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+    manyToOne:
+        validacionReglaEntidadTipo:
+            targetEntity: ValidacionReglaEntidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                validacion_regla_entidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

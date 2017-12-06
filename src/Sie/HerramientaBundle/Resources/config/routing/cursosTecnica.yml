@@ -1,0 +1,24 @@
+herramienta_cursosTecnica_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:CursosTecnica:index}
+
+herramienta_cursosTecnica_crear:
+    path:     /crear
+    defaults: { _controller: SieHerramientaBundle:CursosTecnica:crear}
+    
+herramienta_cursosTecnica_getspecialidad:
+    path:   /getspecialidad
+    defaults: { _controller: SieHerramientaBundle:CursosTecnica:getSpecialidad}
+    options:
+         expose: true
+         
+herramienta_cursosTecnica_getperiodo:
+    path:   /getperiodo
+    defaults: { _controller: SieHerramientaBundle:CursosTecnica:getPeriodo}
+    options:
+         expose: true
+         
+herramienta_cursosTecnica_savecurso:         
+    path:   /savecurso
+    defaults: { _controller: SieHerramientaBundle:CursosTecnica:saveCurso}
+    

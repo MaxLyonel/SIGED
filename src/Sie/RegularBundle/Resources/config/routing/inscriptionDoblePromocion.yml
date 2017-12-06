@@ -1,0 +1,30 @@
+##    
+inscription_doble_promocion_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:InscriptionDoblePromocion:index }
+
+inscription_doble_promocion_result:
+    path:     /sie/result/
+    defaults: { _controller: SieRegularBundle:InscriptionDoblePromocion:result }
+    options:
+         expose: true 
+         
+inscription_doble_promocion_nota:
+    path:     /seeNota/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}/{sie}
+    defaults: { _controller: SieRegularBundle:InscriptionDoblePromocion:nota }           
+    options:
+         expose: true 
+         
+inscription_doble_promocion_download:
+    path:     /download/{file}
+    defaults: { _controller: SieRegularBundle:InscriptionDoblePromocion:download }         
+    
+inscription_doble_promocion_remove:
+    path: /remove
+    defaults: { _controller: SieRegularBundle:InscriptionDoblePromocion:remove }  
+    
+inscription_doble_promocion_inscription:
+    path:     /inscription/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}/{sie}/{matricula}/{ciclo}
+    defaults: { _controller: SieRegularBundle:InscriptionDoblePromocion:inscription }           
+    options:
+         expose: true     

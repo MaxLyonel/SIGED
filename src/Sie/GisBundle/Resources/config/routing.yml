@@ -1,0 +1,73 @@
+sie_gis_homepage:
+    path:     /sigindex
+    defaults: { _controller: SieGisBundle:Default:index }
+
+sie_gis_login:
+    path:     /login
+    defaults: { _controller: SieGisBundle:Default:login }
+
+sie_gis_searching:
+    path:     /searching
+    defaults: { _controller: SieGisBundle:Default:searching }
+    options:
+        expose: true
+
+sie_gis_seleccionar_unidad:
+    path:     /seleccionar
+    defaults: { _controller: SieGisBundle:Default:seleccionarUnidad }
+    options:
+        expose: true
+
+sie_gis_seleccionar_edificio:
+    path:     /seleccionarEdificio
+    defaults: { _controller: SieGisBundle:Default:seleccionarEdificio }
+    options:
+        expose: true
+
+sie_gis_datos_edit_geografica:
+    path:     /editgeografica
+    defaults: { _controller: SieGisBundle:Default:editgeografica }
+    options:
+        expose: true
+
+sie_gis_datos_update_geografica:
+    path:     /updategeografica
+    defaults: { _controller: SieGisBundle:Default:updategeografica }
+    options:
+        expose: true
+
+sie_gis_listar_provincias:
+    path:     /gis/listarProvincias/{dpto}
+    defaults: { _controller: SieGisBundle:Default:listarProvincias }
+    options:
+        expose: true
+
+sie_gis_listar_municipios:
+    path:     /gis/listarMunicipios/{prov}
+    defaults: { _controller: SieGisBundle:Default:listarMunicipios }
+    options:
+        expose: true
+
+sie_gis_listar_comunidades:
+    path:     /gis/listarComunidades/{mun}
+    defaults: { _controller: SieGisBundle:Default:listarComunidades }
+    options:
+        expose: true
+
+sie_gis_datos_edit_georeferencial:
+    path:     /editgeoreferencial
+    defaults: { _controller: SieGisBundle:Default:editgeoreferencial }
+    options:
+        expose: true
+
+sie_gis_datos_update_georeferencial:
+    path:     /updategeoreferencial
+    defaults: { _controller: SieGisBundle:Default:updategeoreferencial }
+    options:
+        expose: true
+
+sie_gis_imprimir_reporte:
+    path:     /imprimirReporte/{codEdificio}
+    defaults: { _controller: SieGisBundle:Default:imprimirReporte }
+    options:
+        expose: true

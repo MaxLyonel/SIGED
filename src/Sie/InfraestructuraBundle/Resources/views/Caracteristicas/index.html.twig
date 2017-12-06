@@ -1,0 +1,1041 @@
+{% extends 'layoutInfraestructura.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .modal-dialog{
+            width: 80%;
+        }
+        #map {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+    {% include 'SieInfraestructuraBundle:Info:cabecera.html.twig' %}
+    <ol class="breadcrumb">
+        <li><a href="{{path('infra_info_index')}}">Pincipal</a></li>
+        <li><a href="{{path('infra_info_acceder')}}">Panel de Acceso Rápido</a></li>
+        <li class="active">Hoja 2 - Características del Edificio</li>
+    </ol>
+    <h2 class="view-title"><img src="{{asset('webInfraestructura/assets/images/edificio.png')}}" class="img-header"> HOJA 2 - CARACTERÍSTICAS DEL EDIFICIO</h2>
+    {{form_start(form, {'attr': {'id':'formCaracteristicas','method':'post','onsubmit':'return validarForm();'} })}}
+
+    <div class="form-group">
+        {{form_widget(form.guardar)}}
+        <a href="{{path('infra_info_acceder')}}" class="btn btn-danger-alt" >Cancelar</a>
+    </div>
+
+    <div class="module-wrapper">
+    <section class="module module-headings">
+    <div class="module-inner">
+    <div class="module-content">
+    <div role="tabpanel">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs nav-tabs-theme-3" role="tablist">
+            <li role="presentation" class="active"><a href="#terreno" aria-controls="terreno" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-map"></i><br><span class="hidden-xs hidden-sm">1. Características del terreno</span></a></li>
+            <li role="presentation" class=""><a href="#edificacion" aria-controls="edificacion" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-comments"></i><br><span class="hidden-xs hidden-sm">2. Características de la edificación</span></a></li>
+            <li role="presentation" class=""><a href="#bloques" aria-controls="bloques" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-building-o"></i><br><span class="hidden-xs hidden-sm">3. Bloques edificados</span></a></li>
+            <li class="presentation" role="presentation"><a href="#ubicacion" aria-controls="ubicacion" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-map-marker"></i><br><span class="hidden-xs hidden-sm">4. Ubicación cartográfica del edificio educativo (Coordenadas geográficas)</span></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="terreno">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>1.1 Área Total</legend>
+                            <div class="form-group col-sm-2">
+                                <label for="">Área Total</label> <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Es el área corresponde legalmente al Edificio Educativo." data-original-title="Área Total"></i>
+                                <input type="text" name="total" id="total" value="" class="form-control" disabled="true">
+                            </div>
+                            <div class="form-group col-sm-2">
+                                {{form_label(form.n11Areaconstruida)}} <span class="text-danger">(*)</span>
+                                <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Área en la que ya se han hecho edificaciones. NO INCLUIR: patios, canchas o áreas de esparcimiento. ESTE DATO DEBE SER IGUAL A LA SUMA DEL AREA REPORTADA DE LOS BLOQUES EDIFICADOS. (Punto 3)" data-original-title="Área construida"></i>
+                                {{form_widget(form.n11Areaconstruida)}}
+                            </div>
+                            <div class="form-group col-sm-2">
+                                {{form_label(form.n11Arearecreacion)}} <span class="text-danger">(*)</span>
+                                <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Área que corresponde a patios, canchas, jardines u otros sin importar el material del piso, destinado al esparcimiento." data-original-title="Área de recreación"></i>
+                                {{form_widget(form.n11Arearecreacion)}}
+                            </div>
+                            <div class="form-group col-sm-2">
+                                {{form_label(form.n11Areanoconstruida)}} <span class="text-danger">(*)</span>
+                                <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Área donde se realizarán futuras construcciones ó donde no existe construcción alguna, pero es parte del edificio educativo." data-original-title="Área no construida"></i>
+                                {{form_widget(form.n11Areanoconstruida)}}
+                            </div>
+                            <div class="form-group col-sm-2">
+                                {{form_label(form.n11Areacultivo)}} <span class="text-danger">(*)</span>
+                                <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Área dedicada a la siembra." data-original-title="Área de cultivo"></i>
+                                {{form_widget(form.n11Areacultivo)}}
+                            </div>
+                            <div class="form-group col-sm-2">
+                                {{form_label(form.n11Areacriaanimales)}} <span class="text-danger">(*)</span>
+                                <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Área dedicada a la cria de animales." data-original-title="Área de cría de animales"></i>
+                                {{form_widget(form.n11Areacriaanimales)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <fieldset>
+                            <legend>1.2 Topografía <span class="text-danger">(*)</span></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n12TopografiaTipo)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>1.3 Muros perimetrales</legend>
+                            <div class="form-group">
+                                {{form_label(form.n13MuroperimetralArea)}} <span class="text-danger">(*)</span>
+                                <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Es la medida del contorno que tiene el terreno." data-original-title="Perímetro"></i>
+                                <div class="input-group">
+                                    {{form_widget(form.n13MuroperimetralArea)}}
+                                    <div class="input-group-addon">mts</div>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n13MuroperimetralAvanceTipo)}} <span class="text-danger">(*)</span>
+                                <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Se refiere a si el contorno del terreno tiene una construcción de piedra, ladrillo y otro material." data-original-title="Amurallada"></i>
+                                {{form_widget(form.n13MuroperimetralAvanceTipo)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n13MuroperimetralActual)}} <span class="text-danger">(*)</span>
+                                <div class="input-group">
+                                    {{form_widget(form.n13MuroperimetralActual)}}
+                                    <div class="input-group-addon">mts.</div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-4">
+                        <fieldset>
+                            <legend>1.4 Riesgos ambientales par el área construida <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Reportar si tiene Área construida." data-original-title="Riesgos área edificada"></i></legend>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoInundacion)}}
+                                    {{form_label(form.n14ConEsRiesgoInundacion)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoRiada)}}
+                                    {{form_label(form.n14ConEsRiesgoRiada)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoTormenta)}}
+                                    {{form_label(form.n14ConEsRiesgoTormenta)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoIncendio)}}
+                                    {{form_label(form.n14ConEsRiesgoIncendio)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoGranizo)}}
+                                    {{form_label(form.n14ConEsRiesgoGranizo)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoHumedad)}}
+                                    {{form_label(form.n14ConEsRiesgoHumedad)}}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoBarranco)}}
+                                    {{form_label(form.n14ConEsRiesgoBarranco)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoContaminacion)}}
+                                    {{form_label(form.n14ConEsRiesgoContaminacion)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoDeslizamiento)}}
+                                    {{form_label(form.n14ConEsRiesgoDeslizamiento)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoSifonamiento)}}
+                                    {{form_label(form.n14ConEsRiesgoSifonamiento)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoTerremoto)}}
+                                    {{form_label(form.n14ConEsRiesgoTerremoto)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n14ConEsRiesgoNoexiste)}}
+                                    {{form_label(form.n14ConEsRiesgoNoexiste)}}
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-4">
+                        <fieldset>
+                            <legend>1.5 Riesgos ambientales par el área de cultivo <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Reportar si tiene Área de cultivo." data-original-title="Riesgos área cultivo"></i></legend>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoInundacion)}}
+                                    {{form_label(form.n15CulEsRiesgoInundacion)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoRiada)}}
+                                    {{form_label(form.n15CulEsRiesgoRiada)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoTormenta)}}
+                                    {{form_label(form.n15CulEsRiesgoTormenta)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoIncendio)}}
+                                    {{form_label(form.n15CulEsRiesgoIncendio)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoGranizo)}}
+                                    {{form_label(form.n15CulEsRiesgoGranizo)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoHumedad)}}
+                                    {{form_label(form.n15CulEsRiesgoHumedad)}}
+                                </div>
+                                <div class="form-group">
+                                    {#form_widget(form.n15culTrueno)#}
+                                    {#form_label(form.n15culTrueno)#}
+                                </div>
+                                <div class="form-group">
+                                    {#form_widget(form.n15culHelada)#}
+                                    {#form_label(form.n15culHelada)#}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {#form_widget(form.n15culSequia)#}
+                                    {#form_label(form.n15culSequia)#}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoBarranco)}}
+                                    {{form_label(form.n15CulEsRiesgoBarranco)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoContaminacion)}}
+                                    {{form_label(form.n15CulEsRiesgoContaminacion)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoDeslizamiento)}}
+                                    {{form_label(form.n15CulEsRiesgoDeslizamiento)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoSifonamiento)}}
+                                    {{form_label(form.n15CulEsRiesgoSifonamiento)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoTerremoto)}}
+                                    {{form_label(form.n15CulEsRiesgoTerremoto)}}
+                                </div>
+                                <div class="form-group">
+                                    {{form_widget(form.n15CulEsRiesgoNoexiste)}}
+                                    {{form_label(form.n15CulEsRiesgoNoexiste)}}
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="edificacion">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <fieldset>
+                            <legend>2.1 ¿La edificación fue construida para ser edificio educativo (EE)? <span class="text-danger">(*)</span></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n21EsConstruidaEducativo)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.2 Año de construcción <span class="text-danger">(*)</span> <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="En el caso de los TERRENOS poner el AÑO DE COMPRA." data-original-title="Año de construcción"></i></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n22AnioConstruccion)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.3 Año de refacción <span class="text-danger">(*)</span> <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="O reparación es aquella que debemos realizar inesperadamente porque nuestra construcción sufrió o tuvo daños, el cual dependiendo de su gravedad pudo ser correctivo o reconstructivo." data-original-title="Refacción"></i></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n23AnioRefaccion)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.4 Año última ampliación <span class="text-danger">(*)</span></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n24AnioAmpliacion)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.5 Tipo de propiedad <span class="text-danger">(*)</span></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n25PropiedadTipo)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.6 Razón social (Nombre del propietario o institución) <span class="text-danger">(*)</span></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n26Razonsocial)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-4">
+                        <fieldset>
+                            <legend>2.7 Estado general del edificio <span class="text-danger">(*)</span></legend>
+                            <div class="form-group">
+                                {{form_widget(form.n27EstadogeneralTipo)}}
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>2.8 Estado general dentro del Edificio Educativo</legend>
+                            <div class="form-group">
+                                {{form_label(form.n28TechoEstadogeneralTipo)}} <span class="text-danger">(*)</span>
+                                {{form_widget(form.n28TechoEstadogeneralTipo)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n28ParedEstadogeneralTipo)}} <span class="text-danger">(*)</span>
+                                {{form_widget(form.n28ParedEstadogeneralTipo)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n28PisoEstadogeneralTipo)}} <span class="text-danger">(*)</span>
+                                {{form_widget(form.n28PisoEstadogeneralTipo)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n28CieloEstadogeneralTipo)}} <span class="text-danger">(*)</span>
+                                {{form_widget(form.n28CieloEstadogeneralTipo)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-sm-5">
+                        <fieldset>
+                            <legend>2.9 Documentación acerca del Edificio Educativo</legend>
+                            <div class="form-group">
+                                {{form_label(form.n29DocumentoTipo)}} <span class="text-danger">(*)</span> 
+                                <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="Señale el tipo de documentación con la que cuenta, si no tuviera documentación no escriba nada en la descripción siguiente, si tuviera documentación anote los datos del número de documento." data-original-title="Tipo de documentación"></i>
+                                {{form_widget(form.n29DocumentoTipo)}}
+                            </div>
+                            <div class="form-group">
+                                {{form_label(form.n29DocumentoObs)}}
+                                {{form_widget(form.n29DocumentoObs)}}
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    {{form_label(form.n29DocumentoNroPartida)}} <span class="text-danger">(*)</span>
+                                    <i class="fa fa-question-circle text-info" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="En caso de contrato de alquiler, anticrético u otro escriba quienes firman(en el campo descripción) posteriormente, la partida de Derechos Reales del folio Real si tuviera." data-original-title="Nro. partida DD.RR."></i>
+                                    {{form_widget(form.n29DocumentoNroPartida)}}
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    {{form_label(form.n29EsPlanoAprobado)}} <span class="text-danger">(*)</span>
+                                    {{form_widget(form.n29EsPlanoAprobado)}}
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="bloques">
+                <div class="row">
+                    <div class="col-sm-12">
+                        
+                        <fieldset>
+                            <legend>3.1 Bloques edificados</legend>
+                            <button class="btn btn-primary btn-primary btn-xs" type="button" onclick="agregarFila();">Agregar Bloque Edificado</button>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Nombre Bloque <span class="text-danger">(*)</span></th>
+                                            <th>Área(m2) <span class="text-danger">(*)</span></th>
+                                            <th>Nro. Plantas <span class="text-danger">(*)</span></th>
+                                            <th>Pisos <span class="text-danger">(*)</span></th>
+                                            <th>Paredes <span class="text-danger">(*)</span></th>
+                                            <th>Cielo Raso <span class="text-danger">(*)</span></th>
+                                            <th>Techos <span class="text-danger">(*)</span></th>
+                                            <th>Nro. Amb. Ped. <span class="text-danger">(*)</span></th>
+                                            <th>Nro. Amb. no Ped. <span class="text-danger">(*)</span></th>
+                                            <th>Total Amb. <span class="text-danger">(*)</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bloquesEdificados">
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="ubicacion">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <fieldset>
+                            <legend>4.1 Ubicación cartográfica del edificio educativo (Coordenadas geográficas)</legend>
+                            <div class="form-group col-sm-6">
+                                {{form_label(form.n41latitud)}}
+                                {{form_widget(form.n41latitud)}}
+                            </div>
+                            <div class="form-group col-sm-6">
+                                {{form_label(form.n41longitud)}}
+                                {{form_widget(form.n41longitud)}}
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="module-wrapper masonry-item col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <section class="module module-headings">
+                            <div class="module-inner">
+                                <div class="module-heading">
+                                    <h3 class="module-title">Ubicación Política</h3>
+                                    <ul class="actions list-inline" style="display:none">
+                                        <li><a class="collapse-module" data-toggle="collapse" href="#content-4" aria-expanded="false" aria-controls="content-4"><span aria-hidden="true" class="icon arrow_carrot-up"></span></a></li>
+                                        <li><a class="close-module" href="#"><span aria-hidden="true" class="icon icon_close"></span></a></li>
+                                    </ul>
+                                    
+                                </div>
+                                
+                                <div class="module-content collapse in" id="content-4">
+                                    <div class="module-content-inner no-padding-bottom">
+                                        <div class="form-group">
+                                            <label for="">Departamento</label>
+                                            <div class="input-group">
+                                                {{form_widget(form.departamento)}}
+                                                <div class="input-group-addon"><button type="button" class="btn btn-primary-alt btn-xs" onclick="buscar(2)"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Provincia</label>
+                                            <div class="input-group">
+                                                {{form_widget(form.provincia)}}
+                                                <div class="input-group-addon"><button type="button" class="btn btn-success-alt btn-xs" onclick="buscar(3)"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Municipio</label>
+                                            <div class="input-group">
+                                                {{form_widget(form.municipio)}}
+                                                <div class="input-group-addon"><button type="button" class="btn btn-info-alt btn-xs" onclick="buscar(4)"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Comunidad</label>
+                                            <div class="input-group">
+                                                {{form_widget(form.comunidad)}}
+                                                <div class="input-group-addon"><button type="button" class="btn btn-warning-alt btn-xs" onclick="buscar(5)"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Localidad</label>
+                                            <div class="input-group">
+                                                {{form_widget(form.localidad)}}
+                                                <div class="input-group-addon"><button type="button" class="btn btn-purple-alt btn-xs" onclick="buscar(6)"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="module module-headings" style="display:none">
+                            <div class="module-inner">
+                                <div class="module-heading">
+                                    <h3 class="module-title">Predios</h3>
+                                    <ul class="actions list-inline">
+                                        <li><a class="collapse-module" data-toggle="collapse" href="#content-3" aria-expanded="false" aria-controls="content-3"><span aria-hidden="true" class="icon arrow_carrot-up"></span></a></li>
+                                        <li><a class="close-module" href="#"><span aria-hidden="true" class="icon icon_close"></span></a></li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="module-content collapse in" id="content-3">
+                                    <div class="module-content-inner no-padding-bottom">
+                                        <button type="button" class="btn btn-primary-alt" onclick="predio('cancha')" data-toggle="tooltip" data-placement="top" data-original-title="Cancha deportiva"><img src="{{asset('images/cancha.png')}}" width="40" alt=""></button>
+                                        <button type="button" class="btn btn-primary-alt" onclick="predio('auditorio')" data-toggle="tooltip" data-placement="top" data-original-title="Auditorio"><img src="{{asset('images/edificio.png')}}" width="40" alt=""></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="module-wrapper masonry-item col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                        <section class="module module-headings">
+                            <div class="module-inner">
+                                <div class="module-heading">
+                                    <h3 class="module-title">Ubicación Geográfica</h3>
+                                    <ul class="actions list-inline" style="display:none">
+                                        <li><a class="collapse-module" data-toggle="collapse" href="#content-2" aria-expanded="false" aria-controls="content-2"><span aria-hidden="true" class="icon arrow_carrot-up"></span></a></li>
+                                        <li><a class="close-module" href="#"><span aria-hidden="true" class="icon icon_close"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="module-content collapse in" id="content-2">
+                                        <div class="alert-info" style="padding:5px;display:none">
+                                            <i class="fa fa-info-circle"></i> Para actualizar la ubicación del edificio escolar, arrastre el marcador (<img src="{{asset('images/edificio.png')}}" alt="" width="20" height="20" onclick="initMap()"> del mapa) a la nueva ubicación.
+                                        </div>
+                                        <div>
+                                            <blockquote class="highlight-border">
+                                                <div style="float:right">
+                                                    <button type="button" class="btn btn-info-alt btn-circle" onclick="initMap()"><span aria-hidden="true" class="fs1 icon icon_pin_alt"></span></button>
+                                                </div>
+                                                <p class="text-highlight">Coordenadas</p>
+                                                Latitud:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite title="Source Title"><span id="latitudText"></span></cite><br>
+                                                Longitud: &nbsp;&nbsp;&nbsp;<cite title="Source Title"><span id="longitudText"></span></cite>
+                                            </blockquote>
+                                        </div>
+                                        <div id="map"></div>
+                                        <input type="hidden" id="latitud" value="{#latitud#}">
+                                        <input type="hidden" id="longitud" value="{#longitud#}">
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    </div>
+    </div>
+    </section>
+    
+    {{form_end(form)}}
+    <div class="modal fade bs-example-modal-lg" id="modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        
+    </div>
+    
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDROD2n5aHXRd8k_LaEPmgRNnLm576G-Kc&callback=initMap">
+    </script>
+    <script>
+        var peticion1;
+        function listarProvincias(idDpto) {
+            if (peticion1 && peticion1.readyState != 4) {
+                peticion1.abort();
+            }
+            peticion1 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_provincias_2012', {'departamento': idDpto}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_provincia').empty();
+                    $('#form_municipio').empty();
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion2;
+        function listarMunicipios(provincia) {
+            if (peticion2 && peticion2.readyState != 4) {
+                peticion2.abort();
+            }
+            peticion2 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_municipios_2012', {'provincia': provincia}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_municipio').empty();
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.municipio, function (i, value) {
+                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion3;
+        function listarComunidades(municipio) {
+            if (peticion3 && peticion3.readyState != 4) {
+                peticion3.abort();
+            }
+            peticion3 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_comunidades_2012', {'municipio': municipio}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.comunidad, function (i, value) {
+                        $("#form_comunidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion4;
+        function listarLocalidades(comunidad) {
+            if (peticion4 && peticion4.readyState != 4) {
+                peticion4.abort();
+            }
+            peticion4 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_localidades_2012', {'comunidad': comunidad}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_localidad').empty();
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.localidad, function (i, value) {
+                        $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        function verificarLocalidad(){
+            if($("#form_localidad option:selected").val().trim() === ''){
+                $('#btnBuscar').css('display','none');
+            }else{
+                $('#btnBuscar').css('display','block');
+                //buscar();
+            }
+        }
+    
+        var map;
+        var myLatLng;
+        var marker;
+        var contMarker = 1;
+        var infowindow;
+        var image = "{{asset('images/marker.png')}}";
+        var contentString;
+
+        function initMap() {
+            var latitud = parseFloat($('#form_n41latitud').val());
+            var longitud = parseFloat($('#form_n41longitud').val());
+            var codigoEdificio = '8000000';
+
+            myLatLng = {lat: latitud, lng: longitud};
+
+            
+        }
+
+        function eliminar(){
+            marker.setMap(null);
+        }
+
+        function confirmarUbicacion(){
+            alert(marker.getPosition().lat());
+            return false;
+        }
+
+        /*
+         *
+         */
+         function buscar(niv){
+            var departamento = $('#form_departamento option:selected').text().toLowerCase();
+            var provincia = $('#form_provincia option:selected').text().toLowerCase();
+            var municipio = $('#form_municipio option:selected').text().toLowerCase();
+            var comunidad = $('#form_comunidad option:selected').text().toLowerCase();
+            var localidad = $('#form_localidad option:selected').text().toLowerCase();
+            var address = '';
+            switch(niv){
+                case 2:
+                    address = 'Bolivia, departamento '+departamento;
+                    break;
+                case 3:
+                    address = 'Bolivia, departamento '+departamento+', provincia '+provincia;
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                    address = 'Bolivia, departamento '+departamento+', provincia '+provincia+', localidad '+localidad;
+                    break;
+            }
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'address':address}, geocodeResult);
+         }
+
+         function geocodeResult(results, status){
+            if(status == 'OK'){
+                //marker.setAnimation(google.maps.Animation.BOUNCE,results[0].geometry.location);
+                //marker.animateCamera(CameraUpdateFactory.newLatLng(results[0].geometry.location));
+                map.setCenter(results[0].geometry.location);
+                map.setZoom(7);
+                marker.setPosition(results[0].geometry.location);
+
+                $('#latitud').val(marker.getPosition().lat());
+                $('#longitud').val(marker.getPosition().lng());
+
+                $('#latitudText').text(marker.getPosition().lat());
+                $('#longitudText').text(marker.getPosition().lng());
+                /*var mapOptions = {
+                    center: results[0].geometry.location,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                map = new google.maps.Map($("#map").get(0), mapOptions);
+                map.fitBounds(results[0].geometry.viewport);*/
+
+                //var markerOptions = { position: results[0].geometry.location };
+                //marker = new google.maps.Marker(markerOptions);
+                //marker.setMap(map);
+            }else{
+                console.log(status);
+            }
+         }
+        var marker1 = null;
+        var marker2 = null;
+         function predio(item){
+            var icono = '';
+            switch(item){
+                case 'cancha': icono = "{{asset('images/cancha32.png')}}";
+                                if(marker1 == null){
+                                    marker1 = new google.maps.Marker({
+                                        position: myLatLng,
+                                        map: map,
+                                        title: 'Cancha deportiva',
+                                        icon: icono,
+                                        draggable: true
+                                    });
+                                }else{
+                                    map.setCenter(marker1.getPosition().lat(),marker1.getPosition().lng());
+                                }
+                                break;
+                case 'auditorio': icono2 = "{{asset('images/edificio.png')}}";
+                                if(marker2 == null){
+                                    marker2 = new google.maps.Marker({
+                                        position: myLatLng,
+                                        map: map,
+                                        title: 'Auditorio',
+                                        icon: icono2,
+                                        draggable: true
+                                    });
+                                }else{
+                                    map.setCenter(marker2.getPosition().lat(),marker2.getPosition().lng());
+                                }
+                                break;
+                default:
+                     break;
+            }
+         }
+    </script>
+
+    <script>
+        /* Validaciones */
+        $("#form_n11Areaconstruida").numeric("positiveInteger");
+        $("#form_n11Arearecreacion").numeric("positiveInteger");
+        $("#form_n11Areanoconstruida").numeric("positiveInteger");
+        $("#form_n11Areacultivo").numeric("positiveInteger");
+        $("#form_n11Areacriaanimales").numeric("positiveInteger");
+
+        $("#form_n13MuroperimetralArea").numeric("positiveInteger");
+        $("#form_n13MuroperimetralActual").numeric("positiveInteger");
+
+        $("#form_n22AnioConstruccion").numeric("positiveInteger");
+        $("#form_n23AnioRefaccion").numeric("positiveInteger");
+        $("#form_n24AnioAmpliacion").numeric("positiveInteger");
+        $("#form_n26Razonsocial").alphanum({allowOtherCharSets : true, allow:'-.,'});
+
+        $("#form_n29DocumentoObs").alphanum({allowOtherCharSets : true, allow:'-.,'});
+        $("#form_n29DocumentoNroPartida").alphanum({allowOtherCharSets : true, allow:'-.,'}); 
+
+    </script>
+    <script>
+        var cont = 0;
+        var arrayPisos = [];
+        var arrayParedes = [];
+        var arrayCielos = [];
+        var arrayTechos = [];
+
+        $(function(){
+            $('.jinfo').addClass('fa fa-question')
+            totalArea();
+            var idEntidad = $('#form_id').val();
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_caracteristicas_bloquesedificados',{id: idEntidad}),
+               beforeSend: function () {
+                   $("#bloquesEdificados").empty();
+               },
+               success: function (data) {
+                    
+                    arrayPisos = data.piso;
+                    arrayParedes = data.pared;
+                    arrayCielos = data.cielo;
+                    arrayTechos = data.techo;
+
+                    $.each(data.bloques, function (i, valores) {
+                        cont++;
+                        var nombre = 'nombre' + cont;
+                        var area = 'area' + cont;
+                        var nroPlantas = 'nroPlantas' + cont;
+                        var pisos = 'pisos' + cont;
+                        var paredes = 'paredes' + cont;
+                        var cielos = 'cielos' + cont;
+                        var techos = 'techos' + cont;
+                        var nroAmbPed = 'nroAmbPed' + cont;
+                        var nroAmbNoPed = 'nroAmbNoPed' + cont;
+                        var nroTotalAmb = 'nroTotalAmb' + cont;
+
+                        $("#bloquesEdificados").append('<tr id="'+cont+'">\n\
+                            <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                            <td><input type="text" name="nombreBloque[]" id="'+nombre+'" value="'+valores.nombre+'" size="50" class="jupper" maxlength="50" required="true" autocomplete="off" title="3.1 Nombre Bloque"></td>\n\
+                            <td><input type="text" name="area[]" id="'+area+'" value="'+valores.area+'" size="5" maxlength="4" required="true" autocomplete="off" title="3.1 Área(m2)"></td>\n\
+                            <td><input type="text" name="nroPlantas[]" id="'+nroPlantas+'" value="'+valores.nroPlantas+'" size="5" maxlength="4" required="true" autocomplete="off" title="3.1 Nro Plantas"></td>\n\
+                            <td><select name="pisos[]" id="'+pisos+'" required="true" title="3.1 Pisos"></select>\n\
+                            <td><select name="paredes[]" id="'+paredes+'" required="true" title="3.1 Paredes"></select>\n\
+                            <td><select name="cielos[]" id="'+cielos+'" required="true" title="3.1 Cielo Raso"></select>\n\
+                            <td><select name="techos[]" id="'+techos+'" required="true" title="3.1 Techos"></select>\n\
+                            <td><input type="text" name="nroAmbPed[]" id="'+nroAmbPed+'" value="'+valores.nroAmbPed+'" size="5" maxlength="4" required="true" autocomplete="off" title="3.1 Nro Amb. Ped."></td>\n\
+                            <td><input type="text" name="nroAmbNoPed[]" id="'+nroAmbNoPed+'" value="'+valores.nroAmbNoPed+'" size="5" maxlength="4" required="true" autocomplete="off" title="3.1 Nro. Amb. no Ped."></td>\n\
+                            <td><input type="text" name="nroTotalAmb[]" id="'+nroTotalAmb+'" value="'+valores.nroTotalAmb+'" size="5" maxlength="4" required="true" autocomplete="off" title="3.1 Total Amb."></td>\n\
+                            </tr>');
+
+                        $("#" + pisos).empty();
+                        $("#" + pisos).append('<option value="">Seleccionar...</option>');
+                        $.each(data.piso, function (i, value) {
+                            if(i==valores.piso){sel = 'selected';}else{sel = '';}
+                            $("#" + pisos).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+                        $("#" + paredes).empty();
+                        $("#" + paredes).append('<option value="">Seleccionar...</option>');
+                        $.each(data.pared, function (i, value) {
+                            if(i==valores.pared){sel = 'selected';}else{sel = '';}
+                            $("#" + paredes).append('<option value="' + i + '"'+ sel +'>' + value + '</option>');
+                        });
+                        $("#" + cielos).empty();
+                        $("#" + cielos).append('<option value="">Seleccionar...</option>');
+                        $.each(data.cielo, function (i, value) {
+                            if(i==valores.cielo){sel = 'selected';}else{sel = '';}
+                            $("#" + cielos).append('<option value="' + i + '"'+ sel +'>' + value + '</option>');
+                        });
+                        $("#" + techos).empty();
+                        $("#" + techos).append('<option value="">Seleccionar...</option>');
+                        $.each(data.techo, function (i, value) {
+                            if(i==valores.techo){sel = 'selected';}else{sel = '';}
+                            $("#" + techos).append('<option value="' + i + '"'+ sel +'>' + value + '</option>');
+                        });
+
+                        $("#"+nombre).alphanum({allowOtherCharSets : true, allow:'-.,'});
+                        $("#"+area).numeric("positiveInteger");
+                        $("#"+nroPlantas).numeric("positiveInteger");
+                        $("#"+nroAmbPed).numeric("positiveInteger");
+                        $("#"+nroAmbNoPed).numeric("positiveInteger");
+                        $("#"+nroTotalAmb).numeric("positiveInteger");
+                    });
+
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        });
+
+        function agregarFila(){
+            cont++;
+            var nombre = 'nombre' + cont;
+            var area = 'area' + cont;
+            var nroPlantas = 'nroPlantas' + cont;
+            var pisos = 'pisos' + cont;
+            var paredes = 'paredes' + cont;
+            var cielos = 'cielos' + cont;
+            var techos = 'techos' + cont;
+            var nroAmbPed = 'nroAmbPed' + cont;
+            var nroAmbNoPed = 'nroAmbNoPed' + cont;
+            var nroTotalAmb = 'nroTotalAmb' + cont;
+
+            $("#bloquesEdificados").append('<tr id="'+cont+'">\n\
+                <td><button type="button" onclick="eliminarFila('+cont+')"><i class="fa fa-remove text-danger"></i></button></td>\n\
+                <td><input type="text" name="nombreBloque[]" id="'+nombre+'" value="" size="50" class="jupper" maxlength="50" required="true" autocomplete="off" title="3.1 Nombre Bloque"></td>\n\
+                <td><input type="text" name="area[]" id="'+area+'" value="" size="5" maxlength="4" required="true" autocomplete="off" title="3.1 Área(m2)"></td>\n\
+                <td><input type="text" name="nroPlantas[]" id="'+nroPlantas+'" value="" size="5" maxlength="4" required="true" autocomplete="off" title="3.1 Nro Plantas"></td>\n\
+                <td><select name="pisos[]" id="'+pisos+'" required="true" title="3.1 Pisos"></select>\n\
+                <td><select name="paredes[]" id="'+paredes+'" required="true" title="3.1 Paredes"></select>\n\
+                <td><select name="cielos[]" id="'+cielos+'" required="true" title="3.1 Cielo Raso"></select>\n\
+                <td><select name="techos[]" id="'+techos+'" required="true" title="3.1 Techos"></select>\n\
+                <td><input type="text" name="nroAmbPed[]" id="'+nroAmbPed+'" value="" size="5" maxlength="4" required="true" autocomplete="off" title="3.1 Nro Amb. Ped."></td>\n\
+                <td><input type="text" name="nroAmbNoPed[]" id="'+nroAmbNoPed+'" value="" size="5" maxlength="4" required="true" autocomplete="off" title="3.1 Nro. Amb. no Ped."></td>\n\
+                <td><input type="text" name="nroTotalAmb[]" id="'+nroTotalAmb+'" value="" size="5" maxlength="4" required="true" autocomplete="off" title="3.1 Total Amb."></td>\n\
+                </tr>');
+
+            $("#" + pisos).empty();
+            $("#" + pisos).append('<option value="">Seleccionar...</option>');
+            $.each(arrayPisos, function (i, value) {
+                $("#" + pisos).append('<option value="' + i + '">' + value + '</option>');
+            });
+            $("#" + paredes).empty();
+            $("#" + paredes).append('<option value="">Seleccionar...</option>');
+            $.each(arrayParedes, function (i, value) {
+                $("#" + paredes).append('<option value="' + i + '">' + value + '</option>');
+            });
+            $("#" + cielos).empty();
+            $("#" + cielos).append('<option value="">Seleccionar...</option>');
+            $.each(arrayCielos, function (i, value) {
+                $("#" + cielos).append('<option value="' + i + '">' + value + '</option>');
+            });
+            $("#" + techos).empty();
+            $("#" + techos).append('<option value="">Seleccionar...</option>');
+            $.each(arrayTechos, function (i, value) {
+                $("#" + techos).append('<option value="' + i + '">' + value + '</option>');
+            });
+
+            $("#"+nombre).alphanum({allowOtherCharSets : true, allow:'-.,'});
+            $("#"+area).numeric("positiveInteger");
+            $("#"+nroPlantas).numeric("positiveInteger");
+            $("#"+nroAmbPed).numeric("positiveInteger");
+            $("#"+nroAmbNoPed).numeric("positiveInteger");
+            $("#"+nroTotalAmb).numeric("positiveInteger");
+        }
+
+        function eliminarFila(id){
+            cont--;
+            $("#" + id).remove();
+        }
+
+        function totalArea(){
+            var a1 = Number($("#form_n11Areaconstruida").val());
+            var a2 = Number($("#form_n11Arearecreacion").val()); 
+            var a3 = Number($("#form_n11Areanoconstruida").val());
+            var a4 = Number($("#form_n11Areacultivo").val());
+            var a5 = Number($("#form_n11Areacriaanimales").val());
+            var total = a1 + a2 + a3 + a4 + a5;
+            $('#total').val(total);
+        }
+
+        var adicionar = function(){
+            $.ajax({
+               type: 'post',
+               url: Routing.generate('infra_caracteristicas_adicionar'),
+               beforeSend: function () {
+                   $("#modal").empty();
+               },
+               success: function (data) {
+                    $("#modal").append(data);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+            });
+        }
+
+        /* Invalidamos los mensajes html5 */
+        var form = document.querySelector('#formCaracteristicas');
+        form.addEventListener('invalid',function(event){
+            event.preventDefault();
+        },true);
+
+        var button = form.querySelector('#form_guardar');
+        button.addEventListener('click', function(){
+            var invalid = form.querySelectorAll(':invalid');
+            var mensajes = "";
+            // Reiteramos sobre ellos
+            for(var i = 0; i < invalid.length;i++){
+                var titleElemento = invalid[i].title;
+
+                // Condicion para los radios
+                var tagElemento = invalid[i].tagName;
+                if(titleElemento == '' && tagElemento != 'FIELDSET'){
+                    var idElementoInvalido = invalid[i+1].id;
+                    var padre = $('#'+idElementoInvalido).parent();
+                    var tagNombre = $('#'+idElementoInvalido).attr('tagName');
+                    var titulo = padre.attr('title')
+                    if(titulo != "undefined"){
+                        titleElemento = titulo;
+                        i = i + 2;
+                    }
+                    
+                }
+                //
+
+                mensajes = mensajes +'<div>'+titleElemento+'</div>';
+            };
+            if(mensajes !== ""){
+                $('.notifyjs-corner').empty();
+                $.notify('<div style="border-bottom:1px solid #FFB89B"><i class="fa fa-warning"></i> Debe Completar</div><br>'+mensajes,{style:"appkit",className:"warn",hideAnimation:"fadeOut",showAnimation:"fadeIn",autoHide:!1,clickToHide:!0});
+            }
+        });
+
+        function validarForm(){
+            var mensajes = "";
+            var enviar = true;
+            if($('#form_n27EstadogeneralTipo').val() == 0){
+                mensajes = mensajes +'<div>2.7 Estado general del edificio (SE ENCUENTRA SIN DATO)</div>';
+                enviar = false;
+            }
+            if($('#form_n28TechoEstadogeneralTipo').val() == 0){
+                mensajes = mensajes +'<div>2.8 Estado general Techos (SE ENCUENTRA SIN DATO)</div>';
+                enviar = false;
+            }
+            if($('#form_n28ParedEstadogeneralTipo').val() == 0){
+                mensajes = mensajes +'<div>2.8 Estado general Paredes (SE ENCUENTRA SIN DATO)</div>';
+                enviar = false;
+            }
+            if($('#form_n28PisoEstadogeneralTipo').val() == 0){
+                mensajes = mensajes +'<div>2.8 Estado general Pisos (SE ENCUENTRA SIN DATO)</div>';
+                enviar = false;
+            }
+            if($('#form_n28CieloEstadogeneralTipo').val() == 0){
+                mensajes = mensajes +'<div>2.8 Estado general Cielo raso (SE ENCUENTRA SIN DATO)</div>';
+                enviar = false;
+            }
+            if($('#form_n29DocumentoTipo').val() == 0){
+                mensajes = mensajes +'<div>2.9 Tipo de documentación de mayor validez legal (SE ENCUENTRA SIN DATO)</div>';
+                enviar = false;
+            }
+
+            // Validacion de los selects dinamicos
+            $('select[name="pisos[]"]').each(function(){
+                if(this.value == 0){
+                    mensajes = mensajes +'<div>3.1 Pisos (SE ENCUENTRA SIN DATO)</div>';
+                    enviar = false;
+                }
+            });
+            $('select[name="paredes[]"]').each(function(){
+                if(this.value == 0){
+                    mensajes = mensajes +'<div>3.1 Paredes (SE ENCUENTRA SIN DATO)</div>';
+                    enviar = false;
+                }
+            });
+            $('select[name="cielos[]"]').each(function(){
+                if(this.value == 0){
+                    mensajes = mensajes +'<div>3.1 Cielos (SE ENCUENTRA SIN DATO)</div>';
+                    enviar = false;
+                }
+            });
+            $('select[name="techos[]"]').each(function(){
+                if(this.value == 0){
+                    mensajes = mensajes +'<div>3.1 Techos (SE ENCUENTRA SIN DATO)</div>';
+                    enviar = false;
+                }
+            });
+
+            if(enviar == false){
+                $('.notifyjs-corner').empty();
+                $.notify('<div style="border-bottom:1px solid #FFB89B"><i class="fa fa-warning"></i> Debe Seleccionar</div>'+mensajes,{style:"appkit",className:"info",hideAnimation:"fadeOut",showAnimation:"fadeIn",autoHide:!1,clickToHide:!0});
+                return false;
+            }else{
+                $('.notifyjs-corner').empty();
+                return true;
+            }
+        }
+    </script>
+{% endblock %}

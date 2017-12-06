@@ -1,0 +1,91 @@
+Sie\AppWebBundle\Entity\TtecAdministrativoCarreraPersona:
+    type: entity
+    table: ttec_administrativo_carrera_persona
+    indexes:
+        IDX_898761BFA83B07A:
+            columns:
+                - ttec_carrera_tipo_id
+        IDX_898761BF7D8F191E:
+            columns:
+                - ttec_cargo_tipo_id
+        IDX_898761BF518C33DE:
+            columns:
+                - ttec_cargo_designacion_tipo_id
+        IDX_898761BFF5F88DB9:
+            columns:
+                - persona_id
+        IDX_898761BF179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        ttecCarreraTipo:
+            targetEntity: TtecCarreraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_carrera_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecCargoTipo:
+            targetEntity: TtecCargoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_cargo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecCargoDesignacionTipo:
+            targetEntity: TtecCargoDesignacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_cargo_designacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

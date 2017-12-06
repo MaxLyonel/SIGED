@@ -1,0 +1,32 @@
+Sie\AppWebBundle\Entity\IdiomaorginarioTraduccion:
+    type: entity
+    table: idiomaorginario_traduccion
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        titulocastellano:
+            type: string
+            nullable: true
+            length: 120
+            fixed: false
+            comment: ''
+        titulooriginario:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+        idiomaoriginarioTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: idiomaoriginario_tipo_id
+    lifecycleCallbacks: {  }

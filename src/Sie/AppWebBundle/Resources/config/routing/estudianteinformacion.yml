@@ -1,0 +1,17 @@
+estudianteinformacion:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:EstudianteInformacion:index" }
+
+estudianteinformacion_result:
+    path:    /result
+    defaults: { _controller: "SieAppWebBundle:EstudianteInformacion:result" } 
+    
+estudianteinformacion_result2:
+    path:    /result2
+    defaults: { _controller: "SieAppWebBundle:EstudianteInformacion:result2" }     
+    
+estudianteinformacion_history:
+    path:     /history/{idStudent}
+    defaults: { _controller: "SieAppWebBundle:EstudianteInformacion:history" }    
+    options:
+        expose: true    

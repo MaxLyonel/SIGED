@@ -1,0 +1,136 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Información {{ app.session.get('tituloTipo') }}
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i> <a href="{{path('institucioneducativagestion',{'op':'search'})}}">Buscar</a></li>
+                    <li><i class="fa fa-home"></i>  <a href="">{{ app.session.get('tituloTipo') }}</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Datos {{ app.session.get('tituloTipo') }}</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div id="no-more-tables">
+                            <table class="table table-bordered cf">
+                                <thead class="cf">
+                                <tr>
+                                    <th>Código SIE</th>
+                                    <th>Nombre</th>
+                                    <th>Gestión</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <td data-title="Código SIE">{{institucion.id}}</td>
+                                    <td data-title="Ins.Educativa">{{institucion.institucioneducativa}}</td>
+                                    <td data-title="Gestión">{{gestion}}</td>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Sub-Centros</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelmaestro"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelmaestro" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            {% if sucursales is not empty %}
+                                <div id="no-more-tables">
+                                    <table class="table table-bordered table-hover cf dataTable" id="myTable">
+                                        <thead class="cf">
+                                            <tr>
+                                                <th>N°</th>
+                                                <th>Sub-Centro</th>
+                                                <th>Teléfono</th>
+                                                <th>Correo</th>
+                                                <th>Fax</th>
+                                                <th>Gestión</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for sucursal in sucursales %}
+                                                {% set sucursalTipo = sucursal.sucursalTipo %}
+                                                {% set sucursalGestion = sucursal.gestionTipo %}
+                                                <tr>
+                                                    <td data-title="N°">{{ loop.index }}&nbsp;</td>
+                                                    <td data-title="Sucursal">{{ sucursalTipo.id }}&nbsp;</td>
+                                                    <td data-title="Teléfono">{{ sucursal.telefono1 }}&nbsp;</td>
+                                                    <td data-title="Correo">{{ sucursal.email }}&nbsp;</td>
+                                                    <td data-title="Fax">{{ sucursal.fax }}&nbsp;</td>
+                                                    <td data-title="Gestión">{{ sucursalGestion.id }}&nbsp;</td>
+                                                    <td data-title="Acciones">
+                                                        <form action="{{path('institucioneducativagestion_edit')}}" method="post" style="display:inline-block">
+                                                            <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                                                            <input type="hidden" name="idSucursal" value="{{sucursal.id}}">
+                                                            <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
+                                                        </form>
+                                                        
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                No hay sucursales registrados en el sistema...
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+{% endblock %}
+

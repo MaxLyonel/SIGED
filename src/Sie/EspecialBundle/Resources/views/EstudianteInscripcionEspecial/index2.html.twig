@@ -1,0 +1,174 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Inscripción de Estudiantes
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="">{{ app.session.get('tituloTipo') }}</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('registroConRudeOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('eliminarError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Institución Educativa</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div id="no-more-tables">
+                            <table class="table table-bordered cf">
+                                <thead class="cf">
+                                <tr>
+                                    <th>Código SIE</th>
+                                    <th>Institución Educativa</th>
+                                    <th>Gestión</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <td data-title="Código SIE">{{institucion.id}}</td>
+                                    <td data-title="Ins.Educativa">{{institucion.institucioneducativa}}</td>
+                                    <td data-title="Gestión">{{gestion}}</td>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>{{ app.session.get('tituloTipo') }}</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelmaestro"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelmaestro" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <p><a href="{{path('estudianteinscripcion_new')}}" class="btn-link"><i class="fa fa-user"></i> Nuevo</a></p>
+                            
+                            {% if inscritos is not empty %}
+                                <div id="no-more-tables">
+                                    <table class="table table-bordered table-hover cf dataTable" id="myTable">
+                                        <thead class="cf">
+                                            <tr>
+                                                
+                                                <th>Rude</th>
+                                                <th>C.I.</th>
+                                                <th>Nombres</th>
+                                                <th>Fecha Nacimiento</th>
+                                                <th>Nivel</th>
+                                                <th>Grado</th>
+                                                <th>Paralelo</th>
+                                                <th>Turno</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for inscrito in inscritos %}
+                                                {% set estudiante = inscrito.estudiante %}
+                                                <tr>
+                                                    
+                                                    <td data-title="Rude">{{ estudiante.codigoRude }}</td>
+                                                    <td data-title="C.I.">{{ estudiante.carnetIdentidad }}</td>
+                                                    <td data-title="Nombres">{{ inscrito.estudiante }}</td>
+                                                    <td data-title="Fecha Nac.">{{ estudiante.fechaNacimiento|date('d-m-Y') }}</td>
+                                                    <td data-title="Nivel">{{ inscrito.nivelTipo }}</td>
+                                                    <td data-title="Grado">{{ inscrito.gradoTipo }}</td>
+                                                    <td data-title="Paralelo">{{ inscrito.paraleloTipo }}</td>
+                                                    <td data-title="Turno">{{ inscrito.turnoTipo }}</td>
+                                                    <td data-title="Acciones">
+                                                        <form action="{{path('personaladministrativogestion_edit')}}" method="post" style="display:inline-block">
+                                                            <input type="hidden" name="idPersona" value="{{estudiante.id}}">
+                                                            <input type="hidden" name="idInstitucion" value="{{estudiante.id}}">
+                                                            <input type="hidden" name="gestion" value="{{gestion}}">
+                                                            <input type="hidden" name="idMaestroInscripcion" value="{{estudiante.id}}">
+                                                            <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
+                                                        </form>
+                                                        <form action="{{path('personaladministrativogestion_delete')}}" method="post" style="display: inline-block">
+                                                            <input type="hidden" name="idPersona" value="{{estudiante.id}}">
+                                                            <input type="hidden" name="idInstitucion" value="{{estudiante.id}}">
+                                                            <input type="hidden" name="gestion" value="{{gestion}}">
+                                                            <input type="hidden" name="idMaestroInscripcion" value="{{estudiante.id}}">
+                                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                No hay Personal Administrativo registrado.
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{path('personaladministrativogestion',{'op':'search'})}}" class="btn-link"><i class="fa fa-arrow-circle-left"></i> Atras</a>
+        </div>
+    </div> 
+{% endblock %}

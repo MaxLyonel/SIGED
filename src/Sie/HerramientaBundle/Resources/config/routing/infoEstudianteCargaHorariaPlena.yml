@@ -1,0 +1,23 @@
+herramienta_infoEstudianteCargaHorariaPlena_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteCargaHorariaPlena:index"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteCargaHorariaPlena_create_update:
+    path:     /createUpdate
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteCargaHorariaPlena:createUpdate"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteCargaHorariaPlena_finalizeCreateUpdate:
+    path:     /finalizeCreateUpdate
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteCargaHorariaPlena:finalizeCreateUpdate"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteCargaHorariaPlena_finalizeCreateUpdate_confirm:
+    path:     /finalizeCreateUpdateConfirm
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteCargaHorariaPlena:finalizeCreateUpdateConfirm"}
+    options:
+         expose: true

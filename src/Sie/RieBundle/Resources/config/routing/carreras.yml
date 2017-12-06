@@ -1,0 +1,36 @@
+
+carrera_rie_list:
+    path:     /
+    defaults: { _controller: "SieRieBundle:Carreras:list" }
+
+carrera_rie_new:
+    path:     /new
+    defaults: { _controller: "SieRieBundle:Carreras:new" }    
+    methods:  GET 
+
+carrera_rie_create:
+    path:     /create
+    defaults: { _controller: "SieRieBundle:Carreras:create" }
+    methods:  POST      
+
+carrera_rie_edit:
+    path:     /edit/{idCarrera}
+    defaults: { _controller: SieRieBundle:Carreras:edit } 
+    methods:  GET      
+        
+carrera_rie_update:
+    path:     /update
+    defaults: { _controller: "SieRieBundle:Carreras:update" }
+    methods:  POST          
+
+carrera_rie_delete:
+    path:     /delete/{idCarrera}
+    defaults: { _controller: SieRieBundle:Carreras:delete } 
+    methods:  GET    
+
+#rie_buscar_area_formacion:
+#     path:    /buscarareaf/{idArea}/
+#     defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:buscarareaf" }
+#     options:
+#         expose: true         
+    

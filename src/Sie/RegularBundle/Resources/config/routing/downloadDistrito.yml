@@ -1,0 +1,15 @@
+download_distrito_sie_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:DownloadDistrito:index }
+
+download_distrito_sie_build:
+    path:     /sie/buildfile/
+    defaults: { _controller: SieRegularBundle:DownloadDistrito:build }
+    options:
+         expose: true 
+    
+download_distrito_sie_getgestion:
+    path:     /getGestion/{sie}
+    defaults: { _controller: SieRegularBundle:DownloadDistrito:getgestion }       
+    options:
+         expose: true 

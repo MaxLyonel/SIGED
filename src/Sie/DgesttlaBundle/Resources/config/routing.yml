@@ -1,0 +1,15 @@
+sie_dgesttla_main:
+    resource:   "@SieDgesttlaBundle/Resources/config/routing/dgesttla.yml"
+    prefix: /dgesttla
+
+sie_dgesttla_docentes:
+    resource:   "@SieDgesttlaBundle/Resources/config/routing/infoDocente.yml"
+    prefix: /dgesttla/docente
+
+sie_dgesttla_administrativos:
+    resource:   "@SieDgesttlaBundle/Resources/config/routing/infoPersonalAdm.yml"
+    prefix: /dgesttla/administrativo
+
+sie_dgesttla_administrativos_carrera:
+    resource:   "@SieDgesttlaBundle/Resources/config/routing/infoPersonalAdmCarrera.yml"
+    prefix: /dgesttla/administrativocarrera

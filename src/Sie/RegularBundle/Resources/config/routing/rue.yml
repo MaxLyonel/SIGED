@@ -1,0 +1,86 @@
+bjp_rue:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:index" }
+
+bjp_rue_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:show" }
+
+bjp_rue_new:
+    path:     /new
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:new" }
+
+bjp_rue_create:
+    path:     /create
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:create" }
+    methods:  POST
+
+#rue_edit:
+#    path:     /{id}/edit
+#    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:edit" }
+
+bjp_rue_edit:
+    path:     /edit/
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:edit" }
+    methods:  POST
+
+
+#rue_update:
+#    path:     /{id}/update
+#    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:update" }
+#    methods:  [POST, PUT]
+
+bjp_rue_update:
+    path:     /update/
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:update" }
+    methods:  [POST, PUT]
+
+
+bjp_rue_delete:
+    path:     /delete/
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:delete" }
+    methods:  [POST, DELETE]    
+
+bjp_rue_result:
+    path:     /findieducativa
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:findieducativa" }
+
+bjp_rue_view:
+    path:     /view/
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:view" }
+
+bjp_rue_buscar_edificio:
+     path:    /buscaredificio/{idLe}/
+     defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:buscaredificio" }
+     options:
+         expose: true
+
+bjp_rue_clistarprovincias:
+    path:     /bjplistarprovincias/{dpto}
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:listarprovincias" }
+    options:
+         expose: true
+
+bjp_rue_clistarmunicipios:
+    path:     /bjplistarmunicipios/{prov}
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:listarmunicipios" }
+    options:
+         expose: true         
+
+bjp_rue_clistarcantones:
+    path:     /bjplistarcantones/{muni}
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:listarcantones" }
+    options:
+         expose: true               
+
+bjp_rue_clistarlocalidades:
+    path:     /bjplistarlocalidades/{cantn}
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:listarlocalidades" }
+    options:
+         expose: true            
+
+bjp_rue_clistardistritos:
+    path:     /bjplistardistritos/{dpto}
+    defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:listardistritos" }
+    options:
+         expose: true

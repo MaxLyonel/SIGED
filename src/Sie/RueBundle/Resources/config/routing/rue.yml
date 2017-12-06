@@ -1,0 +1,57 @@
+rue:
+    path:     /
+    defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:index" }
+
+rue_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:show" }
+
+rue_new:
+    path:     /new
+    defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:new" }
+
+rue_create:
+    path:     /create
+    defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:create" }
+    methods:  POST
+
+#rue_edit:
+#    path:     /{id}/edit
+#    defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:edit" }
+
+rue_edit:
+    path:     /edit/
+    defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:edit" }
+    methods:  POST
+
+
+#rue_update:
+#    path:     /{id}/update
+#    defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:update" }
+#    methods:  [POST, PUT]
+
+rue_update:
+    path:     /update/
+    defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:update" }
+    methods:  [POST, PUT]
+
+
+rue_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:delete" }
+    methods:  [POST, DELETE]
+
+rue_result:
+    path:     /findieducativa
+    defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:findieducativa" }
+    
+rue_view:
+    path:     /view/
+    defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:view" }
+
+rue_buscar_edificio:
+     path:    /buscaredificio/{idLe}/
+     defaults: { _controller: "SieRueBundle:RegistroInstitucionEducativa:buscaredificio" }
+     options:
+         expose: true
+    

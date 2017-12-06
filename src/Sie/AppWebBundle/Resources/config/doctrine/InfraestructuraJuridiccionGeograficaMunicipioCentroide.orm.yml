@@ -1,0 +1,76 @@
+Sie\AppWebBundle\Entity\InfraestructuraJuridiccionGeograficaMunicipioCentroide:
+    type: entity
+    table: infraestructura_juridiccion_geografica_municipio_centroide
+    indexes:
+        IDX_D8B460DDCE295FA5:
+            columns:
+                - lugar_tipo_id_municipio2012
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        depto:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        prov:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        mun:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        pob:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+        latitudX:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: latitud_x
+        longitudY:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: longitud_y
+    manyToOne:
+        lugarTipoMunicipio2012:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_tipo_id_municipio2012:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,59 @@
+alternativa_inscriptionHumanisticas_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:index}
+
+alternativa_inscriptionHumanisticas_goinscription:
+    path:     /goinscription
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:goInscription}
+
+alternativa_inscriptionHumanisticas_result:
+    path:     /alt/result
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:result}
+    options:
+         expose: true
+
+alternativa_inscriptionHumanisticas_findIE:
+     path:    /findIE/{id}/{gestion}
+     defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:findIE }
+     options:
+         expose: true
+
+alternativa_inscriptionHumanisticas_findciclo:
+    path:    /findciclo/{sie}/{subcea}/{semestre}/{gestion}
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:findCiclo }
+    options:
+        expose: true
+
+alternativa_inscriptionHumanisticas_findgrado:
+    path:    /findgrado/{sie}/{subcea}/{semestre}/{gestion}/{ciclo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:findGrado }
+    options:
+        expose: true
+
+alternativa_inscriptionHumanisticas_findparalelo:
+    path:    /findparalelo/{sie}/{subcea}/{semestre}/{gestion}/{ciclo}/{grado}
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:findParalelo }
+    options:
+        expose: true
+
+alternativa_inscriptionHumanisticas_findturno:
+    path:    /findturno/{sie}/{subcea}/{semestre}/{gestion}/{ciclo}/{grado}/{paralelo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:findTurno }
+    options:
+        expose: true
+
+alternativa_inscriptionHumanisticas_saveExcepcionales:
+    path: /saveexcepcionales
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:saveExcepcionales }
+
+alternativa_inscriptionHumanisticas_withoutrude:
+    path: /withoutrudeexcepcional
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:withoutRudeExcepcional }
+
+alternativa_inscriptionHumanisticas_searchstudents:
+    path: /searchstudents
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:searchStudents }
+
+alternativa_inscriptionHumanisticas_newexcepcional:
+    path: /newexcepcional
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionHumanisticas:newExcepcional }

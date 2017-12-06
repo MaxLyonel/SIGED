@@ -1,0 +1,24 @@
+Sie\AppWebBundle\Entity\IdiomaTipo:
+    type: entity
+    table: idioma_tipo
+    uniqueConstraints:
+        idioma_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        idioma:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

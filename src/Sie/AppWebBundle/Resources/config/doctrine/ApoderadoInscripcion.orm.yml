@@ -1,0 +1,64 @@
+Sie\AppWebBundle\Entity\ApoderadoInscripcion:
+    type: entity
+    table: apoderado_inscripcion
+    indexes:
+        idx_apoderado_inscripcion_estudiante_inscripcion_id:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_98C9376BF5F88DB9:
+            columns:
+                - persona_id
+        IDX_98C9376BC861DD7C:
+            columns:
+                - apoderado_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        esValidado:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: es_validado
+    manyToOne:
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        apoderadoTipo:
+            targetEntity: ApoderadoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                apoderado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

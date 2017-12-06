@@ -1,0 +1,56 @@
+Sie\AppWebBundle\Entity\TramiteDetalleDerivacion:
+    type: entity
+    table: tramite_detalle_derivacion
+    indexes:
+        IDX_3E08B61110CA67B8:
+            columns:
+                - tramite_detalle_id_recibe
+        IDX_3E08B61199526E6B:
+            columns:
+                - tramite_detalle_id_envia
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRecibe:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_recibe
+        fechaEnvia:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_envia
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        tramiteDetalleRecibe:
+            targetEntity: TramiteDetalle
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_detalle_id_recibe:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tramiteDetalleEnvia:
+            targetEntity: TramiteDetalle
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_detalle_id_envia:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

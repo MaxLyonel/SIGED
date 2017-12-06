@@ -1,0 +1,27 @@
+certificado_rie:
+    path:     /
+    defaults: { _controller: "SieRieBundle:CertificadoInstituto:index" }
+
+certificado_rie_new:
+    path:     /new
+    defaults: { _controller: "SieRieBundle:CertificadoInstituto:new" }
+
+certificado_rie_create:
+    path:     /create
+    defaults: { _controller: "SieRieBundle:CertificadoInstituto:create" }
+    methods:  POST
+
+certificado_rie_edit:
+    path:     /edit/{idCertificado}
+    defaults: { _controller: "SieRieBundle:CertificadoInstituto:edit" }
+    methods:  GET
+
+certificado_rie_delete:
+    path:     /delete/
+    defaults: { _controller: "SieRieBundle:CertificadoInstituto:delete" }
+    methods:  [POST, DELETE]
+
+certificado_rie_update:
+    path:     /update/
+    defaults: { _controller: "SieRieBundle:CertificadoInstituto:update" }
+    methods:  [POST, PUT]

@@ -1,0 +1,102 @@
+<small>
+{%if exist %}
+  <div class='row'>
+    <div class='col-md-4 col-md-offset-8'></div>
+  </div>
+<div class="col-md-12">
+
+    <!-- Start horizontal form -->
+    <div class="panel rounded shadow">
+        <div class="panel-heading">
+            <div class="pull-center">
+                <h3 class="panel-title">Información Estudiante<code></code></h3>
+            </div>
+            <div class="pull-right">
+                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'idInscriptionForm', 'class':'form-inline'} } )}}
+                <input type="hidden" id="form_dateStudent" name="form[dateStudent]" class="form-control" value='{{objStudent.fechaNacimiento | date('Y-m-d')}}'>
+                {{form_end(form)}}
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="panel-body no-padding">
+            <!-- here the content -->
+                    <table id="datatable-ajax" class="table table-striped table-success dataTable" role="grid" aria-describedby="datatable-ajax_info">
+                      <thead>
+                          <tr role="row">
+                          <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Rudeal</th>
+                          <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">CI</th>
+                          <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Paterno</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending">Materno</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending">Nombre(s)</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending">Fec. Nacimiento</th>
+                          </tr>
+                      </thead>
+                      <!--tbody section is required-->
+                      <tbody>
+
+                        <tr role="row" class="odd">
+                            <td >{{objStudent.codigoRude}}</td>
+                            <td >{{objStudent.carnetIdentidad}}</td>
+                            <td >{{objStudent.paterno}}</td>
+                            <td>{{objStudent.materno}}</td>
+                            <td>{{objStudent.nombre}}</td>
+                            <td>{{objStudent.fechaNacimiento | date('d-m-Y')}}</td>
+
+                        </tr>
+
+                      </tbody>
+                      <!--tfoot section is optional-->
+                      <tfoot>
+                      </tfoot>
+                  </table>
+
+                  <table id="datatable-ajax" class="table table-striped table-success dataTable" role="grid" aria-describedby="datatable-ajax_info">
+                    <thead>
+                        <tr role="row">
+                          <th data-class="expand" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Name: activate to sort column descending" aria-sort="ascending">Gestion</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending">SIE</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending">Unidad Educativa</th>
+                          <th data-hide="phone" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending">Nivel</th>
+                          <th data-hide="phone,tablet" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending">Grado</th>
+                          <th data-hide="phone,tablet" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending">Paralelo</th>
+                          <th data-hide="phone,tablet" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending">Turno</th>
+                          <th data-hide="phone,tablet" class="" tabindex="0" aria-controls="datatable-ajax" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending">Estado Matricula</th>
+                        </tr>
+                    </thead>
+                    <!--tbody section is required-->
+                    <tbody>
+                    {% for data in objStudentInscriptions %}
+                      <tr role="row" class="odd">
+                          <td >{{data.gestion}}</td>
+                          <td>{{data.sie}}</td>
+                          <td>{{data.institucioneducativa}}</td>
+                          <td>{{data.nivel}}</td>
+                          <td>{{data.grado}}</td>
+                          <td>{{data.paralelo}}</td>
+                          <td>{{data.turno}}</td>
+                          <td>{{data.estadoMatricula}}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                    <!--tfoot section is optional-->
+                    <tfoot>
+                    </tfoot>
+                </table>
+        </div><!-- /.panel-body -->
+    </div><!-- /.panel -->
+    <!--/ End horizontal form -->
+
+</div>
+{% else %}
+<div class='row'>
+  <div class="col-md-12">
+  {% for flashMessage in app.session.flashbag.get('noinscription') %}
+      <div class="alert alert-warning alert-dismissible" >
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+          <strong>Alerta!</strong> {{ flashMessage }}
+      </div>
+  {% endfor %}
+  </div>
+</div>
+{% endif %}
+</small>

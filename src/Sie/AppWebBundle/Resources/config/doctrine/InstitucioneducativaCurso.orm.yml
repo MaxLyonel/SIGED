@@ -1,0 +1,341 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaCurso:
+    type: entity
+    table: institucioneducativa_curso
+    repositoryClass: Sie\AppWebBundle\Entity\InstitucioneducativaCursoRepository
+    indexes:
+        fk_institucioneducativacurso_su:
+            columns:
+                - sucursal_tipo_id
+        fk_institucioneducativacurso_tu:
+            columns:
+                - turno_tipo_id
+        fk_institucioneducativacurso_pe:
+            columns:
+                - periodo_tipo_id
+        fk_institucioneducativacurso_ge:
+            columns:
+                - gestion_tipo_id
+        fk_institucioneducativacurso_gr:
+            columns:
+                - grado_tipo_id
+        fk_institucioneducativacurso_in:
+            columns:
+                - institucioneducativa_id
+        fk_institucioneducativacurso_pa:
+            columns:
+                - paralelo_tipo_id
+        fk_institucioneducativacurso_ci:
+            columns:
+                - ciclo_tipo_id
+        fk_institucioneducativacurso_ni:
+            columns:
+                - nivel_tipo_id
+        institucioneducativa_curso_idx_inst_gest:
+            columns:
+                - institucioneducativa_id
+                - gestion_tipo_id
+        IDX_9ED2FE1520CC201F:
+            columns:
+                - nota_periodo_tipo_id
+        IDX_9ED2FE15C35325:
+            columns:
+                - superior_institucioneducativa_periodo_id
+        IDX_9ED2FE1579D7A9C3:
+            columns:
+                - maestro_inscripcion_id_asesor
+    uniqueConstraints:
+        indxalter_institucioneducativa_curso:
+            columns:
+                - superior_institucioneducativa_periodo_id
+                - paralelo_tipo_id
+                - turno_tipo_id
+        institucioneducativa_curso_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        multigrado:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        desayunoEscolar:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: desayuno_escolar
+        modalidadEnsenanza:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: modalidad_ensenanza
+        idiomaMasHabladoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: idioma_mas_hablado_tipo_id
+        idiomaRegHabladoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: idioma_reg_hablado_tipo_id
+        idiomaMenHabladoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: idioma_men_hablado_tipo_id
+        priLenEnsenanzaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: pri_len_ensenanza_tipo_id
+        segLenEnsenanzaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: seg_len_ensenanza_tipo_id
+        terLenEnsenanzaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: ter_len_ensenanza_tipo_id
+        finDesEscolarTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: fin_des_escolar_tipo_id
+        nroMaterias:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nro_materias
+        consolidado:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        periodicidadTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: periodicidad_tipo_id
+        resolucion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        periodicidad:
+            type: string
+            nullable: true
+            length: 7
+            fixed: false
+            comment: ''
+        carreraespecialidadTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: carreraespecialidad_tipo_id
+        modalidadTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: modalidad_tipo_id
+        programaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: programa_tipo_id
+        nivelacreditacionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nivelacreditacion_tipo_id
+        lugartipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: lugartipo_id
+        fechaInicio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        fecharegistroCuso:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecharegistro_cuso
+        lugar:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+        duracionhoras:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        numeroperiodo:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        programaTipoOtros:
+            type: string
+            nullable: true
+            length: 60
+            fixed: false
+            comment: ''
+            column: programa_tipo_otros
+        facilitador:
+            type: string
+            nullable: true
+            length: 120
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        cicloTipo:
+            targetEntity: CicloTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ciclo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gradoTipo:
+            targetEntity: GradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        paraleloTipo:
+            targetEntity: ParaleloTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                paralelo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        periodoTipo:
+            targetEntity: PeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        sucursalTipo:
+            targetEntity: SucursalTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sucursal_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        turnoTipo:
+            targetEntity: TurnoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                turno_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        notaPeriodoTipo:
+            targetEntity: NotaPeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nota_periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        superiorInstitucioneducativaPeriodo:
+            targetEntity: SuperiorInstitucioneducativaPeriodo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_institucioneducativa_periodo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        maestroInscripcionAsesor:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestro_inscripcion_id_asesor:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

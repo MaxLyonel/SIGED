@@ -1,0 +1,13 @@
+deleteInscriptionQa_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:DeleteInscriptionQa:index }
+
+# deleteInscriptionQa_list:
+#     path:     /{id}/list
+#     defaults: { _controller: "SieRegularBundle:DeleteInscriptionQa:list" }
+
+deleteInscriptionQa_deleteInscription:
+    path:     /deleteInscription/
+    defaults: { _controller: "SieRegularBundle:DeleteInscriptionQa:deleteInscription" }
+    options:
+         expose: true

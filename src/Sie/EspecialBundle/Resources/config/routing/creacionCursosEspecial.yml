@@ -1,0 +1,44 @@
+creacioncursos_especial:
+    path:     /{op}
+    defaults: { _controller: SieEspecialBundle:CreacionCursosEspecial:index, op:search }
+
+creacioncursos_especial_new:
+    path:     /new/
+    defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:new" }
+    methods:  POST
+
+creacioncursos_especial_create:
+    path:     /create/
+    defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:create" }
+    methods:  POST
+
+creacioncursos_especial_delete:
+    path:     /delete/
+    defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:delete" }
+    methods:  [POST, DELETE]
+
+         
+listar_niveles_especial:
+    path:     /listarNiveles/{area}/
+    defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarNiveles"}
+    options:
+         expose: true
+
+listar_grados_especial:
+    path:     /listarGrados/{nivel}/
+    defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarGrados"}
+    options:
+         expose: true
+         
+listar_servicios_especial:
+    path:     /listarServicios/{area}/{nivel}/{grado}/
+    defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarServicios"}
+    options:
+         expose: true
+listar_programas_especial:
+    path:     /listarProgramas/{area}/{nivel}/{grado}/
+    defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarProgramas"}
+    options:
+         expose: true
+         
+         

@@ -1,0 +1,92 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="block-header">
+        <h2>RESULTADO DE LA BÚSQUEDA</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('rie')}}">Inicio</a></li>
+        <li class="active">Resultado de la búsqueda</li>
+    </ol>
+
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        INSTITUCION(ES) EDUCATIVA(S)
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <table class="table table-bordered table-striped table-hover js-exportable dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th nowrap>Departamento</th>
+                                        <th nowrap>Código RIE</th>
+                                        <th nowrap>Denominación del Instituto</th>
+                                        <th nowrap>Código LE</th>
+                                        <th nowrap>Número Resolución</th>
+                                        <th nowrap>Fecha Resolución</th>
+                                        <th nowrap>Carácter Jurídico</th>
+                                        <th nowrap>Tipo Institución</th>
+                                        <th nowrap>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <!--
+                                <tfoot>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Código RUE</th>
+                                        <th>Institución Educativa</th>
+                                        <th>Código LE</th>
+                                        <th>Fecha Resolución</th>
+                                        <th>Dependencia</th>
+                                        <th>Tipo</th>
+                                        <th>Estado</th>
+                                        <th>Departamento</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </tfoot>
+                                -->
+                                <tbody>
+                                    {% for entity in entities %}
+                                        <tr>
+                                            <td nowrap>{{ loop.index }}</td>
+                                            <td nowrap>{{ entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>                                            
+                                            <td nowrap>{{ entity.id }}</td>
+                                            <td nowrap>{{ entity.institucioneducativa }}</td>
+                                            <td nowrap>{{ entity.leJuridicciongeografica.id }}</td>
+                                            <td nowrap>{{ entity.nroResolucion }}</td>
+                                            <td nowrap>{% if entity.fechaResolucion %}{{ entity.fechaResolucion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                            <td nowrap>{{ entity.dependenciaTipo.dependencia }}</td>
+                                            <td nowrap>{{ entity.institucioneducativaTipo.descripcion }}</td>
+                                            <td nowrap>{{ entity.estadoinstitucionTipo.estadoinstitucion }}</td>
+                                            <td>
+                                                <form action="{{path('rie_edit')}}" method="post" style="display:inline-block">
+                                                    <input type="hidden" name="idRie" value="{{entity.id}}">
+                                                    <button type="submit" class="btn btn-xs bg-pink waves-effect">
+                                                        <i class="material-icons">mode_edit</i> Editar
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Basic Examples -->
+
+{% endblock %}
+

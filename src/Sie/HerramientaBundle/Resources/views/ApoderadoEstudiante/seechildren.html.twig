@@ -1,0 +1,141 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="row">
+        <div class="col-md-12">
+          {% if app.session.flashBag.has('successValidate') %}
+              <div class="alert alert-success">
+                  {% for msg in app.session.flashBag.get('successValidate') %}
+                      {{ msg }}
+                  {% endfor %}
+              </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="row">
+                        <div class="col-md-12">
+
+                            <!-- Start inline form -->
+                            <div class="panel rounded shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">Lista de Apoderado - Hijas/os</h3>
+                                    </div>
+                                    <div class="pull-right">
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding">
+
+                                  <div class="show-grid">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                        <strong>
+                                           Nombre: {{persona.paterno}} {{persona.materno}} {{persona.nombre}}
+                                        </strong>
+                                        </div>
+                                        <div class="col-md-2">
+                                          <strong>
+                                            CI: {{persona.carnet}}
+                                          </strong>
+                                        </div>
+                                    </div><!-- /.row -->
+                                </div>
+
+                                <div class="infoChildren">
+
+                                  {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'childrenFormId', 'class':'form'} } )}}
+
+                                      <div class="form-body">
+
+                                      <div class="table-responsive mb-20">
+                                        <table class="table">
+                                            <tbody>
+                                              <tr>
+                                                <td align='right'>
+                                                  <button type="button" class="btn btn-link " data-toggle="modal" data-target=".bs-example-modal-lg" onclick="addChildren('{{jsnInfoApoderado}}');" >
+                                                      <i class="fa fa-eye"></i> Adicionar Hija/o
+                                                  </button>
+                                                </td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="text-center" style="width: 45px">#</th>
+                                                        <th>Estudiante</th>
+                                                        <th>Unidad Educativa</th>
+                                                        <th>Nivel-Grado-Paralelo</th>
+                                                        <th>Opción</th>
+
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                  {% for child in children %}
+                                                    <tr class="info">
+                                                        <td class="text-center">{{loop.index}}</td>
+                                                        <td>
+                                                        <strong>
+                                                          {{child.paterno}}
+                                                          {{child.materno}}
+                                                          {{child.nombre}}
+                                                        </strong>
+
+                                                        </td>
+                                                        <td>
+                                                          {{child.institucioneducativa}} ({{child.sie}})
+                                                        </td>
+                                                        <td>
+                                                        <strong>{{child.nivel}}</strong>  {{child.grado}} <strong>{{child.paralelo}} </strong>   </td>
+                                                        <td>
+                                                          <a target="" href="#" onclick="removeChildApo('{{child.apoId}}','{{jsnInfoApoderado}}')"><i class="fa fa-trash"></i> Eliminar </a>
+                                                        </td>
+                                                    </tr>
+
+                                                  {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+                                         <div class='row'>
+                                            <div class='col-md-8 col-md-offset-4'>
+                                              {{form_widget(form.find)}}
+                                              <!--button type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancel</button-->
+                                            </div>
+                                        </div>
+                                      </div><!-- /.form-body -->
+
+                                  {{form_end(form)}}
+
+                                </div>
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                            <!--/ End inline form -->
+
+                        </div>
+                    </div>
+
+        </div>
+      </div>
+
+      <div class='row'>
+        <div class='col-md-12'>
+          <div id='idanswer'></div>
+        </div>
+      </div>
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+
+
+<script>
+
+
+</script>

@@ -1,0 +1,48 @@
+Sie\AppWebBundle\Entity\GradoCursoControl:
+    type: entity
+    table: grado_curso_control
+    id:
+        nivelId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: nivel_id
+        cicloId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: ciclo_id
+        idGrado:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_grado
+    fields:
+        descGrado:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: desc_grado
+        edadMinima:
+            type: decimal
+            nullable: true
+            precision: 3
+            scale: 0
+            comment: ''
+            column: edad_minima
+        edadMaxima:
+            type: decimal
+            nullable: true
+            precision: 3
+            scale: 0
+            comment: ''
+            column: edad_maxima
+    lifecycleCallbacks: {  }

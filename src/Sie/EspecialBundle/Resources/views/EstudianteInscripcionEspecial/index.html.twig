@@ -1,0 +1,325 @@
+{% extends 'SieEspecialBundle:Default:sie.html.twig' %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Inscripción de Estudiantes de Educación Especial
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('estudianteinscripcion_especial')}}">Buscar</a></li>
+                    <li><i class="fa fa-user"></i>  <a href="{{path('estudianteinscripcion_especial',{'op':'result'})}}">{{ app.session.get('tituloTipo') }}</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('registroConRudeOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-red">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Institución Educativa</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div id="no-more-tables">
+                                <table class="table table-bordered cf">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>Código SIE</th>
+                                            <th>Nombre</th>
+                                            <th>Gestión</th>
+                                            <th>Area</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <td data-title="Código SIE">{{institucion.id}}</td>
+                                    <td data-title="Ins.Educativa">{{institucion.institucioneducativa}}</td>
+                                    <td data-title="Gestión">{{gestion}}</td>
+                                    <td data-title="Area">{{area.areaEspecial}}</td>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-right">
+                                <form action="{{path('reporte_especial_cuatro')}}" method="post" style="display:inline-block">
+                                    <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                                    <input type="hidden" name="gestion" value="{{gestion}}">
+                                    <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-save"></i> Generar Reporte</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal modal-flex fade in" tabindex="-1" role="dialog" aria-hidden="true" id="modal" aria-labelledby="flexModalLabel" aria-hidden="false">
+            
+        </div><!-- /.modal -->
+    </div> 
+    
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-red">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>{{ app.session.get('tituloTipo') }}</h4>
+                    </div>
+                    {#                    
+                                        <div class="portlet-widgets">
+                                            <a href="{{path('estudianteinscripcion_especial_new')}}" class="btn btn-default btn-sm"><i class="fa fa-user"></i> Nuevo</a>
+                                            <span class="divider"></span>
+                                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelmaestro"><i class="fa fa-chevron-down"></i></a>
+                                        </div>
+                    #}                    
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelmaestro" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div id="accordion" class="panel-group">
+                                {% if inscritos is not empty %}
+                                    <ul id="myPills" class="nav nav-pills">
+                                        {% for inscrito in inscritos %}
+                                            {% set TG = inscrito[1] %}
+                                            {% if loop.index == 1 %}
+                                                {% set activo = 'active'%}
+                                            {% else %}
+                                                {% set activo = '' %}
+                                            {% endif %}
+                                            <li class="{{activo}}"><a href="tabs-accordions.html#{{loop.index}}" data-toggle="tab">
+                                                    <b>{{inscrito[0]|upper}}</b><br>Turno: {{TG[0].turno}}
+                                                </a></li>
+                                            {% endfor %}
+                                    </ul>
+                                    <div id="myTabContent" class="tab-content">
+                                        {% for inscrito in inscritos %}
+                                            {% if loop.index == 1 %}
+                                                {% set activo = 'active in'%}
+                                            {% else %}
+                                                {% set activo = '' %}
+                                            {% endif %}
+                                            <div class="tab-pane fade {{activo}}" id="{{loop.index}}">
+                                                <div class="row">
+                                                    <div class="col-lg-2">
+                                                        <div class="portlet portlet-red">
+                                                            <div class="portlet-heading">
+                                                                <div class="portlet-title">
+                                                                    <h4>Grado - Paralelo</h4>
+                                                                </div>
+                                                                <div class="portlet-widgets">
+                                                                    <span class="divider"></span>
+                                                                    <a data-toggle="collapse" data-parent="#accordion" href="portlets.html#grados{{loop.index}}"><i class="fa fa-chevron-down" data-toggle="tooltip" data-placement="top" title="Mostrar/Ocultar grados"></i></a>
+                                                                </div>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                            <div id="grados{{loop.index}}" class="panel-collapse collapse in">
+                                                                <div class="portlet-body">
+                                                                    <ul id="myStacked" class="nav nav-pills nav-stacked">
+                                                                        {% for grado in inscrito[1] %}
+                                                                            {% if loop.index == 1 %}
+                                                                                {% set activo = 'active' %}
+                                                                            {% else %}
+                                                                                {% set activo = '' %}
+                                                                            {% endif %}
+
+                                                                            {% if grado.idNivel == 410 %}
+                                                                                <li class="{{activo}}"><a href="tabs-accordions.html#{{grado.idTurno}}{{grado.idNivel}}{{grado.idArea}}{{grado.idGrado}}{{ grado.idServicio }}{{ grado.idPrograma }}{{loop.index}}" data-toggle="tab">{{grado.servicio}} - {{grado.paralelo}}</a></li>
+                                                                                {% elseif grado.idNivel == 411 %}
+                                                                               	<li class="{{activo}}"><a href="tabs-accordions.html#{{grado.idTurno}}{{grado.idNivel}}{{grado.idArea}}{{grado.idGrado}}{{ grado.idServicio }}{{ grado.idPrograma }}{{loop.index}}" data-toggle="tab">{{grado.programa}} - {{grado.paralelo}}</a></li>
+                                                                                {% elseif grado.idNivel == 405 %}
+                                                                               	<li class="{{activo}}"><a href="tabs-accordions.html#{{grado.idTurno}}{{grado.idNivel}}{{grado.idArea}}{{grado.idGrado}}{{ grado.idServicio }}{{ grado.idPrograma }}{{loop.index}}" data-toggle="tab">{{grado.grado}} - {{grado.paralelo}} - {{grado.tecnica}}</a></li>
+                                                                                {% else %}
+                                                                                <li class="{{activo}}"><a href="tabs-accordions.html#{{grado.idTurno}}{{grado.idNivel}}{{grado.idArea}}{{grado.idGrado}}{{ grado.idServicio }}{{ grado.idPrograma }}{{loop.index}}" data-toggle="tab">{{grado.grado}} - {{grado.paralelo}}</a></li>
+                                                                                {% endif %}
+                                                                            <form action="{{path('estudianteinscripcion_especial_new')}}" method="post" style="display:inline-block">
+                                                                                <input type="hidden" name="idInstitucionCurso" value="{{grado.idInstitucionCurso }}">
+                                                                                <button type="submit" class="btn-link"><i class="fa fa-plus text-warning"></i> Nuevo</button>
+                                                                            </form>
+
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <div class="portlet-footer">
+                                                                Grados y paralelos {{inscrito[0]}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-10">
+                                                        <div id="myStackedContent" class="tab-content">
+                                                            {% for grado in inscrito[1] %}
+                                                                {% if loop.index == 1 %}
+                                                                    {% set activo = 'in active' %}
+                                                                {% else %}
+                                                                    {% set activo = '' %}
+                                                                {% endif %}
+                                                                <div id="{{grado.idTurno}}{{grado.idNivel}}{{grado.idArea}}{{grado.idGrado}}{{ grado.idServicio }}{{ grado.idPrograma }}{{loop.index}}" class="panel-collapse collapse fade {{activo}}" style="height: auto;">
+
+                                                                    <div class="portlet portlet-red">
+                                                                        <div class="portlet-heading">
+                                                                            <div class="portlet-title">
+                                                                                {% if grado.idNivel == 410 %}
+                                                                                    <h4>Estudiantes Inscritos en  {{grado.servicio}} - {{grado.paralelo}}</h4>
+                                                                                {% elseif grado.idNivel == 411 %}
+                                                                                    <h4>Estudiantes Inscritos en  {{grado.programa}} - {{grado.paralelo}}</h4>
+                                                                                {% elseif grado.idNivel == 405 %}
+                                                                                    <h4>Estudiantes Inscritos en  {{grado.grado}} - {{grado.paralelo}} - {{grado.tecnica}}</h4>
+                                                                                {% else %}
+                                                                                    <h4>Estudiantes Inscritos en  {{grado.grado}} - {{grado.paralelo}}</h4>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                            <div class="portlet-widgets">
+
+                                                                                <span class="divider"></span>
+                                                                                <a data-toggle="collapse" data-parent="#accordion" href="portlets.html#Portlet{{grado.idTurno}}{{grado.idNivel}}{{grado.idArea}}{{grado.idGrado}}{{grado.idServicio}}{{grado.idPrograma}}{{loop.index}}"><i class="fa fa-chevron-down"></i></a>
+                                                                            </div>
+                                                                            <div class="clearfix"></div>
+                                                                        </div>
+                                                                        <div id="Portlet{{grado.idTurno}}{{grado.idNivel}}{{grado.idArea}}{{grado.idGrado}}{{grado.idServicio}}{{grado.idPrograma}}{{loop.index}}" class="panel-collapse collapse in">
+                                                                            <div class="portlet-body">
+                                                                                <div id="no-more-tables">
+                                                                                    <table class="table table-bordered table-hover cf dataTable">
+                                                                                        <thead class="cf">
+                                                                                            <tr>
+                                                                                                <th>Nro</th>
+                                                                                                <th>Rude</th>
+                                                                                                <th>C.I.</th>
+                                                                                                <th>Paterno</th>
+                                                                                                <th>Materno</th>
+                                                                                                <th>Nombre(s)</th>
+                                                                                                <th>Fecha Nacimiento</th>
+                                                                                                <th>Acciones</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            {% for est in grado.inscritos %}
+                                                                                                <tr>
+                                                                                                    <td data-title="Nro">{{loop.index}}</td>
+                                                                                                    <td data-title="Rude">{{ est.rude }}&nbsp;</td>
+                                                                                                    <td data-title="C.I.">{{ est.ci }}&nbsp;</td>
+                                                                                                    <td data-title="Paterno">{{ est.paterno }}&nbsp;</td>
+                                                                                                    <td data-title="Materno">{{ est.materno }}&nbsp;</td>
+                                                                                                    <td data-title="Nombres">{{ est.nombre }}&nbsp;</td>
+                                                                                                    <td data-title="Fecha Nac.">{{ est.fecha }}&nbsp;</td>
+
+                                                                                                    <td data-title="Acciones">
+                                                                                                        <form action="{{path('estudianteinscripcion_especial_edit')}}" method="post" style="display:inline-block">
+                                                                                                            <input type="hidden" name="idInscripcion" value="{{est.idInscripcion }}">
+                                                                                                            <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
+                                                                                                        </form>
+                                                                                                        <form action="{{path('estudianteinscripcion_especial_delete')}}" method="post" style="display: inline-block">
+                                                                                                            <input type="hidden" name="idInscripcion" value="{{est.idInscripcion }}">
+                                                                                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
+                                                                                                        </form>
+                                                                                                        {% if grado.idNivel == 401 or grado.idNivel == 402 or grado.idNivel == 404 %}
+                                                                                                            <button type="button" class="btn btn-link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{est.idInscripcion}});" >
+                                                                                                                <i class="fa fa-list"></i> Notas
+                                                                                                            </button>
+                                                                                                        {% endif %}
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            {% endfor %}
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="portlet-footer">
+                                                                            Lista de estudiante inscritos
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>  
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{path('estudianteinscripcion_especial',{'op':'search'})}}" class="btn-link"><i class="fa fa-arrow-circle-left"></i> Atras</a>
+        </div>
+    </div> 
+    <script>
+        var getNotas = function (idInscripcion) {
+            $.ajax({
+                type: 'post',
+                data: ({idInscripcion: idInscripcion}),
+                url: "{{ path('especialEstudianteNotas') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                    $('#modal').modal('show');
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

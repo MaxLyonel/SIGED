@@ -1,0 +1,58 @@
+le:
+    path:     /
+    defaults: { _controller: "SieRueBundle:LocalEducativo:index" }
+
+le_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieRueBundle:LocalEducativo:show" }
+
+le_new:
+    path:     /new
+    defaults: { _controller: "SieRueBundle:LocalEducativo:new" }
+
+le_create:
+    path:     /create
+    defaults: { _controller: "SieRueBundle:LocalEducativo:create" }
+    methods:  POST
+
+le_edit:
+    path:     /edit/
+    defaults: { _controller: "SieRueBundle:LocalEducativo:edit" }
+    methods:  POST
+
+le_update:
+    path:     /update/
+    defaults: { _controller: "SieRueBundle:LocalEducativo:update" }
+    methods:  [POST, PUT]
+
+le_result:
+    path:     /findle
+    defaults: { _controller: "SieRueBundle:LocalEducativo:findle" }
+    
+le_buscar_provincias:
+     path:    /provincias/{idDepartamento}/
+     defaults: { _controller: "SieRueBundle:LocalEducativo:provincias" }
+     options:
+         expose: true
+le_buscar_municipios:
+     path:    /municipios/{idProvincia}/
+     defaults: { _controller: "SieRueBundle:LocalEducativo:municipios" }
+     options:
+         expose: true
+le_buscar_cantones:
+     path:    /cantones/{idMunicipio}/
+     defaults: { _controller: "SieRueBundle:LocalEducativo:cantones" }
+     options:
+         expose: true
+le_buscar_localidades:
+     path:    /localidades/{idCanton}/
+     defaults: { _controller: "SieRueBundle:LocalEducativo:localidades" }
+     options:
+         expose: true
+
+le_buscar_distritos:
+     path:    /distritos/{idDepartamento}/
+     defaults: { _controller: "SieRueBundle:LocalEducativo:distritos" }
+     options:
+         expose: true
+         

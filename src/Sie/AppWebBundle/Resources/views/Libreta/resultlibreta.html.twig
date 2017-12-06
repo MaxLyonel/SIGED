@@ -1,0 +1,190 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption%}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Busqueda de Libreta Electrónica
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="index.html">Apoderado</a>
+                    </li>
+                    <li class="active">Buscar Libreta </li>
+                    <li class="active">Libreta Electrónica </li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-green">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th>Rude</th>
+                                        <th>Nombre</th>
+                                        <th>CI</th>
+                                        <th>Genero</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Rude">{{datastudent.codigo_rude|e}}</td>
+                                        <td data-title="Nombre">{{ datastudent.nombre|e }} {{datastudent.paterno|e}} {{datastudent.materno|e}}</td>
+                                        <td data-title="CI">{{datastudent.carnet_identidad|e}}</td>
+                                        <td data-title="Genero"> {{datastudent.genero|e}}</td>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-green">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Inscripción</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinscripcion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinscripcion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th>Gestión</th>
+                                        <th>Sie</th>
+                                        <th>Institución Educativa</th>
+                                        <th>Nivel</th>
+                                        <th>Ciclo</th>
+                                        <th>Grado</th>
+                                        <th>Paralelo</th>
+                                        <th>Turno</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Gestión">{{datainscription.gestion}}</td>
+                                        <td data-title="Sie">{{ datainscription.institucioneducativa_id }}</td>
+                                        <td data-title="Institución Educativa">{{datainscription.institucioneducativa}}</td>
+                                        <td data-title="Nivel"> {{datainscription.nivel}}</td>
+                                        <td data-title="Ciclo"> {{datainscription.ciclo}}</td>
+                                        <td data-title="Grado"> {{datainscription.grado}}</td>
+                                        <td data-title="Paralelo"> {{datainscription.paralelo}}</td>
+                                        <td data-title="Turno"> {{datainscription.turno}}</td>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-orange">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Libreta Electrónica</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#datalibreta"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="datalibreta" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="text-right"><a class="btn btn-link"  href="{{asset('assets/libretas/721600032011731.pdf')}} " role="button" target='_blank'><i class="glyphicon glyphicon-file"></i> Descargar Libreta</a></div>
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th >Área</th>
+
+                                        {% for notacualitativa in notacualitativostudent %}
+                                            <th >{{ notacualitativa.orden }}. Bimestre</th>
+                                            {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for key,menu in notastudent %}
+                                        <tr>
+                                            <td data-title="Asignatura">{{ key }}</td>
+                                            {% for k,nota in menu %}
+                                                <td data-title="{{ k }}. Bimestre" align='center'> {{nota}}</td>
+                                            {% endfor %}
+                                            <!-- /.nav-second-level -->
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class=""><h5><strong><span class="text-default">Valoración Cualitativa</strong></h5></div>
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        {% for notacualitativa in notacualitativostudent%}
+                                            <th data-title="Gestión">{{notacualitativa.nota_tipo}}</th>
+                                            {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {% for notacualitativa in notacualitativostudent%}
+                                            <td data-title="{{notacualitativa.orden}}. Bimestre">{{notacualitativa.nota_cualitativa}}</td>
+                                        {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('search_data_libreta')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+
+
+    {% endblock %}

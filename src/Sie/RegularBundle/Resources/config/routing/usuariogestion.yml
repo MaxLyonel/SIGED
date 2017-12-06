@@ -1,0 +1,37 @@
+usuariogestion:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:UsuarioGestion:index" }
+
+usuariogestion_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieRegularBundle:UsuarioGestion:show" }
+
+usuariogestion_new:
+    path:     /new
+    defaults: { _controller: "SieRegularBundle:UsuarioGestion:new" }
+
+usuariogestion_create:
+    path:     /create
+    defaults: { _controller: "SieRegularBundle:UsuarioGestion:create" }
+    methods:  POST
+
+usuariogestion_edit:
+    path:     /edit/
+    defaults: { _controller: "SieRegularBundle:UsuarioGestion:edit" }
+    methods:  POST
+
+usuariogestion_update:
+    path:     /update/
+    defaults: { _controller: "SieRegularBundle:UsuarioGestion:update" }
+    methods:  [POST, PUT]
+
+usuariogestion_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieRegularBundle:UsuarioGestion:delete" }
+    methods:  [POST, DELETE]
+    
+activarDesactivar_usuario:
+    path:     /activardesactivar_usuario/{idUsuarioRol}/{div}
+    defaults: { _controller: "SieRegularBundle:UsuarioGestion:activarDesactivar_usuario" }
+    options:
+         expose: true

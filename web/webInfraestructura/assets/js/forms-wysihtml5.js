@@ -1,0 +1,1 @@
+$(document).ready(function(){"use strict";$("#wysihtml5-editor").wysihtml5({toolbar:{fa:!0}})});

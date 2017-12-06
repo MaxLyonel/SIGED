@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\SuperiorPeriodoTipo:
+    type: entity
+    table: superior_periodo_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        periodoSuperior:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+            column: periodo_superior
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

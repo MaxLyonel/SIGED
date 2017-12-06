@@ -1,0 +1,90 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaSucursalTramite:
+    type: entity
+    table: institucioneducativa_sucursal_tramite
+    indexes:
+        IDX_F87A42457A322B24:
+            columns:
+                - institucioneducativa_sucursal_id
+        IDX_F87A424592A5C389:
+            columns:
+                - periodo_estado_id
+        IDX_F87A4245F8923225:
+            columns:
+                - tramite_estado_id
+        IDX_F87A42454FE8BC31:
+            columns:
+                - tramite_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        distritoCod:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: distrito_cod
+        fechainicio:
+            type: date
+            nullable: true
+            comment: ''
+        usuarioIdInicio:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id_inicio
+        fechamodificacion:
+            type: date
+            nullable: true
+            comment: ''
+        usuarioIdModificacion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id_modificacion
+    manyToOne:
+        institucioneducativaSucursal:
+            targetEntity: InstitucioneducativaSucursal
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_sucursal_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        periodoEstado:
+            targetEntity: PeriodoEstadoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo_estado_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tramiteEstado:
+            targetEntity: TramiteEstado
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_estado_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tramiteTipo:
+            targetEntity: TramiteTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

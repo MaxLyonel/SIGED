@@ -1,0 +1,36 @@
+post_bachillerato_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:PostBachillerato:index }
+
+post_bachillerato_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:PostBachillerato:result }
+  
+post_bachillerato_save:
+    path: /save
+    defaults: { _controller: SieRegularBundle:PostBachillerato:save }
+    
+post_bachillerato_findIE:
+     path:    /findIE/{id}/{gestion}
+     defaults: { _controller: SieRegularBundle:PostBachillerato:findIE }
+     options:
+         expose: true     
+    
+post_bachillerato_findgrado:
+     path:    /findgrado/{idnivel}/{sie}/{gestion}
+     defaults: { _controller: SieRegularBundle:PostBachillerato:findgrado }
+     options:
+         expose: true
+
+post_bachillerato_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}/{gestion}
+     defaults: { _controller: SieRegularBundle:PostBachillerato:findparalelo }
+     options:
+         expose: true
+         
+post_bachillerato_findturno:         
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}/{gestion}
+    defaults: { _controller: SieRegularBundle:PostBachillerato:findturno }
+    options:
+        expose: true
+  

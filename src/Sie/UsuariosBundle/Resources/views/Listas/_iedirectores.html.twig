@@ -1,0 +1,33 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo -%}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4>Personas registradas con el cargo director en la Unidad Educativa</h4>
+        </div>
+        <div class="panel-body">
+            <table class="table-striped" cellspacing="0" width="100%">    
+                <thead>
+                    <tr>
+                        <th>Carnet</th>
+                        <th>Nombre</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Cargo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {#{% for persona in personas %}
+                    <tr>                  
+                        <td>{{ persona.carnet }}</td>
+                        <td>{{ persona.nombre }}</td>
+                        <td>{{ persona.paterno }}</td>
+                        <td>{{ persona.materno }}</td>
+                        <td>{{ persona.cargo }}</td>
+                    </tr>
+                {% endfor %}#}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

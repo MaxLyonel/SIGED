@@ -1,0 +1,34 @@
+{% extends app.session.get('layout') %}
+
+{% block contentoption %} 
+    
+        <div class="row">
+            <div class="page-header">
+                <h3 class="heading pull-left"><i class="fa fa-home animated flip"></i> Buscar ddd Instituci&oacute;n Educativa <span class="sub-heading">{{app.session.get('fullname')}}</span></h3>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="separator bottom"></div>
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="panel" id="dashboard-tour-visits">
+                    <!--h1 class="page-header">Busqueda Instituci&oacute;n Educativa</h1-->
+                    <form class="form" action="{{ path('search_data_institucion_educativa') }}" method="get" name="formrude" id="formrude">
+                        <div class="input-group">                                                
+                            <input type="text" class="form-control" id="inseducativa" name="inseducativa" placeholder="Inserte Instituci&oacute;n Educativa" maxlength="30" size="45">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-success"><i class="fa fa-search"></i> Buscar</button>
+                            </span>
+                        </div>
+                       
+                    </form>
+                </div>
+                <!-- End of Website Stats Widget -->
+
+            </div>
+        </div>
+
+    
+{% endblock %}

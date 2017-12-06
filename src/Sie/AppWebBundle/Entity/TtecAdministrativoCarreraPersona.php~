@@ -1,0 +1,195 @@
+<?php
+
+namespace Sie\AppWebBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TtecAdministrativoCarreraPersona
+ */
+class TtecAdministrativoCarreraPersona
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var integer
+     */
+    private $personaId;
+
+    /**
+     * @var boolean
+     */
+    private $esVigente;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistro;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecAdministrativoCarrera
+     */
+    private $ttecAdministrativoCarrera;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo
+     */
+    private $ttecCargoDesignacionTipo;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set personaId
+     *
+     * @param integer $personaId
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setPersonaId($personaId)
+    {
+        $this->personaId = $personaId;
+    
+        return $this;
+    }
+
+    /**
+     * Get personaId
+     *
+     * @return integer 
+     */
+    public function getPersonaId()
+    {
+        return $this->personaId;
+    }
+
+    /**
+     * Set esVigente
+     *
+     * @param boolean $esVigente
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setEsVigente($esVigente)
+    {
+        $this->esVigente = $esVigente;
+    
+        return $this;
+    }
+
+    /**
+     * Get esVigente
+     *
+     * @return boolean 
+     */
+    public function getEsVigente()
+    {
+        return $this->esVigente;
+    }
+
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
+
+    /**
+     * Set ttecAdministrativoCarrera
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecAdministrativoCarrera $ttecAdministrativoCarrera
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setTtecAdministrativoCarrera(\Sie\AppWebBundle\Entity\TtecAdministrativoCarrera $ttecAdministrativoCarrera = null)
+    {
+        $this->ttecAdministrativoCarrera = $ttecAdministrativoCarrera;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecAdministrativoCarrera
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecAdministrativoCarrera 
+     */
+    public function getTtecAdministrativoCarrera()
+    {
+        return $this->ttecAdministrativoCarrera;
+    }
+
+    /**
+     * Set ttecCargoDesignacionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo $ttecCargoDesignacionTipo
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setTtecCargoDesignacionTipo(\Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo $ttecCargoDesignacionTipo = null)
+    {
+        $this->ttecCargoDesignacionTipo = $ttecCargoDesignacionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecCargoDesignacionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo 
+     */
+    public function getTtecCargoDesignacionTipo()
+    {
+        return $this->ttecCargoDesignacionTipo;
+    }
+}

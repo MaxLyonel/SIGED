@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="{{asset('favicon.ico')}}" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Siged</title>
+
+        <!-- GLOBAL STYLES -->
+        <link href="{{asset('css/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel="stylesheet" type="text/css">
+        <link href="{{asset('icons/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+
+        <!-- PAGE LEVEL PLUGIN STYLES -->
+
+        <!-- THEME STYLES -->
+        <link href="{{asset('css/style.css')}}" rel="stylesheet">
+        <link href="{{asset('css/plugins.css')}}" rel="stylesheet">
+
+        <!-- THEME DEMO STYLES -->
+        <link href="{{asset('css/demo.css')}}" rel="stylesheet">
+        <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
+        <!--[if lt IE 9]>
+        <script src="{{asset('js/html5shiv.js')}}"></script>
+        <script src="{{asset('js/respond.min.js')}}"></script>
+        <![endif]-->
+
+    </head>
+
+    <body class="login">
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="login-banner text-center">
+                        <h1><i class="fa fa-gears"></i> SIE {{ app.session.get('sysname') }} </h1>
+                    </div>
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading login-heading">
+                            <div class="portlet-title">
+                                <h4><strong>Antes de ingresar al Sistema debe actualizar sus datos</strong>
+                                </h4>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% for flashMessage in app.session.flashbag.get('info') %}
+                                        <div class="alert alert-success alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <strong>Bien!</strong> {{ flashMessage }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+
+                            <div class="portlet portlet-default">
+                                <div class="portlet-heading">
+                                    <div class="portlet-title">
+                                        <h4>Datos del Usuario</h4>
+                                    </div>
+                                    <div class="portlet-widgets">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#formControls"><i class="fa fa-chevron-down"></i></a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+
+                                <div id="formControls" class="panel-collapse collapse in">
+                                    <div class="portlet-body">
+                                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                        <fieldset><legend>1. Datos Personales</legend>
+                                            <div class="row">
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.ci)}}
+                                                    {{form_widget(form.ci) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group col-lg-2 col-md-6">
+                                                    {{form_label(form.complemento)}}
+                                                    <i style="cursor:pointer" class="glyphicon glyphicon-info-sign text-info" data-container="body" data-toggle="popover" data-placement="right" data-content="Complemento Ej.: 8R"></i>
+                                                    {{form_widget(form.complemento) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.paterno)}}
+                                                    {{form_widget(form.paterno) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.materno)}}
+                                                    {{form_widget(form.materno) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.nombre)}}
+                                                    {{form_widget(form.nombre) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.genero)}}
+                                                    {{form_widget(form.genero) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.fechaNacimiento)}}
+                                                    <div id="sandbox-container">
+                                                        {{form_widget(form.fechaNacimiento) }}
+                                                    </div>
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.estadoCivil)}}
+                                                    {{form_widget(form.estadoCivil) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.celular)}}
+                                                    {{form_widget(form.celular) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.correo)}}
+                                                    {{form_widget(form.correo) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                        <filedset><legend>2. Datos de Usuario</legend>
+                                            <div class="row">
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.usuario)}}
+                                                    {{form_widget(form.usuario) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.password)}}
+                                                    {{form_widget(form.password) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.newPassword)}}
+                                                    <i style="cursor:pointer" class="glyphicon glyphicon-info-sign text-info" data-container="body" data-toggle="popover" data-placement="right" data-content="Llenar solo si se desea cambiar el password"></i>
+                                                    {{form_widget(form.newPassword) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.rol)}}
+                                                    {{form_widget(form.rol) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.lugar)}}
+                                                    {{form_widget(form.lugar) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-6">
+                                                    {{form_label(form.activo)}}
+                                                    {{form_widget(form.activo) }}
+                                                    <div class="help-block with-errors"></div>
+                                                </div>
+                                            </div>  
+                                        </filedset>
+                                        <hr>
+                                        <div class="form-group">
+                                            <div class="col-lg-12 text-center">
+                                                {{ form_widget(form.guardar ) }}
+                                                <a href="{{path('login')}}" class="btn btn-default">Cancelar</a>
+                                            </div>
+                                        </div>
+                                        {{form_end(form)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GLOBAL SCRIPTS -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="{{asset('js/plugins/bootstrap/bootstrap.min.js')}}"></script>
+        <script src="{{asset('js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
+        <!-- HISRC Retina Images -->
+        <script src="{{asset('js/plugins/hisrc/hisrc.js')}}"></script>
+
+        <!-- PAGE LEVEL PLUGIN SCRIPTS -->
+
+        <!-- THEME SCRIPTS -->
+        <script src="{{asset('js/flex.js')}}"></script>
+        <script>
+
+        </script>
+        <script src="{{asset('validator/js/validator.js')}}"></script>
+        <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
+        <script src="{{asset('js/initialize.js')}}"></script>
+    </body>
+
+</html>
+
+
+

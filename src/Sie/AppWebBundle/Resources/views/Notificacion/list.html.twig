@@ -1,0 +1,80 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Notificación
+                    <small>Listar</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-edit"></i> Listar</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4><i class="fa fa-list-alt"></i> Notificaciones</h4>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped cf dataTable">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Título</th>
+                                            <th>Mensaje</th>
+                                            <th>Prioridad</th>
+                                            <th>Adjunto</th>
+                                            <th>Inicio</th>
+                                            <th>Fin</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for entity in entities %}
+                                            {% if entity.notif.estado == 1 and entity.rolTipo.id == app.session.get('roluser') %}
+                                                <tr>
+                                                    <td class="text-center">{{ loop.index }}</td>
+                                                    <td>{{ entity.notif.titulo }}</td>
+                                                    <td>{{ entity.notif.mensaje|slice(0,150)|raw }}...</td>
+                                                    <td><span class="label label-{% if(entity.notif.noticiaTipo) == 0  %}primary{% elseif(entity.notif.noticiaTipo) == 1 %}warning{% else %}danger{% endif %}">{% if(entity.notif.noticiaTipo) == 0  %}Normal{% elseif(entity.notif.noticiaTipo) == 1 %}Urgente{% else %}Muy Urgente{% endif %}</span></td>
+                                                    <td align="center">
+                                                        {% if entity.notif.adjunto %}
+                                                            <a href="{{ asset('uploads/adjuntos/' ~ entity.notif.adjunto) }}" target="_blank"><img src="{{asset('img/pdf.png') }}" class="img-responsive" alt="{{ entity.notif.adjunto }}" width="20" height="20"></a>
+                                                            {% else %}
+                                                            -
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-center">{% if entity.notif.fechaCrea %}{{ entity.notif.fechaCrea|date('d-m-Y') }}{% endif %}</td>
+                                                    <td class="text-center">{% if entity.notif.fechaPub %}{{ entity.notif.fechaPub|date('d-m-Y') }}{% endif %}</td>
+                                                    <td  class="text-center">
+                                                        <a href="{{ path('notificacion_show_all', { 'id': entity.notif.id }) }}"><i class="fa fa-eye"></i> Ver</a>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

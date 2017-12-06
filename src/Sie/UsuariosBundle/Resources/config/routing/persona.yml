@@ -1,0 +1,53 @@
+sie_usuario_persona_new:
+    path:     /{ci}/{complemento}/personanew/
+    defaults: { _controller: "SieUsuariosBundle:Persona:personanew" }
+    options:
+         expose: true
+         
+sie_usuario_persona_insert:
+    path:     /personainsert/
+    defaults: { _controller: "SieUsuariosBundle:Persona:personainsert" }
+    options:
+         expose: true
+    
+sie_usuario_persona_edit:
+    path:     /{personaid}/personaedit/
+    defaults: { _controller: "SieUsuariosBundle:Persona:personaedit" }
+    options:
+         expose: true 
+
+sie_usuario_persona_update:
+    path:     /personaupdate/
+    defaults: { _controller: "SieUsuariosBundle:Persona:personaupdate" }
+    options:
+         expose: true 
+         
+sie_persona_activar_edicion:
+    path:     /{personaid}/personaactedicion/
+    defaults: { _controller: "SieUsuariosBundle:Persona:personaactedicion" }
+    options:
+         expose: true 
+         
+sie_usuario_persona_show:
+    path:     /{ie_id}/{ie_nombre}/personashow/
+    defaults: { _controller: "SieUsuariosBundle:Default:mostrarUsuarioPersona" }    
+
+sie_persona_uploadfoto:
+    path:     /uploadfotopersona/
+    defaults: { _controller: "SieUsuariosBundle:Persona:personauploadfoto" } 
+
+sie_persona_apropiacion:
+    path:     /apropiacionpersona/
+    defaults: { _controller: "SieUsuariosBundle:Persona:apropiacionpersona" }     
+
+sie_persona_apropiacion_buscar:
+    path:     /apropiacionpersonabuscar/{ci}/{complemento}/{extranjero}
+    defaults: { _controller: SieUsuariosBundle:Persona:apropiacionpersonabuscar, extranjero:1 }
+    options:
+         expose: true
+
+sie_persona_apropiacion_insertar:
+    path:     /apropiacionpersonabuscarinsertar/
+    defaults: { _controller: SieUsuariosBundle:Persona:apropiacionpersonainsertar }
+    options:
+         expose: true    

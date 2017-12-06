@@ -1,0 +1,70 @@
+Sie\AppWebBundle\Entity\EstudianteDatopersonal:
+    type: entity
+    table: estudiante_datopersonal
+    indexes:
+        IDX_6A5402CF59590C39:
+            columns:
+                - estudiante_id
+        IDX_6A5402CF179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estatura:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+        peso:
+            type: decimal
+            nullable: true
+            precision: 5
+            scale: 2
+            comment: ''
+        foto:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 155
+            fixed: false
+            comment: ''
+        talla:
+            type: string
+            nullable: true
+            length: 4
+            fixed: false
+            comment: ''
+    manyToOne:
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

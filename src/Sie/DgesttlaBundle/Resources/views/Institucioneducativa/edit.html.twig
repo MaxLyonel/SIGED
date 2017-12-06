@@ -1,0 +1,425 @@
+{% extends 'SieRueBundle:Default:rue.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="block-header">
+        <h2>REGISTRO DE INSTITUCIONES EDUCATIVAS</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('rue')}}">Registro de Instituciones Educativas</a></li>
+        <li class="active">Editar</li>
+    </ol>
+
+    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %} 
+    {% for flashMessage in app.session.flashbag.get('registroInstitucionError') %}
+        <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+	{% endfor %}
+	
+	<!-- Tabs With Icon Title -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        INSTITUCIÓN EDUCATIVA
+                    </h2>
+                </div>
+                <div class="body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#datos" data-toggle="tab">
+                                <i class="material-icons">mode_edit</i> Datos de registro
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#historial" data-toggle="tab">
+                                <i class="material-icons">history</i> Historial
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#certificados" data-toggle="tab">
+                                <i class="material-icons">card_membership</i> Certificados
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="datos">
+                            <!-- Vertical Layout -->
+                            <div class="row clearfix">
+                                <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-xs-12">
+                                    <div class="card">
+                                        <div class="body">
+                                            {{ form_start(form) }}
+												<fieldset>
+													<legend>1. Datos Generales</legend>
+													<label class="form-label">{{form_label(form.rue)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.rue) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.institucionEducativa)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.institucionEducativa) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.nroResolucion)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.nroResolucion) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.fechaResolucion)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.fechaResolucion) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.obsRue)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.obsRue,{'attr':{'maxlength':'45'}}) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.dependenciaTipo)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.dependenciaTipo) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.convenioTipo)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.convenioTipo) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.estadoTipo)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.estadoTipo) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.desUeAntes)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.desUeAntes) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.institucionTipo)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.institucionTipo) }}
+														</div>
+													</div>
+												</fieldset>
+												<fieldset>
+													<legend>2. Localización del Edificio Escolar</legend>
+													<label class="form-label">{{form_label(form.leJuridicciongeograficaId)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.leJuridicciongeograficaId,{'attr':{'onkeyup':'buscarEdificioEscolar(this.value)'} })}}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.departamento)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.departamento) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.provincia)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.provincia) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.municipio)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.municipio) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.canton)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.canton) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.localidad)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.localidad) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.zona)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.zona) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.direccion)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.direccion) }}
+														</div>
+													</div>
+													<label class="form-label">{{form_label(form.distrito)}}</label>
+													<div class="form-group">
+														<div class="form-line">
+															{{form_widget(form.distrito) }}
+														</div>
+													</div>
+												</fieldset>
+												<fieldset><legend>3. Niveles / Áreas de Atención</legend>
+													<div class="row clearfix">
+														{% if app.session.get('institucioneducativaTipoId') == 4 %}
+														<div class="form-group col-lg-12 col-md-6">
+															{{form_label(form.areaEspecialTipo)}}
+															<ul>
+															{% for r in form.areaEspecialTipo %}
+																<div>
+																	{{ form_widget(r) }}
+																	{{ form_label(r) }}
+																</div>
+															{% endfor %}    
+															</ul>
+														</div>
+														<div class="form-group col-lg-12 col-md-6">
+															{{form_label(form.nivelTipo)}}
+															<ul>
+															{% for r in form.nivelTipo %}
+																<div>
+																	{{ form_widget(r) }}
+																	{{ form_label(r) }}
+																</div>
+															{% endfor %}    
+															</ul>
+														</div>
+														{% else %}
+														<div class="form-group col-lg-12 col-md-6">
+															{{form_label(form.nivelTipo)}}
+															<ul>
+															{% for r in form.nivelTipo %}
+																<div>
+																	{{ form_widget(r) }}
+																	{{ form_label(r) }}
+																</div>
+															{% endfor %}    
+															</ul>
+														</div>
+														{% endif %}
+													</div>
+												</fieldset>
+												{{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+												<a href="{{path('le')}}" class="btn btn-default btn-lg m-l-15 waves-effect">Cancelar</a>
+											{{ form_end(form) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                   
+                            <!-- Vertical Layout -->
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="historial">
+                            <!-- Vertical Layout -->
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="card">
+                                        <div class="body">
+											{% if entity.formularios is not empty %}
+                                            <!-- Example Tab -->
+											<div class="row">
+												<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+													<!-- Nav tabs -->
+													<ul class="nav nav-tabs tab-nav-right" role="tablist">
+														{% for f in entity.formularios  %}
+															{% if loop.index == 1 %}
+																{% set activo = true %}
+															{% else %}
+																{% set activo = false %}
+					                                        {% endif %}
+															<li role="presentation" {% if activo %}class="active"{% endif %}>
+																<a href="#cert{{loop.index}}" data-toggle="tab">
+																	<strong>Nro. Form.: {{ f.id }} | Fecha: {{ f.fechaRegistro|date('Y-m-d') }}</strong><br />
+																	Operación: {{ f.operacionRue }}
+																</a>
+															</li>
+														{% endfor %}
+													</ul>
+
+													<!-- Tab panes -->
+													<div class="tab-content">
+														{% for f in entity.formularios  %}
+															{% if loop.index == 1 %}
+																{% set activo = true %}
+															{% else %}
+																{% set activo = false %}
+					                                        {% endif %}
+															<div role="tabpanel" {% if activo %}class="tab-pane fade in active"{% else %}class="tab-pane fade"{% endif %} id="cert{{loop.index}}">
+																<div class="table-responsive">
+																	<table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+																		<thead>
+																			<tr>
+																				<th>Nro</th>
+																				<th>Fecha</th>
+																				<th>Operación</th>
+																				<th>Tabla</th>
+																				<th>Campo</th>
+																				<th>Valor anterior</th>
+																				<th>Valor nuevo</th>
+																			</tr>
+																		</thead>
+																		<tfoot>
+																			<tr>
+																				<th>Nro</th>
+																				<th>Fecha</th>
+																				<th>Operación</th>
+																				<th>Tabla</th>
+																				<th>Campo</th>
+																				<th>Valor anterior</th>
+																				<th>Valor nuevo</th>
+																			</tr>
+																		</tfoot>
+																		<tbody>
+																			{% for r in f.registros  %}
+								                                                <input type="hidden" name="idFormulario" value="{{r.id}}">
+								                                                <tr>
+								                                                    <td>{{loop.index}}</td>
+								                                                    <td>{{r.fechaRegistro|date('Y-m-d')}}</td>
+								                                                    <td>{{r.operacionRue}}</td>
+								                                                    <td>{{r.tabla}}</td>
+								                                                    <td>{{r.campo}}</td>
+								                                                    <td>{{r.valorAnterior}}</td>
+								                                                    <td>{{r.valorNuevo}}</td>
+								                                                </tr>
+								                                            {% endfor %}
+																		</tbody>
+																	</table>
+																</div>
+															</div>
+														{% endfor %}
+													</div>
+												</div>
+											</div>
+											<!-- #END# Example Tab -->
+											{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                   
+                            <!-- Vertical Layout -->
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="certificados">
+                            <!-- Vertical Layout -->
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="card">
+                                        <div class="body">
+                                            <div class="table-responsive">
+												<table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+													<thead>
+														<tr>
+															<th>No. Certificado</th>
+															<th>Codigo RUE</th>
+															<th>Institución Educativa</th>
+															<th>Código LE</th>
+															<th>No. Resolución</th>
+															<th>Dependencia</th>
+															<th>Tipo</th>
+															<th>Niveles</th>
+															<th>Áreas</th>
+															<th>Operación RUE</th>
+														</tr>
+													</thead>
+													<tfoot>
+														<tr>
+															<th>No. Certificado</th>
+															<th>Codigo RUE</th>
+															<th>Institución Educativa</th>
+															<th>Código LE</th>
+															<th>No. Resolución</th>
+															<th>Dependencia</th>
+															<th>Tipo</th>
+															<th>Niveles</th>
+															<th>Áreas</th>
+															<th>Operación RUE</th>
+														</tr>
+													</tfoot>
+													<tbody>
+														{% for c in entity.certificados %}
+															<tr>
+																<td>{{ c.nroCertificado }}</td>
+																<td>{{ c.institucioneducativa.id }}</td>
+																<td>{{ c.institucioneducativades }}</td>
+																<td>{{ c.leJuridicciongeografica.id }}</td>
+																<td>{{ c.nroResolucion }}</td>
+																<td>{{ c.dependencia }}</td>
+																<td>{{ c.institucioneducativatipo }}</td>
+																<td>{{ c.niveles }}</td>
+																<td>{{ c.areas }}</td>
+																<td>{{ c.operacionRue }}</td>
+															</tr>
+														{% endfor %}
+													</tbody>
+												</table>
+											</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                   
+                            <!-- Vertical Layout -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Tabs With Icon Title -->
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function buscarEdificioEscolar(idLe) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('rue_buscar_edificio', {'idLe': idLe}),
+                beforeSend: function () {
+                    $("#form_departamento").val("");
+                    $("#form_provincia").val("");
+                    $("#form_municipio").val("");
+                    $("#form_canton").val("");
+                    $("#form_localidad").val("");
+                    $("#form_zona").val("");
+                    $("#form_direccion").val("");
+                    $("#form_distrito").val("");
+                    
+                },
+                success: function (data) {
+                	$("#form_departamento").val(data.departamento);
+                    $("#form_provincia").val(data.provincia);
+                    $("#form_municipio").val(data.municipio);
+                    $("#form_canton").val(data.canton);
+                    $("#form_localidad").val(data.localidad);
+                    $("#form_zona").val(data.zona);
+                    $("#form_direccion").val(data.direccion);
+                    $("#form_distrito").val(data.distrito);
+                }
+            });
+        }
+    </script>
+{% endblock %}
+
+
+

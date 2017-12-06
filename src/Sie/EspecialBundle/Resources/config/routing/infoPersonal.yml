@@ -1,0 +1,3 @@
+info_personal_index:
+    path:     /
+    defaults: { _controller: SieEspecialBundle:InfoPersonal:index }

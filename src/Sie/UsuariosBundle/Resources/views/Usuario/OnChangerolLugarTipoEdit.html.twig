@@ -1,0 +1,242 @@
+            {#PARA EDIT USUARIO#}
+            {#PARA EDIT USUARIO#}
+            {#PARA EDIT USUARIO#}
+            <table id="tablaListadoPersonas" class="table table-hover">    
+                <thead>
+                    <tr>
+                        <th colspan="5">Roles Asignados al Usuario</th>            
+                    </tr>
+                    <tr>
+                        <th><h4><div style="text-align: left;"><span class="label label-primary">Rol</span></div></h4></th>
+                        <th><h4><div style="text-align: left;"><span class="label label-primary">Estado</span></div></h4></th>
+                        <th><h4><div style="text-align: left;"><span class="label label-primary">Jurisdicción</span></div></h4></th>
+                        <th><h4><div style="text-align: left;"><span class="label label-primary">Sistemas</span></div></h4></th>                        
+                    </tr>
+                </thead>
+                <tbody>                    
+                {% for rollugar in roltiplug %}
+                    {% set foo = roluserstr|split(',') %}
+                    {% if rollugar.rolid in foo %} {#HABILITA OPCIONES DE MODIFICACION#}                      
+                    <tr>
+                        {% if rollugar.rolesactivo == true %}{#invertido#}
+                            <td>
+                                <h5>
+                                <div id="rolonoff{{rollugar.rolid }}">     
+                                    <span class="label label-info">{{loop.index }}: {{rollugar.rol}}</span>
+                                </div>
+                                </h5>
+                            </td>
+                            <td>
+                                <h5>
+                                    <div id="labelonoff{{rollugar.rolid }}">                                     
+                                        <span class="label label-success">Acti.</span>
+                                        {% if rollugar.rolid != '3' %}{#invertido#}
+                                            <a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuariorolFormDesactivarModal({{rollugar.usuarioid}},{{rollugar.usuariorolid}},{{rollugar.rolid}},{{rollugar.lugarNivelId}})"></a>
+                                        {% endif %}
+                                    </div>
+                                </h5>    
+                            </td>
+                        {% else %}
+                            <td>
+                                <h5>
+                                    <div id="rolonoff{{rollugar.rolid }}">     
+                                        <span class="label label-default">{{loop.index }}: {{rollugar.rol}}</span>
+                                    </div>
+                                </h5>
+                            </td>
+                            <td>
+                                <h5>
+                                    <div id="labelonoff{{rollugar.rolid }}">                                     
+                                        <span class="label label-default">Desac.</span>                                         
+                                        {% if rollugar.rolid != '3' %}{#invertido#}
+                                            <a class="glyphicon glyphicon-ok-circle" href="#" onclick="usuariorolFormDesactivarModal({{rollugar.usuarioid}},{{rollugar.usuariorolid}},{{rollugar.rolid}},{{rollugar.lugarNivelId}})"></a>                                        
+                                        {% endif %}
+                                    </div>
+                                </h5>
+                            </td>                            
+                        {% endif %}
+                        {# NIVEL NACIONAL #}
+                        {% if rollugar.lugarNivelId == '0' %}
+                            <td>                        
+                                <h5>
+                                    <div> 
+                                        <span class="label label-warning">Cobertura Nacional.</span> 
+                                    </div>
+                                </h5>
+                            </td>
+                            {#<td>
+                                {% include 'SieUsuariosBundle:Usuario:subsistemarol.html.twig' with {'rollugar': rollugar} %}                             
+                            </td>#}
+                        {# NIVELES DEPARTAMENTALES #}
+                        {% elseif ((rollugar.lugarNivelId == '1') or (rollugar.lugarNivelId == '6') or (rollugar.lugarNivelId == '8')) %}
+                            <td>  
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="input-group input-group-sm">
+                                            <div id="div_lug_dep{{ rollugar.rolid }}">
+                                                {% if rollugar.rolesactivo == true %}
+                                                    <select class="form-control" id="sel_lug_dep_edit{{ rollugar.rolid }}" onchange="lug_dep_onchangemodal({{ rollugar.rolid }});">
+                                                {% else %}
+                                                    <select class="form-control" id="sel_lug_dep_edit{{ rollugar.rolid }}" onchange="lug_dep_onchangemodal({{ rollugar.rolid }});" disabled="">
+                                                {% endif %}
+                                                    <option value="-100">Modificar...</option>                                                
+                                                    <option value="{{ rollugar.lugar_tipoid }}" selected>{{ rollugar.lugar }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                                
+                                <div class="row">
+                                    <div id="guardarbuttonedit{{ rollugar.rolid }}" class="col-xs-12" id="div_lug_guardar{{ rollugar.rolid }}" style="display:none">
+                                        <a class="glyphicon glyphicon-ok" href="#" onclick="usuariorolupdatedep({{rollugar.usuariorolid}},{{rollugar.rolid}})"> Guardar</a>
+                                    </div>
+                                </div>
+                            </td>
+                            {#<td>                        
+                                {% include 'SieUsuariosBundle:Usuario:subsistemarol.html.twig' with {'rollugar': rollugar} %}                             
+                            </td>#}
+                        {# NIVELES DISTRITO: TECNICOS SIE DISTRITALE, DIRECTOR, MAESTROS #}
+                        {% elseif rollugar.lugarNivelId == '7' %}
+                            <td>  
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="input-group input-group-sm">
+                                            <div id="div_lug_dep{{ rollugar.rolid }}">
+                                                {% if rollugar.rolesactivo == true %}
+                                                    <select class="form-control" id="sel_lug_dep_edit{{ rollugar.rolid }}" onchange="lug_dep_onchangemodal({{ rollugar.rolid }});">
+                                                {% else %}
+                                                    <select class="form-control" id="sel_lug_dep_edit{{ rollugar.rolid }}" onchange="lug_dep_onchangemodal({{ rollugar.rolid }});" disabled="">
+                                                {% endif %}
+                                                    <option value="-100">Modificar...</option>                                                
+                                                    <option value="{{ rollugar.lugar_tipoid }}" selected>{{ rollugar.lugarnivelsup }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="input-group input-group-sm">
+                                            <div id="lug_dis_{{ rollugar.rolid }}">
+                                                {% if rollugar.rolesactivo == true %}
+                                                    <select class="form-control" id="sel_lug_dis_edit{{ rollugar.rolid }}">                                                    
+                                                {% else %}    
+                                                    <select class="form-control" id="sel_lug_dis_edit{{ rollugar.rolid }}" disabled="">                                                    
+                                                {% endif %}
+                                                        <option value="{{ rollugar.lugar_tipoid }}" selected>{{ rollugar.lugar }}</option>
+                                                </select>
+                                            </div>                      
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="guardarbuttonedit{{ rollugar.rolid }}" class="col-xs-12" id="div_lug_guardar{{ rollugar.rolid }}" style="display:none">
+                                        <a class="glyphicon glyphicon-ok" href="#" onclick="usuariorolupdatedis({{rollugar.usuariorolid}},{{rollugar.rolid}})"> Guardar</a>
+                                    </div>                                    
+                                </div>
+                            </td> 
+                            {#<td>                        
+                                {% include 'SieUsuariosBundle:Usuario:subsistemarol.html.twig' with {'rollugar': rollugar} %}                             
+                            </td>#}
+                        {% endif %}
+                            <td>                        
+                                {% include 'SieUsuariosBundle:Usuario:subsistemarol.html.twig' with {'rollugar': rollugar} %}                             
+                            </td>                           
+                    </tr>  
+                    {% else %}{#SIN HABILITACION#}
+                    <tr>
+                        {% if rollugar.rolesactivo == true %}{#invertido#}
+                            <td>
+                                <h5>
+                                <div id="rolonoff{{rollugar.rolid }}">     
+                                    <span class="label label-info">{{loop.index }}: {{rollugar.rol}}</span>
+                                </div>
+                                </h5>
+                            </td>
+                            <td>
+                                <h5>
+                                <div id="labelonoff{{rollugar.rolid }}">                                     
+                                    <span class="label label-success">Acti.</span>
+                                </div>
+                                </h5>    
+                            </td>
+                        {% else %}
+                            <td>
+                                <h5>
+                                <div id="rolonoff{{rollugar.rolid }}">     
+                                    <span class="label label-default">{{loop.index }}: {{rollugar.rol}}</span>
+                                </div>
+                                </h5>
+                            </td>
+                            <td>
+                                <h5>
+                                <div id="labelonoff{{rollugar.rolid }}"> 
+                                    <span class="label label-default">Desa.</span>
+                                </div>
+                                </h5>    
+                            </td>
+                        {% endif %}
+                        {# NIVELES NACIONAL #}
+                        {% if rollugar.lugarNivelId == '0' %}
+                            <td>                        
+                                <h5>
+                                    <div> 
+                                        <span class="label label-warning">Cobertura Nacional.</span> 
+                                    </div>
+                                </h5>
+                            </td>     
+                        {# NIVELES DEPARTAMENTALES #}
+                        {% elseif ((rollugar.lugarNivelId == '1') or (rollugar.lugarNivelId == '6') or (rollugar.lugarNivelId == '8')) %}                        
+                            <td>  
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="input-group input-group-sm">
+                                            <div id="div_lug_dep{{ rollugar.rolid }}">
+                                                <select class="form-control" disabled="">                                                 
+                                                    <option value="{{ rollugar.lugar_tipoid }}" selected>{{ rollugar.lugar }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            {#<td>                        
+                                {% include 'SieUsuariosBundle:Usuario:subsistemarol.html.twig' with {'rollugar': rollugar} %}                             
+                            </td>#}
+                        {# NIVELES DISTRITALES #}
+                        {% elseif rollugar.lugarNivelId == '7' %}
+                            <td>  
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="input-group input-group-sm">
+                                            <div id="div_lug_dep{{ rollugar.rolid }}">
+                                                <select class="form-control" id="sel_lug_dep_edit{{ rollugar.rolid }}" onchange="lug_dep_onchangemodal({{ rollugar.rolid }});" disabled="">
+                                                    <option value="{{ rollugar.lugar_tipoid }}" selected>{{ rollugar.lugarnivelsup }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="input-group input-group-sm">
+                                            <div id="lug_dis_{{ rollugar.rolid }}">
+                                                <select class="form-control" id="sel_lug_dis_edit{{ rollugar.rolid }}" disabled=""> 
+                                                    <option value="{{ rollugar.lugar_tipoid }}" selected>{{ rollugar.lugar }}</option>
+                                                </select>
+                                            </div>                      
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        {% endif %}
+                            <td>                        
+                                {% include 'SieUsuariosBundle:Usuario:subsistemarol.html.twig' with {'rollugar': rollugar} %}                             
+                            </td>
+                    </tr>
+                    {% endif %}
+                    
+                {% endfor %}
+                </tbody>
+            </table>            

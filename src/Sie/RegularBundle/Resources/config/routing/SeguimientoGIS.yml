@@ -1,0 +1,11 @@
+seguimiento_gis_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:SeguimientoGIS:index }
+
+seguimiento_gis_find:
+    path:     /find
+    defaults: { _controller: SieRegularBundle:SeguimientoGIS:find }
+
+seguimiento_gis_disable:
+    path:     /disable
+    defaults: { _controller: SieRegularBundle:SeguimientoGIS:disable }

@@ -1,0 +1,649 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-tab panel-tab-double">
+            <div class="panel-heading no-padding">
+                <!-- tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="component-modals.html#tab2-1" data-toggle="tab">
+                            <i class="fa fa-institution"></i>
+                            <div>
+                                <span class="text-strong">I.</span>
+                                <span class="hidden-xs">DATOS DEL CEA</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="component-modals.html#tab2-2" data-toggle="tab">
+                            <i class="fa fa-user"></i>
+                            <div>
+                                <span class="text-strong">II.</span>
+                                <span class="hidden-xs">DATOS DE LA O EL ESTUDIANTE/PARTICIPANTE</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="component-modals.html#tab2-3" data-toggle="tab">
+                            <i class="fa fa-credit-card"></i>
+                            <div>
+                                <span class="text-strong">III.</span>
+                                <span class="hidden-xs">DIRECCIÓN DE LA O EL ESTUDIANTE/PARTICIPANTE</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="component-modals.html#tab2-4" data-toggle="tab">
+                            <i class="fa fa-credit-card"></i>
+                            <div>
+                                <span class="text-strong">IV.</span>
+                                <span class="hidden-xs">DISCAPACIDAD DE LA O EL ESTUDIANTE/PARTICIPANTE</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="component-modals.html#tab2-5" data-toggle="tab">
+                            <i class="fa fa-credit-card"></i>
+                            <div>
+                                <span class="text-strong">V.</span>
+                                <span class="hidden-xs">ASPECTOS SOCIALES</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="component-modals.html#tab2-6" data-toggle="tab">
+                            <i class="fa fa-check-circle"></i>
+                            <div>
+                                <span class="text-strong">VI.</span>
+                                <span class="hidden-xs">FINALIZAR REGISTRO</span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <!-- contenido tabs -->
+            </div>
+            <div class="panel-body no-padding" id="modal-body">
+
+                {{form_start(form, { 'attr': {'role': 'form'} } )}}
+                <div class="form-body">
+                <div class="alert alert-info">
+                    <span class="alert-icon"><i class="fa fa-info"></i></span>
+                    <div class="notification-info">
+                        <ul class="clearfix notification-meta">
+                            <li class="pull-left notification-sender"><strong>{{estudiante.codigoRude}}</strong></li>
+                            <li class="pull-right notification-time"><strong>{{estudiante.estadoMatricula}}</strong></li>
+                        </ul>
+                        <p><strong>{{estudiante.estudiante}}</strong></p>
+                    </div>
+                </div>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="tab2-1">
+                        <div class="panel panel-theme">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <h4>I. DATOS DEL CENTRO DE EDUCACIÓN ALTERNATIVA</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td class="col-lg-4">1.1. NOMBRE DEL CENTRO DE EDUCACIÓN ALTERNATIVA</td>
+                                            <td class="col-lg-8"><strong>{{ institucion.ieducativa }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-lg-4">1.2. Nº SUB CENTRO</td>
+                                            <td class="col-lg-8"><strong>{{ institucion.sucId }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>1.3. DEPENDENCIA DE LA UNIDAD EDUCATIVA</td>
+                                            <td><strong>{{ institucion.dependencia }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>1.4. DISTRITO EDUCATIVO</td>
+                                            <td><strong>{{ institucion.distritoId }} - {{ institucion.distrito }}</strong></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab2-2">
+                        <div class="panel panel-theme">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <h4>II. DATOS DE LA O EL ESTUDIANTE/PARTICIPANTE</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <tr>
+                                            <td class="col-lg-6">2.1. APELLIDO(S) Y NOMBRE(S)</td>
+                                            <td class="col-lg-6">
+                                                <div class="row">
+                                                    <div class="col-lg-4">Apellido Paterno:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.paterno }}</strong></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Apellido Materno:</div>
+                                                    <div class="col-lg-8"><strong>{{ student.materno }}</strong></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Nombre(s):</div>
+                                                    <div class="col-lg-8"><strong>{{ student.nombre }}</strong></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.2. LUGAR DE NACIMIENTO<br /><span class="asterisk">* (Los campos: departamento, provincia, localidad son obligatorios en caso de que la/el participante sea de nacionalidad boliviana)</span></td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Pais:</div>
+                                                    <div class="col-lg-8">{{ form_widget(form.seccioniiPais) }}</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Departamento:</div>
+                                                    <div class="col-lg-8">{{ form_widget(form.seccioniiDepartamento) }}</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Provincia:</div>
+                                                    <div class="col-lg-8">{{ form_widget(form.seccioniiProvincia) }}</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Localidad:</div>
+                                                    <div class="col-lg-8">{{ form_widget(form.seccioniiLocalidad) }}</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.3. DOCUMENTO DE IDENTIFICACIÓN</td>
+                                            <td>
+                                                {% if student.carnetIdentidad or student.pasaporte %}
+                                                    <div class="row">
+                                                        <div class="col-lg-4">Cédula de Identidad:</div>
+                                                        <div class="col-lg-8"><strong>{{ student.carnetIdentidad }}</strong></div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-4">Pasaporte:</div>
+                                                        <div class="col-lg-8"><strong>{{ student.pasaporte }}</strong></div>
+                                                    </div>
+                                                {% else %}
+                                                    <span class="label label-danger">No cuenta con identificación</span>
+                                                {% endif %}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.4. FECHA DE NACIMIENTO</td>
+                                            <td>{{ student.fechaNacimiento|date('d-m-Y') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.5. CERTIFICADO DE NACIMIENTO</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Oficialia:</div>
+                                                    <div class="col-lg-8">{{ form_widget(form.seccioniiOficialia) }}</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Libro Nº:</div>
+                                                    <div class="col-lg-8">{{ form_widget(form.seccioniiLibro) }}</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Partida Nº:</div>
+                                                    <div class="col-lg-8">{{ form_widget(form.seccioniiPartida) }}</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">Folio Nº:</div>
+                                                    <div class="col-lg-8">{{ form_widget(form.seccioniiFolio) }}</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.6. ESTADO CIVIL</td>
+                                            <td>{{ form_widget(form.seccioniiCivil) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.7. GÉNERO</td>
+                                            <td>{{ form_widget(form.seccioniiGenero) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.8. Nº DE HIJOS</td>
+                                            <td><div class="col-md-2 form-group">{{ form_widget(form.seccioniiHijos) }}</div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.9. ¿ACTUALMENTE PRESTA SERVICIO MILITAR?</td>
+                                            <td><div class="col-md-3 form-group">{{ form_widget(form.seccioniiEsserviciomilitar) }}</div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>En caso afirmativo, la formación educativa del estudiante/participante se realiza en:</td>
+                                            <td><div class="col-md-6 form-group">{{ form_widget(form.seccioniiEsserviciomilitarCea) }}</div></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab2-3">
+                        <div class="panel panel-theme">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <h4>III. DIRECCIÓN DE LA O EL ESTUDIANTE/PARTICIPANTE</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                            <tr>
+                                <td>
+                                    Departamento<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                </td>
+                                <td><div class="col-md-9 form-group">{{ form_widget(form.departamento) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Provincia<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                </td>
+                                <td><div class="col-md-9 form-group">{{ form_widget(form.provincia) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Municipio<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                </td>
+                                <td><div class="col-md-9 form-group">{{ form_widget(form.municipio) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Canton<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                </td>
+                                <td><div class="col-md-9 form-group">{{ form_widget(form.canton) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Localidad<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                </td>
+                                <td><div class="col-md-9 form-group">{{ form_widget(form.localidad) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Zona / Barrio / Villa<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                </td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccioniiiZona) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Avenida / Calle<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                </td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccioniiiAvenida) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Número de vivienda<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                </td>
+                                <td><div class="col-md-3 form-group">{{ form_widget(form.seccioniiiNumero) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>Teléfono fijo</td>
+                                <td><div class="col-md-4 form-group">{{ form_widget(form.seccioniiiTelefonofijo) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>Teléfono celular</td>
+                                <td><div class="col-md-4 form-group">{{ form_widget(form.seccioniiiTelefonocelular) }}</div></td>
+                            </tr>
+                        </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab2-4">
+                        <div class="panel panel-theme">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <h4>IV. DISCAPACIDAD DE LA O EL ESTUDIANTE/PARTICIPANTE</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                            <tr>
+                                <td>- La o el estudiante/participante tiene Carnet de Discapacidad?</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionivEscarnetDiscapacidad) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>En caso afirmativo llene lo siguiente (Nº Carnet de Discapacidad):</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionivNumeroCarnetDiscapacidad) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>Tipo de Discapacidad</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionivDiscapacitadTipo) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>Grado de Discapacidad</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionivGradoTipo) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>- ¿La o el estudiante/participante con discapacidad visual tiene Carnet de Registro en el IBC? </td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionivCarnetIbc) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>En caso afirmativo llene lo siguiente (Código de Registro IBC):</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionivNumeroCarnetIbc) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>La o el estudiante/participante presenta:</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionivEscegueratotal) }}</div></td>
+                            </tr>
+                        </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab2-5">
+                        <div class="panel panel-theme">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <h4>V. ASPECTOS SOCIALES</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                            <tr>
+                                <td>
+                                    ¿Qué idiomas habla la o el estudiante/participante?
+                                    <br /><span class="asterisk">* (Debe seleccionar al menos 1 idioma)</span>
+                                </td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionvIdioma1) }}</div><div class="col-md-12 form-group">{{ form_widget(form.seccionvIdioma3) }}</div><div class="col-md-12 form-group">{{ form_widget(form.seccionvIdioma2) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>- ¿La o el estudiante /participante pertenece a alguna nación o pueblo indígena originario campesino y afroboliviano? </td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionvEstudianteEsnacionoriginaria) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>En caso afirmativo, especificar a cual: </td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionvEstudianteNacionoriginariaTipo) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>¿La o el estudiante/participante tiene alguna ocupación?</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionvEstudianteEsocupacion) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>En caso afirmativo, marque en que sector o rubro: (puede seleccionar varias opciones)</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionvTrabaja) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>¿La o el estudiante/participante tiene seguro de salud?</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionvEstudianteEsseguroSalud) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>En caso negativo, ¿Dónde acude la o el estudiante/participante en caso de enfermedad o accidente?</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionvEstudianteSeguroSaludDonde) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>Grupo sanguíneo del estudiante/participante</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionvEstudianteGrupoSanguineoTipo) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>La o el estudiante/participante tiene acceso a: (Puede seleccionar varias opciones)</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionvAcceso) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>¿Qué medio de transporte utiliza frecuentemente la o el estudiante/participante para trasladarse al Centro de Educación Alternativa? (Puede seleccionar varias opciones)</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionvTransporte) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    ¿Cuánto tiempo demora en llegar hasta el Centro de Educación Alternativa?
+                                    <br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                </td>
+                                <td><div class="col-md-4 form-group">Horas {{ form_widget(form.seccionvEstudianteDemoraLlegarCentroHoras) }}</div><div class="col-md-4 form-group">Minutos {{ form_widget(form.seccionvEstudianteDemoraLlegarCentroMinutos) }}</div></td>
+                            </tr>
+                        </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab2-6">
+                        <div class="panel panel-theme">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <h4>VI. FINALIZAR REGISTRO</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                            <tr>
+                                <td>Si la o el estudiante /participante hubiera interrumpido<br /> sus estudios y sea nuevo en el CEA,<br /> Indique el motivo principal de la misma:</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionviEstudiantePorqueInterrupcionservicios) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Lugar donde se llenó el formulario<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                </td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.lugar) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Fecha en la que se llenó el formulario
+                                    <br /><span class="asterisk">* (Especificar la fecha del formulario físico)</span>
+                                </td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.fecha) }}</div></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-right">{{ form_widget(form.guardar) }}</div></td>
+                            </tr>
+                        </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                {{form_end(form)}}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+<script>
+        
+        $(".js-example-basic-multiple").select2({
+            tags: "true",
+            placeholder: "Seleccione una opción",
+            allowClear: true
+        });
+
+        
+        $("#form_seccioniiHijos").numeric("positiveInteger");
+        $("#form_seccioniiiZona").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#form_seccioniiiAvenida").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#form_seccionivNumeroCarnetDiscapacidad").alphanum({
+            allow              : '-'
+        });
+        $("#form_seccionivNumeroCarnetIbc").alphanum({
+            allow              : '-'
+        });
+        $("#form_seccionvEstudianteSeguroSaludDonde").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-,.'
+        });
+        $("#form_seccionviEstudiantePorqueInterrupcionservicios").alphanum({
+            allowOtherCharSets : true,
+            allow              : '-.,'
+        });
+        $("#form_lugar").alphanum({
+            allow              : '-.,'
+        });
+        $("#form_seccioniiiNumero").numeric("positiveInteger");
+        $("#form_seccioniiiTelefonofijo").numeric("positiveInteger");
+        $("#form_seccioniiiTelefonocelular").numeric("positiveInteger");
+        $("#form_seccionvEstudianteDemoraLlegarCentroHoras").numeric("positiveInteger");
+        $("#form_seccionvEstudianteDemoraLlegarCentroMinutos").numeric("positiveInteger");
+
+        var peticion1;
+        //$('#form_turno').on('change',function(){
+        function listarProvincias(idDpto) {
+            if (peticion1 && peticion1.readyState != 4) {
+                peticion1.abort();
+            }
+
+            peticion1 = $.ajax({
+                type: 'get',
+                url: Routing.generate('bjp_rue_clistarprovincias', {'dpto': idDpto}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_provincia').empty();
+                    $('#form_municipio').empty();
+                    $('#form_canton').empty();
+                    $('#form_localidad').empty();
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listaprovincias, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        
+        var peticion2;
+        //$('#form_turno').on('change',function(){
+        function listarMunicipios(idProv) {
+            if (peticion2 && peticion2.readyState != 4) {
+                peticion2.abort();
+            }
+
+            peticion2 = $.ajax({
+                type: 'get',
+                url: Routing.generate('bjp_rue_clistarmunicipios', {'prov': idProv}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_municipio').empty();
+                    $('#form_canton').empty();
+                    $('#form_localidad').empty();
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listamunicipios, function (i, value) {
+                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        
+        var peticion3;
+        //$('#form_turno').on('change',function(){
+        function listarCantones(idMuni) {
+            if (peticion3 && peticion3.readyState != 4) {
+                peticion3.abort();
+            }
+
+            peticion3 = $.ajax({
+                type: 'get',
+                url: Routing.generate('bjp_rue_clistarcantones', {'muni': idMuni}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_canton').empty();
+                    $('#form_localidad').empty();
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listacantones, function (i, value) {
+                        $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        
+        var peticion4;
+        //$('#form_turno').on('change',function(){
+        function listarLocalidades(idCantn) {
+            if (peticion4 && peticion4.readyState != 4) {
+                peticion4.abort();
+            }
+
+            peticion4 = $.ajax({
+                type: 'get',
+                url: Routing.generate('bjp_rue_clistarlocalidades', {'cantn': idCantn}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_localidad').empty();
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listalocalidades, function (i, value) {
+                        $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        var peticion5;
+        //$('#form_turno').on('change',function(){
+        function listarProvinciasNac(idDpto) {
+            if (peticion5 && peticion5.readyState != 4) {
+                peticion5.abort();
+            }
+
+            peticion5 = $.ajax({
+                type: 'get',
+                url: Routing.generate('bjp_rue_clistarprovincias', {'dpto': idDpto}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_seccioniiProvincia').empty();
+                    $('#form_seccioniiLocalidad').empty();
+                    $("#form_seccioniiProvincia").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listaprovincias, function (i, value) {
+                        $("#form_seccioniiProvincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        /*var peticion6;
+        //$('#form_turno').on('change',function(){
+        function listarDeparamentoNac(idPais) {
+            if (peticion6 && peticion6.readyState != 4) {
+                peticion6.abort();
+            }
+
+            peticion5 = $.ajax({
+                type: 'get',
+                url: Routing.generate('socioeconomicoalt_list_dptos_nac', {'pais': idPais}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_seccioniiDepartamento').empty();
+                    $('#form_seccioniiProvincia').empty();
+                    $('#form_seccioniiLocalidad').empty();
+                    $('#form_seccioniiDepartamento').append('<option value="">Seleccionar...</option>');
+                    $("#form_seccioniiProvincia").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listadptosnac, function (i, value) {
+                        $("#form_seccioniiDepartamento").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }*/
+</script>

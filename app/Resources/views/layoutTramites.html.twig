@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+
+    <!-- START @HEAD -->
+    <head>
+        <!-- START @META SECTION -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="description" content="Juegos Deportivos Estudiantiles Plurinacionales Presidente Evo">
+        <meta name="keywords" content="Ministerio de Eduación">
+        <meta name="author" content="Djava UI">
+        <title>SIE | Tramites</title>
+        <!--/ END META SECTION -->
+
+        <!-- START @FAVICONS -->
+        <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-144x144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144">
+        <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-114x114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114">
+        <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-72x72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72">
+        <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-57x57-precomposed.png" rel="apple-touch-icon-precomposed">
+        <link href="{{asset('favicon.ico')}}" rel="shortcut icon">
+        <!--/ END FAVICONS -->
+
+        <!-- START @FONT STYLES -->
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet">
+        <link href="http://fonts.googleapis.com/css?family=Oswald:700,400" rel="stylesheet">
+        <!--/ END FONT STYLES -->
+
+        <!-- START @GLOBAL MANDATORY STYLES -->
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+        <!--/ END GLOBAL MANDATORY STYLES -->
+
+        <!-- START @PAGE LEVEL STYLES -->
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
+        <!-- <link href="{{asset('juegos/assets/global/plugins/bower_components/animate.css/animate.min.css')}}" rel="stylesheet"> -->
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
+
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-datepicker-vitalets/css/datepicker.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/ion.rangeSlider/css/ion.rangeSlider.css')}}" rel="stylesheet">
+
+        <!--<link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">-->
+        <!--<link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">-->
+
+        <!--<link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">-->
+        <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
+
+        <!-- <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet"> -->
+        <link rel="stylesheet" type="text/css" href="{{asset('juegos/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css')}}">
+        <!--/ END PAGE LEVEL STYLES -->
+
+        <!-- START @THEME STYLES -->
+        <link href="{{asset('juegos/assets/admin/css/reset.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/admin/css/layout.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/admin/css/components.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/admin/css/plugins.css')}}" rel="stylesheet">
+        <link href="{{asset('juegos/assets/admin/css/themes/default.theme.css')}}" rel="stylesheet" id="theme">
+        <link href="{{asset('juegos/assets/admin/css/custom.css')}}" rel="stylesheet">
+
+
+        <!--/ END THEME STYLES -->
+
+        <!-- START @IE SUPPORT -->
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/html5shiv/dist/html5shiv.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/respond-minmax/dest/respond.min.js')}}"></script>
+        <![endif]-->
+        <!--/ END IE SUPPORT -->
+        {% block stylesheets %}
+        {% endblock %}
+    </head>    
+    <!--/ END HEAD -->
+
+    <!--
+
+    |=========================================================================================================================|
+    |  TABLE OF CONTENTS (Use search to find needed section)                                                                  |
+    |=========================================================================================================================|
+    |  01. @HEAD                        |  Container for all the head elements                                                |
+    |  02. @META SECTION                |  The meta tag provides metadata about the HTML document                             |
+    |  03. @FAVICONS                    |  Short for favorite icon, shortcut icon, website icon, tab icon or bookmark icon    |
+    |  04. @FONT STYLES                 |  Font from google fonts                                                             |
+    |  05. @GLOBAL MANDATORY STYLES     |  The main 3rd party plugins css file                                                |
+    |  06. @PAGE LEVEL STYLES           |  Specific 3rd party plugins css file                                                |
+    |  07. @THEME STYLES                |  The main theme css file                                                            |
+    |  08. @IE SUPPORT                  |  IE support of HTML5 elements and media queries                                     |
+    |=========================================================================================================================|
+    |  09. @BODY                        |  Contains all the contents of an HTML document                                      |
+    |  10. @WRAPPER                     |  Wrapping page section                                                              |
+    |  11. @HEADER                      |  Header page section contains about logo, top navigation, notification menu         |
+    |  12. @SIDEBAR LEFT                |  Sidebar page section contains all sidebar menu left                                |
+    |  13. @PAGE CONTENT                |  Contents page section contains breadcrumb, content page, footer page               |
+    |  14. @SIDEBAR RIGHT               |  Sidebar page section contains all sidebar menu right                               |
+    |  15. @BACK TOP                    |  Element back to top and action                                                     |
+    |========================================================================================================================|
+    |  16. @CORE PLUGINS                |  The main 3rd party plugins script file                                             |
+    |  17. @PAGE LEVEL PLUGINS          |  Specific 3rd party plugins script file                                             |
+    |  18. @PAGE LEVEL SCRIPTS          |  The main theme script file                                                         |
+    |=========================================================================================================================|
+
+    START @BODY
+    |=========================================================================================================================|
+        |  TABLE OF CONTENTS (Apply to body class)                                                                                |
+        |=========================================================================================================================|
+    |  01. page-boxed                   |  Page into the box is not full width screen                                         |
+        |  02. page-header-fixed            |  Header element become fixed position                                               |
+        |  03. page-sidebar-fixed           |  Sidebar element become fixed position with scroll support                          |
+        |  04. page-sidebar-minimize        |  Sidebar element become minimize style width sidebar                                |
+        |  05. page-footer-fixed            |  Footer element become fixed position with scroll support on page content           |
+        |  06. page-sound                   |  For playing sounds on user actions and page events                                 |
+        |=========================================================================================================================|
+
+    -->
+    <body class="page-header-fixed page-sidebar-fixed">
+
+        <!--[if lt IE 9]>
+        <p class="upgrade-browser">Upps!! You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" target="_blank">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- START @WRAPPER -->
+        <section id="wrapper">
+
+            <!-- START @HEADER -->
+            <header id="header">
+
+                <!-- Start header left -->
+                <div class="header-left">
+                    <!-- Start offcanvas left: This menu will take position at the top of template header (mobile only). Make sure that only #header have the `position: relative`, or it may cause unwanted behavior -->
+                    <div class="navbar-minimize-mobile left">
+                        <i class="fa fa-bars"></i>
+                    </div>
+                    <!--/ End offcanvas left -->
+
+                    <!-- Start navbar header -->
+                    <div class="navbar-header">                        
+                        <!-- Start brand -->
+                        <a class="navbar-brand" href="{{path('sie_tramites_homepage')}}">
+                            Certificaciones
+                        </a> 
+                        <!--/ End brand -->
+
+                    </div><!-- /.navbar-header -->
+                    <!--/ End navbar header -->
+
+                    <!-- Start offcanvas right: This menu will take position at the top of template header (mobile only). Make sure that only #header have the `position: relative`, or it may cause unwanted behavior -->
+                    <div class="navbar-minimize-mobile right">
+                        <i class="fa fa-cog"></i>
+                    </div>
+                    <!--/ End offcanvas right -->
+
+                    <div class="clearfix"></div>
+                </div><!-- /.header-left -->
+                <!--/ End header left -->
+
+                <!-- Start header right -->
+                <div class="header-right">
+                    <!-- Start navbar toolbar -->
+                    <div class="navbar navbar-toolbar navbar-success">
+
+                        <!-- Start left navigation -->
+                        <ul class="nav navbar-nav navbar-left">
+
+                            <!-- Start sidebar shrink -->
+                            <li class="navbar-minimize">
+                                <a href="javascript:void(0);" title="Minimizar menú">
+                                    <i class="fa fa-bars"></i>
+                                </a>
+                            </li>
+
+                            
+                            <!--/ End sidebar shrink -->
+
+                            <!-- Start form search -->
+                            <li class="navbar-search">
+                                <a href="form-element.html#" class="trigger-search"><i class="fa fa-search"></i></a>
+                                <form class="navbar-form" name="form" method="POST" action="{{ path('sie_tramite_seguimiento_documento_lista') }}">
+                                    <div class="form-group has-feedback">
+                                        <input type="text" id="serie" name="serie" required="required" class="form-control typeahead rounded" placeholder="buscar por documento">
+                                        <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                                    </div>
+                                </form>
+                            </li>
+                            <!--/ End form search -->
+
+                        </ul><!-- /.navbar-left -->
+                        <!--/ End left navigation -->
+
+                        <!-- Start right navigation -->
+
+                        <ul class="nav navbar-nav navbar-right">
+
+                            <!-- Start profile -->
+                            <li class="dropdown navbar-profile">
+                                <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <span class="meta">
+                                        <span class="avatar"><img src="{{asset('juegos/img/avatar/35/1.png')}}" class="img-circle" alt="admin"></span>
+                                        <span class="text hidden-xs hidden-sm text-muted">{{app.session.get('name')}}</span>
+                                        <span class="caret"></span>
+                                    </span>
+                                </a>
+                                <!-- Start dropdown menu -->
+                                <ul class="dropdown-menu animated flipInX">
+                                    <!--<li class="dropdown-header">Account</li>
+                                    <li><a href="page-profile.html"><i class="fa fa-user"></i>View profile</a></li>
+                                    <li><a href="mail-inbox.html"><i class="fa fa-envelope-square"></i>Recibidos <span class="label label-info pull-right">30</span></a></li>
+                                    <li><a href="form-element.html#"><i class="fa fa-share-square"></i>Invite a friend</a></li>
+                                    <li class="dropdown-header">Product</li>
+                                    <li><a href="form-element.html#"><i class="fa fa-upload"></i>Upload</a></li>
+                                    <li><a href="form-element.html#"><i class="fa fa-dollar"></i>Earning</a></li>
+                                    <li><a href="form-element.html#"><i class="fa fa-download"></i>Withdrawals</a></li>
+                                    <li class="divider"></li>-->
+                                    <li><a href="{{path('logout')}}"><i class="fa fa-sign-out"></i>Cerrar sesión</a></li>
+                                </ul>
+                                <!--/ End dropdown menu -->
+                            </li><!-- /.navbar-profile -->
+                            <!--/ End profile -->
+
+
+                        </ul><!-- /.navbar-right -->
+                        <!--/ End right navigation -->
+
+                    </div><!-- /.navbar-toolbar -->
+                    <!--/ End navbar toolbar -->
+                </div><!-- /.header-right -->
+                <!--/ End header left -->
+
+            </header> <!-- /#header -->
+            <!--/ END HEADER -->
+
+            <!--
+
+            START @SIDEBAR LEFT
+            |=========================================================================================================================|
+            |  TABLE OF CONTENTS (Apply to sidebar left class)                                                                        |
+            |=========================================================================================================================|
+            |  01. sidebar-box               |  Variant style sidebar left with box icon                                              |
+            |  02. sidebar-rounded           |  Variant style sidebar left with rounded icon                                          |
+            |  03. sidebar-circle            |  Variant style sidebar left with circle icon                                           |
+            |=========================================================================================================================|
+
+            -->
+            <aside id="sidebar-left" class="sidebar-circle sidebar-dark">
+
+                <!-- Start left navigation - profile shortcut -->
+                <div class="sidebar-content">
+                    <div class="media">
+                        <a class="pull-left has-notif avatar" href="{{path('sie_tramites_homepage')}}">
+                            <img src="{{asset('juegos/img/avatar/50/1.png')}}" alt="admin">
+                            <i class="online"></i>
+                        </a>
+                        <div class="media-body">
+                            <h4 class="media-heading">Hola, <span>{{app.session.get('name')}}</span></h4>
+                            <small>{{app.session.get('cuentauser')}}</small>
+                        </div>
+                    </div>
+                </div><!-- /.sidebar-content -->
+                <!--/ End left navigation -  profile shortcut -->
+
+                <!-- Start left navigation - menu -->
+                <ul class="sidebar-menu">
+                    {% set rol8 = false %}    <!-- rol distrito -->          
+                    {% set rol10 = false %}    <!-- rol distrito -->          
+                    {% set rol12 = false %}    <!-- rol recepcion unidad educativa -->
+                    {% set rol13 = false %}    <!-- rol recepcion distrito -->
+                    {% set rol14 = false %}    <!-- rol recepcion ventanilla departamento -->
+                    {% set rol15 = false %}    <!-- rol autorizacion -->
+                    {% set rol16 = false %}    <!-- rol impresion -->
+                    {% set rol17 = false %}    <!-- rol legalizacion -->              
+                    {% for item in app.session.get('roluser') %}  
+                        {% if item.id == 8 %}
+                            {% set rol8 = true %} 
+                        {% elseif item.id == 10 %}
+                            {% set rol10 = true %} 
+                        {% elseif item.id == 12 %}
+                            {% set rol12 = true %} 
+                        {% elseif item.id == 13 %}
+                            {% set rol13 = true %} 
+                        {% elseif item.id == 14 %}
+                            {% set rol14 = true %} 
+                        {% elseif item.id == 15 %}
+                            {% set rol15 = true %} 
+                        {% elseif item.id == 16 %}
+                            {% set rol16 = true %} 
+                        {% elseif item.id == 17 %}
+                            {% set rol17 = true %} 
+                        {% else %}
+                        {% endif %}                        
+                    {% endfor %}   
+                    {% if (rol8 or rol16 or rol13) %}                    
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-gear"></i></span>
+                                <span class="text">Ajustes</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('sie_tramite_certificacion_homologacion') }}">Gestiones anteriores</a></li>
+                                {% if (rol16 or rol8) and 1 == 2%} 
+                                    <li><a href="#">Generar número de serie</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>  
+                    {% endif %}  
+                    {% if rol13 or rol14 or rol15 or rol16 or rol17 or rol8 %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-pencil"></i></span>
+                                <span class="text">Trámite</span>
+                                <span class="arrow"></span>
+                                <span class="selected"></span>
+                            </a>
+                            <ul>
+                                {% if rol13 or rol8 %}
+                                    <li class=" "><a href="{{path('sie_tramite_certificado_tecnico_registro_busca')}}">Registro</a></li>
+                                {% endif %}
+                                {% if (rol14 or rol8) and 1 == 2 %}
+                                    <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_recepcion_busca')}}">Recepción</a></li>                                    
+                                {% endif %}
+                                {% if rol15 or rol8 %}
+                                    <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_autorizacion_busca')}}">Autorización</a></li>
+                                {% endif %}
+                                {% if rol16 or rol8 %}
+                                    <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_impresion_busca')}}">Impresión</a></li>
+                                {% endif %}
+                                {% if (rol14 or rol8) and 1 == 2 %}
+                                    <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_envio_busca')}}">Envío</a></li>
+                                {% endif %}
+                                {% if rol13 or rol8 %}
+                                    <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_entrega_busca')}}">Entrega</a></li>
+                                {% endif %}
+                                {% if rol16 or rol8 %}
+                                    <li><a href="{{path('sie_tramite_reactiva_busca')}}">Reactivar</a></li>
+                                {% endif %}
+                                {% if rol17 or rol8 %}
+                                    <!--<li><a href="#">Legalización</a></li>-->
+                                {% endif %}
+                            </ul>
+                        </li> 
+                    {% endif %}                    
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-user"></i></span>
+                                <span class="text">Estudiante</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{path('declaracion_jurada_index')}}">Declaración jurada</a></li>
+                                {% if rol15 or rol8 %}  
+                                    <li><a href="{{path('estudiante_index')}}">Busqueda de estudiante</a></li>
+                                    <li><a href="{{ path('history_new_inscription_index') }}">Historial de estudiante</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>                                     
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-search"></i></span>
+                                <span class="text">Seguimiento</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{path('sie_tramite_seguimiento_busca')}}">Busqueda por trámite</a></li>
+                                <li><a href="{{path('sie_tramite_seguimiento_documento_busca')}}">Busqueda por número serie</a></li>
+                                <li><a href="{{path('sie_tramite_seguimiento_rude_busca')}}">Busqueda por código rude</a></li>
+                            </ul>
+                        </li>  
+                    {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8) and 1 == 2%}              
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-line-chart"></i></span>
+                                <span class="text">Reportes</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="#">Diplomas</a></li>
+                                <li><a href="#">Participantes</a></li>
+                                <li><a href="#">Trámites</a></li>
+                            </ul>
+                        </li> 
+                    {% endif %}                        
+                </ul><!-- /.sidebar-menu -->
+                <!--/ End left navigation - menu -->
+
+                <!-- Start left navigation - footer -->
+                <div class="sidebar-footer hidden-xs hidden-sm hidden-md">
+                    <a id="setting" class="pull-left" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-title="Setting"><i class="fa fa-cog"></i></a>
+                    <a id="fullscreen" class="pull-left" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-title="Fullscreen"><i class="fa fa-desktop"></i></a>
+                    <a id="lock-screen" data-url="{{path('logout')}}" class="pull-left" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-title="Lock Screen"><i class="fa fa-lock"></i></a>
+                    <a id="logout" data-url="{{path('logout')}}" class="pull-left" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-title="Logout"><i class="fa fa-power-off"></i></a>
+                </div><!-- /.sidebar-footer -->
+                <!--/ End left navigation - footer -->
+
+            </aside><!-- /#sidebar-left -->
+            <!--/ END SIDEBAR LEFT -->
+          
+
+            <!-- START @PAGE CONTENT -->
+            <section id="page-content">   
+                <!-- Start page header -->
+                <div class="header-content">
+                    <h2>
+                        <i class="fa fa-male"></i> 
+                        {% if titulo is defined  %}  {{ titulo }} {% endif %}
+                        <span>{% if subtitulo is defined  %}{{ subtitulo }} {% endif %}</span>
+                    </h2>
+                    <div class="breadcrumb-wrapper hidden-xs">
+                        <span class="label">Usted esta aquí:</span>
+                        {% block contentBread %}
+                        {% endblock %}                        
+                    </div><!-- /.breadcrumb-wrapper -->
+                </div><!-- /.header-content -->
+                <!--/ End page header -->
+                 <!-- Start body content -->
+                <div class="body-content animated fadeIn">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="page-content">
+                                {% for type, flashMessage in app.session.flashbag.all() %}
+                                    <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        {% if flashMessage.title is defined %}
+                                            <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                                            {{ flashMessage.message }}
+                                        {% else %}
+                                            &nbsp;
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>        
+                    </div>
+                    {% block contentoption %}
+                        <!-- here the iptions content -->
+                    {% endblock %}
+                </div>
+                <!--/ End body content -->  
+                <!-- Start footer content -->
+                <footer class="footer-content">
+                    <span id="copyright-year"></span> &copy;Administrador Creado por <a href="http://www.minedu.gob.bo" target="_blank">Ministerio de Educación</a>, Bolivia
+                    <span class="pull-right">...</span>
+                </footer><!-- /.footer-content -->
+                <!--/ End footer content -->
+
+            </section><!-- /#page-content -->
+            <!--/ END PAGE CONTENT -->
+        </section><!-- /#wrapper -->
+        <!--/ END WRAPPER -->
+
+        <!-- START @BACK TOP -->
+        <div id="back-top" class="animated pulse circle">
+            <i class="fa fa-angle-up"></i>
+        </div><!-- /#back-top -->
+        <!--/ END BACK TOP -->
+
+
+        
+
+        <!-- START JAVASCRIPT SECTION (Load javascripts at bottom to reduce load time) -->
+        <!-- START @CORE PLUGINS -->
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/typehead.js/dist/handlebars.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/typehead.js/dist/typeahead.bundle.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-nicescroll/jquery.nicescroll.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery.sparkline.min/index.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-easing-original/jquery.easing.1.3.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/bootbox/bootbox.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/retina.js/dist/retina.min.js')}}"></script>
+        <!--/ END CORE PLUGINS -->
+
+        <!-- START @PAGE LEVEL PLUGINS -->
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/js/jasny-bootstrap.fileinput.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/holderjs/holder.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js')}}"></script>
+
+
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
+        <!-- <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script> -->
+        <!-- <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/datatables.responsive.fos_js_routing_js')}}"></script> -->
+        <!-- <script src="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js')}}"></script> -->
+        <!--/ END PAGE LEVEL PLUGINS -->
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/jquery-validation/dist/jquery.validate.min.js')}}"></script>
+
+
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-datepicker-vitalets/js/bootstrap-datepicker.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/moment/min/moment.min.js')}}"></script>
+        <script src="{{asset('juegos/assets/global/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+        <link href="{{asset('juegos/assets/admin/css/pages/timeline.css')}}" rel="stylesheet">
+
+
+        <!-- START @PAGE LEVEL SCRIPTS -->
+        <script src="{{asset('juegos/assets/admin/js/apps.js')}}"></script>
+        <script src="{{asset('juegos/assets/admin/js/pages/blankon.form.element.js')}}"></script>
+        <!--<script src="{{asset('juegos/assets/admin/js/pages/blankon.form.picker.js')}}"></script>-->
+        <script src="{{asset('juegos/assets/admin/js/pages/blankon.timeline.js')}}"></script>
+        <script src="{{asset('juegos/assets/admin/js/demo.js')}}"></script>
+        <script src="{{asset('juegos/assets/admin/js/menuTree.js')}}"></script>
+        <!--/ END PAGE LEVEL SCRIPTS -->
+        <!--/ END JAVASCRIPT SECTION -->
+
+
+        <!-- START GOOGLE ANALYTICS -->
+        <script>
+        </script>
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+        <!--/ END GOOGLE ANALYTICS -->
+
+        {% block javascripts %}
+        {% endblock %}
+    </body>
+    <!--/ END BODY -->
+</html>

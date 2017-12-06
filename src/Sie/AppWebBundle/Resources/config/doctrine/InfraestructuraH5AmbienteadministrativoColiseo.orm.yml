@@ -1,0 +1,76 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5AmbienteadministrativoColiseo:
+    type: entity
+    table: infraestructura_h5_ambienteadministrativo_coliseo
+    indexes:
+        IDX_87F9FC10E4D897D5:
+            columns:
+                - n24_piso_estadogeneral_tipo_id
+        IDX_87F9FC105CE1AD49:
+            columns:
+                - n24_material_piso_tipo_id
+        IDX_87F9FC101DBD8CC2:
+            columns:
+                - infraestructura_h5_ambienteadministrativo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n24EsTechado:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n24_es_techado
+        n24Capacidad:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: n24_capacidad
+        n24AreaMt2:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n24_area_mt2
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        n24PisoEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n24_piso_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n24MaterialPisoTipo:
+            targetEntity: InfraestructuraH5MaterialPisoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n24_material_piso_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH5Ambienteadministrativo:
+            targetEntity: InfraestructuraH5Ambienteadministrativo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h5_ambienteadministrativo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

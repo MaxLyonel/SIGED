@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltHablaTipo:
+    type: entity
+    table: estudiante_inscripcion_socioeconomico_alt_habla_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        habla:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

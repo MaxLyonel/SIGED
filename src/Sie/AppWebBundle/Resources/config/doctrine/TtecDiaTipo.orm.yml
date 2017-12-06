@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\TtecDiaTipo:
+    type: entity
+    table: ttec_dia_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        dia:
+            type: string
+            nullable: true
+            length: 25
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

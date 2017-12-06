@@ -1,0 +1,77 @@
+gestionUesprocesoApertura_index:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:index" }
+
+gestionUesprocesoApertura_curso_maincurso:
+    path:     /maincurso
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:mainCurso" }
+    options:
+       expose: true
+
+gestionUesprocesoApertura_curso_newcurso:
+    path:     /newcurso
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:newCurso" }
+    options:
+       expose: true
+
+gestionUesprocesoApertura_curso_savecurso:
+    path:     /savecurso
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:saveCurso" }
+    options:
+       expose: true
+
+gestionUesprocesoApertura_curso_removecurso:
+    path:     /removecurso
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:removeCurso" }
+    options:
+       expose: true
+
+gestionUesprocesoApertura_curso_inscribirstudents:
+    path:     /inscribirstudents
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:inscribirStudents" }
+    options:
+       expose: true
+
+gestionUesprocesoApertura_curso_findstudent:
+    path:     /findstudent
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:findStudents" }
+    options:
+       expose: true
+
+
+gestionUesprocesoApertura_curso_saveinscription:
+    path:     /saveinnscriptionnoacredit
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:saveInscriptionNoAcredit"}
+    options:
+         expose: true
+
+
+gestionUesprocesoApertura_curso_listStudents:
+    path:     /liststudents
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:listStudents" }
+    options:
+       expose: true
+
+gestionUesprocesoApertura_curso_removeInscriptionNoAcredit:
+    path:     /removeInscriptionNoAcredit
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:removeInscriptionNoAcredit" }
+    options:
+       expose: true
+
+gestionUesprocesoApertura_curso_printddjj:
+    path:     /printddjj
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:printDdjj" }
+    options:
+       expose: true
+
+
+
+
+gestionUesprocesoApertura_rue_new:
+    path:     /new
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:new" }
+
+gestionUesprocesoApertura_rue_create:
+    path:     /create
+    defaults: { _controller: "SieRegularBundle:GestionUesprocesoApertura:create" }
+    methods:  POST

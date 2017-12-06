@@ -1,0 +1,103 @@
+sie_diploma_tramite_recepcion_distrito:
+    path:     /recepcion/distrito
+    defaults: { _controller: SieDiplomaBundle:Tramite:recepcionDistrito }
+
+sie_diploma_tramite_recepcion_alternativa_distrito:
+    path:     /recepcion/alternativa/distrito
+    defaults: { _controller: SieDiplomaBundle:Tramite:recepcionAlternativaDistrito }
+
+sie_diploma_tramite_recepcion_departamento:
+    path:     /recepcion/departamento
+    defaults: { _controller: SieDiplomaBundle:Tramite:recepcionDepartamento }
+    
+sie_diploma_tramite_autorizacion:
+    path:     /autorizacion/diploma
+    defaults: { _controller: SieDiplomaBundle:Tramite:autorizacionDiploma }
+    
+sie_diploma_tramite_impresion_listados:
+    path:     /impresion/listado
+    defaults: { _controller: SieDiplomaBundle:Tramite:impresionListado }    
+        
+sie_diploma_tramite_impresion_listados_pdf:
+    path:     /impresion/listado/pdf
+    defaults: { _controller: SieDiplomaBundle:Tramite:impresionListadoPdf }
+    
+sie_diploma_tramite_anular:
+    path:     /anular/diploma
+    defaults: { _controller: SieDiplomaBundle:Tramite:anularDiploma }
+    
+sie_diploma_tramite_impresion:
+    path:     /impresion/diploma
+    defaults: { _controller: SieDiplomaBundle:Tramite:impresionDiploma }
+    
+sie_diploma_tramite_impresion_pdf:
+    path:     /impresion/diploma/pdf
+    defaults: { _controller: SieDiplomaBundle:Tramite:impresionDiplomaPdf }
+    
+sie_diploma_tramite_documento_impresion_pdf:
+    path:     /impresion/diploma/lista/pdf
+    defaults: { _controller: SieDiplomaBundle:Tramite:printDiplomaListaPdf }
+    
+sie_diploma_tramite_legalizacion:
+    path:     /legalizacion/diploma
+    defaults: { _controller: SieDiplomaBundle:Tramite:legalizacionDiploma }
+
+sie_diploma_tramite_legalizacion_ue:
+    path:     /legalizacion/ue/diploma
+    defaults: { _controller: SieDiplomaBundle:Tramite:legalizacionUeDiploma }
+
+sie_diploma_tramite_legalizacion_ue_pdf:
+    path:     /legalizacion/ue/diploma/pdf
+    defaults: { _controller: SieDiplomaBundle:Tramite:legalizacionUeDiplomaPdf }
+
+sie_diploma_tramite_reactivacion:
+    path:     /reactivacion/tramite
+    defaults: { _controller: SieDiplomaBundle:Tramite:reactivarTramite }
+    
+sie_diploma_tramite_legalizacion_save:
+    path:     /legalizacion/diploma/save
+    defaults: { _controller: SieDiplomaBundle:Tramite:legalizacionDiplomaSave }
+    
+sie_diploma_tramite_reactivacion_save:
+    path:     /reactivacion/tramite/save
+    defaults: { _controller: SieDiplomaBundle:Tramite:reactivarTramiteSave }
+    
+sie_diploma_tramite_busca_ue:
+    path:     /lista/estudiantes/unidad/educativa
+    defaults: { _controller: SieDiplomaBundle:Tramite:buscaUnidadEducativa }
+    
+sie_diploma_tramite_busca_cea:
+    path:     /lista/estudiantes/centro/educacion/alternativa
+    defaults: { _controller: SieDiplomaBundle:Tramite:buscaCentroEducacionAlternativa }
+
+sie_diploma_tramite_recepcion_distrito_registra:
+    path:     /recepcion/distrito/registra
+    defaults: { _controller: SieDiplomaBundle:Tramite:registraTramiteDiploma }
+
+sie_diploma_tramite_recepcion_alternativa_distrito_registra:
+    path:     /recepcion/alternativa/distrito/registra
+    defaults: { _controller: SieDiplomaBundle:Tramite:registraAlternativaTramiteDiploma }
+    
+sie_diploma_tramite_procesa:
+    path:     /procesa/tramite/diploma
+    defaults: { _controller: SieDiplomaBundle:Tramite:procesaTramiteDiploma }
+
+sie_diploma_tramite_entrega_departamento:
+    path:     /entrega/departamento
+    defaults: { _controller: SieDiplomaBundle:Tramite:entregaDepartamento }
+
+sie_diploma_tramite_entrega_distrito:
+    path:     /entrega/distrito
+    defaults: { _controller: SieDiplomaBundle:Tramite:entregaDistrito }
+    
+sie_diploma_tramite_descarga_reporte_distrito_pdf:
+    path:     /reporte/recepcion/distrito/download/{sie}
+    defaults: { _controller: SieDiplomaBundle:Tramite:printReportesDistritoPdf }
+    
+sie_diploma_tramite_descarga_reporte_departamental_pdf:
+    path:     /reporte/recepcion/departamental/download/{sie}
+    defaults: { _controller: SieDiplomaBundle:Tramite:printReportesDepartamentalPdf }
+
+sie_diploma_tramite_impresion_serie_form:
+    path:     /impresion/diploma/serie/form
+    defaults: { _controller: SieDiplomaBundle:Tramite:impresionDiplomaSerieForm }

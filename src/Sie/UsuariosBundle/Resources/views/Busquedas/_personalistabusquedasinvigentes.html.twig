@@ -1,0 +1,90 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo %}  
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4>CI sin vigencia segun su busqueda.</h4>
+    </div>
+    <div id="tablaListadoPersonas_fil"  style="visibility: hidden;">
+        
+    </div>
+    <div class="panel-body">
+        <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+            <thead>
+                <tr>
+                    <th>Acciones</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Estado</th>
+                    <th>Carnet</th>
+                    <th>Nombre</th>
+                    <th>Paterno</th>
+                    <th>Materno</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Vigente Administrativo</th>
+                    <th>Vigente Apoderado</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for persona in personas %}
+                <tr>
+                    <td>
+                        {% if accion == 'newuser' %}
+                            <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="usuarioForm('{{personaid}}')"> Asignar Usuario</a>                        
+                        {% elseif (app.session.get('roluser') == 8) or (app.session.get('roluser') == 31) %}
+                            <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="usuarioForm('{{persona.id}}')"> Asignar Usuario</a>
+                        {% else %}
+                            <span class="label label-danger"><i class="fa fa-ban" aria-hidden="true"></i></span>                        
+                        {% endif %}    
+                    </td>
+                    <td></td>
+                    <td>
+                        <span class="label label-warning">Sin usuario</span>
+                    </td>
+                    <td>{{ [persona.carnet,persona.complemento]|join|trim}}</td>
+                    <td>{{ persona.nombre }}</td>
+                    <td>{{ persona.paterno }}</td>
+                    <td>{{ persona.materno }}</td>
+                    <td>{% if persona.fecha_nacimiento %}{{ persona.fecha_nacimiento|date('d/m/Y') }}{% endif %}</td>                    
+                    <td>  
+                        <span class="label label-default"><i class="fa fa-square-o" aria-hidden="true"></i></span>                       
+                    </td>
+                    <td>  
+                        <span class="label label-default"><i class="fa fa-square-o" aria-hidden="true"></i></span>                       
+                    </td>
+                </tr>                
+            {% endfor %}
+            {% if personas|length == 0 %}
+                 <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#tablaListadoPersonas').find('tr').click( function(){
+            $('#tablaListadoPersonas_fil').text($(this).index());
+        });
+        
+        {% if accion == 'newuser' %}
+            $('#tablaListadoPersonas_fil').text('0');
+            usuarioForm('{{ personaid }}');        
+        {% endif %}            
+    } );
+    </script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+<!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Módulo cerrado', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Cerrado'} %}
+        {% include 'SieHerramientaBundle:Principal:onlyview.html.twig'%}
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-4">
+                <div class="callout callout-warning text-justify">
+                    <strong>¡Atención!</strong> La Unidad Educativa <strong>"{{institucion.id}} - {{institucion.institucioneducativa}}"</strong> ya concluyó con la validación de estudiantes para el Bono Juancito Pinto gestión <strong>"{{gestion}}"</strong>.<br />
+                    Por tanto, este módulo se encuentra cerrado.
+                </div>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4 ">
+            <form action="{{path('herramienta_info_estudiante_bjp_print_reporte')}}" method="post">
+                <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                <input type="hidden" name="gestion" value="{{gestion}}">
+                <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-save"></i> Generar Reporte de Información</button>
+            </form>
+          </div>
+
+        </div>
+    </div>
+{% endblock %}

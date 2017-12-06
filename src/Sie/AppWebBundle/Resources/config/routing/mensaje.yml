@@ -1,0 +1,59 @@
+mensaje:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:Mensaje:index" }
+    
+mensaje_inbox:
+    path:     /inbox
+    defaults: { _controller: "SieAppWebBundle:Mensaje:inbox" }
+        
+mensaje_sent:
+    path:     /sent
+    defaults: { _controller: "SieAppWebBundle:Mensaje:sent" }
+
+mensaje_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:Mensaje:show" }
+
+mensaje_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:Mensaje:new" }
+
+mensaje_reply:
+    path:     /{id}/reply
+    defaults: { _controller: "SieAppWebBundle:Mensaje:reply" }
+
+mensaje_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:Mensaje:create" }
+    methods:  POST
+
+mensaje_reply_msg:
+    path:     /reply-msg
+    defaults: { _controller: "SieAppWebBundle:Mensaje:replyMsg" }
+    methods:  POST
+
+mensaje_readed_sent:
+    path:     /{id}/readed-out
+    defaults: { _controller: "SieAppWebBundle:Mensaje:readedOut" }
+
+mensaje_readed_inbox:
+    path:     /{id}/readed-in
+    defaults: { _controller: "SieAppWebBundle:Mensaje:readedIn" }
+
+#mensaje_readed:
+#    path:     /{id}/readed
+#    defaults: { _controller: "SieAppWebBundle:Mensaje:readed" }
+    
+#mensaje_edit:
+#    path:     /{id}/edit
+#    defaults: { _controller: "SieAppWebBundle:Mensaje:edit" }
+
+#mensaje_update:
+#    path:     /{id}/update
+#    defaults: { _controller: "SieAppWebBundle:Mensaje:update" }
+#    methods:  [POST, PUT]
+
+#mensaje_delete:
+#    path:     /{id}/delete
+#    defaults: { _controller: "SieAppWebBundle:Mensaje:delete" }
+#    methods:  [POST, DELETE]

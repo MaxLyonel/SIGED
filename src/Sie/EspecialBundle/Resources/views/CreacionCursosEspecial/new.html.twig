@@ -1,0 +1,217 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+{% block contentoption %}
+    <!-- Start page header -->
+<div class="header-content">
+    <h2><i class="fa fa-table"></i> Creación de Cursos <span>Nuevo Curso</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aqui:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="#">Creación de Cursos</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+
+            <li class="active">Nuevo</li>
+        </ol>
+    </div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+<div class="body-content animated fadeIn">
+
+    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Cursos', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+    {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h4>Nuevo curso</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-collapse collapse in" id="panelnuevocurso">
+                    <div class="panel-body">
+                        <div class="panel-body">
+                            {{form_start(form)}}
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.area)}}
+                                        {{form_widget(form.area,{ 'attr':{'onchange':'listarNiveles()'}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.turno)}}
+                                        {{form_widget(form.turno) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                     <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.nivel)}}
+                                        {{form_widget(form.nivel,{ 'attr':{'onchange':'listarGrados()'}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                     <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.servicio)}}
+                                        {{form_widget(form.servicio,{ 'attr':{'onchange':'listarProgramas()'}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row"> 
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.grado)}}
+                                        {{form_widget(form.grado,{ 'attr':{'onchange':'listarServicios()'}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.programa)}}
+                                        {{form_widget(form.programa) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.paralelo)}}
+                                        {{form_widget(form.paralelo) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+ 
+                                   <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.tecnica)}}
+                                        {{form_widget(form.tecnica) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>                                   
+                                   <div class="form-group col-lg-6 col-md-12">
+                                        {{form_label(form.nivelTecnico)}}
+                                        {{form_widget(form.nivelTecnico) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>                                   
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12" style="text-align:center">
+                                        {{form_widget(form.guardar)}}
+                                        <a href="{{path('creacioncursos_especial',{'op':'result'})}}" class="btn btn-default"> Cancelar</a>
+                                    </div>
+                                </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('js/jquery-ui.min.js')}}"></script>
+    <script>
+
+        function listarNiveles() {
+            var area = $('#form_area').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('listar_niveles_especial', {'area':area}),
+                beforeSend: function () {
+                    $("#form_nivel").empty();
+                    $("#form_grado").empty();
+                    $("#form_programa").empty();
+                    $("#form_servicio").empty();
+                    $("#form_nivel").append('<option value="">Buscando...</option>');
+                    $("#form_grado").append('<option value="">Buscando...</option>');
+                    $("#form_programa").append('<option value="">Buscando...</option>');
+                    $("#form_servicio").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_nivel").empty();
+                    $("#form_grado").empty();
+                    $("#form_programa").empty();
+                    $("#form_servicio").empty();
+                    $("#form_nivel").append('<option value="">Seleccionar...</option>');
+                    $("#form_grado").append('<option value="">Seleccionar...</option>');
+                    $("#form_programa").append('<option value="">Seleccionar...</option>');
+                    $("#form_servicio").append('<option value="">Seleccionar...</option>');
+                    $.each(data.niveles, function (i, value) {
+                        $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        function listarGrados() {
+            var nivel = $('#form_nivel').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('listar_grados_especial', {'nivel':nivel}),
+                beforeSend: function () {
+                    $("#form_grado").empty();
+                    $("#form_programa").empty();
+                    $("#form_servicio").empty();
+                    $("#form_grado").append('<option value="">Buscando...</option>');
+                    $("#form_programa").append('<option value="">Buscando...</option>');
+                    $("#form_servicio").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_grado").empty();
+                    $("#form_programa").empty();
+                    $("#form_servicio").empty();
+                    $("#form_grado").append('<option value="">Seleccionar...</option>');
+                    $("#form_programa").append('<option value="">Seleccionar...</option>');
+                    $("#form_servicio").append('<option value="">Seleccionar...</option>');
+                    $.each(data.grados, function (i, value) {
+                        $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        function listarServicios() {
+            var area = $('#form_area').val();
+            var nivel = $('#form_nivel').val();
+            var grado = $('#form_grado').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('listar_servicios_especial', {'area':area,'nivel':nivel,'grado':grado}),
+                beforeSend: function () {
+                    $("#form_programa").empty();
+                    $("#form_servicio").empty();
+                    $("#form_programa").append('<option value="">Buscando...</option>');
+                    $("#form_servicio").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_programa").empty();
+                    $("#form_servicio").empty();
+                    $("#form_programa").append('<option value="">Seleccionar...</option>');
+                    $("#form_servicio").append('<option value="">Seleccionar...</option>');
+                    $.each(data.servicios, function (i, value) {
+                        $("#form_servicio").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        function listarProgramas() {
+			var area  = $('#form_area').val();
+        	var nivel = $('#form_nivel').val();
+            var grado = $('#form_grado').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('listar_programas_especial', {'area':area,'nivel':nivel,'grado':grado}),
+                beforeSend: function () {
+                    $("#form_programa").empty();
+                    $("#form_programa").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_programa").empty();
+                    $("#form_programa").append('<option value="">Seleccionar...</option>');
+                    $.each(data.programas, function (i, value) {
+                        $("#form_programa").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        
+    </script>
+{% endblock %}

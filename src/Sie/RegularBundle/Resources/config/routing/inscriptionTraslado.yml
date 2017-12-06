@@ -1,0 +1,27 @@
+inscription_traslado_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InscriptionTraslado:index }
+
+inscription_traslado_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InscriptionTraslado:result }
+
+inscription_traslado_findIE:
+     path:    /findIE/{id}/{nivel}/{grado}
+     defaults: { _controller: SieRegularBundle:InscriptionTraslado:findIE }
+     options:
+         expose: true   
+
+inscription_traslado_saveMateriasNotas:
+    path: /saveMateriasNotas
+    defaults: { _controller: SieRegularBundle:InscriptionTraslado:saveMateriasNotas }
+    
+inscription_traslado_regNotas:    
+    path:    /regNotas
+    defaults: { _controller: SieRegularBundle:InscriptionTraslado:regNotas }
+    options:
+        expose: true
+        
+inscription_traslado_saveData:
+    path: /saveData
+    defaults: { _controller: SieRegularBundle:InscriptionTraslado:saveData }        

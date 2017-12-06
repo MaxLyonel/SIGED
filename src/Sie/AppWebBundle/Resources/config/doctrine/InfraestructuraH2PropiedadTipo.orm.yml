@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH2PropiedadTipo:
+    type: entity
+    table: infraestructura_h2_propiedad_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraPropiedad:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_propiedad
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

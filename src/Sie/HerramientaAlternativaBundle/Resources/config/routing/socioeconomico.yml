@@ -1,0 +1,42 @@
+socioeconomicoalt_index:
+    path:     /
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:index" }
+    options:
+         expose: true
+
+socioeconomicoalt_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:show" }
+
+socioeconomicoalt_new:
+    path:     /new
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:new" }
+
+socioeconomicoalt_create:
+    path:     /create
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:create" }
+    methods:  POST
+
+socioeconomicoalt_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:edit" }
+
+socioeconomicoalt_update:
+    path:     /update
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:update" }
+    methods:  [POST, PUT]
+
+socioeconomicoalt_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:delete" }
+    methods:  [POST, DELETE]
+
+socioeconomicoalt_result:
+    path:    /result
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:result" } 
+    options:
+         expose: true   
+
+socioeconomicoalt_list_dptos_nac:
+    path:     /altlistardptosnac/{pais}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:listarDepartamentosNac" }

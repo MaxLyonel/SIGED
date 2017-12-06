@@ -1,0 +1,22 @@
+Sie\AppWebBundle\Entity\AtencionmedicaTipo:
+    type: entity
+    table: atencionmedica_tipo
+    id:
+        idAtencionmedica:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: id_atencionmedica
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descAtencionmedica:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: desc_atencionmedica
+    lifecycleCallbacks: {  }

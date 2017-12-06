@@ -1,0 +1,502 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="alert alert-info alert-dismissible" role="alert">
+
+                    <i class="fa fa-warning"></i> LA MODIFICACIO SE DEBE REALIZAR PREVIA PRESENTACION DEL FORMULARIO DE MODIFICACION Y/O INCLUSION DE DATOS (SIE-MD-300), ESTA MODIFICACION SOLO SE REALIZA UNA VEZ POR GESTION.
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title"><i class="fa fa-list"></i> Información Inscripción: {{student.paterno}} {{student.materno}} {{student.nombre}} - {{student.codigoRude}}</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th>Gestión</th>
+                                        <th>Sie</th>
+                                        <th>Institución Educativa</th>
+                                        <!--th>Rude</th-->
+                                        <th>Nivel</th>
+                                        <th>Grado</th>
+                                        <th>Paralelo</th>
+                                        <th>Turno</th>
+                                        <th>Est. Matrícula</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for inscription in infoinscription%}
+                                        <tr>
+
+                                            <td data-title="Gestión">{{inscription.gestion}}</td>
+                                            <td data-title="Sie">{{inscription.sie}}</td>
+                                            <td data-title="Institución Educativa">{{inscription.institucioneducativa}}</td>
+                                            <!--td data-title="Rude">{{inscription.codigoRude}}</td-->
+                                            <td data-title="Nivel">{{inscription.nivel}} </td>
+                                            <td data-title="Grado">{{inscription.grado}}</td>
+                                            <td data-title="Paralelo">{{inscription.paralelo}}</td>
+                                            <td data-title="Turno">{{inscription.turno}} </td>
+                                            <td data-title="Est. Matricula">{{inscription.estadoMatricula}}</td>
+                                        </tr>
+                                    {% endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nuevo panel -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title"><i class="fa fa-user"></i> Modificación</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        {% if form_mode1 is empty %}
+
+                        {% else %}
+
+                            {{form_start(form_mode1,{'attr':{'data-toggle': 'validator','form':'role'} })}}
+                            <h5 class="text-lilac">MODIFICACION Y/O INCLUSIÓN DE NOMBRE(S), APELLIDO(S) Y/O MODIFICACION DE FECHA DE NACIMIENTO</h5>
+                            <h6 class="text-primary">Los campos con (*) son requeridos</h6>
+                            <div id="no-more-tables">
+
+
+                                <table class="table table-bordered table-hover cf">
+                                    <thead class="cf">
+                                        <tr class="info">
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>Nombre(*)</th>
+                                            <th>Fecha Nacimiento</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+
+                                            <td data-title="Paterno" class="form-group">
+                                                {{form_widget(form_mode1.paterno) }}
+                                                <div class="help-block with-errors"></div>
+                                            </td>
+                                            <td data-title="Materno" class="form-group">
+                                                {{form_widget(form_mode1.materno)}}
+                                                <div class="help-block with-errors"></div>
+                                            </td>
+                                            <td data-title="Nombre(s)" class="form-group">
+                                                {{form_widget(form_mode1.nombre)}}
+                                                <div class="help-block with-errors"></div>
+                                            </td>
+                                            <td data-title="Fecha Nac.">
+                                                <div id="sandbox-container">
+                                                    {{form_widget(form_mode1.fechaNacimiento)}}
+                                                </div>
+                                            </td>
+
+                                    </tbody>
+
+                                </table>
+                                <hr>
+                            </div>
+
+                            {% if m3==1 %}
+                                <h5 class="text-lilac">MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO, CARNET DE IDENTIDAD Y OTROS</h5>
+                                <h6 class="text-primary">Los campos con (*) son requeridos</h6>
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    {{form_label(form_mode3.isDoubleNcnal)}} <i class="fa fa-question-circle"  data-toggle="tooltip" data-placement="right" title="" data-original-title="En caso de que la/el estudiante presente doble nacionalidad marque el campo y seleccione el pais de procedencia"></i>
+                                    {{form_widget(form_mode3.isDoubleNcnal,{'attr': {'':''}  }   )}}
+                                  </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        {{form_label(form_mode1.pais)}}
+                                        {{form_widget(form_mode1.pais,{'attr':{'onchange':'dep(this.value)'} })}}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{form_label(form_mode1.departamento)}}
+                                        {{form_widget(form_mode1.departamento,{'attr':{'onchange':'prov(this.value)'} })}}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{form_label(form_mode1.provincia)}}
+                                        {{form_widget(form_mode1.provincia)}}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{form_label(form_mode1.localidad)}}
+                                        {{form_widget(form_mode1.localidad)}}
+                                    </div>
+                                </div>
+                                </br>
+
+                                <div class="row">
+
+                                    <div class="col-sm-1">
+                                        {{form_label(form_mode3.extranjero)}}
+                                        {{form_widget(form_mode3.extranjero)}}
+                                    </div>
+                                    <div class="col-sm-2">
+                                        {{form_label(form_mode1.ci)}}
+                                        {{form_widget(form_mode1.ci)}}
+                                    </div>
+                                    <div class="col-sm-1">
+                                        {{form_label(form_mode1.complemento)}}
+
+                                        {{form_widget(form_mode1.complemento)}}
+
+                                    </div>
+                                    <div class="col-sm-2">
+                                        {{form_label(form_mode1.generoTipo)}}
+                                        {{form_widget(form_mode1.generoTipo)}}
+                                    </div>
+                                    <div class="col-sm-2">
+                                        {{form_label(form_mode1.oficialia)}}
+                                        {{form_widget(form_mode1.oficialia)}}
+                                    </div>
+                                    <div class="col-sm-2">
+                                        {{form_label(form_mode1.libro)}}
+                                        {{form_widget(form_mode1.libro)}}
+                                    </div>
+                                    <div class="col-sm-1">
+                                        {{form_label(form_mode1.partida)}}
+                                        {{form_widget(form_mode1.partida)}}
+                                    </div>
+                                    <div class="col-sm-1">
+                                        {{form_label(form_mode1.folio)}}
+                                        {{form_widget(form_mode1.folio)}}
+                                    </div>
+                                </div>
+
+
+                            {%endif%}
+                            <hr>
+                            <div class="text-right">
+                                {{form_widget(form_mode1.save)}}
+                            </div>
+
+                            {{form_end(form_mode1)}}
+                        {% endif %}
+                        <!--end mode1 form-->
+                        <!--mode2 form-->
+                        {% if form_mode2 is empty %}
+
+                        {%else%}
+                            <h5 class="text-lilac">MODIFICACION Y/O INCLUSIÓN DE NOMBRE(S), APELLIDO(S) Y/O MODIFICACION DE FECHA DE NACIMIENTO</h5>
+                            <h6 class="text-primary">Los campos con (*) son requeridos</h6>
+                            {{form_start(form_mode2,{'attr':{'data-toggle': 'validator','form':'role'} })}}
+                            <div id="no-more-tables">
+                                <table class="table table-bordered table-hover cf">
+                                    <thead class="cf">
+                                        <tr class="info">
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>Nombre(*)</th>
+                                            <th>Fecha Nacimiento</th>
+                                            <th>Resol. Aprobatoria</th>
+                                            <th>Obs. Adicional</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+
+                                            <td data-title="Paterno" class="form-group">{{form_widget(form_mode2.paterno) }}<div class="help-block with-errors"></div></td>
+                                            <td data-title="Materno" class="form-group">{{form_widget(form_mode2.materno)}}<div class="help-block with-errors"></div></td>
+                                            <td data-title="Nombre(s)" class="form-group">{{form_widget(form_mode2.nombre)}}<div class="help-block with-errors"></div></td>
+                                            <td data-title="Fecha Nac.">
+                                                <div id="sandbox-container">
+                                                    {{form_widget(form_mode2.fechaNacimiento)}}
+                                                </div>
+                                            </td>
+                                            <td data-title="Resol. Aprobatoria">{{form_widget(form_mode2.resolAprobatoria)}}</td>
+                                    <div id="sandbox-container">
+                                        <td data-title="Obs. Adicional">{{form_widget(form_mode2.obsAdicional)}}</td>
+                                    </div>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {% if m3==1 %}
+                            <hr>
+                                <h5 class="text-lilac">MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO, CARNET DE IDENTIDAD Y OTROS</h5>
+
+                                <h6 class="text-primary">Los campos con (*) son requeridos</h6>
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    {{form_label(form_mode3.isDoubleNcnal)}} <i class="fa fa-question-circle"  data-toggle="tooltip" data-placement="right" title="" data-original-title="En caso de que la/el estudiante presente doble nacionalidad marque el campo y seleccione el pais de procedencia"></i>
+                                    {{form_widget(form_mode3.isDoubleNcnal,{'attr': {'':''}  }   )}}
+                                  </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        {{form_label(form_mode2.pais)}} (*)
+                                        {{form_widget(form_mode2.pais,{'attr':{'onchange':'dep(this.value)'} })}}
+
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{form_label(form_mode2.departamento)}}
+                                        {{form_widget(form_mode2.departamento,{'attr':{'onchange':'prov(this.value)'}  } )}}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{form_label(form_mode2.provincia)}}
+                                        {{form_widget(form_mode2.provincia)}}
+                                    </div>
+                                    <div class="col-sm-3">
+                                        {{form_label(form_mode2.localidad)}}
+                                        {{form_widget(form_mode2.localidad)}}
+                                    </div>
+                                </div>
+                                </br>
+
+                                <div class="row">
+                                    <div class="col-sm-1">
+                                        {{form_label(form_mode3.extranjero)}}
+                                        {{form_widget(form_mode3.extranjero)}}
+                                    </div>
+                                    <div class="col-sm-2">
+                                        {{form_label(form_mode2.ci)}}
+                                        {{form_widget(form_mode2.ci)}}
+                                    </div>
+                                    <div class="col-sm-1">
+                                        {{form_label(form_mode2.complemento)}}
+
+                                        {{form_widget(form_mode2.complemento)}}
+
+                                    </div>
+                                    <div class="col-sm-2">
+                                        {{form_label(form_mode2.generoTipo)}}
+                                        {{form_widget(form_mode2.generoTipo)}}
+                                    </div>
+                                    <div class="col-sm-2">
+                                        {{form_label(form_mode2.oficialia)}}
+                                        {{form_widget(form_mode2.oficialia)}}
+                                    </div>
+                                    <div class="col-sm-2">
+                                        {{form_label(form_mode2.libro)}}
+                                        {{form_widget(form_mode2.libro)}}
+                                    </div>
+                                    <div class="col-sm-1">
+                                        {{form_label(form_mode2.partida)}}
+                                        {{form_widget(form_mode2.partida)}}
+                                    </div>
+                                    <div class="col-sm-1">
+                                        {{form_label(form_mode2.folio)}}
+                                        {{form_widget(form_mode2.folio)}}
+                                    </div>
+                                </div>
+
+
+                            {%endif%}
+                            <hr>
+                            <div class="text-right">
+                                {{form_widget(form_mode2.save)}}
+                            </div>
+
+                            {{form_end(form_mode2)}}
+                        {% endif %}
+                        <!--end mode2 form-->
+
+                        <!--mode3 form-->
+                        {% if m1==0 and m2==0 and m3==1 %}
+
+                            <h5 class="text-lilac">MODIFICACIÓN Y/O INCLUSIÓN DE DATOS PROPIOS DEL CERTIFICADO DE NACIMIENTO, CARNET DE IDENTIDAD Y OTROS</h5>
+                            <h6 class="text-primary">Los campos con (*) son requeridos</h6>
+                            {{form_start(form_mode3,{'attr':{'data-toggle': 'validator','form':'role'} })}}
+
+                            <div class="row">
+                              <div class="col-md-12">
+                                {{form_label(form_mode3.isDoubleNcnal)}} <i class="fa fa-question-circle"  data-toggle="tooltip" data-placement="right" title="" data-original-title="En caso de que la/el estudiante presente doble nacionalidad marque el campo y seleccione el pais de procedencia"></i>
+                                {{form_widget(form_mode3.isDoubleNcnal,{'attr': {'':''}  }   )}}
+                              </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    {{form_label(form_mode3.pais)}} (*)
+                                    {{form_widget(form_mode3.pais,{'attr': {'onchange':'dep(this.value)'}  }   )}}
+
+                                </div>
+                                <div class="col-sm-3">
+                                    {{form_label(form_mode3.departamento)}}
+                                    {{form_widget(form_mode3.departamento,{'attr':{'onchange':'prov(this.value)'} })}}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{form_label(form_mode3.provincia)}}
+                                    {{form_widget(form_mode3.provincia)}}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{form_label(form_mode3.localidad)}}
+                                    {{form_widget(form_mode3.localidad)}}
+                                </div>
+                            </div>
+                            </br>
+
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    {{form_label(form_mode3.extranjero)}}
+                                    {{form_widget(form_mode3.extranjero)}}
+                                </div>
+                                <div class="col-sm-2">
+                                    {{form_label(form_mode3.ci)}}
+                                    {{form_widget(form_mode3.ci)}}
+                                </div>
+                                <div class="col-sm-1">
+                                    {{form_label(form_mode3.complemento)}}
+
+                                    {{form_widget(form_mode3.complemento)}}
+
+                                </div>
+                                <div class="col-sm-2">
+                                    {{form_label(form_mode3.generoTipo)}}
+                                    {{form_widget(form_mode3.generoTipo)}}
+                                </div>
+                                <div class="col-sm-2">
+                                    {{form_label(form_mode3.oficialia)}}
+                                    {{form_widget(form_mode3.oficialia)}}
+                                </div>
+                                <div class="col-sm-2">
+                                    {{form_label(form_mode3.libro)}}
+                                    {{form_widget(form_mode3.libro)}}
+                                </div>
+                                <div class="col-sm-1">
+                                    {{form_label(form_mode3.partida)}}
+                                    {{form_widget(form_mode3.partida)}}
+                                </div>
+                                <div class="col-sm-1">
+                                    {{form_label(form_mode3.folio)}}
+                                    {{form_widget(form_mode3.folio)}}
+                                </div>
+                            </div>
+                            </br>
+                            <hr>
+                            <div class="text-right">
+                                {{form_widget(form_mode3.save)}}
+                            </div>
+
+                            {{form_end(form_mode3)}}
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{path('sie_estudiantes')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+        //to validate the pais, departament, provincia and localidad by krlos
+        $('#form_save').click(function ( ) {
+
+            //alert($('#form_pais').val() + '---' + $('#form_departamento').val() + '---' + $('#form_provincia').val());
+            //return false;
+            if ($('#form_pais').val() == 0) {
+
+                alert('Debe seleccionar País');
+                $('#form_pais').focus();
+                return false;
+            }
+            if ($('#form_pais').val() == 1) {
+
+                if ($('#form_departamento').val() == null) {
+                    alert('Debe seleccionar Departamento');
+                    $('#form_departamento').focus();
+
+                    return false;
+                } else {
+                    if ($('#form_provincia').val() == null) {
+                        alert('Debe seleccionar Provincia');
+                        $('#form_provincia').focus();
+                        return false;
+                    } else {
+                        if ($('#form_localidad').val() == '') {
+                            alert('La Localidad no puede estar en blanco');
+                            $('#form_localidad').focus();
+                            return false;
+                        }
+                    }
+
+                }
+            }
+
+        });
+
+
+
+
+
+        function dep(es) {
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_departamentos_st', {'pais': parseInt(es)}),
+                beforeSend: function () {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    /*$("#localidad").empty();*/
+                    $("#div-load").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+
+                    $.each(data.departamento, function (i, value) {
+                        $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }
+
+
+
+        function prov(d) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_provincias_st', {'departamento': parseInt(d)}),
+                beforeSend: function () {
+                    $("#form_provincia").empty();
+                    $("#div-load-prov").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_provincia").empty();
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }
+    </script>
+{% endblock %}

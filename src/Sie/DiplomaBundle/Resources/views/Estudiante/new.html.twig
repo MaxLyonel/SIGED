@@ -1,0 +1,379 @@
+{% extends 'layoutDiplomas.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .datepicker table tr td.today,
+        .datepicker table tr td.today:hover,
+        .datepicker table tr td.today:hover:hover {
+            color: #fff;
+            background: #16a085;
+        }
+
+        .datepicker table tr td.active:hover,
+        .datepicker table tr td.active:hover:hover,
+        .datepicker table tr td.active.active,
+        .datepicker table tr td.active.active:hover {
+            color: #fff;
+            background: #34495e;
+        }
+
+        .datepicker.dropdown-menu {
+            border-radius: 0;
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+
+    <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker.css')}}" rel="stylesheet">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>REGISTRO DE ESTUDIANTE
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-user"></i> Nuevo Estudiante</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('mensaje') %}
+                <div class="alert alert-danger text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %} 
+            {% for flashMessage in app.session.flashbag.get('registroEstudianteError') %}
+                <div class="alert alert-danger text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!-- Website Stats  Widget -->
+        </div>
+    </div>
+
+    {{form_start(form,{'attr':{'data-toggle': 'validator','form':'role'} })}}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-green">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>DATOS DEL ESTUDIANTE</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+
+
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Carnet de Identidad</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.carnetIdentidad,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-3">
+                                    <div class="row">
+                                        <div class="col-lg-0 col-md-4">
+                                            <label for="" class="control-label">Complemento</label>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            {{form_widget(form.complemento,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Paterno (*)</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.paterno,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Materno (*)</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.materno,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Nombre(s) (*)</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.nombre,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Género (*)</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.generoTipo,{ 'attr':{'class': 'form-control'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Fecha de Nacimiento (*)</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <div id='sandbox-container'>
+                                                {{form_widget(form.fechaNacimiento,{ 'attr':{'class': 'form-control','autocomplete':'off'} }) }}
+
+                                            </div>
+                                            <div class="help-block with-errors"></div>
+
+                                        </div>
+                                    </div>
+                                </div> 
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Lugar Nacimiento (*)</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.lugarNacTipo,{ 'attr':{'class': 'form-control'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Localidad Nacimiento</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.localidadNac,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Idioma Materno (*)</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.idiomaMaternoId,{ 'attr':{'class': 'form-control'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Tipo de Sangre (*)</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.sangreTipoId,{ 'attr':{'class': 'form-control'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Correo</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.correo,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Celular</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.celular,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Estado Civil (*)</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.estadoCivil,{ 'attr':{'class': 'form-control'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Oficialia</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.oficialia,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Libro</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.libro,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Partida</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.partida,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Folio</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.folio,{ 'attr':{'class': 'form-control','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Carnet Codepedis</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.carnetCodepedis,{ 'attr':{'class': 'form-control','placeholder':'','autocomplete':'off'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-3 col-md-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="" class="control-label">Carnet I.B.C.</label>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            {{form_widget(form.carnetIbc,{ 'attr':{'class': 'form-control','autocomplete':'off','placeholder':'Instituto Boliviano de la Ceguera'}  }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    {{form_widget(form.guardar, {'attr':{'class':'btn btn-primary'} })}}
+                                    <a href="{{path('estudianteespecialindirecta_new')}}" class="btn btn-default">Cancelar</a>
+                                </div>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{form_end(form)}}
+    <div id="respuesta">
+
+    </div>                                  
+
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function validarDatos() {
+            var nombre = document.getElementById('').value;
+            var paterno = document.getElementById('').value;
+            var materno = document.getElementById('').value;
+            var genero = document.getElementById('').value;
+            var fechanac = document.getElementById('').value;
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('validardatosestudiante', {'nombre': nombre, 'paterno': paterno, 'materno': materno, 'genero': genero, 'fechanac': fechanac}),
+                beforeSend: function () {
+                    $("#respuesta").append('Verificando los datos del estudiante...');
+                },
+                success: function (data) {
+                    $("#respuesta").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+            return false;
+        }
+
+        $('#sandbox-container input').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd-mm-yyyy',
+            language: "es"
+        });
+
+    </script>
+{% endblock %}
+
+

@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH1TenenciaTipo:
+    type: entity
+    table: infraestructura_h1_tenencia_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        tenenciaTipo:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: tenencia_tipo
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

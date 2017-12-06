@@ -1,0 +1,26 @@
+<div class="alert " style="padding:10px">
+    <h5 class="text-lilac">Datos del Curso</h5>
+    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+        <tr>
+            <th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel|upper}}</td>
+            <th>Turno</th><td>{{inscripcion.institucioneducativaCurso.turnoTipo.turno|upper}}</td>
+        </tr>
+        <tr>
+            <th>Grado</th><td>{{inscripcion.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
+            <th>Paralelo</th><td>{{inscripcion.institucioneducativaCurso.paraleloTipo.paralelo|upper}}</td>
+        </tr>
+    </table>
+    
+    <h5 class="text-info">Datos del Estudiante</h5>
+    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+        <tr>
+            <th>Codigo Rude</th><td style="color:#0086DD">{{inscripcion.estudiante.codigoRude}}</td>
+        </tr>
+        <tr>
+            <th>Estudiante</th><td style="color:#0086DD"><b>{{inscripcion.estudiante.nombre}} {{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}}</b></td>
+        </tr>
+        <tr>
+            <th>Estado de matrícula</th><td>{{inscripcion.estadomatriculaTipo.estadomatricula}}</td>
+        </tr>
+    </table>
+</div>

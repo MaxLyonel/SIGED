@@ -1,0 +1,110 @@
+ControlPagosBono:
+    path:     /{op}
+    defaults: { _controller: SieBjpBundle:ControlPagosBono:index, op:search }
+
+ControlPagosBono_new:
+    path:     /new/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:new" }
+    methods:  POST
+
+ControlPagosBono_listados:
+    path:     /{id}/listados/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:listados" }
+
+ControlPagosBono_list:
+    path:     /{id}/list/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:list" }
+    
+ControlPagosBono_create:
+    path:     /create/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:create" }
+    methods:  POST
+
+listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:listargrados" }
+    options:
+         expose: true
+
+ControlPagosBono_cargar_niveles:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}/{turno}/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:cargarNiveles"}
+    options:
+         expose: true
+
+ControlPagosBono_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{turno}/{nivel}/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:cargarGrados"}
+    options:
+         expose: true
+
+ControlPagosBono_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:cargarParalelos"}
+    options:
+         expose: true
+
+ControlPagosBono_listar_areas_curso:
+    path:     /lista_areas_curso_a/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:lista_areas_curso" }
+    options:
+         expose: true
+
+ControlPagosBono_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:lista_areas_nivel" }
+    options:
+         expose: true
+
+ControlPagosBono_listar_areas_curso_adicionar_eliminar:
+    path:     /lista_areas_curso_adicionar_eliminar/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:lista_areas_curso_adicionar_eliminar" }
+    options:
+         expose: true
+
+ControlPagosBono_asignar_maestro_area:
+    path:     /asignar_maestro_area/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:asignar_maestro" }
+    options:
+         expose: true
+
+ControlPagosBono_delete:
+    path:     /delete/{idCursoOferta}
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:delete" }
+    options:
+         expose: true
+
+ControlPagosBono_file:
+    path:     /sie/build/
+    defaults: { _controller: SieBjpBundle:ControlPagosBono:build }
+    options:
+         expose: true          
+
+ControlPagosBono_maestros:
+    path:     /maestros_materia/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:maestros"}
+    options:
+         expose: true
+
+ControlPagosBono_maestros_asignar_siged:
+    path:     /maestros_asignar_siged/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:maestrosAsignar"}
+    options:
+         expose: true
+
+
+ControlPagosBono_buscar_infoUe:
+    path:     /buscar_infoUe/
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:buscarInfoUe"}
+    options:
+         expose: true         
+
+
+ControlPagosBono_estado:
+    path:     /{id}/estado
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:estado" }
+
+
+ControlPagosBono_consol:
+    path:     /consol
+    defaults: { _controller: "SieBjpBundle:ControlPagosBono:consolidar" }

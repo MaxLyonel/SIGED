@@ -1,0 +1,58 @@
+Sie\AppWebBundle\Entity\TtecInstitucioneducativaSede:
+    type: entity
+    table: ttec_institucioneducativa_sede
+    indexes:
+        IDX_EF26A60E3AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        sede:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaCierre:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_cierre
+        estado:
+            type: boolean
+            nullable: true
+            comment: ''
+        observacion:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

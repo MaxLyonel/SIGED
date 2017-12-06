@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\DependenciaTipo:
+    type: entity
+    table: dependencia_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        dependencia:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        idTipoAdministracion:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: id_tipo_administracion
+    lifecycleCallbacks: {  }

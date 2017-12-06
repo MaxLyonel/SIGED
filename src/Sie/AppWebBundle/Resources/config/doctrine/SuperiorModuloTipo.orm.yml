@@ -1,0 +1,62 @@
+Sie\AppWebBundle\Entity\SuperiorModuloTipo:
+    type: entity
+    table: superior_modulo_tipo
+    indexes:
+        IDX_4550B763C90FFEFC:
+            columns:
+                - superior_area_saberes_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        modulo:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        codigo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        sigla:
+            type: string
+            nullable: true
+            length: 7
+            fixed: false
+            comment: ''
+        oficial:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        contenido:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+    manyToOne:
+        superiorAreaSaberesTipo:
+            targetEntity: SuperiorAreaSaberesTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_area_saberes_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

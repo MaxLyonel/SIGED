@@ -1,0 +1,696 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption -%}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Información de la Unidad Educativa
+                    <small>Gestión {{ gestion }}</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Información</a></li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4><i class="fa fa-circle text-dpl"></i> Búsqueda de Unidad Educativa</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <span class="divider"></span>
+                            <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                            <div class="form-group">
+                                {{ form_widget(form.identificador) }}
+                                <label class="col-lg-1 col-md-2 col-sm-9 col-xs-12 control-label">
+                                    {{form_label(form.sie)}}                                    
+                                </label>
+                                <div class="col-lg-9 col-md-7 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.sie) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>                                
+                                <div class="col-lg-1 col-md-7 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.gestion,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                </div>
+                                <div class="col-lg-1 col-md-2 col-sm-3 col-xs-12">
+                                    {{ form_widget(form.search,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                                </div>
+                            </div>
+                        {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+    {% if sie is defined  %}                    
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>1. Datos de Identificación</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        Código de Unidad Educativa (U.E.)
+                                    </div>     
+                                </div> 
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['cod_ue_id'] }}</div>
+                                    </div>     
+                                </div> 
+                            </div> 
+                            <div class="col-lg-8">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        Nombre de la Unidad Educativa
+                                    </div>     
+                                </div> 
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['desc_ue'] }}</div>
+                                    </div>     
+                                </div> 
+                            </div> 
+                            <div class="col-lg-2">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        ¿La U.E. esta cerrada?
+                                    </div>     
+                                </div> 
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['institucioneducativa_cerrado'] }}</div>
+                                    </div>     
+                                </div> 
+                            </div> 
+                        </div>    
+                        <div class="row">&nbsp;</div> 
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        Nombre Director o encargado de la U.E.
+                                    </div>     
+                                </div> 
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['director'] }}</div>
+                                    </div>     
+                                </div> 
+                            </div> 
+                            <div class="col-lg-2">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        C.I. Director o encargado
+                                    </div>     
+                                </div> 
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['ci_director'] }}</div>
+                                    </div>     
+                                </div> 
+                            </div> 
+                            <div class="col-lg-2">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        ¿Tiene Cargo Director?
+                                    </div>     
+                                </div> 
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['item_director'] }}</div>
+                                    </div>     
+                                </div> 
+                            </div> 
+                        </div>    
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.portlet-body -->
+                </div>
+                <!-- /.portlet -->
+            </div>
+            <!-- /.col-lg-12 -->
+            <div class="col-lg-12">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>2. Datos de ubicación del edificio escolar</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-lg-1"> 
+                                Departamento
+                            </div>      
+                            <div class="col-lg-1"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['id_departamento'] }}</div>
+                            </div>   
+                            <div class="col-lg-4"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['desc_departamento'] }}</div>
+                            </div>   
+                            <div class="col-lg-1"> 
+                                Provincia
+                            </div>      
+                            <div class="col-lg-1"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['id_provincia'] }}</div>
+                            </div>   
+                            <div class="col-lg-4"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['desc_provincia'] }}</div>
+                            </div>        
+                        </div>
+                        <div class="row">&nbsp;</div> 
+                        <div class="row">
+                            <div class="col-lg-1"> 
+                                Secc. Municipal
+                            </div>      
+                            <div class="col-lg-1"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['id_seccion'] }}</div>
+                            </div>   
+                            <div class="col-lg-4"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['desc_seccion'] }}</div>
+                            </div>   
+                            <div class="col-lg-1"> 
+                                Cantón
+                            </div>      
+                            <div class="col-lg-1"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['id_canton'] }}</div>
+                            </div>   
+                            <div class="col-lg-4"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['desc_canton'] }}</div>
+                            </div>        
+                        </div>
+                        <div class="row">&nbsp;</div> 
+                        <div class="row">
+                            <div class="col-lg-1"> 
+                                Ciudad o Local.
+                            </div>      
+                            <div class="col-lg-1"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['id_localidad'] }}</div>
+                            </div>   
+                            <div class="col-lg-4"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['desc_localidad'] }}</div>
+                            </div>   
+                            <div class="col-lg-1"> 
+                                Zona
+                            </div>      
+                            <div class="col-lg-5"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{% if ue[0]['zona'] == "" %}&nbsp;{% else %}{{ ue[0]['zona'] }}{% endif %}</div>
+                            </div>        
+                        </div>
+                        <div class="row">&nbsp;</div> 
+                        <div class="row">
+                            <div class="col-lg-2"> 
+                                <div class="row">
+                                    <div class="col-lg-12"> 
+                                        Código de edificio escolar
+                                    </div>    
+                                </div> 
+                                <div class="row">
+                                    <div class="col-lg-12"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['cod_le_id'] }}</div>
+                                    </div>    
+                                </div> 
+                            </div>       
+                            <div class="col-lg-8"> 
+                                <div class="row">
+                                    <div class="col-lg-12"> 
+                                        Dirección
+                                    </div>    
+                                </div> 
+                                <div class="row">
+                                    <div class="col-lg-12"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{% if ue[0]['direccion'] == "" %}&nbsp;{% else %}{{ ue[0]['direccion'] }}{% endif %}</div>
+                                    </div>    
+                                </div> 
+                            </div>  
+                            <div class="col-lg-2"> 
+                                <div class="row">
+                                    <div class="col-lg-12"> 
+                                        Área
+                                    </div>    
+                                </div> 
+                                <div class="row">
+                                    <div class="col-lg-12"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['desc_area'] }}</div>
+                                    </div>    
+                                </div> 
+                            </div>     
+                        </div>
+                        <div class="row">&nbsp;</div> 
+                        <div class="row">
+                            <div class="col-lg-1"> 
+                                Num. Telefono 1
+                            </div>      
+                            <div class="col-lg-1"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['telefono1'] }}</div>
+                            </div>    
+                            <div class="col-lg-1"> 
+                                Num. Fax
+                            </div>    
+                            <div class="col-lg-1"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['fax'] }}</div>
+                            </div>    
+                            <div class="col-lg-1"> 
+                                Num. Telefono 2
+                            </div>    
+                            <div class="col-lg-1">  
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['telefono2'] }}</div>
+                            </div>    
+                            <div class="col-lg-2"> 
+                                Pertenece a: (cargo o relación)
+                            </div>      
+                            <div class="col-lg-4"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['referencia_telefono2'] }}</div>
+                            </div>                                 
+                        </div>                        
+                        <div class="row">&nbsp;</div> 
+                        <div class="row">
+                            <div class="col-lg-2"> 
+                                Correo electrónico de la U.E.
+                            </div>      
+                            <div class="col-lg-4"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['email'] }}</div>
+                            </div>    
+                            <div class="col-lg-2"> 
+                                Casilla postal
+                            </div>    
+                            <div class="col-lg-4"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['casilla'] }}</div>
+                            </div>                        
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.portlet-body -->
+                </div>
+                <!-- /.portlet -->
+            </div>
+            <!-- /.col-lg-12 -->
+            <div class="col-lg-12">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>3. Jurisdicción administrativa</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-lg-1"> 
+                                Código Distrito
+                            </div>      
+                            <div class="col-lg-1"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['cod_distrito'] }}</div>
+                            </div>    
+                            <div class="col-lg-1"> 
+                                Nombre Distrito
+                            </div>    
+                            <div class="col-lg-9"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{{ ue[0]['distrito'] }}</div>
+                            </div>                        
+                        </div>
+                        <div class="row">&nbsp;</div> 
+                        <div class="row">
+                            <div class="col-lg-1"> 
+                                Código Núcleo
+                            </div>      
+                            <div class="col-lg-1"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{% if ue[0]['cod_nuc'] == "" %}&nbsp;{% else %}{{ ue[0]['cod_nuc'] }}{% endif %}</div>
+                            </div>    
+                            <div class="col-lg-1"> 
+                                Nombre Núcleo
+                            </div>    
+                            <div class="col-lg-9"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{% if ue[0]['des_nuc'] == "" %}&nbsp;{% else %}{{ ue[0]['des_nuc'] }}{% endif %}</div>
+                            </div>                        
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.portlet-body -->
+                </div>
+                <!-- /.portlet -->
+            </div>
+            <!-- /.col-lg-12 -->
+            <div class="col-lg-12">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>4. Dependencia</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-lg-1"> 
+                                Descripción
+                            </div>      
+                            <div class="col-lg-5"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{% if ue[0]['dependencia'] == "" %}&nbsp;{% else %}{{ ue[0]['dependencia'] }}{% endif %}</div>
+                            </div>    
+                            <div class="col-lg-1"> 
+                                Turnos
+                            </div>    
+                            <div class="col-lg-5"> 
+                                <div style="background-color: #E1F1FF; text-align: center;">{% if ue[0]['turno_abrv'] == "" %}&nbsp;{% else %}{{ ue[0]['turno_abrv'] }}{% endif %}</div>
+                            </div>                        
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.portlet-body -->
+                </div>
+                <!-- /.portlet -->
+            </div>
+            <!-- /.col-lg-12 -->
+            <div class="col-lg-12">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>5. Grados de atención (cantidad de cursos por grado)</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="row">
+                            <div class="col-lg-4"> 
+                                <div class="row">
+                                    <div class="col-lg-12" style="text-align: center;"> 
+                                        Inicial en Familia Comunitaria
+                                    </div>          
+                                </div>    
+                                <div class="row">
+                                    <div class="col-lg-6"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['ini1'] }}</div>
+                                    </div>      
+                                    <div class="col-lg-6"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['ini2'] }}</div>
+                                    </div>      
+                                </div>     
+                                <div class="row">
+                                    <div class="col-lg-6" style="text-align: center;"> 
+                                        1°
+                                    </div>      
+                                    <div class="col-lg-6" style="text-align: center;"   > 
+                                        2°
+                                    </div>      
+                                </div>   
+                            </div>  
+                            <div class="col-lg-4"> 
+                                <div class="row">
+                                    <div class="col-lg-12" style="text-align: center;"> 
+                                        Primaria Comunitaria Vocacional
+                                    </div>          
+                                </div>    
+                                <div class="row">
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['pri1'] }}</div>
+                                    </div>      
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['pri2'] }}</div>
+                                    </div>       
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['pri3'] }}</div>
+                                    </div>       
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['pri4'] }}</div>
+                                    </div>       
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['pri5'] }}</div>
+                                    </div>       
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['pri6'] }}</div>
+                                    </div>      
+                                </div>     
+                                <div class="row">
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        1°
+                                    </div>      
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        2°
+                                    </div>      
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        3°
+                                    </div>     
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        4°
+                                    </div>     
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        5°
+                                    </div>     
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        6°
+                                    </div>     
+                                </div>   
+                            </div>  
+                            <div class="col-lg-4"> 
+                                <div class="row">
+                                    <div class="col-lg-12" style="text-align: center;"> 
+                                        Secundaria Comunitaria Productiva
+                                    </div>          
+                                </div>    
+                                <div class="row">
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['sec1'] }}</div>
+                                    </div>      
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['sec2'] }}</div>
+                                    </div>       
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['sec3'] }}</div>
+                                    </div>       
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['sec4'] }}</div>
+                                    </div>       
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['sec5'] }}</div>
+                                    </div>       
+                                    <div class="col-lg-2"> 
+                                        <div style="background-color: #E1F1FF; text-align: center;">{{ ueNivelGrado[0]['sec6'] }}</div>
+                                    </div>      
+                                </div>     
+                                <div class="row">
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        1°
+                                    </div>      
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        2°
+                                    </div>      
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        3°
+                                    </div>     
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        4°
+                                    </div>     
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        5°
+                                    </div>     
+                                    <div class="col-lg-2" style="text-align: center;"> 
+                                        6°
+                                    </div>    
+                                </div> 
+                            </div>  
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.portlet-body -->
+                </div>
+                <!-- /.portlet -->
+            </div>
+            <!-- /.col-lg-12 -->
+            <div class="col-lg-2">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>6. Observaciones</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.portlet-body -->
+                </div>
+                <!-- /.portlet -->
+            </div>
+            <!-- /.col-lg-12 -->
+            <div class="col-lg-10">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>7. Aula multigrado</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="no-more-tables"> 
+                            <table id="myTable" class="table table-bordered table-hover cf">
+                                <thead class="">
+                                    <tr class="">
+                                        <th>Aula Multigrado</th>
+                                        <th>Ini. 1°</th>
+                                        <th>Ini. 2°</th>
+                                        <th>Pri. 1°</th>
+                                        <th>Pri. 2°</th>
+                                        <th>Pri. 3°</th>
+                                        <th>Pri. 4°</th>
+                                        <th>Pri. 5°</th>
+                                        <th>Pri. 6°</th>
+                                        <th>Sec. 1°</th>
+                                        <th>Sec. 2°</th>
+                                        <th>Sec. 3°</th>
+                                        <th>Sec. 4°</th>
+                                        <th>Sec. 5°</th>
+                                        <th>Sec. 6°</th>                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set cont = 0 %}
+                                    {% for ueMul in ueMultigrado %}
+                                        {% set cont = cont +1 %}
+                                        <tr>
+                                            <td data-title="#">{{ ueMul.multigrado }}</td>
+                                            <td data-title="Ini. 1°">{{ ueMul.ini1 }}</td>
+                                            <td data-title="Ini. 2°">{{ ueMul.ini2 }}</td>
+                                            <td data-title="Pri. 1°">{{ ueMul.pri1 }}</td>
+                                            <td data-title="Pri. 2°">{{ ueMul.pri2 }}</td>
+                                            <td data-title="Pri. 3°">{{ ueMul.pri3 }}</td>
+                                            <td data-title="Pri. 4°">{{ ueMul.pri4 }}</td>
+                                            <td data-title="Pri. 5°">{{ ueMul.pri5 }}</td>
+                                            <td data-title="Pri. 6°">{{ ueMul.pri6 }}</td>
+                                            <td data-title="Sec. 1°">{{ ueMul.sec1 }}</td>
+                                            <td data-title="Sec. 2°">{{ ueMul.sec2 }}</td>
+                                            <td data-title="Sec. 3°">{{ ueMul.sec3 }}</td>
+                                            <td data-title="Sec. 4°">{{ ueMul.sec4 }}</td>
+                                            <td data-title="Sec. 5°">{{ ueMul.sec5 }}</td>
+                                            <td data-title="Sec. 6°">{{ ueMul.sec6 }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>                                                                                      
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.portlet-body -->
+                </div>
+                <!-- /.portlet -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-sm-6">
+                <div class="circle-tile">
+                    <a href="#">
+                        <div class="circle-tile-heading green">
+                            <i class="fa fa-home fa-fw fa-3x"></i>
+                        </div>
+                    </a>
+                    <div class="circle-tile-content green">
+                        <div class="circle-tile-description text-faded">
+                            SIE 100
+                        </div>
+                        <div class="circle-tile-number text-faded">
+                            Carátula                        
+                        </div>
+                        <form name="formCaratula" id="formCaratula" role="form" action="{{ path('sie_ue_informacion_general_impresion_caratula') }}" method="POST">
+                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                            <input type="hidden" name="sie" value="{{ sie }}" />  
+                            <a class="circle-tile-footer" onclick="document.forms['formCaratula'].submit();">Descargar <i class="fa fa-download"></i></a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="circle-tile">
+                    <a href="#">
+                        <div class="circle-tile-heading orange">
+                            <i class="fa fa-bars fa-fw fa-3x"></i>
+                        </div>
+                    </a>
+                    <div class="circle-tile-content orange">
+                        <div class="circle-tile-description text-faded">
+                            SIE
+                        </div>
+                        <div class="circle-tile-number text-faded">
+                            Información Estadística
+                        </div>
+                        <form name="formInformacionEstadistica" id="formInformacionEstadistica" role="form" action="{{ path('sie_ue_informacion_general_impresion_informacionestadistica') }}" method="POST">
+                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                            <input type="hidden" name="sie" value="{{ sie }}" />  
+                            <a class="circle-tile-footer" onclick="document.forms['formInformacionEstadistica'].submit();">Descargar <i class="fa fa-download"></i></a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="circle-tile">
+                    <a href="#">
+                        <div class="circle-tile-heading blue">
+                            <i class="fa fa-book fa-fw fa-3x"></i>
+                        </div>
+                    </a>
+                    <div class="circle-tile-content blue">
+                        <div class="circle-tile-description text-faded">
+                            SIE
+                        </div>
+                        <div class="circle-tile-number text-faded">
+                            Oferta Curricular
+                        </div>
+                        <form name="formOfertaCurricular" id="formOfertaCurricular" role="form" action="{{ path('sie_ue_informacion_general_impresion_ofertacurricular') }}" method="POST">
+                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                            <input type="hidden" name="sie" value="{{ sie }}" />  
+                            <a class="circle-tile-footer" onclick="document.forms['formOfertaCurricular'].submit();">Descargar <i class="fa fa-download"></i></a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="circle-tile">
+                    <a href="#">
+                        <div class="circle-tile-heading red">
+                            <i class="fa fa-users fa-fw fa-3x"></i>
+                        </div>
+                    </a>
+                    <div class="circle-tile-content red">
+                        <div class="circle-tile-description text-faded">
+                            SIE
+                        </div>
+                        <div class="circle-tile-number text-faded">
+                            Docente - Administrativo
+                        </div>                    
+                        <form name="formDocente" id="formDocente" role="form" action="{{ path('sie_ue_informacion_general_impresion_docente') }}" method="POST">
+                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                            <input type="hidden" name="sie" value="{{ sie }}" />  
+                            <a class="circle-tile-footer" onclick="document.forms['formDocente'].submit();">Descargar <i class="fa fa-download"></i></a>
+                        </form>                 
+                        <form name="formAdministrativo" id="formAdministrativo" role="form" action="{{ path('sie_ue_informacion_general_impresion_administrativo') }}" method="POST">
+                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                            <input type="hidden" name="sie" value="{{ sie }}" />  
+                            <a class="circle-tile-footer" onclick="document.forms['formAdministrativo'].submit();">Descargar <i class="fa fa-download"></i></a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>                        
+    {% endif  %}    
+{% endblock %}

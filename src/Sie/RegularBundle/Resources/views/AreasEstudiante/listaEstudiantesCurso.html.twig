@@ -1,0 +1,36 @@
+{% if inscritos is not empty %}
+    <div id="no-more-tables">
+        <table class="table table-bordered table-hover cf" id="tablaEstudiantes">
+            <thead class="cf">
+                <tr>
+                    <th>Nro</th>
+                    <th>Rude</th>
+                    <th>Paterno</th>
+                    <th>Materno</th>
+                    <th>Nombre</th>
+                    <th id="tituloAreas" data-toggle="tooltip" data-placement="top" data-original-title="Cantidad de asignaturas del Curso y del Estudiante (Curso-Estudiante)">Áreas(Cur-Est)</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for ins in inscritos %}
+                    <tr>
+                        <td data-title="Nro">{{loop.index}}</td>
+                        <td data-title="Rude">{{ins.codigoRude}}&nbsp;</td>
+                        <td data-title="Paterno">{{ins.paterno}}&nbsp;</td>
+                        <td data-title="Materno">{{ins.materno}}&nbsp;</td>
+                        <td data-title="Nombre">{{ins.nombre}}&nbsp;</td>
+                        <td data-title="Areas (C-E)" align="center">
+                            <b>{{nroAreas}} - <span id="{{ins.id}}">{{ins.asignaturas}}</span></b>
+                        </td>
+                        <td data-title="Acciones">
+                            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'),'{{curso.gradoTipo.grado}}','{{curso.paraleloTipo.paralelo}}',{{curso.id}},{{curso.nivelTipo.id}},'divAreas',{{ins.id}},new String('{{ins.paterno}} {{ins.materno}} {{ins.nombre}}'))" class="btn-link"><i class="fa fa-plus-circle text-info"></i> Adicionar/Eliminar Áreas</button>
+                            <button data-title="3456" onclick="modalNotas(new String('{{curso.nivelTipo.nivel}}'),'{{curso.gradoTipo.grado}}','{{curso.paraleloTipo.paralelo}}',{{curso.id}},{{curso.nivelTipo.id}},'divAreas',{{ins.id}},new String('{{ins.paterno}} {{ins.materno}} {{ins.nombre}}'))" class="btn-link"><i class="fa fa-plus-circle text-info"></i> Registrar Calificaciones</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}

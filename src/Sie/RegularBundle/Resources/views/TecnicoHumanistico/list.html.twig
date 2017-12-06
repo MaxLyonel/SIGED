@@ -1,0 +1,170 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+    <style>
+        .higherWider {
+            width: 800px;
+            margin-top:100px;
+        }
+    </style>
+{% endblock %}
+{% block contentoption%}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Unidades Educativas Técnico Humanistico
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('tecnico_humanistico_index')}}">Unidades Educativas</a></li>
+                    <li><i class="fa fa-reddit"></i> Estudiantes</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag().get('goodtechum') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Unidad Educativa</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+
+                    <div class="portlet-body">
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <td><small>SIE</small></td>
+                                    <td><small>Unidad Educativa</small></td>
+                                    <td><small>Convenio</small></td>
+                                    <td><small>Dependencia</small></td>
+
+                                </tr>
+                                <tr>
+                                    <td><small>{{infoUe.idUe}}</small></td>
+                                    <td><small>{{infoUe.institucioneducativa}}</small></td>
+                                    <td><small>{{infoUe.convenio}}</small></td>
+                                    <td><small>{{infoUe.dependencia}}</small></td>
+
+                                </tr>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Estudiantes por Especialidad</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="portlet-body">
+
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+
+                            {% for key,specials in speciality%}
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="tabs-accordions.html#{{loop.index}}">
+                                            {{key}}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="{{loop.index}}" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table id="myTable" class="table table-bordered table-hover cf dataTable">
+
+                                                <thead class="">
+                                                    <tr class="">
+                                                        <th>No.</th>
+                                                        <th>Codigo Rude</th>
+                                                        <th>CI</th>
+                                                        <th>Paterno</th>
+                                                        <th>Materno</th>
+                                                        <th>Nombre</th>
+                                                        <th>Género</th>
+                                                        <th>Pais</th>
+                                                        <th>Lugar</th>
+                                                        <th>Nac</th>
+                                                        <th>Especialidad</th>
+                                                        <th>Horas</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for student in specials%}
+
+                                                        <tr>
+                                                            <td data-title="No.">{{loop.index}}</td>
+                                                            <td data-title="No.">{{student.codigoRude}}</td>
+                                                            <td data-title="Rude">{{ student.carnetIdentidad }}</td>
+                                                            <td data-title="Rude">{{ student.paterno }}</td>
+                                                            <td data-title="Rude">{{ student.materno }}</td>
+                                                            <td data-title="Rude">{{ student.nombre }}</td>
+                                                            <td data-title="Rude">{{ student.genero }}</td>
+                                                            <td data-title="Rude">{{ student.pais }}</td>
+                                                            <td data-title="Rude">{{ student.lugar }}</td>
+                                                            <td data-title="Rude">{{ student.localidadNac }}</td>
+                                                            <td data-title="Rude">{{ student.especialidad }}</td>
+                                                            <td data-title="Rude">{{ student.horas }}</td>
+                                                        </tr>
+                                                    {%endfor%}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            {%endfor%}
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- /.portlet-body -->
+            </div>
+            <!-- /.portlet -->
+
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('tecnico_humanistico_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+
+
+{% endblock %}
+

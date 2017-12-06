@@ -1,0 +1,151 @@
+
+<input type="hidden" name="cursoOfertaId" value="{{m.ieco}}">
+<table class="table table-lilac">
+	<thead>
+		<tr class="row">
+			<th class="col-lg-3 col-md-3 col-xs-3">Periodo</th>
+			<th class="col-lg-7 col-md-7 col-xs-7">Maestro</th>
+			<th class="col-lg-2 col-md-2 col-xs-2">Horas</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% set control = m.maestrosCursoOferta[0].idNotaTipo %}
+
+		{% for mco in m.maestrosCursoOferta %}
+
+			{% if control != mco.idNotaTipo and m.idAsignatura in m.materiasMasMaestros and m.vista != 0 and mco.idNotaTipo < m.operativo and m.gestion < m.gestionActual %}
+				<tr class="row">
+					<td colspan="3" style="padding:0px">
+						<table class="table">
+							<tbody id="div-{{mco.idco}}_{{m.maestrosCursoOferta[loop.index - 2].idNotaTipo}}">
+							</tbody>
+						</table>
+						<div style="text-align:center;">
+							<button type="button" class="btn-link" onclick="agregarFila({{mco.idco}},{{m.maestrosCursoOferta[loop.index - 2].idNotaTipo}},{{m.maestrosCursoOferta[loop.index - 2].idNotaTipo}},'{{m.maestrosCursoOferta[loop.index - 2].periodo}}');"><i class="fa fa-plus"></i> {{m.maestrosCursoOferta[loop.index - 2].periodo}} </button>
+
+							<button type="button" class="btn-link pop" data-container="body" data-toggle="popover" data-placement="top" data-content="Adicionar solamente si el área es impartida por mas de un maestro." data-trigger="focus">
+							  	<i class="fa fa-question-circle" style="color:#34B4A9; font-size:18px"></i>
+							</button>
+						</div>
+					</td>
+				</tr>
+				{% set control = mco.idNotaTipo %}
+			{% endif %}
+
+			<tr class="{{mco.idco}}_{{mco.idNotaTipo}} row" id="tr">
+				{% if (m.vista != 0 and ((mco.idNotaTipo <= m.operativo and (mco.idmi == "" or mco.horas == 0 ) and m.gestion == m.gestionActual) or (m.gestion < m.gestionActual and (mco.idmi == "" or mco.horas == 0 )))) or m.vista == 2 or (mco.idNotaTipo == m.operativo and m.gestion == m.gestionActual) %}
+					<td>
+						{{mco.periodo}}
+					</td>
+					<td>
+						<input type="hidden" name="ieco[]" value="{{mco.idco}}">
+						<input type="hidden" name="iecom[]" value="{{mco.id}}">
+						<input type="hidden" name="idnt[]" value="{{mco.idNotaTipo}}">
+						<select name="idmi[]" id="" class="chosen-select form-control maestro" data-placeholder="Seleccionar maestro">
+							<option value=""></option>
+							{% for ma in m.maestros %}
+								{% if mco.idmi == ma.id %}
+									{% set selected = 'selected' %}
+								{% else %}
+									{% set selected = '' %}
+								{% endif %}
+								<option value="{{ma.id}}" {{selected}}>{{ma.persona.paterno}} {{ma.persona.materno}} {{ma.persona.nombre}}</option>
+							{% endfor %}
+						</select>
+					</td>
+					<td><input type="text" name="horas[]" value="{{mco.horas}}" size="2" class="form-control input-sm horas" autocomplete="off" maxlength="3" onkeypress="return validarNumero(event)" style="width:90%; display:inline-block"><i class="fa fa-plus" style="color:#F5F5F5"></i></td>
+				{% else %}
+					<td>
+						{{mco.periodo}}
+					</td>
+					<td>
+						<select class="form-control" data-placeholder="Seleccionar maestro" disabled="disabled">
+							<option value=""></option>
+							{% for ma in m.maestros %}
+								{% if mco.idmi == ma.id %}
+									{% set selected = 'selected' %}
+								{% else %}
+									{% set selected = '' %}
+								{% endif %}
+								<option value="{{ma.id}}" {{selected}}>{{ma.persona.paterno}} {{ma.persona.materno}} {{ma.persona.nombre}}</option>
+							{% endfor %}
+						</select>
+					</td>
+					<td><input type="text" value="{{mco.horas}}" size="2" class="form-control input-sm" autocomplete="off" maxlength="3" disabled="disabled" style="width:90%; display:inline-block"><i class="fa fa-plus" style="color:#F5F5F5; float:right"></i></td>
+				{% endif %}
+			</tr>
+		{% endfor %}
+		{% if m.idAsignatura in m.materiasMasMaestros and m.vista != 0 %}
+		<tr class="row">
+			<td colspan="3" style="padding:0px">
+				<table class="table">
+					<tbody id="div-{{m.ieco}}_{{m.maestrosCursoOferta[m.maestrosCursoOferta|length - 1].idNotaTipo}}">
+					</tbody>
+				</table>
+				<div style="text-align:center">
+					<button type="button" class="btn-link" onclick="agregarFila({{m.ieco}},{{m.maestrosCursoOferta[m.maestrosCursoOferta|length - 1].idNotaTipo}},{{m.maestrosCursoOferta[m.maestrosCursoOferta|length - 1].idNotaTipo}},'{{m.maestrosCursoOferta[m.maestrosCursoOferta|length - 1].periodo}}');"><i class="fa fa-plus"></i> {{m.maestrosCursoOferta[m.maestrosCursoOferta|length - 1].periodo}} </button>
+
+					<button type="button" class="btn-link pop" data-container="body" data-toggle="popover" data-placement="top" data-content="Adicionar solamente si el área es impartida por mas de un maestro." data-trigger="focus">
+					  	<i class="fa fa-question-circle" style="color:#34B4A9; font-size:18px"></i>
+					</button>
+				</div>
+			</td>
+		</tr>
+		{% endif %}
+	</tbody>
+</table>
+
+<script>
+    var maestrosPeriodo = 3; 		
+	var valor = 1000;
+	function agregarFila(idco,divId,idNotaTipo,periodo){
+		var contadorDeFilas = 0;
+		$("."+idco+"_"+idNotaTipo).each(function (index) {
+            contadorDeFilas++;
+            //console.log($(this).tagName);
+        });
+        console.log(contadorDeFilas);
+        console.log(maestrosPeriodo);
+        if(contadorDeFilas < maestrosPeriodo){
+
+			var maestros = {{ m.maestrosJson|json_encode|raw }};
+			var filaId = 'fila-'+valor;
+			var selectId = 'select-'+valor+'_'+idco;
+			$('#div-'+idco+'_'+divId).append('<tr id="'+filaId+'" class="'+idco+'_'+idNotaTipo+' row">\n\
+				<td class="col-lg-3 col-md-3 col-xs-3">'+periodo+' <input type="hidden" name="ieco[]" value="'+idco+'">\n\
+								<input type="hidden" name="iecom[]" value="nuevo">\n\
+								<input type="hidden" name="idnt[]" value="'+idNotaTipo+'"></td>\n\
+				<td class="col-lg-7 col-md-7 col-xs-7"><select name="idmi[]" id="'+selectId+'" class="chosen-select form-control maestro" data-placeholder="Seleccionar maestro"></select></td>\n\
+				<td class="col-lg-2 col-md-2 col-xs-2"><input type="text" name="horas[]" size="2" class="form-control input-sm horas" autocomplete="off" maxlength="3" onkeypress="return validarNumero(event)" style="width:90%; display:inline-block"><i class="glyphicon glyphicon-remove-circle" onclick="eliminarFila('+valor+');" style="cursor:pointer; float:right; color:#EE6573" title="Eliminar"></i></td>\n\
+			</tr>');
+
+			$("#" + selectId).append('<option value=""></option>');
+			for (var i = 0; i< maestros.length; i++) {
+				//console.log(maestros[i].id);
+				$("#" + selectId).append('<option value="' + maestros[i].id + '">' + maestros[i].persona + '</option>');
+			}
+
+			$('.chosen-select').chosen({allow_single_deselect: false});
+			$('.chosen-container').css('width','100%');			
+		}else{
+			//alert('Solo puede haber 2 maestros por asignatura');
+		}
+		valor++;
+		console.log(valor);
+	}
+	function eliminarFila(filaId){
+		$('#fila-'+filaId).remove();
+	}
+
+	var validarNumero = function(e){
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+        )
+        return false;
+    }
+
+</script>

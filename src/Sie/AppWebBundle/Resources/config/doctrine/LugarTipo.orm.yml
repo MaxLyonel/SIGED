@@ -1,0 +1,123 @@
+Sie\AppWebBundle\Entity\LugarTipo:
+    type: entity
+    table: lugar_tipo
+    indexes:
+        fk_lugar_tipo_gestion_tipo1_fk:
+            columns:
+                - gestion_tipo_id
+        fk_lugar_tipo_pais_tipo1_fk:
+            columns:
+                - pais_tipo_id
+        fk_lugar_tipo_lugar_nivel1_fk:
+            columns:
+                - lugar_nivel_id
+        fk_lugar_tipo_lugar_tipo1_fk:
+            columns:
+                - lugar_tipo_id
+        idx_lugar_tipo_codigo:
+            columns:
+                - codigo
+        IDX_C84AD26AFC9CFF49:
+            columns:
+                - departamento_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        paisTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: pais_tipo_id
+        codigo:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        lugar:
+            type: string
+            nullable: true
+            length: 125
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 145
+            fixed: false
+            comment: ''
+        area2001:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: ''
+        area2012:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: ''
+        areaDistrito:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: ''
+            column: area_distrito
+        poblacion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        viviendas:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+    manyToOne:
+        departamentoTipo:
+            targetEntity: DepartamentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                departamento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lugarNivel:
+            targetEntity: LugarNivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_nivel_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lugarTipo:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

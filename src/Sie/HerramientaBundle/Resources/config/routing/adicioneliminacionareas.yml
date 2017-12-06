@@ -1,0 +1,73 @@
+adicioneliminacionareas:
+    path:     /{op}
+    defaults: { _controller: SieHerramientaBundle:AdicionEliminacionAreas:index, op:search }
+
+adicioneliminacionareas_new:
+    path:     /new/
+    defaults: { _controller: "SieHerramientaBundle:AdicionEliminacionAreas:new" }
+    methods:  POST
+
+adicioneliminacionareas_create:
+    path:     /create/
+    defaults: { _controller: "SieHerramientaBundle:AdicionEliminacionAreas:create" }
+    methods:  POST
+
+listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieHerramientaBundle:AdicionEliminacionAreas:listargrados" }
+    options:
+         expose: true
+
+adicioneliminacionareas_cargar_niveles:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}/{turno}/
+    defaults: { _controller: "SieHerramientaBundle:AdicionEliminacionAreas:cargarNiveles"}
+    options:
+         expose: true
+
+adicioneliminacionareas_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{turno}/{nivel}/
+    defaults: { _controller: "SieHerramientaBundle:AdicionEliminacionAreas:cargarGrados"}
+    options:
+         expose: true
+
+adicioneliminacionareas_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieHerramientaBundle:AdicionEliminacionAreas:cargarParalelos"}
+    options:
+         expose: true
+
+adicioneliminacionareas_listar_areas_curso:
+    path:     /lista_areas_curso_a/
+    defaults: { _controller: "SieHerramientaBundle:AdicionEliminacionAreas:lista_areas_curso" }
+    options:
+         expose: true
+
+adicioneliminacionareas_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    defaults: { _controller: "SieHerramientaBundle:AdicionEliminacionAreas:lista_areas_nivel" }
+    options:
+         expose: true
+
+adicioneliminacionareas_listar_areas_curso_adicionar_eliminar:
+    path:     /lista_areas_curso_adicionar_eliminar/
+    defaults: { _controller: "SieHerramientaBundle:AdicionEliminacionAreas:lista_areas_curso_adicionar_eliminar" }
+    options:
+         expose: true
+
+adicioneliminacionareas_asignar_maestro_area:
+    path:     /asignar_maestro_area/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieHerramientaBundle:AdicionEliminacionAreas:asignar_maestro" }
+    options:
+         expose: true
+
+adicioneliminacionareas_delete:
+    path:     /delete/{idCursoOferta}
+    defaults: { _controller: "SieHerramientaBundle:AdicionEliminacionAreas:delete" }
+    options:
+         expose: true
+
+build_file:
+    path:     /sie/build/
+    defaults: { _controller: SieHerramientaBundle:AdicionEliminacionAreas:build }
+    options:
+         expose: true          

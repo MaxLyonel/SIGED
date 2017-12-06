@@ -1,0 +1,366 @@
+{% extends 'layoutGis.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-map"></i><font><font>Sistema GIS - Principal</font></font><span><font><font>Ubicación</font></font></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label"><font><font>Estás aquí:</font></font></span>
+            <ol class="breadcrumb">
+                <li class="active"><font><font>Principal</font></font></li>
+            </ol>
+        </div>
+    </div>
+    <div class="body-content animated fadeIn" id="contenido">
+        <div class="col-md-12">
+            <div class="panel panel-default rounded shadow">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Buscar</h3>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    {% include 'SieGisBundle:Default:search.html.twig' %}
+                </div>
+            </div>
+        </div>
+
+        {% if jurisdiccion is defined %}
+            {% if jurisdiccion is not null %}
+                <div class="col-md-12">
+                    <div class="panel panel-white rounded shadow">
+                        <div class="panel-heading">
+                            <div class="pull-center">
+                                <h3 style="text-align:center"><i class="fa fa-home"></i> Edificio Educativo - {{jurisdiccion.id}}</h3>
+                            </div>
+                        </div><!-- /.panel-heading -->
+                        
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="panel panel-lilac rounded shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">Instituciones Educativas que operan en el Edificio Educativo</h3>
+                            </div>
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        {% if 1 == 2 %}
+                        <div class="panel-sub-heading" style="display:none">
+                            <div class="callout callout-info"><p><a href="http://www.dropzonejs.com/" target="_blank">Informaciòn</a> Debe actualizar la ubicación del edificio educativo.</p><span class="label label-info">Estos datos son para fines estadìsticos</span></div>
+                        </div><!-- /.panel-subheading -->
+                        {% endif %}
+                        <div class="panel-body">
+                            <h4></h4>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>SIE</th>
+                                        <th>Institución Educativa</th>
+                                        <th>Org. Curricular</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ue in unidadesEducativas %}
+                                        <tr>
+                                            <td>{{ue.id}}</td>
+                                            <td>{{ue.institucioneducativa}}</td>
+                                            <td>{{ue.orgcurricularTipo.orgcurricula}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel -->
+                </div>
+                
+                <form action="{{path('sie_gis_save')}}" method="post" onsubmit="return validar();">
+                    <div class="col-md-4">
+                        <div class="panel panel-primary rounded shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Ubicación Política</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <p>Departamento</p>
+                                <h4>{{departamento|upper}}</h4><hr>
+                                <p>Provincia</p>
+                                <h4>{{provincia|upper}}</h4><hr>
+                                <p>Municipio</p>
+                                <h4>{{municipio|upper}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="panel panel-primary rounded shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Ubicación Geográfica</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="alert alert-info"> <i class="fa fa-info-circle"></i> El Edificio Educativo no cuenta con coordenadas de ubicación exactas, debe registrar y/o actualizar las coordenadas.</div>
+                                        <div class="col-md-3">
+                                            <p>Buscar por coordenadas:</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" id="buscarLatitud" name="buscarLatitud" class="form-control control-sx" placeholder="Latitud" value="">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" id="buscarLongitud" name="buscarLongitud" class="form-control control-sx" placeholder="Longitud" value="">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button type="button" class="btn btn-lilac" onclick="buscarPorCoordenada();"><i class="fa fa-search"></i> Buscar</button>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                                <hr>
+                                <div class="col-md-12" style="font-size:1.3em;">
+                                    <h5>Coordenadas actuales</h5>
+                                    <div class="row" style="background: #cccccc; padding:10px; font-weight: bold">
+                                        <div class="col-md-6">
+                                            Latitud:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<cite title="Source Title"><span id="latitudText">{{latitud}}</span></cite>
+                                        </div>
+                                        <div class="col-md-6">
+                                            Longitud: &nbsp;&nbsp;&nbsp;<cite title="Source Title"><span id="longitudText">{{longitud}}</span></cite>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-12" id="map" style="height: 400px; margin-top: 0px"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="idJurisdiccion" name="idJurisdiccion" value="{{jurisdiccion.id}}" required="required">
+                    <input type="hidden" id="latitud" name="latitud" value="{{latitud}}" required="required">
+                    <input type="hidden" id="longitud" name="longitud" value="{{longitud}}" required="required">
+                    
+                    <div class="col-md-12 text-center" style="background: #ffffff; padding: 10px; height:120px">
+                        <button type="submit" class="btn btn-teal">Guardar los cambios realizados</button>
+                    </div>
+                </form>
+
+                <hr>
+
+                <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+                <script type="text/javascript">
+                    var map;
+                    var myLatLng;
+                    var marker;
+                    var contMarker = 1;
+                    var infowindow;
+                    var image = "{{asset('images/marker.png')}}";
+                    var contentString;
+
+                    function initMap(latitud, longitud, zom) {
+
+                        var codigoEdificio = {{codigoEdificio}};
+                        myLatLng = {lat: latitud, lng: longitud};
+
+                        map = new google.maps.Map(document.getElementById('map'), {
+                            center: myLatLng,
+                            zoom: zom,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        });
+                        
+                        marker = new google.maps.Marker({
+                            position: myLatLng,
+                            map: map,
+                            title: 'Edificio Escolar',
+                            icon: image,
+                            draggable: true
+                        });
+
+                        contentString = '<h5>Local Educativo: '+codigoEdificio+'</h5>'+
+                                        '<p>Mover a la nueva ubicación</p>'+
+                                        '<!--button onclick="confirmarUbicacion()" class="btn btn-success btn-xs">Confirmar</button-->';
+
+                        infowindow = new google.maps.InfoWindow({
+                            content: contentString
+                        });
+
+                        marker.addListener('click', function() {
+                            infowindow.open(map, marker);
+                            map.setZoom(zom);
+                        });
+
+                        // Eventos del movimiento del marker Draggable
+                        marker.addListener('dragstart', function() {
+                            console.log('Empezando');
+                            infowindow.close();
+                        });
+                        marker.addListener('drag', function() {
+                            console.log('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
+                            //infowindow.open(map, marker);
+                            $('#latitud').val(marker.getPosition().lat());
+                            $('#longitud').val(marker.getPosition().lng());
+                            $('#latitudText').text(marker.getPosition().lat());
+                            $('#longitudText').text(marker.getPosition().lng());
+                        });
+                        marker.addListener('dragend', function() {
+                            console.log('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
+                            //infowindow.open(map, marker);
+                            $('#latitud').val(marker.getPosition().lat());
+                            $('#longitud').val(marker.getPosition().lng());
+                            $('#latitudText').text(marker.getPosition().lat());
+                            $('#longitudText').text(marker.getPosition().lng());
+                        });
+
+                        $('#latitudText').text(marker.getPosition().lat());
+                        $('#longitudText').text(marker.getPosition().lng());
+
+                        $('#latitud').val(marker.getPosition().lat());
+                        $('#longitud').val(marker.getPosition().lng());
+                        /*google.maps.event.addListener(marker, 'dragend', function() 
+                        {
+                            alert('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
+                        });*/
+                    }
+
+                    initMap({{latitud}},{{longitud}},{{zoom}});
+
+                    function validar(){
+                        var latitud = $('#latitud').val();
+                        var longitud = $('#longitud').val();
+                        if(!confirm('Las coordenadas que se registrarán son:\n \n Latitud: '+latitud+'\n Longitud: '+longitud+'\n \nEsta seguro de guardar los cambios?')){
+                            return false;
+                        }
+                    }
+
+                </script>
+            {% else %}
+                <div class="col-sm-12 alert alert-info">
+                    <i class="fa fa-info-circle"></i> El còdigo ingresado no es válido
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script type="text/javascript">
+        $("#parametro").numeric("positiveInteger");
+        // Funciones de autocompletado de combos
+        var peticion1;
+        function listarProvincias(idDpto) {
+            if (peticion1 && peticion1.readyState != 4) {
+                peticion1.abort();
+            }
+            peticion1 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_provincias_2012', {'departamento': idDpto}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_provincia').empty();
+                    $('#form_municipio').empty();
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion2;
+        function listarMunicipios(provincia) {
+            if (peticion2 && peticion2.readyState != 4) {
+                peticion2.abort();
+            }
+            peticion2 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_municipios_2012', {'provincia': provincia}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_municipio').empty();
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.municipio, function (i, value) {
+                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion3;
+        function listarComunidades(municipio) {
+            if (peticion3 && peticion3.readyState != 4) {
+                peticion3.abort();
+            }
+            peticion3 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_comunidades_2012', {'municipio': municipio}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.comunidad, function (i, value) {
+                        $("#form_comunidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion4;
+        function listarLocalidades(comunidad) {
+            if (peticion4 && peticion4.readyState != 4) {
+                peticion4.abort();
+            }
+            peticion4 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_localidades_2012', {'comunidad': comunidad}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_localidad').empty();
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.localidad, function (i, value) {
+                        $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        var buscarPorCoordenada = function(){
+            var bLatitud = parseFloat($('#buscarLatitud').val());
+            var bLongitud = parseFloat($('#buscarLongitud').val());
+            if(isNaN(bLatitud) || isNaN(bLongitud)){
+                return false;
+            }
+            console.log(bLatitud);
+            console.log(bLongitud);
+            initMap(bLatitud,bLongitud,8);
+        }
+    </script>
+{% endblock %}

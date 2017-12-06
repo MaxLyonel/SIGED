@@ -1,0 +1,230 @@
+{% extends "::layoutCertification.html.twig"%}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('tramite_cert/css/reset.css')}}" rel="stylesheet" />
+    <link href="{{asset('tramite_cert/css/style_cert.css')}}" rel="stylesheet" />
+    <script src="{{asset('tramite_cert/js/modernizr.js')}}"></script>
+    <script src="{{asset('tramite_cert/js/script.js')}}"></script>
+    <script src="{{asset('tramite_cert/js/script_principal.js')}}"></script>
+{% endblock %}
+{% block contentoption %}
+    <section class="cd-horizontal-timeline">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-title">
+                    <h1>Panel Principal
+                        <small>Bienvenido(a). {{ app.session.get('name') }}{{ app.session.get('lastname') }}</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li class="active"><i class="fa fa-dashboard"></i> Principal</li>
+                    </ol>
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="timeline">
+            <div class="events-wrapper">
+                <div class="events">
+                    <ol>
+                        <li><a href="#0" data-date="16/01/2014" class="selected">Recibir Distrito</a></li>
+                        <li><a href="#0" data-date="28/02/2014">Recibir Departamento</a></li>
+                        <li><a href="#0" data-date="20/04/2014">prueba 1</a></li>
+                        <li><a href="#0" data-date="20/05/2014">prueba 2</a></li>
+                        <li><a href="#0" data-date="09/07/2014">Prueba 3</a></li>
+                        <li><a href="#0" data-date="30/08/2014">Prueba 4</a></li>
+                        <li><a href="#0" data-date="15/09/2014">Prueba 4</a></li>
+                    </ol>
+
+                    <span class="filling-line" aria-hidden="true"></span>
+                </div> <!-- .events -->
+            </div> <!-- .events-wrapper -->
+
+            <ul class="cd-timeline-navigation">
+                <li><a href="#0" class="prev inactive">Prev</a></li>
+                <li><a href="#0" class="next">Next</a></li>
+            </ul> <!-- .cd-timeline-navigation -->
+        </div> <!-- .timeline -->
+
+        <div class="events-content">
+            <ol>
+                <li class="selected" data-date="16/01/2014">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="portlet portlet-default">
+                                    <div class="portlet-heading">
+                                        <div class="portlet-title">
+                                            <h4><i class="fa fa-circle text-dpl"></i> Búsqueda de Centro de Educación Alternativa</h4>
+                                        </div>
+                                        <div class="portlet-widgets">
+                                            <span class="divider"></span>
+                                            <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                        <div class="form-group">
+                                            <div class="row">
+                                                {{ form_widget(form.identificador) }}
+                                                <div class="col-lg-2 col-md-7 col-sm-9 col-xs-12">
+                                                    {{ form_widget(form.gestiones,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                                </div>
+                                                <div class="col-lg-5 col-md-7 col-sm-9 col-xs-12">
+                                                    {{ form_widget(form.sies) }}
+                                                    {#<div class="help-block with-errors"></div>#}
+                                                </div>                                
+                                                <div class="col-lg-3 col-md-7 col-sm-9 col-xs-12">
+                                                    {{ form_widget(form.especialidad,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                                </div>
+                                                <div class="col-lg-2 col-md-7 col-sm-9 col-xs-12">
+                                                    {{ form_widget(form.nivel,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                                </div>
+                                                <br />
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
+                                                    {{ form_widget(form.search,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } } ) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{form_end(form)}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </li>
+
+                <li data-date="28/02/2014">
+                    <h2>Prueba 1</h2>
+                    <em>February 28th, 2014</em>
+                    <p>	
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum praesentium officia, fugit recusandae ipsa, quia velit nulla adipisci? Consequuntur aspernatur at, eaque hic repellendus sit dicta consequatur quae, ut harum ipsam molestias maxime non nisi reiciendis eligendi! Doloremque quia pariatur harum ea amet quibusdam quisquam, quae, temporibus dolores porro doloribus.
+                    </p>
+                </li>
+
+                <li data-date="20/04/2014">
+                    <h2>Prueba 2</h2>
+                    <em>March 20th, 2014</em>
+                    <p>	
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum praesentium officia, fugit recusandae ipsa, quia velit nulla adipisci? Consequuntur aspernatur at, eaque hic repellendus sit dicta consequatur quae, ut harum ipsam molestias maxime non nisi reiciendis eligendi! Doloremque quia pariatur harum ea amet quibusdam quisquam, quae, temporibus dolores porro doloribus.
+                    </p>
+                </li>
+
+                <li data-date="20/05/2014">
+                    <h2>Prueba 3</h2>
+                    <em>May 20th, 2014</em>
+                    <p>	
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum praesentium officia, fugit recusandae ipsa, quia velit nulla adipisci? Consequuntur aspernatur at, eaque hic repellendus sit dicta consequatur quae, ut harum ipsam molestias maxime non nisi reiciendis eligendi! Doloremque quia pariatur harum ea amet quibusdam quisquam, quae, temporibus dolores porro doloribus.
+                    </p>
+                </li>
+
+                <li data-date="09/07/2014">
+                    <h2>Prueba 4</h2>
+                    <em>July 9th, 2014</em>
+                    <p>	
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum praesentium officia, fugit recusandae ipsa, quia velit nulla adipisci? Consequuntur aspernatur at, eaque hic repellendus sit dicta consequatur quae, ut harum ipsam molestias maxime non nisi reiciendis eligendi! Doloremque quia pariatur harum ea amet quibusdam quisquam, quae, temporibus dolores porro doloribus.
+                    </p>
+                </li>
+
+                <li data-date="30/08/2014">
+                    <h2>Prueba 5</h2>
+                    <em>August 30th, 2014</em>
+                    <p>	
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum praesentium officia, fugit recusandae ipsa, quia velit nulla adipisci? Consequuntur aspernatur at, eaque hic repellendus sit dicta consequatur quae, ut harum ipsam molestias maxime non nisi reiciendis eligendi! Doloremque quia pariatur harum ea amet quibusdam quisquam, quae, temporibus dolores porro doloribus.
+                    </p>
+                </li>
+                <li data-date="15/09/2014">
+                    <h2>Prueba 5</h2>
+                    <em>August 30th, 2014</em>
+                    <p>	
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum praesentium officia, fugit recusandae ipsa, quia velit nulla adipisci? Consequuntur aspernatur at, eaque hic repellendus sit dicta consequatur quae, ut harum ipsam molestias maxime non nisi reiciendis eligendi! Doloremque quia pariatur harum ea amet quibusdam quisquam, quae, temporibus dolores porro doloribus.
+                    </p>
+                </li>
+
+
+            </ol>
+        </div>
+
+        
+    </section>
+        
+ 
+
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function buscarBoton(a){
+            if(a != ''){
+                $('#form_search').removeAttr('disabled');
+            }
+        }
+        function listar_especialidad(sie_listar) {
+            var peticion1;
+            var gestion_listar = document.getElementById('form_gestiones').value;
+            if (peticion1 && peticion1.readyState != 4) {
+                peticion1.abort();
+            }
+            peticion1 = $.ajax({
+                type: 'POST',
+                url: '{{ path('sie_tramite_listar_especialidad')}}',
+                data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar},
+                beforeSend: function () {
+                    $("#form_especialidad").attr('disabled', 'true');
+                    $('#form_especialidad').empty();
+                    $("#form_especialidad").append('<option value="">Cargando Datos..</option>');
+                },
+                success: function (data) {
+                    $('#form_search').attr('disabled');
+                    if (data.listaespecialidades == '') {
+                        $("#form_especialidad").attr('disabled', 'true');
+
+                    } else {
+                        $('#form_especialidad').empty();
+                        $("#form_especialidad").append('<option value=""></option>');
+                        for (var i in data.listaespecialidades) {
+                            $("#form_especialidad").append('<option value="' + data.listaespecialidades[i].id + '">' + data.listaespecialidades[i].ciclo + '</option>');
+                        }
+                        $("#form_especialidad").removeAttr('disabled');
+                    }
+                }
+            });
+        }
+        function listarNivel(esp_listar) {
+            var peticion2;
+            var gestion_listar = document.getElementById('form_gestiones').value;
+            var sie_listar = document.getElementById('form_sies').value;
+            if (peticion2 && peticion2.readyState != 4) {
+                peticion2.abort();
+            }
+            peticion2 = $.ajax({
+                type: 'POST',
+                url: '{{ path('sie_tramite_listar_nivel')}}',
+                data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar, 'especialidad': esp_listar},
+                beforeSend: function () {
+                    $('#form_nivel').attr('disabled', 'true');
+                    $('#form_nivel').empty();
+                    $("#form_nivel").append('<option value="">Cargando Datos..</option>');
+                },
+                success: function (data) {
+                    if (data.listanivel == '') {
+                        $('#form_nivel').attr('disabled', 'true');
+
+                    } else {
+
+                        $('#form_nivel').empty();
+                        $("#form_nivel").append('<option value=""></option>');
+                        for (var i in data.listanivel) {
+                            $("#form_nivel").append('<option value="' + data.listanivel[i].id + '">' + data.listanivel[i].grado + '</option>');
+                        }
+                        $('#form_nivel').removeAttr('disabled');
+                    }
+                }
+            });
+        }
+    </script>
+{%endblock%}

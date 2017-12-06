@@ -1,0 +1,42 @@
+Sie\AppWebBundle\Entity\NivelTipo:
+    type: entity
+    table: nivel_tipo
+    indexes:
+        IDX_FBC9C57F617D55DB:
+            columns:
+                - cod_org_curr_id
+    uniqueConstraints:
+        nivel_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nivel:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        vigente:
+            type: boolean
+            nullable: false
+            comment: ''
+    manyToOne:
+        codOrgCurr:
+            targetEntity: OrgcurricularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cod_org_curr_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

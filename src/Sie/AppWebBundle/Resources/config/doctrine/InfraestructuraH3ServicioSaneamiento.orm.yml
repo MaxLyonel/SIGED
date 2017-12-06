@@ -1,0 +1,190 @@
+Sie\AppWebBundle\Entity\InfraestructuraH3ServicioSaneamiento:
+    type: entity
+    table: infraestructura_h3_servicio_saneamiento
+    indexes:
+        IDX_70B560C3C19E7805:
+            columns:
+                - n3_cielo_estadogeneral_tipo_id
+        IDX_70B560C3AA6751C8:
+            columns:
+                - n3_piso_estadogeneral_tipo_id
+        IDX_70B560C3305FDC4D:
+            columns:
+                - n3_techo_estadogeneral_tipo_id
+        IDX_70B560C3CA642B6B:
+            columns:
+                - n3_pared_estadogeneral_tipo_id
+        IDX_70B560C3A7761338:
+            columns:
+                - n3_servicio_banio_tipo_id
+        IDX_70B560C351C0E7E4:
+            columns:
+                - infraestructura_h3_servicio_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n3Areatotalm2:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_areatotalm2
+        n3BanioConagua:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_banio_conagua
+        n3BanioSinagua:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_banio_sinagua
+        n3LiteraFunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_litera_funciona
+        n3LiteraNofunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_litera_nofunciona
+        n3InodoroFunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_inodoro_funciona
+        n3InodoroNofunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_inodoro_nofunciona
+        n3UrinarioFunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_urinario_funciona
+        n3UrinarioNofunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_urinario_nofunciona
+        n3LavamanoFunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_lavamano_funciona
+        n3LavamanoNofunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_lavamano_nofunciona
+        n3DuchaFunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_ducha_funciona
+        n3DuchaNofunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_ducha_nofunciona
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        n3CieloEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_cielo_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n3PisoEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_piso_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n3TechoEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_techo_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n3ParedEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_pared_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n3ServicioBanioTipo:
+            targetEntity: InfraestructuraH3BanoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_servicio_banio_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH3Servicio:
+            targetEntity: InfraestructuraH3Servicio
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h3_servicio_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,37 @@
+usuariosuegestion:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:UsuariosUEGestion:index" }
+
+usuariosuegestion_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieRegularBundle:UsuariosUEGestion:show" }
+
+usuariosuegestion_new:
+    path:     /new
+    defaults: { _controller: "SieRegularBundle:UsuariosUEGestion:new" }
+
+usuariosuegestion_create:
+    path:     /create
+    defaults: { _controller: "SieRegularBundle:UsuariosUEGestion:create" }
+    methods:  POST
+
+usuariosuegestion_edit:
+    path:     /edit/
+    defaults: { _controller: "SieRegularBundle:UsuariosUEGestion:edit" }
+    methods:  POST
+
+usuariosuegestion_update:
+    path:     /update/
+    defaults: { _controller: "SieRegularBundle:UsuariosUEGestion:update" }
+    methods:  [POST, PUT]
+
+usuariosuegestion_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieRegularBundle:UsuariosUEGestion:delete" }
+    methods:  [POST, DELETE]
+
+activarDesactivar_usuario_ue:
+    path:     /activardesactivar_usuario_ue/{idUsuarioRol}/{div}/
+    defaults: { _controller: "SieRegularBundle:UsuariosUEGestion:activarDesactivar_usuario" }
+    options:
+         expose: true

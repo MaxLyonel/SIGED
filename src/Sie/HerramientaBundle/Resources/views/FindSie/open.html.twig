@@ -1,0 +1,170 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .btn:hover{
+            color:#FFFFFF;
+        }
+        
+    </style>
+{% endblock %}
+
+{% block contentoption %}
+
+
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Index</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Abrir</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <!-- Start widget newsletter -->
+                <div class="panel text-center rounded shadow">
+                    <div class="panel-body bg-lilac rounded">
+                        <div class="inner-all">
+                            <h4 class="text-uc">Unidad Educativa</h4>
+                            <p>Unidad Educativa</p>
+                            <!--form class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-addon no-border btn btn-lilac btn-alt">@</span>
+                                        <input class="form-control input-lg no-border" placeholder="Your email" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-lilac btn-alt">Subscribe</button>
+                                </div>
+                            </form-->
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End widget newsletter -->
+            </div>
+
+
+        </div><!-- /.row -->
+
+        <hr>
+
+        <div id="js-grid-masonry-projects" class="cbp cbp-l-grid-masonry-projects cbp-caption-active cbp-caption-zoom cbp-ready row" style="margin-top: -20px; height: 857px;"><div class="cbp-wrapper-outer"><div class="cbp-wrapper">
+            
+            
+
+            {{form_start(uEducativaform)}}
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#77BB3A"></div>
+                        <img src="{{asset('img/unidad-educativa300.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(uEducativaform.next)}}
+                                <br>
+                                <span style="color:#FFFFFF">Información de la Unidad Educativa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Unidad Educativa</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(uEducativaform)}}
+
+            {{form_start(personalAdmform)}}
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#E63E2B"></div>
+                        <img src="{{asset('img/administrativo300.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(personalAdmform.next)}}<br>
+                                <span style="color:#FFFFFF">Administración de personal administrativo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Personal Administrativo</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(personalAdmform)}}
+
+            {{form_start(infoMaestroform)}}
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#22B389"></div>
+                        <img src="{{asset('img/maestros300.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(infoMaestroform.next)}}<br>
+                                <span style="color:#FFFFFF">Administración de personal docente</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Maestros</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(infoMaestroform)}}
+
+            {{form_start(infotStudentform)}}
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#00A0DC"></div>
+                        <img src="{{asset('img/estudiantes300.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(infotStudentform.next)}}<br>
+                                <span style="color:#FFFFFF">Información de alumnos, cursos, plan de estudios</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Estudiantes</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(infotStudentform)}}
+
+        </div></div></div>
+
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    </script>
+{%endblock%}

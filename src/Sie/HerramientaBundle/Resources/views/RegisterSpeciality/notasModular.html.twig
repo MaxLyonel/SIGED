@@ -1,0 +1,255 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    	<form action="" id="formNotas" onsubmit="registrarNotas(); return false">
+    	<input type="hidden" name="infoUe" value="{{infoUe}}">
+    	<input type="hidden" name="infoStudent" value="{{infoStudent}}">
+    	<input type="hidden" name="tipo" value="b">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Notas del Estudiante</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body no-padding" id="modal-body">
+                <div class="alert alert-warning text-center">
+                    <h3 class="text-center">Secundaria Modular</h3>
+                    <i class="fa fa-info-circle"></i> En el sistema modular debe registrar solo una nota (promedio), ésta se repetira para los demas bimestres.
+                </div>
+            	<div class="alert alert-info">
+                    <span class="alert-icon"><i class="fa fa-user"></i></span>
+                    <div class="notification-info">
+                        <ul class="clearfix notification-meta">
+                            <li class="pull-left notification-sender"><span><a href="javascript:void()">{{estudiante.codigoRude}}</a></span></li>
+                            <li class="pull-right notification-time">{{estudiante.estadoMatricula}}</li>
+                        </ul>
+                        <p>{{estudiante.estudiante}}</p>
+                    </div>
+                </div>
+                    <div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th rowspan="2" style="vertical-align: middle">Campo de Saberes y Conocimientos</th>
+								<th rowspan="2" style="vertical-align: middle">Áreas Curriculares</th>
+								<th colspan="5">Valoración Cuantitativa</th>
+								<th rowspan="2" style="vertical-align: middle;" class="col-md-3 col-xs-4">Valoración Cualitativa</th>
+							</tr>
+							<tr>
+								<th>1er Bimestre</th>
+								<th>2do Bimestre</th>
+								<th>3er Bimestre</th>
+								<th>4to Bimestre</th>
+								<th>Promedio Final</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% set cont = 0 %}
+							{% set contCuali = 0 %}
+							{% for key, a in areas %}
+								{% for asig in a %}
+									<tr>
+										{% if cont == 0 %}
+											<td rowspan="{{a|length}}">{{key}}</td>
+										{% endif %}
+										<td>{{asig.asignatura}}</td>
+										{% for n in asig.notas %}
+											{% if n.idNotaTipo != 5 %}
+
+													<td>
+														<input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+														<input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+														<input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+
+														<input name="notas[]" type="text" size="3" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="promedio(this,{{asig.idAsignatura}});" onblur="notaVacia(this,{{asig.idAsignatura}})" class="form-control input-sm {{asig.idAsignatura}} nota" autocomplete="off" maxlength="3" readonly="readonly">
+													</td>
+
+											{% else %}
+                                                {% if n.nota == 0 %}
+													<td>
+														<input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+														<input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+														<input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+
+														<input name="notas[]" type="text" size="3" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="repetirNota(this,{{asig.idAsignatura}});" onblur="notaVacia(this,{{asig.idAsignatura}})" class="form-control input-sm p{{asig.idAsignatura}} nota" autocomplete="off" maxlength="3">
+													</td>
+                                                {% else %}
+                                                    <td>
+                                                        <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+														<input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+														<input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                                        <input name="notas[]" type="text" size="3" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="repetirNota(this,{{asig.idAsignatura}});" onblur="notaVacia(this,{{asig.idAsignatura}})" class="form-control input-sm p{{asig.idAsignatura}} nota" autocomplete="off" maxlength="3" readonly="readonly">
+                                                    </td>
+                                                {% endif %}
+											{% endif %}
+
+										{% endfor %}
+										{% if contCuali == 0 %}
+											<td rowspan="20">
+												{% for c in cualitativas %}
+														<input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
+														<input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
+														<p><b>{{c.notaTipo}} {{operativo}}</b></p>
+														<p class="text-justify">
+                                                            {% if c.idNotaTipo <= operativo and c.notaCualitativa|length < 1 %}
+                                                                <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="">{{c.notaCualitativa}}</textarea>
+                                                            {% else %}
+															    <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="" readonly="readonly">{{c.notaCualitativa}}</textarea>
+                                                            {% endif %}
+                                                        </p>
+												{% endfor %}
+											</td>
+										{% endif %}
+									</tr>
+									{% set cont = cont + 1 %}
+									{% set contCuali = contCuali + 1 %}
+								{% endfor %}
+								{% set cont = 0 %}
+							{% endfor %}
+						</tbody>
+					</table>
+                    </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-theme">Guardar Cambios</button>
+        </div>
+    </div><!-- /.modal-content -->
+    </form>
+</div><!-- /.modal-dialog -->
+<script>
+	var promedio = function(control,clase){
+		//if(control.value == ""){ control.value = 0; }
+		/*if(control.value < 0){ control.value = 0; }
+		if(control.value > 100){ control.value = 100; }
+		var suma = 0;
+		$("."+clase).each(function (index) {
+            suma = suma + parseInt($(this).val());
+        })
+        var promedio = Math.round(suma/4);
+        if(isNaN(promedio)){
+    		promedio = 0;
+    	}
+        $('.p'+clase).val(promedio);*/
+	}
+
+    var repetirNota = function(control,clase){
+		//if(control.value == ""){ control.value = 0; }
+		if(control.value < 0){ control.value = 0; }
+		if(control.value > 100){ control.value = 100; }
+		//var suma = 0;
+		$("."+clase).each(function (index) {
+            $(this).val(control.value);
+        });
+        /*var promedio = Math.round(suma/4);
+        if(isNaN(promedio)){
+    		promedio = 0;
+    	}
+        $('.p'+clase).val(promedio);*/
+	}
+
+	var notaVacia = function(control,clase){
+		/*if(control.value == ""){ control.value = 0; }
+		if(control.value < 0){ control.value = 0; }
+		if(control.value > 100){ control.value = 100; }
+		var suma = 0;
+		$("."+clase).each(function (index) {
+            suma = suma + parseInt($(this).val());
+        })
+        var promedio = Math.round(suma/4);
+        if(isNaN(promedio)){
+    		promedio = 0;
+    	}
+        $('.p'+clase).val(promedio);*/
+        if(control.value < 0){ control.value = 0; }
+		if(control.value > 100){ control.value = 100; }
+        if(control.value == ""){ control.value = 0; }
+		//var suma = 0;
+		$("."+clase).each(function (index) {
+            $(this).val(control.value);
+        });
+	}
+
+	var validarNota = function(e){
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+        )
+        return false;
+    }
+
+    var registrarNotas = function(){
+    	var enviar = true;
+    	$(".nota").each(function (index) {
+            if($(this).val() == 0){
+            	enviar = true;//false;
+            }
+        });
+        if(enviar == false){
+        	alert('Las notas registradas no pueden ser cero');
+        }
+        if(enviar == true){
+        	$(".notaCualitativa").each(function (index) {
+	            if($(this).val().length < 15){
+	            	//alert('Las notas cualitativas deben tener al menos 15 dígitos');
+	            	enviar = true;//false;
+	            }
+	        });
+        }
+
+        if(enviar == true){
+	    	var formData = $('#formNotas').serialize();
+		    $.ajax({
+		        type: 'post',
+		        url: Routing.generate('herramienta_infoEstudianteNotas_create_update'),
+		        data: formData,
+		        beforeSend: function () {
+		            $('#modal-body').empty();
+		            $('.modal-footer').empty();
+		            $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+		        },
+		        success: function (data) {
+		            $('#modal').modal('hide');
+		        },
+		        error: function (data) {
+
+		        }
+		    });
+		}
+	}
+
+	$(".jnumbersletters").keypress(function (key) {
+        var key = key || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 97 || k > 122)//letras minusculas
+            && (k < 65 || k > 90) //letras mayusculas
+            && (k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+            && (k != 241) //ñ
+             && (k != 209) //Ñ
+             && (k != 32) //espacio
+             && (k != 225) //á
+             && (k != 233) //é
+             && (k != 237) //í
+             && (k != 243) //ó
+             && (k != 250) //ú
+             && (k != 193) //Á
+             && (k != 201) //É
+             && (k != 205) //Í
+             && (k != 211) //Ó
+             && (k != 218) //Ú
+             && (k != 44) //coma ,
+             && (k != 46) //punto .
+            )
+            return false;
+    });
+</script>

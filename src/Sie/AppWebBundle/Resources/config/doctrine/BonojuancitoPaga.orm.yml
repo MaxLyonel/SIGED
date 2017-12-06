@@ -1,0 +1,240 @@
+Sie\AppWebBundle\Entity\BonojuancitoPaga:
+    type: entity
+    table: bonojuancito_paga
+    indexes:
+        IDX_B907375E232E207A:
+            columns:
+                - bonojuancito_unidadmilitar_id
+        IDX_B907375EA1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_B907375E179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_B907375E3AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_B907375E6DD9B3B9:
+            columns:
+                - nivel_tipo_id
+        IDX_B907375EC6447610:
+            columns:
+                - grado_tipo_id
+        IDX_B907375E59590C39:
+            columns:
+                - estudiante_id
+        IDX_B907375E9122652:
+            columns:
+                - id_turno
+        IDX_B907375EECEBF374:
+            columns:
+                - paralelo_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codigoRude:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        carnetIdentidad:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+            column: carnet_identidad
+        paterno:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+        fechaNacimiento:
+            type: date
+            nullable: false
+            comment: ''
+            column: fecha_nacimiento
+        genero:
+            type: string
+            nullable: false
+            length: 1
+            fixed: false
+            comment: ''
+        nivel:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        grado:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        paralelo:
+            type: string
+            nullable: false
+            length: 15
+            fixed: false
+            comment: ''
+        turno:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        estadomatriculaTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estadomatricula_tipo_id
+        estadomatriculaTipo:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+            column: estadomatricula_tipo
+        esnuevoingreso:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+        espagado:
+            type: boolean
+            nullable: true
+            comment: ''
+        eshabilitado:
+            type: boolean
+            nullable: true
+            comment: ''
+        lugar:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        esnuevorude:
+            type: boolean
+            nullable: true
+            comment: ''
+        observaciones:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        estadopagoEstudiante:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: estadopago_estudiante
+    manyToOne:
+        bonojuancitoUnidadmilitar:
+            targetEntity: BonojuancitoUnidadmilitar
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bonojuancito_unidadmilitar_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gradoTipo:
+            targetEntity: GradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idTurno:
+            targetEntity: TurnoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                id_turno:
+                    referencedColumnName: id
+            orphanRemoval: false
+        paraleloTipo:
+            targetEntity: ParaleloTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                paralelo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

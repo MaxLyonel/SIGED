@@ -1,0 +1,70 @@
+Sie\AppWebBundle\Entity\UsuarioSession:
+    type: entity
+    table: usuario_session
+    indexes:
+        fk_session_usuario1_fk:
+            columns:
+                - usuario_id
+    uniqueConstraints:
+        session_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        usuarioId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        nombre:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        fecharegistro:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        username:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        ip:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+        logeoEstado:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: logeo_estado
+        observaciones:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        rolTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: rol_tipo_id
+    lifecycleCallbacks: {  }

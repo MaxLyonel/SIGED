@@ -1,0 +1,40 @@
+Sie\AppWebBundle\Entity\RolRolesAsignacion:
+    type: entity
+    table: rol_roles_asignacion
+    repositoryClass: Sie\AppWebBundle\Entity\RolRolesAsignacionRepository
+    indexes:
+        IDX_D09323614BAB96C:
+            columns:
+                - rol_id
+        IDX_D0932361B63E2EC7:
+            columns:
+                - roles
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        rol:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rol_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        roles:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                roles:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

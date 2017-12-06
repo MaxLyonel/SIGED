@@ -1,0 +1,144 @@
+Sie\AppWebBundle\Entity\MaestroCuentabancaria:
+    type: entity
+    table: maestro_cuentabancaria
+    indexes:
+        IDX_7CADB0F8A1583A43:
+            columns:
+                - cargo_tipo_id
+        IDX_7CADB0F82D20481B:
+            columns:
+                - entidadfinanciera_tipo_id
+        IDX_7CADB0F83AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_7CADB0F8A4B6FF2:
+            columns:
+                - maestro_inscripcion_id
+        IDX_7CADB0F8F5F88DB9:
+            columns:
+                - persona_id
+        IDX_7CADB0F8179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cuentabancaria:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        carnet:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        complemento:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+        esoficial:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: true
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        cargoTipo:
+            targetEntity: CargoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cargo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        entidadfinancieraTipo:
+            targetEntity: EntidadfinancieraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                entidadfinanciera_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        maestroInscripcion:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestro_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

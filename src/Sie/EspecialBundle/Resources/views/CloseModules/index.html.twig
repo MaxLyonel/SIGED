@@ -1,0 +1,35 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+
+{% block contentoption %}
+<!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Módulo cerrado', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Cerrado'} %}
+        {% include 'SieHerramientaBundle:Principal:onlyview.html.twig'%}
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-4">
+                <div class="callout callout-warning text-justify">
+                    <strong>¡Atención!</strong> La Unidad Educativa <strong>"{{institucion.id}} - {{institucion.institucioneducativa}}"</strong> actualmente está trabajando el operativo <strong>"{{operativo.notaTipo}} - {{gestion}}"</strong>.<br />
+                    Por tanto, este módulo se encuentra cerrado hasta consolidar la información correspondiente a dicho operativo.<br />
+                    <strong>Nota.- </strong>Cualquier cambio que desee realizar, debe esperar la habilitación del operativo siguiente.
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

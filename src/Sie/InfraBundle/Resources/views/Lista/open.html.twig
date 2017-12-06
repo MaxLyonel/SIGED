@@ -1,0 +1,218 @@
+{% extends 'layoutInfra.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+
+{% endblock %}
+
+{% block contentoption %}
+
+
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Menu Principal <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('infra_list_index')}}">Operativos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Menu Principal</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <!-- <li class="active">Abrir</li> -->
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+
+    <div class="body-content animated fadeIn">
+
+
+
+        <hr>
+
+        <div id="js-grid-masonry-projects" class="cbp cbp-l-grid-masonry-projects cbp-caption-active cbp-caption-zoom cbp-ready row" style="margin-top: -20px; height: 1857px;"><div class="cbp-wrapper-outer"><div class="cbp-wrapper">
+
+
+
+            {{form_start(sheetOneform)}}
+            <div class="col-lg-4 col-md-4 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#a1a2a3"></div>
+                        <img src="{{asset('../webinfra/img/img/datosgenerales.png')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(sheetOneform.opensheet)}}
+                                <br>
+                                <span style="color:#FFFFFF"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">{{form_label(sheetOneform.labelsheet)}}</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(sheetOneform)}}
+
+            {{form_start(sheetTwoform)}}
+            <div class="col-lg-4 col-md-4 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#a1a2a3"></div>
+                        <img src="{{asset('../webinfra/img/img/caracedificio.png')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(sheetTwoform.opensheet)}}<br>
+                                <span style="color:#FFFFFF"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">{{form_label(sheetTwoform.labelsheet)}}</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(sheetTwoform)}}
+
+            {{form_start(sheetThreeform)}}
+            <div class="col-lg-4 col-md-4 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#a1a2a3"></div>
+                        <img src="{{asset('../webinfra/img/img/riesgos.png')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(sheetThreeform.opensheet)}}<br>
+                                <span style="color:#FFFFFF"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">{{form_label(sheetThreeform.labelsheet)}}</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(sheetThreeform)}}
+
+            {{form_start(sheetFourform)}}
+            <div class="col-lg-4 col-md-4 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#a1a2a3"></div>
+                        <img src="{{asset('../webinfra/img/img/servicios.png')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(sheetFourform.opensheet)}}<br>
+                                <span style="color:#FFFFFF"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">{{form_label(sheetFourform.labelsheet)}}</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(sheetFourform)}}
+
+
+            {{form_start(sheetFiveform)}}
+            <div class="col-lg-4 col-md-4 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#a1a2a3"></div>
+                        <img src="{{asset('../webinfra/img/img/pedagogicos.png')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(sheetFiveform.opensheet)}}<br>
+                                <span style="color:#FFFFFF"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">{{form_label(sheetFiveform.labelsheet)}}</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(sheetFiveform)}}
+
+            {{form_start(sheetSixform)}}
+            <div class="col-lg-4 col-md-4 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#a1a2a3"></div>
+                        <img src="{{asset('../webinfra/img/img/nopedagogicos.png')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(sheetSixform.opensheet)}}<br>
+                                <span style="color:#FFFFFF"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">{{form_label(sheetSixform.labelsheet)}}</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(sheetSixform)}}
+
+      </div>
+
+      </div>
+
+    </div>
+
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+
+    var closeOperativo = function(){
+
+      if(confirm('esta seguro de cerrar el operativo?')){
+        formData = $('#formCloseOperativo').serialize();
+        $.ajax({
+               type: 'post',
+               url: Routing.generate('herramienta_inbox_close_operativo'),
+               data: formData,
+               beforeSend: function () {
+                   $("#answerClose").empty();
+                   $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+               },
+               success: function (data) {
+                   $("#answerClose").empty();
+                   $("#answerClose").append(data);
+                   //location.reload(true);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+           });
+      }else{
+        return false;
+      }
+    };
+    </script>
+{%endblock%}

@@ -1,0 +1,174 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Cambiar Estado Estudiante
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('change_state_student_index')}}">Buscar</a></li>
+                    <li class="active"> Resultado</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    <div class="row">
+
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-white">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf table-green">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Rude</th>
+                                        <th class="text-center">Nombre(s)</th>
+                                        <th class="text-center">Paterno</th>
+                                        <th class="text-center">Materno</th>
+                                        <th class="text-center">CI</th>
+                                        <th class="text-center">Complemento</th>
+                                        <th class="text-center">Género</th>
+                                        <th class="text-center">F. Nacimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Rude" class="text-center">{{data.codigoRude}}</td>
+                                        <td data-title="Nombre" class="text-center">{{ data.nombre|e }} </td>
+                                        <td data-title="Paterno" class="text-center">{{data.paterno|e}}</td>
+                                        <td data-title="Materno" class="text-center">{{data.materno|e}}</td>
+                                        <td data-title="CI" class="text-center">{{data.carnetIdentidad}} </td>
+                                        <td data-title="Complemento" class="text-center">{{data.complemento}}</td>
+                                        <td data-title="Gènero" class="text-center">{{data.genero}} </td>
+                                        <td data-title="F. Nacimiento" class="text-center">{{data.fechaNacimiento|date('d-m-Y')}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Pais</th>
+                                        <th class="text-center">Departamento</th>
+                                        <th class="text-center">Provincia</th>
+                                        <th class="text-center">Localidad</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Pais" class="text-center">{{data.pais|upper}}</td>
+                                        <td data-title="Departamento" class="text-center">{{ data.departamento|upper }} </td>
+                                        <td data-title="Provincia" class="text-center">{{data.provincia|upper}}</td>
+                                        <td data-title="Localidad" class="text-center">{{data.localidadNac|upper}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf table-green">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Nivel</th>
+                                        <th class="text-center">Grado</th>
+                                        <th class="text-center">Paralelo</th>
+                                        <th class="text-center">Turno</th>
+                                        <th class="text-center">Matricula</th>
+                                    </tr>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Nivel" class="text-center">{{data.nivel|upper}}</td>
+                                        <td data-title="Grado" class="text-center">{{ data.grado|upper }} </td>
+                                        <td data-title="Paralelo" class="text-center">{{data.paralelo|upper}}</td>
+                                        <td data-title="Turno" class="text-center">{{data.turno|upper}}</td>
+                                        <td data-title="Matricula" class="text-center">{{data.estadomatricula|upper}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf table-green">
+
+                                <tr>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-6 col-md-offset-3">
+                                                {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form' } } )}}
+                                                {{form_widget(form.save) }}
+                                                {{form_end(form)}}
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                </tr>
+
+                            </table>
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('change_state_student_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+
+
+
+{% endblock %}

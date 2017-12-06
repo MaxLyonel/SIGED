@@ -1,0 +1,24 @@
+Sie\AppWebBundle\Entity\DiscapacidadTipo:
+    type: entity
+    table: discapacidad_tipo
+    uniqueConstraints:
+        discapacidad_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        origendiscapacidad:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,79 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionObservacion:
+    type: entity
+    table: estudiante_inscripcion_observacion
+    indexes:
+        IDX_C306E313450B37B:
+            columns:
+                - observacion_inscripcion_tipo_id
+        IDX_C306E31A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_C306E31179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_C306E31DB38439E:
+            columns:
+                - usuario_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        obs:
+            type: string
+            nullable: true
+            length: 400
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        observacionInscripcionTipo:
+            targetEntity: ObservacionInscripcionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                observacion_inscripcion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

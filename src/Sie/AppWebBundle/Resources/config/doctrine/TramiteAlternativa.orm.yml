@@ -1,0 +1,51 @@
+Sie\AppWebBundle\Entity\TramiteAlternativa:
+    type: entity
+    table: tramite_alternativa
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 32
+            fixed: false
+            comment: ''
+            default: tramite_alternativa_id_seq
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estudiante:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        esp:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        nivel:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        periodo:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        institucioneducativa:
+            type: bigint
+            nullable: true
+            unsigned: false
+            comment: ''
+        tramiteId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tramite_id
+        fecha:
+            type: date
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

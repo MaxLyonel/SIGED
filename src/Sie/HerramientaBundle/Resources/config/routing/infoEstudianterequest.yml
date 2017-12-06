@@ -1,0 +1,77 @@
+herramienta_info_estudianterequest_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteRequest:index}
+
+herramienta_info_estudianterequest_second:
+    path:     /sie/second
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteRequest:second}
+
+herramienta_info_estudianterequest_get_turnos:
+    path:     /sie/getturnos/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:getTurnos }
+    options:
+         expose: true
+
+herramienta_info_estudianterequest_see_students:
+    path:     /sie/seestudents/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteRequest:seeStudents }
+    options:
+         expose: true
+
+herramienta_info_estudianterequest_get_students:
+    path:     /sie/getstudents/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteRequest:getStudents }
+    options:
+         expose: true
+
+herramienta_info_estudianterequest_see_students:
+    path:     /sie/getstudents/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteRequest:seeStudents }
+    options:
+         expose: true
+
+herramienta_info_estudianterequest_third:
+    path:     /sie/third
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRequest:loadThird"}
+    options:
+         expose: true
+
+herramienta_info_estudianterequest_with_rude:
+    path:     /sie/inscriptionwithrude/
+    defaults: { _controller: SieHerramientaBundle:infoEstudianteRequest:inscriptionWithRude }
+    options:
+         expose: true
+
+herramienta_info_estudianterequest_rude_inscription:
+    path:     /sie/inscriptionrudeinscription/
+    defaults: { _controller: SieHerramientaBundle:infoEstudianteRequest:rudeInscription }
+    options:
+         expose: true
+
+herramienta_info_estudianterequest_exe_inscription:
+    path:     /sie/inscriptionexeinscription/
+    defaults: { _controller: SieHerramientaBundle:infoEstudianteRequest:exeInscription }
+    options:
+         expose: true
+
+herramienta_info_estudianterequest_areas:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteAreasRequest.yml"
+    prefix:   /sie/estudianterequest_areas
+
+herramienta_info_estudianterequest_notas:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteNotasRequest.yml"
+    prefix:   /sie/estudianterequest_notas
+
+herramienta_info_estudianterequest_inscription:
+    path:     /sie/inscription/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudiante:inscription }
+    options:
+         expose: true
+
+herramienta_alter_info_estudiante_inscriptions_request:
+    resource: "@SieHerramientaBundle/Resources/config/routing/studentInscriptionsRequest.yml"
+    prefix:   /sie/estudiante_inscriptions_academico_req
+
+herramienta_alter_info_estudiante_inscriptions_without_rude_request:
+    resource: "@SieHerramientaBundle/Resources/config/routing/studentInscriptionsWithoutRudeRequest.yml"
+    prefix:   /sie/estudiante_inscriptions_without_rude_academico_req

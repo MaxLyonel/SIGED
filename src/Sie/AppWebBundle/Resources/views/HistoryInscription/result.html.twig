@@ -1,0 +1,232 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Inscripciones
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('inscription_talento_index')}}">Talento</a></li>
+                    <li class="active"> Resultado</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    <div class="row">
+
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Rude</th>
+                                        <th class="text-center">Nombre(s)</th>
+                                        <th class="text-center">Paterno</th>
+                                        <th class="text-center">Materno</th>
+                                        <th class="text-center">CI</th>
+                                        <th class="text-center">Complemento</th>
+                                        <th class="text-center">Genero</th>
+                                        <th class="text-center">F. Nacimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Rude">{{datastudent.codigoRude}}</td>
+                                        <td data-title="Nombre">{{ datastudent.nombre|e }} </td>
+                                        <td data-title="Paterno">{{datastudent.paterno|e}}</td>
+                                        <td data-title="Materno">{{datastudent.materno|e}}</td>
+                                        <td data-title="CI">{{datastudent.carnetIdentidad}} </td>
+                                        <td data-title="Complemento" class="text-center">{{datastudent.complemento}}</td>
+                                        <td data-title="Genero" class="text-center">{{datastudent.generoTipo}} </td>
+                                        <td data-title="F. Nacimiento" class="text-center">{{datastudent.fechaNacimiento|date('d-m-Y')}}</td>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Historial de Inscripciones</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#omitidos"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div id="omitidos" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+
+
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Gestion</th>
+                                        <th class="text-center">Unidad Educativa</th>
+                                        <th class="text-center">Nivel</th>
+                                        <th class="text-center">Grado</th>
+                                        <th class="text-center">Paralelo</th>
+                                        <th class="text-center">Turno</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in dataInscription%}
+                                        <tr>
+                                            <td data-title="Rude">{{data.gestion}}</td>
+                                            <td data-title="Rude">{{data.institucioneducativa}}</td>
+                                            <td data-title="Nombre">{{ data.nivel|e }} </td>
+                                            <td data-title="Paterno">{{data.grado|e}}</td>
+                                            <td data-title="Materno">{{data.paralelo|e}}</td>
+                                            <td data-title="CI">{{data.turno}} </td>
+
+                                        </tr>
+                                    {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('history_inscription_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        function institucionEducativa(id) {
+
+            if (id.length > 7) {
+                //get the nivel and grado to do the search
+                nivel = $('#form_nivelId').val();
+                grado = $('#form_gradoId').val();
+                lastue = $('#form_lastue').val();
+
+                //call the ajax function by krlos
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('inscription_omitidos_findIE', {'id': id, 'nivel': nivel, 'grado': grado, 'lastue': lastue}),
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        $("#form_institucionEducativaName").val(data.nombre);
+
+                        $("#form_paralelo").empty();
+                        $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                        $.each(data.paralelo, function (i, value) {
+                            $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        /*
+                         $("#form_turno").empty();
+                         $.each(data.turno, function (i, value) {
+                         $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                         });*/
+
+                    }
+                });
+            } else {
+                nivel = $('#form_nivelId').val();
+                grado = $('#form_gradoId').val();
+
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('inscription_omitidos_findIE', {'id': id, 'nivel': nivel, 'grado': grado}),
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        $("#form_institucionEducativaName").val(data.nombre);
+                        $("#form_paralelo").empty();
+                        $("#form_turno").empty();
+                    }
+                });
+            }
+        }
+        function getTurno(paralelo) {
+
+            sie = $('#form_ueid').val();
+            nivel = $('#form_nivelid').val();
+            grado = $('#form_gradoid').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_extranjeros_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado}),
+                beforeSend: function () {
+                    $("#form_turno").empty();
+                },
+                success: function (data) {
+                    $("#form_turno").empty();
+                    $("#form_turno").append('<option value="">Seleccionar</option>');
+                    $.each(data.aturnos, function (i, value) {
+                        $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        }
+
+    </script>
+
+
+{% endblock %}

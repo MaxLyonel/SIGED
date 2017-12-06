@@ -1,0 +1,17 @@
+inscription_talento_index:
+    path:    /
+    defaults: { _controller: SieAppWebBundle:InscriptionTalento:index }
+
+inscription_talento_result:
+    path:    /result
+    defaults: { _controller: SieAppWebBundle:InscriptionTalento:result }
+
+inscription_talento_findIE:
+     path:    /findIE/{id}/{nivel}/{grado}/{lastue}
+     defaults: { _controller: SieAppWebBundle:InscriptionTalento:findIE }
+     options:
+         expose: true   
+
+inscription_talento_saveMateriasNotas:
+    path: /saveMateriasNotas
+    defaults: { _controller: SieAppWebBundle:InscriptionTalento:saveMateriasNotas }

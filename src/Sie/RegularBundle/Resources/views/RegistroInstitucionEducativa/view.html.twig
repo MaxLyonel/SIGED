@@ -1,0 +1,155 @@
+{% extends app.session.get('layout') %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Administración Institución Educativa
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="">Resultado Institución Educativa</a></li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-green">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Institución Educativa</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pie"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pie" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 text-info">SIE</div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">{{ institucion.id }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 text-info">INSITUCION EDUCATIVA</div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">{{ institucion.institucioneducativa }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 text-info">TIPO</div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">{{ institucion.institucioneducativaTipo}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-green">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Personal - Institución Educativa</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pdatauser"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pdatauser" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-heading text-right">
+                            <form action="{{ path('maestroinscripcion_new') }}" style="display: inline-block" method="post">
+                                <input type="hidden" name="idInstitucion" value="{{ institucion.id }}">
+                                <button type="submit" class="btn-link"><i class="fa fa-user"></i> Nuevo</button>
+                            </form> 
+                        </div>
+                        <div id="no-more-tables">
+                            <table class="table table-bordered cf dataTable">
+                                <thead class="">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Cargo</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for persona in personal %}
+
+                                        <tr>
+                                            <td data-title="Nombre">{{ persona.paterno }} {{ persona.materno }} {{ persona.nombre }}</td>
+                                            <td data-title="Nombre">{{persona.cargo}}</td>
+                                            <td data-title="Accion">
+                                                <form action="{{ path('usuario_asignar') }}" style="display: inline-block" method="post">
+                                                    <input type="hidden" name="idPersona" value="{{ persona.personId }}">
+                                                    <input type="hidden" name="idInstitucion" value="{{ institucion.id }}">
+                                                    <button type="submit" class="btn-link"><i class="fa fa-user"></i> Adm. Cuenta</button>
+                                                </form>
+
+                                                <form action="{{ path('maestroinscripcion_show') }}" style="display: inline-block" method="post">
+                                                    <input type="hidden" name="idPersona" value="{{ persona.personId }}">
+                                                    <input type="hidden" name="idInstitucion" value="{{ persona.maestroInsId }}">
+                                                    <button type="submit" class="btn-link"><i class="fa fa-edit"></i> Ver</button>
+                                                </form>
+
+                                                <form action="{{ path('maestroinscripcion_delete1') }}" style="display: inline-block" method="post" onsubmit="return eliminarElemento()">
+                                                    <input type="hidden" name="personaId" value="{{ persona.personId }}">
+                                                    <input type="hidden" name="maestroInsId" value="{{ persona.maestroInsId }}">
+                                                    <button type="submit" class="btn-link" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="text-danger fa fa-remove"></i> Eliminar</button>
+                                                </form> 
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>                                   
+
+
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script>
+        function eliminarElemento() {
+            if (confirm('Esta completamente seguro de eliminar el registro?')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
+
+{% endblock %}

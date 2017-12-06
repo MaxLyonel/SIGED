@@ -1,0 +1,30 @@
+creacioncursos:
+    path:     /{op}
+    defaults: { _controller: SieRegularBundle:CreacionCursos:index, op:search }
+
+creacioncursos_new:
+    path:     /new/
+    defaults: { _controller: "SieRegularBundle:CreacionCursos:new" }
+    methods:  POST
+
+creacioncursos_create:
+    path:     /create/
+    defaults: { _controller: "SieRegularBundle:CreacionCursos:create" }
+    methods:  POST
+
+creacioncursos_delete:
+    path:     /delete/
+    defaults: { _controller: "SieRegularBundle:CreacionCursos:delete" }
+    methods:  [POST, DELETE]
+
+clistarniveles:
+    path:     /clistarniveles/{turno}
+    defaults: { _controller: "SieRegularBundle:CreacionCursos:listarniveles" }
+    options:
+         expose: true
+
+clistargrados:
+    path:     /clistargrados/{nivel}
+    defaults: { _controller: "SieRegularBundle:CreacionCursos:listargrados" }
+    options:
+         expose: true

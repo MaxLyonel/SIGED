@@ -1,0 +1,52 @@
+Sie\AppWebBundle\Entity\DepartamentoTipo:
+    type: entity
+    table: departamento_tipo
+    indexes:
+        IDX_C0975F692548EB1:
+            columns:
+                - pais_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        sigla:
+            type: string
+            nullable: false
+            length: 5
+            fixed: false
+            comment: ''
+        departamento:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        codigo:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+    manyToOne:
+        paisTipo:
+            targetEntity: PaisTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                pais_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

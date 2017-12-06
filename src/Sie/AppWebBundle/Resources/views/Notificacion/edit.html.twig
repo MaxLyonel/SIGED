@@ -1,0 +1,114 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Notificación
+                    <small>Editar</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-edit"></i> Editar</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4><i class="fa fa-plus-square"></i> Nueva Notificación</h4>
+                            </div>
+                            <div class="portlet-widgets"></div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+                            {{ form_start(edit_form, { 'attr': {'class': 'form-horizontal'} } ) }}
+                            {{ form_errors(edit_form) }}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(edit_form.titulo) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(edit_form.titulo, { 'attr': {'class': 'form-control'} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(edit_form.mensaje) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(edit_form.mensaje, { 'attr': {'class': 'form-control'} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(edit_form.fechaCrea) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(edit_form.fechaCrea) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(edit_form.fechaPub) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(edit_form.fechaPub) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(edit_form.adjunto) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(edit_form.adjunto, { 'attr': {'disabled': true} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(edit_form.noticiaTipo) }}</label>
+                                <div class="col-sm-3">
+                                    {{ form_widget(edit_form.noticiaTipo, { 'attr': {'class': 'form-control'} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(edit_form.envioTipo) }}</label>
+                                <div class="col-sm-3">
+                                    {{ form_widget(edit_form.envioTipo, { 'attr': {'class': 'form-control'} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <div class="checkbox">
+                                        <label>
+                                            {{ form_widget(edit_form.estado) }} {{ form_label(edit_form.estado) }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ form_label(edit_form.rolTipo) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(edit_form.rolTipo, { 'attr': {'class': 'form-control', 'disabled': true} }) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    {{ form_widget(edit_form.usuarioId, { 'attr': {'class': 'form-control'} }) }}
+                                    {{ form_widget(edit_form.submit, { 'attr': {'class': 'btn btn-default'} }) }}
+                                </div>
+                            </div>
+                            {{ form_end(edit_form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <a href="{{ path('notificacion') }}" class="btn btn-link">
+                <i class="fa fa-hand-o-left"></i> Retornar al listado
+            </a>
+                {{ form(delete_form) }}
+        </div>
+    </div>
+{% endblock %}

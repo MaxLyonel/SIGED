@@ -1,0 +1,816 @@
+{% extends 'layoutReporte.html.twig' %}
+{% block fechaReporte %}
+    {% if fechaEstadisticaEspecial is defined  %}
+        {{ fechaEstadisticaEspecial }}
+    {% endif %}
+{% endblock %}
+{% block contentoption %}
+    {% set ingresa = 0 %}
+    {% set ingresaAdmin = 0 %}
+    {% for item in app.session.get('roluser') %} 
+        {% if item.id == 8 or item.id == 11 or item.id == 32 or item.id == 33 or item.id == 39 %} 
+             {% set ingresa = 1 %}
+             {% if item.id == 8 or item.id == 39 %} 
+                {% set ingresaAdmin = 1 %}
+             {% endif %} 
+        {% endif %} 
+    {% endfor %} 
+    <!-- Start page header -->
+    <div id="tour-6" class="header-content">
+        <h2><i class="fa fa-th-large"></i>Información Estadística</h2><span>Subsistema de Educación Especial</span>
+        <div" class="breadcrumb-wrapper hidden-xs">
+            <!--<span class="label">Info.:</span>-->
+            <ol class="breadcrumb">
+                <li class="active">Gestión: 2016</li>
+                <!--<li><i class="fa fa-ellipsis-v" aria-hidden="true"></i></li>-->
+            </ol>
+        </div>
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <!-- Start body content -->
+    <div class="body-content animated fadeIn">
+        {% if infoEntidad is defined  %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <!-- Start widget newsletter -->
+                    <div class="panel text-center rounded shadow">
+                        <div class="panel-body bg-lilac rounded">
+                            <!--<div class="inner-all">-->
+                                <h4 class="text-uc">{{infoEstadisticaEspecial.nombre_entidad}}</h4>
+                            <!--</div>-->
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel -->
+                    <!--/ End widget newsletter -->
+                </div>
+            </div><!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="page-content">
+                        {% for type, flashMessage in app.session.flashbag.all() %}
+                            <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {% if flashMessage.title is defined %}
+                                <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                                    {{ flashMessage.message }}
+                                {% else %}
+                                    {{ type }}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>        
+            </div>
+        {% endif %}
+        <div class="row">
+            <div id="tour-7" class="col-lg-{% if infoSubEntidad is defined and infoLugarNivel !=8 %}9{% else %}12{% endif %} col-md-{% if infoSubEntidad is defined and infoLugarNivel !=8 %}9{% else %}12{% endif %} col-sm-12 col-xs-12">
+                {% if infoEntidad is defined %}
+                    {% if infoLugarNivel == 8 %}
+                        <div class="row">  
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">                        
+                                <div class="panel panel-default shadow">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title"><i class='fa fa-home'></i> Unidad Educativa - Información</h3>
+                                        </div><!-- /.pull-left -->
+                                        <div class="pull-right">
+                                            <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                                <i class="fa fa-angle-up"></i>
+                                            </button>
+                                        </div><!-- /.pull-right -->
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <!-- Start project overview -->
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <div class="mini-stat-type-4 bg-danger shadow">
+                                                        <form name="formCaratula" id="formCaratula" role="form" action="{{ path('sie_ue_especial_informacion_general_impresion_caratula') }}" method="POST">
+                                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                            <input type="hidden" name="sie" value="{{ infoLugar }}" />  
+                                                            <a class="btn btn-danger" onclick="document.forms['formCaratula'].submit();">
+                                                                <h4>Información</br>General</br><i class="fa fa-download fa-2x"></i></h4>
+                                                            </a>
+                                                        </form>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <div class="mini-stat-type-4 bg-warning shadow">
+                                                        <form name="formInformacionEstadistica" id="formInformacionEstadistica" role="form" action="{{ path('sie_ue_especial_informacion_general_impresion_estadistica') }}" method="POST">
+                                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                            <input type="hidden" name="sie" value="{{ infoLugar }}" />  
+                                                            <a class="btn btn-warning" onclick="document.forms['formInformacionEstadistica'].submit();">
+                                                                <h4>Información</br>Estadística</br><i class="fa fa-download fa-2x"></i></h4>
+                                                            </a>
+                                                        </form>
+                                                    </div>
+                                                </div> 
+
+<!--  
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <div class="mini-stat-type-4 bg-success shadow">
+                                                        <form name="formOfertaCurricular" id="formOfertaCurricular" role="form" action="{{ path('sie_ue_informacion_general_impresion_ofertacurricular') }}" method="POST">
+                                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                            <input type="hidden" name="sie" value="{{ infoLugar }}" />  
+                                                            <a class="btn btn-success" onclick="document.forms['formOfertaCurricular'].submit();">
+                                                                <h4>Oferta</br>Curricular</br><i class="fa fa-download fa-2x"></i></h4>
+                                                            </a>
+                                                        </form>
+                                                    </div>
+                                                </div> 
+-->
+
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <div class="mini-stat-type-4 bg-primary shadow">
+                                                        <form name="formDocente" id="formDocente" role="form" action="{{ path('sie_ue_especial_informacion_general_impresion_docente') }}" method="POST">
+                                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                            <input type="hidden" name="sie" value="{{ infoLugar }}" />  
+                                                            <a class="btn btn-primary" onclick="document.forms['formDocente'].submit();">
+                                                                <h4>Maestros <i class="fa fa-download"></i></h4>
+                                                            </a>
+                                                        </form>                 
+                                                    </div>
+                                                </div> 
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <div class="mini-stat-type-4 bg-success shadow">
+                                                        <form name="formAdministrativo" id="formAdministrativo" role="form" action="{{ path('sie_ue_especial_informacion_general_impresion_administrativo') }}" method="POST">
+                                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                            <input type="hidden" name="sie" value="{{ infoLugar }}" />  
+                                                            <a class="btn btn-success" onclick="document.forms['formAdministrativo'].submit();">
+                                                                <h4>Administrativos <i class="fa fa-download"></i></h4>
+                                                            </a>
+                                                        </form>
+
+                                                    </div>
+                                                </div> 
+
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <div id="lienzoMapa" style="width: auto; height: 320px;"></div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>     
+                            </div>                 
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div class="panel-heading">
+                                <div id="tour-9" class="pull-left">
+                                    <h3 class="panel-title"><i class='fa fa-tasks'></i> Matrícula</h3>
+                                </div><!-- /.pull-left -->
+                                <div class="pull-right">
+                                        <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                </div><!-- /.pull-right -->
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div id="tour-11" class="panel-body">
+                                <!-- Start project overview -->
+                                
+                                <div class="row">  
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="panel-body bg-success">
+                                            <div class="ribbon-wrapper">                                            
+                                            </div><!-- /.ribbon-wrapper -->
+                                            <ul class="inner-all list-unstyled">
+                                                <li class="text-center">
+                                                    <span class="glyphicon glyphicon-list-alt" style="font-size: 50px;"></span>
+                                                </li>
+                                                <li class="text-center">
+                                                    <h4 class="text-capitalize">Matricula</h4>
+                                                    <h3><p class="text-muted text-capitalize">{{infoEstadisticaEspecial['matricula_total']|number_format(0, ',', '.')}}</p></h3>
+                                                </li>
+                                            </ul><!-- /.list-unstyled -->
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="chartContainerMatriculaAreaEspecial" style="display: none;"> </div>                    
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"><i class='fa fa-sort-amount-asc'></i> Estudiantes Matriculados - Area de Especial</h3>
+                                </div><!-- /.pull-left -->
+                                <div class="pull-right">
+                                    <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                        <i class="fa fa-angle-up"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-inverse" onclick="seeGraphic(1,{{infoEntidad.id}},{{infoEntidad.rolactual}});">
+                                        <i class='fa fa-circle-o'></i>
+                                    </button>
+                                </div><!-- /.pull-right -->
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <!-- Start project overview -->
+                                <div class="row">                                
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-teal rounded">
+                                            <span class="mini-stat-chart">
+                                                <span><i class="fa fa-child fa-4x"></i></span>
+                                            </span><!-- /.mini-stat-chart -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_auditiva']|number_format(0, ',', '.')}}</span>
+                                                <p><h4 class="text-capitalize">Auditiva</h4></p>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>  
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-lilac rounded">
+                                            <span class="mini-stat-chart">
+                                                <span><i class="fa fa-child fa-4x"></i></span>
+                                            </span><!-- /.mini-stat-chart -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_visual']|number_format(0, ',', '.')}}</span>
+                                                <p><h4 class="text-capitalize">Visual</h4></p>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>   
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-danger rounded">
+                                            <span class="mini-stat-chart">
+                                                <span><i class="fa fa-child fa-4x"></i></span>
+                                            </span><!-- /.mini-stat-chart -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_intelectual']|number_format(0, ',', '.')}}</span>
+                                                <p><h4 class="text-capitalize">Intelectual</h4></p>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>      
+                                </div>
+                                <div class="row">                                
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-teal rounded">
+                                            <span class="mini-stat-chart">
+                                                <span><i class="fa fa-child fa-4x"></i></span>
+                                            </span><!-- /.mini-stat-chart -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_fisico_motora']|number_format(0, ',', '.')}}</span>
+                                                <p><h4 class="text-capitalize">Fisico-Motora</h4></p>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>  
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-lilac rounded">
+                                            <span class="mini-stat-chart">
+                                                <span><i class="fa fa-child fa-4x"></i></span>
+                                            </span><!-- /.mini-stat-chart -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_multiple']|number_format(0, ',', '.')}}</span>
+                                                <p><h4 class="text-capitalize">Multiple</h4></p>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>   
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-danger rounded">
+                                            <span class="mini-stat-chart">
+                                                <span><i class="fa fa-child fa-4x"></i></span>
+                                            </span><!-- /.mini-stat-chart -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_dificultad']|number_format(0, ',', '.')}}</span>
+                                                <p><h4 class="text-capitalize">Dificultades en el Aprendizaje</h4></p>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>      
+                                </div>
+                                
+                                <div class="row">                                
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-teal rounded">
+                                            <span class="mini-stat-chart">
+                                                <span><i class="fa fa-child fa-4x"></i></span>
+                                            </span><!-- /.mini-stat-chart -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_talento']|number_format(0, ',', '.')}}</span>
+                                                <p><h4 class="text-capitalize">Talento Extraordinario</h4></p>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>  
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-lilac rounded">
+                                            <span class="mini-stat-chart">
+                                                <span><i class="fa fa-child fa-4x"></i></span>
+                                            </span><!-- /.mini-stat-chart -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_sordo_ceguera']|number_format(0, ',', '.')}}</span>
+                                                <p><h4 class="text-capitalize">Sordoceguera</h4></p>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>   
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-danger rounded">
+                                            <span class="mini-stat-chart">
+                                                <span><i class="fa fa-child fa-4x"></i></span>
+                                            </span><!-- /.mini-stat-chart -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_problemas_emocionales']|number_format(0, ',', '.')}}</span>
+                                                <p><h4 class="text-capitalize">Problemas emocionales y/o de conducta</h4></p>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>      
+                                </div>
+                                
+                                <div class="row">
+		                            <div class="panel-heading">
+		                                <div class="pull-left">
+		                                    <h3 class="panel-title"> Modalidad de Atención Indirecta</h3>
+		                                </div>
+		                            </div>
+                                	                                
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-warning rounded">
+                                            <span class="mini-stat-chart">
+                                                <span><i class="fa fa-child fa-4x"></i></span>
+                                            </span><!-- /.mini-stat-chart -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_indirecta']|number_format(0, ',', '.')}}</span>
+                                                <p><h4 class="text-capitalize">Modalidad Indirecta</h4></p>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>  
+
+                                </div>
+                                                            
+                            </div><!-- /.panel-body -->
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="chartContainerMatriculaGeneroEspecial" style="display: none;"> </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"><i class='fa fa-venus-mars'></i> Estudiantes Matriculados - Género</h3>
+                                </div><!-- /.pull-left -->
+                                <div class="pull-right">
+                                    <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                        <i class="fa fa-angle-up"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-inverse" onclick="seeGraphic(2,{{infoEntidad.id}},{{infoEntidad.rolactual}});">
+                                        <i class='fa fa-pie-chart'></i>
+                                    </button>
+                                </div><!-- /.pull-right -->
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <!-- Start project overview -->
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <div class="panel-body bg-primary">
+                                            <div class="ribbon-wrapper">
+                                            </div><!-- /.ribbon-wrapper -->
+                                            <ul class="inner-all list-unstyled">
+                                                <li class="text-center">
+                                                    <i class="fa fa-male fa-5x"></i>
+                                                </li>
+                                                <li class="text-center">
+                                                    <h4 class="text-capitalize">Masculino</h4>
+                                                    <h3><p class="text-muted text-capitalize">{{infoEstadisticaEspecial['matricula_masculino']|number_format(0, ',', '.')}}</p></h3>
+                                                </li>
+                                            </ul><!-- /.list-unstyled -->
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <div class="panel-body bg-dribbble">
+                                            <div class="ribbon-wrapper">
+                                            </div><!-- /.ribbon-wrapper -->
+                                            <ul class="inner-all list-unstyled">
+                                                <li class="text-center">
+                                                    <i class="fa fa-female fa-5x"></i>
+                                                </li>
+                                                <li class="text-center">
+                                                    <h4 class="text-capitalize">Femenino</h4>
+                                                    <h3><p class="text-muted text-capitalize">{{infoEstadisticaEspecial['matricula_femenino']|number_format(0, ',', '.')}}</p></3>
+                                                </li>
+                                            </ul><!-- /.list-unstyled -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                    
+                </div> 
+                <div class="row">
+                    <div id="chartContainerMatriculaDependenciaEspecial" style="display: none;"> </div>                    
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"><i class='fa fa-map'></i> Estudiantes Matriculados - Dependencia</h3>
+                                </div><!-- /.pull-left -->
+                                <div class="pull-right">
+                                    <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                        <i class="fa fa-angle-up"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-inverse" onclick="seeGraphic(3,{{infoEntidad.id}},{{infoEntidad.rolactual}});">
+                                        <i class='fa fa-bar-chart'></i>
+                                    </button>
+                                </div><!-- /.pull-right -->
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <!-- Start project overview -->
+                                <div class="row">                                                                     
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-success rounded">
+                                            <span class="mini-stat-icon"><i class="fa fa-university fg-success"></i></span><!-- /.mini-stat-icon -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_fiscal']|number_format(0, ',', '.')}}</span>
+                                                <h4 class="text-capitalize">Pública</h4>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>                                       
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-lilac rounded">
+                                            <span class="mini-stat-icon"><i class="fa fa-institution fg-lilac"></i></span><!-- /.mini-stat-icon -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_convenio']|number_format(0, ',', '.')}}</span>
+                                                <h4 class="text-capitalize">Convenio</h4>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>                                 
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                        <div class="mini-stat clearfix bg-info rounded">
+                                            <span class="mini-stat-icon"><i class="fa fa-bank fg-info"></i></span><!-- /.mini-stat-icon -->
+                                            <div class="mini-stat-info">
+                                                <span>{{infoEstadisticaEspecial['matricula_privada']|number_format(0, ',', '.')}}</span>
+                                                <h4 class="text-capitalize">Privada</h4>
+                                            </div><!-- /.mini-stat-info -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>  
+                {% if infoEstadisticaEspecialIE is defined and infoEstadisticaEspecialEE is defined %}
+                    <div class="row">     
+                        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">             
+                            <div class="panel panel-default shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title"><i class='fa fa-sort-amount-asc'></i> Centros de Educación Especial - Dependencia</h3>
+                                    </div><!-- /.pull-left -->
+                                    <div class="pull-right">
+                                        <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                    </div><!-- /.pull-right -->
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <!-- Start project overview -->
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="mini-stat-type-4 bg-googleplus shadow">
+                                                <i class="fa fa-home fa-2x"></i>
+                                                <h2>{{infoEstadisticaEspecialIE['ie_fiscal']|number_format(0, ',', '.')}}</h2>
+                                                <h4>Pública</h4>
+                                            </div>
+                                        </div>    
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="mini-stat-type-4 bg-warning shadow">
+                                                <i class="fa fa-home fa-2x"></i>
+                                                <h2>{{infoEstadisticaEspecialIE['ie_convenio']|number_format(0, ',', '.')}}</h2>
+                                                <h4>Convenio</h4>
+                                            </div>
+                                        </div>   
+                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                            <div class="mini-stat-type-4 bg-teal shadow">
+                                                <i class="fa fa-home fa-2x"></i>
+                                                <h2>{{infoEstadisticaEspecialIE['ie_privada']|number_format(0, ',', '.')}}</h2>
+                                                <h4>Privada</h4>
+                                            </div>
+                                        </div>   
+                                    </div>                            
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>                         
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">             
+                            <div class="panel panel-default shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title"><i class='fa fa-sort-amount-asc'></i> Edificios</h3>
+                                    </div><!-- /.pull-left -->
+                                    <div class="pull-right">
+                                        <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                    </div><!-- /.pull-right -->
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <!-- Start project overview -->
+                                    <div class="row">                           
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="mini-stat-type-4 bg-facebook shadow">
+                                                <i class="fa fa-building fa-2x"></i>
+                                                <h2>{{infoEstadisticaEspecialEE['ee_total']|number_format(0, ',', '.')}}</h2>
+                                                <h5>Ed. Educativo</h5>
+                                            </div>
+                                        </div>                                   
+                                    </div>                            
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                    </div>    
+                {%endif%}                     
+                    {% if ingresa == 1 and 1 > 1 %} 
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="panel panel-default shadow">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title"><i class='fa fa-venus-mars'></i> Valoraciones Cuantitativas</h3>
+                                        </div><!-- /.pull-left -->
+                                        <div class="pull-right">
+                                            <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                                <i class="fa fa-angle-up"></i>
+                                            </button>
+                                        </div><!-- /.pull-right -->
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <!-- Start project overview -->
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <div class="panel-body bg-teal">
+                                                    <div class="ribbon-wrapper">
+                                                    </div><!-- /.ribbon-wrapper -->
+                                                    <ul class="inner-all list-unstyled">
+                                                        <li class="text-center" onclick="document.forms['formEstadisticaRegularValoracionEnDesarrolloXls'].submit();">
+                                                            <i class="fa fa-file-excel-o fa-5x"></i>
+                                                        </li>
+                                                        <li class="text-center" onclick="document.forms['formEstadisticaRegularValoracionEnDesarrolloXls'].submit();">
+                                                            <h4 class="text-capitalize">En Desarrollo</h4>
+                                                        </li>
+                                                    </ul><!-- /.list-unstyled -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div>
+                            </div>                    
+                        </div>  
+                    {%endif%}       
+            </div> 
+            {% if infoSubEntidad is defined and infoLugarNivel != 8%}
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <div id="tour-8" class="panel panel-default shadow">
+                        <div class="panel-heading">
+                            <div id="tour-12" class="pull-left">
+                                <h3 class="panel-title">{% if infoSubEntidad is defined %}{{infoSubEntidad[0]['nombre_nivel']}}{%endif%}</h3>
+                            </div>
+                            <div class="pull-right">
+                                <div>
+                                <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                    <i class="fa fa-angle-up"></i>
+                                </button>  
+                                {% if ingresaAdmin == 1 %}
+                                    <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdfTemp'].submit();" title="Descargar PDF" class="btn btn-primary">
+                                        <i class="fa fa-file-pdf-o"></i>
+                                    </button>
+                                {% endif %} 
+                                <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar PDF" class="btn btn-googleplus">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                </button>
+                                <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar EXCEL" class="btn btn-success">
+                                    <i class="fa fa-file-excel-o"></i>
+                                </button>
+                                </div> 
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div id="animate-action" class="panel-scrollable">
+                            <div id="tour-15" style="display: block; height: 500px;" class="panel-body no-padding">
+                                <div class="list-group no-margin">                            
+                                    {% for data in infoSubEntidad%}
+                                        {% set lugar_id = data.id %}
+                                        {% set nombre = data.nombre %} 
+                                        {% set lugar_nivel_id = data.lugar_nivel_id %}   
+                                        <form name="form" role="form" action="{{ path('estadistica_especial_informacion_general') }}" method="POST"> 
+                                            <input type="hidden" name="lugarNivel" value="{{lugar_nivel_id}}" />
+                                            <input type="hidden" name="lugar" value="{{lugar_id}}" />
+                                            <input type="hidden" name="gestion" value="{{gestion}}" />
+                                            
+                                            <button type="submit" class="list-group-item">{{nombre}}</button>   
+                                        </form> 
+                                    {% endfor %}
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>  
+                <form name="formEstadisticaEspecialPdf" id="formEstadisticaEspecialPdf" role="form" action="{{ path('reporte_especial_informacion_general_print_pdf') }}" method="POST">  
+                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="lugar_id" value="{{ infoLugar }}" />  
+                    <input type="hidden" name="nivel_lugar_id" value="{{ infoLugarNivel }}" />     
+                    <input type="hidden" name="fecha_vista" value="{{ fechaEstadisticaEspecial }}" />     
+                </form> 
+                <form name="formEstadisticaEspecialXls" id="formEstadisticaEspecialXls" role="form" action="{{ path('reporte_especial_informacion_general_print_xls') }}" method="POST">  
+                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="lugar_id" value="{{ infoLugar }}" />  
+                    <input type="hidden" name="nivel_lugar_id" value="{{ infoLugarNivel }}" />
+                    <input type="hidden" name="fecha_vista" value="{{ fechaEstadisticaEspecial }}" />     
+                </form>                      
+            {% endif %}   
+        </div>
+        <div class="row">
+            <div class="alert alert-info">
+                <span class="alert-icon"><i class="fa fa-info"></i></span>
+                <div class="notification-info">
+                    <ul class="clearfix notification-meta">
+                        <li class="pull-left notification-sender"><span><a>Matricula: </a></span> Estudiantes que se inscribieron en un Centro de Educación Especial en una determinada gestión escolar </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+                        
+                        <li class="pull-left notification-sender"><span><a>Centro de Educación Especial de Convenio: </a></span> Instituciones financiadas por privados y el Estado, pero administradas por privados. Por lo tanto, no son necesariamente gratuitas. </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+                        
+                        <li class="pull-left notification-sender"><span><a>Centro de Educación Especial Fiscal: </a></span> Instituciones financiadas y administradas por el Estado. Por tanto, son gratuitas.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+                        
+                        <li class="pull-left notification-sender"><span><a>Centro de Educación Especial Privada: </a></span> Instituciones financiadas y administradas por privados. Por tanto, no son de carácter gratuito.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+                        
+                        <li class="pull-left notification-sender"><span><a>Personas con Discapacidad Intelectual: </a></span> Son las y los estudiantes que presentan limitaciones significativas tanto en el funcionamiento de la inteligencia, el desarrollo psicológico evolutivo, como en la conducta adaptativa.  </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+
+                        <li class="pull-left notification-sender"><span><a>Personas con Discapacidad Visual: </a></span> Son las y los estudiantes que presentan deficiencias anatómicas y/o funcionales, causantes de la ceguera legal establecida en el Art&iacuteculo 2 de la Ley del 22 de enero de 1957, que crea eel IBC. Es ceguera total cuando no ve absolutamente nada o sólo una ligera percepción de luz, pero no la forma de los objetos. Es baja visión cuando tiene limitaciones para ver a distancia o puede ver a pocos metros o cent&iacutemetros. </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+
+                        <li class="pull-left notification-sender"><span><a>Personas con Discapacidad Auditiva: </a></span> Son las personas perdida y/o limitación auditiva en menor o mayor grado. A trav&eacutes del sentido de la visión, estructura su experiencia e integración con el medio. </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+
+                        <li class="pull-left notification-sender"><span><a>Personas con Discapacidad F&iacutesica Motora: </a></span> Son las personas con deficiencias anatómicas y/o funcionales y neurom&uacutesculofuncionales causantes de limitaciones en el movimiento. </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+
+                        <li class="pull-left notification-sender"><span><a>Personas con Discapacidad M&uacuteltiple: </a></span> Son personas que presentan discapacidad por m&uacuteltiples deficiencias sean estas de car&aacutecter f&iacute, visual, auditivo, intelectual o ps&iacutequica. </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+
+                        <li class="pull-left notification-sender"><span><a>Personas con Discapacidad Ps&iacutequica: </a></span> Son personas que debido a causas biológicas, psicodin&aacutemicas o ambientales son afectadas por alteraciones de los procesos cognitivos, log&iacutecos, volitivos, afectivos o psicosociales que se traducen en transtornos de razonamiento, de la personalidad del comportamiento, del jucio y comprensi&oacuten de la realidad, que les dificultan adaptarse a ella y a sus particulares condiciones de vida, adem&aacutes de impedirles el desarrollo arm&oacutenico de las relaciones familiares, laborales y sociales, sin tener conciencia de la enfermedad ps&iacutequica. </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+
+                        <li class="pull-left notification-sender"><span><a>Estudiantes con Dificultades Generales en el Aprendizaje: </a></span> Comprende a las y los estudiantes que presentan necesidades educativas en todas las &aacutereas de saberesy conocimientos, que no estan probocados por factores intelectuales, sensoriales y/o neurol&oacutegicos. </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+
+                        <li class="pull-left notification-sender"><span><a>Estudiantes con Dificultades Espec&iacuteficas en el Aprendizaje: </a></span> Comprende a las y los estudiantes que presentan un desnivel en ciertas &aacutereas de saberes y conocimientos, pronunci&aacutendose con m&aacutes frecuencia en el Lectura, Escritura y Matem&aacuteticas. </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+
+                        <li class="pull-left notification-sender"><span><a>Talento General </a></span> Es el estudiante que muestra un desempe&ntildeo diferencial positivo en varios campos y &aacutereas de conocimientoen equilibrio con las dimensiones del ser. </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+
+                        <li class="pull-left notification-sender"><span><a>Talento Espec&iacutefico </a></span> Es la o el estudiante que muestra un desempe&ntildeo diferencial positivo en varios campos y &aacutereasde conocimiento, en equilibrio con las dimensiones del ser, pero no en todos los camposy &aacutereas de conocimiento. </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+
+                        <li class="pull-left notification-sender"><span><a>Modalidad de Atenci&oacuten Indirecta </a></span> Son un conjunto de programas y servicios de apoyo a los procesos educativos inclusivos que se desarrollan en espacios educativos de los subsistemas de educaci&oacuten regular, alterntiva y superior de formación profesional del Sistema Educativo Plurinacional. </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+                        {% if ingresa == 1 %} 
+
+                        <li class="pull-left notification-sender"><span><a>Valoración Cuantitativa: </a></span> Es aquella valoración que se realiza a traves de números.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+                        
+                        <li class="pull-left notification-sender"><span><a>En Desarrollo: </a></span> Denominación para las valoraciones cuantitativas hasta el número 50.&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; </li>
+                        <li class="pull-right notification-time">&nbsp;</li>
+
+                        {% endif %} 
+
+                    </ul>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <!--/ END ADDITIONAL ELEMENT -->
+    <script>  
+        $(function () {
+
+        });  
+
+
+        {% autoescape %}
+            {{ datoGraficoAreaEspecial|raw }}
+        {% endautoescape %}
+
+        {% autoescape %}
+            {{ datoGraficoGeneroEspecial|raw }}
+        {% endautoescape %}
+
+        {% autoescape %}
+            {{ datoGraficoDependenciaEspecial|raw }}
+        {% endautoescape %}
+
+        function seeGraphic (infoTipo,infoCodigo,infoRol) {
+            $("#modal-page").modal(
+                {
+                    show: true,
+                    backdrop: 'static',
+                    keyboard: false
+                }
+            ); 
+            if(infoTipo == 1){
+                $("#modal-page-header").empty().append("<i class='fa fa-circle-o'></i>");    
+                chartContainerMatriculaAreaEspecialLoad(); 
+            }
+            if(infoTipo == 2){
+                $("#modal-page-header").empty().append("<i class='fa fa-pie-chart'></i>");  
+                chartContainerMatriculaGeneroEspecialLoad();  
+            }
+            if(infoTipo == 3){
+                $("#modal-page-header").empty().append("<i class='fa fa-bar-chart'></i>");  
+                chartContainerMatriculaDependenciaEspecialLoad(); 
+            }
+            
+            //$.ajax({
+            //    type: 'get',
+            //    data: ({tipo:infoTipo, codigo: infoCodigo, rol: infoRol}),
+            //    url: Routing.generate('reporte_regular_informacion_general_chart'),
+            //    beforeSend: function () {                    
+            //        $("#modal-page").modal(
+            //            {
+            //                show: true,
+            //                backdrop: 'static',
+            //                keyboard: false
+            //            }
+            //        );
+            //        $("#modal-page-header").empty();
+            //        $("#modal-page-header").append('<span>Cargando...</span>');
+            //        $("#modal-page-body").empty();
+            //        $("#modal-page-body").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+            //    },
+            //    success: function (data) {               
+            //        $("#modal-page").modal(
+            //            {
+            //                show: true,
+            //                backdrop: 'static',
+            //                keyboard: false
+            //            }
+            //        );
+            //        $("#modal-page-header").empty();
+            //        $("#modal-page-header").append('<p>Estadística</p>');
+            //        $("#modal-page-body").empty();
+            //        $("#modal-page-body").append(data);
+            //    },
+            //    statusCode: {
+            //        500: function () {           
+            //        },
+            //        404: function () {                 
+            //        }
+            //    }
+            //});
+        };
+        $(document).ready(function() {
+            {% autoescape %}
+                {% if mensaje is defined %}
+                    {{ mensaje|raw }}   
+                {%endif%} 
+            {% endautoescape %}
+        });
+    </script>
+    {% if infoEntidad is defined and infoLugarNivel == 8 %}
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+        <script>
+            function initialize() {
+                var marcadores = [['{{infoEntidad.id}}', {{infoEntidad.cordx}}, {{infoEntidad.cordy}}]];
+                var map = new google.maps.Map(document.getElementById('lienzoMapa'), {
+                    zoom: 16,
+                    center: new google.maps.LatLng({{infoEntidad.cordx}}, {{infoEntidad.cordy}}),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
+                var infowindow = new google.maps.InfoWindow();
+                var marker, i;
+                for (i = 0; i < marcadores.length; i++) {
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(marcadores[i][1], marcadores[i][2]),
+                        map: map
+                    });
+                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                        return function () {
+                            infowindow.setContent('<div><b>Unidad Educativa: </b>' + marcadores[i][0] + '</div>');
+                            infowindow.open(map, marker);
+                        }
+                    })(marker, i));
+                }
+            }        
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+    {% endif %}
+{% endblock %}
+
+

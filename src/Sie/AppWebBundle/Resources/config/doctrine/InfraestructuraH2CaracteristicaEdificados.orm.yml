@@ -1,0 +1,123 @@
+Sie\AppWebBundle\Entity\InfraestructuraH2CaracteristicaEdificados:
+    type: entity
+    table: infraestructura_h2_caracteristica_edificados
+    indexes:
+        IDX_95F5070CDC2DA8F5:
+            columns:
+                - n3_techo_material_tipo_id
+        IDX_95F5070CDD284C7C:
+            columns:
+                - n3_pared_material_tipo_id
+        IDX_95F5070C4A43410E:
+            columns:
+                - n3_cielo_material_tipo_id
+        IDX_95F5070C9E607F6F:
+            columns:
+                - n3_piso_material_tipo_id
+        IDX_95F5070CCC5A783:
+            columns:
+                - infraestructura_h2_caracteristica_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n3NombreBloque:
+            type: string
+            nullable: true
+            length: 55
+            fixed: false
+            comment: ''
+            column: n3_nombre_bloque
+        n3AreaM2:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_area_m2
+        n3Numeroplantas:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_numeroplantas
+        n3NumeroAmbientesPedagogicos:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_numero_ambientes_pedagogicos
+        n3NumeroNoAmbientesPedagogicos:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_numero_no_ambientes_pedagogicos
+        n3NumeroTotalPedagogicos:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_numero_total_pedagogicos
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        n3TechoMaterialTipo:
+            targetEntity: InfraestructuraH2TechoMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_techo_material_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n3ParedMaterialTipo:
+            targetEntity: InfraestructuraH2ParedMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_pared_material_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n3CieloMaterialTipo:
+            targetEntity: InfraestructuraH2CieloMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_cielo_material_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n3PisoMaterialTipo:
+            targetEntity: InfraestructuraH2PisoMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_piso_material_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH2Caracteristica:
+            targetEntity: InfraestructuraH2Caracteristica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h2_caracteristica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,23 @@
+qahistoryInscription_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:QAHistoryInscription:index }
+
+qahistoryInscription_do_inscription:
+    path:     /doInscription
+    defaults: { _controller: SieRegularBundle:QAHistoryInscription:doInscription }
+
+qahistoryInscription_fill_notas:
+    path:     /fillNotas
+    defaults: { _controller: SieRegularBundle:QAHistoryInscription:fillNotas }
+
+qahistoryInscription_findIE:
+     path:    /findIE/{id}/{nivel}/{grado}/{gestion}
+     defaults: { _controller: SieRegularBundle:QAHistoryInscription:findIE }
+     options:
+         expose: true
+
+qahistoryInscription_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}}/{gestion}
+    defaults: { _controller: SieRegularBundle:QAHistoryInscription:findturno }
+    options:
+        expose: true

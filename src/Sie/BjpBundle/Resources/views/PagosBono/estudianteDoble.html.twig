@@ -1,0 +1,46 @@
+<small>
+<div class="col-lg-12">
+    <div class="portlet portlet-red">
+        <div class="portlet-heading">
+            <div class="portlet-title">
+                <h4></h4>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+            <div class="table-responsive">
+              <table>
+                <tr>
+                  <td><button type="button" class="btn-link" onclick="guardarNuevoEstudiante();" title="VerDetalles"><i class="fa fa-list"></i> Inscribir Nuevo</button></td>
+                </tr>
+              </table>
+                <table class="table table-condensed">
+                  <thead>
+                     <tr>
+                         <th>Rude</th>
+                         <th>Paterno</th>
+                         <th>Materno</th>
+                         <th>nombre</th>
+                         <th>opcion</th>
+                     </tr>
+                 </thead>
+                    <tbody>
+                      {% for estudiante in EstudianteResp %}
+                      <tr>
+                          <td>{{(estudiante.codigoRude)}}</td>
+                          <td>{{(estudiante.paterno)}}</td>
+                          <td>{{(estudiante.materno)}}</td>
+                          <td>{{(estudiante.nombre)}}</td>
+                          <td>
+                            <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="InscribirEstudianteBono('{{dataEnviar}}','{{estudiante.id}}')" title="VerDetalles"><i class="fa fa-pencil"></i> Inscribir</button>                            
+                          </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /.portlet -->
+</div>
+</small>

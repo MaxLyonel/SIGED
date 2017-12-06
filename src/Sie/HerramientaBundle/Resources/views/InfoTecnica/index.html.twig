@@ -1,0 +1,75 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+
+        <div class="row">
+            <div class="col-md-12">
+                <section id="welcome" class="page-section">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Información Unidad Educativa</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <blockquote>
+                                        Unidad Educativa Plena
+                                    </blockquote>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <blockquote>
+                                        <ul class="list-unstyled">
+
+                                            <li>Unidad Educativa: REPUBLICA DE COSTA RICA</li>
+                                            <li>SIE: 80730032</li>
+                                            <li>gestión: 2013 </li>
+                                        </ul>
+                                    </blockquote>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <blockquote>
+                                        <a href="{{path('herramienta_InfoTecnica_open')}}" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Acceder Unidad Educativa Plena"><i class="fa fa-eye"></i> Acceder Unidad Educativa Plena</a>
+                                    </blockquote>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+        </div>
+
+
+
+
+
+        <div class='row'>
+            <div class='col-md-12'>
+                <div id='idmalla'></div>
+            </div>
+        </div>
+
+
+    </div> 
+{% endblock %}
+

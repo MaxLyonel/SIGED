@@ -1,0 +1,125 @@
+Sie\AppWebBundle\Entity\UesObservadas:
+    type: entity
+    table: ues_observadas
+    id:
+        id:
+            type: bigint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        idDepartamento:
+            type: string
+            nullable: true
+            length: 6
+            fixed: false
+            comment: ''
+            column: id_departamento
+        descDepartamento:
+            type: string
+            nullable: true
+            length: 125
+            fixed: false
+            comment: ''
+            column: desc_departamento
+        codDistrito:
+            type: string
+            nullable: true
+            length: 6
+            fixed: false
+            comment: ''
+            column: cod_distrito
+        distrito:
+            type: string
+            nullable: true
+            length: 125
+            fixed: false
+            comment: ''
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        institucioneducativa:
+            type: string
+            nullable: true
+            length: 70
+            fixed: false
+            comment: ''
+        turnoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: turno_tipo_id
+        nivelTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nivel_tipo_id
+        gradoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: grado_tipo_id
+        paraleloTipoId:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+            column: paralelo_tipo_id
+        codigoRude:
+            type: string
+            nullable: true
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        paterno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        estadomatriculaTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estadomatricula_tipo_id
+        estadomatriculaInicioTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estadomatricula_inicio_tipo_id
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        estado:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

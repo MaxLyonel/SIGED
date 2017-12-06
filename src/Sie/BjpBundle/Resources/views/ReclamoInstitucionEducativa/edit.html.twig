@@ -1,0 +1,468 @@
+{% extends 'SieBjpBundle:Default:reclamoinstitucioneducativa.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet">
+{% endblock %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Registro de Instituciones Educativas
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('ReclamoInstitucionEducativa')}}">Registro de Institucion Educativa</a>
+                    </li>
+                    <li class="active">Editar</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('errorEstudiante') %}
+                <div class="alert alert-danger text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %} 
+            {% for flashMessage in app.session.flashbag.get('errorInscripcion') %}
+                <div class="alert alert-danger text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!-- Website Stats  Widget -->
+        </div>
+    </div>
+
+
+{#
+
+
+#}
+
+
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Institucion Educativa</h4>
+                    </div>
+
+                    <div class="portlet-widgets">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a href="#portlet_tab1" data-toggle="tab">
+								Datos de registro </a>
+							</li>
+							<li>
+								<a href="#portlet_tab2" data-toggle="tab">
+								Historial </a>
+							</li>
+							<li>
+								<a href="#portlet_tab3" data-toggle="tab">
+								Certificados </a>
+							</li>
+						</ul>
+
+<!--                          <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelInstitucionEducativa"><i class="fa fa-chevron-down"></i></a>-->
+                    </div>
+                    <div class="clearfix"></div>
+
+
+                </div>
+
+                <div id="panelInstitucionEducativa" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+							<div class="tab-content">
+								<div class="tab-pane active" id="portlet_tab1">
+		                            <fieldset><legend>1. Datos Generales</legend>
+		                                <div class="row">
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.rue)}}
+		                                        {{form_widget(form.rue) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+
+		                                </div>
+		                                <div class="row">
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.institucionEducativa)}}
+		                                        {{form_widget(form.institucionEducativa) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.nroResolucion)}}
+		                                        {{form_widget(form.nroResolucion) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.fechaResolucion)}}
+		                                        <div id="sandbox-container">
+		                                            {{form_widget(form.fechaResolucion) }}
+		                                        </div>
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.obsRue)}}
+		                                        {{form_widget(form.obsRue) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+
+		                                </div>
+
+		                                <div class="row">
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.dependenciaTipo)}}
+		                                        {{form_widget(form.dependenciaTipo) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.convenioTipo)}}
+		                                        {{form_widget(form.convenioTipo) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.estadoTipo)}}
+		                                        {{form_widget(form.estadoTipo) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.desUeAntes)}}
+		                                        {{form_widget(form.desUeAntes) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		   
+		                                </div>
+		                                <div class="row">
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.institucionTipo)}}
+		                                        {{form_widget(form.institucionTipo,{'attr':{'onchange':'institucionTipo(this.value)'} }) }}
+		                                        <div class="help-block with-errors"></div>
+
+		                                    </div>
+		   
+		                                </div>
+		                            </fieldset>
+		                            <fieldset><legend>2. Ubicación del Edificio Escolar</legend>
+		                                <div class="row">
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.leJuridicciongeograficaId)}}
+		                                        {{form_widget(form.leJuridicciongeograficaId,{'attr':{'onkeyup':'buscarEdificioEscolar(this.value)'} })}}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+
+		                                </div>
+		                                <div class="row">
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.departamento)}}
+		                                        {{form_widget(form.departamento) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.provincia)}}
+		                                        {{form_widget(form.provincia) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.municipio)}}
+		                                        {{form_widget(form.municipio) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.canton)}}
+		                                        {{form_widget(form.canton) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                </div>
+		                                <div class="row">
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.localidad)}}
+		                                        {{form_widget(form.localidad) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.zona)}}
+		                                        {{form_widget(form.zona) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.direccion)}}
+		                                        {{form_widget(form.direccion) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                    <div class="form-group col-lg-3 col-md-6">
+		                                        {{form_label(form.distrito)}}
+		                                        {{form_widget(form.distrito) }}
+		                                        <div class="help-block with-errors"></div>
+		                                    </div>
+		                                </div>
+
+		                            </fieldset>
+		                            <fieldset><legend>3. Niveles / Areas de Atención</legend>
+		                                
+		                                <div class="row">
+		                                   {% if entity.institucionEducativaTipo.id == 4 %}
+                                            <div class="form-group col-lg-12 col-md-6">
+                                                {{form_label(form.areaEspecialTipo)}}
+										        <ul>
+										        {% for r in form.areaEspecialTipo %}
+										            <div>
+										                {{ form_widget(r) }}
+										                {{ form_label(r) }}
+										            </div>
+										        {% endfor %}    
+										        </ul>
+  
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+                                            <div class="form-group col-lg-12 col-md-6">
+                                                {{form_label(form.nivelTipo)}}
+										        <ul>
+										        {% for r in form.nivelTipo %}
+										            <div>
+										                {{ form_widget(r) }}
+										                {{ form_label(r) }}
+										            </div>
+										        {% endfor %}    
+										        </ul>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+
+                                        	{% elseif entity.institucionEducativaTipo.id == 1 or entity.institucionEducativaTipo.id == 2  %}
+                                            <div class="form-group col-lg-12 col-md-6">
+                                                {{form_label(form.nivelTipo)}}
+										        <ul>
+										        {% for r in form.nivelTipo %}
+										            <div>
+										                {{ form_widget(r) }}
+										                {{ form_label(r) }}
+										            </div>
+										        {% endfor %}    
+										        </ul>
+                                                <div class="help-block with-errors"></div>
+                                            </div>
+	                                        {% endif %}
+		   
+		                                </div>
+		                            </fieldset>
+		                            <div class="form-group">
+		                                <div class="col-lg-12 text-center">
+		                                    {{ form_widget(form.guardar ) }}
+		                                    <a href="{{path('ReclamoInstitucionEducativa')}}" class="btn btn-default">Cancelar</a>
+		                                </div>
+		                            </div>
+		                            {{form_end(form)}}
+
+								</div>
+								<div class="tab-pane" id="portlet_tab2">
+								
+					                <div id="panelmaestro" class="panel-collapse collapse in">
+					                    <div class="portlet-body">
+					                        <div class="panel-body panel-primary">
+					                            <div id="accordion" class="panel-group">
+					                                {% if entity.formularios is not empty %}
+					                                <ul id="myPills" class="nav nav-pills">
+															{% for f in entity.formularios  %}
+					                                            {% if loop.index == 1 %}
+					                                                {% set activo = 'active'%}
+					                                            {% else %}
+					                                                {% set activo = '' %}
+					                                            {% endif %}
+					                                            <li class="{{activo}}"><a href="tabs-accordions.html#{{loop.index}}" data-toggle="tab">
+					                                                <b>Nro Form.:{{ f.id }} Fecha: {{ f.fechaRegistro|date('Y-m-d') }} </b><br>Operacion: {{ f.operacionRue }}
+					                                            </a></li>
+					                                        {% endfor %}
+					                                </ul>
+					
+					                                    <div id="myTabContent" class="tab-content">
+					                                        {% for f in entity.formularios %}
+					                                            {% if loop.index == 1 %}
+					                                                {% set activo = 'active in'%}
+					                                            {% else %}
+					                                                {% set activo = '' %}
+					                                            {% endif %}
+					                                            <div class="tab-pane fade {{activo}}" id="{{loop.index}}">
+								                                    <div id="no-more-tables">
+								                                        <table class="table table-bordered table-hover cf">
+								                                            <thead>
+								                                                <tr class="cf">
+								                                                    <th>Nro</th>
+								                                                    <th>Fecha</th>
+								                                                    <th>Operacion</th>
+								                                                    <th>Tabla</th>
+								                                                    <th>Campo</th>
+								                                                    <th>Valor anterior</th>
+								                                                    <th>Valor nuevo</th>
+								                                                </tr>
+								                                            </thead>
+								                                            <tbody>
+								                                                {% for r in f.registros  %}
+								                                                <input type="hidden" name="idFormulario" value="{{r.id}}">
+								                                                <tr>
+								                                                    <td data-title="Nro">{{loop.index}}</td>
+								                                                    <td data-title="Fecha">{{ r.fechaRegistro|date('Y-m-d') }}&nbsp;</td>
+								                                                    <td data-title="Operacion">{{r.operacionRue}}&nbsp;</td>
+								                                                    <td data-title="Tabla">{{r.tabla}}&nbsp;</td>
+								                                                    <td data-title="Campo">{{r.campo}}&nbsp;</td>
+								                                                    <td data-title="Valor anterior">{{r.valorAnterior}}&nbsp;</td>
+								                                                    <td data-title="Valor nuevo">{{r.valorNuevo}}&nbsp;</td>
+								                                                </tr>
+								                                            {% endfor %}
+								                                            </tbody>
+								                                        </table>
+								                                    </div>
+					                                                
+					                                                  
+					                                            </div>
+					                                        {% endfor %}
+					                                    </div>
+					                                {% endif %}
+					                            </div>
+					                        </div>
+					                    </div>
+					                </div>
+								
+
+								</div>
+
+
+								<div class="tab-pane" id="portlet_tab3">
+								
+								   <div class="row">
+								       <div class="col-md-12">
+								            <div id="no-more-tables">
+								                 <table id="myTable" class="table table-bordered table-hover cf dataTable">
+								
+								                        <thead class="">
+								                               <tr class="">
+								                                   <th>No. Certificado</th>
+								                                   <th>Codigo RUE</th>
+								                                   <th>Institucion Educativa</th>
+								                                   <th>Codigo LE</th>
+								                                   <th>No. Resolucion</th>
+								                                   <th>Dependencia</th>
+								                                   <th>Tipo</th>
+								                                   <th>Niveles</th>
+								                                   <th>Areas</th>
+								                                   <th>Operacion RUE</th>
+								                               </tr>
+								                        </thead>
+								                        <tbody>
+								                                  {% for c in entity.certificados %}
+								                                  <tr>
+								                                     <td data-title="No. Certificado">{{ c.nroCertificado }}</td>
+								                                     <td data-title="Codigo RUE">{{ c.institucioneducativa.id }}</td>
+								                                     <td data-title="Institucion Educativa" >{{ c.institucioneducativades }}</td>
+								                                     <td data-title="Codigo LE" >{{ c.leJuridicciongeografica.id }}</td>
+								                                     <td data-title="No. Resolucion" >{{ c.nroResolucion }}</td>
+								                                     <td data-title="Dependencia" >{{ c.dependencia }}</td>
+								                                     <td data-title="Tipo" >{{ c.institucioneducativatipo }}</td>
+								                                     <td data-title="Niveles" >{{ c.niveles }}</td>
+								                                     <td data-title="Areas" >{{ c.areas }}</td>
+								                                     <td data-title="Operacion RUE" >{{ c.operacionRue }}</td>
+								                                  </tr>
+								                                  {% endfor %}
+								                        </tbody>
+								                 </table>
+								            </div>
+								       </div>
+								   </div>
+								</div>
+
+
+
+
+								
+							</div>
+
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('js/jquery-ui.min.js')}}"></script>
+    <script>
+        function gradosMostrar(nivel) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('listargrados', {'nivel': nivel}),
+                beforeSend: function () {
+                    $("#form_grado").empty();
+                    $("#form_grado").append('<option value="">Buscando...</option>');
+                    //$("#form_grado").attr('disabled', 'disabled');
+                },
+                success: function (data) {
+                    $("#form_grado").empty();
+                    //$("#form_grado").removeAttr('disabled');
+                    $("#form_grado").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listagrados, function (i, value) {
+                        $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+
+        function buscarEdificioEscolar(idLe) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('rue_buscar_edificio', {'idLe': idLe}),
+                beforeSend: function () {
+                    $("#form_departamento").val("");
+                    $("#form_provincia").val("");
+                    $("#form_municipio").val("");
+                    $("#form_canton").val("");
+                    $("#form_localidad").val("");
+                    $("#form_zona").val("");
+                    $("#form_direccion").val("");
+                    $("#form_distrito").val("");
+                    
+                },
+                success: function (data) {
+
+                	$("#form_departamento").val(data.departamento);
+                    $("#form_provincia").val(data.provincia);
+                    $("#form_municipio").val(data.municipio);
+                    $("#form_canton").val(data.canton);
+                    $("#form_localidad").val(data.localidad);
+                    $("#form_zona").val(data.zona);
+                    $("#form_direccion").val(data.direccion);
+                    $("#form_distrito").val(data.distrito);
+                }
+            });
+        }
+
+
+        
+    </script>
+{% endblock %}
+
+
+

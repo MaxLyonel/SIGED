@@ -1,0 +1,82 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Notificación
+                    <small>Ver</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-edit"></i> Ver</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="portlet portlet-blue">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4><i class="fa fa-rss-square"></i> Notificación</h4>
+                </div>
+                <div class="portlet-widgets">
+                    <!-- Button Dropdown -->
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <tbody>
+                            <tr>
+                                <th>Título</th>
+                                <td>{{ entity.titulo }}</td>
+                            </tr>
+                            <tr>
+                                <th>Mensaje</th>
+                                <td>{{ entity.mensaje|raw }}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha inicio</th>
+                                <td>{{ entity.fechaCrea|date('d-m-Y') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha fin</th>
+                                <td>{{ entity.fechaPub|date('d-m-Y') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Público para</th>
+                                <td>
+                                    {% for ent in entities %}
+                                        <span class="label label-info">{{ ent.rolTipo }}</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Prioridad</th>
+                                <td><span class="label label-{% if(entity.noticiaTipo) == 0  %}primary{% elseif(entity.noticiaTipo) == 1 %}warning{% else %}danger{% endif %}">{% if(entity.noticiaTipo) == 0  %}Normal{% elseif(entity.noticiaTipo) == 1 %}Urgente{% else %}Muy Urgente{% endif %}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Adjunto</th>
+                                <td>
+                                    {% if entity.adjunto %}
+                                        <a href="{{ asset('uploads/adjuntos/' ~ entity.adjunto) }}" target="_blank"><img src="{{asset('img/pdf.png') }}" class="img-responsive" alt="{{ entity.adjunto }}" width="20" height="20"></a>
+                                        {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>                
+                <div>
+                    <a href="{{ path('notificacion_list') }}" class="btn btn-link"><i class="fa fa-hand-o-left"></i> Retornar al listado </a>
+                </div>
+            </div>
+        </div>
+    {% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'layoutBjp.html.twig' %}
+
+{#{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/chosen.css')}}" rel="stylesheet">
+    <link href="{{asset('bootstrap-wizard/css/bwizard.min.css')}}" rel="stylesheet">
+</style>
+{% endblock %} #}
+
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Control de Pagos Bono
+                    <small>Index</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('ControlPagosBono')}}"> Index</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('correcto') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('incorrecto') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- begin DASHBOARD CIRCLE TILES -->
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <div class="circle-tile">
+                <a href="index.html#">
+                    <div class="circle-tile-heading dark-blue">
+                        <i class="fa fa-users fa-fw fa-3x"></i>
+                    </div>
+                </a>
+                <div class="circle-tile-content dark-blue">
+                    <div class="circle-tile-description text-faded">
+                        Control Pagos Bono
+                    </div>
+                    <div class="circle-tile-number text-faded">
+                        BJP
+                    </div>
+                    <a href="{{ path('ControlPagosBono_list', { 'id': 8 }) }}" class="circle-tile-footer">Ver más <i class="fa fa-chevron-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+{% if app.session.get('userId') == 92506164 %}
+        <div class="col-lg-6 col-sm-12">
+            <div class="circle-tile">
+                <a href="index.html#">
+                    <div class="circle-tile-heading blue">
+                        <i class="fa fa-tasks fa-fw fa-3x"></i>
+                    </div>
+                </a>
+                <div class="circle-tile-content blue">
+                    <div class="circle-tile-description text-faded">
+                        Consolidar 4to Bim 2016
+                    </div>
+                    <div class="circle-tile-number text-faded">
+                        92506164
+                    </div>
+                    <a href="{{ path('ControlPagosBono_consol') }}" class="circle-tile-footer">Consolidar <i class="fa fa-chevron-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+{% endif %}
+    </div>
+    <!-- end DASHBOARD CIRCLE TILES --> 
+{% endblock %}
+

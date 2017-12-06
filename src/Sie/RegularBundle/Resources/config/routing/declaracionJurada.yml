@@ -1,0 +1,15 @@
+declaracion_jurada_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:DeclaracionJurada:index }
+    
+declaracion_jurada_upfile_web:
+    path:    /upfile
+    defaults: { _controller: SieRegularBundle:DeclaracionJurada:upfile }    
+
+declaracion_jurada_checkit_web:
+    path:    /thinkit
+    defaults: { _controller: SieRegularBundle:DeclaracionJurada:greeting }
+    
+declaracion_jurada_find:
+    path:    /find
+    defaults: { _controller: SieRegularBundle:DeclaracionJurada:find }         

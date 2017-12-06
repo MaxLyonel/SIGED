@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\AreaTipo:
+    type: entity
+    table: area_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        area:
+            type: string
+            nullable: false
+            length: 70
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

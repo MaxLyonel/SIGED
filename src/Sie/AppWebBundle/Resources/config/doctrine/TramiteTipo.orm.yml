@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\TramiteTipo:
+    type: entity
+    table: tramite_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        tramiteTipo:
+            type: string
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+            column: tramite_tipo
+        obs:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

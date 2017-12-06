@@ -1,0 +1,69 @@
+Sie\AppWebBundle\Entity\TtecInstitucioneducativaHistorico:
+    type: entity
+    table: ttec_institucioneducativa_historico
+    indexes:
+        IDX_E9725CC03AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nroResolucion:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: nro_resolucion
+        fechaResolucion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_resolucion
+        descripcion:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        datoAdicional:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: dato_adicional
+        archivo:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

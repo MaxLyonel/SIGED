@@ -1,0 +1,190 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %} 
+
+
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+
+
+    <div class="body-content animated fadeIn">
+
+        <!-- Start mail page -->
+        <div class="row">
+
+            <div class="col-sm-12">
+                <div class="panel rounded shadow panel">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Inbox (1)</h3>
+                        </div>
+                        <div class="pull-right">
+                            <form action="mail-inbox.html#" class="form-horizontal mr-5 mt-3">
+                                <div class="form-group no-margin no-padding has-feedback">
+                                    <input type="text" class="form-control no-border" placeholder="Search mail">
+                                    <button type="submit" class="btn btn-theme fa fa-search form-control-feedback"></button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-sub-heading inner-all">
+                        <div class="pull-left">
+                            <ul class="list-inline no-margin">
+                                <li>
+                                    <div class="ckbox ckbox-theme">
+                                        <input id="checkbox-group" type="checkbox" class="mail-group-checkbox">
+                                        <label for="checkbox-group"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            All <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="mail-inbox.html#">None</a></li>
+                                            <li><a href="mail-inbox.html#">Read</a></li>
+                                            <li><a href="mail-inbox.html#">Unread</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="btn-group">
+                                        <button class="btn btn-default btn-sm tooltips" type="button" data-toggle="tooltip" data-container="body" title="" data-original-title="Archive"><i class="fa fa-inbox"></i></button>
+                                        <button class="btn btn-default btn-sm tooltips" type="button" data-toggle="tooltip" data-container="body" title="" data-original-title="Report Spam"><i class="fa fa-warning"></i></button>
+                                        <button class="btn btn-default btn-sm tooltips" type="button" data-toggle="tooltip" data-container="body" title="" data-original-title="Delete"><i class="fa fa-trash-o"></i></button>
+                                    </div>
+                                </li>
+                                <li class="hidden-xs">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default btn-sm">More</button>
+                                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="mail-inbox.html#"><i class="fa fa-edit"></i> Mark as read</a></li>
+                                            <li><a href="mail-inbox.html#"><i class="fa fa-ban"></i> Spam</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="mail-inbox.html#"><i class="fa fa-trash-o"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="pull-right">
+                            <ul class="list-inline no-margin">
+                                <li class="hidden-xs"><span class="text-muted">Showing 1-50 of 2,051 messages</span></li>
+                                <li>
+                                    <div class="btn-group">
+                                        <a href="mail-inbox.html#" class="btn btn-sm btn-default"><i class="fa fa-angle-left"></i></a>
+                                        <a href="mail-inbox.html#" class="btn btn-sm btn-default"><i class="fa fa-angle-right"></i></a>
+                                    </div>
+                                </li>
+                                <li class="hidden-xs">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-cog"></i> <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li class="dropdown-header">Display density :</li>
+                                            <li class="active"><a href="mail-inbox.html#">Comfortable</a></li>
+                                            <li><a href="mail-inbox.html#">Cozy</a></li>
+                                            <li><a href="mail-inbox.html#">Compact</a></li>
+                                            <li class="dropdown-header">Configure inbox</li>
+                                            <li><a href="mail-inbox.html#">Settings</a></li>
+                                            <li><a href="mail-inbox.html#">Themes</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="mail-inbox.html#">Help</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-sub-heading -->
+                    <div class="panel-body no-padding">
+
+                        <div class="table-responsive">
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-middle table-lilac">
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Proceso</th>
+                                            <th>Paso</th>
+                                            <th>Enviado por</th>
+                                            <th>Fecha Expiración</th>
+                                            <th>Ultima Modificación</th>
+                                            <th>Prioridad</th>
+                                            <th class="text-center" style="width: 11%;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-warning">
+                                            <td class="text-center" style="width: 7%;">
+                                                <b># 1024</b>
+                                            </td>
+                                            <td>Regularización UE</td>
+                                            <td>paso 2</td>
+                                            <td><span class="label label-warning">krlos</span></td>
+                                            <td>10-03-2016</td>
+                                            <td>01-03-2016</td>
+                                            <td>Normal</td>
+                                            <td class="text-center">
+                                                <a href="{{path('herramienta_inbox_open')}}" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Ver Detalle"><i class="fa fa-eye"></i></a>
+                                                <a href="{{path('herramienta_inbox_open')}}" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Abrir"><i class="fa fa-pencil"></i></a>
+                                                <a href="{{path('herramienta_inbox_open')}}" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div><!-- /.table-responsive -->
+
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+            </div>
+        </div><!-- /.row -->
+        <!--/ End mail page -->
+
+    </div>
+
+
+    <!-- Start body content -->
+    
+
+
+    <!--/ End body content -->
+
+
+
+
+    <!--/ End body content -->
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    </script>
+{%endblock%}
+

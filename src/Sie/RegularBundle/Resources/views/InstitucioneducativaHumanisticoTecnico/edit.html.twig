@@ -1,0 +1,103 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption -%}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Unidad Educativa Humanistico Técnico 
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Editar</a></li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="col-lg-12">
+
+        <div class="row">
+
+            <!-- Form Controls -->
+            <div class="col-lg-12">
+                <div class="portlet portlet-blue">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>Basic Form Controls</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#formControls"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="formControls" class="panel-collapse collapse in">
+                        <div class="portlet-body">
+                            <form class="form-horizontal">
+                                {{form_start(edit_form)}}
+
+
+
+                                <div class="form-group">
+                                    <label for="input2" class="col-sm-2 control-label">{{form_label(edit_form.institucioneducativaId)}}</label>
+                                    <div class="col-sm-10">
+                                        {{form_widget(edit_form.institucioneducativaId)}}
+                                        <span class="help-block with-errors" ></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="input3" class="col-sm-2 control-label">{{form_label(edit_form.institucioneducativa)}}</label>
+                                    <div class="col-sm-10">
+                                        {{form_widget(edit_form.institucioneducativa)}}
+                                        <span  class="help-block with-errors" ></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="input1" class="col-sm-2 control-label">{{form_label(edit_form.gestionTipoId)}}</label>
+                                    <div class="col-sm-10">
+                                        {{form_widget(edit_form.gestionTipoId)}}
+                                        <span  class="help-block with-errors" ></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        {{form_widget(edit_form.submit)}}
+
+                                    </div>
+                                </div>
+                                {{form_end(edit_form)}}
+
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /.portlet -->
+            </div>
+            <!-- /.col-lg-12 (nested) -->
+            <!-- End Form Controls -->
+
+            <!-- Input Sizing -->
+
+            <!-- /.col-lg-12 (nested) -->
+            <!-- End Form Controls -->
+
+        </div>
+        <!-- /.row (nested) -->
+
+    </div>
+
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('sie_ueHumTec') }}">
+                Volver al listado
+            </a>
+        </li>
+        <!--li>{{ form(delete_form) }}</li-->
+    </ul>
+{% endblock %}

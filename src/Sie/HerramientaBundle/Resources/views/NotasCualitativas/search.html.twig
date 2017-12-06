@@ -1,0 +1,326 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+    <div class="header-content">
+        <h2>
+            Apreciaciones
+            <span>Cualitativas</span>
+        </h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Estas aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="#">A. Cualitativas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    <i class="fa fa-search"></i>
+                    <a href="{{path('notascualitativas')}}">Buscar</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-lilac rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Buscar Institución Educativa</h3>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    
+                    <div class="panel-body">
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form-horizontal'} } )}}
+                            {% if maestro is defined %}
+                                <div class="form-group">
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">{{ form_label(form.carnet) }}</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.carnet ) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-2 control-label">{{ form_label(form.gestion) }}</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.gestion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                    </div>
+                                </div>
+                            {% else %}
+                                {% if DatosUE is defined %}
+                                    <div class="form-group">
+                                        <label for="form_codigoRude" class="col-sm-2 control-label">{{ form_label(form.institucion) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.institucion ) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="" class="col-sm-2 control-label">{{ form_label(form.turno) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.turno,{'attr':{'onchange':'cargarNiveles()'} }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="" class="col-sm-2 control-label">{{ form_label(form.nivel) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.nivel,{'attr':{'onchange':'cargarGrados()'} }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">{{ form_label(form.grado) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.grado,{'attr':{'onchange':'cargarParalelos()'} }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">{{ form_label(form.paralelo) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.paralelo) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <!-- Formulario de busqueda de institucion educativa -->
+                                    <div class="form-group">
+                                        <label for="form_codigoRude" class="col-sm-2 control-label">{{ form_label(form.idInstitucion) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.idInstitucion ) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_codigoRude" class="col-sm-2 control-label">{{ form_label(form.institucion) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.institucion ) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="" class="col-sm-2 control-label">{{ form_label(form.turno) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.turno,{'attr':{'onchange':'cargarNiveles()'} }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="" class="col-sm-2 control-label">{{ form_label(form.nivel) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.nivel,{'attr':{'onchange':'cargarGrados()'} }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">{{ form_label(form.grado) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.grado,{'attr':{'onchange':'cargarParalelos()'} }) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword3" class="col-sm-2 control-label">{{ form_label(form.paralelo) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ form_widget(form.paralelo) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        {{form_end(form)}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('noTuicion') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var xhr;
+        var xhr1;
+        var xhr2;
+        var xhr3;
+        var xhr4;
+
+        function institucionEducativa(id) {
+            if (id.length > 7) {
+                if(xhr && xhr.readyState != 4){
+                    xhr.abort();
+                }
+                xhr = $.ajax({
+                    type: 'get',
+                    url: Routing.generate('buscarinstitucioneducativa', {'id': id}),
+                    beforeSend: function () {
+                        //$("#departamento").empty();
+                        //$("#div-load").parent().append('<div class="loading"></div>');    
+                    },
+                    success: function (data) {
+                        $("#form_institucion").val(data.nombre);
+                        cargarTurnos();
+                    }
+                });
+            }
+        }
+        function cargarTurnos() {
+            var institucion = $('#form_idInstitucion').val();
+            var gestion = $('#form_idGestion').val();
+            if(xhr1 && xhr1.readyState != 4){
+                xhr1.abort();
+            }
+            xhr1 = $.ajax({
+                type: 'get',
+                url: Routing.generate('notas_cargar_turnos', {'idInstitucion': institucion,'gestion':gestion}),
+                beforeSend: function () {
+                    $("#form_turno").empty();
+                    $("#form_nivel").empty();
+                    $("#form_grado").empty();
+                    $("#form_paralelo").empty();
+                    $("#form_turno").append('<option value="">Buscando...</option>');
+                    $("#form_nivel").append('<option value="">Buscando...</option>');
+                    $("#form_grado").append('<option value="">Buscando...</option>');
+                    $("#form_paralelo").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_turno").empty();
+                    $("#form_nivel").empty();
+                    $("#form_grado").empty();
+                    $("#form_paralelo").empty();
+                    $("#form_turno").append('<option value="">Seleccionar...</option>');
+                    $("#form_nivel").append('<option value="">Seleccionar...</option>');
+                    $("#form_grado").append('<option value="">Seleccionar...</option>');
+                    $("#form_paralelo").append('<option value="">Seleccionar...</option>');
+                    $.each(data.turnos, function (i, value) {
+                        $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        function cargarNiveles() {
+            var institucion = $('#form_idInstitucion').val();
+            var gestion = $('#form_idGestion').val();
+            var turno = $('#form_turno').val();
+            if(xhr2 && xhr2.readyState != 4){
+                xhr2.abort();
+            }
+            xhr2 = $.ajax({
+                type: 'get',
+                url: Routing.generate('notas_cargar_niveles', {'idInstitucion': institucion,'gestion':gestion,'turno':turno}),
+                beforeSend: function () {
+                    $("#form_nivel").empty();
+                    $("#form_grado").empty();
+                    $("#form_paralelo").empty();
+                    $("#form_nivel").append('<option value="">Buscando...</option>');
+                    $("#form_grado").append('<option value="">Buscando...</option>');
+                    $("#form_paralelo").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_nivel").empty();
+                    $("#form_grado").empty();
+                    $("#form_paralelo").empty();
+                    $("#form_nivel").append('<option value="">Seleccionar...</option>');
+                    $("#form_grado").append('<option value="">Seleccionar...</option>');
+                    $("#form_paralelo").append('<option value="">Seleccionar...</option>');
+                    $.each(data.niveles, function (i, value) {
+                        $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        function cargarGrados() {
+            var institucion = $('#form_idInstitucion').val();
+            var gestion = $('#form_idGestion').val();
+            var turno = $('#form_turno').val();
+            var nivel = $('#form_nivel').val();
+            if(xhr3 && xhr3.readyState != 4){
+                xhr3.abort();
+            }
+            xhr3 = $.ajax({
+                type: 'get',
+                url: Routing.generate('notas_cargar_grados', {'idInstitucion': institucion,'gestion':gestion,'turno':turno,'nivel':nivel}),
+                beforeSend: function () {
+                    $("#form_grado").empty();
+                    $("#form_paralelo").empty();
+                    $("#form_grado").append('<option value="">Buscando...</option>');
+                    $("#form_paralelo").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_grado").empty();
+                    $("#form_paralelo").empty();
+                    $("#form_grado").append('<option value="">Seleccionar...</option>');
+                    $("#form_paralelo").append('<option value="">Seleccionar...</option>');
+                    $.each(data.grados, function (i, value) {
+                        $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        function cargarParalelos() {
+            var institucion = $('#form_idInstitucion').val();
+            var gestion = $('#form_idGestion').val();
+            var turno = $('#form_turno').val();
+            var nivel = $('#form_nivel').val();
+            var grado = $('#form_grado').val();
+            if(xhr4 && xhr4.readyState != 4){
+                xhr4.abort();
+            }
+            xhr4 = $.ajax({
+                type: 'get',
+                url: Routing.generate('notas_cargar_paralelos', {'idInstitucion': institucion,'gestion':gestion,'turno':turno,'nivel':nivel,'grado':grado}),
+                beforeSend: function () {
+                    $("#form_paralelo").empty();
+                    $("#form_paralelo").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_paralelo").empty();
+                    $("#form_paralelo").append('<option value="">Seleccionar...</option>');
+                    $.each(data.paralelos, function (i, value) {
+                        $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+    </script>
+{% endblock %}

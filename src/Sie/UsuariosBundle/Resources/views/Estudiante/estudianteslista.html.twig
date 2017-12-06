@@ -1,0 +1,66 @@
+        {% if po|length > 0 %}
+            <span class="label label-danger">Verifique que los datos del nuevo rude no esten en el presente listado.</span>
+            <div class="portlet portlet-orange">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4><i class="fa fa-list-ul"></i> Coincidencias detectadas</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#listacoincidenciasestudiantes"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="listacoincidenciasestudiantes" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body">                            
+                            <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+                                <thead>
+                                    <tr>
+                                        <th>Rude</th>
+                                        <th>Nombres</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>
+                                        <th>F. de Nac.</th>                                                
+                                        <th>Gen.</th>                                                
+                                        <th>H</th>                                                
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                
+                                    {% for persona in po %}
+                                        <tr>                        
+                                            <td>{{ persona.codigo_rude }}</td>
+                                            <td>{{ persona.nombre }}</td>
+                                            <td>{{ persona.paterno }}</td>
+                                            <td>{{ persona.materno }}</td>                                                
+                                            <td>{% if persona.fecha_nacimiento %}{{ persona.fecha_nacimiento|date('d/m/Y') }}{% endif %}</td>
+                                            <td>{% if (persona.genero_tipo_id == 1) %}
+                                                    M
+                                                {% else %}
+                                                    F
+                                                {% endif %}    
+                                            </td>
+                                            <td>
+                                                <button type = "button" class = "btn btn-warning btn-sm" title = "bbb"
+                                                        data-container = "body" data-toggle = "popover" data-placement = "left"
+                                                        data-content = "aaa">
+                                                    H
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                
+                                </tbody>
+                            </table>
+                        </div>                        
+                    </div>
+                </div>                                              
+            </div>                
+        {% else %}       
+            <center> 
+                <span class="label label-danger">¡No se encontro coincidencias!</span>                        
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <strong>Verifique que cada letra y numero este digitada correctamente y vuelva a intentarlo.</strong>
+                </div>
+            </center>     
+        {% endif %}              

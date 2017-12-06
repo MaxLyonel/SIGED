@@ -1,0 +1,30 @@
+Sie\AppWebBundle\Entity\GeneroTipo:
+    type: entity
+    table: genero_tipo
+    uniqueConstraints:
+        genero_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        genero:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

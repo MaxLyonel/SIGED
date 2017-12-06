@@ -1,0 +1,399 @@
+Sie\AppWebBundle\Entity\BonojuancitoAsignacion:
+    type: entity
+    table: bonojuancito_asignacion
+    repositoryClass: Sie\AppWebBundle\Entity\BonojuancitoAsignacionRepository
+    indexes:
+        IDX_4F49551F232E207A:
+            columns:
+                - bonojuancito_unidadmilitar_id
+        IDX_4F49551F3AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_4F49551F179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codLe:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_le
+        codSie:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_sie
+        institucioneducativa:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        departamentoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: departamento_tipo_id
+        departamentoTipo:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: departamento_tipo
+        provincia:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+        municipio:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+        seccion:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+        canton:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        localidad:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+        nucleo:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+        distritoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: distrito_tipo_id
+        distrito:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+        zona:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        direccion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        areaGeografica:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: ''
+            column: area_geografica
+        ciDirector:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: ci_director
+        director:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+        turnoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: turno_tipo_id
+        turno:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        telefono1:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        telefono2:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        fax:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        email:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        orgcurricularTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: orgcurricular_tipo_id
+        orgcurricularTipo:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: orgcurricular_tipo
+        dependencia:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        esnuevoingreso:
+            type: boolean
+            nullable: false
+            comment: ''
+        esreportadopreliminar:
+            type: boolean
+            nullable: false
+            comment: ''
+        essinrue:
+            type: boolean
+            nullable: false
+            comment: ''
+        primerop:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        segundop:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        tercerop:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        cuartop:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        quintop:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        sextop:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        primeros:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        segundos:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        terceros:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        cuartos:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        quintos:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        sextos:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        multigrado:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+        fechaEstadisticaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_estadistica_registro
+        totalPlanificado:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: total_planificado
+        habilitados:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        pagadoEnPeriodo:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: pagado_en_periodo
+        pagadoRezagado:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: pagado_rezagado
+        espagado:
+            type: boolean
+            nullable: true
+            comment: ''
+        esterminado:
+            type: boolean
+            nullable: false
+            comment: ''
+        registrados:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        abandono:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        traspaso:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        otro:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        noRecibieron:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: no_recibieron
+        ci:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        agente:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        fechaTerminado:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_terminado
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        bonojuancitoUnidadmilitar:
+            targetEntity: BonojuancitoUnidadmilitar
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bonojuancito_unidadmilitar_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa2:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

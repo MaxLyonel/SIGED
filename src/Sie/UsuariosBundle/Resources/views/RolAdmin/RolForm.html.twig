@@ -1,0 +1,34 @@
+<p>
+{{ form_start(form, {'method': 'POST'}) }}    
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4>Seleccione el rol que añadira al rol a asignar</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-6"> 
+                {{ form_row(form.rolTipoadmin, { 'id': 'rolTipoadmin'}) }}                    
+            </div>
+            <div class="col-xs-6">
+                {{ form_row(form.rolTipoasign, { 'id': 'rolTipoasign' }) }}                  
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-4">
+                {#{{ form_row(form.idpersona) }}#}
+            </div>
+            <div class="col-xs-4">
+                {{ form_row(form.save) }}
+            </div>                        
+            <div class="col-xs-4">
+                <a role="button" class="btn btn-default btn-large glyphicon glyphicon-remove-sign" href="#" onclick="modaluserclose();"> Cerrar</a>
+            </div>
+        </div>
+    </div>
+</div>   
+{{ form_end(form) }}            

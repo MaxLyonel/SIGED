@@ -1,0 +1,141 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Información Estudiantes Inscritos de Educación Especial
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('estudianteinscripcion_especial')}}">Buscar</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            {% if iesec %}
+                <div class="alert alert-danger fade in">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Advertencia!</strong> Usted concluyó la etapa de inscripción de estudiantes. Tenga en cuenta que no podrá realizar más cambios.
+                        <form action="{{path('reporte_especial_cuatro')}}" method="post" style="display:inline-block">
+                            <input type="hidden" name="idInstitucion" value="{{app.session.get('idInstitucion')}}">
+                            <input type="hidden" name="gestion" value="{{app.session.get('idGestion')}}">
+                            <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-save"></i> Generar Reporte</button>
+                        </form>
+                  </div>
+            {% else %}        
+            <div class="portlet portlet-red">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Buscar</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form-horizontal'} } )}}
+                            <div class="panel-body">
+
+                                <div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-2 control-label">Gestión</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.gestion,{ 'attr':{'class': 'form-control','placeholder':''} }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">Código SIE</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.institucioneducativa,{ 'attr':{'class': 'form-control jnumbers','pattern':'[0-9]{7,9}'}}) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="form_area" class="col-sm-2 control-label">Area de Especial</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.area )}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+
+                                        {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-red' } } ) }}
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 5 %}
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="alert alert-info fade in">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>¡Información!</strong> Si Ud. concluyó la etapa de inscripción de estudiantes, es necesario que pulse en el botón "Finalizar Inscripción". Tenga en cuenta que posterior al Cierre de Inscripción no podrá realizar más cambios.
+                            <form action="{{path('especial_finalizar_inscripcion')}}" method="post" style="display:inline-block" onsubmit="return confirm('Tenga en cuenta que posterior al Cierre de Inscripción no podrá realizar más cambios. ¿Está segura/o de continuar?');">
+                                <input type="hidden" name="idInstitucion" value="{{app.session.get('idInstitucion')}}">
+                                <input type="hidden" name="gestion" value="{{app.session.get('idGestion')}}">
+                                <button type="submit" class="btn btn-md btn-danger"><i class="fa fa-save"></i> Finalizar Inscripción</button>
+                            </form>
+                      </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('js/jquery-ui.min.js')}}"></script>
+    <script>
+
+        /*  functiones para areas */
+        function cargarAreas(idInstitucion) {
+//             var institucion = $('#form_institucioneducativa').val();
+            var gestion = $('#form_gestion').val();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('cargar_areas_especial', {'idInstitucion': idInstitucion,'gestion':gestion}),
+                beforeSend: function () {
+                	$("#form_area").empty();
+                    $("#form_area").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_area").empty();
+                    $("#form_area").append('<option value="">Seleccionar...</option>');
+                    $.each(data.areas, function (i, value) {
+                        $("#form_area").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        </script>
+{% endblock %}

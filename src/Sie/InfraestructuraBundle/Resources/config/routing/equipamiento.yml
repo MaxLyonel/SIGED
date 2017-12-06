@@ -1,0 +1,45 @@
+infra_equipamiento_index:
+    path:     /
+    defaults: { _controller: "SieInfraestructuraBundle:Equipamiento:index" }
+
+infra_equipamiento_viviendaAdicionar:
+    path:     /viviendaAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:Equipamiento:viviendaAdicionar" }
+    options:
+        expose: true
+
+infra_equipamiento_dormitorioAdicionar:
+    path:     /dormitorioAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:Equipamiento:dormitorioAdicionar" }
+    options:
+        expose: true
+
+infra_equipamiento_alimentacionAdicionar:
+    path:     /alimentacionAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:Equipamiento:alimentacionAdicionar" }
+    options:
+        expose: true
+
+infra_equipamiento_moviliarioAdicionar:
+    path:     /moviliarioAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:Equipamiento:moviliarioAdicionar" }
+    options:
+        expose: true
+
+infra_equipamiento_moviliarioAdicionalAdicionar:
+    path:     /moviliarioAdicionalAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:Equipamiento:moviliarioAdicionalAdicionar" }
+    options:
+        expose: true
+
+infra_equipamiento_infoComplete:
+    path:     /infoComplete
+    defaults: { _controller: "SieInfraestructuraBundle:Equipamiento:infoComplete" }
+    options:
+        expose: true
+
+infra_equipamiento_infosave:
+    path:     /infoSave
+    defaults: { _controller: "SieInfraestructuraBundle:Equipamiento:infoSave" }
+    options:
+        expose: true

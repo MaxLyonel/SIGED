@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Mapa</title>
+	<link rel="stylesheet" type="text/css" href="{{asset('webGis/bootstrap4/dist/css/bootstrap.min.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{asset('webGis/fontawesome/css/font-awesome.min.css')}}">
+	<link href="{{asset('webGis/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
+	<style type="text/css">
+		body, #map{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100% !important;
+			height: 100% !important;
+			background-color: grey
+		}
+		.menu{
+			position: absolute;
+			padding: 0px;
+			width: 350px;
+			height: 100%;
+			background-color: #ffffff;
+			top: 0;
+			display: none;
+			overflow-y: auto;
+		}
+		.menu-header{
+			background-color: #0A60FE;
+			color: #FFFFFF;
+			text-align: left;
+			margin: 0px;
+			margin-bottom: 5px;
+			padding: 5px 0 5px 20px;
+		}
+
+		.menu-search{
+			padding: 0 10px 0 10px;
+			margin-bottom: 5px;
+		}
+
+		.menu-result{
+			padding: 10px;
+		}
+
+		.menu p{
+			font-size: 0.9em;
+		}
+
+		.ui-autocomplete {
+			display: none;
+		    max-height: 0px;
+		    overflow-y: auto;
+		    /* prevent horizontal scrollbar */
+		    overflow-x: hidden;
+  		}
+
+		#result{
+			height: auto;
+			max-height: 250px;
+			background-color: #FFFFFF;
+			overflow-y: auto;
+			padding: 5px;
+		}
+		#result li{
+			list-style: none;
+			padding: 4px;
+			margin: 0px;
+			border-bottom: 2px solid #EEEEEE;
+			background-color: #FFFFFF;
+		}
+		#result li:hover{
+			background-color: #EEEEEE;
+		}
+		#result a{
+			text-decoration: none;
+			color: #898A9C;
+		}
+		.tab-panel{
+			padding: 10px 0 10px 0;
+		}
+		.btn-menu{
+			position: absolute;
+			margin-top:10px;
+			margin-left: 0px;
+			z-index: 10;
+			color: #0A60FE;
+		}
+		.btn-login{
+			position: absolute;
+			top:10px;
+			right:20px;
+		}
+		#institucion{
+			text-transform: none; 
+		}
+		#detalle h5{
+			color:#299AFF;
+		}
+	</style>
+</head>
+<body>
+	<div id="map"></div>
+
+	<button type="button" class="btn-menu btn" data-toggle="tooltip" data-placement="right" title="Buscar" onclick="mostrarMenu();"> <i class="fa fa-search"></i></button>
+
+	{% if app.user %}
+		<div class="btn-login btn-group">
+		  	<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    	{{app.user.persona.nombre}}
+		  	</button>
+		  	<div class="dropdown-menu dropdown-menu-right">
+		    	<a href="{{path('logout')}}"><button class="dropdown-item btn-sm" type="button"> i.false Salir</button></a>
+		  	</div>
+		</div>
+	{% else %}    
+		<a href="{{path('sie_gis_login')}}" class="btn-login btn btn-primary btn-sm">Iniciar Session</a>
+	{% endif %}
+
+	<div class="menu">
+		<div class="menu-header">
+			<h3>GIS <a href="#" style="float:right; font-size:0.7em; margin: 10px 10px 0 0; color:#FFFFFF; text-decoration:none" onclick="ocultarMenu();">X</a></h3>
+		</div>
+		<div class="menu-search">
+			<ul id="tabsJustified" class="nav nav-tabs">
+                <li class="nav-item"><a href="" data-target="#tab1" data-toggle="tab" class="nav-link small text-uppercase">Sie</a></li>
+                <li class="nav-item"><a href="" data-target="#tab2" data-toggle="tab" class="nav-link small text-uppercase active">Nombre</a></li>
+                <li class="nav-item"><a href="" data-target="#tab3" data-toggle="tab" class="nav-link small text-uppercase">Código Edificio</a></li>
+            </ul>
+            <br>
+            <div id="tabsJustifiedContent" class="tab-content">
+                <div id="tab1" class="tab-pane fade">
+                    <div class="input-group">
+			  			<div class="input-group-addon"> <i class="fa fa-search"></i> </div>
+			  			<input type="text" id="sie" name="sie" class="form-control" placeholder="Código SIE">
+			  		</div>
+                </div>
+                <div id="tab2" class="tab-pane fade active show">
+                    <div class="input-group">
+			  			<div class="input-group-addon"> <i class="fa fa-search"></i> </div>
+			  			<input type="text" id="institucion" name="institucion" class="form-control" placeholder="Nombre de la Institución Educativa">
+			  		</div>
+                </div>
+                <div id="tab3" class="tab-pane fade">
+                    <div class="input-group">
+			  			<div class="input-group-addon"> <i class="fa fa-search"></i> </div>
+			  			<input type="text" id="edificio" name="edificio" class="form-control" placeholder="Código de Edificio Educativo">
+			  		</div>
+                </div>
+            </div>
+		</div>
+  		<div class="menu-result">
+  			<div class="result-header">
+  				<hr>
+  			</div>
+  			<div class="result-body">
+  				<ul id="result"></ul>
+  			</div>
+			<div class="result-detalle">
+				<div id="detalle"></div>
+			</div>
+  		</div>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Actualizar Ubicación Geográfica</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        ...
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+	<!--script type="text/javascript" src="{{asset('webGis/js/jquery-3.2.1.min.js')}}"></script-->
+	<script type="text/javascript" src="{{asset('webGis/bootstrap4/dist/js/popper.js')}}"></script>
+	<script type="text/javascript" src="{{asset('webGis/bootstrap4/dist/js/bootstrap.min.js')}}"></script>
+	<script src="{{asset('webGis/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js')}}"></script>
+
+
+	<script type="text/javascript" src="{{asset('webGis/assets/global/plugins/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
+
+	<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+	<script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript" src="{{asset('webGis/google-maps-extensions/google.maps.Polygon.contains.js')}}"></script>
+	<script type="text/javascript" src="{{asset('webGis/google-maps-extensions/google.maps.Polygon.getBounds.js')}}"></script>
+	
+	<script type="text/javascript">
+		/* INICIALIZAR VARIABLES*/
+
+		var map;
+		var myLatLng;
+		var marker;
+		var contMarker = 1;
+		var infowindow;
+		var image = "{{asset('images/marker.png')}}";
+		var contentString;
+		var poligono;
+		var cordsPoligono;
+
+		/* FUNCIONES PARA MANIPULAR EL MENU */
+
+		function mostrarMenu(){
+			$('.menu').fadeIn(400);
+			$('.btn-menu').fadeOut(300);
+		}
+		function ocultarMenu(){
+			$('.menu').fadeOut(400);
+			$('.btn-menu').fadeIn(500);
+		}
+
+		function limpiarDatos(){
+			if(marker){marker.setMap(null);}
+			if (poligono) {poligono.setMap(null);}
+			$('#result').empty();
+			$('#detalle').empty();
+		}
+
+		$( ".nav-item" ).click(function() {
+  			limpiarDatos();
+  			$('#sie').val('');
+  			$('#institucion').val('');
+  			$('#edificio').val('');
+  			map.setZoom(6);
+
+		});
+
+		/* INICIALIZAR MAPA */
+
+		function initMap() {
+			myLatLng = {lat:-16.507675, lng:-68.126159};
+		    map = new google.maps.Map(document.getElementById('map'), {
+		        center: myLatLng,
+		        zoom: 6,
+		        minZoom: 3,
+		        maxZoom: 17,
+		        mapTypeId: google.maps.MapTypeId.ROADMAP,
+		        disableDefaultUI: true,
+		        zoomControl: true,
+		        mapTypeControl: true,
+		        mapTypeControlOptions: {
+    				style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+    				position: google.maps.ControlPosition.TOP_CENTER
+    			},
+		        scaleControl: true,
+		        streetViewControl: false,
+		        rotateControl: false,
+		        fullscreenControl: false
+		    });
+
+		    map.addListener('click', function(e) {
+    			placeMarkerAndPanTo(e.latLng, map);
+  			});
+		}
+
+		initMap();
+
+		function placeMarkerAndPanTo(latLng, map) {
+			console.log(latLng);
+		  var marker = new google.maps.Marker({
+		    position: latLng,
+		    map: map
+		  });
+		  map.panTo(latLng);
+		}
+
+		/* VALIDACION DE MARCADOR */
+
+		function validarPosicion(){
+			var estado = poligono.contains(marker.getPosition());
+		    if (estado) {
+		    	console.log(marker.getPosition().lat());
+		        console.log(marker.getPosition().lng());
+		    	console.log('Si es valido');
+		    }else{
+		    	console.log('No es valido');
+		    }
+		}
+
+		function validar(){
+			var latitud = $('#latitud').val();
+			var longitud = $('#longitud').val();
+			if(!confirm('Las coordenadas que se registrarán son:\n \n Latitud: '+latitud+'\n Longitud: '+longitud+'\n \nEsta seguro de guardar los cambios?')){
+				return false;
+			}
+		}
+
+		/* BUSQUEDA POR SIE */
+
+		$('#sie').autocomplete({
+		    minLength: 8,
+		    source: function(request, response){
+		        $.ajax({
+		            url: Routing.generate('sie_gis_searching',{'sie':request.term, 'tipo':'sie'}),
+		            dataType: "json",
+		            beforeSend: function(){
+
+		            },
+		            success: function(data){
+	            		$('#result').empty();
+	            		$('#detalle').empty();
+	            		if (data.length === 0) {
+	            			$('#result').append('<li> <i class="fa fa-info-circle"></i> No hay resultados</li>');
+	            		}else{
+		            	    response(
+		            	        $.each(data, function(i, value){
+		            	            $('#result').append('<a href="#" onclick="seleccionar('+i+');"><li> <i class="fa fa-home" style="font-size:1.5em; float:left;"></i> <div style="margin-left:30px; font-size:0.8em"><div>SIE: <b style="color:#299AFF">'+value.sie+'</b> <small style="float:right">'+value.departamento+'</small> </div><div> I.E.: '+value.institucioneducativa+'</div></div></li></a>');
+		            	        }));
+	            		}
+		            },
+		            error: function(data){
+
+		            }		        	
+		        });
+		    }
+		});
+
+		/* BUSQUEDA POR NOMBRE DE INSTITUCION */
+
+		$('#institucion').on('keyup', function(){
+			if(this.value == ""){
+				limpiarDatos();
+			}
+		})
+		$('#institucion').autocomplete({
+		    minLength: 3,
+		    source: function(request, response){
+		        $.ajax({
+		            url: Routing.generate('sie_gis_searching',{'institucion':request.term,'tipo':'nombre'}),
+		            dataType: "json",
+		            beforeSend: function(){
+
+		            },
+		            success: function(data){
+	            		$('#result').empty();
+	            		$('#detalle').empty();
+	            		if (data.length === 0) {
+	            			$('#result').append('<li> <i class="fa fa-info-circle"></i> No hay resultados</li>');
+	            		}else{
+	            			//$('#result').append('<small style="text-align:right">'+  +' resultados</small>');
+		            	    response(
+		            	        $.each(data, function(i, value){
+		            	            $('#result').append('<a href="#" onclick="seleccionar('+i+');"><li> <i class="fa fa-home" style="font-size:1.5em; float:left;"></i> <div style="margin-left:30px; font-size:0.8em"><div>SIE: <b style="color:#299AFF">'+value.sie+'</b> <small style="float:right">'+value.departamento+'</small> </div><div> I.E.: '+value.institucioneducativa+'</div></div></li></a>');
+		            	        }));
+	            		}
+		            },
+		            error: function(data){
+
+		            }		        	
+		        });
+		    }
+		});
+
+		/* BUSQUEDA POR CODIGO DE EDIFICIO */
+		
+		$('#edificio').autocomplete({
+		    minLength: 8,
+		    source: function(request, response){
+		        $.ajax({
+		            url: Routing.generate('sie_gis_searching',{'edificio':request.term, 'tipo':'edificio'}),
+		            dataType: "json",
+		            beforeSend: function(){
+
+		            },
+		            success: function(data){
+	            		$('#result').empty();
+	            		$('#detalle').empty();
+	            		if (data.length === 0) {
+	            			$('#result').append('<li> <i class="fa fa-info-circle"></i> No hay resultados</li>');
+	            		}else{
+		            	    response(
+		            	        $.each(data, function(i, value){
+		            	            $('#result').append('<a href="#" onclick="seleccionarEdificio('+i+');"><li> <i class="fa fa-home" style="font-size:1.5em; float:left;"></i> <div style="margin-left:30px; font-size:0.8em"><div>COD. EDIFICIO: <b style="color:#299AFF">'+value.edificio+'</b> <small style="float:right">'+value.departamento+'</small> </div></div></li></a>');
+		            	        }));
+	            		}
+		            },
+		            error: function(data){
+
+		            }		        	
+		        });
+		    }
+		});
+
+		function seleccionar(i){
+			$.ajax({
+				type:'post',
+				url: Routing.generate('sie_gis_datos',{'ie':i}),
+				beforeSend: function(){
+					$('#detalle').empty();
+				},
+				success: function(data){
+					if(marker){
+						marker.setMap(null);
+					}
+					if(data.coordenadas == true){
+					    // Construimos el marcador
+					    marker = new google.maps.Marker({
+					        position: {lat: data.latitud, lng:data.longitud},
+					        map: map,
+					        title: 'Edificio Escolar',
+					        draggable: false
+					    });
+
+					    // Centrar el map
+					    map.setCenter(myLatLng);
+
+					    contentString = '<div>Código SIE</div>'+
+					    				'<b>'+data.id+'</b>'+
+					    				'<div>Institución Educativa</div>'+
+					    				'<b>'+data.institucioneducativa+'</b>';
+
+					    infowindow = new google.maps.InfoWindow({
+					        content: contentString
+					    });
+
+					    marker.addListener('click', function() {
+					        infowindow.open(map, marker);
+					        map.setCenter({lat: data.latitud, lng:data.longitud});
+					        map.setZoom(12);
+					    });
+					}
+
+					map.setZoom(6);
+
+					$('#detalle').append('<h5>Información</h5>'+
+									      '<div><small>Código SIE</small></div>'+
+										  '<div><b>'+data.id+'</b></div>'+
+										  '<div><small>Institución Educativa</small></div>'+
+										  '<div><b>'+data.institucioneducativa+'</b></div>'+
+										  '<div><small>Código de Edificio</small></div>'+
+										  '<div><b>'+data.codEdificio+'</b></div>'+
+										  '<hr>'+
+										  '<h5>Ubicación Geográfica</h5>'+
+										  '<div><small>Departamento</small></div>'+
+										  '<div><b>'+data.departamento+'</b></div>'+
+										  '<div><small>Provincia</small></div>'+
+										  '<div><b>'+data.provincia+'</b></div>'+
+										  '<div><small>Municipio</small></div>'+
+										  '<div><b>'+data.municipio+'</b></div>'+
+										  '<div class="text-right"><button class="btn btn-link text-info" data-toggle="modal" data-target="#modal">Actualizar</button></div>'+
+										  '<hr>'+
+										  '<h5>Ubicación Georeferencial</h5>'+
+										  '<div><small>Latitud</small></div>'+
+										  '<div><b>'+data.latitud+'</b></div>'+
+										  '<div><small>Longitud</small></div>'+
+										  '<div><b>'+data.longitud+'</b></div>'+
+										  '<div class="text-right"><button class="btn btn-link text-info">Actualizar</button></div>'
+										  );
+
+				},
+				error: function(data){
+
+				}
+			});
+		}
+
+		function seleccionarEdificio(i){
+			$.ajax({
+				type:'post',
+				url: Routing.generate('sie_gis_datos_edificio',{'edificio':i}),
+				beforeSend: function(){
+					$('#detalle').empty();
+				},
+				success: function(data){
+					if(marker){
+						marker.setMap(null);
+					}
+					if(data.coordenadas == true){
+					    // Construimos el marcador
+					    marker = new google.maps.Marker({
+					        position: {lat: data.latitud, lng:data.longitud},
+					        map: map,
+					        title: 'Edificio Escolar',
+					        draggable: false
+					    });
+
+					    // Centrar el map
+					    map.setCenter(myLatLng);
+
+					    contentString = '<div>Código EDIFICIO</div>'+
+					    				'<b>'+data.codEdificio+'</b>';
+
+					    infowindow = new google.maps.InfoWindow({
+					        content: contentString
+					    });
+
+					    marker.addListener('click', function() {
+					        infowindow.open(map, marker);
+					        map.setCenter({lat: data.latitud, lng:data.longitud});
+					        map.setZoom(12);
+					    });
+					}
+
+					map.setZoom(6);
+
+					$('#detalle').append('<h5>Información</h5>'+
+										  '<div><small>Código de Edificio</small></div>'+
+										  '<div><b>'+data.codEdificio+'</b></div>'+
+										  '<hr>'+
+										  '<h5>Ubicación Geográfica</h5>'+
+										  '<div><small>Departamento</small></div>'+
+										  '<div><b>'+data.departamento+'</b></div>'+
+										  '<div><small>Provincia</small></div>'+
+										  '<div><b>'+data.provincia+'</b></div>'+
+										  '<div><small>Municipio</small></div>'+
+										  '<div><b>'+data.municipio+'</b></div>'+
+										  '<div class="text-right"><button class="btn btn-link text-info" data-toggle="modal" data-target="#modal">Actualizar</button></div>'+
+										  '<hr>'+
+										  '<h5>Ubicación Georeferencial</h5>'+
+										  '<div><small>Latitud</small></div>'+
+										  '<div><b>'+data.latitud+'</b></div>'+
+										  '<div><small>Longitud</small></div>'+
+										  '<div><b>'+data.longitud+'</b></div>'+
+										  '<div class="text-right"><button class="btn btn-link text-info">Actualizar</button></div>'+
+										  '<hr>'+
+										  '<h5>Unidades Educativas</h5>'
+										  );
+
+					$('#detalle').append('<small><table class="table table-sm table-bordered"><thead><tr class="table-info">'+
+										'<th>SIE</th>'+
+										'<th>Institución Educativa</th>'+
+										'</tr></thead><tbody id="listaues"></tbody></table></small>'
+										);
+					$.each(data.unidadesEducativas, function(i, value){
+        	            $('#listaues').append('<tr><td>'+i+'</td><td>'+value.institucioneducativa+'</td></tr>');
+        	        });
+
+				},
+				error: function(data){
+
+				}
+			});
+		}
+
+		function actualizarGeografica(){
+
+		}
+
+		function actualizarGeoreferencial(){
+			// Construimos el poligono
+			//if(data.cordsPoligono != null){
+				poligono = new google.maps.Polygon({
+			        paths: data.cordsPoligono,
+			        strokeColor: '#FF0000',
+			        strokeOpacity: 0.4,
+			        strokeWeight: 2,
+			        fillColor: '#FF0000',
+			        fillOpacity: 0
+			    });
+			    poligono.setMap(map);
+			//}
+
+			// Eventos del movimiento del marker Draggable
+		    marker.addListener('dragstart', function() {
+		        console.log('Empezando');
+		        infowindow.close();
+		    });
+		    marker.addListener('drag', function() {
+		        validarPosicion();
+		    });
+		    marker.addListener('dragend', function() {
+		        console.log('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
+		    });		    
+		}
+
+	</script>
+</body>
+</html>

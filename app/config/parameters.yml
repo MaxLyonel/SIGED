@@ -1,0 +1,15 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_pgsql
+    database_host: 172.20.0.103
+    database_port: 5430
+    database_name: sie_produccion
+    database_user: dev
+    database_password: D3v3l0p3r.-
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: es
+    secret: 6cb655b6ed26ceef8e203036205a5c23872e42aa
+    urlreportweb: http://100.0.100.66:8080/birt-viewer/frameset?__report=siged/

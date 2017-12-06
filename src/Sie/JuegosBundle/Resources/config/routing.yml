@@ -1,0 +1,27 @@
+sie_juegos_homepage:
+    path:     /index
+    defaults: { _controller: SieJuegosBundle:Default:index }
+
+sie_juegos_inscripcion:
+    resource: "@SieJuegosBundle/Resources/config/routing/inscripcion.yml"
+    prefix:   /inscripcion
+
+sie_juegos_clasificacion:
+    resource: "@SieJuegosBundle/Resources/config/routing/clasificacion.yml"
+    prefix:   /clasificacion
+
+sie_juegos_reporte:
+    resource: "@SieJuegosBundle/Resources/config/routing/reporte.yml"
+    prefix:   /reporte   
+
+sie_juegos_comision:
+    resource: "@SieJuegosBundle/Resources/config/routing/comision.yml"
+    prefix:   /comision   
+
+sie_juegos_seguimiento:
+    resource: "@SieJuegosBundle/Resources/config/routing/seguimiento.yml"
+    prefix:   /seguimiento  
+
+sie_juegos_fixture:
+    resource: "@SieJuegosBundle/Resources/config/routing/fixture.yml"
+    prefix:   /fixture   

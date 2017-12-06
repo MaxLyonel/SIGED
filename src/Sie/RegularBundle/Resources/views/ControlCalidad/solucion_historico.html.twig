@@ -1,0 +1,82 @@
+<div class="col-md-12">
+    {% if inconsistencias is not empty %}
+        <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+            <div class="portlet-heading">
+                <div class="pull-left">
+                    <h4 class="portlet-title">Error en el historial de inscripción</h4>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="portlet-body">
+                <div class="panel-body panel-primary">
+                    <div id="no-more-tables" class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover cf dataTable">
+                            <thead class="cf">
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Gestión</th>
+                                    <th>Nivel</th>
+                                    <th>Grado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for inco in inconsistencias %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{inco.gestion_tipo_id}}</td>
+                                    <td>
+                                        {% if inco.nivel_tipo_id == 1 %}
+                                            Inicial
+                                        {% elseif inco.nivel_tipo_id == 2 %}
+                                            Primaria
+                                        {% elseif inco.nivel_tipo_id == 3 %}
+                                            Secundaria
+                                        {% elseif inco.nivel_tipo_id == 11 %}
+                                            Inicial
+                                        {% elseif inco.nivel_tipo_id == 12 %}
+                                            Primaria
+                                        {% elseif inco.nivel_tipo_id == 13 %}
+                                            Secundaria
+                                        {% endif %}
+                                    </td>
+                                    <td>{{inco.grado_tipo_id}}</td>
+                                    <td>
+                                        <form action="{{path('qahistoryInscription_index')}}" method="post">
+                                            <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{vp_id}}">
+                                            <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{llave}}">
+                                            <input type="hidden" id="form_gestion" name="form[gestion]" value="{{inco.gestion_tipo_id}}">
+                                            <input type="hidden" id="form_nivel" name="form[nivel]" value="{{inco.nivel_tipo_id}}">
+                                            <input type="hidden" id="form_grado" name="form[grado]" value="{{inco.grado_tipo_id}}">
+                                            <input type="hidden" id="form_nroInconsistencias" name="form[nroInconsistencias]" value="{{nroInconsistencias}}">
+                                            <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                        </form>
+                                        {#<form action="{{path('ccalidad_omitir_historico')}}" method="post">
+                                            <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{vp_id}}">
+                                            <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{llave}}">
+                                            <input type="hidden" id="form_gestion" name="form[gestion]" value="{{inco.gestion_tipo_id}}">
+                                            <input type="hidden" id="form_nivel" name="form[nivel]" value="{{inco.nivel_tipo_id}}">
+                                            <input type="hidden" id="form_grado" name="form[grado]" value="{{inco.grado_tipo_id}}">
+                                            <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de omitir el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?');"><i class="fa fa-ban"></i> Omitir</button>
+                                        </form>#}
+                                        <button type="submit" class="btn btn-link" onclick="omitirSolucionHistorico({{vp_id}}, {{llave}}, {{inco.gestion_tipo_id}}, {{inco.nivel_tipo_id}}, {{inco.grado_tipo_id}})"><i class="fa fa-eye"></i> Omitir</button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="glyphicon glyphicon-ok"></i> Debe omitir esta observación, previa verificación del historial de inscripción de la/el estudiante.
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>

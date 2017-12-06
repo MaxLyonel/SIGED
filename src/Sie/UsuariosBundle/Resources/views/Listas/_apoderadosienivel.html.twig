@@ -1,0 +1,101 @@
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4>Información del curso</h4>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                {% if sw == 'true' %}
+                    <div class="col-xs-3">
+                        <h4><small>NIVEL :</small><br>{{personas[0].nivel}}</h4>
+                    </div>
+                    <div class="col-xs-3">
+                        <h4><small>GRADO :</small><br>{{personas[0].grado}}</h4>
+                    </div>
+                    <div class="col-xs-3">
+                        <h4><small>TURNO :</small><br>{{personas[0].turno}}</h4>
+                    </div>
+                    <div class="col-xs-3">
+                        <h4><small>PARALELO :</small><br>{{personas[0].paralelo}}</h4>
+                    </div>
+                {% endif%}
+            </div>
+        </div>
+    </div>
+                    
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4>Apoderados Registrados en la Institución Educativa</h4>
+        </div>
+        <div class="panel-body">
+            <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+                <thead>
+                    <tr>
+                        <th>Acciones</th>
+                        <th>Nombre de usuario</th>                        
+                        <th>Estado</th>
+                        <th>Carnet</th>
+                        <th>Nombre</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Parentesco</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for persona in personas %}
+                    <tr>
+                        <td>                           
+                            {% if 'SINDATO' in persona.carnet %}
+                                <span class="label label-warning">Bloqueado</span>                                            
+                            {% elseif persona.username %}
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-info btn-xs dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" aria-haspopup="true">
+                                        Acciones <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">                                        
+                                        <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li>
+                                        {#<li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>#}
+                                        <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li>
+                                    </ul>
+                                </div>
+                                {#<a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="usuarioForm('{{persona.personaid}}')"> Bloqueao</a>#}
+                            {% else %}                                
+                                <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="usuarioForm('{{persona.personaid}}')"> Asignar Usuario</a>
+                            {% endif %}
+                        </td>
+                        <td>{{ persona.username }}</td>
+                        <td>
+                            {% if persona.esactivo  %}
+                                {% if persona.esactivo == true %}
+                                    Activado
+                                {% else %}
+                                    Desactivado
+                                {% endif %}
+                            {% else %}
+                                Sin usuario
+                            {% endif %}         
+                        </td>
+                        <td>{{ persona.carnet }}</td>
+                        <td>{{ persona.nombre }}</td>
+                        <td>{{ persona.paterno }}</td>
+                        <td>{{ persona.materno }}</td>
+                        <td>{{ persona.fecha_nacimiento }}</td>
+                        <td>{{ persona.apoderado }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#tablaListadoPersonas').find('tr').click( function(){
+            $('#tablaListadoPersonas_fil').text($(this).index());
+        });                
+    } );
+    </script>
+{% endblock %}    

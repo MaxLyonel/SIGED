@@ -1,0 +1,445 @@
+{%if flagValidation %}
+<small>
+    <div class="row">
+        <div class="col-lg-12">
+
+                <div class="portlet portlet-basic">
+                    <div class="portlet-body">
+                    <center>    <h3 id="grid-offsetting">Unidad Educativa con inconsistencia de datos<br /></h3></center>
+                        <h4> Regularice las observaciones para poder bajar el archivo.
+                        </h4>
+                        <p>
+
+                        </p>
+                        <div class="row show-grid">
+                            <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info">
+                                    <thead>
+                                        <tr role="row" class='blue'>
+                                          <td class="">Unidad Educativa</td>
+                                          <td class="">Localidad</td>
+                                          <td class="">Dependencia</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                        <tr>
+                                            <td class=""> {{objUe.institucioneducativa}} - {{objUe.ueId}} </td>
+                                            <td class="">{{objUe.lugar}}</td>
+                                            <td class=""> {{objUe.dependencia}}</td>
+                                        </tr>
+                                    </tbody>
+                            </table>
+
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th colspan="6" class="alert-danger">
+                                        &nbsp;<!--this is for the title by krlos-->
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td class="warning"> Gestión</td>
+                                    <td class="warning"> Observación</td>
+                                    <td class="warning"> Entidad</td>
+                                </tr>
+                                {%  for observation in arrValidationPrecess %}
+                                    <tr>
+                                        <td class=""> {{observation.gestionTipo}}</td>
+                                        <td class=""> {{observation.obs}}</td>
+                                        <td class="">{{observation.entidad}}</td>
+
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+</small>
+{% else %}
+
+  {%if swvalidation %}
+      <small>
+          <div class="row">
+              <div class="col-lg-12">
+
+                {% if swinconsistencia %}
+                    <div class="portlet portlet-basic">
+                        <div class="portlet-body">
+                            <h3 id="grid-offsetting">Unidad Educativa Observada<br />
+                              <p class='text-red'>
+                                 Regularice los casos observados para poder bajar el archivo.
+                              </p>
+                            </h3>
+                            <p>
+
+                            </p>
+                            <div class="row show-grid">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="success">Unidad Educativa</td>
+                                        <td class="success">Localidad</td>
+                                        <td class="success">Dependencia</td>
+                                    </tr>
+                                    <tr>
+                                        <td class=""> {{objUe.institucioneducativa}} - {{objUe.ueId}} </td>
+                                        <td class="">{{objUe.lugar}}</td>
+                                        <td class=""> {{objUe.dependencia}}</td>
+                                    </tr>
+                                </table>
+
+                                <table class="table table-bordered">
+                                    <!--tr>
+                                        <th colspan="6" class="alert-danger">
+                                            Observados
+                                        </th>
+                                    </tr-->
+                                    <tr>
+                                        <td class="warning"> Observación</td>
+                                    </tr>
+                                    {%  for observation in objinconsistencia %}
+                                        <tr>
+
+                                            <td class="alert-danger"> {{observation.observacion}}</td>
+
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+
+                {% if ueModular %}
+                    <div class="portlet portlet-basic">
+                        <div class="portlet-body">
+                            <h3 id="grid-offsetting">Unidad Educativa <b> {{objinconsistencia.institucioneducativa_humanistico_tecnico_tipo}} </b> - No puede descargar el archivo</h3>
+                            <h5 class='text-red'><strong>Todo el registro de la información se lo debe hacer a través de la web ACADEMICO - <a href='http://academico.sie.gob.bo/' target='_blank'>academico.sie.gob.bo</a></strong>.</h5>
+                            <div class="row show-grid">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="success">Unidad Educativa</td>
+                                        <td class="success">Localidad</td>
+                                        <td class="success">Dependencia</td>
+                                    </tr>
+                                    <tr>
+                                        <td class=""> {{objUe.institucioneducativa}} - {{objUe.ueId}} </td>
+                                        <td class="">{{objUe.lugar}}</td>
+                                        <td class=""> {{objUe.dependencia}}</td>
+                                    </tr>
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div>
+                {% endif %}
+                {% if swObservados %}
+                    <div class="portlet portlet-basic">
+                        <div class="portlet-body">
+                            <h3 id="grid-offsetting">Unidad Educativa Observada<br />
+                              <p class='text-red'>
+                                 Regularice los casos observados para poder bajar el archivo.
+                              </p>
+                            </h3>
+                            <p>
+
+                            </p>
+                            <div class="row show-grid">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="success">Unidad Educativa</td>
+                                        <td class="success">Localidad</td>
+                                        <td class="success">Dependencia</td>
+                                    </tr>
+                                    <tr>
+                                        <td class=""> {{objUe.institucioneducativa}} - {{objUe.ueId}} </td>
+                                        <td class="">{{objUe.lugar}}</td>
+                                        <td class=""> {{objUe.dependencia}}</td>
+                                    </tr>
+                                </table>
+                                <table class="table table-bordered">
+                                    <!--tr>
+                                        <th colspan="6" class="alert-danger">
+                                            Observados
+                                        </th>
+                                    </tr-->
+                                    <tr>
+                                        <td class="warning"> Observación</td>
+                                    </tr>
+                                    {%  for observation in objinconsistencia %}
+                                        <tr>
+
+                                            <td class="alert-danger"> {{observation.obs}}</td>
+
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+
+
+                                <!-- <table class="table table-bordered">
+                                    <tr>
+                                        <th colspan="6" class="alert-danger">
+                                            Observados
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td class="warning"> Rude</td>
+                                        <td class="warning"> Paterno</td>
+                                        <td class="warning"> Materno</td>
+                                        <td class="warning">  Nombre</td>
+                                        <td class="warning"> Observación</td>
+
+                                    </tr>
+                                    {#  for observation in observaciones #}
+                                        <tr>
+                                            <td class=""> {#observation.codigoRude#}</td>
+                                            <td class=""> {#observation.paterno#}</td>
+                                            <td class=""> {#observation.materno#}</td>
+                                            <td class=""> {#observation.nombre#}</td>
+                                            <td class="alert-danger"> {#observation.observacion#}</td>
+
+                                        </tr>
+                                    {# endfor #}
+                                </table> -->
+
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if false %}
+                  {# if uEducativa.ueplena #}
+                      <div class="portlet portlet-basic">
+                          <div class="portlet-body">
+                              <h3 id="grid-offsetting">Unidad Educativa Plena - No puede descargar el archivo</h3>
+                              <h5 class='text-red'><strong>Todo el registro de la información se lo debe hacer a través de la web ACADEMICO - <a href='http://academico.sie.gob.bo/' target='_blank'>academico.sie.gob.bo</a></strong>.</h5>
+                              <div class="row show-grid">
+                                  <table class="table table-bordered">
+                                      <!-- On cells (`td` or `th`) -->
+                                      <tr>
+
+                                          <td class="success">Unidad Educativa</td>
+                                          <td class="success">Dependencia</td>
+                                      </tr>
+                                      <tr>
+                                          <td class=""> {{objUe.institucioneducativa}} - {{objUe.ueId}} </td>
+                                          <td class="">Unidad Educativa Plena</td>
+                                      </tr>
+                                  </table>
+
+                              </div>
+
+                          </div>
+                      </div>
+                  {% endif %}
+                  {% if uEducativa.ueobservation %}
+                      <div class="portlet portlet-basic">
+                          <div class="portlet-body">
+                              <h3 id="grid-offsetting">Unidad Educativa Observada3<br />
+                                  Regularice los casos observados para poder bajar el archivo.
+                              </h3>
+                              <p>
+
+                              </p>
+                              <div class="row show-grid">
+                                  <table class="table table-bordered">
+                                      <tr>
+                                          <td class="success">Unidad Educativa</td>
+                                          <td class="success">Localidad</td>
+                                          <td class="success">Dependencia</td>
+                                      </tr>
+                                      <tr>
+                                          <td class=""> {{objUe.institucioneducativa}} - {{objUe.ueId}} </td>
+                                          <td class="">{{objUe.lugar}}</td>
+                                          <td class=""> {{objUe.dependencia}}</td>
+                                      </tr>
+                                  </table>
+
+                                  <table class="table table-bordered">
+                                      <tr>
+                                          <th colspan="6" class="alert-danger">
+                                              Observados
+                                          </th>
+                                      </tr>
+                                      <tr>
+                                          <td class="warning"> Rude</td>
+                                          <td class="warning"> Paterno</td>
+                                          <td class="warning"> Materno</td>
+                                          <td class="warning">  Nombre</td>
+                                          <td class="warning"> Observación</td>
+                                          <td class="warning"> Gestión</td>
+                                      </tr>
+                                      {%  for observation in uEducativa.ueobservation %}
+                                          <tr>
+                                              <td class=""> {{observation.codigoRude}}</td>
+                                              <td class=""> {{observation.paterno}}</td>
+                                              <td class="">{{observation.materno}}</td>
+                                              <td class=""> {{observation.nombre}}</td>
+                                              <td class="alert-danger"> {{observation.observacion}}</td>
+                                              <td class=""> {{observation.gestionTipo}}</td>
+                                          </tr>
+                                      {% endfor %}
+                                  </table>
+                              </div>
+                          </div>
+                      </div>
+                  {% endif %}
+
+
+              </div>
+              <!-- /.col-lg-12 -->
+              {% if validationRegistroConsolidado %}
+                  <div class="portlet portlet-basic">
+                      <div class="portlet-body">
+                          <h3 id="grid-offsetting">Unidad Educativa - No puede descargar el archivo</h3>
+                          <h5 class='text-red'><strong> La informacion de la Unidad Educativa consolidada esta incompleta  </strong>.</h5>
+                          <div class="row show-grid">
+                              <table class="table table-bordered">
+                                  <tr>
+                                      <td class="success">Unidad Educativa</td>
+                                      <td class="success">Localidad</td>
+                                      <td class="success">Dependencia</td>
+                                  </tr>
+                                  <tr>
+                                      <td class=""> {{objUe.institucioneducativa}} - {{objUe.ueId}} </td>
+                                      <td class="">{{objUe.lugar}}</td>
+                                      <td class=""> {{objUe.dependencia}}</td>
+                                  </tr>
+                              </table>
+
+                          </div>
+
+                      </div>
+                  </div>
+              {% endif %}
+
+              {% if validationPersonal %}
+                  <div class="portlet portlet-basic">
+                      <div class="portlet-body">
+                          <h3 id="grid-offsetting">Unidad Educativa - No puede descargar el archivo</h3>
+                          <h5 class='text-red'><strong>La Unidad Educativa tiene que realizar la validacion de Docentes/Administrativos/Director por el
+                                                ACADEMICO - <a href='http://academico.sie.gob.bo/' target='_blank'>academico.sie.gob.bo</a>
+                          </strong>.</h5>
+                          <div class="row show-grid">
+                              <table class="table table-bordered">
+                                  <tr>
+                                      <td class="success">Unidad Educativa</td>
+                                      <td class="success">Localidad</td>
+                                      <td class="success">Dependencia</td>
+                                  </tr>
+                                  <tr>
+                                      <td class=""> {{objUe.institucioneducativa}} - {{objUe.ueId}} </td>
+                                      <td class="">{{objUe.lugar}}</td>
+                                      <td class=""> {{objUe.dependencia}}</td>
+                                  </tr>
+                              </table>
+
+                          </div>
+
+                      </div>
+                  </div>
+              {% endif %}
+
+              {% if sistemaRegular %}
+                  <div class="portlet portlet-basic">
+                      <div class="portlet-body">
+                        <h5 class='text-red'><strong> UNIDAD EDUCATIVA NO PERTENECE AL SISTEMA REGULAR, NO PUEDE DESCARGAR EL ARCHIVO.  </strong></h5>
+
+                          <div class="row show-grid">
+                              <table class="table table-bordered">
+                                  <tr>
+                                      <td class="success">Unidad Educativa</td>
+                                      <td class="success">Localidad</td>
+                                      <td class="success">Dependencia</td>
+                                  </tr>
+                                  <tr>
+                                      <td class=""> {{objUe.institucioneducativa}} - {{objUe.ueId}} </td>
+                                      <td class="">{{objUe.lugar}}</td>
+                                      <td class=""> {{objUe.dependencia}}</td>
+                                  </tr>
+                              </table>
+
+                          </div>
+
+                      </div>
+                  </div>
+              {% endif %}
+
+          </div>
+      </small>
+      <!-- /.row -->
+  {% else %}
+      <div class="row">
+          <div class="col-lg-12">
+              <div class="portlet portlet-basic">
+                  <div class="portlet-body">
+
+                      <div class="row show-grid">
+
+                          <div class="col-md-12">
+                              <!--p>
+                                  {#form_start(form)#}
+                                  ¿Realizó cambios recientes que modifiquen el contenido de su archivo?
+                                  <br />
+                                  Para volver a genere su archivo presion en el enlace <i class="fa fa-hand-o-right" ></i>
+                                  {#form_widget(form.generar)#}
+                                  {#form_end(form)#}
+
+                              </p-->
+                          </div>
+
+                          <div class="col-lg-12">
+
+                              <div class="portlet portlet-basic">
+                                  <div class="portlet-body">
+                                      <h3 id="grid-offsetting">Datos Unidad Educativa</h3>
+
+                                      <div class="row show-grid">
+
+                                          <table class="table table-bordered">
+
+                                              <!-- On cells (`td` or `th`) -->
+                                              <tr>
+
+                                                  <td class="success">Unidad Educativa</td>
+                                                  <td class="success">Localidad</td>
+                                                  <td class="success">Dependencia</td>
+
+                                              </tr>
+                                              <tr>
+
+                                                  <td class=""> {{uEducativa.institucioneducativa}} - {{uEducativa.ueId}} </td>
+                                                  <td class="">{{uEducativa.lugar}}</td>
+                                                  <td class=""> {{uEducativa.dependencia}}</td>
+
+                                              </tr>
+                                          </table>
+
+                                          <center>
+                                              <a class="btn btn-success  btn-pinterest" href="{{ path('download_file_sie_download', { 'file':file,'datadownload':datadownload } )}}" onclick="return confirm('¡NOTA IMPORTANTE!\nAntes de continuar debe estar seguro que ha verificado que todos los datos de: administrativos, inscripciones y la declaración jurada para la validación de maestros estén correctos y completos.\nSi presiona ACEPTAR se iniciara el proceso de descargar de archivos y no podrá hacer ninguna modificación posteriormente.\nSi no está seguro de este mensaje presione CANCELAR.')">
+                                                  <i class="fa fa-download"></i> Descargar Archivo Generado
+                                              </a>
+                                          </center>
+                                      </div>
+
+                                  </div>
+                              </div>
+
+
+                          </div>
+
+
+
+                      </div>
+
+                  </div>
+              </div>
+          </div>
+          <!-- /.col-lg-12 -->
+      </div>
+      <!-- /.row -->
+  {% endif %}
+{% endif %}

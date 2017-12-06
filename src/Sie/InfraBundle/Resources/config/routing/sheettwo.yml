@@ -1,0 +1,7 @@
+infra_sheet_two_index:
+    path:     /index
+    defaults: { _controller: SieInfraBundle:SheetTwo:index }
+
+infra_sheet_two_index:
+    path:     /access
+    defaults: { _controller: SieInfraBundle:SheetTwo:access }

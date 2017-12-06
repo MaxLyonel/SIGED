@@ -1,0 +1,233 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption%}
+
+{{ form_start(form) }}
+
+    <div class="block-header">
+        <h2>REGISTRO - CARRERAS</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('oac_list', {'idRie': institucion.getId()})}}">Listado de Institutos</a></li>
+        <li><a href="{{path('oac_list', {'idRie': institucion.getId()})}}">Listado de Carreras</a></li>
+        <li class="active">Nuevo</li>
+    </ol>
+
+    <div class="row clearfix">
+        <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        Nueva Resolución Ministerial
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="row">
+                        <fieldset>
+                            <label class="form-label">Denominación de Instituto</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{institucion.getId()}} - {{institucion.getInstitucioneducativa()}}
+                                </div>
+                            </div>
+
+                            <label class="form-label">{{form_label(form.ttecAreaFormacion)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.ttecAreaFormacion)}}  
+                                </div>
+                            </div>
+
+                            <label class="form-label">{{form_label(form.ttecCarreraTipo)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.ttecCarreraTipo)}}  
+                                </div>
+                            </div>                            
+
+                            <label class="form-label">{{form_label(form.resolucion)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.resolucion) }}
+                                </div>
+                            </div>
+
+                            <label class="form-label">{{form_label(form.fechaResolucion)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.fechaResolucion) }}
+                                </div>
+                            </div>    
+
+                            <label class="form-label">{{form_label(form.nivelTipo)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.nivelTipo,{'attr':{'onchange':'cargarTiempoEstudio()'}}) }}
+                                </div>
+                            </div>                                                                                                             
+
+                            <label class="form-label">{{form_label(form.regimenEstudio)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.regimenEstudio,{'attr':{'onchange':'cargarTiempoEstudio()'}}) }}
+                                </div>
+                            </div>                                                                                    
+
+                            <label class="form-label">{{form_label(form.tiempoEstudio)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.tiempoEstudio) }}
+                                </div>
+                            </div>                                                                                    
+
+                            <label class="form-label">{{form_label(form.cargaHoraria)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.cargaHoraria) }}
+                                </div>
+                            </div>                                                                                    
+                            <label class="form-label pull-left col-blue">{{form_label(form.operacion)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.operacion) }}
+                                </div>
+                            </div>                                                                                    
+                        </fieldset>
+                            {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+                            <a href="{{path('oac_list', {'idRie': institucion.getId()})}}" class="btn btn-danger btn-lg m-l-15 waves-effect">Cancelar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>            
+
+{{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        
+        function cargarTiempoEstudio(){
+            nivel = $("#form_nivelTipo").val();
+            regimen = $("#form_regimenEstudio").val();
+            //TS = 500; TM=501; C=502
+            //Anual = 1; Semestral=2; modular = 3
+
+            //TecSup ; Anual
+            if(nivel == 500 && regimen == 1)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }
+
+            //TecSup ; Semestral
+            if(nivel == 500 && regimen == 2)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").append('<option value="5">5</option>');
+                $("#form_tiempoEstudio").append('<option value="6">6</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }
+
+            //TecSup ; Modular
+            if(nivel == 500 && regimen == 3)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").append('<option value="5">5</option>');
+                $("#form_tiempoEstudio").append('<option value="6">6</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }
+            
+            //TecMed ; Anual
+            if(nivel == 501 && regimen == 1)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }
+
+            //TecMed ; Semestral
+            if(nivel == 501 && regimen == 2)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }
+
+            //TecMed ; Modular
+            if(nivel == 501 && regimen == 3)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").append('<option value="5">5</option>');
+                $("#form_tiempoEstudio").append('<option value="6">6</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }    
+
+            //Capacitacion ; Anual
+            if(nivel == 502 && regimen == 1)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }
+
+            //Capacitacion ; Semestral
+            if(nivel == 502 && regimen == 2)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }
+
+            //Capacitacion ; Modular
+            if(nivel == 502 && regimen == 3)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").append('<option value="5">5</option>');
+                $("#form_tiempoEstudio").append('<option value="6">6</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }    
+
+        }
+
+    </script>
+
+{% endblock %}

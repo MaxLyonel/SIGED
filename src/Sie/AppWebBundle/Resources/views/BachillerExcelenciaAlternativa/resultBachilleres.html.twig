@@ -1,0 +1,100 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Paso 3.- Registrar Bachiller de Excelencia <span>Bachiller de Excelencia</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                    Bachiller de Excelencia
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Registrar Bachiller de Excelencia</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-warning" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-info-circle fa-fw"></i> Ha registrado.
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for datastudent in bachilleres%}
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="panel panel-teal">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <h4><i class="fa fa-users"></i> Bachiller de Excelencia (Género: {{datastudent.genero}})</h4>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <th><strong>Rude</strong></th><td>{{datastudent.codigoRude}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>CI</strong></th><td>{{datastudent.carnetIdentidad}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Paterno</strong></th><td>{{datastudent.paterno}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Materno</strong></th><td>{{datastudent.materno}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Nombre</strong></th><td>{{datastudent.nombre}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Género</strong></th><td>{{datastudent.genero}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Promedio Semestre 1</strong></th><td>{{datastudent.promedioSem1}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Promedio Semestre 2</strong></th><td>{{datastudent.promedioSem2}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Promedio Final</strong></th><td>{{datastudent.promedioFinal}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.portlet -->
+                </div>
+                <!-- /.col-lg-12 -->
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <p><a href="{{ path('bach_exc_alt_ddjj') }}" class="btn btn-block btn-success">Ir a: "Paso 4.- Declaración Jurada (Bachilleres)"</a></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <p><a href="{{ path('bach_exc_alt') }}" class="btn btn-block btn-default">Salir</a></p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

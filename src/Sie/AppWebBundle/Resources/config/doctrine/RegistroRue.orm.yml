@@ -1,0 +1,67 @@
+Sie\AppWebBundle\Entity\RegistroRue:
+    type: entity
+    table: registro_rue
+    indexes:
+        IDX_9D275E3B18BB59DA:
+            columns:
+                - formulario_rue_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        operacionRue:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: operacion_rue
+        campo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        valorNuevo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: valor_nuevo
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        valorAnterior:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: valor_anterior
+        tabla:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        formularioRue:
+            targetEntity: FormularioRue
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                formulario_rue_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

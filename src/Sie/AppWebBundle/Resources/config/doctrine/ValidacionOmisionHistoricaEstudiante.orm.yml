@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\ValidacionOmisionHistoricaEstudiante:
+    type: entity
+    table: validacion_omision_historica_estudiante
+    uniqueConstraints:
+        fk__pvalidacion_omision_historica_estudian:
+            columns:
+                - nivel_tipo_id
+                - grado_tipo_id
+                - codigo_rude
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaProceso:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_proceso
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        nivelTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nivel_tipo_id
+        gradoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: grado_tipo_id
+        codigoRude:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: codigo_rude
+    lifecycleCallbacks: {  }

@@ -1,0 +1,20 @@
+reporte_especial_uno:
+    path:     /repUno
+    defaults: { _controller: SieEspecialBundle:Reportes:repUno }
+    
+reporte_especial_dos:
+    path:     /repDos
+    defaults: { _controller: SieEspecialBundle:Reportes:repDos }
+
+reporte_especial_tres:
+    path:     /repTres
+    defaults: { _controller: SieEspecialBundle:Reportes:repTres }
+    
+reporte_especial_cuatro:
+    path:     /repCuatro
+    defaults: { _controller: SieEspecialBundle:Reportes:repCuatro }    
+
+especial_finalizar_inscripcion:
+    path:     /finIns
+    defaults: { _controller: SieEspecialBundle:Reportes:finalizaInscripcion } 
+    

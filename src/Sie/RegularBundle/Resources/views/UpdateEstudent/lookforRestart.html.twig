@@ -1,0 +1,89 @@
+<div class="row">
+
+  <div class="col-md-6">
+
+    <div class="panel rounded shadow">
+        <div class="panel-heading">
+            <div class="pull-left">
+                <h3 class="panel-title">Información Estudiante</h3>
+            </div>
+
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <tbody>
+                <tr>
+                    <th>RUDE</th>
+                    <td>{{objStudent.codigoRude}}</td>
+                </tr>
+                <tr>
+                    <th>PATERNO</th>
+                    <td>{{objStudent.paterno}}</td>
+                </tr>
+                <tr>
+                    <th>MATERNO</th>
+                    <td>{{objStudent.materno}}</td>
+                </tr>
+                <tr>
+                    <th>NOMBRE</th>
+                    <td>{{objStudent.nombre}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div><!-- /.table-responsive -->
+    </div><!-- /.panel-heading -->
+
+
+
+
+</div>
+
+  <div class="col-md-6">
+
+        <!-- Start validation states - horizontal form -->
+        <div class="panel rounded shadow">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Modificar Datos</h3>
+                </div>
+
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body no-padding">
+              {{form_start(form, { 'attr' : {'data-toggle':'validator','class': 'form-horizontal', 'role':'form', 'id':'updateDataId' } } )}}
+                    <div class="form-body">
+                        <div class="form-group has-primary">
+                            <label class="col-sm-3 control-label">{{form_label(form.LocalidadNac)}}</label>
+                            <div class="col-sm-7">
+                                {{form_widget(form.LocalidadNac)}}
+                            </div>
+                        </div><!-- /.form-group -->
+
+                        <div class="form-group has-primary">
+                            <label class="col-sm-3 control-label">{{form_label(form.CarnetIdentidad)}}</label>
+                            <div class="col-sm-7">
+                                {{form_widget(form.CarnetIdentidad)}}
+                            </div>
+                        </div><!-- /.form-group -->
+
+                        <div class="form-group has-primary">
+                            <label class="col-sm-3 control-label">{{form_label(form.Complemento)}}</label>
+                            <div class="col-sm-7">
+                                {{form_widget(form.Complemento)}}
+                            </div>
+                        </div><!-- /.form-group -->
+                    </div><!-- /.form-body -->
+                    <div class="form-footer">
+                        <div class="col-sm-offset-3">
+                            {{form_widget(form.save)}}
+                        </div>
+                    </div><!-- /.form-footer -->
+                {{form_end(form)}}
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel -->
+        <!--/ End validation states -->
+
+    </div>
+
+</div>

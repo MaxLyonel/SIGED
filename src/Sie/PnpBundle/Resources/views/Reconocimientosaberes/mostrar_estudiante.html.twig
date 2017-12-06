@@ -1,0 +1,165 @@
+<form method="post" action="{{path('sie_pnp_reconocimiento_saberes')}}">
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet portlet-blue">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Datos del Estudiante</h4>
+                </div>
+                <div class="portlet-widgets">
+                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation1"><i class="fa fa-chevron-down"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="pinformation1" class="panel-collapse collapse in">
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4 style="color: #3B78B0; text-decoration: underline;">Datos Generales Unidad Educativa Evaluadora</h4>
+                        </div>
+                    </div>
+                    <div class="row">&nbsp;</div>         
+                        <div class="row">
+                            <div class="col-lg-6">
+                                Nombre de Unidad Educativa (UE):
+                                <select class="form-control"  {% if ('21' == app.session.get('roluser')) %} disabled="disabled" {% endif %} required="required" id="cod_ue" name="cod_ue" placeholder="Nombre (UE)" onchange="cambiar(this.value)">
+                                    <option value="">Elegir...</option>
+                                    <option value="80480300" {% if ie ==  '80480300'%} selected="selected" {% endif %}>CHUQUISACA PNP</option>
+                                    <option value="80730794" {% if ie ==  '80730794'%} selected="selected" {% endif %}>LA PAZ PNP</option>
+                                    <option value="80980569" {% if ie ==  '80980569'%} selected="selected" {% endif %}>COCHABAMBA PNP</option>
+                                    <option value="81230297" {% if ie ==  '81230297'%} selected="selected" {% endif %}>ORURO PNP</option>
+                                    <option value="81480201" {% if ie ==  '81480201'%} selected="selected" {% endif %}>POTOSI PNP</option>
+                                    <option value="81730264" {% if ie ==  '81730264'%} selected="selected" {% endif %}>TARIJA PNP</option>
+                                    <option value="81981501" {% if ie ==  '81981501'%} selected="selected" {% endif %}>SANTA CRUZ PNP</option>
+                                    <option value="82230130" {% if ie ==  '82230130'%} selected="selected" {% endif %}>BENI PNP</option>
+                                    <option value="82480050" {% if ie ==  '82480050'%} selected="selected" {% endif %}>PANDO PNP</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-6">
+                                C&oacute;digo de Unidad Educativa (UE):
+                                <input type="text" name="ue" id="ue" value="{{ ie }}" placeholder="C&oacute;digo (UE)" required="required" readonly="readonly"  class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="row">&nbsp;</div>  
+                        <div class="row">
+                            <hr style="background-color: #3B78B0; height: 5px;" />
+                        <div class="col-lg-12">
+                            <h4 style="color: #3B78B0; text-decoration: underline;">Datos del Estudiante</h4>
+                        </div>
+                        <div class="row" align="center">
+                            <div class="form-group col-lg-4 col-md-6" align="center">
+                               <h4>Nombre(s): <small>{{ result.nombre }}</small></h4>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-6" align="center">
+                                <h4>Primer Apellido: <small>{{ result.paterno }}</small></h4>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-6" align="center">
+                                <h4>Segundo Apellido: <small>{{ result.materno }}</small></h4>
+                            </div>
+                        </div>
+                        <div class="row" align="center">
+                            <div class="form-group col-lg-4 col-md-6" align="center">
+                                <h4>Fecha Nacimiento: <small>{{ result.fecha_nac|date("d/m/Y") }}</small></h4>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-6" align="center">
+                                <h4>Carnet de Identidad: <small>{{ result.ci }}{% if result.complemento != '' %}-{{result.complemento}}{% endif %}</small></h4>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-6" align="center">
+                                <h4>G&eacute;nero: <small>
+                                {% if result.genero == 1 %}MASCULINO {% elseif result.genero == 2 %} FEMENINO {% else %}{{ result.genero }}{% endif %}</small></h4>
+                            </div>
+                        </div>
+                        <div class="row" align="center" >
+                            <div class="col-lg-4 col-md-3" align="center">
+                                <h4>Alfabetizado</h4>
+                                <select name="alfabetizado" class="form-control">
+                                    <option value="SI">Si</option>
+                                    <option value="NO">NO</option>
+                                </select>  
+                            </div>
+                            <div class="col-lg-4 col-md-3" align="center">
+                                <h4>Idioma</h4>
+                                <select name="idioma" class="form-control">
+                                    <option value="CASTELLANO">CASTELLANO</option>
+                                    <option value="ATAONA">ATAONA</option>
+                                    <option value="AIMARA">AIMARA</option>
+                                    <option value="AYOREO">AYOREO</option>
+                                    <option value="BAURE">BAURE</option>
+                                    <option value="CAVINEÑO">CAVINEÑO</option>
+                                    <option value="CANICHANA">CANICHANA</option>
+                                    <option value="CAYUBABA">CAYUBABA</option>
+                                    <option value="CHÁCOBO">CHÁCOBO</option>
+                                    <option value="CHIMAN">CHIMAN</option>
+                                    <option value="CHIQUITANO">CHIQUITANO</option>
+                                    <option value="ESSE EJJA">ESSE EJJA</option>
+                                    <option value="GUARANI">GUARANI</option>
+                                    <option value="GUARAYA">GUARAYA</option>
+                                    <option value="ITONOMA">ITONOMA</option>
+                                    <option value="JOAQUINIANO">JOAQUINIANO</option>
+                                    <option value="LECO">LECO</option>
+                                    <option value="MACHINERI">MACHINERI</option>
+                                    <option value="MORÉ">MORÉ</option>
+                                    <option value="MOSETÉN">MOSETÉN</option>
+                                    <option value="MOVIMA">MOVIMA</option>
+                                    <option value="MOXEÑO">MOXEÑO</option>
+                                    <option value="NAHUA">NAHUA</option>
+                                    <option value="PACAHUARA">PACAHUARA</option>
+                                    <option value="PAICONECA">PAICONECA</option>
+                                    <option value="QUECHUA">QUECHUA</option>
+                                    <option value="SIRIONO">SIRIONO</option>
+                                    <option value="TACANA">TACANA</option>
+                                    <option value="TAPIETE">TAPIETE</option>
+                                    <option value="TORONOMA">TORONOMA</option>
+                                    <option value="URU">URU</option>
+                                    <option value="WEENHAYEK">WEENHAYEK</option>
+                                    <option value="YUMINAHUA">YUMINAHUA</option>
+                                    <option value="YUKI">YUKI</option>
+                                    <option value="YURACARÉ">YURACARÉ</option>
+                                    <option value="NO ORIGINARIO">NO ORIGINARIO</option>
+                                    <option value="AFRO BOLIVIANO">AFRO BOLIVIANO</option>
+                                </select>  
+                            </div>
+                            <div class="col-lg-4 col-md-3" align="center">
+                                <h4>Ocupaci&oacute;n</h4> 
+                                <select name="ocupacion" class="form-control">
+                                    <option value="AMA DE CASA">AMA DE CASA</option>
+                                    <option value="AGRICULTOR">AGRICULTOR</option>
+                                    <option value="MINERO">MINERO</option>
+                                    <option value="CHOFER">CHOFER</option>
+                                    <option value="CARPINTERO">CARPINTERO</option>
+                                    <option value="ZAPATERO">ZAPATERO</option>
+                                    <option value="CHOFER">CHOFER</option>
+                                    <option value="COMERCIANTE">COMERCIANTE</option>
+                                    <option value="PANADERO">PANADERO</option>
+                                    <option value="AVICULTOR">AVICULTOR</option>
+                                    <option value="PELUQUERO">PELUQUERO</option>
+                                    <option value="OTRO">OTRO</option>
+                                </select> 
+                            </div>
+                        </div>
+                        <div class="row" align="center" >
+                            <div class="col-lg-4 col-md-3" align="center">&nbsp;</div>
+                            <div class="col-lg-4 col-md-6" align="center">
+                                <h4>Nivel Alcanzado</h4>
+                                <select class="form-control" id="curso" name="curso" required="required" placeholder="Nivel Alcanzado">
+                                    <option value="">Elegir nivel alcanzado...</option>
+                                    <option value="2">Segundo</option>
+                                    <option value="3">Tercero</option>
+                                    <option value="5">Quinto</option>
+                                    <option value="6">Sexto</option>
+                                </select>
+                                <input name="estudiante_id" id="estudiante_id" required="required" value="{{ result.id }}" style="visibility:hidden"  />
+                                <input name="tipo" id="tipo" required="required" value="{{ result.tipo }}" style="visibility:hidden"  />
+                            </div>
+                        </div>
+                        <div class="row" align="center">
+                            <button type="submit" class="btn btn-default">&nbsp;Registrar Datos</button>
+                        </div>
+                    </div>
+                </div>          
+                </div> 
+            </div>
+        </div> 
+    </div>
+</div>
+</form>

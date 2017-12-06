@@ -1,0 +1,28 @@
+area_rie_list:
+    path:     /
+    defaults: { _controller: "SieRieBundle:Areas:list" }
+
+area_rie_new:
+    path:     /new
+    defaults: { _controller: "SieRieBundle:Areas:new" }    
+
+area_rie_create:
+    path:     /create
+    defaults: { _controller: "SieRieBundle:Areas:create" }
+    methods:  POST      
+
+area_rie_edit:
+    path:     /edit/{idArea}
+    defaults: { _controller: SieRieBundle:Areas:edit } 
+    methods:  GET      
+        
+area_rie_update:
+    path:     /update
+    defaults: { _controller: "SieRieBundle:Areas:update" }
+    methods:  POST          
+
+area_rie_delete:
+    path:     /delete/{idArea}
+    defaults: { _controller: SieRieBundle:Areas:delete } 
+    methods:  GET      
+    

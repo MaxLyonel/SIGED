@@ -1,0 +1,8 @@
+        {#cuando tiene que volver a armar el combo despues de elejir el departamento#}
+        <select class="form-control lugar_final" id="lug_dis_{{d}}" onchange="lug_rol_dis_onchange();"> 
+            <option value="-999">Elija el Distrito</option> 
+            {% for dislug in dislugid %}    
+                <option value="{{ dislug.id }}">{{ dislug.lugar }}</option>
+            {% endfor %}
+        </select>
+        

@@ -1,0 +1,35 @@
+download_file_aca_sie_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:DownloadFileSieAca:index }
+
+download_file_aca_sie_build:
+    path:     /sie/buildfile/
+    defaults: { _controller: SieHerramientaBundle:DownloadFileSieAca:build }
+    options:
+         expose: true
+
+download_file_aca_sie_download:
+    path:     /download/{file}
+    defaults: { _controller: SieHerramientaBundle:DownloadFileSieAca:download }
+
+download_file_aca_sie_getgestion:
+    path:     /getGestion/{sie}
+    defaults: { _controller: SieHerramientaBundle:DownloadFileSieAca:getgestion }
+    options:
+         expose: true
+
+download_file_aca_sie_getbimestre:
+    path:     /getBimestre/{sie}/{gestion}
+    defaults: { _controller: SieHerramientaBundle:DownloadFileSieAca:getbimestre }
+    options:
+         expose: true
+
+download_file_aca_sie_changedate:
+    path:     /changedate
+    defaults: { _controller: SieHerramientaBundle:DownloadFileSieAca:changedate }
+
+download_file_aca_sie_buildAgain:
+    path:     /sie/buildfileagain/
+    defaults: { _controller: SieHerramientaBundle:DownloadFileSieAca:buildAgain }
+    options:
+         expose: true

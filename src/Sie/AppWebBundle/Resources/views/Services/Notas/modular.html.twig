@@ -1,0 +1,221 @@
+{# 
+	variable vista
+	vista = 0  // La vista estara totalmente bloqueada
+	vista = 1  // Se podran modificar las notas dirferentes a cero y vacio
+	vista = 2  // Se podra modificar todo
+#}
+
+<input type="hidden" name="tipoNota" value="{{notas.tipoNota}}">
+<input type="hidden" name="nivel" value="{{notas.nivel}}">
+<input type="hidden" name="idInscripcion" value="{{notas.idInscripcion}}">
+
+<div class="row">
+{% if notas.nivel == 11 %}
+    <div class="col-lg-12">
+{% else %}
+    <div class="col-lg-8">
+{% endif %}
+<table class="table table-bordered cf" style="backgroud:#FFFFFF">
+    <thead class="cf">
+        <tr>
+            <th>
+                Asignatura
+            </th>
+            {% if notas.operativo > 0 %}
+                {% for i in 1..notas.operativo %}
+                    {% if i < 5  %}
+                        <th>{{ i }} Bimestre</th>
+                    {% else %}
+                        {% if notas.nivel != 11 %}
+                            <th>Promedio</th>
+                        {% endif %}
+                    {% endif %}
+                    
+                {% endfor %}
+                {% if notas.operativo == 4 and notas.nivel != 11 %}
+                    <th>Promedio</th>
+                {% endif %}
+            {% else %}
+                <th>Notas Cuantitativas</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% set cont = 0 %}    
+
+        {% for a in notas.cuantitativas %}
+            <tr>
+                <td data-title="Asignatura">
+                    {{a.asignatura}}<br>
+                    <small style="color:#7A93A5">{{a.area}}</small>
+                </td>
+                {% if a.notas is defined and a.notas|length > 0 %}
+                {% for n in a.notas %}
+                    {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                        {% if n.idNotaTipo != 5 %}
+                            <td data-title="{{n.idNotaTipo}} Bimestre">
+                                <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+                                <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+                                <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                
+                                <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="promedio(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" onblur="notaVacia(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')"  class="form-control input-sm nota {{notas.idInscripcion}}_{{a.idAsignatura}}" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly">
+                            </td>
+                        {% else %}
+                            
+                            <td data-title="Promedio">
+                                <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+                                <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+                                <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                
+                                <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event)" onkeyup="repetirNota(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" onblur="notaVacia(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" class="form-control input-sm p{{notas.idInscripcion}}_{{a.idAsignatura}} promedio" style="width:50px" maxlength="3" autocomplete="off" {% if n.nota != 0 and vista != 2 %} readonly="readonly" {% endif %}>
+                            </td>
+
+                        {% endif %}
+                    {% else %}
+                        <td data-title="{{n.idNotaTipo}} Bimestre">
+                            <input id="{{n.id}}" type="text" size="2" class="form-control input-sm" style="width:50px" maxlength="3" autocomplete="off" disabled="disabled" value="{{n.nota}}">
+                        </td>
+                    {% endif %}
+
+                {% endfor %}
+
+                {% else %}
+                    <td>
+                        <em><spam style="color:#9DB2B9">No hay notas</spam></em>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% if notas.nivel == 11 %}
+    <div class="col-lg-12">
+{% else %}
+    <div class="col-lg-4">
+{% endif %}
+<table class="table">
+    {% if notas.cualitativas|length > 0 %}
+        {% for c in notas.cualitativas %}
+            <tr><td style="padding:0px; margin:0px">
+            {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
+                {% if (c.notaCualitativa == "") or (vista == 2) %}
+                    <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
+                    <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
+                    <p><b>{{c.notaTipo}}</b></p>
+                    <p class="text-justify">
+                        <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="15">{{c.notaCualitativa}}</textarea>
+                    </p>
+                {% else %}
+                    <p><b>{{c.notaTipo}}</b></p>
+                    <p class="text-justify">
+                        <textarea class="form-control jnumbersletters" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                    </p>
+                {% endif %}
+            {% else %}
+                <p><b>{{c.notaTipo}}</b></p>
+                <p class="text-justify">
+                    <textarea class="form-control jnumbersletters" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                </p>
+            {% endif %}
+            </td></tr>
+        {% endfor %}
+    {% else %}
+        <tr><th>Notas cualitativas</th></tr>
+    {% endif %}
+</table>
+</div>
+<div class="col-lg-12">
+    <div class="alert alert-warning">
+        (MODULAR) Verifique bien las notas antes de guardarlas, porque una vez guardadas estas no se podran modificar ! 
+    </div>
+</div>
+</div>
+
+<script>
+    var repetirNota = function(control,clase){
+        console.log(clase);
+        if(control.value < 0){ control.value = 0; }
+        if(control.value > 100){ control.value = 100; }
+
+        $("."+clase).each(function (index) {
+            $(this).val(control.value);
+        });
+    }
+
+    var notaVacia = function(control,clase){
+        if(control.value < 0){ control.value = 0; }
+        if(control.value > 100){ control.value = 100; }
+        if(control.value == ""){ control.value = 0; }
+
+        $("."+clase).each(function (index) {
+            $(this).val(control.value);
+        });
+    }
+
+    var validarNota = function(e){
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+        )
+        return false;
+    }
+
+    var validarEnvioNotas = function(){
+        var enviar = true;
+        var mensaje = "";
+        /*$(".nota").each(function (index) {
+            if($(this).val() == 0){
+                enviar = false;
+                mensaje = 'Las notas registradas no pueden ser cero';
+            }
+        });
+        if(enviar == true){
+            $(".notaCualitativa").each(function (index) {
+                if($(this).val().length < 15){
+                    mensaje = 'Las notas cualitativas deben tener al menos 15 dígitos';
+                    enviar = false;
+                }
+            });
+        }
+        if(enviar == false){
+            alert(mensaje);
+            return false;
+        }else{
+            return true;
+        }*/
+        return true;
+    }
+
+    $(".jnumbersletters").keypress(function (key) {
+        var key = key || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 97 || k > 122)//letras minusculas
+            && (k < 65 || k > 90) //letras mayusculas
+            && (k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+            && (k != 241) //ñ
+             && (k != 209) //Ñ
+             && (k != 32) //espacio
+             && (k != 225) //á
+             && (k != 233) //é
+             && (k != 237) //í
+             && (k != 243) //ó
+             && (k != 250) //ú
+             && (k != 193) //Á
+             && (k != 201) //É
+             && (k != 205) //Í
+             && (k != 211) //Ó
+             && (k != 218) //Ú
+             && (k != 44) //coma ,
+             && (k != 46) //punto .
+            )
+            return false;
+    });
+</script>

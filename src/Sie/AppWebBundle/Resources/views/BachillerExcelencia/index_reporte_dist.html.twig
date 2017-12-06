@@ -1,0 +1,99 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Reporte por distrito <span>Bachiller de Excelencia</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                    Bachiller de Excelencia
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Generar reporte</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+    <!--div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <p class="text-center"><i class="fa fa-info-circle fa-5x"></i></p>
+                <p class="text-center">Se ha cerrado la opción para CORREGIR la información tanto de Directoras/Directores y/o Bachilleres de Excelencia.</p>
+            </div>
+        </div>
+    </div-->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="fa fa-info-circle"></i> Ingresar el código de distrito y presionar sobre el botón "Reporte por distrito".
+            </div>
+        </div>
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('searchIe') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('tuicionIe') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h4>Formulario de búsqueda</h4>
+                    </div>
+                    <div class="panel-widgets">
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelie" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator', 'role': "form", 'class':'form-horizontal'} } )}}
+                            <div class="form-group">
+                                <label for="form_institucioneducativa" class="col-sm-2 control-label">Distrito</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.institucioneducativa, { 'attr': {'class': 'form-control', 'placeholder': 'Introduzca el código de distrito'}  }) }}
+                                    <div class="help-block with-errors">{{ form_errors(form.institucioneducativa) }}</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="form_gestion" class="col-sm-2 control-label">{{ form_label(form.gestion) }}</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.gestion, { 'attr': {'class': 'form-control', 'value': '2017'}  }) }}
+                                    <div class="help-block with-errors">{{ form_errors(form.gestion) }}</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    {{ form_widget(form.submit, { 'attr': {'class': 'btn btn-primary' } } ) }}
+                                </div>
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    </div>                     
+{% endblock %}

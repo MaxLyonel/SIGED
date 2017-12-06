@@ -1,0 +1,46 @@
+estudiante_main:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:Estudiante:index" }
+
+estudiante_main_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieRegularBundle:Estudiante:show" }
+
+estudiante_main_new:
+    path:     /new
+    defaults: { _controller: "SieRegularBundle:Estudiante:new" }
+
+estudiante_main_create:
+    path:     /create
+    defaults: { _controller: "SieRegularBundle:Estudiante:create" }
+    methods:  POST
+
+estudiante_main_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieRegularBundle:Estudiante:edit" }
+
+estudiante_main_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieRegularBundle:Estudiante:update" }
+    methods:  [POST, PUT]
+
+estudiante_main_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieRegularBundle:Estudiante:delete" }
+    methods:  [POST, DELETE]
+
+student_main_result:
+    path:     /findstudent
+    defaults: { _controller: "SieRegularBundle:Estudiante:searchstudent" }
+
+student_main_history:
+    path:     /history/{idStudent}
+    defaults: { _controller: "SieRegularBundle:Estudiante:history" }    
+    options:
+        expose: true
+        
+student_main_history_alt:
+    path:     /historyalt/{idStudent}
+    defaults: { _controller: "SieRegularBundle:Estudiante:historyalt" }    
+    options:
+        expose: true        

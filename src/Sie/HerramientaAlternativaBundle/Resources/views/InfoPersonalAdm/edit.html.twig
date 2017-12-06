@@ -1,0 +1,343 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-user-secret"></i> Datos del personal administrativo <span> Datos personales, cargo, financiamiento, idiomas.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                    <li>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                            <a href="{{path('principal_web')}}">Bienvenida</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>                    
+                    <li>
+                        <i class="fa fa-th-large"></i>
+                            <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <i class="fa fa-user-secret"></i>
+                            <a href="{{path('herramientalt_info_personal_adm_index')}}">Personal administrativo</a>
+                        <i class="fa fa-angle-right"></i>
+                    <li>    
+                    <li>
+                        <i class="fa fa-user-secret"></i>
+                            Datos del personal administrativo
+                        <i class="fa fa-angle-right"></i>
+                    </li>                
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-danger">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Editar Personal Administrativo</h3>
+                        </div>
+                        <div class="pull-right">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'onsubmit': 'return validaIdioma()'} } )}}
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="carnet">Carnet</label>
+                                        <input value="{{ persona.carnet }}" id="carnet" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="complemento">Complemento</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">-</div>
+                                            <input value="{{ persona.complemento }}" id="complemento" class="form-control" readonly="readonly" type="text">
+                                        </div>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="paterno">Apellido Paterno</label>
+                                        <input value="{{ persona.paterno }}" id="paterno" class="form-control" readonly="readonly" type="text">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="materno">Apellido Materno</label>
+                                        <input value="{{ persona.materno }}" id="materno" class="form-control" readonly="readonly" type="text">
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="nombre">Nombre(s)</label>
+                                        <input value="{{ persona.nombre }}" id="nombre" class="form-control" readonly="readonly" type="text">
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="genero">Género</label>
+                                        <input value="{{ persona.generoTipo }}" id="genero" class="form-control" readonly="readonly" type="text">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="fechanac">Fecha de Nacimiento</label>
+                                        <input value="{{ persona.fechaNacimiento|date('d-m-Y') }}" id="fechanac" class="form-control" readonly="readonly" type="text">
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label class="control-label" for="direccion">Dirección de Domicilio</label>
+                                        <input value="{{ persona.direccion }}" id="direccion" class="form-control" readonly="readonly" type="text">
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="celular">Nro. de celular</label>
+                                        <input value="{{ persona.celular }}" id="celular" class="form-control" readonly="readonly" type="text">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="correo">Correo Electrónico</label>
+                                        <input value="{{ persona.correo }}" id="correo" class="form-control" readonly="readonly" type="text">
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        <label class="control-label" for="rda">RDA</label>
+                                        <input value="{{ persona.rda }}" id="rda" class="form-control" readonly="readonly" type="text">
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.item)}}
+                                        {{form_widget(form.item) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.normalista)}}
+                                        {{form_widget(form.normalista) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.funcion)}}
+                                        {{form_widget(form.funcion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.financiamiento)}}
+                                        {{form_widget(form.financiamiento) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.formacion)}}
+                                        {{form_widget(form.formacion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.formacionDescripcion)}}
+                                        {{form_widget(form.formacionDescripcion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <fieldset>
+                                                <a onclick="agregarHijo()" class="btn-link"><i class="fa fa-plus-square"></i> Agregar Idioma</a>
+                                                <legend>Idioma(s) que conoce <img src="{{asset('img/loading.gif')}}" id="loading"> <span class="text-danger text-sm">(* Debe registrar al menos un idioma)</span></legend>
+                                                <div id="no-more-tables">
+                                                    <table class="table table-bordered cf">
+                                                        <thead class="cf">
+                                                            <tr>
+                                                                <th class="col-lg-4">Idioma</th>
+                                                                <th class="col-lg-2">Lee</th>
+                                                                <th class="col-lg-2">Habla</th>
+                                                                <th class="col-lg-2">Escribe</th>
+                                                                <th class="col-lg-2">Eliminar</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="idiomas">
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        {% if app.session.get('sysname') == 'PERMANENTE' %}
+                                            {% set display = 'none' %}
+                                        {% else %}
+                                            {% set display = 'block' %}
+                                        {% endif %}
+                                        <div class="form-group col-lg-6 col-md-12" style=" display: {{display}}">
+                                            {{ form_label(form.idiomaOriginario)}} 
+                                            {{form_widget(form.idiomaOriginario) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                        <div class="form-group col-lg-6 col-md-12">
+                                            {{ form_label(form.leeEscribeBraile)}}
+                                            {{form_widget(form.leeEscribeBraile) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12 text-center">
+                                            {{ form_widget(form.guardar ) }}
+                                            <a href="{{ path('herramientalt_info_personal_adm_index') }}" class="btn btn-default">Cancelar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{form_end(form)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var cantidad = 0;
+        var cont = 0;
+
+        $(function () {
+            var idMaestro = document.getElementById('form_idMaestroInscripcion').value;
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_listaridiomasleehablaescribe_edit', {'idMaestroInscripcion': idMaestro}),
+                beforeSend: function () {
+                    $("#idiomas").empty();
+                    $("#loading").css('display', 'inline-block');
+                },
+                success: function (data) {
+                    $.each(data.idiomasMaestro, function (i, valores) {
+                        cantidad++;
+                        cont++;
+                        var idioma = 'idioma' + cantidad;
+                        var lee = 'lee' + cantidad;
+                        var habla = 'habla' + cantidad;
+                        var escribe = 'escribe' + cantidad;
+
+                        $('#idiomas').append("<tr id='" + cantidad + "' class='info'>\n\
+                            <td data-title='Idioma' class='form-group'><select name='" + idioma + "' id='" + idioma + "' class='form-control' required></select></td>\n\
+                            <td data-title='Lee' class='form-group'><select name='" + lee + "' id='" + lee + "' class='form-control' required></select></td>\n\
+                            <td data-title='Habla' class='form-group'><select name='" + habla + "' id='" + habla + "' class='form-control' required></select></td>\n\
+                            <td data-title='Escribe' class='form-group'><select name='" + escribe + "' id='" + escribe + "' class='form-control' required></select></td>\n\
+                            <td><button type='button' onclick='eliminaridioma(" + cantidad + " )' class='btn-link'><i class='fa fa-trash-o text-danger'> Eliminar</button></td>\n\
+                        </tr>");
+                        //select idioma
+                        $("#" + idioma).empty();
+                        $("#" + idioma).append('<option value="">Seleccionar...</option>');
+                        $.each(data.idiomas, function (i, value) {
+                            if (i == valores.idioma) {
+                                sel = 'selected';
+                            } else {
+                                sel = '';
+                            }
+                            $("#" + idioma).append('<option value="' + i + '"' + sel + '>' + value + '</option>');
+                        });
+                        // select lee
+                        $("#" + lee).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            if (i == valores.lee) {
+                                sel = 'selected';
+                            } else {
+                                sel = '';
+                            }
+                            $("#" + lee).append('<option value="' + i + '"' + sel + '>' + value + '</option>');
+                        });
+                        // select habla
+                        $("#" + habla).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            if (i == valores.habla) {
+                                sel = 'selected';
+                            } else {
+                                sel = '';
+                            }
+                            $("#" + habla).append('<option value="' + i + '"' + sel + '>' + value + '</option>');
+                        });
+                        // select escribe
+                        $("#" + escribe).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            if (i == valores.escribe) {
+                                sel = 'selected';
+                            } else {
+                                sel = '';
+                            }
+                            $("#" + escribe).append('<option value="' + i + '"' + sel + '>' + value + '</option>');
+                        });
+                    });
+                    $("#loading").css('display', 'none');
+                }
+            });
+        })
+
+        function agregarHijo()
+        {
+            cont++;
+            if (cont < 5) {
+                cantidad++;
+                var idioma = 'idioma' + cantidad;
+                var lee = 'lee' + cantidad;
+                var habla = 'habla' + cantidad;
+                var escribe = 'escribe' + cantidad;
+                $('#idiomas').append("<tr id='" + cantidad + "' class='info'>\n\
+                                        <td data-title='Idioma' class='form-group'><select name='" + idioma + "' id='" + idioma + "' class='form-control' required></select></td>\n\
+                                        <td data-title='Lee' class='form-group'><select name='" + lee + "' id='" + lee + "' class='form-control' required></select></td>\n\
+                                        <td data-title='Habla' class='form-group'><select name='" + habla + "' id='" + habla + "' class='form-control' required></select></td>\n\
+                                        <td data-title='Escribe' class='form-group'><select name='" + escribe + "' id='" + escribe + "' class='form-control' required></select></td>\n\
+                                        <td><button type='button' onclick='eliminaridioma(" + cantidad + " )' class='btn-link'><i class='fa fa-trash-o text-danger'> Eliminar</button></td>\n\
+                                    </tr>");
+
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('herramienta_listaridiomasleehablaescribe'),
+                    beforeSend: function () {
+                        $("#" + idioma).empty();
+                    },
+                    success: function (data) {
+                        $("#" + idioma).empty();
+                        $("#" + idioma).append('<option value="">Seleccionar...</option>');
+                        $.each(data.idiomas, function (i, value) {
+                            $("#" + idioma).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select lee
+                        $("#" + lee).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + lee).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select habla
+                        $("#" + habla).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + habla).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select escribe
+                        $("#" + escribe).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + escribe).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                });
+            } else {
+                cont--;
+            }
+        }
+
+        function eliminaridioma(i) {
+            cont--;
+            $("#" + i).remove();
+        }
+
+        function validaIdioma() {
+            if (cont == 0) {
+                alert('Debe registrar al menos un idioma que conoce el Administrativo');
+                return false;
+            }
+            return true;
+        }
+    </script>
+{% endblock %}

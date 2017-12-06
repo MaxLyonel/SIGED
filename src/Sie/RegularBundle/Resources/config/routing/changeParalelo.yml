@@ -1,0 +1,19 @@
+change_paralelo_sie_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:ChangeParalelo:index }
+
+change_paralelo_sie_result:
+    path:     /sie/result/
+    defaults: { _controller: SieRegularBundle:ChangeParalelo:result }
+    options:
+         expose: true
+
+change_paralelo_sie_change:
+    path:     /change/
+    defaults: { _controller: SieRegularBundle:ChangeParalelo:change }
+
+change_paralelo_sie_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieRegularBundle:ChangeParalelo:findturno }
+    options:
+        expose: true

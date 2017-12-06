@@ -1,0 +1,23 @@
+herramienta_change_paralelo_sie_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:CambioParalelo:index }
+
+herramienta_change_paralelo_sie_result:
+    path:     /sie/result/
+    defaults: { _controller: SieHerramientaBundle:CambioParalelo:result }
+    options:
+         expose: true
+
+herramienta_change_paralelo_sie_change:
+    path:     /change/
+    defaults: { _controller: SieHerramientaBundle:CambioParalelo:change }
+
+herramienta_change_paralelo_sie_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieHerramientaBundle:CambioParalelo:findturno }
+    options:
+        expose: true
+
+herramienta_change_paralelo_sie_index_calidad:
+    path:     /cparalelo
+    defaults: { _controller: SieHerramientaBundle:CambioParalelo:calidad }

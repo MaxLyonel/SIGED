@@ -1,0 +1,17 @@
+#Para certificado
+reporte_rie_uno:
+    path:     /repRieUno
+    defaults: { _controller: SieRieBundle:Reportes:repUno }
+
+reporte_list:
+    path:     /list
+    defaults: { _controller: SieRieBundle:Reportes:list }     
+
+reporte_rie_vigente:
+    path:     /repvigente
+    defaults: { _controller: SieRieBundle:Reportes:repvigente }
+
+reporte_rie_general:
+    path:     /reportegeneral/{opc}
+    defaults: { _controller: SieRieBundle:Reportes:reportegeneral } 
+    methods:  GET 

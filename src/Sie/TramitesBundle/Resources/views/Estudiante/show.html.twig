@@ -1,0 +1,88 @@
+{% extends 'layoutCertification.html.twig' %}
+
+{% block body -%}
+    <h1>Estudiante</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Codigorude</th>
+                <td>{{ entity.codigoRude }}</td>
+            </tr>
+            <tr>
+                <th>Carnetidentidad</th>
+                <td>{{ entity.carnetIdentidad }}</td>
+            </tr>
+            <tr>
+                <th>Pasaporte</th>
+                <td>{{ entity.pasaporte }}</td>
+            </tr>
+            <tr>
+                <th>Paterno</th>
+                <td>{{ entity.paterno }}</td>
+            </tr>
+            <tr>
+                <th>Materno</th>
+                <td>{{ entity.materno }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ entity.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Oficialia</th>
+                <td>{{ entity.oficialia }}</td>
+            </tr>
+            <tr>
+                <th>Libro</th>
+                <td>{{ entity.libro }}</td>
+            </tr>
+            <tr>
+                <th>Partida</th>
+                <td>{{ entity.partida }}</td>
+            </tr>
+            <tr>
+                <th>Folio</th>
+                <td>{{ entity.folio }}</td>
+            </tr>
+            <tr>
+                <th>Idiomamaternoid</th>
+                <td>{{ entity.idiomaMaternoId }}</td>
+            </tr>
+            <tr>
+                <th>Segipid</th>
+                <td>{{ entity.segipId }}</td>
+            </tr>
+            <tr>
+                <th>Complemento</th>
+                <td>{{ entity.complemento }}</td>
+            </tr>
+            <tr>
+                <th>Bolean</th>
+                <td>{{ entity.bolean }}</td>
+            </tr>
+            <tr>
+                <th>Fechanacimiento</th>
+                <td>{{ entity.fechaNacimiento|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('estudiante_main') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('estudiante_main_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

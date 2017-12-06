@@ -1,0 +1,70 @@
+##    
+inscription_techum_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:InscriptionTecHum:index }
+
+inscription_techum_result:
+    path:     /sie/result/
+    defaults: { _controller: SieRegularBundle:InscriptionTecHum:result }
+    options:
+         expose: true 
+         
+inscription_techum_nota:
+    path:     /seeNota/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}/{sie}
+    defaults: { _controller: SieRegularBundle:InscriptionTecHum:nota }           
+    options:
+         expose: true 
+         
+inscription_techum_download:
+    path:     /download/{file}
+    defaults: { _controller: SieRegularBundle:InscriptionTecHum:download }         
+    
+inscription_techum_remove:
+    path: /remove
+    defaults: { _controller: SieRegularBundle:InscriptionTecHum:remove }  
+    
+inscription_techum_inscription:
+    path:     /inscription/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}/{sie}/{matricula}/{ciclo}
+    defaults: { _controller: SieRegularBundle:InscriptionTecHum:inscription }           
+    options:
+         expose: true     
+         
+inscription_techum_newins:
+    path:     /newins/
+    defaults: { _controller: SieRegularBundle:InscriptionTecHum:newins }
+
+inscription_techum_oldins:
+    path:     /oldins/
+    defaults: { _controller: SieRegularBundle:InscriptionTecHum:oldins }  
+    
+inscription_techum_findIE:
+     path:    /findIE/{id}
+     defaults: { _controller: SieRegularBundle:InscriptionTecHum:findIE }
+     options:
+         expose: true  
+         
+inscription_techum_findgrado:
+     path:    /findgrado/{idnivel}/{sie}
+     defaults: { _controller: SieRegularBundle:InscriptionTecHum:findgrado }
+     options:
+         expose: true
+
+inscription_techum_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}
+     defaults: { _controller: SieRegularBundle:InscriptionTecHum:findparalelo }
+     options:
+         expose: true
+         
+inscription_techum_findturno:         
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieRegularBundle:InscriptionTecHum:findturno }
+    options:
+        expose: true  
+        
+inscription_techum_savenew:
+    path: /savenew
+    defaults: { _controller: SieRegularBundle:InscriptionTecHum:savenew}    
+    
+inscription_techum_exist:
+    path: /exist
+    defaults: { _controller: SieRegularBundle:InscriptionTecHum:exist}    

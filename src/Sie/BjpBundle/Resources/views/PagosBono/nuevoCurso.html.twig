@@ -1,0 +1,125 @@
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="row">
+                        <div class="col-md-12">
+
+                            <!-- Start inline form -->
+                            <div class="panel rounded shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">Buscar Estudiante por codigo RUDE y Creación de Nuevo Curso</h3>
+                                    </div>
+                                    <div class="pull-right">
+                                        <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                        <button class="btn btn-sm" data-action="remove" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Remove" data-original-title="" title=""><i class="fa fa-times"></i></button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Nuevo Nivel</td>
+                                                <td>
+                                                    <select id="nivel" >
+                                                        <option value="999">Nuevo Nivel</option>                
+                                                        <option value="2">Primaria </option>
+                                                        <option value="3">Secundaria</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Nuevo Grado</td>
+                                                <td>
+                                                    <select id="grado" >
+                                                        <option value="999">Nuevo Grado</option>                
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                    </select>
+                                                </td>                                                              
+                                            </tr>
+                                            <tr>                                                               
+                                                <td>Nombre</td>
+                                                <td>
+                                                    <select id="paralelo" >
+                                                        <option value="999">Nuevo Paralelo</option>                
+                                                        <option value="2">B</option>
+                                                        <option value="3">C</option>
+                                                        <option value="4">D</option>
+                                                        <option value="5">E</option>
+                                                        <option value="6">F</option>
+                                                        <option value="7">G</option>
+                                                        <option value="8">H</option>
+                                                        <option value="9">I</option>
+                                                        <option value="10">J</option>
+                                                        <option value="11">K</option>
+                                                        <option value="12">L</option>
+                                                    </select>
+                                                </td>
+                                            </tr>    
+                                        </tbody>
+                                    </table>
+                                                    
+                                    
+                                            {{form_start(formCursoForm,{'attr':{'data-toggle': 'validator','form':'role', 'id':'idNuevoCursoForm'} })}}
+
+                                                <table class="table">
+                                                       <tbody>
+                                                           <tr>
+                                                               <td>Rude</td>
+                                                               <td colspan="3">{{form_widget(formCursoForm.rude)}}</td>
+                                                           </tr>
+                                                           <tr>
+                                                               <td>Paterno</td>
+                                                               <td>{{form_widget(formCursoForm.paterno)}}</td>
+                                                               <td>Materno</td>
+                                                               <td>{{form_widget(formCursoForm.materno)}}</td>                                                               
+                                                           </tr>
+                                                           <tr>                                                               
+                                                               <td>Nombre</td>
+                                                               <td>{{form_widget(formCursoForm.nombre)}}</td>
+                                                               <td>Fecha Nacimiento<br/>(dd-mm-aaaa)</td>
+                                                               <td>{{form_widget(formCursoForm.fnac)}}</td>
+                                                           </tr>
+                                                           <tr>
+                                                               <td>Genero</td>
+                                                               <td>{{form_widget(formCursoForm.generoTipo)}}</td>
+                                                               <td>Observación</td>
+                                                               <td>{{form_widget(formCursoForm.observacion)}}</td>                                                               
+                                                           </tr>
+                                                           <tr>
+                                                               <td>
+                                                                   {{form_widget(formCursoForm.buscar)}} <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">Cerrar</button>
+                                                               </td>
+                                                           </tr>
+
+
+                                                       </tbody>
+                                                     </table>
+
+                                            {{form_end(formCursoForm)}}
+
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                            <!--/ End inline form -->
+
+                        </div>
+                    </div>
+
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-12'>
+          <div id='idBuscarNuevoEstudiante'></div>
+        </div>
+      </div>
+    </div><!-- /.modal-dialog -->
+</div>

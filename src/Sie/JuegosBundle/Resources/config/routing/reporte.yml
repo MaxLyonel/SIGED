@@ -1,0 +1,19 @@
+sie_juegos_reporte_index:
+    path:    /index
+    defaults: { _controller: SieJuegosBundle:Reporte:index }
+
+sie_juegos_reporte_fp:
+    path:    /fase/previa
+    defaults: { _controller: SieJuegosBundle:Reporte:fasePrevia }
+
+sie_juegos_reporte_f1:
+    path:    /fase/primera
+    defaults: { _controller: SieJuegosBundle:Reporte:fasePrimera }
+
+sie_juegos_reporte_f2:
+    path:    /fase/segunda
+    defaults: { _controller: SieJuegosBundle:Reporte:faseSegunda }
+
+sie_juegos_reporte_f3:
+    path:    /fase/tercera
+    defaults: { _controller: SieJuegosBundle:Reporte:faseTercera }

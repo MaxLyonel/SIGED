@@ -1,0 +1,99 @@
+sie_juegos_clasificacion_f1_index:
+    path:    /f1/index
+    defaults: { _controller: SieJuegosBundle:Clasificacion:f1Index }
+
+sie_juegos_clasificacion_f2_index:
+    path:    /f2/index
+    defaults: { _controller: SieJuegosBundle:Clasificacion:f2Index }
+
+sie_juegos_clasificacion_f3_index:
+    path:    /f3/index
+    defaults: { _controller: SieJuegosBundle:Clasificacion:f3Index }
+
+sie_juegos_clasificacion_lista_deportistas:
+    path:    /lista/deportistas
+    defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistas }
+    options:
+         expose: true  
+
+sie_juegos_clasificacion_lista_deportistas_registro:
+    path:    /lista/deportistas/registro
+    defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistasRegistro }
+
+sie_juegos_eliminacion_clasificacion_deportista:
+    path:    /eliminacion/prueba/estudiantes/f1/{inscripcion}
+    defaults: { _controller: SieJuegosBundle:Clasificacion:eliminaPruebaInscripcion }
+    options:
+         expose: true 
+
+sie_juegos_clasificacion_lista_deportistas_inscritos_fase:
+    path:    /lista/deportistas/clasificados/fase/{fase}/{usuario}
+    defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistasClasificadosDescargaPdf } 
+
+sie_juegos_clasificacion_lista_deportistas_inscritos_fase_nacional:
+    path:    /lista/deportistas/clasificados/fase/nacional/{fase}/{usuario}
+    defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistasClasificadosNacionalDescargaPdf } 
+
+sie_juegos_clasificacion_lista_deportistas_aspirantes_fase:
+    path:    /lista/deportistas/aspirante/fase/{fase}/{usuario}
+    defaults: { _controller: SieJuegosBundle:Clasificacion:listaDeportistasAspirantesDescargaPdf }
+
+sie_juegos_representacion_cultural_index:    
+    path:    /representacion/cultural/index
+    defaults: { _controller: SieJuegosBundle:Clasificacion:representacionCulturalIndex }
+
+sie_juegos_representacion_cultural_busca_ue:    
+    path:    /representacion/cultural/ue
+    defaults: { _controller: SieJuegosBundle:Clasificacion:representacionCulturalBuscaUE }
+
+sie_juegos_representacion_cultural_lista_estudiante:    
+    path:    /representacion/cultural/lista/estudiantes
+    defaults: { _controller: SieJuegosBundle:Clasificacion:representacionCulturalListaEstudiantes }
+    options:
+         expose: true 
+
+sie_juegos_representacion_cultural_lista_estudiante_inscritos:
+    path:    /representacion/cultural/lista/estudiantes/inscritos
+    defaults: { _controller: SieJuegosBundle:Clasificacion:buscaInscritosCultural }
+    options:
+         expose: true  
+
+sie_juegos_representacion_cultural_lista_estudiante_registro:    
+    path:    /representacion/cultural/lista/estudiantes/registro
+    defaults: { _controller: SieJuegosBundle:Clasificacion:representacionCulturalListaEstudiantesRegistro }
+
+sie_juegos_acreditacion_busca_registro:    
+    path:    /acreditacion/busca/registro
+    defaults: { _controller: SieJuegosBundle:Comision:acreditacionBusca }
+
+sie_juegos_acreditacion_registro_impresion:
+    path:    /acreditacion/registro/impresion
+    defaults: { _controller: SieJuegosBundle:Comision:acreditacionRegistroImpresion }
+
+sie_juegos_acreditacion_registro_edita:
+    path:    /acreditacion/registro/edita
+    defaults: { _controller: SieJuegosBundle:Comision:acreditacionRegistroEdita }
+
+sie_juegos_acreditacion_registro_save_estudiante:
+    path:    /acreditacion/registro/save/estudiante
+    defaults: { _controller: SieJuegosBundle:Comision:acreditacionRegistroSaveEstudiante }
+
+sie_juegos_acreditacion_registro_save_comision:
+    path:    /acreditacion/registro/save/comision
+    defaults: { _controller: SieJuegosBundle:Comision:acreditacionRegistroSaveComision }
+
+sie_juegos_acreditacion_registro_elimina:
+    path:    /acreditacion/registro/elimina
+    defaults: { _controller: SieJuegosBundle:Comision:acreditacionRegistroElimina }
+
+sie_juegos_eliminacion_clasificacion_estudiante:
+    path:    /eliminacion/estudiante
+    defaults: { _controller: SieJuegosBundle:Clasificacion:eliminaInscripcion }
+
+sie_juegos_clasificacion_estadistica_ue_fp_departamento_pdf:
+    path:    /estadistica/ue/fp/departamento/pdf
+    defaults: { _controller: SieJuegosBundle:Clasificacion:estadisticaRegistroUnidadesEducativasFasePreviaDepartamentoDescargaPdf }
+
+sie_juegos_clasificacion_estadistica_ue_fp_distrito_pdf:
+    path:    /estadistica/ue/fp/distrito/pdf
+    defaults: { _controller: SieJuegosBundle:Clasificacion:estadisticaRegistroUnidadesEducativasFasePreviaDistritoDescargaPdf }

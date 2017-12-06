@@ -1,0 +1,96 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+<!-- Start page header -->
+<div class="header-content">
+    <h2><i class="glyphicon glyphicon-leaf"></i> ¡Bienvenido! <span>Usted a ingresado al sistemas academico de educación alternativa.</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aqui:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+        </ol>
+    </div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+
+<!-- Start body content -->
+<div class="body-content animated fadeIn">
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-4">
+        <div class="panel rounded shadow">
+            <div class="panel-body">
+                <div class="inner-all">
+                    <ul class="list-unstyled">
+                        <li class="text-center">
+                            <img data-no-retina class="img-circle img-bordered-primary" height="150" width="150" src="/uploads/personasfotos/{{app.session.get('userfoto')}}" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}">
+                        </li>
+                        <li class="text-center">
+                            <h4 class="text-capitalize">{{app.session.get('name')}} {{app.session.get('lastname')}}</h4>
+                            <p class="text-muted text-capitalize">{{app.session.get('cuentauser')}}</p>
+                        </li>                                        
+                        <li><br/></li>
+                        <li>
+                            <div class="btn-group-vertical btn-block">
+                                <a href="{{path('sie_usuarios_homepage')}}" class="btn btn-default"><i class="fa fa-cog pull-right"></i>Editar Cuenta - Gestión de Usuarios</a>                                
+                                <a href="{{path('logout')}}" class="btn btn-default"><i class="fa fa-sign-out pull-right"></i>Salir</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div><!-- /.panel -->                            
+    </div>
+    <div class="col-lg-9 col-md-9 col-sm-8">
+        <div class="profile-cover">
+            <div class="cover rounded shadow no-overflow">
+                 
+                    <div class="inner-cover">
+                        <!-- Start offcanvas btn group menu: This menu will take position at the top of profile cover (mobile only). -->
+                        <div class="btn-group cover-menu-mobile hidden-lg hidden-md">
+                            <button type="button" class="btn btn-theme btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right no-border" role="menu">                                                
+                                {% if app.session.get('roluser') == 8 %}
+                                    <li class="active"><a onclick="selgessubsemFormShow();"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>                                                
+                                    {#<li><a href="page-profile.html#"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small>(98)</small></a></li>#}
+                                    {#<li><a href="{{ path('herramientalt_ceducativa_estadistiscas_departamento')}}"><i class="fa fa-fw fa-edit"></i> <span>Estadísticas</span></a></li>#}
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <img data-no-retina height="50" width="150" src="/uploads/institutoseducativos/40730321.jpg" class="img-responsive full-width" alt="cover">
+                    </div>
+
+                    <ul class="list-unstyled no-padding hidden-sm hidden-xs cover-menu">                                        
+                        {% if app.session.get('roluser') == 8 %}
+                            <li class="active"><a onclick="selgessubsemFormShow();"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>                                        
+                            {#<li><a href="page-profile.html#"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small>(98)</small></a></li>#}
+                            {#<li><a href="{{ path('herramientalt_ceducativa_estadistiscas_departamento')}}"><i class="fa fa-fw fa-edit"></i> <span>Estadísticas</span></a></li>#}
+                        {% endif %}
+                    </ul>
+                        
+                
+            </div><!-- /.cover -->
+        </div><!-- /.profile-cover -->
+        <div class="divider">
+
+        </div>
+    </div>
+</div><!-- /.row -->                    
+</div><!-- /.body-content -->
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% if app.session.get('ie_id') != '-1' %}
+            <script>
+            $(document).ready(function () {                
+                selgessubsemFormShow();
+            });  
+            </script>
+{% endif %}
+{% endblock %}
+    

@@ -1,0 +1,17 @@
+history_inscription_index:
+    path:    /
+    defaults: { _controller: SieAppWebBundle:HistoryInscription:index }
+
+history_inscription_result:
+    path:    /result
+    defaults: { _controller: SieAppWebBundle:HistoryInscription:result }
+
+history_inscription_findIE:
+     path:    /findIE/{id}/{nivel}/{grado}/{lastue}
+     defaults: { _controller: SieAppWebBundle:HistoryInscription:findIE }
+     options:
+         expose: true   
+
+history_inscription_saveMateriasNotas:
+    path: /saveMateriasNotas
+    defaults: { _controller: SieAppWebBundle:HistoryInscription:saveMateriasNotas }

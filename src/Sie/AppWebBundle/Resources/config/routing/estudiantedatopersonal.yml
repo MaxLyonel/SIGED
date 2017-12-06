@@ -1,0 +1,19 @@
+estudiantedatopersonal_index:
+    path:     /index
+    defaults: { _controller: "SieAppWebBundle:EstudianteDatopersonal:index" }
+
+estudiantedatopersonal_juegos_deportistas_fase3:
+    path:     /juegos/deportistas/fase/3
+    defaults: { _controller: "SieAppWebBundle:EstudianteDatopersonal:juegosDeportistasFase3" }
+
+estudiantedatopersonal_juegos_deportistas_fase2:
+    path:     /juegos/deportistas/fase/2
+    defaults: { _controller: "SieAppWebBundle:EstudianteDatopersonal:juegosDeportistasFase2" }
+
+estudiantedatopersonal_juegos_deportistas_fase3_form:
+    path:     /juegos/deportistas/fase/3/form
+    defaults: { _controller: "SieAppWebBundle:EstudianteDatopersonal:juegosDeportistasFase3Form" }
+
+estudiantedatopersonal_juegos_deportistas_fase3_form_save:
+    path:     /juegos/deportistas/fase/3/form/save
+    defaults: { _controller: "SieAppWebBundle:EstudianteDatopersonal:juegosDeportistasFase3FormSave" }

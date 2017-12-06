@@ -1,0 +1,39 @@
+reg_multigrado_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:Multigrado:index }
+
+reg_multigrado_save:
+    path:     /multigrado_save/
+    defaults: { _controller: "SieRegularBundle:Multigrado:save" }
+    options:
+         expose: true
+
+reg_multigrado_reload:
+    path:     /multigrado_reload/
+    defaults: { _controller: "SieRegularBundle:Multigrado:reload" }
+    options:
+         expose: true
+
+reg_multigrado_yesMultigrado:
+    path:     /multigrado_option/
+    defaults: { _controller: "SieRegularBundle:Multigrado:yesMultigrado" }
+    options:
+         expose: true
+
+reg_multigrado_noMultigrado:
+    path:     /multigrado_noMultigrado/
+    defaults: { _controller: "SieRegularBundle:Multigrado:noMultigrado" }
+    options:
+         expose: true
+
+reg_multigrado_saveNewMultigrado:
+    path:     /multigrado_saveNewMultigrado/
+    defaults: { _controller: "SieRegularBundle:Multigrado:saveNewMultigrado" }
+    options:
+         expose: true
+
+reg_multigrado_confirmMultigrado:
+    path:     /multigrado_confirmMultigrado/
+    defaults: { _controller: "SieRegularBundle:Multigrado:confirmMultigrado" }
+    options:
+         expose: true

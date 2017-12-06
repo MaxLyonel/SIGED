@@ -1,0 +1,62 @@
+cursosparalelos:
+    path:     /{op}
+    defaults: { _controller: SieRegularBundle:CursosParalelos:index, op:search }
+
+cursosparalelos_show:
+    path:     /{id}/show/
+    defaults: { _controller: "SieRegularBundle:CursosParalelos:show" }
+
+cursosparalelos_new:
+    path:     /new/
+    defaults: { _controller: "SieRegularBundle:CursosParalelos:new" }
+    methods:  POST
+
+cursosparalelos_create:
+    path:     /create/
+    defaults: { _controller: "SieRegularBundle:CursosParalelos:create" }
+    methods:  POST
+
+cursosparalelos_edit:
+    path:     /edit/
+    defaults: { _controller: "SieRegularBundle:CursosParalelos:edit" }
+    methods:  POST
+
+cursosparalelos_update:
+    path:     /update/
+    defaults: { _controller: "SieRegularBundle:CursosParalelos:update" }
+    methods:  [POST, PUT]
+
+cursosparalelos_delete:
+    path:     /delete/
+    defaults: { _controller: "SieRegularBundle:CursosParalelos:delete" }
+    methods:  [POST, DELETE]
+
+cursosparalelos_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    defaults: { _controller: "SieRegularBundle:CursosParalelos:lista_areas_nivel" }
+    options:
+         expose: true
+
+cursosparalelos_listar_areas_curso:
+    path:     /lista_areas_curso/
+    defaults: { _controller: "SieRegularBundle:CursosParalelos:lista_areas_curso" }
+    options:
+         expose: true
+
+cursosparalelos_asignar_maestro_area:
+    path:     /asignar_maestro_area/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieRegularBundle:CursosParalelos:asignar_maestro" }
+    options:
+         expose: true
+
+asignar_asesor:
+    path:     /asignar_asesor/{idCurso}/{idMaestro}
+    defaults: { _controller: "SieRegularBundle:CursosParalelos:asignar_asesor" }
+    options:
+         expose: true
+
+listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieRegularBundle:CursosParalelos:listargrados" }
+    options:
+         expose: true

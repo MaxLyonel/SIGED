@@ -1,0 +1,53 @@
+{#{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block contentoption %}#}
+        
+        <h2>Lista de Centros de Alternativa con Pendientes de Reporte de Información.</h2>
+        
+        <table aria-readonly="true" class="table" data-container="true" data-preserve="shallow" role="grid">
+            <thead>
+                <tr>
+                    <th class="text-center border-right">No.</th>
+                    <th>Departamento</th>
+                    <th>Código de distrito</th>            
+                    <th>Gestión</th>
+                    <th>Semestre</th>
+                    <th>Observación</th>
+                    <th>Cod. Cea</th>            
+                    <th>Centro Alternativa</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reg in entities %}
+                    <tr>
+                        <td class="text-center border-right">{{ loop.index }}</td>
+                        <td>{{ reg.lugar }}</td>
+                        <td>{{ reg.distrito_cod }}</td>
+                        <td>{{ reg.gestion_tipo_id }}</td>
+                        <td><h5>{{ reg.semestre }}</h5></td>
+                        <td><h4>{{ reg.obs }}</h4></td>                        
+                        <td><h3>{{ reg.ieue }}</h3></td>
+                        <td><h3>{{ reg.institucioneducativa }}</h3></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>              
+{#{% endblock %}    #}             
+
+{#{% block javascripts %}   
+    {{parent()}}#}
+    <script>
+        $(document).ready( function(){
+            $(".tooltips").tooltip();
+        });
+
+        function verificarRegularizacion(){
+            var myText = '¡AVISO IMPORTANTE LEA CON ATENCIÓN!\nLa habilitación de regularización permitira al director modificar datos\ny se registrara fecha y usuario de inicio de regularización\n¿Esta seguro de conceder este acceso?\nSi no esta seguro de este mensaje presione CANCELAR.';
+            if(!confirm(myText)){
+                return false;
+            }
+        };
+    </script>    
+{#{% endblock %}   #}   
+
+    
+

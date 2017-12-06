@@ -1,0 +1,24 @@
+Sie\AppWebBundle\Entity\EspecialidadMaestroTipo:
+    type: entity
+    table: especialidad_maestro_tipo
+    uniqueConstraints:
+        especialidad_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        especialidad:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

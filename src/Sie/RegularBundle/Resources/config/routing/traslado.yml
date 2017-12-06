@@ -1,0 +1,35 @@
+traslado_web:
+    path:    /
+    defaults: { _controller: SieRegularBundle:Traslado:index }
+
+traslado_web_findResult:
+    path:    /findresult
+    defaults: { _controller: SieRegularBundle:Traslado:findResult }
+
+traslado_web_registreInscrip:
+    path:    /saveTraslado
+    defaults: { _controller: SieRegularBundle:Traslado:registreInscrip }
+
+traslado_web_findIE:
+     path:    /findIE/{id}/{nivel}/{grado}/{lastue}
+     defaults: { _controller: SieRegularBundle:Traslado:findIE }
+     options:
+         expose: true
+
+traslado_web_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieRegularBundle:Traslado:findturno }
+    options:
+        expose: true
+
+traslado_web_verificartraslado:
+    path:    /verificartraslado
+    defaults: { _controller: SieRegularBundle:Traslado:verificartraslado }
+    options:
+        expose: true
+
+traslado_web_savetraslado_student:
+    path:     /savetraslado_student
+    defaults: { _controller: "SieRegularBundle:Traslado:saveTraslado" }
+    options:
+       expose: true

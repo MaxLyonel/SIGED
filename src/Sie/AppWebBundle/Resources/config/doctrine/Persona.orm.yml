@@ -1,0 +1,179 @@
+Sie\AppWebBundle\Entity\Persona:
+    type: entity
+    table: persona
+    indexes:
+        fk_persona_estado_civil_tipo1_f:
+            columns:
+                - estadocivil_tipo_id
+        carnet_index:
+            columns:
+                - carnet
+        fk_persona_idioma_materno1_fk:
+            columns:
+                - idioma_materno_id
+        fk_persona_grupo_sanguineo1_fk:
+            columns:
+                - sangre_tipo_id
+        idxapod2:
+            columns:
+                - carnet
+                - paterno
+                - materno
+        fk_dat_rde_persona_cla_genero1_:
+            columns:
+                - genero_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        carnet:
+            type: string
+            nullable: false
+            length: 15
+            fixed: false
+            comment: ''
+            default: '0'
+        rda:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+        libretaMilitar:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: libreta_militar
+        pasaporte:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        fechaNacimiento:
+            type: date
+            nullable: false
+            comment: ''
+            column: fecha_nacimiento
+        segipId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: segip_id
+        complemento:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+        activo:
+            type: boolean
+            nullable: true
+            comment: ''
+        correo:
+            type: string
+            nullable: true
+            length: 40
+            fixed: false
+            comment: ''
+        foto:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        celular:
+            type: string
+            nullable: true
+            length: 10
+            fixed: false
+            comment: ''
+        direccion:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        esvigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+        esvigenteApoderado:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: esvigente_apoderado
+        countEdit:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: count_edit
+    manyToOne:
+        generoTipo:
+            targetEntity: GeneroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                genero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadocivilTipo:
+            targetEntity: EstadoCivilTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadocivil_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaMaterno:
+            targetEntity: IdiomaMaterno
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_materno_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        sangreTipo:
+            targetEntity: SangreTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sangre_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

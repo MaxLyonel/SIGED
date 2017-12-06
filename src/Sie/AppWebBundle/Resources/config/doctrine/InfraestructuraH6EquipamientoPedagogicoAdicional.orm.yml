@@ -1,0 +1,63 @@
+Sie\AppWebBundle\Entity\InfraestructuraH6EquipamientoPedagogicoAdicional:
+    type: entity
+    table: infraestructura_h6_equipamiento_pedagogico_adicional
+    indexes:
+        IDX_7E8E7BDA2CCBCD40:
+            columns:
+                - infraestructura_h6_equipamiento_id
+        IDX_7E8E7BDA2FC55433:
+            columns:
+                - n5_equipamiento_adiciona_estadogeneral_tipo_id
+        IDX_7E8E7BDA8820916A:
+            columns:
+                - n5_mobiliario_adicional_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n5Cantidad:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: n5_cantidad
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        infraestructuraH6Equipamiento:
+            targetEntity: InfraestructuraH6Equipamiento
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h6_equipamiento_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n5EquipamientoAdicionaEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n5_equipamiento_adiciona_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n5MobiliarioAdicionalTipo:
+            targetEntity: InfraestructuraH6MobiliarioAdicionalTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n5_mobiliario_adicional_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

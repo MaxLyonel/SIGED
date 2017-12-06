@@ -1,0 +1,7 @@
+herramienta_infoconsolidation_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InfoConsolidation:index }
+
+herramienta_infoconsolidation_find:
+    path:     /sie/find
+    defaults: { _controller: SieHerramientaBundle:InfoConsolidation:find }

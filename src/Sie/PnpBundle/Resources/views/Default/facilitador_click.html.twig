@@ -1,0 +1,6 @@
+<div class="alert alert-danger" role="alert"><h4>{% if opcion == 1 %} Facilitador no registrado => {% else %} Estudiante no registrado {% endif %} <a class="btn btn-success" id="boton" target="_blanck" onclick="desabilitar()" href="{{ path('sie_pnp_insertar_facilidaor',{'ci':ci}) }}" > {% if opcion == 1 %} Insertar Facilitador {% else %} Insertar Estudiante {% endif %}</a></h4></div>
+<script type="text/javascript">
+	function desabilitar(){
+		document.getElementById("boton").disabled=true;
+	}
+</script>

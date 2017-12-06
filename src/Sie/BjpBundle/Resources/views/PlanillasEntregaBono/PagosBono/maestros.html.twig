@@ -1,0 +1,59 @@
+<form action="" id="formMaestros" onsubmit="asignarMaestro(); return false;">
+	<table class="table table-lilac table-striped">
+		<thead>
+			<tr>
+				<th>Periodo</th>
+				<th>Maestro</th>
+				<th>Horas</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for mco in maestrosCursoOferta %}
+				<tr>
+					{% if operativo >= mco.idNotaTipo and mco.id == 'nuevo' or mco.horas == 0 %}
+						<td>{{mco.periodo}}</td>
+						<td>
+							<input type="hidden" name="ieco[]" value="{{mco.idco}}">
+							<input type="hidden" name="iecom[]" value="{{mco.id}}">
+							<input type="hidden" name="idnt[]" value="{{mco.idNotaTipo}}">
+							<select name="idmi[]" id="" class="chosen-select form-control" data-placeholder="Seleccionar maestro">
+								<option value=""></option>
+								{% for m in maestros %}
+									{% if mco.idmi == m.id %}
+										{% set selected = 'selected' %}
+									{% else %}
+										{% set selected = '' %}
+									{% endif %}
+									<option value="{{m.id}}" {{selected}}>{{m.persona.paterno}} {{m.persona.materno}} {{m.persona.nombre}}</option>
+								{% endfor %}
+							</select>
+						</td>
+						<td><input type="text" name="horas[]" value="{{mco.horas}}" size="2" class="form-control input-sm" autocomplete="off" maxlength="2" onkeypress="return validarNumero(event)" minlength="1"></td>
+					{% else %}
+						<td>{{mco.periodo}}</td>
+						<td>
+							<select class="form-control" data-placeholder="Seleccionar maestro" disabled="disabled">
+								<option value=""></option>
+								{% for m in maestros %}
+									{% if mco.idmi == m.id %}
+										{% set selected = 'selected' %}
+									{% else %}
+										{% set selected = '' %}
+									{% endif %}
+									<option value="{{m.id}}" {{selected}}>{{m.persona.paterno}} {{m.persona.materno}} {{m.persona.nombre}}</option>
+								{% endfor %}
+							</select>
+						</td>
+						<td><input type="text" value="{{mco.horas}}" size="2" class="form-control input-sm" autocomplete="off" maxlength="3" disabled="disabled"></td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<div style="background:#EEEEEE; text-align:right; padding:5px; margin-top:-10px">
+		<button type="button" class="btn btn-default" onclick="cerrarMaestros({{ieco}})">Cerrar</button>
+		{% if operativo < 5 %}
+			<button type="submit" class="btn btn-success">Guardar Cambios</button>
+		{% endif %}
+	</div>
+</form>

@@ -1,0 +1,32 @@
+<div class="checkbox">
+    <label class="label green">Marcar Todos
+    <input type="checkbox" name="marcarTodos" id="marcarTodos" onclick="marcarTodasAreas()">
+    </label>
+</div>
+<div id="no-more-tables">
+<table class="table table-bordered cf">
+    <thead class="cf"> 
+        <tr>
+            <th></th>
+            <th>Campo</th>
+            <th>Código</th>
+            <th>Área</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for areas in areasNivel %}
+            <tr>
+                <td data-title=""><input type="checkbox" name="areas[]" {{areas.marcado}} value="{{areas.codigo}}"></td>
+                <td data-title="Campo">{{areas.campo}}</td>
+                <td data-title="Código">{{areas.codigo}}</td>
+                <td data-title='Área'>{{areas.asignatura}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<hr>
+<div style="text-align: right">
+<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+<button type="submit" class="btn btn-green">Guardar Cambios</button>
+</div>

@@ -1,0 +1,33 @@
+tecnico_humanistico_index:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:TecnicoHumanistico:index" }
+
+tecnico_humanistico_courses:
+    path:     /cursos
+    defaults: { _controller: "SieRegularBundle:TecnicoHumanistico:courses" }
+
+tecnico_humanistico_students:
+    path:     /students/{sie}/{gestion}/{nivel}/{grado}/{paralelo}
+    defaults: { _controller: "SieRegularBundle:TecnicoHumanistico:students" }
+    options:
+         expose: true
+         
+tecnico_humanistico_registro:
+    path:     /registro/{idIns}/{rude}/{iddiv}
+    defaults: { _controller: "SieRegularBundle:TecnicoHumanistico:registro" }
+    options:
+         expose: true
+
+tecnico_humanistico_save:
+    path:     /save
+    defaults: { _controller: "SieRegularBundle:TecnicoHumanistico:save" }
+    options:
+         expose: true    
+         
+tecnico_humanistico_printddjj:         
+    path:     /printddjj
+    defaults: { _controller: "SieRegularBundle:TecnicoHumanistico:printddjj" }
+    
+tecnico_humanistico_list:
+    path: /list
+    defaults: { _controller: "SieRegularBundle:TecnicoHumanistico:list" }

@@ -1,0 +1,56 @@
+Sie\AppWebBundle\Entity\MensajeUsuario:
+    type: entity
+    table: mensaje_usuario
+    indexes:
+        IDX_B438C745C4AE854E:
+            columns:
+                - emisor
+        IDX_B438C745E9C2A867:
+            columns:
+                - receptor
+        IDX_B438C7454C54F362:
+            columns:
+                - mensaje_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        leido:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        emisor:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                emisor:
+                    referencedColumnName: id
+            orphanRemoval: false
+        receptor:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                receptor:
+                    referencedColumnName: id
+            orphanRemoval: false
+        mensaje:
+            targetEntity: Mensaje
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                mensaje_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

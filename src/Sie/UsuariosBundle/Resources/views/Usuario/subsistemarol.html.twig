@@ -1,0 +1,119 @@
+                            {% if '*' in rollugar.subSistema %}
+                                <h5>
+                                    <div> 
+                                        <span class="label label-warning">Accesos segun datos del rol.</span> 
+                                    </div>
+                                </h5>  
+                            {% elseif (rollugar.rolid == 7) or (rollugar.rolid == 8) %}
+                                {% if (rollugar.rolesactivo == true) %}
+                                    <form action="/action_page.php">
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                {% if 'SIG' in rollugar.subSistema %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" checked="checked" value="SIG">SIG<br>
+                                                {% else %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="SIG">SIG<br>    
+                                                {% endif %}
+                                            </div>    
+                                            <div class="col-xs-6">
+                                                {% if 'ALT' in rollugar.subSistema %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" checked="checked" value="ALT">ALT<br>
+                                                {% else %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="ALT">ALT<br>    
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="row">                                          
+                                            <div class="col-xs-6">
+                                                {% if 'DIP' in rollugar.subSistema %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" checked="checked" value="DIP">DIP<br>
+                                                {% else %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="DIP">DIP<br>    
+                                                {% endif %}
+                                            </div>    
+                                        
+                                            <div class="col-xs-6">
+                                                {% if 'PNP' in rollugar.subSistema %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" checked="checked" value="PNP">PNP<br>
+                                                {% else %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="PNP">PNP<br>    
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                {% if 'USU' in rollugar.subSistema %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" checked="checked" value="USU">USU<br>
+                                                {% else %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="USU">USU<br>    
+                                                {% endif %}
+                                            </div>    
+                                            <div class="col-xs-6">
+                                                {% if 'REG' in rollugar.subSistema %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" checked="checked" value="REG">REG<br>
+                                                {% else %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="REG">REG<br>    
+                                                {% endif %}
+                                            </div>    
+                                        </div>
+                                        <div class="row">    
+                                            <div class="col-xs-6">
+                                                {% if 'ESP' in rollugar.subSistema %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" checked="checked" value="ESP">ESP<br>
+                                                {% else %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="ESP">ESP<br>    
+                                                {% endif %}
+                                            </div>    
+                                            <div class="col-xs-6">
+                                                {% if 'EST' in rollugar.subSistema %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" checked="checked" value="EST">EST<br>
+                                                {% else %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="EST">EST<br>    
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="row">                                        
+                                            <div class="col-xs-6">
+                                                {% if 'JUE' in rollugar.subSistema %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" checked="checked" value="JUE">JUE<br>
+                                                {% else %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="JUE">JUE<br>    
+                                                {% endif %}
+                                            </div>                                           
+                                            <div class="col-xs-6">
+                                                {% if 'CER' in rollugar.subSistema %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" checked="checked" value="CER">CER<br>
+                                                {% else %}
+                                                    <input class="chesubsist{{ rollugar.usuariorolid }}" type="checkbox" value="CER">CER<br>    
+                                                {% endif %}
+                                            </div>                                        
+                                        </div>                                    
+                                        <div class="row">
+                                            <div class="col-xs-12" id="div_subsistema_guardar{{ rollugar.usuariorolid }}">
+                                                <a class="glyphicon glyphicon-ok" href="#" onclick="usuariorolupdatesubsistema({{rollugar.usuariorolid}})"> Guardar</a>
+                                            </div>
+                                        </div> 
+                                    </form>
+                                {% else %}
+                                    <h5>
+                                        <div> 
+                                            <span class="label label-default">{{ rollugar.subSistema }}</span>     
+                                        </div>
+                                    </h5>
+                                {% endif %}    
+                            {% else %}
+                                {% if (rollugar.rolesactivo == true) %}
+                                    <h5>
+                                        <div>
+                                            <span class="label label-success">{{ rollugar.subSistema }}</span> 
+                                            
+                                        </div>
+                                    </h5>
+                                {% else %}
+                                    <h5>
+                                        <div> 
+                                            <span class="label label-default">{{ rollugar.subSistema }}</span>     
+                                        </div>
+                                    </h5>
+                                {% endif %}
+                            {% endif %}

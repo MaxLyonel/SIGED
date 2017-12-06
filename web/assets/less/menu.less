@@ -1,0 +1,85 @@
+.navbar { 
+    background-color: #25313e;
+    height: 52px;
+    border-bottom: 1px solid #25313e;
+}
+.profile {
+  margin-left: -225px;
+  left: 225px;
+  width: 225px;
+  position: fixed;
+  top: 52px;
+  height: 80px;
+  padding: 15px 25px; 
+  background-color: #2ecc71;
+  color: #fff;
+  img {
+    float: left;
+    border: 4px solid #f39c12;
+  }
+  .name {
+    float: left;
+    margin-left: 5px;
+    margin-top: 5px;
+    font-size: 16px;
+    font-weight: 400;
+  }
+  .status {
+    float: left;
+    margin-left: 5px;
+    i {
+      color: #e67e22;
+    }
+  }
+}
+.side-nav {
+  margin-left: -225px;
+  left: 225px;
+  width: 225px;
+  position: fixed;
+  top: 132px;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+  background-color: #2c3e50;
+  overflow-y: auto;
+
+}
+
+  /* Bootstrap Default Overrides - Customized Dropdowns for the Side Nav */
+
+  .side-nav>li.with-submenu>ul.collapse {
+    position: relative;
+    min-width: 225px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+
+  .with-submenu>a>b.caret {
+    line-height: 1;
+    color: #fff;
+  }
+  .side-nav>li {
+    border-top: 1px solid #34495e;
+    border-bottom: 1px solid #243240;
+  }
+
+  .side-nav>li.with-submenu>ul.collapse>li>a {
+  color: #ecf0f1;
+  padding: 15px 15px 15px 25px;
+  }
+
+  .side-nav>li.with-submenu>ul.collapse>li>a:hover,
+  .side-nav>li.with-submenu>ul.collapse>li>a.active,
+  .side-nav>li.with-submenu>ul.collapse>li>a:focus {
+  color: #fff;
+  }
+
+  .side-nav>li>a {
+  width: 225px;
+  }

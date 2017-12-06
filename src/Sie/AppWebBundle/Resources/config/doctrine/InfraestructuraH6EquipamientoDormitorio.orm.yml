@@ -1,0 +1,122 @@
+Sie\AppWebBundle\Entity\InfraestructuraH6EquipamientoDormitorio:
+    type: entity
+    table: infraestructura_h6_equipamiento_dormitorio
+    indexes:
+        IDX_937F8EC92CCBCD40:
+            columns:
+                - infraestructura_h6_equipamiento_id
+        IDX_937F8EC9A299A121:
+            columns:
+                - n2_cielo_estadogeneral_tipo_id
+        IDX_937F8EC9ABD2ACD5:
+            columns:
+                - n2_piso_estadogeneral_tipo_id
+        IDX_937F8EC953580569:
+            columns:
+                - n2_techo_estadogeneral_tipo_id
+        IDX_937F8EC9A963F24F:
+            columns:
+                - n2_pared_estadogeneral_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n2DormitorioGeneroTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n2_dormitorio_genero_tipo_id
+        n2CantidadDormitorios:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n2_cantidad_dormitorios
+        n2Camaliteras:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n2_camaliteras
+        n2Camasimples:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n2_camasimples
+        n2Camaotro:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n2_camaotro
+        n1Aream2:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n1_aream2
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        infraestructuraH6Equipamiento:
+            targetEntity: InfraestructuraH6Equipamiento
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h6_equipamiento_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n2CieloEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n2_cielo_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n2PisoEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n2_piso_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n2TechoEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n2_techo_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n2ParedEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n2_pared_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

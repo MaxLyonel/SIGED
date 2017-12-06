@@ -1,0 +1,363 @@
+<?php
+
+namespace Sie\AppWebBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * EstudianteAsignatura
+ */
+class EstudianteAsignatura
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     */
+    private $ferchaLastUpdate;
+
+    /**
+     * @var integer
+     */
+    private $version;
+
+    /**
+     * @var integer
+     */
+    private $revisionId;
+
+    /**
+     * @var integer
+     */
+    private $maestroInscripcionId;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\AsignaturaEspecialidadTipo
+     */
+    private $asignaturaEspecialidadTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\AsignaturaTipo
+     */
+    private $asignaturaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\GestionTipo
+     */
+    private $gestionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcion
+     */
+    private $estudianteInscripcion;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set ferchaLastUpdate
+     *
+     * @param \DateTime $ferchaLastUpdate
+     * @return EstudianteAsignatura
+     */
+    public function setFerchaLastUpdate($ferchaLastUpdate)
+    {
+        $this->ferchaLastUpdate = $ferchaLastUpdate;
+    
+        return $this;
+    }
+
+    /**
+     * Get ferchaLastUpdate
+     *
+     * @return \DateTime 
+     */
+    public function getFerchaLastUpdate()
+    {
+        return $this->ferchaLastUpdate;
+    }
+
+    /**
+     * Set version
+     *
+     * @param integer $version
+     * @return EstudianteAsignatura
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    
+        return $this;
+    }
+
+    /**
+     * Get version
+     *
+     * @return integer 
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set revisionId
+     *
+     * @param integer $revisionId
+     * @return EstudianteAsignatura
+     */
+    public function setRevisionId($revisionId)
+    {
+        $this->revisionId = $revisionId;
+    
+        return $this;
+    }
+
+    /**
+     * Get revisionId
+     *
+     * @return integer 
+     */
+    public function getRevisionId()
+    {
+        return $this->revisionId;
+    }
+
+    /**
+     * Set maestroInscripcionId
+     *
+     * @param integer $maestroInscripcionId
+     * @return EstudianteAsignatura
+     */
+    public function setMaestroInscripcionId($maestroInscripcionId)
+    {
+        $this->maestroInscripcionId = $maestroInscripcionId;
+    
+        return $this;
+    }
+
+    /**
+     * Get maestroInscripcionId
+     *
+     * @return integer 
+     */
+    public function getMaestroInscripcionId()
+    {
+        return $this->maestroInscripcionId;
+    }
+
+    /**
+     * Set asignaturaEspecialidadTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\AsignaturaEspecialidadTipo $asignaturaEspecialidadTipo
+     * @return EstudianteAsignatura
+     */
+    public function setAsignaturaEspecialidadTipo(\Sie\AppWebBundle\Entity\AsignaturaEspecialidadTipo $asignaturaEspecialidadTipo = null)
+    {
+        $this->asignaturaEspecialidadTipo = $asignaturaEspecialidadTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get asignaturaEspecialidadTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\AsignaturaEspecialidadTipo 
+     */
+    public function getAsignaturaEspecialidadTipo()
+    {
+        return $this->asignaturaEspecialidadTipo;
+    }
+
+    /**
+     * Set asignaturaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\AsignaturaTipo $asignaturaTipo
+     * @return EstudianteAsignatura
+     */
+    public function setAsignaturaTipo(\Sie\AppWebBundle\Entity\AsignaturaTipo $asignaturaTipo = null)
+    {
+        $this->asignaturaTipo = $asignaturaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get asignaturaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\AsignaturaTipo 
+     */
+    public function getAsignaturaTipo()
+    {
+        return $this->asignaturaTipo;
+    }
+
+    /**
+     * Set gestionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\GestionTipo $gestionTipo
+     * @return EstudianteAsignatura
+     */
+    public function setGestionTipo(\Sie\AppWebBundle\Entity\GestionTipo $gestionTipo = null)
+    {
+        $this->gestionTipo = $gestionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\GestionTipo 
+     */
+    public function getGestionTipo()
+    {
+        return $this->gestionTipo;
+    }
+
+    /**
+     * Set estudianteInscripcion
+     *
+     * @param \Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion
+     * @return EstudianteAsignatura
+     */
+    public function setEstudianteInscripcion(\Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion = null)
+    {
+        $this->estudianteInscripcion = $estudianteInscripcion;
+    
+        return $this;
+    }
+
+    /**
+     * Get estudianteInscripcion
+     *
+     * @return \Sie\AppWebBundle\Entity\EstudianteInscripcion 
+     */
+    public function getEstudianteInscripcion()
+    {
+        return $this->estudianteInscripcion;
+    }
+    /**
+     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta
+     */
+    private $institucioneducativaCursoOferta;
+
+
+    /**
+     * Set institucioneducativaCursoOferta
+     *
+     * @param \Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta $institucioneducativaCursoOferta
+     * @return EstudianteAsignatura
+     */
+    public function setInstitucioneducativaCursoOferta(\Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta $institucioneducativaCursoOferta = null)
+    {
+        $this->institucioneducativaCursoOferta = $institucioneducativaCursoOferta;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativaCursoOferta
+     *
+     * @return \Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta 
+     */
+    public function getInstitucioneducativaCursoOferta()
+    {
+        return $this->institucioneducativaCursoOferta;
+    }
+    /**
+     * @var integer
+     */
+    private $institucioneducativaTecnicaCursoOfertaId;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstudianteasignaturaEstado
+     */
+    private $estudianteasignaturaEstado;
+
+
+    /**
+     * Set institucioneducativaTecnicaCursoOfertaId
+     *
+     * @param integer $institucioneducativaTecnicaCursoOfertaId
+     * @return EstudianteAsignatura
+     */
+    public function setInstitucioneducativaTecnicaCursoOfertaId($institucioneducativaTecnicaCursoOfertaId)
+    {
+        $this->institucioneducativaTecnicaCursoOfertaId = $institucioneducativaTecnicaCursoOfertaId;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativaTecnicaCursoOfertaId
+     *
+     * @return integer 
+     */
+    public function getInstitucioneducativaTecnicaCursoOfertaId()
+    {
+        return $this->institucioneducativaTecnicaCursoOfertaId;
+    }
+
+    /**
+     * Set estudianteasignaturaEstado
+     *
+     * @param \Sie\AppWebBundle\Entity\EstudianteasignaturaEstado $estudianteasignaturaEstado
+     * @return EstudianteAsignatura
+     */
+    public function setEstudianteasignaturaEstado(\Sie\AppWebBundle\Entity\EstudianteasignaturaEstado $estudianteasignaturaEstado = null)
+    {
+        $this->estudianteasignaturaEstado = $estudianteasignaturaEstado;
+    
+        return $this;
+    }
+
+    /**
+     * Get estudianteasignaturaEstado
+     *
+     * @return \Sie\AppWebBundle\Entity\EstudianteasignaturaEstado 
+     */
+    public function getEstudianteasignaturaEstado()
+    {
+        return $this->estudianteasignaturaEstado;
+    }
+    /**
+     * @var \DateTime
+     */
+    private $ferchaRegistro;
+
+
+    /**
+     * Set ferchaRegistro
+     *
+     * @param \DateTime $ferchaRegistro
+     * @return EstudianteAsignatura
+     */
+    public function setFerchaRegistro($ferchaRegistro)
+    {
+        $this->ferchaRegistro = $ferchaRegistro;
+    
+        return $this;
+    }
+
+    /**
+     * Get ferchaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFerchaRegistro()
+    {
+        return $this->ferchaRegistro;
+    }
+}

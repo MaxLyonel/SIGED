@@ -1,0 +1,45 @@
+Sie\AppWebBundle\Entity\SuperiorEspecialidadTipo:
+    type: entity
+    table: superior_especialidad_tipo
+    indexes:
+        IDX_79096E00D122181D:
+            columns:
+                - superior_facultad_area_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codigo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        especialidad:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        superiorFacultadAreaTipo:
+            targetEntity: SuperiorFacultadAreaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_facultad_area_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,3 @@
+reporte_tecnica_index:
+    path:     /inicio
+    defaults: { _controller: SieAppWebBundle:Reporte:alternativa } 

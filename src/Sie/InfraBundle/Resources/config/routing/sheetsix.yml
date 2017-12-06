@@ -1,0 +1,7 @@
+infra_sheet_six_index:
+    path:     /index
+    defaults: { _controller: SieInfraBundle:SheetSix:index }
+
+infra_sheet_six_access:
+    path:     /access
+    defaults: { _controller: SieInfraBundle:SheetSix:access }

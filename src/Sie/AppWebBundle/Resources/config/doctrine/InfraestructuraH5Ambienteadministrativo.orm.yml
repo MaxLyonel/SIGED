@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5Ambienteadministrativo:
+    type: entity
+    table: infraestructura_h5_ambienteadministrativo
+    indexes:
+        IDX_5D8497E553BED532:
+            columns:
+                - infraestructura_juridiccion_geografica_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        infraestructuraJuridiccionGeografica:
+            targetEntity: InfraestructuraJuridiccionGeografica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_juridiccion_geografica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

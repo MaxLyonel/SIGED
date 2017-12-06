@@ -1,0 +1,17 @@
+{% extends 'layoutPnp.html.twig' %}
+{% block body %}    
+    {% for flashMessage in app.session.flashbag.get('success') %}
+    <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Bien!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>¡Advertencia!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}   
+<div align="center"><img src="{{ asset('images/pnp_pie.png')}}" alt="" height="140" width="600"></div>
+    <div align="center"><img src="{{ asset('images/pnp_bolivia.png')}}" alt="" height="500" width="500"></div>
+{% endblock %} 

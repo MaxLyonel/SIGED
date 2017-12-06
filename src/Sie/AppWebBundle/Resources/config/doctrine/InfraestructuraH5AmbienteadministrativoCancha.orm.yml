@@ -1,0 +1,90 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5AmbienteadministrativoCancha:
+    type: entity
+    table: infraestructura_h5_ambienteadministrativo_cancha
+    indexes:
+        IDX_48C04E67E3BA9EBC:
+            columns:
+                - n21_piso_estadogeneral_tipo_id
+        IDX_48C04E67C7CEE60E:
+            columns:
+                - n21_material_piso_tipo_id
+        IDX_48C04E671DBD8CC2:
+            columns:
+                - infraestructura_h5_ambienteadministrativo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n21DeporteDestino:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: n21_deporte_destino
+        n21EsTechado:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n21_es_techado
+        n21EsGraderias:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n21_es_graderias
+        n21CapacidadGraderias:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n21_capacidad_graderias
+        n21AreaCanchaMt2:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n21_area_cancha_mt2
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        n21PisoEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n21_piso_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n21MaterialPisoTipo:
+            targetEntity: InfraestructuraH5MaterialPisoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n21_material_piso_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH5Ambienteadministrativo:
+            targetEntity: InfraestructuraH5Ambienteadministrativo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h5_ambienteadministrativo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

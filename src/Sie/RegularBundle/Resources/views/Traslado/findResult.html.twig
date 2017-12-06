@@ -1,0 +1,437 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Inscripción Traslado
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('traslado_web')}}">Buscar</a>
+                    </li>
+                    <li class="active">Resultado</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    <div class="row">
+        {% for flashMessage in app.session.flashbag.get('newUser') %}
+            <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ flashMessage.mensaje }}<br>
+                <button class="btn-link" data-toggle="tooltip" data-placement="top" title="Descargar declaracion jurada"><img src="{{asset('assets/images/pdf.png')}}"> Declaración jurada</button>
+                    {# flashMessage.nombre #}
+                    {# flashMessage.usuario #}
+                    {# flashMessage.password #}
+            </div>
+        {% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center" >Rude</th>
+                                        <th class="text-center">Nombre</th>
+                                        <th class="text-center">Paterno</th>
+                                        <th class="text-center">Materno</th>
+                                        <th class="text-center">CI</th>
+                                        <th class="text-center">Complemento</th>
+                                        <th class="text-center">Genero</th>
+                                        <th class="text-center">Fecha Nacimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Rude" class='text-center'>{{datastudent.codigoRude}}</td>
+                                        <td data-title="Nombre" class='text-center'>{{ datastudent.nombre|e }} </td>
+                                        <td data-title="Paterno" class='text-center'> {{datastudent.paterno|e}}</td>
+                                        <td data-title="Materno" class='text-center'> {{datastudent.materno|e}}</td>
+                                        <td data-title="CI" class='text-center'>{{datastudent.carnetIdentidad}} </td>
+                                        <td data-title="Complemento" class='text-center'>{{datastudent.complemento}}</td>
+                                        <td data-title="Genero" class='text-center'>{{datastudent.generoTipo}} </td>
+                                        <td data-title="Genero" class='text-center'>{{datastudent.fechaNacimiento|date('d-m-Y')}} </td>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Inscripción</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinformation" class="panel-collapse collapse">
+                    <div class="portlet-body">
+
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Gestión</th>
+                                        <th class="text-center">Sie</th>
+                                        <th class="text-center">Unidad Educativa</th>
+                                        <th class="text-center">Nivel</th>
+                                        <th class="text-center">Grado</th>
+                                        <th class="text-center">Paralelo</th>
+                                        <th class="text-center">Turno</th>
+                                        <th class="text-center">Est. Matrícula</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for inscription in datainscriptions%}
+                                        <tr>
+
+                                            <td data-title="Gestión">{{inscription.gestion}}</td>
+                                            <td data-title="Sie">{{inscription.sie}}</td>
+                                            <td data-title="Institución Educativa">{{inscription.institucioneducativa}}</td>
+                                            <td data-title="Nivel">{{inscription.nivel}} </td>
+                                            <td data-title="Grado">{{inscription.grado}}</td>
+                                            <td data-title="Paralelo" class="text-center">{{inscription.paralelo}}</td>
+                                            <td data-title="Turno" class="text-center">{{inscription.turno}} </td>
+                                            <td data-title="Est. Matricula" class="text-center">{{inscription.estadoMatricula}}</td>
+                                        </tr>
+                                    {% endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Traslado Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pusers"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pusers" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+
+                        {{form_start(formInscription, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form', 'id':'formTralado' } } )}}
+
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                {{form_label(formInscription.institucionEducativa)}}
+                                {{form_widget(formInscription.institucionEducativa, {'attr':{'onkeyUp':'institucionEducativa(this.value)'}  } )}}
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-6">
+                                {{form_label(formInscription.institucionEducativaName)}}
+                                {{form_widget(formInscription.institucionEducativaName)}}
+                            </div>
+                            <!--div class="col-md-4">
+                                {#{form_label(formInscription.bimestre)}#}
+                                {#{form_widget(formInscription.bimestre)}#}
+                            </div-->
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                {{form_label(formInscription.nivel)}}
+                                {{form_widget(formInscription.nivel)}}
+                            </div>
+                            <div class="col-md-3">
+                                {{form_label(formInscription.grado)}}
+                                {{form_widget(formInscription.grado)}}
+                            </div>
+                            <div class="col-md-3 form-group">
+                                {{form_label(formInscription.paralelo)}}
+                                {{form_widget(formInscription.paralelo, {'attr':{'required':'true','onchange':'getTurno(this.value)','onmousedown':'getTurno(this.value)'} })}}
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                {{form_label(formInscription.turno)}}
+                                {{form_widget(formInscription.turno)}}
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        {{form_widget(formInscription.save, {'attr':{'class':'btn btn-default'} }) }}
+                        {{form_end(formInscription)}}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <div class="col-md-12">
+                <div id='answerTrasladoId' style="background:#FFFFFF; padding:10px">
+
+                </div>
+            </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{path('traslado_web')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+            </div>
+        </div>
+
+
+
+    {% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+
+        <script>
+
+            function institucionEducativa(id) {
+
+                if (id.length > 7) {
+                    //get the nivel and grado to do the search
+                    nivel = $('#form_nivelId').val();
+                    grado = $('#form_gradoId').val();
+                    lastue = $('#form_lastue').val();
+                    //call the ajax function by krlos
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('traslado_web_findIE', {'id': id, 'nivel': nivel, 'grado': grado, 'lastue': lastue}),
+                        beforeSend: function () {
+                            //$("#departamento").empty();
+                            //$("#div-load").parent().append('<div class="loading"></div>');
+                        },
+                        success: function (data) {
+                            $("#form_institucionEducativaName").val(data.nombre);
+                            //$(".loading").remove();
+                            $("#form_paralelo").empty();
+                            $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                            $.each(data.paralelo, function (i, value) {
+                                $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            //$(".loading").remove();
+                        }
+                    });
+                } else {
+
+                    $("#form_institucionEducativaName").val('');
+                    //$(".loading").remove();
+                    $("#form_paralelo").empty();
+                    $("#form_turno").empty();
+
+                }
+
+            }
+
+            function getTurno(paralelo) {
+
+                sie = $('#form_institucionEducativa').val();
+                nivel = $('#form_nivelId').val();
+                grado = $('#form_gradoId').val();
+
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('traslado_web_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado}),
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        $("#form_turno").empty();
+                        $("#form_turno").append('<option value="">Seleccionar</option>');
+                        $.each(data.aturnos, function (i, value) {
+                            $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                });
+
+            }
+            var verificarTraslado = function (){
+              sie = $('#form_institucionEducativa').val();
+              paralelo = $('#form_paralelo').val();
+              turno = $('#form_turno').val();
+
+              if(sie.length > 0 && paralelo != "" && turno != ""){
+
+                  formTralado = $('#formTralado').serialize();
+                  $.ajax({
+                      type: 'post',
+                      url: Routing.generate('traslado_web_verificartraslado'),
+                      data: formTralado,
+                      beforeSend: function () {
+                          $("#answerTrasladoId").empty();
+                          $("#answerTrasladoId").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                      },
+                      success: function (data) {
+                          $("#answerTrasladoId").empty();
+                          $("#answerTrasladoId").append(data);
+                      },
+                      statusCode: {
+                          500: function () {
+
+                          },
+                          404: function () {
+
+                          }
+                      }
+                  });
+              }else{
+                  alert('Necesita ingresar Sie, paralelo y turno para poder realizar el traslado!!!');
+                  return false;
+              }
+
+            };
+
+            var saveTraslado = function (){
+                var enviar = true;
+                var mensaje = "";
+            	$(".nota").each(function (index) {
+                    if($(this).val() == 0 ){
+                    	enviar = false;
+                        mensaje = "Las notas registradas no pueden estar vacias o estar en cero";
+                    }
+                });
+                if(enviar == false){
+                	alert(mensaje);
+                }
+                if(enviar == true){
+                    formData = $('#formTrasladoNotasId').serialize();
+                    $.ajax({
+                       type: 'post',
+                       url: Routing.generate('traslado_web_savetraslado_student'),
+                       data: formData,
+                       beforeSend: function () {
+                           $("#answerTrasladoId").empty();
+                           $("#answerTrasladoId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                       },
+                       success: function (data) {
+                           $("#answerTrasladoId").empty();
+                           $("#answerTrasladoId").append(data);
+                           //location.reload(true);
+                       },
+                       statusCode: {
+                           500: function () {
+
+                           },
+                           404: function () {
+
+                           }
+                       }
+                    });
+                }
+            };
+
+            function validarNota(e,id,nota){
+                var key = e || window.event;
+                var k = key.charCode || key.keyCode;
+                if ((k < 48 || k > 57) //NUmeros
+                    && (k != 13) //ENTER
+                    && (k != 8) //retroceso
+                    && (k != 9) //tab
+                )
+                return false;
+            }
+
+            function validarNota1(id,nota){
+
+                    var grado = $('#idGrado').val();
+                    var gestion = $('#idGestion').val();
+                    if(gestion < 2013){
+                        if(nota<0){$('#'+id).val(0);}
+                        if(nota>70){$('#'+id).val(70);}
+                    }else{
+                        if(gestion == 2013){
+                            if(grado == 1){
+                                if(nota<0){$('#'+id).val(0);}
+                                if(nota>100){$('#'+id).val(100);}
+                            }else{
+                                if(nota<0){$('#'+id).val(0);}
+                                if(nota>70){$('#'+id).val(70);}
+                            }
+                        }else{
+                            if(nota<0){$('#'+id).val(0);}
+                            if(nota>100){$('#'+id).val(100);}
+                        }
+                    }
+
+            }
+
+            function validarNotaCualitativa(e,id,nota){
+                var key = e || window.event;
+                var k = key.charCode || key.keyCode;
+                if ((k < 97 || k > 122)//letras minusculas
+                    && (k < 65 || k > 90) //letras mayusculas
+                    && (k < 48 || k > 57) //NUmeros
+                    && (k != 13) //ENTER
+                    && (k != 8) //retroceso
+                    && (k != 9) //tab
+                    && (k != 241) //ñ
+                     && (k != 209) //Ñ
+                     && (k != 32) //espacio
+                     && (k != 225) //á
+                     && (k != 233) //é
+                     && (k != 237) //í
+                     && (k != 243) //ó
+                     && (k != 250) //ú
+                     && (k != 193) //Á
+                     && (k != 201) //É
+                     && (k != 205) //Í
+                     && (k != 211) //Ó
+                     && (k != 218) //Ú
+                     && (k != 44) //coma ,
+                     && (k != 46) //punto .
+                    )
+                return false;
+            }
+
+        </script>
+
+
+    {% endblock %}

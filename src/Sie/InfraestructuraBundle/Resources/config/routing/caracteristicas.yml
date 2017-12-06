@@ -1,0 +1,14 @@
+infra_caracteristicas_index:
+    path:     /
+    defaults: { _controller: "SieInfraestructuraBundle:Caracteristicas:index" }
+
+infra_caracteristicas_create_update:
+    path:     /create_update
+    defaults: { _controller: "SieInfraestructuraBundle:Caracteristicas:createUpdate" }
+    methods: POST
+
+infra_caracteristicas_bloquesedificados:
+    path:     /bloquesedificados
+    defaults: { _controller: "SieInfraestructuraBundle:Caracteristicas:bloquesEdificados" }
+    options:
+        expose: true

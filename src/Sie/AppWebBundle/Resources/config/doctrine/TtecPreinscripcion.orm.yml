@@ -1,0 +1,44 @@
+Sie\AppWebBundle\Entity\TtecPreinscripcion:
+    type: entity
+    table: ttec_preinscripcion
+    indexes:
+        IDX_BC52CA236716D8F6:
+            columns:
+                - ttec_materia_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        personaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: persona_id
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        ttecMateriaTipo:
+            targetEntity: TtecMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

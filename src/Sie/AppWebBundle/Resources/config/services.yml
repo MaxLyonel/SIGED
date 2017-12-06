@@ -1,0 +1,12 @@
+services:
+    sie_app_web.maestro_inscripcion:
+        class: Sie\AppWebBundle\Services\MaestroInscripcion
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"
+
+    sie_app_web.persona:
+        class: Sie\AppWebBundle\Services\Persona
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"

@@ -1,0 +1,149 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+
+{% block contentoption %}
+
+
+    <div class="row">
+        <div class="page-header">
+            <h3 class="heading pull-left"><i class="fa fa-home animated flip"></i> Registro Personal <span class="sub-heading">{{app.session.get('fullname')}}</span></h3>
+        </div>
+    </div>
+
+    <div class="separator bottom"></div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+
+                <div class="panel-heading text-center">
+                    <h4 class="text-info">Datos Personal Académico</h4>
+                </div>
+
+                <div class="panel-body">
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form-horizontal'} } )}}
+
+
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">CI</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.carnet,{ 'attr':{'class': 'form-control','placeholder':''}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Paterno</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.paterno,{ 'attr':{'class': 'form-control','placeholder':''}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Materno</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.materno,{ 'attr':{'class': 'form-control','placeholder':''}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Nombre</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.nombre,{ 'attr':{'class': 'form-control','placeholder':''}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Idioma Materno</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.idiomaMaterno,{ 'attr':{'class': 'form-control','placeholder':''}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Género</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.generoTipo,{ 'attr':{'class': 'form-control','placeholder':''}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Tipo de Sangre</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.sangreTipo,{ 'attr':{'class': 'form-control','placeholder':''}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Estado Civil</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.estadocivilTipo,{ 'attr':{'class': 'form-control','placeholder':''}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Cargo</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.cargoTipo,{ 'attr':{'class': 'form-control','placeholder':''}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Especialidad</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.especialidadTipo,{ 'attr':{'class': 'form-control','placeholder':'Inserte Rude'}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Financiamiento</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.financiamientoTipo,{ 'attr':{'class': 'form-control','placeholder':'Inserte Rude'}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Formacion</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.formacionTipo,{ 'attr':{'class': 'form-control','placeholder':'Inserte Rude'}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Periodo</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.periodoTipo,{ 'attr':{'class': 'form-control','placeholder':'Inserte Rude'}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">Estado</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.estadomaestro,{ 'attr':{'class': 'form-control','placeholder':'Inserte Rude'}  }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="form_codigoRude" class="col-sm-2 control-label">&nbsp;</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.aceptar, { 'attr': {'class': 'btn btn-success'} }) }}
+                            <a href="" onclick="window.history.back();" class="btn btn-default">Cancelar</a>
+                        </div>
+                    </div>
+
+                    {{form_end(form)}}
+                </div>
+                <div class="panel-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

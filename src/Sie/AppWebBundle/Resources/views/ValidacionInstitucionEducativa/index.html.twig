@@ -1,0 +1,214 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+    <div class="modal modal-flex fade" id="masDetalles" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Detalles</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idDetalle"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Validación
+                    <small>Lista de unidades educativas activas y no activas</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-home"></i>  <a href="{{ path('validacion') }}"> Lista</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <div class="well well-lg text-dark-blue">
+                <h4>MÓDULO DE VALIDACIÓN</h4>
+                <h5>UNIDADES EDUCATIVAS POR DISTRITO EDUCATIVO</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="pull-left">
+                        <h4 class="portlet-title">Lista de Unidades Educativas activas y no activas en la presente y anterior gestión </h4>
+                    </div>
+                    <div class="pull-right">
+                        <a class="btn btn-success" href="{{ path('sie_app_bjp_validacion_ie_lista_descarga_dpf') }}">
+                            Imprimir
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="portlet-body">
+                    <div class="panel-body panel-primary">
+                        {% if entityUE is not empty %}
+                            <form action="{{ path('sie_app_bjp_validacion_ie_lista_paso_1_save') }}" method="POST" id="form">
+                                <input type="hidden" name="gestion" id="gestion" value="{{ gestionActual }}">        
+                                <input type="hidden" name="sie" id="sie" value="0">          
+                                <input type="hidden" name="cantidad" id="cantidad" value="0">         
+                                <input type="hidden" name="sienuevo" id="sienuevo" value="0">        
+                                <input type="hidden" name="obs" id="obs" value="">               
+                                <input type="hidden" name="tipo" id="tipo" value="0">                                
+                            </form>               
+                            <div id="no-more-tables" class="table-responsive">
+                                <!--table class="table table-bordered table-hover cf dataTable" id="myTable"-->
+                                <table class="table table-bordered table-striped cf dataTable">
+                                    <thead  class="cf">
+                                        <tr>
+                                            <th>N°</th>
+                                            <th>Código SIE</th>
+                                            <th>Institucion Educativa</th>
+                                            <th>Gestión {{ gestionAnterior }}</th>
+                                            <th>Gestión {{ gestionActual }}</th>
+                                            <th>Cant. Est.</th>
+                                            <th>Cierre/Apertura</th>
+                                            <th>Observación</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for data in entityUE %}
+                                            {% set gestion_anterior = data.gestion_anterior %}
+                                            {% set gestion_actual = data.gestion_actual %}
+                                            {% set sie = data.institucioneducativa_id %}                                              
+                                            {% set sieNuevo = data.institucioneducativa_id_nueva %}                            
+                                            {% set ue = data.institucioneducativa %}                        
+                                            {% set cantEstudiantes = data.cantidad_estudiantes %}                        
+                                            {% set obs = data.obs %}                       
+                                            {% set tipoValidacionId = data.validacion_id %}          
+                                            {% set tipoValidacion = data.validacion %}         
+                                            {% set tipo = data.tipo %}  
+                                                <tr>
+                                                    <td>{{ loop.index }}</td>
+                                                    <td>{{ sie }}</td>
+                                                    <td>{{ ue }}</td>
+                                                    <td style="text-align:center;">{% if gestion_anterior > 0 %} X {% else %} &nbsp; {% endif %}</td>
+                                                    <td style="text-align:center;">{% if gestion_actual > 0 %} X {% else %} &nbsp; {% endif %}</td>
+                                                    <td>
+                                                        {% if gestion_actual > 0 and tipo != "Especial" %}
+                                                            <input type="number" id="cantidad{{sie}}" required=required class="form-control" value="{{ cantEstudiantes }}" readonly="readonly"/>
+                                                        {% else %}
+                                                            <input type="number" id="cantidad{{sie}}" required=required  class="form-control" value="{{ cantEstudiantes }}" />
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control" id="tipovalidacion{{sie}}" onchange="verificaCampos(this, {{ sie }})">
+                                                            <option value="0" selected>Seleccionar...</option>
+                                                            {% for val in entityValidacion %}
+                                                                {% if val.id == tipoValidacionId %}
+                                                                    <option value="{{ val.id }}" selected>{{ val.bonojuancito_institucioneducativa }}</option>
+                                                                {% else %}
+                                                                    <option value="{{ val.id }}">{{ val.bonojuancito_institucioneducativa }}</option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        {% if tipoValidacionId == 3 %}
+                                                            <input type="text" id="sienuevo{{sie}}" pattern="[0-9\sñÑ]{6,8}" maxlength="8" autocomplete="on" placeholder="Nuevo Sie" class="form-control" value="{{ sieNuevo }}" />
+                                                        {% else %}  
+                                                            <input type="text" id="sienuevo{{sie}}" pattern="[0-9\sñÑ]{6,8}" maxlength="8" autocomplete="on" placeholder="Nuevo Sie" style="display: none;" class="form-control" value="{{ sieNuevo }}" />
+                                                        {% endif %}                                                            
+                                                        <input type="text" id="obs{{sie}}" class="form-control" value="{{ obs }}" placeholder="Observación" />
+                                                    </td>
+                                                    <td class="text-center"><button class="btn btn-default" style="width:100%; text-align:left; margin: 0px 0px 0px 0px;" onclick="verificaEnvio({{sie}})">Registrar</button></td>
+                                                </tr>                                                 
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}                      
+                            <div class="alert alert-warning" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <i class="glyphicon glyphicon-alert"></i> <strong>¡Bien!</strong> No se encontraron instituciones educativas por validar.
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div> 
+{% endblock %}
+
+{% block javascripts %}    
+    {{ parent() }}
+    <script>
+        function verificaCampos(campo, id){    
+            var sienuevo = document.getElementById('sienuevo'+id);
+            var tipovalidacion = campo;
+            if (sienuevo){
+                if (tipovalidacion.value == 3){
+                    sienuevo.style.display = "";
+                } else {
+                    sienuevo.style.display = "none";
+                }
+            }            
+        }  
+
+
+        function verificaEnvio(id){    
+            var form = document.getElementById('form');
+            var sie = id;
+            var cantidad = document.getElementById('cantidad'+id);
+            var obs = document.getElementById('obs'+id);
+            var tipo = document.getElementById('tipovalidacion'+id);
+
+            if(tipo.value == 3){
+                var sienuevo = document.getElementById('sienuevo'+id);
+            }
+
+            document.getElementById('sie').value = "";
+            document.getElementById('sienuevo').value = "";
+            document.getElementById('cantidad').value = "";
+            document.getElementById('obs').value = "";
+            document.getElementById('tipo').value = "";
+
+            if(tipo.value == 3){
+                if (sienuevo){
+                    if (sienuevo.value == ""){
+                        alert("Debe introducir el Código SIE Nuevo");
+                        return false;
+                    }
+                }
+            }
+                
+            if (sie){
+                document.getElementById('sie').value = sie;
+            }   
+            if(tipo.value == 3){
+                if (sienuevo){
+                    document.getElementById('sienuevo').value = sienuevo.value;
+                }   
+            }
+            if (cantidad){
+                document.getElementById('cantidad').value = cantidad.value;
+            }   
+            if (obs){
+                document.getElementById('obs').value = obs.value;
+            }   
+            if (tipo){
+                document.getElementById('tipo').value = tipo.value;
+            }    
+            form.submit();        
+        }   
+    </script>
+{% endblock %}

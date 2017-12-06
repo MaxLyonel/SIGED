@@ -1,0 +1,61 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta:
+    type: entity
+    table: institucioneducativa_curso_oferta
+    indexes:
+        fk_insteduc_curso_oferta_asig:
+            columns:
+                - insitucioneducativa_curso_id
+                - asignatura_tipo_id
+        IDX_399E5EDF585AE0D9:
+            columns:
+                - asignatura_tipo_id
+        IDX_399E5EDF3711D285:
+            columns:
+                - insitucioneducativa_curso_id
+        IDX_399E5EDF8166BE86:
+            columns:
+                - superior_modulo_periodo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        horasmes:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+    manyToOne:
+        asignaturaTipo:
+            targetEntity: AsignaturaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                asignatura_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        insitucioneducativaCurso:
+            targetEntity: InstitucioneducativaCurso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                insitucioneducativa_curso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        superiorModuloPeriodo:
+            targetEntity: SuperiorModuloPeriodo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_modulo_periodo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

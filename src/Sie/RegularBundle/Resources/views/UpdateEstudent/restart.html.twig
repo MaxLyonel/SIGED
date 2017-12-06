@@ -1,0 +1,20 @@
+{% if done %}
+<div class="panel panel-default rounded shadow">
+  <div class="panel-body">
+      <div class="alert alert-success">
+          <strong>Bien!</strong> datos Modificados correctamente...
+      </div>
+  </div><!-- /.panel-body -->
+</div>
+{% else %}
+<b></b>
+
+<div class="panel panel-default rounded shadow">
+    <div class="panel-body">
+
+        <div class="alert alert-danger">
+            <strong>Verificar!</strong> proceso no realizado...
+        </div>
+    </div><!-- /.panel-body -->
+</div>
+{% endif %}

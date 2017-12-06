@@ -1,0 +1,26 @@
+{% extends '::layoutreportebach.html.twig' %}  
+{% block content %}   
+    <!-- begin PAGE TITLE ROW -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h4>
+                    <p>Reporte de Directoras y Directores U.E.{% block grid_title %}{% endblock %}</p>
+                    <p><small>{{ "now"|date("d/m/Y  g:i a", "America/La_Paz") }}</small></p>
+                </h4>
+                <ol class="breadcrumb">
+                    {% block grid_panel_menu %}{% endblock %}
+                </ol>
+            </div>
+            <div class="page-content">
+                {% block grid_panel_content %}{% endblock %}
+            </div>
+                
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {% block javascriptsnew %}
+    {% endblock %}
+{% endblock %}

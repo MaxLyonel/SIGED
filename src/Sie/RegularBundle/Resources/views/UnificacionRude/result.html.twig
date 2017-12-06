@@ -1,0 +1,130 @@
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('notihistory') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Advertencia!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('goodhistory') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>    
+  
+    <div class="portlet portlet-blue">
+        <div class="portlet-heading">
+            <div class="portlet-title">
+                <h3 class="fa fa-thumbs-o-up"> Información de Rude Unificado</h3>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+            <div class="portlet-body">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h4 class="fa fa-info"> Información Estudiante</h4>
+                    </div>    
+                    <div class="panel-body"> 
+                        <div class="row">                    
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Rude</th>
+                                        <th class="text-center">Nombre(s)</th>
+                                        <th class="text-center">Paterno</th>
+                                        <th class="text-center">Materno</th>
+                                        <th class="text-center">CI</th>
+                                        <th class="text-center">Complemento</th>
+                                        <th class="text-center">Genero</th>
+                                        <th class="text-center">F. Nacimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Rude" id="rudeinc">{{datastudentcor[0].codigo_rude}}</td>
+                                        <td data-title="Nombre">{{ datastudentcor[0].nombre|e }} </td>
+                                        <td data-title="Paterno">{{datastudentcor[0].paterno|e}}</td>
+                                        <td data-title="Materno">{{datastudentcor[0].materno|e}}</td>                                        
+                                        <td data-title="Genero" class="text-center">{{datastudentcor[0].genero}} </td>
+                                        <td data-title="F. Nacimiento" class="text-center">{{datastudentcor[0].fecha_nacimiento|date('d-m-Y')}}</td>                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row"> 
+
+                        </div>    
+                    </div>
+                </div>
+
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h4 class="fa fa-list"> Historial de Inscripciones</h4>
+                    </div>    
+                <div class="panel-body">
+                    <div class="row">                    
+                        <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Gestión</th>
+                                        <th class="text-center">SIE</th>
+                                        <th class="text-center">Unidad Educativa</th>
+                                        <th class="text-center">Nivel</th>
+                                        <th class="text-center">Grado</th>
+                                        <th class="text-center">Paralelo</th>
+                                        <th class="text-center">Turno</th>
+                                        <th class="text-center">Estado Matricula</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in datastudentcor%}
+                                        <tr>
+                                            <td>{{data.gestion_tipo_id}}</td>
+                                            <td>{{data.institucioneducativa_titulo}}</td>
+                                            <td>{{data.institucioneducativa}}</td>
+                                            <td>{{data.nivel|e }} </td>
+                                            <td>{{data.grado|e}}</td>
+                                            <td>{{data.turno}} </td>
+                                            <td>{{data.paralelo|e}}</td>
+                                            <td class="text-center">{{data.em}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>                                
+
+    <div class="modal modal-flex fade" id="myModalNotas" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Calificaciones</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idNotas"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('unificacion_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>

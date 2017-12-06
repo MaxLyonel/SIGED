@@ -1,0 +1,87 @@
+sie_tramite_detalle:
+    path:     /detalle
+    defaults: { _controller: SieTramitesBundle:Default:Generar }
+
+sie_tramite_detalle_certificado_tecnico_recepcion_busca:
+    path:     /certificado/tecnico/recepcion/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecRecepcionBusca }
+
+sie_tramite_detalle_certificado_tecnico_recepcion_lista:
+    path:     /certificado/tecnico/recepcion/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecRecepcionLista }
+
+sie_tramite_detalle_certificado_tecnico_recepcion_lista_pdf:
+    path:     /certificado/tecnico/recepcion/lista/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecRecepcionListaPdf }
+
+sie_tramite_detalle_certificado_tecnico_recepcion_guarda:
+    path:     /certificado/tecnico/recepcion/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecRecepcionGuarda }
+
+sie_tramite_detalle_certificado_tecnico_autorizacion_busca:
+    path:     /certificado/tecnico/autorizacion/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecAutorizacionBusca }
+
+sie_tramite_detalle_certificado_tecnico_autorizacion_lista:
+    path:     /certificado/tecnico/autorizacion/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecAutorizacionLista }
+
+sie_tramite_detalle_certificado_tecnico_autorizacion_lista_pdf:
+    path:     /certificado/tecnico/autorizacion/lista/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecAutorizacionListaPdf }
+
+sie_tramite_detalle_certificado_tecnico_autorizacion_guarda:
+    path:     /certificado/tecnico/autorizacion/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecAutorizacionGuarda }
+
+sie_tramite_detalle_certificado_tecnico_impresion_busca:
+    path:     /certificado/tecnico/impresion/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecImpresionBusca }
+
+sie_tramite_detalle_certificado_tecnico_impresion_lista:
+    path:     /certificado/tecnico/impresion/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecImpresionLista }
+
+sie_tramite_detalle_certificado_tecnico_impresion_lista_pdf:
+    path:     /certificado/tecnico/impresion/lista/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecImpresionListaPdf }
+
+sie_tramite_detalle_certificado_tecnico_impresion_certificado_pdf:
+    path:     /certificado/tecnico/impresion/certificado/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecImpresionCertificadoPdf }
+
+sie_tramite_detalle_certificado_tecnico_impresion_guarda:
+    path:     /certificado/tecnico/impresion/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecImpresionGuarda }
+
+sie_tramite_detalle_certificado_tecnico_envio_busca:
+    path:     /certificado/tecnico/envio/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecEnvioBusca }
+
+sie_tramite_detalle_certificado_tecnico_envio_lista:
+    path:     /certificado/tecnico/envio/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecEnvioLista }
+
+sie_tramite_detalle_certificado_tecnico_envio_lista_pdf:
+    path:     /certificado/tecnico/envio/lista/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecEnvioListaPdf }
+
+sie_tramite_detalle_certificado_tecnico_envio_guarda:
+    path:     /certificado/tecnico/envio/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecEnvioGuarda }
+
+sie_tramite_detalle_certificado_tecnico_entrega_busca:
+    path:     /certificado/tecnico/entrega/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecEntregaBusca }
+
+sie_tramite_detalle_certificado_tecnico_entrega_lista:
+    path:     /certificado/tecnico/entrega/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecEntregaLista }
+
+sie_tramite_detalle_certificado_tecnico_entrega_lista_pdf:
+    path:     /certificado/tecnico/entrega/lista/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecEntregaListaPdf }
+
+sie_tramite_detalle_certificado_tecnico_entrega_guarda:
+    path:     /certificado/tecnico/entrega/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecEntregaGuarda }

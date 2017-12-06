@@ -1,0 +1,15 @@
+controlOperativoMenu:
+    path:     /
+    defaults: { _controller: SieRegularBundle:ControlOperativoMenu:index }
+
+controlOperativoMenu_search:
+    path:     /search
+    defaults: { _controller: "SieRegularBundle:ControlOperativoMenu:search" }
+    options:
+        expose: true
+
+controlOperativoMenu_change:
+    path:     /change
+    defaults: { _controller: "SieRegularBundle:ControlOperativoMenu:change" }
+    options:
+        expose: true

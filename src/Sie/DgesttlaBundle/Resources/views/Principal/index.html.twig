@@ -1,0 +1,51 @@
+{% extends 'layoutDgesttla.html.twig' %}
+
+{% block headercontent %}
+    <!-- Start header content -->
+    <div class="header-content">
+        <h2><i class="fa fa-file-o"></i>Formación Técnica Tecnológica <span>Bienvenida/o</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Estás aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('principal_web')}}">Inicio</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Bienvenida/o</li>
+            </ol>
+        </div>
+    </div><!-- /.header-content -->
+    <!--/ End header content -->
+{% endblock %}
+
+{% block bodycontent %}
+
+<div class="row">
+    <div class="col-md-3">
+
+        <div class="panel panel-primary rounded shadow">
+            <div class="panel-heading">
+                <h3 class="panel-title">Bienvenida/o</h3>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                Contenido...
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel -->
+
+    </div>
+    <div class="col-md-9">
+            
+        <div class="panel panel-default rounded shadow">
+            <div class="panel-heading">
+                <h3 class="panel-title">Bienvenida/o</h3>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+                Contenido...
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel -->
+
+    </div>
+</div><!-- /.row -->
+
+{% endblock %}

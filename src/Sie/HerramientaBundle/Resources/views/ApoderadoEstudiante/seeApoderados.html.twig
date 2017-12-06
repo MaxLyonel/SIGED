@@ -1,0 +1,110 @@
+
+{% if exist == true %}
+    <small>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                  <div class="alert alert-warning alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                  <div class="alert alert-success alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="no-more-tables">
+                    <div class="row">
+
+                    </div>
+
+                    <table class="table table-bordered table-hover cf">
+                        <tr>
+
+                        <input type="hidden" id="formdata_data" name="formdata[data]" value="{{aData}}">
+                        <td align="center" class="warning" colspan="5">Apoderados</br>
+                            {{gradoname}} - {{paraleloname}}
+                        </td>
+                        <td>Opciones</td>
+
+                        </tr>
+                        {#init the array info student #}
+                        {% set objInfoStudent = [] %}
+                        {% for data in apoderados %}
+                          {% set items = {
+                                          'studentInscId': data.studentInscId ,
+                                          'estId': data.estId,
+                                          'carnet': data.carnet,
+                                          'codigoRude': data.codigoRude,
+                                          'persId': data.persId,
+                                          'iecId': data.iecId
+                                          } %}
+
+                            {% set jsnInfoApoderado = items|json_encode() %}
+                            {# set the array student info and convert on json string #}
+                            {# set objInfoStudent = objInfoStudent|merge(data) #}
+                            {# set jsnInfoStudent = objInfoStudent|json_encode() #}
+                            <tr >
+                                <td>{{loop.index}}</td>
+
+                                <td  align="">{{data.paterno}} </td>
+                                <td  align="">{{data.materno}}</td>
+                                <td  align="">{{data.nombre}} </td>
+                                <td  align="center" class=''>
+                                  <p class='text-primary'>
+                                    <strong>{{data.apoderado}} </strong>
+                                  </p>
+                                </td>
+
+                                <td  align="">
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                        <button type="button" class="btn btn-link " data-toggle="" data-target="" onclick="seeChildren('{{jsnInfoApoderado}}');" >
+                                            <i class="fa fa-eye"></i> Hijos
+                                        </button>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+
+                    </table>
+
+                </div>
+                <!-- /.portlet -->
+            </div>
+        </div>
+    </small>
+    <!-- /.row -->
+{% else %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endif %}
+
+<script>
+
+
+</script>

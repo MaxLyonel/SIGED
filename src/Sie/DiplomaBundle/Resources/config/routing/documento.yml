@@ -1,0 +1,23 @@
+sie_diploma_tramite_documento_certificado_supletorio:
+    path:     /certificado/supletorio
+    defaults: { _controller: SieDiplomaBundle:Documento:certificadoSupletorio }
+
+sie_diploma_tramite_documento_certificado_supletorio_index:
+    path:     /certificado/supletorio/index
+    defaults: { _controller: SieDiplomaBundle:Documento:certificadoSupletorioIndex }
+
+sie_diploma_tramite_documento_certificado_supletorio_guarda:
+    path:     /certificado/supletorio/guarda
+    defaults: { _controller: SieDiplomaBundle:Documento:certificadoSupletorioGuarda }
+
+sie_diploma_tramite_documento_certificado_supletorio_pdf:
+    path:     /certificado/supletorio/pdf
+    defaults: { _controller: SieDiplomaBundle:Documento:certificadoSupletorioPdf }
+
+sie_diploma_tramite_documento_certificado_supletorio_qr:
+    path:     /certificado/supletorio/qr/{supletorio}
+    defaults: { _controller: SieDiplomaBundle:Documento:certificadoSupletorioQr }
+
+sie_diploma_tramite_documento_bachiller_humanidades_qr:
+    path:     /bachiller/humanidades/qr/{documento}
+    defaults: { _controller: SieDiplomaBundle:Documento:bachillerHumanidadesQr }

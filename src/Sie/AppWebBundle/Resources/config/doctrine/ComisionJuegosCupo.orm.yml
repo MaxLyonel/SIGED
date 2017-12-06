@@ -1,0 +1,52 @@
+Sie\AppWebBundle\Entity\ComisionJuegosCupo:
+    type: entity
+    table: comision_juegos_cupo
+    indexes:
+        IDX_AE5882D25A51DE01:
+            columns:
+                - prueba_tipo_id
+        IDX_AE5882D22C887590:
+            columns:
+                - comision_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: comision_juegos_cupo_seq
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cupo:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        pruebaTipo:
+            targetEntity: PruebaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                prueba_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        comisionTipo:
+            targetEntity: ComisionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                comision_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

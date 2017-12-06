@@ -1,0 +1,328 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    	<form action="" id="formNotas" onsubmit="registrarNotas(); return false">
+    	<input type="hidden" name="infoUe" value="{{infoUe}}">
+    	<input type="hidden" name="infoStudent" value="{{infoStudent}}">
+    	<input type="hidden" name="tipo" value="t">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Notas</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body no-padding" id="modal-body">
+            	<div class="alert alert-info">
+                    <span class="alert-icon"><i class="fa fa-user"></i></span>
+                    <div class="notification-info">
+                        <ul class="clearfix notification-meta">
+                            <li class="pull-left notification-sender"><span><a href="javascript:void()">{{estudiante.codigoRude}}</a></span></li>
+                            <li class="pull-right notification-time">{{estudiante.estadoMatricula}}</li>
+                        </ul>
+                        <p>{{estudiante.estudiante}}</p>
+                    </div>
+                </div>
+				{% if nivel == 11 or nivel == 1 %}
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th rowspan="2" style="vertical-align: middle">Áreas Curriculares</th>
+								<th colspan="4">Valoración Cualitativa</th>
+							</tr>
+							<tr>
+								<th>1er Trimestre</th>
+								<th>2do Trimestre</th>
+								<th>3er Trimestre</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for asig in areas %}
+								<tr>
+									<td>{{asig.asignatura}}</td>
+									{% for n in asig.notas %}
+										<td>
+											<input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+											<input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+											<input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+
+											<textarea name="notas[]" class="form-control input-sm jnumbersletters" cols="45" rows="5" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="15">{{n.notaCualitativa}}</textarea>
+										</td>
+									{% endfor %}
+								</tr>
+							{% endfor %}
+							<tr>
+								<td colspan="6">
+									<hr>
+									{% for c in cualitativas %}
+										<p>{{c.notaTipo}}</p>
+										<p class="text-justify">
+											<input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
+											<input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
+											<textarea class="form-control jnumbersletters" name="notaCualitativa[]" rows="5" style="resize:none; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="15">{{c.notaCualitativa}}</textarea>
+										</p>
+									{% endfor %}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+            	{% else %}
+            		{% if nivel == 12 or (nivel == 13 and gestion <= 2013) %}
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th rowspan="2" style="vertical-align: middle">Áreas Curriculares</th>
+									<th colspan="6">Valoración Cuantitativa</th>
+									<th colspan="3" style="vertical-align: middle;" class="col-md-3 col-xs-4">Valoración Cualitativa</th>
+								</tr>
+								<tr>
+									<th>1er Trim.</th>
+									<th>2do Trim.</th>
+									<th>3er Trim.</th>
+									<th>Prom. Anual</th>
+									<th>Reforz.</th>
+									<th>Prom. Final</th>
+									<th>1er Trimestre&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+									<th>2do Trimestre&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+									<th>3er Trimestre&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for asig in areas %}
+									<tr>
+										<td>{{asig.asignatura}}</td>
+										{% for n in asig.notas %}
+											<td>
+												<input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+												<input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+												<input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+												{% if n.idNotaTipo != 9 and n.idNotaTipo != 10 and n.idNotaTipo != 11 %}
+													<input name="notas[]" type="text" size="3" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="promedio(this,{{asig.idAsignatura}});" onblur="notaVacia(this,{{asig.idAsignatura}})" class="form-control input-sm {{asig.idAsignatura}}" autocomplete="off">
+												{% else %}
+													{% if n.idNotaTipo == 9 %}
+														<input name="notas[]" type="text" size="3" value="{{n.nota}}" class="form-control input-sm pa{{asig.idAsignatura}}" readonly="readonly">
+													{% else %}
+														{% if n.idNotaTipo == 10 %}
+															<input name="notas[]" type="text" size="3" value="{{n.nota}}" class="form-control input-sm r{{asig.idAsignatura}}" onkeypress="return validarNota(event)" onkeyup="promedio2(this,{{asig.idAsignatura}});" onblur="notaVacia2(this,{{asig.idAsignatura}})" autocomplete="off">
+														{% else %}
+															<input name="notas[]" type="text" size="3" value="{{n.nota}}" class="form-control input-sm pf{{asig.idAsignatura}}" readonly="readonly">
+														{% endif %}
+													{% endif %}
+												{% endif %}
+											</td>
+										{% endfor %}
+										{% for n in asig.notas %}
+											{% if n.idNotaTipo == 6 or n.idNotaTipo == 7 or n.idNotaTipo == 8 %}
+												<td>
+													<input type="hidden" name="idEstudianteNotaC[]" value="{{n.idEstudianteNota}}">
+													<input type="hidden" name="idNotaTipoC[]" value="{{n.idNotaTipo}}">
+													<input type="hidden" name="idEstudianteAsignaturaC[]" value="{{n.idEstudianteAsignatura}}">
+
+													<textarea name="notasC[]" class="form-control input-sm jnumbersletters" cols="40" rows="4" style="resize:vertical; max-height:200px; text-transform:uppercase" maxlength="200" minlength="15">{{n.notaCualitativa}}</textarea>
+												</td>
+											{% endif %}
+										{% endfor %}
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+            		{% else %}
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th rowspan="2" style="vertical-align: middle">Áreas Curriculares</th>
+									<th colspan="6">Valoración Cuantitativa</th>
+									<th rowspan="2" style="vertical-align: middle;" class="col-md-3 col-xs-4">Valoración Cualitativa</th>
+								</tr>
+								<tr>
+									<th>1er Trimestre</th>
+									<th>2do Trimestre</th>
+									<th>3er Trimestre</th>
+									<th>Prom. Anual</th>
+									<th>Reforza-<br>miento</th>
+									<th>Prom. Final</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% set cont = 0 %}
+								{% set contCuali = 0 %}
+								{% for asig in areas %}
+									<tr>
+										<td>{{asig.asignatura}}</td>
+										{% for n in asig.notas %}
+											<td>
+												<input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+												<input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+												<input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+												{% if n.idNotaTipo != 9 and n.idNotaTipo != 10 and n.idNotaTipo != 11 %}
+													<input name="notas[]" type="text" size="3" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="promedio(this,{{asig.idAsignatura}});" onblur="notaVacia(this,{{asig.idAsignatura}})" class="form-control input-sm {{asig.idAsignatura}}" autocomplete="off">
+												{% else %}
+													{% if n.idNotaTipo == 9 %}
+														<input name="notas[]" type="text" size="3" value="{{n.nota}}" class="form-control input-sm pa{{asig.idAsignatura}}" readonly="readonly">
+													{% else %}
+														{% if n.idNotaTipo == 10 %}
+															<input name="notas[]" type="text" size="3" value="{{n.nota}}" class="form-control input-sm r{{asig.idAsignatura}}" onkeypress="return validarNota(event)" onkeyup="promedio2(this,{{asig.idAsignatura}});" onblur="notaVacia2(this,{{asig.idAsignatura}})" autocomplete="off">
+														{% else %}
+															<input name="notas[]" type="text" size="3" value="{{n.nota}}" class="form-control input-sm pf{{asig.idAsignatura}}" readonly="readonly">
+														{% endif %}
+													{% endif %}
+												{% endif %}
+											</td>
+										{% endfor %}
+										{% if contCuali == 0 %}
+											<td rowspan="20">
+												{% for c in cualitativas %}
+													<p><b>{{c.notaTipo}}</b></p>
+													<p class="text-justify">
+														<input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
+														<input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
+
+														<textarea class="form-control jnumbersletters" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="15">{{c.notaCualitativa}}</textarea>
+													</p>
+												{% endfor %}
+											</td>
+										{% endif %}
+									</tr>
+									{% set cont = cont + 1 %}
+									{% set contCuali = contCuali + 1 %}
+								{% endfor %}
+							</tbody>
+						</table>
+					{% endif %}
+				{% endif %}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-theme">Guardar Cambios</button>
+        </div>
+    </div><!-- /.modal-content -->
+	</form>
+</div><!-- /.modal-dialog -->
+<script>
+	var promedio = function(control,clase){
+		//if(control.value == ""){ control.value = 0; }
+		if(control.value < 0){ control.value = 0; }
+		if(control.value > 70){ control.value = 70; }
+		var suma = 0;
+		$("."+clase).each(function (index) {
+            suma = suma + parseInt($(this).val());
+        })
+        var promedio = Math.round(suma/3);
+        if(isNaN(promedio)){
+    		promedio = 0;
+    	}
+        $('.pa'+clase).val(promedio);
+	}
+
+	var notaVacia = function(control,clase){
+		if(control.value == ""){ control.value = 0; }
+		if(control.value < 0){ control.value = 0; }
+		if(control.value > 100){ control.value = 100; }
+		var suma = 0;
+		$("."+clase).each(function (index) {
+            suma = suma + parseInt($(this).val());
+        })
+        var promedio = Math.round(suma/3);
+        if(isNaN(promedio)){
+    		promedio = 0;
+    	}
+        $('.pa'+clase).val(promedio);
+	}
+
+	var promedio2 = function(control,clase){
+		if(control.value < 0){ control.value = 0; }
+		if(control.value > 70){ control.value = 70; }
+		var promAnual = parseInt($('.pa'+clase).val());
+		var reforzamiento = parseInt($('.r'+clase).val());
+		if(reforzamiento == 0){
+			$('.pf'+clase).val(0);
+		}else{
+			var suma = promAnual + reforzamiento;
+        	var promedio = Math.round(suma/2);
+        	if(isNaN(promedio)){
+        		promedio = 0;
+        	}
+        	$('.pf'+clase).val(promedio);
+		}
+	}
+
+	var notaVacia2 = function(control,clase){
+		if(control.value == ""){ control.value = 0; }
+		if(control.value < 0){ control.value = 0; }
+		if(control.value > 70){ control.value = 70; }
+		var promAnual = parseInt($('.pa'+clase).val());
+		var reforzamiento = parseInt($('.r'+clase).val());
+		if(reforzamiento == 0){
+			$('.pf'+clase).val(0);
+		}else{
+			var suma = promAnual + reforzamiento;
+        	var promedio = Math.round(suma/2);
+        	if(isNaN(promedio)){
+        		promedio = 0;
+        	}
+        	$('.pf'+clase).val(promedio);
+		}
+	}
+
+	var validarNota = function(e){
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+        )
+        return false;
+    }
+
+    var registrarNotas = function(){
+    	var formData = $('#formNotas').serialize();
+	    $.ajax({
+	        type: 'post',
+	        url: Routing.generate('herramienta_infoEstudianteNotasRequest_create_update'),
+	        data: formData,
+	        beforeSend: function () {
+	            $('#modal-body').empty();
+	            $('.modal-footer').empty();
+	            $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+	        },
+	        success: function (data) {
+	            $('#modal').modal('hide');
+	        },
+	        error: function (data) {
+
+	        }
+	    });
+	}
+
+	$(".jnumbersletters").keypress(function (key) {
+        var key = key || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 97 || k > 122)//letras minusculas
+            && (k < 65 || k > 90) //letras mayusculas
+            && (k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+            && (k != 241) //ñ
+             && (k != 209) //Ñ
+             && (k != 32) //espacio
+             && (k != 225) //á
+             && (k != 233) //é
+             && (k != 237) //í
+             && (k != 243) //ó
+             && (k != 250) //ú
+             && (k != 193) //Á
+             && (k != 201) //É
+             && (k != 205) //Í
+             && (k != 211) //Ó
+             && (k != 218) //Ú
+             && (k != 44) //coma ,
+             && (k != 46) //punto .
+            )
+            return false;
+    });
+</script>

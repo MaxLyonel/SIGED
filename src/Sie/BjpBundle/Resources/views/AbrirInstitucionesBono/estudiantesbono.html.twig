@@ -1,0 +1,181 @@
+
+<div class="row">
+    <small>
+        {{form_start(formEstudiantes,{'attr':{'id':'formEstudiantesHabId','':' '} })}}
+        <div class="col-md-5">
+
+                <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                                <div class="portlet-heading">
+                                    <div class="portlet-title">
+                                        <h4>Estudiantes Habilitados</h4>
+                                    </div>
+                                    <div class="portlet-widgets">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div id="panelinstitucion" class="panel-collapse collapse in">
+                                    <div class="portlet-body">
+                                        <div class="panel-body panel-primary">
+                                           <div id="no-more-tables">
+                                            <table class="table table-bordered cf">
+                                                <thead class="cf">
+                                                    <tr>
+                                                        
+                                                        <th>-</th>
+                                                        <th>Nombre</th>
+                                                        <th>paterno</th>
+                                                        <th>materno</th>
+                                                        <th>Código RUDE</th>
+                                                    </tr>
+                                                </thead>
+                                                 <tbody>
+                                                    {% for estudianteHabilitado in estudianteHabilitados %}
+                                                        <tr>
+                                                            <td>
+                                                                <div class="checkbox">
+                                                                    
+                                                                        <input type="checkbox" id="form_habmov_{{estudianteHabilitado.id}}" name="form[habmov_{{estudianteHabilitado.id}}]" value="{{estudianteHabilitado.id}}">
+                                                                    
+                                                                </div>
+                                                            </td>
+                                                        <td data-title="Ins.Educativa">{{estudianteHabilitado.paterno}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudianteHabilitado.materno}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudianteHabilitado.nombre}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudianteHabilitado.codigoRude}}</td>
+                                                        
+                                                        
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+        </div>
+        <div class='col-md-2'>
+
+            
+                {{form_widget(formEstudiantes.data)}}
+                {{form_widget(formEstudiantes.movida)}}
+                {{form_widget(formEstudiantes.mover)}}
+                               
+                            
+        </div>
+          {{form_end(formEstudiantes)}}
+        <div class="col-md-5">
+               <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4>Estudiantes Pagados</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div id="panelinstitucion" class="panel-collapse collapse in">
+                            <div class="portlet-body">
+                                <div class="panel-body panel-primary">
+                                   <div id="no-more-tables">
+                                    <table class="table table-bordered cf">
+                                        <thead class="cf">
+                                            <tr>
+                                                
+                                                 <th>-</th>
+                                                <th>Nombre</th>
+                                                <th>paterno</th>
+                                                <th>materno</th>
+                                                <th>Código RUDE</th>
+                                            </tr>
+                                        </thead>
+                                         <tbody>
+                                            {% for estudiantePagado in estudiantePagados %}
+                                                        <tr>
+                                                            <td>
+                                                                <div class="checkbox">
+                                                                    
+                                                                        <input type="checkbox" id="form_habmov_{{estudiantePagado.id}}" name="form[habmov_{{estudiantePagado.id}}]" value="{{estudiantePagado.id}}">
+                                                                    
+                                                                </div>
+                                                            </td>
+                                                        <td data-title="Ins.Educativa">{{estudiantePagado.paterno}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudiantePagado.materno}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudiantePagado.nombre}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudiantePagado.codigoRude}}</td>
+                                                        
+                                                        
+                                                        </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+</div>
+
+
+
+<div class="row">
+        <div class="col-lg-12">
+           <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4>Estudiantes Inhabilitados</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div id="panelinstitucion" class="panel-collapse collapse in">
+                            <div class="portlet-body">
+                                <div class="panel-body panel-primary">
+                                   <div id="no-more-tables">
+                                    <table class="table table-bordered cf">
+                                        <thead class="cf">
+                                            <tr>
+                                                 <th>-</th>
+                                                <th>Nombre</th>
+                                                <th>paterno</th>
+                                                <th>materno</th>
+                                                <th>Código RUDE</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                            {% for estudianteInHabilitado in estudianteInHabilitados %}
+                                                         <tr>
+                                                            <td>
+                                                                <div class="checkbox">
+                                                                    
+                                                                        <input type="checkbox" id="form_habmov_{{estudianteInHabilitado.id}}" name="form[habmov_{{estudianteInHabilitado.id}}]" value="{{estudianteInHabilitado.id}}">
+                                                                    
+                                                                </div>
+                                                            </td>
+                                                        <td data-title="Ins.Educativa">{{estudianteInHabilitado.paterno}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudianteInHabilitado.materno}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudianteInHabilitado.nombre}}</td>
+                                                        <td data-title="Ins.Educativa">{{estudianteInHabilitado.codigoRude}}</td>
+                                                        
+                                                        
+                                                        </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+      </small>
+</div>

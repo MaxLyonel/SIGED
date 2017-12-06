@@ -1,0 +1,184 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/jquery-ui.min.css')}}" rel="stylesheet">
+{% endblock %}
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Solicitud
+                    <small>Adición de Calificaciones</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-list-alt"></i>  <a href="{{path('solicitudAdicionCalificaciones')}}">Solicitudes</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    {% for flashMessage in app.session.flashbag.get('sendOk') %}
+        <div class="alert alert-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('approved') %}
+        <div class="alert alert-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('rejected') %}
+        <div class="alert alert-warning" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Solicitudes</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        {% if app.session.get('roluser') == 5 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 %}
+                        <a href="{{path('solicitudAdicionCalificaciones_search',{'op':'search'})}}" class="btn btn-xs btn-red"><i class="fa fa-pencil"></i> Nueva Solicitud </a>
+                        {% endif %}
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelsolicitudes"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelsolicitudes" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            {% if app.session.get('roluser') == 5 or app.session.get('roluser') == 9 %}
+                            <div class="alert alert-danger">
+                                <i class="fa fa-info-circle"></i> Una vez enviada la solicitud de adición debe realizar la impresion del formulario de declaracion jurada, y con las firmas respectivas enviarla a la Dirección Distrital de Educación.
+                            </div>
+                            {% endif %}
+                            <div class="count">
+                                {% if solicitudes %}
+                                Total solicitudes: {{solicitudes.getTotalItemCount}}
+                                {% endif %}
+                            </div>
+                            <div class="filter" style="text-align:center">
+                                {% if solicitudes %}
+                                {{ knp_pagination_filter(solicitudes, {'all':'Todos','id':'Nro Solicitud','ie':'Código SIE'}) }}
+                                {% endif %}
+                            </div>
+                            {% if solicitudes is not empty %}
+                                <div id="no-more-tables">
+                                    <table class="table">
+                                        <thead class="cf">
+                                            <tr>
+                                                <th>Nro Solicitud</th>
+                                                <th></th>
+                                                <th>Fecha</th>
+                                                <th>Gestión</th>
+                                                <th>Institución Educativa</th>
+                                                <th>Nivel</th>
+                                                <th>Grado</th>
+                                                <th>Paralelo</th>
+                                                <th>Estudiante</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for s in solicitudes %}
+                                                <tr>
+                                                    <td>{{s.id}}</td>
+                                                    <td>
+                                                        {% if s.estado == 1 %}
+                                                            <span class="label label-primary">Enviado</span>
+                                                        {% else %}
+                                                            {% if s.estado == 2 %}
+                                                                <span class="label label-success">Aprobado</span>
+                                                            {% else %}
+                                                                <span class="label label-danger">Rechazado</span>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{s.fecha|date('d-m-Y')}} a hrs. {{s.hora|date('H:i')}}</td>
+                                                    <td>{{s.gestionTipoId}}</td>
+                                                    <td>{{s.institucioneducativaId}} - {{s.institucioneducativa}}</td>
+                                                    <td>{{s.nivel}}</td>
+                                                    <td>{{s.grado}}</td>
+                                                    <td>{{s.paralelo}}</td>
+                                                    <td>{{s.codigoRude}} - {{s.paterno}} {{s.materno}} {{s.nombre}}</td>
+                                                    <td>
+                                                        <form action="{{path('solicitudAdicionDetalle')}}" method="post" style="display:inline-block">
+                                                            <input type="hidden" name="idSolicitud" value="{{s.id}}">
+                                                            <button type="submit" class="btn-link"><i class="fa fa-file-o"></i> Detalle</button>
+                                                        </form>
+                                                        {% if s.estado == 1 %}
+                                                            <a href="{{path('download_ue_solicitudAdicionCalificaciones',{'idSolicitud':s.id})}}"><i class="fa fa-file"></i>Form.</a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <div class="navigation">
+                                        {{ knp_pagination_render(solicitudes)}}
+                                    </div>
+                                </div>
+                            {% else %}
+                                No hay Solicitudes
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal-flex fade" id="modalDetalle" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">Detalle -> <span id="numSolicitud"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <div id="detalleSolicitud">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+        var xhr;
+        function detalle(idSolicitud){
+            $('#numSolicitud').empty();
+            $('#numSolicitud').append('S-'+idSolicitud);
+            $('#modalDetalle').modal('show');
+            if(xhr && xhr.readyState != 4){
+                xhr.abort();
+            }
+            xhr = $.ajax({
+                type: 'get',
+                url: Routing.generate('detalleSolicitud', {'idSolicitud': idSolicitud}),
+                beforeSend: function () {
+                    $('#detalleSolicitud').empty();
+                },
+                success: function (data) {
+                    $('#detalleSolicitud').empty();
+                    $('#detalleSolicitud').append(data);
+                }
+            });
+        }
+    </script>
+{% endblock %}

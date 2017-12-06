@@ -1,0 +1,91 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet portlet-blue">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Información Estudiante</h4>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="pinfoestudiante" class="panel-collapse collapse in">
+                <div class="portlet-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th><small>Rude</small></th>
+                                    <th><small>Paterno</small></th>
+                                    <th><small>Materno</small></th>
+                                    <th><small>Nombre</small></th>
+                                    <th><small>Género</small></th>
+                                    <th><small>CI</small></th>
+                                    <th><small>Fecha Nac.</small></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><small>{{datastudent.codigoRude}}</small></td>
+                                    <td><small>{{datastudent.paterno}}</small></td>
+                                    <td><small>{{datastudent.materno}}</small></td>
+                                    <td><small>{{datastudent.nombre}}</small></td>
+                                    <td><small>{{datastudent.generoTipo}}</small></td>
+                                    <td><small>{{datastudent.carnetIdentidad}}</small></td>
+                                    <td><small>{{ datastudent.fechaNacimiento|date('d-m-Y') }}</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet portlet-default">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Historial de Inscripciones</h4>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <div id="omitidos" class="panel-collapse collapse in">
+                <div class="portlet-body">
+                    <div id="no-more-tables">
+                        <table class="table table-bordered table-hover cf">
+                            <thead class="cf">
+                                <tr class="info">
+                                    <th class="text-center"><small>Gestión</small></th>
+                                    <th class="text-center"><small>SIE</small></th>
+                                    <th class="text-center"><small>Unidad Educativa</small></th>
+                                    <th class="text-center"><small>Nivel</small></th>
+                                    <th class="text-center"><small>Grado</small></th>
+                                    <th class="text-center"><small>Paralelo</small></th>
+                                    <th class="text-center"><small>Turno</small></th>
+                                    <th class="text-center"><small>Estado Matricula</small></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in dataInscription%}
+                                    <tr>
+                                        <td data-title="Rude"><small>{{data.gestion}}</small></td>
+                                        <td data-title="Rude"><small>{{data.sie}}</small></td>
+                                        <td data-title="Rude"><small>{{data.institucioneducativa}}</small></td>
+                                        <td data-title="Nombre"><small>{{ data.nivel|e }} </small></td>
+                                        <td data-title="Paterno"><small>{{data.grado|e}}</small></td>
+                                        <td data-title="Materno"><small>{{data.paralelo|e}}</small></td>
+                                        <td data-title="CI"><small>{{data.turno}} </small></td>
+                                        <td data-title="Est. Matricula" class="text-center"><small>{{data.estadoMatricula}}</small></td>
+                                    </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

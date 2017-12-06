@@ -1,0 +1,83 @@
+Sie\AppWebBundle\Entity\MaestroInscripcionIdioma:
+    type: entity
+    table: maestro_inscripcion_idioma
+    indexes:
+        IDX_52BB824DCD9F4106:
+            columns:
+                - idioma_materno_id
+        IDX_52BB824D2358E5EE:
+            columns:
+                - idiomaconoce_tipo_id_escribe
+        IDX_52BB824D807CBBA6:
+            columns:
+                - idiomaconoce_tipo_id_habla
+        IDX_52BB824D28B91FEE:
+            columns:
+                - idiomaconoce_tipo_id_lee
+        IDX_52BB824DA4B6FF2:
+            columns:
+                - maestro_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        idiomaTipoIdEstudia:
+            type: string
+            nullable: true
+            length: 5
+            fixed: false
+            comment: ''
+            column: idioma_tipo_id_estudia
+    manyToOne:
+        idiomaMaterno:
+            targetEntity: IdiomaMaterno
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_materno_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaconoceTipoEscribe:
+            targetEntity: IdiomaconoceTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idiomaconoce_tipo_id_escribe:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaconoceTipoHabla:
+            targetEntity: IdiomaconoceTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idiomaconoce_tipo_id_habla:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaconoceTipoLee:
+            targetEntity: IdiomaconoceTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idiomaconoce_tipo_id_lee:
+                    referencedColumnName: id
+            orphanRemoval: false
+        maestroInscripcion:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestro_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,4 @@
+services:
+#    sie_dgesttla.example:
+#        class: Sie\DgesttlaBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

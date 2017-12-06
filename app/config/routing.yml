@@ -1,0 +1,105 @@
+sie_infra:
+    resource: "@SieInfraBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_gis:
+    resource: "@SieGisBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_bjp:
+    resource: "@SieBjpBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_infraestructura:
+    resource: "@SieInfraestructuraBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_tramites:
+    resource: "@SieTramitesBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_certification_alt:
+    resource: "@SieCertificationAltBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_esquema:
+    resource: "@SieEsquemaBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+sie_herramienta_alternativa:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_juegos:
+    resource: "@SieJuegosBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_rue:
+    resource: "@SieRueBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_rie:
+    resource: "@SieRieBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_dgesttla:
+    resource: "@SieDgesttlaBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_herramienta:
+    resource: "@SieHerramientaBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_pnp:
+    resource: "@SiePnpBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_usuarios:
+    resource: "@SieUsuariosBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_validacion:
+    resource: "@SieValidacionBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_diploma:
+    resource: "@SieDiplomaBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_permanente:
+    resource: "@SiePermanenteBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_especial:
+    resource: "@SieEspecialBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_alternativa:
+    resource: "@SieAlternativaBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_regular:
+    resource: "@SieRegularBundle/Resources/config/routing.yml"
+    prefix:   /
+
+sie_app_web:
+    resource: "@SieAppWebBundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: @AppBundle/Controller/
+    type:     annotation
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+    
+#login:
+#    pattern:   /login
+#    defaults:  { _controller: SieAppWebBundle:Security:login }
+#    
+#login_check:
+#    pattern:   /login_check 
+#    
+#logout:
+#    path:   /login     

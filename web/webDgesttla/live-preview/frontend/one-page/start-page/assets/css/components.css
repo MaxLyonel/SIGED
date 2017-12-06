@@ -1,0 +1,394 @@
+/* ========================================================================
+ * COMPONENTS
+ * ======================================================================== */
+/* ========================================================================
+ * CONTEXTUAL CLASSES TEXT
+ * ======================================================================== */
+.text-center {
+  text-align: center;
+}
+
+/* ========================================================================
+ * FOREGROUND COLOR
+ * ======================================================================== */
+.fg-red {
+  color: #E9573F;
+}
+
+.fg-blue {
+  color: #00B1E1;
+}
+
+.fg-yellow {
+  color: #F6BB42;
+}
+
+.fg-green {
+  color: #8CC152;
+}
+
+/* ========================================================================
+ * RIBBONS
+ * ======================================================================== */
+.ribbon-wrapper {
+  width: 85px;
+  height: 88px;
+  overflow: hidden;
+  position: absolute;
+  top: -4px;
+  right: -2px;
+  z-index: 250;
+}
+.ribbon-wrapper.top-left {
+  left: -2px;
+}
+.ribbon-wrapper.top-left .ribbon {
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  left: -30px;
+}
+.ribbon-wrapper.bottom-right {
+  right: -2px;
+  bottom: -2px;
+  top: inherit;
+}
+.ribbon-wrapper.bottom-right .ribbon {
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  left: -6px;
+  top: 40px;
+}
+.ribbon-wrapper.bottom-left {
+  left: -3px;
+  bottom: -3px;
+  top: inherit;
+}
+.ribbon-wrapper.bottom-left .ribbon {
+  left: -28px;
+  top: 40px;
+}
+.ribbon-wrapper .ribbon {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #FFF;
+  text-align: center;
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  position: relative;
+  padding: 7px 0;
+  left: -5px;
+  top: 15px;
+  width: 120px;
+  line-height: 20px;
+  text-decoration: none;
+  cursor: pointer;
+  background-color: #797979;
+}
+.ribbon-wrapper .ribbon:before {
+  left: 0;
+  bottom: -1px;
+}
+.ribbon-wrapper .ribbon:after {
+  right: 0;
+}
+.ribbon-wrapper .ribbon:before, .ribbon-wrapper .ribbon:after {
+  content: "";
+  border-top: 2px solid #797979;
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  position: absolute;
+  bottom: -2px;
+}
+.ribbon-wrapper .ribbon.ribbon-shadow {
+  -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+.ribbon-wrapper .ribbon.transparent {
+  background-color: RGBA(121, 121, 121, 0.34) !important;
+  border: none !important;
+}
+
+.ribbon-default {
+  background-color: #EEEEEE !important;
+}
+.ribbon-default:before, .ribbon-default:after {
+  border-top: 2px solid #EEEEEE !important;
+}
+.ribbon-default.transparent {
+  background-color: fade(#EEEEEE, 40%) !important;
+}
+.ribbon-default.transparent:before, .ribbon-default.transparent:after {
+  border-top: 2px solid fade(#EEEEEE, 40%) !important;
+}
+.ribbon-default.ribbon-shadow {
+  -moz-box-shadow: 0 0 3px fade(#EEEEEE, 50%) !important;
+  -webkit-box-shadow: 0 0 3px fade(#EEEEEE, 50%) !important;
+  box-shadow: 0 0 3px fade(#EEEEEE, 50%) !important;
+}
+
+.ribbon-primary {
+  background-color: #00B1E1 !important;
+}
+.ribbon-primary:before, .ribbon-primary:after {
+  border-top: 2px solid #00B1E1 !important;
+}
+.ribbon-primary.transparent {
+  background-color: fade(#00B1E1, 40%) !important;
+}
+.ribbon-primary.transparent:before, .ribbon-primary.transparent:after {
+  border-top: 2px solid fade(#00B1E1, 40%) !important;
+}
+.ribbon-primary.ribbon-shadow {
+  -moz-box-shadow: 0 0 3px fade(#00B1E1, 50%) !important;
+  -webkit-box-shadow: 0 0 3px fade(#00B1E1, 50%) !important;
+  box-shadow: 0 0 3px fade(#00B1E1, 50%) !important;
+}
+
+.ribbon-success {
+  background-color: #8CC152 !important;
+}
+.ribbon-success:before, .ribbon-success:after {
+  border-top: 2px solid #8CC152 !important;
+}
+.ribbon-success.transparent {
+  background-color: fade(#8CC152, 40%) !important;
+}
+.ribbon-success.transparent:before, .ribbon-success.transparent:after {
+  border-top: 2px solid fade(#8CC152, 40%) !important;
+}
+.ribbon-success.ribbon-shadow {
+  -moz-box-shadow: 0 0 3px fade(#8CC152, 50%) !important;
+  -webkit-box-shadow: 0 0 3px fade(#8CC152, 50%) !important;
+  box-shadow: 0 0 3px fade(#8CC152, 50%) !important;
+}
+
+.ribbon-info {
+  background-color: #63D3E9 !important;
+}
+.ribbon-info:before, .ribbon-info:after {
+  border-top: 2px solid #63D3E9 !important;
+}
+.ribbon-info.transparent {
+  background-color: fade(#63D3E9, 40%) !important;
+}
+.ribbon-info.transparent:before, .ribbon-info.transparent:after {
+  border-top: 2px solid fade(#63D3E9, 40%) !important;
+}
+.ribbon-info.ribbon-shadow {
+  -moz-box-shadow: 0 0 3px fade(#63D3E9, 50%) !important;
+  -webkit-box-shadow: 0 0 3px fade(#63D3E9, 50%) !important;
+  box-shadow: 0 0 3px fade(#63D3E9, 50%) !important;
+}
+
+.ribbon-warning {
+  background-color: #F6BB42 !important;
+}
+.ribbon-warning:before, .ribbon-warning:after {
+  border-top: 2px solid #F6BB42 !important;
+}
+.ribbon-warning.transparent {
+  background-color: fade(#F6BB42, 40%) !important;
+}
+.ribbon-warning.transparent:before, .ribbon-warning.transparent:after {
+  border-top: 2px solid fade(#F6BB42, 40%) !important;
+}
+.ribbon-warning.ribbon-shadow {
+  -moz-box-shadow: 0 0 3px fade(#F6BB42, 50%) !important;
+  -webkit-box-shadow: 0 0 3px fade(#F6BB42, 50%) !important;
+  box-shadow: 0 0 3px fade(#F6BB42, 50%) !important;
+}
+
+.ribbon-danger {
+  background-color: #E9573F !important;
+}
+.ribbon-danger:before, .ribbon-danger:after {
+  border-top: 2px solid #E9573F !important;
+}
+.ribbon-danger.transparent {
+  background-color: fade(#E9573F, 40%) !important;
+}
+.ribbon-danger.transparent:before, .ribbon-danger.transparent:after {
+  border-top: 2px solid fade(#E9573F, 40%) !important;
+}
+.ribbon-danger.ribbon-shadow {
+  -moz-box-shadow: 0 0 3px fade(#E9573F, 50%) !important;
+  -webkit-box-shadow: 0 0 3px fade(#E9573F, 50%) !important;
+  box-shadow: 0 0 3px fade(#E9573F, 50%) !important;
+}
+
+.ribbon-lilac {
+  background-color: #906094 !important;
+}
+.ribbon-lilac:before, .ribbon-lilac:after {
+  border-top: 2px solid #906094 !important;
+}
+.ribbon-lilac.transparent {
+  background-color: fade(#906094, 40%) !important;
+}
+.ribbon-lilac.transparent:before, .ribbon-lilac.transparent:after {
+  border-top: 2px solid fade(#906094, 40%) !important;
+}
+.ribbon-lilac.ribbon-shadow {
+  -moz-box-shadow: 0 0 3px fade(#906094, 50%) !important;
+  -webkit-box-shadow: 0 0 3px fade(#906094, 50%) !important;
+  box-shadow: 0 0 3px fade(#906094, 50%) !important;
+}
+
+.ribbon-teals {
+  background-color: #37BC9B !important;
+}
+.ribbon-teals:before, .ribbon-teals:after {
+  border-top: 2px solid #37BC9B !important;
+}
+.ribbon-teals.transparent {
+  background-color: fade(#37BC9B, 40%) !important;
+}
+.ribbon-teals.transparent:before, .ribbon-teals.transparent:after {
+  border-top: 2px solid fade(#37BC9B, 40%) !important;
+}
+.ribbon-teals.ribbon-shadow {
+  -moz-box-shadow: 0 0 3px fade(#37BC9B, 50%) !important;
+  -webkit-box-shadow: 0 0 3px fade(#37BC9B, 50%) !important;
+  box-shadow: 0 0 3px fade(#37BC9B, 50%) !important;
+}
+
+.ribbon-inverse {
+  background-color: #2A2A2A !important;
+}
+.ribbon-inverse:before, .ribbon-inverse:after {
+  border-top: 2px solid #2A2A2A !important;
+}
+.ribbon-inverse.transparent {
+  background-color: fade(#2A2A2A, 40%) !important;
+}
+.ribbon-inverse.transparent:before, .ribbon-inverse.transparent:after {
+  border-top: 2px solid fade(#2A2A2A, 40%) !important;
+}
+.ribbon-inverse.ribbon-shadow {
+  -moz-box-shadow: 0 0 3px fade(#2A2A2A, 50%) !important;
+  -webkit-box-shadow: 0 0 3px fade(#2A2A2A, 50%) !important;
+  box-shadow: 0 0 3px fade(#2A2A2A, 50%) !important;
+}
+
+/* ========================================================================
+ * INNER ELEMENT
+ * ======================================================================== */
+.inner {
+  width: 960px;
+  margin: auto;
+  position: relative;
+}
+
+@media (max-width: 800px) {
+  .inner {
+    width: 100%;
+  }
+}
+/* ========================================================================
+ * LOADING ANIMATION
+ * ======================================================================== */
+#loading {
+  margin: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 999999999;
+}
+#loading .loading-inner {
+  position: absolute;
+  top: 40%;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+#loading .loading-inner img {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* ========================================================================
+ * DIMENSION
+ * ======================================================================== */
+.no-padding {
+  padding: 0px !important;
+}
+
+.no-margin {
+  margin: 0px !important;
+}
+
+/* ========================================================================
+ * ARROW
+ * ======================================================================== */
+.arrow {
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  position: absolute;
+  width: 36px;
+  height: 35px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 2px solid #bbbbbb;
+  color: #bbbbbb;
+  right: 10px;
+  font-size: 25px;
+  bottom: 5px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  line-height: 30px;
+}
+.arrow:hover {
+  border: 2px solid white;
+  color: white;
+}
+.arrow:focus {
+  border: 2px solid #bbbbbb;
+  color: #bbbbbb;
+}
+
+/* ========================================================================
+ * BACK TOP
+ * ======================================================================== */
+#back-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  cursor: pointer;
+  color: #EEE;
+  text-align: center;
+  background-color: rgba(89, 95, 102, 0.7);
+  display: block;
+  z-index: 1000;
+  width: 40px;
+  height: 40px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  -moz-transition: all 0.5s ease-in-out 0s;
+  -o-transition: all 0.5s ease-in-out 0s;
+  -webkit-transition: all 0.5s ease-in-out;
+  -webkit-transition-delay: 0s;
+  transition: all 0.5s ease-in-out 0s;
+}
+#back-top:hover {
+  background: #81B71A;
+  box-shadow: 0 0 0 6px #a9e33a;
+}
+#back-top i {
+  font-size: 20px;
+  line-height: 35px;
+}

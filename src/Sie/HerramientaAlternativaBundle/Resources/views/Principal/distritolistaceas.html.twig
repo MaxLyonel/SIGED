@@ -1,0 +1,37 @@
+<table id="tablagessubsem" class="table table-striped">
+    <thead>
+        <tr>
+            <th class="text-center border-right">No.</th>
+            <th>Codigo</th>
+            <th>Centro</th>            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reg in entities %}
+            <tr>
+                <td class="text-center border-right">{{ loop.index }}</td>
+                <td>
+                    {#<img class="img-circle img-bordered-theme" alt="..." src="../../../img/avatar/35/2.png">#}
+                    <span>{{ reg.cod_ue }}</span>
+                </td>
+                <td>{{ reg.institucioneducativa }}</td>
+                
+                <td class="text-center">
+                    <form action="{{path('herramienta_ceducativa_abrir_cea', {'ie_id': reg.cod_ue , 'ie_nombre': reg.institucioneducativa})}}" method="post" style="display:inline-block">                            
+                        <button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡Abrir centro!">
+                            {#<i class="fa fa-graduation-cap"></i>#}
+                            <i class="fa fa-pencil-square"></i>
+                        </button>
+                    </form> 
+                </td>       
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>    
+$(document).ready( function(){
+       $(".tooltips").tooltip();
+   }); 
+</script> 
+                 

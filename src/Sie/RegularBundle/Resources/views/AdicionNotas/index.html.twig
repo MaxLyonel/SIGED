@@ -1,0 +1,212 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/chosen.css')}}" rel="stylesheet">
+
+{% endblock %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Adición de Calificaciones
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('adicionNotas')}}">Buscar</a></li>
+                    <li><i class="fa fa-list-alt"></i>  <a href="{{path('adicionNotas',{'op':'result'})}}">Calificaciones</a></li>
+                    <li><i class="fa fa-edit"></i> Adición</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }} <a href="{{path('modificacionNotas',{'op':'result'})}}" style="text-decoration:underline">modificación de calificacioens</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Datos del Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <span class="divider"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table cf">
+                                <thead class="cf">
+                                    <tr>
+                                        <th>Rude</th>
+                                        <th>Carnet</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>
+                                        <th>Nombre(s)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Rude">{{estudiante.codigoRude}}</td>
+                                        <td data-title="Carnet">{{estudiante.carnetIdentidad}}</td>
+                                        <td data-title="Paterno">{{estudiante.paterno}}</td>
+                                        <td data-title="Materno">{{estudiante.materno}}</td>
+                                        <td data-title="Nombre(s)">{{estudiante.nombre}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Datos de Inscripción</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <span class="divider"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelcurso"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelcurso" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table cf">
+                                <thead class="cf">
+                                    <tr>
+                                        <th>Gestión</th>
+                                        <th>Institucion</th>
+                                        <th>Nivel</th>
+                                        <th>Grado</th>
+                                        <th>Paralelo</th>
+                                        <th>Turno</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Gestión">{{gestion}}</td>
+                                        <td data-title="Institucion">{{curso.institucioneducativa.id}} - {{curso.institucioneducativa.institucioneducativa}}</td>
+                                        <td data-title="Nivel">{{curso.nivelTipo.nivel}}</td>
+                                        <td data-title="Grado">{{curso.gradoTipo.grado}}</td>
+                                        <td data-title="Paralelo">{{curso.paraleloTipo.paralelo}}</td>
+                                        <td data-title="Turno">{{curso.turnoTipo.turno}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Áreas {{gestion}}</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <span class="divider"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelmaestro"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelmaestro" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle"></i> Las calificaciones que apararecen en  color <span class="text-danger">Rojo</span> son las que se van a adicionar.
+                            </div>
+
+                            <form action="{{path('adicionNotas_create')}}" method="post" data-toggle="validator" role="form">
+                                <div id="no-more-tables">
+                                <table class="table table-condensed table-hover cf">
+                                    <thead>
+                                    <tr class="cf">
+                                        <th>Código - Área</th>
+                                        {% for n in titulos_notas %}
+                                            <th>{{n.titulo}}</th>
+                                        {% endfor %}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for a in asignaturas %}
+                                        <tr>
+                                            <td data-title="Área">{{a.codigo}} - {{a.asignatura}}</td>
+                                            {% for n in a.notas %}
+                                                <input type="hidden" name="notaTipo[]" value="{{n.notaTipo}}">
+                                                <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                                <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+                                                <td data-title="{{titulos_notas[(loop.index)-1].titulo}}" align="center">
+                                                    <div class="form-group" {% if n.idEstudianteNota == 'ninguno' %} style="color:red; font-weight:bold" {% endif %}>
+                                                        {% if app.session.get('idNivel') == 11 %}
+                                                            <textarea name="nota[]" class="form-control" style="resize:vertical; max-height:200px; {% if n.idEstudianteNota == 'ninguno' %} color:red; font-weight:bold; {% endif %}" cols="50" rows="50" readonly="readonly">{{n.nota}}</textarea>
+                                                        {% else %}
+                                                            <input id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" style="border: none; background: none;" readonly="readonly">
+                                                        {% endif %}
+                                                    </div>
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td align="right" style="background:#0073A4; color:#FFFFFF;">Seleccionar:</td>
+                                        {% set a = asignaturas %}
+                                        {% for n in a[0].notas %}
+                                            <td style="background:#0073A4; color:#FFFFFF;" align="center"><input type="checkbox" name="notasAdicionar[]" value="{{n.notaTipo}}" class="form-control"></td>
+                                        {% endfor %}
+                                    </tr>  
+                                    </tbody>
+                                </table>
+                                </div>
+                                <hr>
+                                <div style="text-align: center">
+                                    <button class="btn btn-primary" onclick="return validarNotas()"><i class="fa fa-pencil"></i>  Registrar Calificaciones</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function disabledButton(id,valor){
+            if(id){
+                if(valor){
+                    $('#'+id).empty();
+                    $('#'+id).append(valor);
+                }
+                $('#'+id).addClass('disabled');
+            }
+        }
+    </script>
+{% endblock %}

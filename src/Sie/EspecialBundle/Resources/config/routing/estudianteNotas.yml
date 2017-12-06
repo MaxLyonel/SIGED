@@ -1,0 +1,11 @@
+especialEstudianteNotas:
+     path:    /
+     defaults: { _controller: SieEspecialBundle:EstudianteNotas:index }
+     options:
+         expose: true
+
+especialEstudianteNotas_create_update:
+     path:    /create_update
+     defaults: { _controller: SieEspecialBundle:EstudianteNotas:createUpdate }
+     options:
+         expose: true

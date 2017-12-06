@@ -1,0 +1,72 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5AmbienteadministrativoAmbiente:
+    type: entity
+    table: infraestructura_h5_ambienteadministrativo_ambiente
+    indexes:
+        IDX_CD4BC8DE5013004E:
+            columns:
+                - n11_ambienteadministrativo_tipo_id
+        IDX_CD4BC8DE1DBD8CC2:
+            columns:
+                - infraestructura_h5_ambienteadministrativo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n11NumeroBueno:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n11_numero_bueno
+        n11NumeroRegular:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n11_numero_regular
+        n11NumeroMalo:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n11_numero_malo
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        n11AmbienteadministrativoTipo:
+            targetEntity: InfraestructuraH5AmbienteadministrativoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n11_ambienteadministrativo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH5Ambienteadministrativo:
+            targetEntity: InfraestructuraH5Ambienteadministrativo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h5_ambienteadministrativo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

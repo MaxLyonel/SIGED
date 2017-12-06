@@ -1,0 +1,28 @@
+Sie\AppWebBundle\Entity\EstadomatriculaTipo:
+    type: entity
+    table: estadomatricula_tipo
+    uniqueConstraints:
+        estadomatricula_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estadomatricula:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        operativo:
+            type: boolean
+            nullable: false
+            comment: 'variable de operativo'
+    lifecycleCallbacks: {  }

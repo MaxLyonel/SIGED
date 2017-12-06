@@ -1,0 +1,87 @@
+<h4 class="text-orange text-center"><ins>{{curso.nivelTipo.nivel}} - {{curso.gradoTipo.grado}} - {{curso.paraleloTipo.paralelo}}</ins></h4>
+<hr>
+
+<h4><i class="fa fa-list-alt"></i> Áreas Humanísticas
+    {% if areas.tipoUE == 2 and areas.vista != 0 %}
+        <div class="btn-group" style="width:650px; float:right;">
+            <button type="button" class="btn btn-wordpress" onclick="verMateriaTecnica('materiasTecnicas')" style="float:right">
+                Agregar Áreas Tecnicas<span class="caret"></span>
+            </button>
+            <div id="materiasTecnicas" style="display:none; padding:10px; width:500px; position:absolute; background:#FFFFFF; border:2px solid #EEEEEE; right:10px; top:35px; z-index:3" class="animated flipInX row">
+                {% if areas.faltantes|length > 0 %}
+                    <select id="materiaTecnica" class="chosen-select col-lg-10">
+                        <option value="">Seleccionar...</option>
+                        {% for at in areas.faltantes %}
+                            <option value="{{at.id}}">{{at.asignatura}}</option>
+                        {% endfor %}
+                    </select>
+                    <button onclick="enviarMateriaTecnica({{areas.idCurso}})" class="btn btn-teal">Agregar</button>
+                {% else %}
+                    <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    {% if areas.tipoUE != 2 and areas.vista != 0 %}
+        {# if (app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10) #}
+        <span style="float:right; margin-bottom:10px">
+            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Área</button>
+        </span>
+        {# endif #}
+    {% endif %}
+</h4>
+
+{% if areas is not empty %}
+    {% if mensaje %}
+        <div class="alert alert-info">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <i class="fa fa-info-circle"></i> {{mensaje}}
+        </div>
+    {% endif %}
+
+    {% include 'SieAppWebBundle:Services/Areas:lista.html.twig' with {'areas':areas} %}
+
+
+{% else %}
+    <div class="alert alert-warning"><i class="fa fa-warning"></i> El curso no tiene areas humanísticas asignadas</div>
+{% endif %}
+<hr>
+<div style="display:none">
+<h4><i class="fa fa-list-alt"></i> Áreas Técnicas
+    <span style="float:right; margin-bottom:10px">
+        <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Área</button>
+    </span>
+</h4>
+{% if areas is empty %}
+
+{% else %}
+    <div class="alert alert-warning"><i class="fa fa-info-circle"></i> No hay áreas técnicas asignadas</div>
+{% endif %}
+</div>
+</strong>
+<script>
+    $(document).ready( function(){
+        $(".tooltips").tooltip();
+    });
+
+    var verMateriaTecnica = function(id){
+        if ($('#'+id).is(':hidden')){
+            $('#'+id).fadeIn();
+            //$('#'+id).css('z-index','block');
+        }else{
+            $('#'+id).fadeOut();
+        }
+        $('.chosen-select').chosen({allow_single_deselect: false});
+    }
+
+    var enviarMateriaTecnica = function(idCurso){
+        var materia = $('#materiaTecnica').val();
+        if(materia != ""){
+            $('#materiasTecnicas').fadeOut();
+            newArea(materia,idCurso);
+        }
+    }
+
+
+
+</script>

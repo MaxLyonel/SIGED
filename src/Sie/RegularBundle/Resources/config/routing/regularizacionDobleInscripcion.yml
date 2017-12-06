@@ -1,0 +1,14 @@
+regularizacionDobleInscripcion:
+    path:     /
+    defaults: { _controller: SieRegularBundle:RegularizacionDobleInscripcion:index }
+
+regularizacionDobleInscripcion_result:
+    path:     /result/
+    defaults: { _controller: "SieRegularBundle:RegularizacionDobleInscripcion:result" }
+    methods:  POST
+
+regularizacionDobleInscripcion_guardar:
+    path:     /guardar/
+    defaults: { _controller: "SieRegularBundle:RegularizacionDobleInscripcion:guardar" }
+    options:
+         expose: true

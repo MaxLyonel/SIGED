@@ -1,0 +1,79 @@
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4>{{ titulo }}</h4>
+        </div>    
+        <div class="panel-body">
+            <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                <table class="display" id="tablaListadoPersonas" cellspacing="0" width="100%">    
+                    <thead>
+                        <tr>
+                            <th>Acciones</th>
+                            <th>Nombre de Usuario</th>
+                            <th>Estado</th>                            
+                            <th>Rol</th>
+                            <th>Estado del rol</th>
+                            <th>Cobertura-Jurisdicción</th>
+                            <th>Nombres, Apellidos y Carnet</th>                                                        
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th><input type="text" placeholder="filtrar por usuario" /></th>
+                            <th><input type="text" placeholder="filtrar por usuario estado" /></th>                            
+                            <th><input type="text" placeholder="filtrar por Rol" /></th>
+                            <th><input type="text" placeholder="filtrar por rol estado" /></th>
+                            <th><input type="text" placeholder="filtrar por jurisdicción/cobertura" /></th>
+                            <th><input type="text" placeholder="filtrar por nombre y apellido o carnet" /></th>                            
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                    {% for persona in personas %}
+                        <tr>                  
+                            <td> 
+                                {% if persona.username %}
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-info btn-xs dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" aria-haspopup="true">
+                                            Acciones <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li>                                        
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li> 
+                                            <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>
+                                            <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioListChangeState({{persona.usuarioid}},{{persona.usuario_rolid}})"> Activar/Desactivar: Usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-remove-sign" href="#" onclick="usuarioRolListChangeState({{persona.usuarioid}},{{persona.usuario_rolid}})"> Activar/Desactivar: Rol</a></li>                                            
+                                            <li><a class="glyphicon glyphicon-star-empty" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> Actualizar nombre de usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                        
+                                            <li><a class="fa fa-fire" href="#" onclick="personaActivarEdicion('{{persona.personaid}}')"> Activar Edición</a></li>                                            
+                                        </ul>
+                                    </div>                                                    
+                                {% else %}
+                                    <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="usuarioForm('0','0','0','{{persona.personaid}}')"> Asignar Usuario</a>
+                                {% endif %}                        
+                            </td>                                                        
+                            <td>{{ persona.username }}</td>
+                            <td>                        
+                                {% if persona.usuarioesactivo == true %}
+                                    <span class="label label-success">Activo</span>
+                                {% else %}
+                                    <span class="label label-default">Desactivado</span>
+                                {% endif %}        
+                            </td> 
+                            <td>{{ persona.rol }}</td>                           
+                            <td>                        
+                                {% if persona.rolesactivo == true %}
+                                    <span class="label label-success">Activo</span>
+                                {% else %}
+                                    <span class="label label-default">Desactivado</span>
+                                {% endif %}        
+                            </td>
+                            <td> {{ persona.lugarnivel }}-{{ persona.lugar }}</td>                            
+                            <td>{{ persona.nombre }} {{ persona.paterno }} {{ persona.materno }}, CI:{{ [persona.carnet,persona.complemento]|join|trim}}</td>                                                        
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>        
+        </div>
+    </div>

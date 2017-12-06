@@ -1,0 +1,15 @@
+sie_diploma_tramite_reporte_nacional_impreso:
+    path:     /nacional/impreso
+    defaults: { _controller: SieDiplomaBundle:Reporte:nacionalDiplomaImpreso }
+    
+sie_diploma_tramite_reporte_departamental_impreso:
+    path:     /departamental/impreso
+    defaults: { _controller: SieDiplomaBundle:Reporte:departamentalDiplomaImpreso }
+    
+sie_diploma_tramite_reporte_distrital_impreso:
+    path:     /distrital/impreso
+    defaults: { _controller: SieDiplomaBundle:Reporte:distritalDiplomaImpreso }
+   
+sie_diploma_tramite_reporte_institucional_impreso:
+    path:     /institucional/impreso
+    defaults: { _controller: SieDiplomaBundle:Reporte:institucionalDiplomaImpreso }

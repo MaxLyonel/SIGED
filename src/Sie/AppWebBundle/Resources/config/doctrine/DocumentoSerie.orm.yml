@@ -1,0 +1,70 @@
+Sie\AppWebBundle\Entity\DocumentoSerie:
+    type: entity
+    table: documento_serie
+    indexes:
+        documento_serie_idx_departamento_tipo:
+            columns:
+                - departamento_tipo_id
+        IDX_36036B9C7C9FBE9A:
+            columns:
+                - documento_tipo_id
+        IDX_36036B9C8ADDF3C3:
+            columns:
+                - gestion_id
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esanulado:
+            type: boolean
+            nullable: false
+            comment: ''
+        observacionAnulado:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: observacion_anulado
+        obs:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+    manyToOne:
+        documentoTipo:
+            targetEntity: DocumentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                documento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        departamentoTipo:
+            targetEntity: DepartamentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                departamento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestion:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

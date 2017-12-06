@@ -1,0 +1,326 @@
+{% extends '::layoutCertification.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+    <style>
+        .panel-amarillo{
+            background-color: #8CC152;
+            border: 1px solid #8ac04e;
+            color: white;
+        }
+        .panel-princ{
+            border: 1px solid #8CC152;
+            box-shadow: 1px  1px 6px rgba(0,0,0,.3);
+        }
+    </style>
+{% endblock %}
+
+{% block contentoption %}  
+    {% block contentbuscador %}  
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-title">
+                    <h1><i class="fa fa-exchange"></i> Listado de Estudiantes / Participantes Técnico Medio
+                        <small></small>
+                    </h1>
+
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-dashboard"></i>  <a href="{{path('tramite_tecnico_medio_index')}}">Listado de Técnico Medio</a></li>
+                        <li class="active"> Resultado</li>
+
+                    </ol>
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-xs-12 col-lg-12">
+                    {#            <div class="panel panel-icon panel-primary">#}
+                    <div class="panel panel-princ  rounded shadow">
+                        <div class="panel-heading panel-amarillo">
+                            <div class="pull-left">
+                                <h3 class="panel-title">
+                                    <i class="fa fa-search"></i>
+                                    Buscar Estudiantes/Participantes por Gestión
+
+                                </h3>
+                            </div>
+                            <div class="pull-right">
+                                <span class="divider"></span>
+                                <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="panel-body">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    {{ form_widget(form.depto_tm, { 'attr':{'class':'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    {{ form_widget(form.gestiones, { 'attr':{'class':'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
+                                    {{ form_widget(form.buscar_gestion,{ 'attr':{'class':'btn btn-success col-lg-12 col-md-12 col-sm-12 col-xs-12 glyphicon glyphicon-search ' } } ) }}
+                                </div>
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>   
+        </div>
+
+    {% endblock %} 
+    {% block contentregistros %} 
+        {% if estudiantes is defined  %}
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row"> 
+                    <div class="col-lg-12 col-md-12">                
+                        <div class="portlet portlet-default">
+                            <div class="portlet-heading">
+                                {#                                <div class="portlet-widgets">#}
+                                <div class="row">
+                                    <div class="portlet-title col-md-9">
+                                        <h4><i class="fa fa-circle text-dpl"></i> Estudiantes {{ gestion }} - {{departamento}} </h4>
+                                    </div>
+
+
+                                    <input type="hidden" id="gestion" name="gestion" value="{{ gestion }}" />
+                                    <input type="hidden" id="departamento" name="gestion" value="{{ departamento }}" />
+                                    <div class="row">
+                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="margin-top:5px;">
+
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top:5px;">
+                                                <a class="btn btn-warning glyphicon glyphicon-print"  href="{{ path('sie_tramite_imprimir_gestion_tm', {'gestion':gestion, 'departamento':departamento} )}}">
+                                                    Exportar PDF
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top:5px;">
+                                                <a class="btn btn-success glyphicon glyphicon-print"  href="{{ path('sie_tramite_imprimir_gestion_tm_excel', {'gestion':gestion, 'departamento':departamento} )}}">
+                                                    Exportar Excel
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {#<div class="col-lg-1 col-md-7 col-sm-9 col-xs-12" style="margin: 0 auto;">
+                                        <span class="divider"></span>
+                                        <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                                    </div>#}
+                                    <div class="pull-right" style="margin-top: 10px; margin-right: 15px;">
+                                        <span class="divider"></span>
+                                        <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                                    </div>
+                                </div>
+                                {#                                </div>#}
+                                {#                                <div class="clearfix"></div>#}
+                            </div>
+                            <div class="portlet-body">
+                                <div id="no-more-tables"> 
+                                    <table id="myTable" class="table table-bordered table-hover cf dataTable tabla_dis">
+                                        <thead class="">
+                                            <tr class="">
+                                                <th>Trámite</th>
+                                                <th>C.E.A</th>
+                                                <th>Código Rudeal</th>
+                                                <th>C.I.</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Nombre(s)</th>
+                                                <th>Fecha - Lugar Nacimiento</th>
+                                                <th>Especialidad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% set cont =0 %}
+                                            {% for bachiller in estudiantes %}
+                                                {% set cont = cont +1 %}
+                                                <tr>
+                                                    <td data-title="tramite">{{ bachiller.tramite}}</td>
+                                                    <td data-title="institucioneducativa">{{ bachiller.institucioneducativa}}</td>
+                                                    <td data-title="Codigo Rude">{{ bachiller.codigo_rude }}</td>
+                                                    <td data-title="C.I.">{{ bachiller.carnet_identidad }}</td>
+                                                    <td data-title="Paterno">{{ bachiller.paterno }}</td>
+                                                    <td data-title="Materno">{{ bachiller.materno }}</td>
+                                                    <td data-title="Nombre(s)" >{{ bachiller.nombre }}</td>
+                                                    <td data-title="Fecha Nacimiento">{{bachiller.fecha_nacimiento|date('d-m-Y')}}{{ '<br />' }}{{bachiller.depto_nacimiento}}</td>
+                                                    <td data-title="Especialidad">{{bachiller.especialidad}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>                                                                                      
+                                </div>  
+                            </div>
+                        </div>           
+                    </div>                       
+                </div>
+            </div>
+        {% endif %}
+        <div class="modal modal-flex fade" id="historyInscriptions" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+            <div class="modal-dialog higherWider"  style="width: 700px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="flexModalLabel">Historial Académico</h4>
+
+                    </div>
+                    <div class="modal-body">
+                        <div id="idHistory">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    {% endblock %}
+{% endblock %}
+
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+        function buscarBoton(a) {
+            if (a != '') {
+                $('#form_search').removeAttr('disabled');
+            }
+        }
+        $(document).ready(function () {
+            $('#check_table').removeClass('sorting');
+            $('#check_table').removeAttr('aria-controls');
+            $('#check_table').removeAttr('role');
+            $('#check_table').removeAttr('aria-label');
+            $('#check_table').removeAttr('tabindex');
+        });
+        $('#check_table').click(function () {
+            $('#check_table').removeAttr('tabindex');
+            $('#check_table').removeAttr('aria-label');
+            $('#check_table').removeAttr('aria-sort');
+            $('#check_table').removeClass('sorting_asc');
+            $('#check_table').removeClass('sorting_desc');
+        });
+        {#        $('#myTable').addClass('noOrdenar');#}
+
+            function openHistoryInsc(idStudent, especialidad) {
+                $('#historyInscriptions').modal('show');
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ path('estudiante_historial_notas') }}',
+                    data: {'estudiante_id': idStudent, 'especialidad': especialidad},
+                    beforeSend: function () {
+                        $("#idHistory").empty();
+                        $("#idHistory").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+                        $("#idHistory").empty();
+                        $("#idHistory").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }
+            function listar_especialidad(sie_listar) {
+                var gestion_listar = document.getElementById('form_gestiones').value;
+                var error = 0;
+                if (gestion_listar == '' || gestion_listar == null) {
+                    alert('Debe seleccionar una Gestión')
+                    error = error + 1;
+                }
+                if (sie_listar == '' || sie_listar == null) {
+                    alert('Debe llenar el campo C.E.A.')
+                    error = error + 1;
+                }
+                if (error > 0) {
+                    return false;
+                } else {
+                    var peticion1;
+                    if (peticion1 && peticion1.readyState != 4) {
+                        peticion1.abort();
+                    }
+                    peticion1 = $.ajax({
+                        type: 'POST',
+                        url: '{{ path('sie_tramite_listar_especialidad')}}',
+                        data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar},
+                        beforeSend: function () {
+                            $("#form_especialidad").attr('disabled', 'true');
+                            $('#form_especialidad').empty();
+                            $("#form_especialidad").append('<option value="">Cargando Datos..</option>');
+                        },
+                        success: function (data) {
+                            console.log(data.listaespecialidades.length);
+                            if (data.listaespecialidades.length == 0) {
+                                $("#form_especialidad").attr('disabled', 'true');
+                                $('#form_especialidad').empty();
+                                $('#form_especialidad').append('<option value="">Datos no encontrados</option>');
+                            } else {
+                                $('#form_especialidad').empty();
+                                $("#form_especialidad").append('<option value=""></option>');
+                                for (var i in data.listaespecialidades) {
+                                    $("#form_especialidad").append('<option value="' + data.listaespecialidades[i].especialidad_id + '">' + data.listaespecialidades[i].ciclo + '</option>');
+                                }
+                                $("#form_especialidad").removeAttr('disabled');
+                            }
+                        }
+                    });
+                }
+            }
+            function listarNivel(esp_listar) {
+                var peticion2;
+                var gestion_listar = document.getElementById('form_gestiones').value;
+                var sie_listar = document.getElementById('form_sies').value;
+                if (peticion2 && peticion2.readyState != 4) {
+                    peticion2.abort();
+                }
+                peticion2 = $.ajax({
+                    type: 'POST',
+                    url: '{{ path('sie_tramite_listar_nivel')}}',
+                    data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar, 'especialidad': esp_listar},
+                    beforeSend: function () {
+                        $('#form_nivel').attr('disabled', 'true');
+                        $('#form_nivel').empty();
+                        $("#form_nivel").append('<option value="">Cargando Datos..</option>');
+                    },
+                    success: function (data) {
+                        if (data.listanivel.length == 0) {
+                            $('#form_nivel').attr('disabled', 'true');
+                        } else {
+
+                            $('#form_nivel').empty();
+                            $("#form_nivel").append('<option value=""></option>');
+                            for (var i in data.listanivel) {
+                                $("#form_nivel").append('<option value="' + data.listanivel[i].grado_id + '">' + data.listanivel[i].grado + '</option>');
+                            }
+                            $('#form_nivel').removeAttr('disabled');
+                        }
+                    }
+                });
+            }
+            function limpiar_dato_sie() {
+                $('#form_sie').val('');
+            }
+    </script>
+{%endblock%}

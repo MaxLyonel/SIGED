@@ -1,0 +1,121 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Control de Calidad
+                    <small>{{ entidad.entidad }}</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-home"></i>  <a href="{{path('ccalidad_index')}}"> Menú principal</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('warning') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="pull-left">
+                        <h4 class="portlet-title">Inconsistencias respecto a {{ entidad.entidad }} - {{gestion}}</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="portlet-body">
+                    <div class="panel-body panel-primary">
+                        {% if lista_inconsistencias is not empty %}
+                            <div id="no-more-tables" class="table-responsive">
+                                <table class="table table-bordered table-hover cf dataTable">
+                                    <thead  class="cf">
+                                        <tr>
+                                            <th>N°</th>
+                                            <th>Descripción</th>
+                                            <th>Detalle</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for lista in lista_inconsistencias %}
+                                            <tr {% if lista.poderacion > 50 %}class="danger"{% elseif lista.poderacion <= 50 and lista.poderacion > 20 %}class="warning"{% else %}class="success"{% endif %}>
+                                                <td data-title="N°">{{ loop.index }}</td>
+                                                <td data-title="Descripcion">{{ lista.descripcion }}</td>
+                                                <td data-title="Detalle">{{ lista.detalle }}</td>
+                                                <td data-title="Acciones">
+                                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 %}
+                                                        <button type="button" class="btn-link" onclick="mostrarDetalle({{lista.id}})" title="VerDetalles"><i class="fa fa-search"></i> Ver detalle</button>
+                                                        {% if app.session.get('roluser') != 9 %}
+                                                            <a href="{{ path('ccalidad_grafico', { 'id': lista.id }) }}" class="btn-link"><i class="fa fa-search"></i> Ver gráfico</a>
+                                                        {% endif %}
+                                                    {% elseif app.session.get('roluser') == 7 %}
+                                                        <a href="{{ path('ccalidad_grafico', { 'id': lista.id }) }}" class="btn-link"><i class="fa fa-search"></i> Ver gráfico</a>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            No presenta inconsistencias respecto a {{ entidad.entidad }} para la gestión {{gestion}}.
+                        {% endif %}
+                    </div>
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div id="divDetalle"></div>
+    </div> 
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+    <script>
+        function mostrarDetalle(id) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('ccalidad_detalle', {'id': id}),
+                beforeSend: function () {
+                    $("#divDetalle").empty();
+                    $("#divDetalle").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                    Messenger.options = {
+                        extraClasses: 'messenger-fixed messenger-on-top messenger-on-right',
+                        theme: 'flat'
+                    }
+
+                    Messenger().post({
+                        message: 'Cargando detalle, espere un momento...',
+                        type: 'info',
+                        showCloseButton: true
+                    });
+                },
+                success: function (data) {
+                    $("#divDetalle").empty();
+                    $("#divDetalle").html(data);
+                },
+                error: function (data) {
+                    $("#divDetalle").html('<div class="col-md-12"><div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Ocurrió un error interno, no es posible cargar el detalle.</div></div>');
+                }
+            });
+        }
+    </script>
+{% endblock %}

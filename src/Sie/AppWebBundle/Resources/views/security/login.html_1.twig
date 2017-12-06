@@ -1,0 +1,65 @@
+{# app/Resources/views/security/login.html.twig #}
+{# ... you will probably extends your base template, like base.html.twig #}
+
+
+
+
+
+{% extends "::layout.html.twig"%}
+{% block body %}
+
+
+    <body id="login">
+        <div id="wrapper">
+            <div id="page-wrapper">
+                <div class="row">
+
+                    <div class="col-md-4 col-md-offset-4">
+
+                        <div class="login-panel panel panel-default">
+
+                            <div class="panel-heading">
+                                Inserte Usuario y Password
+                            </div>
+
+                            <div class="panel-body">
+
+                                {% if error %}
+                                    <div class="alert alert-warning alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <strong>{{ error.messageKey|trans(error.messageData) }}</strong>
+                                    </div>
+                                {% endif %}
+
+                                <form action="{{ path('login_check') }}" method="post">
+
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                                <input type="text" class="form-control" id="username" name="_username" value="" required autofocus  placeholder="Username" />
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                                <input type="password" class="form-control" id="password" name="_password" required placeholder="Password" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-lg btn-succes btn-block">login</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>        
+            </div>
+        </div>
+    </body>
+{% endblock %}

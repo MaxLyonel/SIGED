@@ -1,0 +1,121 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption%}
+
+    <!-- /.row -->
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="alert alert-info alert-dismissible" role="alert">
+
+                    <i class="fa fa-warning"></i> LA MODIFICACIÓN SE DEBE REALIZAR PREVIA PRESENTACION DEL FORMULARIO DE MODIFICACION Y/O INCLUSION DE DATOS (SIE-MD-300), ESTA MODIFICACION SOLO SE REALIZA UNA VEZ POR GESTION.
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title"><i class="fa fa-user"></i> Modificación de Datos</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+
+                        {% for flashMessage in app.session.flashbag.get('noticemodi') %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong>Warning!</strong> {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                        {% for flashMessage in app.session.flashbag.get('okUpdate') %}
+                            <div class="alert alert-success alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong>Correcto!</strong> {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                        <div style="padding:10px">
+                        {{form_start(form,{ 'attr':{'id':'form', 'data-toggle': 'validator','role': 'form', 'onsubmit': 'return validaRude()'} })   }}
+                            <div class="row">
+                                <label for="form_codigoRude" class="col-sm-2 col-sm-offset-2 control-label text-right">Rude</label>
+                                <div class="col-sm-4">
+                                    {{ form_widget(form.codigoRude,{ 'attr':{'class': 'form-control','placeholder':'Inserte Rude','pattern':'[A-Z0-9]{7,18}'}  }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h5 class="text-lilac">Seleccionar el o los motivos por los que se realiza la solicitud:</h5>
+                                </div>
+                            </div>
+                            </br>
+                            </br>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <p>{{ form_widget(form.mode1, { 'attr':{'class':''} } ) }}</p>
+                                    Modificación y/o inclusión de nombre(s), apellido(s) y/o modificación de fecha de nacimiento, error(es) cometidos por personal administrativo.
+                                </div>
+                                <div class="col-sm-4">
+                                    <p>{{ form_widget(form.mode2, {'attr':{'class':''} })}}</p>
+                                    Modificación y/o inclusión de nombre(s), apellido(s), fecha de nacimiento por reconocimiento de padre y/o madre de familia o por cambio de nombre(s) y/o apellido(s) de manera voluntaria.
+                                </div>
+                                <div class="col-sm-4">
+                                    <p>{{form_widget(form.mode3, {'attr':{'class':''} }) }}</p>
+                                    Modificación y/o inclusión de datos propios del Certificado de nacimiento, Carnet de Identidad y otros datos que son parte del RUDE.
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-12 text-right">
+                                        {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {{form_end(form)}}
+                    </div>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $("#form_mode1").click(function () {
+            $("#form_mode2").attr('checked', false);
+        });
+
+        $("#form_mode2").click(function () {
+            $("#form_mode1").attr('checked', false);
+        });
+
+        function validaRude() {
+            msg = 'Debe seleccionar:';
+            sw1 = 1;
+            sw2 = 1;
+            if ($('#form_codigoRude').val() == '') {
+                msg = msg + '\n- Rude';
+                sw1 = 0;
+            }
+
+            if ((!$("#form_mode1").is(':checked')) && (!$("#form_mode2").is(':checked')) && (!$("#form_mode3").is(':checked'))) {
+                msg = msg + '\n' + '- El motivo de la modificación';
+                sw2 = 0;
+            }
+
+            if (sw1 == 1 && sw2 == 1) {
+                return true;
+            } else {
+                alert('\n' + msg);
+                return false;
+            }
+        }
+    </script>
+{% endblock %}

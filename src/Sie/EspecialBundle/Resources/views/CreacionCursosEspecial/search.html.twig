@@ -1,0 +1,80 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+{% block contentoption %}
+
+<!-- Start page header -->
+<div class="header-content">
+    <h2><i class="fa fa-table"></i> Creación de Cursos <span>Buscar</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aqui:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="#">Creación de Cursos</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+
+            <li class="active">Buscar</li>
+        </ol>
+    </div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+<div class="body-content animated fadeIn">
+
+    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Cursos', 'gestion': '-', 'sie': '-', 'ieducativa': '-', 'opcion': 'Buscar por código SIE'} %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('noTuicion') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-teal">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Ingrese el código SIE para realizar la búsqueda</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">      
+                        {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form-horizontal'} } ) }}
+                            <div class="form-group">
+                                <label for="form_codigoRude" class="col-sm-2 control-label">Código SIE</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.sie, { 'attr':{'class': 'form-control','placeholder':'SIE Intitución Educativa','pattern':'[0-9]{7,8}'}  }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword3" class="col-sm-2 control-label">Gestión</label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.gestion, { 'attr':{'class': 'form-control','placeholder':''}  }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                </div>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

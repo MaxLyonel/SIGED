@@ -1,0 +1,108 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption%}
+
+    {% for flashMessage in app.session.flashbag.get('msgSearch') %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <!-- Tabs With Icon Title -->
+    <div class="row clearfix">
+        <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        Buscar Instituto Educativo
+                    </h2>
+                </div>
+                <div class="body">
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+                            <a href="{{path('rie_new')}}" class="btn btn-md bg-orange waves-effect">
+                                <i class="material-icons">add_box</i>Nuevo
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#por_codigo_le" data-toggle="tab">
+                                <i class="material-icons">view_list</i> Por Código RIE
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#por_dpto" data-toggle="tab">
+                                <i class="material-icons">domain</i> Por nombre de la institución educativa
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="por_codigo_le">
+                            <!-- Vertical Layout -->
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="card">
+                                        <div class="body">
+                                            {{ form_start(formInstitucioneducativaId) }}
+                                                <label class="form-label">Código RIE:</label>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        {{ form_widget(formInstitucioneducativaId.institucioneducativaId,{ 'attr':{'class': 'form-control','placeholder':'Ingresar código RIE...','pattern':'[0-9]{8,17}'}  }) }}
+                                                    </div>
+                                                </div>
+                                                {{ form_widget(formInstitucioneducativaId.buscarId,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+                                            {{ form_end(formInstitucioneducativaId) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                   
+                            <!-- Vertical Layout -->
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="por_dpto">
+                            <!-- Vertical Layout -->
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="card">
+                                        <div class="body">
+                                            {{ form_start(formInstitucioneducativa) }}
+                                                <label class="form-label">Nombre de la Institución Educativa:</label>
+                                                <div class="form-group">
+                                                    <div class="form-line">
+                                                        {{ form_widget(formInstitucioneducativa.institucioneducativa,{ 'attr':{'class': 'form-control','placeholder':'Ingresar nombre del Instituto...'}  }) }}
+                                                    </div>
+                                                </div>
+                                                {{ form_widget(formInstitucioneducativa.buscar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+                                            {{ form_end(formInstitucioneducativa) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                   
+                            <!-- Vertical Layout -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Tabs With Icon Title -->
+
+{% endblock %}

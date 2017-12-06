@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\EspecialServicioTipo:
+    type: entity
+    table: especial_servicio_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        servicio:
+            type: string
+            nullable: false
+            length: 70
+            fixed: false
+            comment: ''
+        areaEspecialTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: area_especial_tipo_id
+    lifecycleCallbacks: {  }

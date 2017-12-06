@@ -1,0 +1,299 @@
+
+{% if exist == true %}
+    <small>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                  <div class="alert alert-warning alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                  <div class="alert alert-success alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+        <div class="row">
+          {#<div class="col-md-4">
+                <a class="btn btn-block btn-facebook" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}">
+                  <i class="fa fa-download"></i> Listado de Estudiantes del Curso
+                </a>
+          </div>
+          <div class="col-md-4">
+                <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
+                  <i class="fa fa-download"></i> Boletin Centralizador
+                </a>
+          </div>#}
+          <div class="col-md-12 text-center">
+              <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
+                  <i class="fa fa-user"></i> Inscripción
+              </button>
+          </div>
+          <!--div class="col-md-3" >
+            {% if app.session.get('ue_modular') and nivel >= 13 %}
+            {% else %}
+            <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{{infoUe}}');" >
+              <i class="fa fa-user-plus"></i> Inscrip. sin Rude
+            </button>
+            {% endif %}
+          </div-->
+      </div>
+    <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="no-more-tables">
+                    <div class="row">
+
+                    </div>
+
+                    <table class="table table-bordered table-hover cf">
+                        <tr>
+
+                        <input type="hidden" id="formdata_data" name="formdata[data]" value="{{aData}}">
+                        <td align="center" class="warning" colspan="3">Estudiantes Inscritos</br>
+                            {{gradoname}} - {{paraleloname}}
+                        </td>
+                        <td>Opciones</td>
+
+                        </tr>
+                        {#init the array info student #}
+                        {% set objInfoStudent = [] %}
+                        {% for data in objStudents %}
+
+                          {% set items = {
+
+                                          'id': data.id,
+                                          'carnetIdentidad': data.carnetIdentidad,
+                                          'codigoRude': data.codigoRude,
+                                          'paterno': '',
+                                          'materno': '',
+                                          'nombre': '',
+                                          'fechaNacimiento': data.fechaNacimiento,
+
+
+                                          } %}
+                            {% set jsnInfoStudent = items|json_encode() %}
+                            {# set the array student info and convert on json string #}
+                            {# set objInfoStudent = objInfoStudent|merge(data) #}
+                            {# set jsnInfoStudent = objInfoStudent|json_encode() #}
+                            <tr >
+                                <td>{{loop.index}}</td>
+                                <td  align="">{{data.codigoRude}}</td>
+                                <td  align="">{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
+
+                                <td  align="">
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                        <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
+                                            <i class="fa fa-list"></i>
+                                        </button>
+                                    </div>
+                                    {% if gestion != 2017 %}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
+                                        <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if  1 == 2 %}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                        <button type="button" class="btn btn-circle btn-info " data-toggle="modal" data-target=".bs-example-modal-table" onclick="socioeconomico('{{infoUe}}','{{jsnInfoStudent}}',0);" >
+                                            <i class="fa fa-user"></i>
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" data-placement="top" title data-original-title="Imprimir Libreta">
+                                    </div>
+                                   </td>
+                                  </td>
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+
+                    </table>
+
+                </div>
+                <!-- /.portlet -->
+            </div>
+        </div>
+    </small>
+    <!-- /.row -->
+{% else %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    var getNotas = function (idInscripcionEspecial) {
+        $.ajax({
+            type: 'post',
+            data: ({idInscripcionEspecial: idInscripcionEspecial}),
+            url: "{{ path('especialInfoNotas') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var socioeconomico = function (infoUe, infoStudent, editar) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent, editar: editar}),
+            url: "{{ path('estudianteSocioeconomico_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">RUDE</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var registerEspecialidad = function (infoUe, infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('herramienta_info_register_speciality_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+    var saveSpeciality = function (infoUe, infoStudent) {
+        var  specialityForm = $('#specialityFormId').serialize();
+        var specialityId = $('#form_especialidad').val();
+        var horas = $('#form_horas').val();
+        var eInsId = $('#form_eInsId').val();
+
+           $('#modal').modal('hide');
+             $.ajax({
+                 type: 'post',
+                 url: Routing.generate('herramienta_info_register_speciality_save'),
+                 data: ({specialityId: specialityId, horas: horas, eInsId: eInsId}),
+                 beforeSend: function () {
+                   $('#modal').empty();
+                 },
+                 success: function (data) {
+                   $('#modal').empty();
+                   //$('#modal').append(data);
+                   //location.reload(true);
+                 },
+                 statusCode: {
+                     500: function () {
+
+                     },
+                     404: function () {
+
+                     }
+                 }
+             });
+         }
+
+
+    var onlyNumber = function (event) {
+
+        var key = window.event ? event.keyCode : event.which;
+
+        if (key > 31 && (key < 48 || key > 57) && key != 47) {
+            $('#noNumber').text(" Campo permitido solo para números ");
+            $("#form_registrar").attr("disabled", true);
+            return false;
+        }
+        else {
+            $('#noNumber').text(" ");
+            $("#form_registrar").removeAttr("disabled");
+            return true;
+        }
+    }
+    ;
+
+
+    var changeMatricula = function (infoUe, infoStudent) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: Routing.generate('herramienta_changeMatricula_index'),
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+
+</script>

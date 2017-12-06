@@ -1,0 +1,28 @@
+regularizarNotas:
+    path:     /
+    defaults: { _controller: SieRegularBundle:RegularizarNotas:index }
+
+regularizarNotas_search:
+    path:     /search/
+    defaults: { _controller: "SieRegularBundle:RegularizarNotas:search" }
+    methods:  POST
+
+regularizarNotas_show:
+    path:     /show/
+    defaults: { _controller: "SieRegularBundle:RegularizarNotas:show" }
+    methods:  [POST,GET]
+
+regularizarNotas_edit:
+    path:     /edit/
+    defaults: { _controller: "SieRegularBundle:RegularizarNotas:edit"}
+
+regularizarNotas_update:
+    path:     /update/
+    defaults: { _controller: "SieRegularBundle:RegularizarNotas:update" }
+    methods:  [POST]
+
+regularizarNotas_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieRegularBundle:Notas:cargarParalelos"}
+    options:
+         expose: true

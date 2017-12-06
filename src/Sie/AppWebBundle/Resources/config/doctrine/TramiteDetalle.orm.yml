@@ -1,0 +1,115 @@
+Sie\AppWebBundle\Entity\TramiteDetalle:
+    type: entity
+    table: tramite_detalle
+    indexes:
+        IDX_66F6AE6DEDC78DDF:
+            columns:
+                - flujo_proceso_id
+        IDX_66F6AE6D42145B6B:
+            columns:
+                - tramite_detalle_id
+        IDX_66F6AE6DF8923225:
+            columns:
+                - tramite_estado_id
+        IDX_66F6AE6D820C2849:
+            columns:
+                - tramite_id
+        IDX_66F6AE6D50D0D880:
+            columns:
+                - usuario_destinatario_id
+        IDX_66F6AE6D1606118A:
+            columns:
+                - usuario_remitente_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: tramite_detalle_id_seq
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaEnvio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_envio
+        fechaRecepcion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_recepcion
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        flujoProceso:
+            targetEntity: FlujoProceso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                flujo_proceso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tramiteDetalle:
+            targetEntity: TramiteDetalle
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_detalle_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tramiteEstado:
+            targetEntity: TramiteEstado
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_estado_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tramite:
+            targetEntity: Tramite
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuarioDestinatario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_destinatario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuarioRemitente:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_remitente_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5InmobiliarioTipo:
+    type: entity
+    table: infraestructura_h5_inmobiliario_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraInmobiliario:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_inmobiliario
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

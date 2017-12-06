@@ -1,0 +1,7 @@
+listCloseRude_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:ListCloseRude:index }
+
+listCloseRude_enable:
+    path:     access/enable
+    defaults: { _controller: SieRegularBundle:ListCloseRude:enable }

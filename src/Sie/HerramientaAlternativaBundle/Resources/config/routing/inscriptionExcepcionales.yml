@@ -1,0 +1,37 @@
+alternativa_inscriptionExcepcionales_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionExcepcionales:index}
+
+alternativa_inscriptionExcepcionales_result:
+    path:     /alt/result
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionExcepcionales:result}
+    options:
+         expose: true
+
+alternativa_inscriptionExcepcionales_findIE:
+     path:    /findIE/{id}/{nivel}/{ciclo}/{grado}/{gestion}
+     defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionExcepcionales:findIE }
+     options:
+         expose: true
+
+alternativa_inscriptionExcepcionales_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{ciclo}/{grado}/{gestion}
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionExcepcionales:findturno }
+    options:
+        expose: true
+
+alternativa_inscriptionExcepcionales_saveExcepcionales:
+    path: /saveexcepcionales
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionExcepcionales:saveExcepcionales }
+
+alternativa_inscriptionExcepcionales_withoutrude:
+    path: /withoutrudeexcepcional
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionExcepcionales:withoutRudeExcepcional }
+
+alternativa_inscriptionExcepcionales_searchstudents:
+    path: /searchstudents
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionExcepcionales:searchStudents }
+
+alternativa_inscriptionExcepcionales_newexcepcional:
+    path: /newexcepcional
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionExcepcionales:newExcepcional }

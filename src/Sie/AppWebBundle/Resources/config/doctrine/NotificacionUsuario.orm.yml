@@ -1,0 +1,60 @@
+Sie\AppWebBundle\Entity\NotificacionUsuario:
+    type: entity
+    table: notificacion_usuario
+    indexes:
+        IDX_4FFB3E995E61BFFA:
+            columns:
+                - notif_id
+        IDX_4FFB3E99DB38439E:
+            columns:
+                - usuario_id
+        IDX_4FFB3E99EF3F27EB:
+            columns:
+                - rol_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        visto:
+            type: boolean
+            nullable: true
+            comment: ''
+        fecha:
+            type: date
+            nullable: true
+            comment: ''
+    manyToOne:
+        notif:
+            targetEntity: Notificacion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                notif_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rolTipo:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rol_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,97 @@
+estudianteinscripcion_especial:
+    path:     /{op}
+    defaults: { _controller: SieEspecialBundle:EstudianteInscripcionEspecial:index, op:search }
+
+estudianteinscripcion_especial_show:
+    path:     /{id}/show/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:show" }
+
+estudianteinscripcion_especial_new:
+    path:     /new/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:new" }
+
+estudianteinscripcion_especial_create:
+    path:     /create/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:create" }
+    methods:  POST
+
+estudianteinscripcion_especial_edit:
+    path:     /edit/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:edit" }
+    methods:  POST
+
+estudianteinscripcion_especial_update:
+    path:     /update/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:update" }
+    methods:  [POST, PUT]
+
+estudianteinscripcion_especial_delete:
+    path:     /delete/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:delete" }
+    methods:  [POST, DELETE]
+
+validardatosestudiante_especial:
+    path:     /validar/{nombre}/{paterno}/{materno}/{genero}/{fechanac}/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:validardatosestudiante" }
+    options:
+         expose: true
+
+buscarestudiantes_institucion_especial:
+    path:     /estudianteslista/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:buscarestudiantesinstitucion" }
+    options:
+         expose: true
+
+cargar_turnos_especial:
+    path:     /cargarTurnos/{idInstitucion}/{gestion}/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:cargarTurnos"}
+    options:
+         expose: true
+
+cargar_areas_especial:
+    path:     /cargarAreas/{idInstitucion}/{gestion}/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:cargarAreas"}
+    options:
+         expose: true
+
+cargar_niveles_especial:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}/{turno}/{area}/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:cargarNiveles"}
+    options:
+         expose: true
+
+cargar_grados_especial:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{turno}/{area}/{nivel}/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:cargarGrados"}
+    options:
+         expose: true
+cargar_servicios_especial:
+    path:     /cargarServicios/{idInstitucion}/{gestion}/{turno}/{area}/{nivel}/{grado}/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:cargarServicios"}
+    options:
+         expose: true
+cargar_programas_especial:
+    path:     /cargarProgramas/{idInstitucion}/{gestion}/{turno}/{area}/{nivel}/{grado}/{servicio}/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:cargarProgramas"}
+    options:
+         expose: true
+
+cargar_paralelos_especial:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{turno}/{area}/{nivel}/{grado}/{servicio}/{programa}/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:cargarParalelos"}
+    options:
+         expose: true
+
+cargar_grados_discapacidad_especial:
+    path:     /cargarGradosDiscapacidad/{discapacidad}/
+    defaults: { _controller: "SieEspecialBundle:EstudianteInscripcionEspecial:cargarGradosDiscapacidad"}
+    options:
+         expose: true
+
+buscarestudianteinscripcion_especial:
+     path:    /buscarEstudiante/{id}/{gestion}/
+     defaults: { _controller: SieEspecialBundle:EstudianteInscripcionEspecial:buscarEstudiante }
+     options:
+         expose: true
+
+         

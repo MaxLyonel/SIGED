@@ -1,0 +1,42 @@
+sie_tramite_certificado_tecnico_registro_busca:
+    path:     /certificado/tecnico/registro/busca
+    defaults: { _controller: SieTramitesBundle:Tramite:certTecRegistroBusca }
+
+sie_tramite_certificado_tecnico_registro_lista:
+    path:     /certificado/tecnico/registro/lista
+    defaults: { _controller: SieTramitesBundle:Tramite:certTecRegistroLista }
+
+sie_tramite_certificado_tecnico_registro_lista_pdf:
+    path:     /certificado/tecnico/registro/lista/pdf
+    defaults: { _controller: SieTramitesBundle:Tramite:certTecRegistroListaPdf }
+
+sie_tramite_certificado_tecnico_registro_guarda:
+    path:     /certificado/tecnico/registro/guarda
+    defaults: { _controller: SieTramitesBundle:Tramite:certTecRegistroGuarda }
+
+sie_tramite_certificado_tecnico_busca_listar_especialidad:
+    path:     /certificado/tecnico/busca/lista/especialidad
+    defaults: { _controller: SieTramitesBundle:Tramite:certTecBuscaListaEspecialidad }  
+    methods:  [POST]   
+
+sie_tramite_certificado_tecnico_busca_listar_nivel:
+    path:     /certificado/tecnico/busca/lista/nivel
+    defaults: { _controller: SieTramitesBundle:Tramite:certTecBuscaListaNivel }  
+    methods:  [POST]  
+
+sie_tramite_certificado_tecnico_registro_inscripcion_historial:
+    path:     /certificado/tecnico/registro/inscripcion/historial
+    defaults: { _controller: SieTramitesBundle:Tramite:certTecRegistroInscripcionHistorial }  
+    methods:  [POST]  
+
+sie_tramite_reactiva_busca:
+    path:     /reactiva/busca
+    defaults: { _controller: SieTramitesBundle:Tramite:reactivaBusca }
+
+sie_tramite_reactiva_lista:
+    path:     /reactiva/lista
+    defaults: { _controller: SieTramitesBundle:Tramite:reactivaLista }
+
+sie_tramite_reactiva_guarda:
+    path:     /reactiva/guarda
+    defaults: { _controller: SieTramitesBundle:Tramite:reactivaGuarda }

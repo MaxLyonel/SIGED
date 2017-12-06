@@ -1,0 +1,58 @@
+Sie\AppWebBundle\Entity\AsignaturaIdiomaoriginario:
+    type: entity
+    table: asignatura_idiomaoriginario
+    indexes:
+        IDX_3077B0696DD9B3B9:
+            columns:
+                - nivel_tipo_id
+        IDX_3077B06930CCAC41:
+            columns:
+                - ciclo_tipo_id
+        IDX_3077B069585AE0D9:
+            columns:
+                - asignatura_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        idiomaoriginarioTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: idiomaoriginario_tipo_id
+    manyToOne:
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        cicloTipo:
+            targetEntity: CicloTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ciclo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        asignaturaTipo:
+            targetEntity: AsignaturaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                asignatura_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,57 @@
+Sie\AppWebBundle\Entity\CertificadoRue:
+    type: entity
+    table: certificado_rue
+    indexes:
+        IDX_2683A37FDB38439E:
+            columns:
+                - usuario_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaCorte:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_corte
+        nroCertificadoInicio:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nro_certificado_inicio
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+    oneToMany:
+      certificados:
+        targetEntity: CertificadoRueInstitucioneducativa
+        mappedBy: certificadoRue
+
+    manyToOne:
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

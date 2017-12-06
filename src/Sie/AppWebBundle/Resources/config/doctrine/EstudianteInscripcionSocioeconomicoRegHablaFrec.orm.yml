@@ -1,0 +1,57 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegHablaFrec:
+    type: entity
+    table: estudiante_inscripcion_socioeconomico_reg_habla_frec
+    indexes:
+        IDX_B02A172FE9B073EF:
+            columns:
+                - estudiante_inscripcion_socioeconomico_reg_habla_frec_tipo_id
+        IDX_B02A172F8AF589F2:
+            columns:
+                - estudiante_inscripcion_socioeconomico_regular_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            default: now()
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estudianteInscripcionSocioeconomicoRegHablaFrecTipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_socioeconomico_reg_habla_frec_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcionSocioeconomicoRegular:
+            targetEntity: EstudianteInscripcionSocioeconomicoRegular
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_socioeconomico_regular_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

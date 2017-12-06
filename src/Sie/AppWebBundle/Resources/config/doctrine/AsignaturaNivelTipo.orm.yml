@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\AsignaturaNivelTipo:
+    type: entity
+    table: asignatura_nivel_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        asignaturaNivel:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: asignatura_nivel
+    lifecycleCallbacks: {  }

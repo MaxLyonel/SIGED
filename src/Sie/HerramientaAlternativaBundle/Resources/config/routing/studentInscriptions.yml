@@ -1,0 +1,17 @@
+alter_inscriptionstudent_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:index"}
+    options:
+         expose: true
+
+alter_inscriptionstudent_findstudent:
+    path:     /findstudent
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:findStudent"}
+    options:
+         expose: true
+
+alter_inscriptionstudent_saveinscription:
+    path:     /save
+    defaults: { _controller: "SieHerramientaAlternativaBundle:StudentsInscriptions:saveInscription"}
+    options:
+         expose: true

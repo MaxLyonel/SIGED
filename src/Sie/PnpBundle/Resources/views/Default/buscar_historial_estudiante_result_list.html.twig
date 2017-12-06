@@ -1,0 +1,125 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet portlet-blue">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Información Estudiante</h4>
+                </div>
+                <div class="portlet-widgets">
+                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+              {% for flashMessage in app.session.flashbag.get('success') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            <div id="pinfoestudiante" class="panel-collapse collapse in">
+                <div class="portlet-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th><small>Rude</small></th>
+                                    <th><small>Paterno</small></th>
+                                    <th><small>Materno</small></th>
+                                    <th><small>Nombre</small></th>
+                                    <th><small>Género</small></th>
+                                    <th><small>CI</small></th>
+                                    <th><small>Fecha Nac.</small></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><small>{{datastudent.codigoRude}}</small></td>
+                                    <td><small>{{datastudent.paterno}}</small></td>
+                                    <td><small>{{datastudent.materno}}</small></td>
+                                    <td><small>{{datastudent.nombre}}</small></td>
+                                    <td><small>{{datastudent.generoTipo}}</small></td>
+                                    <td><small>{{datastudent.carnetIdentidad}}{% if datastudent.complemento != '' %}-{{datastudent.complemento}}{% endif %}</small></td>
+                                    <td><small>{{ datastudent.fechaNacimiento|date('d-m-Y') }}</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="portlet portlet-default">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Historial de Inscripciones</h4>
+                </div>
+                <div class="portlet-widgets">
+                    <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#omitidos"><i class="fa fa-chevron-down"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <div id="omitidos" class="panel-collapse collapse in">
+                <div class="portlet-body">
+
+
+                    <h4 align="center">{% if res_sab_ex == 1 %} ---Estudiante con Reconocimiento de saberes--- {% endif %}</h4>
+                    <div id="no-more-tables">
+                        <table class="table table-bordered table-hover cf">
+                            <thead class="cf">
+                                <tr class="info">
+                                    <th class="text-center"><small>Gestion</small></th>
+                                    <th class="text-center"><small>SIE</small></th>
+                                    <th class="text-center"><small>Unidad Educativa</small></th>
+                                    <th class="text-center"><small>Nivel</small></th>
+                                    <th class="text-center"><small>Grado</small></th>
+                                    <th class="text-center"><small>Paralelo</small></th>
+                                    <th class="text-center"><small>Estado Matricula</small></th>
+                                    <th class="text-center"><small>Bloque</small></th>
+                                    <th class="text-center"><small>Parte</small></th>
+                                    <th class="text-center"><small>RUP-4</small></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in dataInscription%}
+                                    <tr>
+                                        <td data-title="Rude"><small>{{data.gestion}}</small></td>
+                                        <td data-title="Rude"><small>{{data.sie}}</small></td>
+                                        <td data-title="Rude"><small>{{data.institucioneducativa}}</small></td>
+                                        <td data-title="Nombre"><small>{{ data.nivel|e }} </small></td>
+                                        <td data-title="Paterno"><small>{{data.grado|e}}</small></td>
+                                        <td data-title="Materno"><small>{{data.paralelo|e}}</small></td>
+                                        <td data-title="Est. Matricula" class="text-center"><small>{{data.estadoMatricula}}</small></td>
+                                        <td><small>{{data.bloque}}</small></td>
+                                        <td><small>{{data.parte}}</small></td>
+                                        {% if data.sie == "80480300" or data.sie == "80730794" or data.sie == "80980569" or data.sie == "81230297" or data.sie == "81480201" or data.sie == "81730264" or data.sie == "81981501" or data.sie == "82230130" or data.sie == "82480050" %}
+                                            <td><a role="button" class="btn btn-primary glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': data.institucioneducativa_curso_id~data.bloque~data.parte,'esactivo':0}) }}" >&nbsp;</a></td>
+
+                                        {% else %}
+                                            <td>No PNP</td>
+                                        {% endif %}
+                                    </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,178 @@
+{% extends 'layoutDiplomas.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+
+{% endblock %}
+
+
+{% block contentoption%}
+
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-exchange"></i> Resultado Declaración Jurada
+                    <small></small>
+                </h1>
+
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('declaracion_jurada_index')}}">Declaracion Jurada</a></li>
+                    <li class="active"> Resultado</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successdata') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+
+
+    <!--div class='row'>
+
+        <div class='col-md-8 col-md-offset-5'><div id="resultloading"></div></div>
+
+    </div-->
+
+    <!-- Modal -->
+
+
+
+
+
+    <div class="row">
+
+
+        <div class="col-xs-12 col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4><i class="fa fa-home fa-fw"></i> Bachilleres {{gestionSelected}} de {{unidadEducativa.institucioneducativa}} -<b>{{unidadEducativa.id}} </b></h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <!-- Button Dropdown -->
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+
+                            <div class='row'>
+                                <div class='col-md-4 col-md-offset-4'>
+                                    <a class="btn btn-block btn-success btn-pinterest" href="{{ path('download_ddjjgroup_web', {'gestion':gestionSelected, 'sie':unidadEducativa.id} )}}">
+                                        <i class="fa fa-download"></i> Imprimir Formulario de  Declaración Jurada
+                                    </a>
+
+                                </div>
+                            </div>
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="no-more-tables">
+
+                                        <table id="myTable" class="table table-bordered table-hover cf dataTable">
+
+                                            <thead class="">
+                                                <tr class="">
+                                                    <th>No.</th>
+                                                    <th>Codigo Rude</th>
+                                                    <th>Paterno</th>
+                                                    <th>Materno</th>
+                                                    <th>Nombre</th>
+                                                    <th>Fecha Nacimiento</th>
+                                                    <th >Form</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for entity in bachilleres %}
+                                                    <tr>
+                                                        <td data-title="No.">{{ loop.index }}</td>
+                                                        <td data-title="Cod. Rude">{{ entity.codigo_rude }}</td>
+                                                        <td data-title="Paterno">{{ entity.paterno }}</td>
+                                                        <td data-title="Materno">{{ entity.materno }}</td>
+                                                        <td data-title="Nombre" >{{ entity.nombre }}</td>
+                                                        <td data-title="F. Nac.">{{entity.fecha_nacimiento|date('d-m-Y')}}</td>
+                                                        <td class="text-center">
+                                                            <a href="{{path('download_ddjjone_web', {'rude': entity.codigo_rude, 'gestion':entity.gestion_tipo_id , 'sie':entity.insteduid } )}}">
+                                                                <img src="{{asset('img/pdf.png') }}" data-1x="{{asset('img/pdf.png')}}" data-2x="{{asset('img/pdf.png')}}" height="40" width="40"   class="hisrc img-responsive" alt="">
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{path('declaracion_jurada_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+            </div>
+        </div>
+
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+
+        <script>
+
+            $('#form_up').click(function () {
+                if ($('#form_upfile').val() == '') {
+                    alert('Debe seleccionar un archivo...');
+                    return false;
+                }
+                //alert($('#form_upfile').val());return false;
+                $.ajax({
+                    url: "{{ path('consolidation_checkit_web') }}",
+                    type: "POST",
+                    data: {"data": 'krlos'},
+                    success: function (data) {
+                        $('#resultloading').html(data.formulario);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown)
+                    {
+                        alert('Error: ' + errorThrown);
+                    }
+                });
+
+            });
+
+        </script>
+
+
+    {% endblock %}

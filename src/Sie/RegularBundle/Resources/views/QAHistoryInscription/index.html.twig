@@ -1,0 +1,344 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Inscripción QA
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar</a></li>
+                    <li class="active"> Inscripcion QA</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    <div class="row">
+
+        {% for flashMessage in app.session.flashbag.get('noInscriptionQA') %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('yesInscriptionQA') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th>Rude</th>
+                                        <th>Nombre</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>
+                                        <th>CI</th>
+
+                                        <th>Complemento</th>
+                                        <th>Genero</th>
+                                        <th>Fecha Nacimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Nombre">{{ datastudent.codigoRude|e }} </td>
+                                        <td data-title="Nombre">{{ datastudent.nombre|e }} </td>
+                                        <td data-title="Nombre"> {{datastudent.paterno|e}} </td>
+                                        <td data-title="Nombre"> {{datastudent.materno|e}}</td>
+                                        <td data-title="CI">{{datastudent.carnetIdentidad}} </td>
+                                        <td data-title="Complemento">{{datastudent.complemento}}</td>
+                                        <td data-title="genero">{{datastudent.generoTipo}}</td>
+
+                                        <td data-title='F. Nacimiento'> {{datastudent.fechaNacimiento|date('m-d-Y')}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+        {%if currentInscription  | length >1 %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4>Información Inscripción</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div id="pinformation" class="panel-collapse collapse">
+                            <div class="portlet-body">
+
+                                <div id="no-more-tables">
+                                    <table class="table table-bordered table-hover cf">
+                                        <thead class="cf">
+                                            <tr class="info">
+                                                <th class="text-center">Gestión</th>
+                                                <th class="text-center">Sie</th>
+                                                <th class="text-center">Institución Educativa</th>
+                                                <th class="text-center">Nivel</th>
+                                                <th class="text-center">Grado</th>
+                                                <th class="text-center">Paralelo</th>
+                                                <th class="text-center">Turno</th>
+                                                <th class="text-center">Est. Matrícula</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for inscription in currentInscription%}
+                                                <tr>
+
+                                                    <td data-title="Gestión">{{inscription.gestion}}</td>
+                                                    <td data-title="Sie">{{inscription.sie}}</td>
+                                                    <td data-title="Institución Educativa">{{inscription.institucioneducativa}}</td>
+                                                    <td data-title="Nivel">{{inscription.nivel}} </td>
+                                                    <td data-title="Grado">{{inscription.grado}}</td>
+                                                    <td data-title="Paralelo">{{inscription.paralelo}}</td>
+                                                    <td data-title="Turno">{{inscription.turno}} </td>
+                                                    <td data-title="Est. Matricula">{{inscription.estadoMatricula}}</td>
+                                                </tr>
+                                            {% endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {%endif%}
+
+
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Inscripcion QA</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#omitidos"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div id="omitidos" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+
+                      {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form', 'id':'inscriptionForm' } } )}}
+
+
+                      <div class="row">
+
+                          <div class="col-md-6">
+                              {{form_label(form.gestion)}}                              \
+                              {{form_widget(form.gestion, {'attr':{'onchange':'changeGestion(this.value)'}  } )}}
+                          </div>
+                      </div>
+
+                      <div class="row">
+                          <div class="col-md-6 form-group">
+
+                              {{form_label(form.institucionEducativa)}}
+                              {{form_widget(form.institucionEducativa, {'attr':{'onchange':'institucionEducativa(this.value)','onkeyUp':'institucionEducativa(this.value)'}  } )}}
+                              <div class="help-block with-errors"></div>
+                          </div>
+                          <div class="col-md-6">
+                              {{form_label(form.institucionEducativaName)}}
+                              {{form_widget(form.institucionEducativaName)}}
+                          </div>
+                      </div>
+
+                      <div class="row">
+                          <div class="col-md-3">
+                              {{form_label(form.nivel)}}
+                              {{form_widget(form.nivel)}}
+                          </div>
+                          <div class="col-md-3">
+                              {{form_label(form.grado)}}
+                              {{form_widget(form.grado)}}
+                          </div>
+                          <div class="col-md-3 form-group">
+                              {{form_label(form.paralelo)}}
+                              {{form_widget(form.paralelo, {'attr':{'required':'true','onchange':'getTurno(this.value)','onmousedown':'getTurno(this.value)'} })}}
+                              <div class="help-block with-errors "></div>
+                          </div>
+                          <div class="col-md-3 form-group">
+                              {{form_label(form.turno)}}
+                              {{form_widget(form.turno, {'attr':{'required':'true'} })}}
+                              <div class="help-block with-errors "></div>
+                          </div>
+                      </div>
+
+
+                      {{form_widget(form.save, {'attr':{'class':'btn btn-default'} }) }}
+                      {{form_end(form)}}
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="answerInscription">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('inscription_extranjeros_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+    var changeGestion = function(gestion){
+      $("#form_institucionEducativa").val('');
+      $("#form_institucionEducativaName").val('');
+      $("#form_paralelo").empty();
+      $("#form_turno").empty();
+    }
+
+
+
+        function institucionEducativa(id) {
+
+            if (id.length > 7) {
+
+                //get the nivel and grado to do the search
+                nivel = $('#form_nivelId').val();
+                grado = $('#form_gradoId').val();
+                gestion = $('#form_gestion').val();
+
+                //call the ajax function by krlos
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('qahistoryInscription_findIE', {'id': id, 'nivel': nivel, 'grado': grado, 'gestion': gestion}),
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        $("#form_institucionEducativaName").val(data.nombre);
+
+                        $("#form_paralelo").empty();
+                        $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                        $.each(data.paralelo, function (i, value) {
+                            $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        /*
+                         $("#form_turno").empty();
+                         $.each(data.turno, function (i, value) {
+                         $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                         });*/
+
+                    }
+                });
+            } else {
+                nivel = $('#form_nivelId').val();
+                grado = $('#form_gradoId').val();
+                lastue = $('#form_lastue').val();
+                gestion = $('#form_gestion').val();
+                $("#form_institucionEducativaName").val('');
+                $("#form_paralelo").empty();
+                $("#form_turno").empty();
+
+            }
+        }
+        function getTurno(paralelo) {
+
+            sie = $('#form_institucionEducativa').val();
+            nivel = $('#form_nivelId').val();
+            grado = $('#form_gradoId').val();
+            gestion = $('#form_gestion').val();
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('qahistoryInscription_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado, 'gestion': gestion}),
+                beforeSend: function () {
+                    $("#form_turno").empty();
+                },
+                success: function (data) {
+                    $("#form_turno").empty();
+                    $("#form_turno").append('<option value="">Seleccionar</option>');
+                    $.each(data.aturnos, function (i, value) {
+                        $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        }
+
+
+        var regNotas = function () {
+            var str = $("#inscriptionForm").serialize();
+            $.ajax({
+                data: str,
+                type: 'post',
+                url: Routing.generate('inscription_talento_regNotas'),
+                beforeSend: function () {
+                    $("#form_turno").empty();
+                },
+                success: function (data) {
+
+                }
+            });
+
+        }
+
+    </script>
+
+
+{% endblock %}

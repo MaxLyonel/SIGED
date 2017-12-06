@@ -1,0 +1,23 @@
+change_inscription_modular_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:ChangeInscriptionModular:index }
+
+change_inscription_modular_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:ChangeInscriptionModular:result }
+
+change_inscription_modular_save:
+    path: /save
+    defaults: { _controller: SieRegularBundle:ChangeInscriptionModular:save }
+
+change_inscription_modular_modify:
+    path: /modify
+    defaults: { _controller: SieRegularBundle:ChangeInscriptionModular:modify }
+
+change_inscription_modular_remove:
+    path: /remove
+    defaults: { _controller: SieRegularBundle:ChangeInscriptionModular:remove }
+
+change_inscription_modular_result_param:
+    path:    /{rude}/{gestion}/resultparam/
+    defaults: { _controller: SieRegularBundle:ChangeInscriptionModular:resultparam }

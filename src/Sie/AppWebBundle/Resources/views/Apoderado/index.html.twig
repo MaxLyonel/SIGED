@@ -1,0 +1,205 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Información {{ app.session.get('tituloTipo') }} 
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('apoderado')}}"> Buscar</a></li>
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('apoderado',{'op':'result'})}}">{{ app.session.get('tituloTipo') }}</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <h4 class="text-blue">Datos Personales</h4>
+                            <hr style="margin-top:0px">
+                            <div id="no-more-tables">
+                                <table class="table table-bordered cf">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>Código Rude</th>
+                                            <th>C.I.</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>Nombre(s)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <td data-title="Rude">{{estudiante.codigoRude}}</td>
+                                    <td data-title="Carnet">{{estudiante.carnetIdentidad}}</td>
+                                    <td data-title="Paterno">{{estudiante.paterno}}</td>
+                                    <td data-title="Materno">{{estudiante.materno}}</td>
+                                    <td data-title="Nombre(s)">{{estudiante.nombre}}</td>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h4 class="text-blue">Datos de Inscripcion</h4>
+                            <hr style="margin-top:0px">
+                            <div id="no-more-tables">
+                                <table class="table table-bordered cf">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>Gestión</th>
+                                            <th>{{app.session.get('institucion')}}</th>
+                                            <th>Nivel</th>
+                                            <th>Grado</th>
+                                            <th>Paralelo</th>
+                                            <th>Turno</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <td data-title="Gestion">{{inscripcion[0].institucioneducativaCurso.gestionTipo.gestion}}</td>
+                                    <td data-title="{{app.session.get('institucion')}}">{{inscripcion[0].institucioneducativaCurso.institucioneducativa.institucioneducativa}}</td>
+                                    <td data-title="Nivel">{{inscripcion[0].institucioneducativaCurso.nivelTipo.nivel}}</td>
+                                    <td data-title="Grado">{{inscripcion[0].institucioneducativaCurso.gradoTipo.grado}}</td>
+                                    <td data-title="Paralelo">{{inscripcion[0].institucioneducativaCurso.paraleloTipo.paralelo}}</td>
+                                    <td data-title="Turno">{{inscripcion[0].institucioneducativaCurso.turnoTipo.turno}}</td>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>{{ app.session.get('tituloTipo') }}</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <!--a href="{{path('apoderado_find')}}" class="btn btn-default btn-sm"><i class="fa fa-user"></i> Nuevo Apoderado</a-->
+                        <form action="{{path('apoderado_find')}}" method="post" style="display:inline-block">
+                            <input type="hidden" name="form[insId]" id="form_insId" value="{{ inscripcion[0].id }}">
+                            <button type="submit" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Nuevo Apoderado</button>
+                        </form>
+                        <span class="divider"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelapoderado"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelapoderado" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            {% if apoderados is not empty %}
+                                <div id="no-more-tables">
+                                    <table class="table table-bordered table-hover cf dataTable" id="myTable">
+                                        <thead class="cf">
+                                            <tr>
+                                                <th>N°</th>
+                                                <!--th>PerId</th>
+                                                <th>AiId</th>
+                                                <th>AidId</th-->
+                                                <th>Carnet de Identidad</th>
+                                                <th>Paterno</th>
+                                                <th>Materno</th>
+                                                <th>Nombre(s)</th>
+                                                <th>Parentesco</th>
+                                                <th>Empleo</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for apoderado in apoderados %}
+                                                <tr>
+                                                    <td data-title="N°">{{ loop.index }}</td>
+                                                    <!--td data-title="Persona">{{ apoderado.perId }}</td>
+                                                    <td data-title="Persona">{{ apoderado.aiId }}</td>
+                                                    <td data-title="Persona">{{ apoderado.aidId }}</td-->
+                                                    <td data-title="Carnet">{{ apoderado.carnet }}</td>
+                                                    <td data-title="Paterno">{{ apoderado.paterno }}</td>
+                                                    <td data-title="Materno">{{ apoderado.materno }}</td>
+                                                    <td data-title="Nombre(s)">{{ apoderado.nombre }}</td>
+                                                    <td data-title="Parentesco">{{ apoderado.apoTipo }}</td>
+                                                    <td data-title="Empleo">{{ apoderado.empleo }}</td>
+                                                    <td data-title="Acciones">
+                                                        <form action="{{path('apoderado_edit')}}" method="post" style="display:inline-block">
+                                                            <input type="hidden" name="form[aiId]" id="form_aiId" value="{{ apoderado.aiId }}">
+                                                            <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
+                                                        </form>
+                                                        <form action="{{path('apoderado_delete')}}" method="post" style="display: inline-block">
+                                                            <input type="hidden" name="form[aiId]" id="form_aiId" value="{{ apoderado.aiId }}">
+                                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminará el registro!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                No hay apoderados registrados
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{path('apoderado',{'op':'search'})}}" class="btn-link"><i class="fa fa-arrow-circle-left"></i> Atras</a>
+        </div>
+    </div> 
+{% endblock %}
+

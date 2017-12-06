@@ -1,0 +1,123 @@
+{% extends 'layoutInfraestructura.html.twig' %}
+
+{% block contentoption %}
+		<div style="background:#2AC2C7; padding:5px; color:#FFFFFF">
+			<h3 style="text-align:center;">SISTEMA DE INFRAESTRUCTURA EDUCATIVA</h3>
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<h5>Código de EE: {{app.session.get('infCodigoEdificio')}}</h5>
+				</div>
+			</div>
+		</div>
+		<br>
+
+
+		<h2 class="view-title">INFRAESTRUCTURAS DEL EDIFICIO EDUCATIVO</h2>
+		<div id="masonry" class="row" style="position: relative; height: 1014px;">
+			
+			<div class="module-wrapper masonry-item col-lg-4 col-md-4 col-sm-12 col-xs-12" style="position: absolute; left: 0px; top: 630px;">
+				<div class="col-wrapper col-lg-12 col-md-12l col-sm-12 col-xs-12">
+				<div class="module-wrapper">
+					<section class="module module-has-footer module-projects-overview">
+						<div class="module-inner">
+							
+							<div class="module-content collapse in" id="content-overview">
+								<div class="module-content-inner">
+									<ul class="data-list row text-center">
+										<li class="item item-1 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<a>
+												<span aria-hidden="true" class="fa fa-home fa-4x"></span>
+												<span class="data">{{app.session.get('infCodigoEdificio')}}</span>
+												<span class="desc">Edificio<br>Educativo</span>
+											</a>
+										</li>
+									</ul>
+								</div>
+								
+							</div>
+							
+						</div>
+					</section>
+					
+				</div>
+				</div>
+			</div>
+
+			<div class="module-wrapper masonry-item col-lg-8 col-md-8 col-sm-12 col-xs-12" style="position: absolute; left: 0px; top: 630px;">
+				<section class="module module-headings">
+					<div class="module-inner">
+						<div class="module-heading">
+							<h3 class="module-title">Infraestructuras </h3>
+							<ul class="actions list-inline">
+								<li><a class="collapse-module" data-toggle="collapse" href="tables-basic.html#content-6" aria-expanded="false" aria-controls="content-6"><span aria-hidden="true" class="icon arrow_carrot-up"></span></a></li>
+
+							</ul>
+
+						</div>
+
+						<div class="module-content collapse in" id="content-6">
+							<div class="module-content-inner no-padding-bottom">
+								<div class="table-responsive">
+									<table class="table table-hover">
+										<thead>
+											<tr>
+												<th>#</th>
+												<th>Operativo (Gestión)</th>
+												<th>Infraestructura</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% set ijgID = null %}
+											{% for ijg in infJurGeo %}
+												<tr class="active">
+													<td>{{loop.index}}</td>
+													<td><span style="font-size:1.3em">{{ijg[0].gestionTipo.id}}</span></td>
+													<td>
+														{% if ijg[0].gestionTipo.id == 2016 %}
+															{% for i in ijg %}
+																<form action="{{path('infra_info_acceder_principal')}}" method="post" style="display:inline-block">
+																	<input type="hidden" name="infJurGeoId" value="{{i.id}}">
+																	<button type="submit" class="btn btn-primary-alt btn-circle">{{i.infraestructura}}</button>
+																</form>
+																{% set ijgID = i.id %}
+															{% endfor %}
+															<form action="{{path('infra_info_adicionarInfraestructura')}}" method="post" style="display:inline-block" onsubmit="return adicionarInfraestructura();">
+																<input type="hidden" name="infJurGeoId" value="{{ijgID}}">
+																<button type="submit" class="btn btn-default btn-circle" data-toggle="tooltip" data-placement="top" title data-original-title="Adicionar Infraestructura"> <i class="fa fa-plus"></i> </button> 
+															</form>
+														{% endif %}
+													</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</section>
+
+			</div>
+
+		</div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+	{{parent()}}
+	<script>
+		function adicionarInfraestructura(infJurGeoId){
+			if(confirm('Esta a punto de adicionar una nueva Infraestructura ¿Qué desea hacer?')){
+				return true;
+			}
+			return false;
+		}
+	</script>
+{% endblock %}
+{% block autocompletar %}
+{% endblock %}

@@ -1,0 +1,222 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %} 
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-bars animated flip"></i> Apropiación de RUDES
+
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar por Rude</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag.get('noticeddjj') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successddjj') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+
+
+    <!-- /.row -->
+    <div class="panel panel-primary" id="formulario">
+        <div class="panel-heading">
+            <h3 class="glyphicon glyphicon-pencil"> Introduzca el codigo rude observado y el correcto para visualizar su historial</h3>
+        </div>        
+        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form'} } )}}
+        <div class="panel-body"> 
+            <div class="row">                    
+                <div class="col-xs-6">
+                    <h4>
+                        <label class="glyphicon glyphicon-ban-circle required" for="form_codigoRude"> Código Rude Observado</label></h4>
+                        {{form_widget(form.rude )}}
+                </div>
+                <div class="col-xs-6">
+                    <h4>
+                        <label class="glyphicon glyphicon-ok-circle required" for="form_codigoRude"> Código Rude Correcto</label></h4>
+                        {{form_widget(form.rudeb )}}
+                </div>                
+            </div>
+            <HR>
+            <div class="row">                    
+                <div class="col-xs-12 text-center">
+                    {{ form_widget(form.search) }}                    
+                    {#<a role="button" class="btn btn-success btn-large glyphicon glyphicon-search" href="#" onclick="verhistorialunificar();" > VER HISTORIALES</a>       #}
+                </div>                
+            </div>
+        </div>
+        {{form_end(form)}}
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="geneFile"></div>
+        </div>
+    </div>
+
+    <div class="modal modal-flex fade" id="myModalNotas" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Calificaciones</h4>
+
+                </div>
+                <div class="modal-body">
+                    <div id="idNotas"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+
+
+        var lookForInscriptions = function () {
+            //get the values
+            rude = $('#form_rude').val();
+            if (rude.length < 3) {
+                alert("Necesita código Rude para realizar la busqueda");
+                return false;
+            }
+
+            rudeb = $('#form_rudeb').val();
+            if (rudeb.length < 3) {
+                alert("Necesita código Rude para realizar la busqueda");
+                return false;
+            }
+
+            if (rude == rudeb) {
+                alert('Los códigos rudes tienen que ser distintos..');
+                return flase;
+            }
+
+            $.ajax({
+                type: 'post',
+                data: ({rude: rude, rudeb: rudeb}),
+                url: Routing.generate('desunification_rude_sie_build'),
+                beforeSend: function () {
+                    $("#geneFile").empty();
+                    $("#geneFile").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#geneFile").empty();
+                    $("#geneFile").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var desunificarrude = function () {
+            var elem = document.getElementById('formdesuni').elements;
+            var sw = true;
+            for (var i = 0; i < elem.length; i++) {
+                if (elem[i].type == 'checkbox')
+                    if ((elem[i].checked))
+                        sw = false;
+            }
+            if (sw) {
+                alert('Tiene que Seleccionar por lo menos una Inscripción...');
+                return flase;
+            }
+
+            if ((confirm('Esta por cambiar inscripciones del historial de un alumno. ¿Está seguro de realizar el proceso?'))) {
+
+                var str = $("#formdesuni").serialize();
+                $.ajax({
+                    type: 'post',
+                    data: str,
+                    url: Routing.generate('desunification_rude_sie_exect'),
+                    beforeSend: function () {
+                        $("#geneFile").empty();
+                        $("#geneFile").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+                        $("#geneFile").empty();
+                        $("#geneFile").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            } else {
+                return false;
+            }
+
+
+
+        };
+
+
+        var seeNotaNew = function (inscripcionid, idstudent, nivel, grado, paralelo, turno, gestion, sie) {
+
+            $('#myModalNotas').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('note_consultation_parents_sie_nota_new', {'inscripcionid': inscripcionid,'idstudent': idstudent, 'nivel': nivel, 'grado': grado, 'paralelo': paralelo, 'turno': turno, 'gestion': gestion, 'sie': sie}),
+                beforeSend: function () {
+                    $("#idNotas").empty();
+                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#idNotas").empty();
+                    $("#idNotas").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+    </script>
+{%endblock%}
+

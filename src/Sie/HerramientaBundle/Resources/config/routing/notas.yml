@@ -1,0 +1,47 @@
+notas:
+    path:     /{op}
+    defaults: { _controller: SieHerramientaBundle:Notas:index, op:search }
+
+notas_new:
+    path:     /new/
+    defaults: { _controller: "SieHerramientaBundle:Notas:new" }
+    methods:  POST
+
+notas_create:
+    path:     /create/
+    defaults: { _controller: "SieHerramientaBundle:Notas:create" }
+    methods:  POST
+
+notas_edit:
+    path:     /edit/
+    defaults: { _controller: "SieHerramientaBundle:Notas:edit" }
+    methods:  POST
+
+notas_update:
+    path:     /update/
+    defaults: { _controller: "SieHerramientaBundle:Notas:update" }
+    methods:  [POST]
+
+notas_cargar_turnos:
+    path:     /cargarTurnos/{idInstitucion}/{gestion}/
+    defaults: { _controller: "SieHerramientaBundle:Notas:cargarTurnos"}
+    options:
+         expose: true
+
+notas_cargar_niveles:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}/{turno}/
+    defaults: { _controller: "SieHerramientaBundle:Notas:cargarNiveles"}
+    options:
+         expose: true
+
+notas_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{turno}/{nivel}/
+    defaults: { _controller: "SieHerramientaBundle:Notas:cargarGrados"}
+    options:
+         expose: true
+
+notas_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieHerramientaBundle:Notas:cargarParalelos"}
+    options:
+         expose: true

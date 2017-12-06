@@ -1,0 +1,115 @@
+herramienta_info_estudiante_bjp_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:index}
+
+herramienta_info_estudiante_bjp_second:
+    path:     /sie/second
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:second}
+
+herramienta_info_estudiante_bjp_get_turnos:
+    path:     /sie/getturnos/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:getTurnos }
+    options:
+         expose: true
+
+herramienta_info_estudiante_bjp_see_students:
+    path:     /sie/seestudents/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:seeStudents }
+    options:
+         expose: true
+
+herramienta_info_estudiante_bjp_get_students:
+    path:     /sie/getstudents/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:getStudents }
+    options:
+         expose: true
+
+herramienta_info_estudiante_bjp_see_students:
+    path:     /sie/getstudents/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:seeStudents }
+    options:
+         expose: true
+
+herramienta_info_estudiante_bjp_third:
+    path:     /sie/third
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteBjp:loadThird"}
+    options:
+         expose: true
+
+herramienta_info_estudiante_bjp_with_rude:
+    path:     /sie/inscriptionwithrude/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:inscriptionWithRude }
+    options:
+         expose: true
+
+herramienta_info_estudiante_bjp_rude_inscription:
+    path:     /sie/inscriptionrudeinscription/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:rudeInscription }
+    options:
+         expose: true
+
+herramienta_info_estudiante_bjp_exe_inscription:
+    path:     /sie/inscriptionexeinscription/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:exeInscription }
+    options:
+         expose: true
+
+#herramienta_info_estudiante_bjp_areas:
+#    resource: "@SieHerramientaBundle/Resources/config/routing/InfoEstudianteAreas.yml"
+#    prefix:   /sie/estudiante_areas
+
+#herramienta_info_estudiante_bjp_notas:
+#    resource: "@SieHerramientaBundle/Resources/config/routing/InfoEstudianteNotas.yml"
+#    prefix:   /sie/estudiante_notas
+
+herramienta_info_estudiante_bjp_inscription:
+    path:     /sie/inscription/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:inscription }
+    options:
+         expose: true
+
+herramienta_alter_info_estudiante_bjp_inscriptions:
+    resource: "@SieHerramientaBundle/Resources/config/routing/studentInscriptions.yml"
+    prefix:   /sie/estudiante_inscriptions_academico
+
+herramienta_alter_info_estudiante_bjp_inscriptions_without_rude:
+    resource: "@SieHerramientaBundle/Resources/config/routing/studentInscriptionsWithoutRude.yml"
+    prefix:   /sie/estudiante_inscriptions_without_rude_academico
+
+herramienta_change_matricula:
+    resource: "@SieHerramientaBundle/Resources/config/routing/changeMatricula.yml"
+    prefix:   /sie/changematricula
+
+herramienta_info_register_speciality:
+    resource: "@SieHerramientaBundle/Resources/config/routing/registerSpeciality.yml"
+    prefix:   /sie/registerSpeciality
+
+herramienta_info_estudiante_bjp_verifica_pago:
+    path:     /sie/verifpago/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:verificaPago }
+
+herramienta_info_estudiante_bjp_verifica_pago_nuevo:
+    path:     /sie/verifpagonew/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:verificaPagoNuevo }
+
+herramienta_info_estudiante_bjp_verifica_pago_nuevo_save:
+    path:     /sie/verifpagonewsave/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:verificaPagoNuevoGuardar }
+
+herramienta_info_estudiante_bjp_verifica_reporte:
+    path:     /sie/verifreporte/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:repDdjj }
+
+herramienta_info_estudiante_bjp_verifica_reporte_dpto:
+    path:     /sie/verifreportedpto/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:repBjpDpto }
+
+herramienta_info_estudiante_bjp_print_reporte:
+    path:     /sie/print/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:printDdjj }
+
+herramienta_info_estudiante_bjp_remove_students:
+    path:     /sie/removestudents/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:removeStudents }
+    options:
+         expose: true

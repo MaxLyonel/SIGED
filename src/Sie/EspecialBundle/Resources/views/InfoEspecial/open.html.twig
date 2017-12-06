@@ -1,0 +1,246 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+
+{% block contentoption %}
+
+
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Información <span>Centro</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Index</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Abrir</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <!-- Start body content -->
+    <div class="body-content animated fadeIn">
+      {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Menú Principal', 'gestion': data.gestion,'sie': data.id, 'ieducativa': data.institucioneducativa, 'opcion': 'Acceso a Módulos'} %}
+      {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
+        <hr>
+        <div id="js-grid-masonry-projects" class="cbp cbp-l-grid-masonry-projects cbp-caption-active cbp-caption-zoom cbp-ready row" style="margin-top: -20px; height: 857px;"><div class="cbp-wrapper-outer"><div class="cbp-wrapper">
+            {{form_start(centroform)}}
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#77BB3A"></div>
+                        <img src="{{asset('img/unidad-educativa300.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(centroform.next)}}
+                                <br>
+                                <span style="color:#FFFFFF">Información del Centro de Educación Especial</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Centro Educativo</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br>
+        </div>
+            {{form_end(centroform)}}
+
+            {{form_start(cursosform)}}
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#F69429"></div>
+                        <img src="{{asset('img/cambio-paralelo300.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(cursosform.next)}}<br>
+                                <span style="color:#FFFFFF">Administración de Cursos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Administración de Cursos</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(cursosform)}}
+
+            {{form_start(personalAdmform)}}
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#E63E2B"></div>
+                        <img src="{{asset('img/administrativo300.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(personalAdmform.next)}}<br>
+                                <span style="color:#FFFFFF">Administración de personal administrativo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Personal Administrativo</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(personalAdmform)}}
+
+            {{form_start(infoMaestroform)}}
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#22B389"></div>
+                        <img src="{{asset('img/maestros300.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(infoMaestroform.next)}}<br>
+                                <span style="color:#FFFFFF">Administración de personal docente</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Maestros</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(infoMaestroform)}}
+
+            {{form_start(areasform)}}
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#22B389"></div>
+                        <img src="{{asset('img/maestros300.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(areasform.next)}}<br>
+                                <span style="color:#FFFFFF">Asignación Areas/Maestros</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Asignación Areas/Maestros</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(areasform)}}
+
+            {{form_start(infotStudentform)}}
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#00A0DC"></div>
+                        <img src="{{asset('img/estudiantes300.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(infotStudentform.next)}}<br>
+                                <span style="color:#FFFFFF">Información de alumnos, cursos, plan de estudios</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Estudiantes</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(infotStudentform)}}
+
+            {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#bbf628"></div>
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body">
+                                {{form_widget(closeOperativoform.next)}}<br>
+                                <span style="color:#FFFFFF">Cerrar Operativo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Cerrar Operativo</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+            {{form_end(closeOperativoform)}}
+        </div></div></div>
+        <div class="col-lg-12 col-md-12 col-sm-12" >
+            <div id="answerClose" style="overflow: scroll; height:400px"></div>
+        </div>
+        </div>
+        <!-- /.row -->
+        <!-- End misc widget -->
+    </div><!-- /.body-content -->
+    
+
+
+
+        <!-- End misc widget -->
+
+    </div><!-- /.body-content -->
+    <!--/ End body content -->
+
+
+
+
+    <!--/ End body content -->
+
+
+
+
+    <!--/ End body content -->
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    var closeOperativo = function(){
+
+      if(confirm('esta seguro de cerrar el operativo?')){
+        formData = $('#formCloseOperativo').serialize();
+        $.ajax({
+               type: 'post',
+               url: Routing.generate('info_especial_close_operativo'),
+               data: formData,
+               beforeSend: function () {
+                   $("#answerClose").empty();
+                   $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+               },
+               success: function (data) {
+                   $("#answerClose").empty();
+                   $("#answerClose").append(data);
+                   //location.reload(true);
+               },
+               statusCode: {
+                   500: function () {
+
+                   },
+                   404: function () {
+
+                   }
+               }
+           });
+      }else{
+        return false;
+      }
+    };
+    </script>
+{%endblock%}

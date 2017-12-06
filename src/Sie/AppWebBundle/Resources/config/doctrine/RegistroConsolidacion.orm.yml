@@ -1,0 +1,116 @@
+Sie\AppWebBundle\Entity\RegistroConsolidacion:
+    type: entity
+    table: registro_consolidacion
+    repositoryClass: Sie\AppWebBundle\Entity\RegistroConsolidacionRepository
+    id:
+        tipo:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+        gestion:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+        unidadEducativa:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: unidad_educativa
+        periodoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: periodo_id
+    fields:
+        tabla:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        identificador:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        codigo:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        descripcionError:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: descripcion_error
+        fecha:
+            type: date
+            nullable: true
+            comment: ''
+        usuario:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        consulta:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        bim1:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        bim2:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        bim3:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        bim4:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        subCea:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: sub_cea
+        ban:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        esonline:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+        institucioneducativaTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_tipo_id
+    lifecycleCallbacks: {  }

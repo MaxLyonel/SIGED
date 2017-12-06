@@ -1,0 +1,52 @@
+
+inscription_gestiones_pasadas_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:index }
+
+inscription_gestiones_pasadas_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:result }
+
+inscription_gestiones_pasadas_norude:
+    path:    /norude
+    defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:norude }
+
+inscription_gestiones_pasadas_save:
+    path:    /save
+    defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:save }      
+
+inscription_gestiones_pasadas_findIE:
+     path:    /findIE/{id}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:findIE }
+     options:
+         expose: true   
+
+inscription_gestiones_pasadas_findgrado:
+     path:    /findgrado/{idnivel}/{sie}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:findgrado }
+     options:
+         expose: true
+
+inscription_gestiones_pasadas_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:findparalelo }
+     options:
+         expose: true
+         
+inscription_gestiones_pasadas_findturno:         
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}/{gestionselected}
+    defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:findturno }
+    options:
+        expose: true
+
+inscription_gestiones_pasadas_saveext:
+    path: /saveext
+    defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:saveext }
+    
+inscription_gestiones_pasadas_savenew:
+    path:    /saveNew
+    defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:savenew } 
+    
+inscription_gestiones_pasadas_savenewextranjero:    
+    path:    /saveNewExtranjero
+    defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:savenewextranjero } 

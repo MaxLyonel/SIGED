@@ -1,0 +1,81 @@
+bach_exc:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:index" }
+
+bach_exc_dir:
+    path:     /index-dir
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:indexDir" }
+    
+bach_exc_rst:
+    path:     /index-rst
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:indexRst" }    
+
+bach_exc_ddjj:
+    path:     /index-ddjj
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:declaracionJurada" }
+
+bach_exc_ddjj_dir:
+    path:     /index-ddjj-dir
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:declaracionJuradaDir" }
+    
+bach_exc_ie_search:
+    path:     /ie-search
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:resultSearchIe" }
+    methods:  POST
+
+bach_exc_ie_dir_search:
+    path:     /ie-dir-search
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:resultSearchIeDir" }
+    methods:  POST  
+    
+bach_exc_ie_rst_search:
+    path:     /ie-rst-search
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:resultSearchIeRst" }
+    methods:  POST      
+
+bach_exc_create:
+    path:     /be-create
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:beCreate" }
+    options:
+         expose: true
+
+bach_exc_student_info:
+    path:     /be-student/{estId}/{estinsId}/{instId}/{genId}
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:infoStudent" }    
+    options:
+        expose: true
+        
+ie_autocomplete:
+    path: /ie-autocomplete
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:getIes" }
+
+cta_banc_dir_create:
+    path:     /cta-create
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:dirCtaCreate" }
+    options:
+         expose: true        
+
+bach_exc_imprime:
+    path:     /imprime-ddj
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:impresionDDJJ" }
+    
+bach_exc_imprime_dir:
+    path:     /imprime-ddj-dir
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:impresionDDJJDir" }    
+
+cta_banc_dir_rst:
+    path:     /{ie}/estado-dir
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:dirCtaRst" }    
+
+bach_exc_pf_rst:    
+    path:     /{ie}/{ed}/{g}/estado-be
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:beRst" }    
+
+bach_exc_rep_dis:
+    path:     /index-repdis
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:indexReporteDistrito" }
+
+bach_exc_rep_dist_search:
+    path:     /repdis-search
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:resultSearchDistRep" }
+    methods:  POST    

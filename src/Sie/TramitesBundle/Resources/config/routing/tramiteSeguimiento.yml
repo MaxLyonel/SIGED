@@ -1,0 +1,35 @@
+sie_tramite_seguimiento_busca:
+    path:     /busca
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoBusca }
+
+sie_tramite_seguimiento_lista:
+    path:     /lista
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoLista }
+
+sie_tramite_seguimiento_detalle:
+    path:     /detalle
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoDetalle }
+
+sie_tramite_seguimiento_documento_busca:
+    path:     /documento/busca
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoDocumentoBusca }
+
+sie_tramite_seguimiento_documento_lista:
+    path:     /documento/lista
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoDocumentoLista }
+
+sie_tramite_seguimiento_documento_detalle:
+    path:     /documento/detalle
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoDocumentoDetalle }
+
+sie_tramite_seguimiento_rude_busca:
+    path:     /rude/busca
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoRudeBusca }
+
+sie_tramite_seguimiento_rude_lista:
+    path:     /rude/lista
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoRudeLista }
+
+sie_tramite_seguimiento_rude_detalle:
+    path:     /rude/detalle
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoRudeDetalle }

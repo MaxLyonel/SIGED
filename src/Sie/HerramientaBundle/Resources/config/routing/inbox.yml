@@ -1,0 +1,27 @@
+herramienta_inbox_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:Inbox:index}
+
+herramienta_inbox_open:
+    path:     /sie/open
+    defaults: { _controller: SieHerramientaBundle:Inbox:open}
+
+notas_cargar_turnos:
+    path:     /cargarTurnos/{idInstitucion}/{gestion}/
+    defaults: { _controller: "SieHerramientaBundle:Inbox:cargarTurnos"}
+    options:
+         expose: true
+
+herramienta_inbox_openbygestion:
+    path:     /sie/open/{number}/
+    defaults: { _controller: SieHerramientaBundle:Inbox:openByGestion}
+
+herramienta_inbox_openbygestion_tramite:
+    path:     /sie/regularizarUe/
+    defaults: { _controller: SieHerramientaBundle:Inbox:openByGestionTramite}
+
+herramienta_inbox_close_operativo:
+    path:     /closeoperativo
+    defaults: { _controller: "SieHerramientaBundle:Inbox:closeOperativo"}
+    options:
+         expose: true

@@ -1,0 +1,40 @@
+Sie\AppWebBundle\Entity\FaseTipo:
+    type: entity
+    table: fase_tipo
+    uniqueConstraints:
+        fase_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fase:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        esactivoPrimaria:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: esactivo_primaria
+        esactivoSecundaria:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: esactivo_secundaria
+    lifecycleCallbacks: {  }

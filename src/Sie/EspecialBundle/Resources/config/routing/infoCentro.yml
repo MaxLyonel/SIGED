@@ -1,0 +1,7 @@
+herramienta_especial_info_centro_index:
+    path:     /
+    defaults: { _controller: SieEspecialBundle:InfoCentro:index }
+
+herramienta_especial_info_ueducativa_update:
+    path:     /updateInfoEsp
+    defaults: { _controller: SieEspecialBundle:InfoCentro:update }

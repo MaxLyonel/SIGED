@@ -1,0 +1,124 @@
+
+{% extends 'layoutRegular.html.twig' %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Unidades Educativas en Proceso de Apertura
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="index.html">Nuevo</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="portlet portlet-green">
+        <div class="portlet-heading">
+            <div class="portlet-title">
+                <h4>Unidad Educativa no Acreditada</h4>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+
+            <div id="myPillsContent" class="tab-content">
+
+
+
+                <div class="row show-grid">
+                    <div class="col-md-4">
+                        Inicial en Familia Comunitaria
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="#" class="btn" data-toggle="modal" data-target="#myModal"> 1</a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="#" class="btn" data-toggle="modal" data-target="#myModal"> 2</a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        Primaria  Comunitaria Vocacional
+                        <div class="row">
+                            <div class="col-md-2"><a href="#" class="btn"  id="studentInscription">1</a></div>
+                            <div class="col-md-2"><a href="#" class="btn" >2</a></div>
+                            <div class="col-md-2"><a href="#" class="btn" data-toggle="modal" data-target="#myModal">3</a></div>
+                            <div class="col-md-2"><a href="#" class="btn" data-toggle="modal" data-target="#myModal">4</a></div>
+                            <div class="col-md-2"><a href="#" class="btn" data-toggle="modal" data-target="#myModal">5</a></div>
+                            <div class="col-md-2"><a href="#" class="btn" data-toggle="modal" data-target="#myModal">6</a></div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        Secundaria Comunitaria Vocacional
+                        <div class="row">
+                            <div class="col-md-2"><a href="#" class="btn" data-toggle="modal" data-target="#myModal">1</a></div>
+                            <div class="col-md-2"><a href="#" class="btn" data-toggle="modal" data-target="#myModal">2</a></div>
+                            <div class="col-md-2"><a href="#" class="btn" data-toggle="modal" data-target="#myModal">3</a></div>
+                            <div class="col-md-2"><a href="#" class="btn" data-toggle="modal" data-target="#myModal">4</a></div>
+                            <div class="col-md-2"><a href="#" class="btn" data-toggle="modal" data-target="#myModal">5</a></div>
+                            <div class="col-md-2"><a href="#" class="btn" data-toggle="modal" data-target="#myModal">6</a></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button trigger modal -->
+
+
+
+
+            </div>
+
+            <!-- /.portlet-body -->
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{path('sie_ienoacreditadas')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Estudiantes</h4>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    {% endblock %}
+    {% block javascripts %}
+        {{parent()}}
+        <script>
+            function checkSubmitFrm() {
+                document.getElementById('sie_appwebbundle_persona_submit').disabled = true;
+                return true;
+            }
+
+
+
+            $('#studentInscription').click(function (event) {
+                alert(333);
+                $("#myModal").modal("show");
+            });
+
+
+        </script>
+    {% endblock %}

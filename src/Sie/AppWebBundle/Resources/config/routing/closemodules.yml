@@ -1,0 +1,7 @@
+sie_app_web_close_modules_index:
+    path:     /{sie}/{gestion}/{operativo}
+    defaults: { _controller: "SieAppWebBundle:CloseModules:index"}
+
+sie_app_web_close_modules_bjp:
+    path:     /{sie}/{gestion}
+    defaults: { _controller: "SieAppWebBundle:CloseModules:closeBjp"}

@@ -1,0 +1,83 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Administraci&oacute;n de Usuario
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="index.html">Director</a>
+                    </li>
+                    <li class="active">Gestión Usuario</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!-- Website Stats  Widget -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i> Buscar Usuario
+                            </div>
+                            <div class="panel-body">
+
+                                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                <div class="form-group">
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">Rude</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.codigoRude,{ 'attr':{'class': 'form-control','placeholder':'Inserte Rude','pattern':'[A-Z0-9]{13,16}'}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-offset-2 col-sm-10"></div>
+                                <div class="form-group" style="display: none">
+                                    <label for="form_gestion" class="col-sm-2 control-label">Gesti&oacute;n</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.gestion,{ 'attr':{'class': 'form-control','placeholder':'Inserte Rude'}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+
+                                        {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                    </div>
+                                </div>
+                                {{form_end(form)}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- End of Website Stats Widget -->
+
+        </div>
+    </div>
+
+
+{% endblock %}

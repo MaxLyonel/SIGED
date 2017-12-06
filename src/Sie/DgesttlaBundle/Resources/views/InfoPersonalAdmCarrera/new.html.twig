@@ -1,0 +1,107 @@
+{% extends 'layoutDgesttla.html.twig' %}
+
+{% block headercontent %}
+<!-- Start header content -->
+<div class="header-content">
+    <h2><i class="fa fa-file-o"></i>Formación Técnica Tecnológica <span>Nueva/o Administrativo</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Estás aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('principal_web')}}">Inicio</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Registrar Administrativo</li>
+        </ol>
+    </div>
+</div><!-- /.header-content -->
+<!--/ End header content -->
+{% endblock %}
+
+{% block bodycontent %}
+        
+    {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Gestión de Personal Docente', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Nueva/o Docente'} %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel rounded shadow panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Nueva/o Administrativo - {{carrera.nombre}}</h3>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-md-6">
+                            <label class="control-label" for="carnet">Carnet</label>
+                            <input value="{{ persona.carnet }}" id="carnet" class="form-control" readonly="readonly" type="text">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="form-group col-lg-1 col-md-1">
+                            <label class="control-label" for="complemento">Complemento</label>
+                            <input value="{{ persona.complemento }}" id="complemento" class="form-control" readonly="readonly" type="text">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-md-6">
+                            <label class="control-label" for="paterno">Apellido Paterno</label>
+                            <input value="{{ persona.paterno }}" id="paterno" class="form-control" readonly="readonly" type="text">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+                            <label class="control-label" for="materno">Apellido Materno</label>
+                            <input value="{{ persona.materno }}" id="materno" class="form-control" readonly="readonly" type="text">
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+                            <label class="control-label" for="nombre">Nombre(s)</label>
+                            <input value="{{ persona.nombre }}" id="nombre" class="form-control" readonly="readonly" type="text">
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_label(form.genero) }}
+                            {{ form_widget(form.genero) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-md-6">
+                            <label class="control-label" for="fechanac">Fecha de Nacimiento</label>
+                            <input value="{{ persona.fechaNacimiento|date('d-m-Y') }}" id="fechanac" class="form-control" readonly="readonly" type="text">
+                        </div>
+
+                        <div class="form-group col-lg-6 col-md-12">
+                            {{ form_label(form.direccion) }}
+                            {{ form_widget(form.direccion) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_label(form.celular) }}
+                            {{ form_widget(form.celular) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_label(form.correo) }}
+                            {{ form_widget(form.correo) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_label(form.cargo) }}
+                            {{ form_widget(form.cargo) }}
+                        </div>
+                        <div class="form-group col-lg-3 col-md-6">
+                            {{ form_label(form.cargoDesignacion) }}
+                            {{ form_widget(form.cargoDesignacion) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-12 text-center">
+                            {{ form_widget(form.guardar ) }}
+                            <a href="{{ path('dgesttla_info_personal_adm_carr_index') }}" class="btn btn-default">Cancelar</a>
+                        </div>
+                    </div>
+                    {{form_end(form)}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+info_especial_index:
+    path:     /
+    defaults: { _controller: SieEspecialBundle:InfoEspecial:index }
+info_especial_open:
+    path:     /open
+    defaults: { _controller: SieEspecialBundle:InfoEspecial:open }
+
+info_especial_close_operativo:
+    path:     /closeEsp
+    defaults: { _controller: SieEspecialBundle:InfoEspecial:closeOperativo }
+    options:
+         expose: true

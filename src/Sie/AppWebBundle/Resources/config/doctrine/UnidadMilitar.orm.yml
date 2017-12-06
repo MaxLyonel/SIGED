@@ -1,0 +1,33 @@
+Sie\AppWebBundle\Entity\UnidadMilitar:
+    type: entity
+    table: unidad_militar
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        unidadMilitar:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: unidad_militar
+        unidadMilitarTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: unidad_militar_tipo_id
+        distritoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: distrito_id
+    lifecycleCallbacks: {  }

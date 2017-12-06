@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\EstudianteasignaturaEstado:
+    type: entity
+    table: estudianteasignatura_estado
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estado:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

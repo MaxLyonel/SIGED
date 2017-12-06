@@ -1,0 +1,166 @@
+Sie\AppWebBundle\Entity\EstudianteDestacado:
+    type: entity
+    table: estudiante_destacado
+    indexes:
+        IDX_3CCD05D3A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_3CCD05D32BCFBA7:
+            columns:
+                - genero_tipo_id
+        IDX_3CCD05D3179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_3CCD05D33AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        ipOrigen:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: ip_origen
+        impreso:
+            type: boolean
+            nullable: true
+            comment: ''
+        fechaEnvio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_envio
+        lote:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        promedioFinal:
+            type: decimal
+            nullable: false
+            precision: 5
+            scale: 2
+            comment: ''
+            column: promedio_final
+        estudianteId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: _estudiante_id
+        esoficial:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: true
+        nombre:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        carnetIdentidad:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: carnet_identidad
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        codigoRude:
+            type: string
+            nullable: true
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        orgcurricularTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: orgcurricular_tipo_id
+        promedioSem1:
+            type: decimal
+            nullable: true
+            precision: 5
+            scale: 2
+            comment: ''
+            column: promedio_sem1
+        promedioSem2:
+            type: decimal
+            nullable: true
+            precision: 5
+            scale: 2
+            comment: ''
+            column: promedio_sem2
+    manyToOne:
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        generoTipo:
+            targetEntity: GeneroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                genero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

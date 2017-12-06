@@ -1,0 +1,205 @@
+Sie\AppWebBundle\Entity\SocioeconomicoEspecial:
+    type: entity
+    table: socioeconomico_especial
+    indexes:
+        IDX_6B37765977F9D570:
+            columns:
+                - domicilio_departamento_id
+        IDX_6B377659C1D971CB:
+            columns:
+                - domicilio_provincia_id
+        IDX_6B377659E7E1C25F:
+            columns:
+                - etnia_tipo_id
+        IDX_6B377659179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_6B377659812C420E:
+            columns:
+                - idioma1_tipo_id
+        IDX_6B377659B8A17ECB:
+            columns:
+                - idioma2_tipo_id
+        IDX_6B377659AFDA6A88:
+            columns:
+                - idioma3_tipo_id
+        IDX_6B37765970591119:
+            columns:
+                - sangre_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        domicilioMunicipio:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: domicilio_municipio
+        domicilioLocalidad:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: domicilio_localidad
+        direccionZona:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: direccion_zona
+        direccionCalle:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: direccion_calle
+        direccionNro:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: direccion_nro
+        direccionTelefono:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: direccion_telefono
+        direccionCelular:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: direccion_celular
+        viveCon:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: vive_con
+        parienteDiscapacidad:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: pariente_discapacidad
+        gradoParentesco:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: grado_parentesco
+        seguro:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        medicacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        usuarioId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        fechaLastUpdate:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_last_update
+    manyToOne:
+        domicilioDepartamento:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                domicilio_departamento_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        domicilioProvincia:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                domicilio_provincia_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        etniaTipo:
+            targetEntity: EtniaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                etnia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idioma1Tipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma1_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idioma2Tipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma2_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idioma3Tipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma3_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        sangreTipo:
+            targetEntity: SangreTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sangre_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

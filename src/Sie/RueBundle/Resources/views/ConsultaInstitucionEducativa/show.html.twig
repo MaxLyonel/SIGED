@@ -1,0 +1,217 @@
+{% extends 'SieRueBundle:Default:rueConsulta.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="block-header">
+        <h2>RESULTADO DE LA BÚSQUEDA</h2>
+    </div>
+
+	<ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('consulta_rue')}}">Inicio</a></li>
+        <li class="active">Ver Institución Educativa</li>
+    </ol>
+
+	<!-- Basic Example -->
+	<div class="row clearfix">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="card">
+				<div class="header bg-blue-grey">
+					<h2>
+						<i class="material-icons">home</i> {{entity.id}} - {{entity.institucioneducativa}}
+					</h2>
+				</div>
+				<div class="body">
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+							<div class="card">
+								<div class="body">
+									<h4 class="col-teal">1.- Datos Generales</h2>
+										<div class="pull-right">
+											<form action="{{path('reporte_rue_info_gral')}}" method="post">
+												<input type="hidden" id="form_cod_rue" name="form[cod_rue]" value="{{entity.id}}">
+												<button type="submit" class="btn btn-warning waves-effect"><i class="material-icons">save</i> Descargar .pdf</button>
+											</form>
+										</div>
+									<ul class="dashboard-stat-list">
+										<li>
+											Código RUE:
+											<span class="pull-right col-blue"><b>{{entity.id}}</b>
+										</li>
+										<li>
+											Nombre:
+											<span class="pull-right col-blue"><b>{{entity.institucioneducativa}}</b>
+										</li>
+										<li>
+											Resolución:
+											<span class="pull-right"><b>{{entity.nroResolucion}}</b>
+										</li>
+										<li>
+											Fecha Resolución:
+											<span class="pull-right"><b>{{entity.fechaResolucion|date('d-m-Y')}}</b>
+										</li>
+										<li>
+											Dependencia:
+											<span class="pull-right"><b>{{entity.dependenciaTipo.dependencia}}</b>
+										</li>
+										{% if entity.convenioTipo.id != 99 %}
+											<li>
+												Convenio:
+												<span class="pull-right"><b>{{entity.convenioTipo.convenio}}</b>
+											</li>
+										{% endif %}
+										<li>
+											Estado:
+											<span class="pull-right"><b>{{entity.estadoinstitucionTipo.estadoinstitucion}}</b>
+										</li>
+										<li>
+											Subsistema:
+											<span class="pull-right"><b>{{entity.institucioneducativaTipo.descripcion}}</b>
+										</li>
+										{#<li>
+											Registro Legal RUE:
+											<span class="pull-right">
+												<b>{% if entity.fechaResolucion and date(entity.fechaResolucion) > date('01-01-1900') %}<span class="text-success">SI</span>{% else %}<span class="text-danger">NO</span>{% endif %}</b>
+										</li>
+										<li>
+											{% if entity.institucioneducativaTipo.id == 1 %}Regularizada:
+												<span class="pull-right"><b>{% if entity.nroResolucion and entity.nroResolucion != ' ' %}<span class="text-success">SI</span>{% else %}<span class="text-danger">NO</span>{% endif %}</b>
+											{% else %}Acreditada:
+												<span class="pull-right"><b>{% if entity.fechaResolucion and date(entity.fechaResolucion) >= date('31-08-2005') %}<span class="text-success">SI</span>{% else %}<span class="text-danger">NO</span>{% endif %}</b>
+											{% endif %}
+										</li>#}
+									</ul>
+								</div>
+							</div>
+						</div><!-- end Datos Generales -->
+
+						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+							<div class="card">
+								<div class="body">
+									<h4 class="col-teal">2.- Localización del Edificio Escolar</h4>
+									<ul class="dashboard-stat-list">
+										<li>
+											Código LE:
+											<span class="pull-right col-blue"><b>{{entity.leJuridicciongeografica.id}}</b>
+										</li>
+										<li>
+											Departamento:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar}}</b>
+										</li>
+										<li>
+											Provincia:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugar}}</b>
+										</li>
+										<li>
+											Municipio:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugar}}</b>
+										</li>
+										<li>
+											Cantón:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugar}}</b>
+										</li>
+										<li>
+											Localidad:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugar}}</b>
+										</li>
+										<li>
+											Zona:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.zona}}</b>
+										</li>
+										<li>
+											Dirección:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.direccion}}</b>
+										</li>
+										<li>
+											Distrito:
+											<span class="pull-right"><b>{{entity.leJuridicciongeografica.distritoTipo.distrito}}</b>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div><!-- end Ubicación del edificio escolar -->
+
+						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+							<div class="card">
+								<div class="body">
+									<h4 class="col-teal">3.- Niveles / Áreas de atención</h4>
+									{% if areas %}
+										<ul class="dashboard-stat-list">
+										<h4>Áreas:</h4>
+											{% for area in areas %}
+												<li>
+													{{area.areaEspecial}}
+												</li>
+											{% endfor %}
+										</ul>
+									{% endif %}<!-- end areas -->
+
+									{% if niveles %}
+										<ul class="dashboard-stat-list">
+											<h4>Niveles Autorizados:</h4>
+											{% for nivel in niveles %}
+												<li>
+													{{nivel.nivel}}
+												</li>
+											{% endfor %}
+										</ul>
+									{% endif %}<!-- end niveles -->
+								</div>
+							</div>
+						</div><!-- end Áreas/Niveles -->
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="card">
+				<div class="header bg-blue-grey">
+					<h2>
+						<i class="material-icons">map</i> LOCALIZACIÓN GEOGRÁFICA DE LA INSTITUCIÓN EDUCATIVA
+					</h2>
+				</div>
+				<div class="body">
+					{% if (institucion.cordx and institucion.cordy) %}
+						<div id="lienzoMapa" style="width: auto; height: 550px;"></div>
+					{% else %}
+						<div class="text-center"><span class="label label-danger">No se cuenta con coordenadas para mostrar la localización geográfica de la U.E.</span></div>							
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- #END# Basic Example -->
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if (institucion.cordx and institucion.cordy) %}
+        <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+        <script type="text/javascript">
+            function initialize() {
+                var marcadores = [['{{institucion.ieducativa}}', {{institucion.cordx}}, {{institucion.cordy}}]];
+                var map = new google.maps.Map(document.getElementById('lienzoMapa'), {
+                    zoom: 16,
+                    center: new google.maps.LatLng({{institucion.cordx}}, {{institucion.cordy}}),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
+                var infowindow = new google.maps.InfoWindow();
+                var marker, i;
+                for (i = 0; i < marcadores.length; i++) {
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(marcadores[i][1], marcadores[i][2]),
+                        map: map
+                    });
+                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                        return function () {
+                            infowindow.setContent('<div><b>Unidad Educativa: </b>' + marcadores[i][0] + '</div>');
+                            infowindow.open(map, marker);
+                        }
+                    })(marker, i));
+                }
+            }
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,270 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo %}  
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4>Usuario consistente con uno o mas roles segun su busqueda.</h4>
+    </div>
+    <div id="tablaListadoPersonas_fil" style="visibility: hidden;">        
+    </div>
+    <div class="panel-body">
+        <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+            <thead>
+                <tr>
+                    <th>Acciones</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Estado</th>
+                    <th>Carnet</th>
+                    <th>Nombre</th>
+                    <th>Paterno</th>
+                    <th>Materno</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Roles</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for persona in personas %}
+                <tr>                   
+                    <td> 
+                        {% if (accion != 'stop') %}{#SI NO HAY PROBLEMAS CON EL USUARIO DUPLICADOS#}
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info btn-xs dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" aria-haspopup="true">
+                                    Acciones <span class="caret"></span>
+                                </button>
+                                {% if (app.session.get('roluser') == 30) or (app.session.get('roluser') == 41) %} {#NACIONAL CENSO#}                                    
+                                        <ul class="dropdown-menu" role="menu">                                        
+                                            <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li>                                            
+                                            <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>
+                                        </ul>                                        
+                                {% endif %}
+                                {% if app.session.get('roluser') == 31 %} {#SUPERUSUARIOSIE#}
+                                        <ul class="dropdown-menu" role="menu">                                        
+                                            <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li>                                                                       
+                                            {% if persona.count_edit <= 3 %}
+                                                <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                        
+                                            {% endif %}
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> Actualizar nombre de usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioDesactivar({{persona.usuarioid}})"> Activar/Desactivar Usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li>
+                                            <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>                                           
+                                        </ul>  
+                                    {% endif %} 
+                                {% if app.session.get('roluser') == 8 %} {#NACIONAL#}
+                                    <ul class="dropdown-menu" role="menu">                                        
+                                        <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li>
+                                        {% if (not ('8' in persona.roles))%}                                        
+                                            {% if persona.count_edit <= 3 %}
+                                                <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                        
+                                            {% endif %}
+                                            
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> Actualizar nombre de usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioDesactivar({{persona.usuarioid}})"> Activar/Desactivar Usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li>
+                                            <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>
+                                        {% endif %}
+                                    </ul>                                    
+                                {% endif %}
+                                {% if app.session.get('roluser') == 7 %} {#DEPARTAMENTAL#}                                    
+                                    <ul class="dropdown-menu" role="menu">                                        
+                                        <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li>
+                                        {#{% if (not ('8' in persona.roles)) and (not ('7' in persona.roles)) and (app.session.get('roluserlugarid') in persona.rol_lugar_id)%}#}
+                                        {% if (not ('8' in persona.roles)) and (not ('7' in persona.roles)) %}
+                                            {% if persona.count_edit <= 3 %}
+                                                <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                        
+                                            {% endif %}
+                                            
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> Actualizar nombre de usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioDesactivar({{persona.usuarioid}})"> Activar/Desactivar Usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li>
+                                            <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>                                        
+                                        {% else %}    
+                                            <li><a class="glyphicon glyphicon-eye-close" href="#"> Usted no tiene tuición sobre el usuario. El tec. nacional puedo modificar el Lugar o Rol para darle mas permisos.</a></li>
+                                        {% endif %}
+                                    </ul>
+                                {% endif %}
+                                {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
+                                    <ul class="dropdown-menu" role="menu">                                        
+                                        <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver </a></li>
+                                        {% if (not ('8' in persona.roles)) and (not ('7' in persona.roles)) and (not ('10' in persona.roles)) and (app.session.get('roluserlugarid') in persona.rol_lugar_id) %}
+                                            {% if persona.count_edit <= 3 %}
+                                                <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                        
+                                            {% endif %}
+                                            
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> Actualizar nombre de usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioDesactivar({{persona.usuarioid}})"> Activar/Desactivar Usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li>                                                                                        
+                                            <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>
+                                        {% else %}    
+                                            <li><a class="glyphicon glyphicon-eye-close" href="#"> Usted no tiene tuición sobre el usuario. El tec. departamental puedo modificar el Lugar o Rol para darle mas permisos.</a></li>
+                                        {% endif %}
+                                    </ul>
+                                {% endif %}
+                                {% if app.session.get('roluser') == 9 %} {#DIRECTOR UNIDAD EDUCATIVA#}
+                                    <ul class="dropdown-menu" role="menu">                                        
+                                        <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li>
+                                        {% if (not ('8' in persona.roles)) and (not ('7' in persona.roles)) and (not ('10' in persona.roles)) and (not ('9' in persona.roles)) and (app.session.get('roluserlugarid') in persona.rol_lugar_id) %}
+                                            {% if persona.count_edit <= 3 %}
+                                                <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                        
+                                            {% endif %}                                                                                      
+                                            
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> Actualizar nombre de usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioDesactivar({{persona.usuarioid}})"> Activar/Desactivar Usuario</a></li>
+                                            <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li>                                                                                        
+                                            <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>
+                                        {% endif %}
+                                    </ul>
+                                {% endif %}                             
+                            </div>                                                    
+                        {% else %}                            
+                            {#<a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="usuarioForm('{{persona.personaid}}')"> Asignar Usuario</a>#}
+                            <span class="label label-danger"><i class="fa fa-ban" aria-hidden="true"></i></span>
+                            {% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 31) %}                                
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-info btn-xs dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" aria-haspopup="true">
+                                        Acciones <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">                                        
+                                        <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li>                                        
+                                        <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                        
+                                        <li><a class="fa fa-fire" href="#" onclick="personaActivarEdicion('{{persona.personaid}}')"> Activar Edición</a></li>                                        
+                                        <li><a class="glyphicon glyphicon-star-empty" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> Actualizar nombre de usuario</a></li>
+                                        <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioDesactivar({{persona.usuarioid}})"> Activar/Desactivar Usuario</a></li> 
+                                        <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li>
+                                        <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>
+                                    </ul>
+                                </div>      
+                            {% endif %}
+                        {% endif %}                        
+                    </td>
+                    <td>{{ persona.username }}</td>
+                    <td>
+                        {% if persona.usuarioesactivo is not null  %}
+                            {% if persona.usuarioesactivo == true %}
+                                <span class="label label-success">Activado</span>
+                            {% else %}
+                                <span class="label label-default">Desactivado</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="label label-warning">Sin usuario</span>
+                        {% endif %}                        
+                    </td>
+                    <td>{{ [persona.carnet,persona.complemento]|join|trim}}</td>
+                    <td>{{ persona.nombre }}</td>
+                    <td>{{ persona.paterno }}</td>
+                    <td>{{ persona.materno }}</td>
+                    <td>{% if persona.fecha_nacimiento %}{{ persona.fecha_nacimiento|date('d/m/Y') }}{% endif %}</td>
+                    <td>
+                        {% set roles_depu = persona.roles_txt|replace({'"':'','{':'','}':''}) %}
+                        {% set rolesarray = roles_depu|split(',') %}                                                
+                        {% for i in 0..rolesarray|length-1 %}
+                            <h6><span class="label label-info">{{ rolesarray[i] }}</span></h6>                            
+                        {% endfor %}
+                    </td>                    
+                </tr>                
+            {% endfor %}
+            {% if personas|length == 0 %}
+                 <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if personasdup is defined %}  
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4>CI vigentes sin usuarios segun su busqueda.</h4>
+    </div>
+    <div class="panel-body">
+        <table id="tablaListadoPersonasduppli" class="display" cellspacing="0" width="100%">    
+            <thead>
+                <tr>
+                    <th>Acciones</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Estado</th>
+                    <th>Carnet</th>
+                    <th>Nombre</th>
+                    <th>Paterno</th>
+                    <th>Materno</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Vigente Administrativo</th>
+                    <th>Vigente Apoderado</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for personad in personasdup %}
+                <tr>                   
+                    <td>
+                        <span class="label label-danger"><i class="fa fa-ban" aria-hidden="true"></i></span> 
+                        {% if (app.session.get('roluser') == 8) %}
+                            <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="usuarioForm('{{personad.id}}')"> Asignar Usuario</a>                        
+                        {% endif %}
+                    </td>
+                    <td></td>
+                    <td>
+                        <span class="label label-warning">Sin usuario</span>
+                    </td>
+                    <td>{{ personad.carnet }}</td>
+                    <td>{{ personad.nombre }}</td>
+                    <td>{{ personad.paterno }}</td>
+                    <td>{{ personad.materno }}</td>
+                    <td>{% if personad.fecha_nacimiento %}{{ personad.fecha_nacimiento|date('d/m/Y') }}{% endif %}</td>
+                    <td>   
+                        {% if personad.esvigente == true %}
+                            <span class="label label-success"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                        {% else %}
+                            <span class="label label-default"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                        {% endif %}
+                    </td>                    
+                    <td>   
+                        {% if personad.esvigente_apoderado == true %}
+                            <span class="label label-success"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                        {% else %}
+                            <span class="label label-default"><i class="fa fa-square-o" aria-hidden="true"></i></span>
+                        {% endif %}
+                    </td>                    
+                </tr>                
+            {% endfor %}
+
+            {% if personasdup|length == 0 %}
+                 <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{%  endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#tablaListadoPersonas').find('tr').click( function(){
+            $('#tablaListadoPersonas_fil').text($(this).index());
+        });                
+    } );
+    </script>
+{% endblock %}

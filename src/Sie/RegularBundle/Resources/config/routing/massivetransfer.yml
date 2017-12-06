@@ -1,0 +1,61 @@
+massive_transfer_sie_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:MassiveTransfer:index }
+
+massive_transfer_sie_build:
+    path:     /sie/buildfile/
+    defaults: { _controller: SieRegularBundle:MassiveTransfer:build }
+    options:
+         expose: true 
+         
+massive_transfer_sie_download:
+    path:     /download/{file}
+    defaults: { _controller: SieRegularBundle:MassiveTransfer:download }         
+    
+massive_transfer_sie_getnivel:
+    path:     /getNivel/{sie}
+    defaults: { _controller: SieRegularBundle:MassiveTransfer:getnivel }       
+    options:
+         expose: true 
+         
+massive_transfer_sie_getgrado:
+    path:     /getGrado/{sie}/{nivel}
+    defaults: { _controller: SieRegularBundle:MassiveTransfer:getgrado }       
+    options:
+         expose: true 
+         
+massive_transfer_sie_getparalelo:
+    path:     /getParalelo/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieRegularBundle:MassiveTransfer:getparalelo }       
+    options:
+         expose: true  
+         
+massive_transfer_sie_getturno:
+    path:     /getTurno/{sie}/{nivel}/{grado}/{paralelo}
+    defaults: { _controller: SieRegularBundle:MassiveTransfer:getturno }       
+    options:
+         expose: true          
+         
+massive_transfer_sie_students:
+    path:     /sie/students/
+    defaults: { _controller: SieRegularBundle:MassiveTransfer:students }
+    options:
+         expose: true  
+         
+massive_transfer_sie_exect:
+    path:     /sie/exectmassive/
+    defaults: { _controller: SieRegularBundle:MassiveTransfer:exect }
+    options:
+         expose: true         
+         
+         
+         
+massive_transfer_sie_changedate:
+    path:     /changedate
+    defaults: { _controller: SieRegularBundle:MassiveTransfer:changedate }  
+    
+massive_transfer_sie_buildAgain:
+    path:     /sie/buildfileagain/
+    defaults: { _controller: SieRegularBundle:MassiveTransfer:buildAgain }
+    options:
+         expose: true     

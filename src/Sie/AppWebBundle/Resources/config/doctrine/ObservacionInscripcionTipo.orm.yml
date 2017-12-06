@@ -1,0 +1,25 @@
+Sie\AppWebBundle\Entity\ObservacionInscripcionTipo:
+    type: entity
+    table: observacion_inscripcion_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        peso:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+    lifecycleCallbacks: {  }

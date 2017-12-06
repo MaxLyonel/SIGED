@@ -1,0 +1,203 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+    	<form action="" id="formNotas" onsubmit="registrarNotas(); return false">
+    	<input type="hidden" name="infoUe" value="{{infoUe}}">
+    	<input type="hidden" name="infoStudent" value="{{infoStudent}}">
+    	<input type="hidden" name="tipo" value="t">
+        {% endif %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Registro de Notas</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body no-padding" id="modal-body">
+                <div class="alert " style="padding:10px">
+                    <h5 class="text-lilac">Datos del Curso</h5>
+                    {% if nivel == 15 %}
+                        <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                            <tr>
+                                <th>Nivel</th><td>{{especialidad}}</td>
+                                <th>Turno</th><td>{{turno}}</td>
+                            </tr>
+                            <tr>
+                                <th>Etapa</th><td>{{acreditacion}}</td>
+                                <th>Paralelo</th><td>{{paralelo}}</td>
+                            </tr>
+                        </table>
+                    {% else %}
+                        <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                            <tr>
+                                <th>Area</th><td>{{area}}</td>
+                                <th>Turno</th><td>{{turno}}</td>
+                            </tr>
+                            <tr>
+                                <th>Especialidad</th><td>{{especialidad}}</td>
+                                <th>Paralelo</th><td>{{paralelo}}</td>
+                            </tr>
+                            <tr>
+                                <th>Nivel de Acreditación</th><td colspan="3">{{acreditacion}}</td>
+                            </tr>
+                        </table>
+                    {% endif %}
+                    <h5 class="text-info">Datos del Estudiante</h5>
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr>
+                            <th>Codigo Rudeal</th><td>{{estudiante.codigoRude}}</td>
+                        </tr>
+                        <tr>
+                            <th>Estudiante</th><td>{{estudiante.estudiante}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <h5 class="text-success" style="margin-left:10px; margin-top:-15px">Notas</h5>
+
+      						<table class="table table-bordered">
+      							<thead>
+      								<tr>
+      									<th rowspan="2" style="vertical-align: middle">Asignatura / Módulo</th>
+      									<th colspan="4">Valoración Cuantitativa</th>
+                                        <th rowspan="2">Estado</th>
+      								</tr>
+      								<tr>
+      									<th>Participaciòn</th>
+                        <th>Aplicación</th>
+                        <th>Conocimientos</th>
+                        <th>Promedio Final</th>
+      								</tr>
+      							</thead>
+      							<tbody>
+      								{% for asig in areas %}
+      									<tr>
+      										<td>{{asig.asignatura}}<br><small style="color:#000000; opacity:0.3; font-size:9px">{{asig.area}}</small></td>
+      										{% for n in asig.notas %}
+                                                {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+          											<td>
+                                                        <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+          												<input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+          												<input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+                                                        {% if n.idNotaTipo != 22 and n.idNotaTipo != 26 %} <!-- Para notas que no son promedios-->
+          												    <input name="notas[]" type="text" size="3" maxlength="2" value="{{n.nota}}" class="form-control input-sm {{asig.idAsignatura}}" onkeypress="return validarNota(event)" onkeyup="notaVerificar(this,{{asig.idAsignatura}},{{n.idNotaTipo}})" onblur="notaCero(this,{{asig.idAsignatura}},{{n.idNotaTipo}})" style="width:50px" autocomplete="off">
+                                                        {% else %} <!-- Para los promedios -->
+                                                            <input name="notas[]" type="text" size="3" value="{{n.nota}}" class="form-control input-sm p{{asig.idAsignatura}}" style="width:50px" autocomplete="off" readonly="readonly">
+                                                        {% endif %}
+          											</td>
+                                                {% else %}
+                                                    <td>
+                                                        <input type="text" size="3" value="{{n.nota}}" class="form-control input-sm p{{asig.idAsignatura}}" style="width:50px" autocomplete="off" disabled="disabled">
+                                                    </td>
+                                                {% endif %}
+      										{% endfor %}
+                                            <td>
+                                                <select id="{{asig.idAsignatura}}" class="form-control input-sm estados" name="idEstados[]" disabled required="true" onclick="this.blur()">
+                                                  <option value="">Estado...</option>
+                                                  {% for ea in estadosAsignatura %}
+                                                    {% if asig.idEstadoAsignatura == ea.id %}
+                                                        {% set selected = 'selected' %}
+                                                    {% else %}
+                                                        {% set selected = '' %}
+                                                    {% endif %}
+                                                    <option value="{{ea.id}}" {{selected}}>{{ea.estado}}</option>
+                                                  {% endfor %}
+                                                </select>
+                                            </td>
+      									</tr>
+      								{% endfor %}
+      							</tbody>
+      						</table>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+                <button type="submit" class="btn btn-theme">Guardar Cambios</button>
+            {% endif %}
+        </div>
+    </div><!-- /.modal-content -->
+    {% if app.session.get('ie_per_estado') == 2 or app.session.get('ie_per_estado') == 3 %}
+	</form>
+    {% endif %}
+</div><!-- /.modal-dialog -->
+<script>
+    var notaVerificar = function(control,clase,notaTipo){
+        if(notaTipo == 19 || notaTipo == 23 || notaTipo == 20 || notaTipo == 24){
+            if(control.value < 0){ control.value = 0; }
+    		if(control.value > 20){ control.value = 20; }
+        }
+        if(notaTipo == 21 || notaTipo == 25){
+            if(control.value < 0){ control.value = 0; }
+    		if(control.value > 30){ control.value = 30; }
+        }
+        if(control.value != "" && control.value != 0){
+            control.value = Math.round(control.value);
+        }
+        promedio(control.value,clase);
+	}
+
+    var notaCero = function(control,clase,notaTipo){
+		if(control.value == ""){ control.value = 0; }
+        promedio(control.value,clase);
+	}
+
+	var validarNota = function(e){
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+        )
+        return false;
+    }
+
+    var promedio = function(control,clase){
+		var suma = 0;
+		$("."+clase).each(function (index) {
+            suma = suma + parseInt($(this).val());
+        })
+        if(isNaN(suma)){
+    		suma = 0;
+    	}
+        $('.p'+clase).val(suma);
+        cambiarEstado(suma,clase);
+	}
+
+    var cambiarEstado = function(nota,clase){
+      var clase = clase.toString();
+      if(nota == 0){
+        $('select#'+clase).val(3);
+        //$('select#'+clase).css('border-color','#CCCCCC')
+      }
+      if(nota>=1 && nota<=35){
+        $('select#'+clase).val(25);
+        //$('select#'+clase).css('border-color','#f60949')
+      }
+      if(nota>=36 && nota<=70){
+        $('select#'+clase).val(5);
+        //$('select#'+clase).css('border-color','#1cd229')
+      }
+    }
+
+    var registrarNotas = function(){
+    	var formData = $('#formNotas').serialize();
+	    $.ajax({
+	        type: 'post',
+	        url: Routing.generate('herramienta_alter_infoEstudianteNotas_create_update'),
+	        data: formData,
+	        beforeSend: function () {
+	            $('#modal-body').empty();
+	            $('.modal-footer').empty();
+	            $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+	        },
+	        success: function (data) {
+	            $('#modal').modal('hide');
+	        },
+	        error: function (data) {
+
+	        }
+	    });
+	}
+</script>

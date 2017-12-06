@@ -1,0 +1,1 @@
+$(document).ready(function(){"use strict";$("#colorpicker1").colorpicker(),$("#colorpicker2").colorpicker()});

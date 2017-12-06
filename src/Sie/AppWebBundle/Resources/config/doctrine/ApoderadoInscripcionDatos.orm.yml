@@ -1,0 +1,102 @@
+Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos:
+    type: entity
+    table: apoderado_inscripcion_datos
+    indexes:
+        idx_empleo2:
+            columns:
+                - empleo
+        idx_apoderado_inscripcion_datos_instruccion_tipo_id:
+            columns:
+                - instruccion_tipo_id
+        idx_apoderado_inscripcion_datos_idioma_materno_id:
+            columns:
+                - idioma_materno_id
+        IDX_52D41EC318853B5C:
+            columns:
+                - ocupacion_tipo_id
+        IDX_52D41EC34B8E64C7:
+            columns:
+                - actividad_tipo_id
+    uniqueConstraints:
+        uq_apoderado_inscripcion_datos:
+            columns:
+                - apoderado_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        empleo:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        telefono:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        tieneocupacion:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        ocupacionTipo:
+            targetEntity: ApoderadoOcupacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ocupacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        actividadTipo:
+            targetEntity: ApoderadoActividadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                actividad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        apoderadoInscripcion:
+            targetEntity: ApoderadoInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                apoderado_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        instruccionTipo:
+            targetEntity: InstruccionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                instruccion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaMaterno:
+            targetEntity: IdiomaMaterno
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_materno_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

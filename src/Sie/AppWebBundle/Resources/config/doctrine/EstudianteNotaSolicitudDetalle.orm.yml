@@ -1,0 +1,97 @@
+Sie\AppWebBundle\Entity\EstudianteNotaSolicitudDetalle:
+    type: entity
+    table: estudiante_nota_solicitud_detalle
+    indexes:
+        IDX_A373B83DC6130DD9:
+            columns:
+                - estudiante_nota_solicitud_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estudianteNotaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estudiante_nota_id
+        asignatura:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        periodo:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        notaCuantitativaPrev:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nota_cuantitativa_prev
+        notaCuantitativaNew:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nota_cuantitativa_new
+        notaCualitativaPrev:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: nota_cualitativa_prev
+        notaCualitativaNew:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: nota_cualitativa_new
+        valoracionTipo:
+            type: string
+            nullable: true
+            length: 70
+            fixed: false
+            comment: 'cuantitativa, cualitativa_inicial , cualitativa_primaria_secundaria'
+            column: valoracion_tipo
+        notaTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nota_tipo_id
+        estudianteAsignaturaId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estudiante_asignatura_id
+    manyToOne:
+        estudianteNotaSolicitud:
+            targetEntity: EstudianteNotaSolicitud
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_nota_solicitud_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

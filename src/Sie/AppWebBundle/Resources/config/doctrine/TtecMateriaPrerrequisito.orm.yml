@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\TtecMateriaPrerrequisito:
+    type: entity
+    table: ttec_materia_prerrequisito
+    indexes:
+        IDX_354C8E16901C99A1:
+            columns:
+                - ttec_materia_tipo_pre_id
+        IDX_354C8E166716D8F6:
+            columns:
+                - ttec_materia_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    manyToOne:
+        ttecMateriaTipoPre:
+            targetEntity: TtecMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_materia_tipo_pre_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecMateriaTipo:
+            targetEntity: TtecMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

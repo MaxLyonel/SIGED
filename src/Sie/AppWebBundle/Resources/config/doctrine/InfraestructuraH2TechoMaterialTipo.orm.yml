@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH2TechoMaterialTipo:
+    type: entity
+    table: infraestructura_h2_techo_material_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraTechoMaterialTipo:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_techo_material_tipo
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

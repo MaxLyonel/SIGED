@@ -1,0 +1,61 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+
+{% block contentoption%}
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="page-header">
+                <h3 class="heading pull-left"><i class="fa fa-desktop animated flip"></i> Datos Apoderado <span class="sub-heading">Datos Personales</span></h3>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="separator bottom"></div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Datos personales Apoderado                     
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <label class="col-sm-2 text-right">CARNET</label>
+                            <div class="col-sm-10">{{persona.carnet}}</div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-2 text-right">PATERNO</label>
+                            <div class="col-sm-10">{{persona.paterno}}</div>
+                        </div>
+                        <div class="row"><label class="col-sm-2 text-right">MATERNO</label><div class="col-sm-10">{{persona.materno}}</div></div>
+                        <div class="row"><label class="col-sm-2 text-right">NOMBRE</label><div class="col-sm-10">{{persona.nombre}}</div></div>
+                        <div class="row"><label class="col-sm-2 text-right">FECHA DE NACIMIENTO</label><div class="col-sm-10">{{persona.fechaNacimiento|date('d-m-Y')}}</div></div>
+                        <!--<div class="row"><label class="col-sm-2 text-right">PAIS</label><div class="col-sm-10">{#persona.paisNacId#}</div></div>
+                        <div class="row"><label class="col-sm-2 text-right">DEPARTAMENTO</label><div class="col-sm-10">{#persona.departamentoNacId#}</div></div>
+                        <div class="row"><label class="col-sm-2 text-right">PROVINCIA</label><div class="col-sm-10">{#persona.provinciaNacId#}</div></div>
+                        <div class="row"><label class="col-sm-2 text-right">LOCALIDAD</label><div class="col-sm-10">{#persona.localidadNac#}</div></div>-->
+                        <div class="row"><label class="col-sm-2 text-right">COMPLEMENTO</label><div class="col-sm-10">{{persona.complemento|upper}}</div></div>
+                        <div class="row"><label class="col-sm-2 text-right">GENERO</label><div class="col-sm-10">{{persona.generoTipo|upper}}</div></div>
+                        <div class="row"><label class="col-sm-2 text-right">ESTADO CIVIL</label><div class="col-sm-10">{{persona.estadocivilTipo}}</div></div>
+                        <div class="row"><label class="col-sm-2 text-right">GRUPO SANGUINEO</label><div class="col-sm-10">{{persona.sangreTipo}}</div></div>
+                        <div class="row"><label class="col-sm-2 text-right">IDIOMA MATERNO</label><div class="col-sm-10">{{persona.IdiomaMaterno}}</div></div>
+                        <hr>
+                        <div class="row"><label class="col-sm-2 text-right">EMPLEO</label><div class="col-sm-10">{{apoderado.empleo}}</div></div>
+                        <div class="row"><label class="col-sm-2 text-right">TELEFONO</label><div class="col-sm-10">{{apoderado.telefono}}</div></div>
+                        <div class="row"><label class="col-sm-2 text-right">PARENTESCO</label><div class="col-sm-10">{{apoderado.apoderadoTipo}}</div></div>
+                        <hr/>
+                        <div class="separator bottom"></div>
+                        <div class="text-center">
+                            <a href="{{path('apoderado_edit',{'idApoderado':persona.id})}}" class="btn btn-info">Editar</a>
+                        </div>
+                    </div>
+                        <a href="{{path('padres_buscar')}}">Volver</a>
+                </div>     
+            </div>
+        </div>      
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script src="{{ asset('js/funciones.js') }}"></script>
+{% endblock %}

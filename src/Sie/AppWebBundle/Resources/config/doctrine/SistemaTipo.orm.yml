@@ -1,0 +1,32 @@
+Sie\AppWebBundle\Entity\SistemaTipo:
+    type: entity
+    table: sistema_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        sistema:
+            type: string
+            nullable: true
+            length: 55
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        abreviatura:
+            type: string
+            nullable: true
+            length: 5
+            fixed: true
+            comment: ''
+    lifecycleCallbacks: {  }

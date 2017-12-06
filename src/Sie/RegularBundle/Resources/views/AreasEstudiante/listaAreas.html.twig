@@ -1,0 +1,47 @@
+{% if areasNivel is not empty %}
+    <div class="alert alert-info">
+        <i class="fa fa-info-circle"></i> Las áreas que cuentan con calificaciones no se pueden eliminar
+    </div>
+    <div class="checkbox" style="display:none">
+        <label class="label green">Marcar Todos
+        <input type="checkbox" name="marcarTodos" id="marcarTodos" onclick="marcarTodasAreas()">
+        </label>
+    </div>
+    <div id="no-more-tables">
+    <table class="table table-bordered cf">
+        <thead class="cf"> 
+            <tr>
+                <th></th>
+                <th>Campo</th>
+                <th>Código</th>
+                <th>Área</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for areas in areasNivel %}
+                <tr {% if areas.bloqueado == '' %} class='warning' {% endif %}>
+                    <td data-title="">
+                        <div class="checkbox {{areas.bloqueado}}">
+                            <label>
+                            <input type="checkbox" name="areas[]" {{areas.marcado}} value="{{areas.idCursoOferta}}" {%if areas.bloqueado == 'disabled' %} onclick="javascript:return false;" style="cursor:no-drop" {% endif %}>
+                            </label>
+                        <div class="checkbox disabled">
+                    </td>
+                    <td data-title="Campo">{{areas.campo}}</td>
+                    <td data-title="Código">{{areas.codigo}}</td>
+                    <td data-title='Área'>{{areas.asignatura}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <hr>
+    <div style="text-align: right">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+    <button type="submit" class="btn btn-green">Guardar Cambios</button>
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        <i class="fa fa-warning"></i> No hay areas registradas
+    </div>
+{% endif %}

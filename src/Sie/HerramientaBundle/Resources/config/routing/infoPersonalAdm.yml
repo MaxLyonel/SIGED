@@ -1,0 +1,87 @@
+herramienta_info_personal_adm_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InfoPersonalAdm:index}
+
+herramienta_info_personal_adm_tsie_index:
+    path:     /tsie
+    defaults: { _controller: SieHerramientaBundle:InfoPersonalAdm:indexTecSie}
+
+herramienta_info_personal_adm_second:
+    path:     /sie/second
+    defaults: { _controller: SieHerramientaBundle:InfoPersonalAdm:second}
+
+herramienta_info_personal_adm_third:
+    path:     /sie/third
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:loadThird"}
+    options:
+         expose: true
+         
+herramienta_info_personal_adm_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InfoPersonalAdm:index }
+
+herramienta_info_personal_adm_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:show" }
+
+herramienta_info_personal_adm_new:
+    path:     /new/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:new" }
+
+herramienta_info_personal_adm_create:
+    path:     /create/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:create" }
+    methods:  POST
+
+herramienta_info_personal_adm_edit:
+    path:     /edit/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:edit" }
+    methods:  [POST, PUT]
+
+herramienta_info_personal_adm_update:
+    path:     /update/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:update" }
+    methods:  [POST, PUT]
+
+herramienta_info_personal_adm_es_vigente_administrativo:
+    path:     /administrativo/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:esVigenteAdministrativo" }
+    methods:  [POST, PUT]         
+
+herramienta_info_personal_adm_delete:
+    path:     /delete/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:delete" }
+    methods:  [POST, DELETE]    
+    
+herramienta_info_personal_adm_search:
+    path:     /search/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:search" }
+    methods:  POST
+
+herramienta_info_personal_adm_find:
+    path:     /find/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:find" }
+    
+herramienta_info_personal_adm_result:
+    path:     /result/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:result" }
+
+herramienta_info_personal_adm_migrar_index:
+    path:     /admmigrar/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdmMigrar:index" }
+
+herramienta_info_personal_adm_ratificar:
+    path:     /ratificarAdm/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdmMigrar:ratificarAdm" }
+
+herramienta_info_personal_adm_ddjj:
+    path:     /admDJJ/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdmMigrar:admDDJJ" }
+
+herramienta_info_personal_adm_ratificar_currentyear:
+    path:     /ratificarAdmCurrent/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdmMigrar:ratificarAdmCurrent" }
+
+herramienta_info_personal_adm_habilitar_ddjj:
+    path:     /admhabilitarDDJJ/
+    defaults: { _controller: "SieHerramientaBundle:InfoPersonalAdm:admHabilitarDDJJ" }

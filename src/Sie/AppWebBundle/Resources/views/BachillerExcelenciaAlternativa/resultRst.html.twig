@@ -1,0 +1,136 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Restablecer registros
+                    <small>Bachiller de Excelencia</small>
+                </h1>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="fa fa-info-circle fa-fw"></i> Una vez restablecido algún registro, la U.E. debe volver a introducir la información e imprimir nuevamente las declaraciones juradas para contar con los datos actualizados.
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="fa fa-info-circle fa-fw"></i> La U.E. tiene como datos oficiales los registros siguientes:
+            </div>
+        </div>
+    </div>
+
+    {% if(datadirector) %}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="portlet portlet-blue">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4><i class="fa fa-users"></i> Información actualizada de la Directora o del Director de la Unidad Educativa</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <th><strong>CI</strong></th><td>{{datadirector.carnet}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Complemento</strong></th><td>{{datadirector.complemento}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Paterno</strong></th><td>{{datadirector.paterno}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Materno</strong></th><td>{{datadirector.materno}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Nombre</strong></th><td>{{datadirector.nombre}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Entidad Financiera</strong></th><td>{{datadirector.entidadfinanciera}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th><strong>Nro. Cta. Bancaria</strong></th><td>{{datadirector.cuentabancaria}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <a href="{{ path('cta_banc_dir_rst', { 'ie': ieducativa }) }}" class="btn btn-md btn-warning">Clic para restablecer el registro</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>   
+                    </div>
+                </div>
+                <!-- /.portlet -->
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+    {% endif %}
+
+    {% if(bachilleres) %}
+        <div class="row">
+            {% for datastudent in bachilleres%}
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4><i class="fa fa-users"></i> Bachiller de Excelencia (Género: {{datastudent.genero}})</h4>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <th><strong>Rude</strong></th><td>{{datastudent.codigoRude}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>CI</strong></th><td>{{datastudent.carnetIdentidad}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Paterno</strong></th><td>{{datastudent.paterno}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Materno</strong></th><td>{{datastudent.materno}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Nombre</strong></th><td>{{datastudent.nombre}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Género</strong></th><td>{{datastudent.genero}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Promedio Final</strong></th><td>{{datastudent.promedioFinal}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="text-center">
+                                                <a href="{{ path('bach_exc_alt_pf_rst', { 'ie': ieducativa, 'ed': datastudent.edId, 'g': datastudent.gen }) }}" class="btn btn-md btn-danger">Clic para restablecer el registro</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.portlet -->
+                </div>
+                <!-- /.col-lg-12 -->
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

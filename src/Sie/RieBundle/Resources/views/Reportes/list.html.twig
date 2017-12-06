@@ -1,0 +1,20 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption %}
+	{% embed "SieRieBundle:Reportes:opciones.html.twig" %} 
+		
+		{% block bottom %} 
+            <div class="row clearfix">
+                <!-- Basic Examples -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+							<center><img src="{{asset('webRie/images/imagen3.jpg')}}" class="js-animating-object img-responsive" width="650"/></center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		{% endblock %} 
+	{% endembed %} 
+{% endblock %}
+

@@ -1,0 +1,245 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1 class="glyphicon glyphicon-user"> PARTICIPANTES PARA EL MUNICIPIO</h1>
+                <ol class="breadcrumb">
+                    <li>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div style="width: 100%;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger alert-dismissible" role="alert" id="result" style="display: none;">
+                    <strong>¡Advertencia!</strong> <input type="text" id="errorxls" class="form-control input-sm" readonly='true'>
+                </div>
+            </div>
+        </div>
+
+        <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Lista de Participantes para el Municipio</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinformation" class="panel-collapse collapse in">
+                    <div class="portlet-body" align="center">
+            <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+                    <thead>
+                        <tr>
+                            <th>Departamento</th>
+                            <th>Provincia</th>
+                            <th>Municipio</th>
+                            <th>Nivel</th>
+                            <th>Parte</th>
+                            <th>Bloque</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Notas</th>
+                            <th>facilitado CI</th>
+                            <th>facilitado</th>
+                            <th>Codigo Rude</th>
+                            <th>Carnet Identidad</th>
+                            <th>Nombre</th>
+                            <th>Apellido Paterno</th>
+                            <th>Apellido Materno</th>
+                            <th>Genero</th>
+                            <th>Fecha Nacimiento</th>
+                            <th>Edad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fila in filas %}
+                            <tr>
+                                <td>{{ fila.depto }}</td>
+                                <td>{{ fila.provincia }}</td>
+                                <td>{{ fila.municipio }}</td>
+                                <td>{{ fila.nivel }}</td>
+                                <td>{{ fila.parte }}</td>
+                                <td>{{ fila.bloque }}</td>
+                                <td>{{ fila.fecha_inicio }}</td>
+                                <td>{{ fila.fecha_fin }}</td>
+                                <td data-title="VerNota" class="text-center">
+                                    <a href="#" onclick="SeeNotas('{{fila.inscripcionid}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
+                                </td>
+                                <td>{{ fila.facilitadorci }}</td>
+                                <td>{{ fila.facilitador }}</td>
+                                <td>{{ fila.codigo_rude }}</td>
+                                <td>{{ fila.carnet_identidad }}</td>
+                                <td>{{ fila.nombre }}</td>
+                                <td>{{ fila.paterno }}</td>
+                                <td>{{ fila.materno }}</td>
+                                <td>{{ fila.genero }}</td>
+                                <td>{% if fila.fecha_nacimiento %}{{ fila.fecha_nacimiento|date('d/m/Y') }}{% endif %}</td>                             
+                                <td>{{ fila.edadactual }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <th><input type="text" placeholder="Buscar por Departamento" /></th>
+                            <th><input type="text" placeholder="Buscar por Provincia" /></th>
+                            <th><input type="text" placeholder="Buscar por Municipio" /></th>
+                            <th><input type="text" placeholder="Buscar por Nivel" /></th>
+                            <th><input type="text" placeholder="Buscar por Parte" /></th>
+                            <th><input type="text" placeholder="Buscar por Bloque" /></th>
+                            <th><input type="text" placeholder="Buscar por Fecha Inicio" /></th>
+                            <th><input type="text" placeholder="Buscar por Fecha Fin" /></th>
+                            <th><input type="text" /></th>
+                            <th><input type="text" placeholder="Buscar por CI de Facilitador" /></th>
+                            <th><input type="text" placeholder="Buscar por Facilitador" /></th>
+                            <th><input type="text" placeholder="Buscar por Codigo Rude" /></th>
+                            <th><input type="text" placeholder="Buscar por Carnet de Identidad" /></th>
+                            <th><input type="text" placeholder="Buscar por Nombre" /></th>
+                            <th><input type="text" placeholder="Buscar por Patero" /></th>
+                            <th><input type="text" placeholder="Buscar por Materno" /></th>
+                            <th><input type="text" placeholder="Buscar por Genero" /></th>
+                            <th><input type="text" placeholder="Buscar por Fecha Nacimiento" /></th>
+                            <th><input type="text" placeholder="Buscar por Edad" /></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <a role="button" class="btn btn-default btn-large glyphicon glyphicon-circle-arrow-left" href="{{ path('sie_pnp_homepage') }}" > Volver</a>
+        </div>
+    </div>
+
+    <div class="modal modal-flex fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">NOTAS CONSOLIDADAS DEL ESTUDIANTE.</h4>             
+                </div>
+                <div class="modal-body">
+                    <div id="notasModal">
+
+                    </div>
+                </div>
+                <div class="modal-pie">
+                    <HR>
+                </div>                    
+            </div>                
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            initialise();
+        });
+
+        function initialise()
+        {
+                        var table = $('#tablaListadoPersonas').DataTable({
+                            dom: 'Blfrtip',
+                                    
+                            language: {
+                                "sProcessing": "Procesando...",
+                                "sLengthMenu": "Mostrar _MENU_ registros",
+                                "sZeroRecords": "No se encontraron resultados",
+                                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                                "sInfoPostFix": "",
+                                "sSearch": "Buscar:",
+                                "sUrl": "",
+                                "sInfoThousands": ",",
+                                "sLoadingRecords": "Cargando...",
+                                "oPaginate": {
+                                    "sFirst": "Primero",
+                                    "sLast": "Último",
+                                    "sNext": "Siguiente",
+                                    "sPrevious": "Anterior"
+                                },
+                                "oAria": {
+                                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                }
+                            },
+                            
+                            buttons: [
+                                    {
+                                        extend: 'excel',
+                                        text: '(Export a Excel)',
+                                    },
+                                    {
+                                        extend: 'print',
+                                        text: '(Imprimir)',
+                                    }
+                            ]
+
+                        } ); 
+
+                        // Apply the search
+                        table.columns().every(function () {
+                            var that = this;
+                            $('input', this.footer()).on('keyup change', function () {
+                                that
+                                        .search(this.value)
+                                        .draw();
+                            });
+                        });
+
+                        $('#tablaListadoPersonas tbody').on('click', 'tr', function () {
+                            if ($(this).hasClass('selected')) {
+                                $(this).removeClass('selected');
+                            }
+                            else {
+                                table.$('tr.selected').removeClass('selected');
+                                $(this).addClass('selected');
+                            }
+                        });
+
+                    }
+
+                    function SeeNotas(idinscripcion) {
+                        var formData = $('#formxls').serialize();
+                        $.ajax({
+                            type: 'get',
+                            url: Routing.generate('sie_pnp_see_notas', {'idinscripcion': idinscripcion}),
+                            data: formData,
+                            beforeSend: function () {
+                                $("#notasModal").empty();
+                                $("#notasModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                            },
+                            success: function (data) {
+                                $("#notasModal").empty();
+                                $("#notasModal").append(data);
+                            },
+                            error: function (data) {
+                                $("#notasModal").empty();
+                                $("#notasModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                            }
+                        });
+                        $('#ModalUser').modal('show');
+                    }
+
+                    function modaluserclose() {
+                        $('#ModalUser').modal('hide');
+                    }
+    </script>
+{% endblock %}

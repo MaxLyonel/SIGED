@@ -1,0 +1,13 @@
+herramienta_info_ueducativa_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InfoUeducativa:index}
+
+herramienta_info_ueducativa_second:
+    path:     /sie/second
+    defaults: { _controller: SieHerramientaBundle:InfoUeducativa:second}
+
+herramienta_info_ueducativa_third:
+    path:     /sie/third
+    defaults: { _controller: "SieHerramientaBundle:InfoUeducativa:loadThird"}
+    options:
+         expose: true

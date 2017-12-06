@@ -1,0 +1,55 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Estadisticas de cantidades de usuarios activos por rol
+                    <small> Muestra la cantidad de usuarios asignados a determinado rol.</small>
+                </h1>
+            </div>
+        </div>        
+    </div>    
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Cuadro de cantidades de usuarios</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            {#<h3>Nombre de usuario: <span class="label label-primary">aaaa </span></h3>                                                                                    
+                            <p>#}
+                            <table class="table table-bordered">
+                                <tbody>
+                                        <tr>
+                                            <th>Rol</th>
+                                            <th>Cantidad</th>                                            
+                                        </tr> 
+                                    {% for est in estadisticas %}
+                                        <tr>
+                                            <td>{{ est.rol }}</td>
+                                            <td>{{ est.a }}</td>                                            
+                                        </tr>                                       
+                                    {% endfor %}
+                                </tbody>
+                            </table>                             
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>                
+                    
+                      
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}    
+
+

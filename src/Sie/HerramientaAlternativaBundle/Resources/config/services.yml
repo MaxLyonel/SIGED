@@ -1,0 +1,4 @@
+services:
+#    sie_herramienta_alternativa.example:
+#        class: Sie\HerramientaAlternativaBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

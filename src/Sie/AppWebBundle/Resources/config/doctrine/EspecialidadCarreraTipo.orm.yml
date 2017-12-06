@@ -1,0 +1,44 @@
+Sie\AppWebBundle\Entity\EspecialidadCarreraTipo:
+    type: entity
+    table: especialidad_carrera_tipo
+    indexes:
+        IDX_523F5483A7F13EC6:
+            columns:
+                - carrera_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        especialidad:
+            type: string
+            nullable: false
+            length: 75
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        carreraTipo:
+            targetEntity: CarreraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                carrera_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

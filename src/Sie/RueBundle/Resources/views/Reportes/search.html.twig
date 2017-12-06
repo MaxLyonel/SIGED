@@ -1,0 +1,288 @@
+{% extends 'SieRueBundle:Default:rueConsulta.html.twig' %}
+
+{% block contentoption %}
+	
+    <div class="block-header">
+        <h2>INICIO / BUSCAR</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('consulta_rue')}}">Inicio</a></li>
+        <li class="active">Reportes</li>
+    </ol>
+
+	{% for flashMessage in app.session.flashbag.get('msgSearch') %}
+		<div class="alert alert-danger alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<strong>¡Error!</strong> {{ flashMessage }}
+		</div>
+	{% endfor %}
+
+    <!-- Tabs With Icon Title -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        CONSULTA DE INSTITUCIONES EDUCATIVAS
+                    </h2>
+                </div>
+                <div class="body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#reporte1" data-toggle="tab">
+                                <i class="material-icons">domain</i> Instituciones Educativas por Departamento
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#reporte2" data-toggle="tab">
+                                <i class="material-icons">domain</i> Instituciones Educativas por Distrito
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="reporte1">
+                            <!-- Vertical Layout -->
+                            <div class="row clearfix">
+                                {{ form_start(form) }}
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <div class="card">
+                                        <div class="body">
+                                            <label class="form-label">Departamento</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    {{ form_widget(form.departamento,{'attr':{'class': 'form-control', 'onchange':'provincia(this.value)'}}) }}
+                                                </div>
+                                            </div>
+                                            <label class="form-label">Dependencia</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    {{ form_widget(form.institucioneducativaDependencia,{'attr':{'class': 'form-control'}}) }}
+                                                </div>
+                                            </div>
+                                            <label class="form-label">Tipo</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    {{ form_widget(form.institucioneducativaTipo,{'attr':{'class': 'form-control'}}) }}
+                                                </div>
+                                            </div>
+                                            <label class="form-label">Estado</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    {{ form_widget(form.institucioneducativaEstado,{'attr':{'class': 'form-control'}}) }}
+                                                </div>
+                                            </div>
+                                            {{ form_widget(form.reporteuno,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {{ form_end(form) }}
+                            </div>                   
+                            <!-- Vertical Layout -->
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="reporte2">
+                            <!-- Vertical Layout -->
+                            <div class="row clearfix">
+                                {{ form_start(form2) }}
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <div class="card">
+                                        <div class="body">
+                                            <label class="form-label">Departamento</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    {{ form_widget(form2.departamento,{'attr':{'class': 'form-control', 'onchange':'distrito(this.value)'}}) }}
+                                                </div>
+                                            </div>
+                                            <label class="form-label">Distrito</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    {{ form_widget(form2.distrito,{'attr':{'class': 'form-control'}}) }}
+                                                </div>
+                                            </div>
+                                            {{ form_widget(form2.reportedos,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {{ form_end(form) }}
+                            </div>                   
+                            <!-- Vertical Layout -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Tabs With Icon Title -->
+
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script>
+    function provincia(d) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('le_buscar_provincias', {'idDepartamento': d}),
+            beforeSend: function () {
+                $("#form_provincia").empty();
+                $('#form_provincia').selectpicker('refresh');
+                $("#form_municipio").empty();
+                $('#form_municipio').selectpicker('refresh');
+                $("#form_canton").empty();
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").empty();
+                $('#form_localidad').selectpicker('refresh');
+                $("#form_provincia").append('<option value="">Buscando...</option>');
+                $('#form_provincia').selectpicker('refresh');
+                $("#form_municipio").append('<option value="">Buscando...</option>');
+                $('#form_municipio').selectpicker('refresh');
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+                $('#form_localidad').selectpicker('refresh');
+            },
+            success: function (data) {
+               $("#form_provincia").empty();
+                $('#form_provincia').selectpicker('refresh');
+                $("#form_municipio").empty();
+                $('#form_municipio').selectpicker('refresh');
+                $("#form_canton").empty();
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").empty();
+                $('#form_localidad').selectpicker('refresh');
+                $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                $('#form_provincia').selectpicker('refresh');
+                $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                $('#form_municipio').selectpicker('refresh');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $('#form_localidad').selectpicker('refresh');
+               
+                $.each(data.provincia, function (i, value) {
+                    $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $('#form_provincia').selectpicker('refresh');
+            }
+        });
+    }
+
+    function municipio(p) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('le_buscar_municipios', {'idProvincia': p}),
+            beforeSend: function () {
+                $("#form_municipio").empty();
+                $('#form_municipio').selectpicker('refresh');
+                $("#form_canton").empty();
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").empty();
+                $('#form_localidad').selectpicker('refresh');
+                $("#form_municipio").append('<option value="">Buscando...</option>');
+                $('#form_municipio').selectpicker('refresh');
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+                $('#form_localidad').selectpicker('refresh');
+            },
+            success: function (data) {
+                $("#form_municipio").empty();
+                $('#form_municipio').selectpicker('refresh');
+                $("#form_canton").empty();
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").empty();
+                $('#form_localidad').selectpicker('refresh');
+                $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                $('#form_municipio').selectpicker('refresh');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $('#form_localidad').selectpicker('refresh');
+                $.each(data.municipio, function (i, value) {
+                    $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $('#form_municipio').selectpicker('refresh');
+            }
+        });
+    }
+
+    function canton(m) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('le_buscar_cantones', {'idMunicipio': m}),
+            beforeSend: function () {
+                $("#form_canton").empty();
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").empty();
+                $('#form_localidad').selectpicker('refresh');
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+                $('#form_localidad').selectpicker('refresh');
+            },
+            success: function (data) {
+                $("#form_canton").empty();
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").empty();
+                $('#form_localidad').selectpicker('refresh');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $('#form_canton').selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $('#form_localidad').selectpicker('refresh');
+                $.each(data.canton, function (i, value) {
+                    $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $('#form_canton').selectpicker('refresh');
+            }
+        });
+    }
+
+    function localidad(c) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('le_buscar_localidades', {'idCanton': c}),
+            beforeSend: function () {
+                $("#form_localidad").empty();
+                $('#form_localidad').selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+                $('#form_localidad').selectpicker('refresh');
+            },
+            success: function (data) {
+                $("#form_localidad").empty();
+                $('#form_localidad').selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $('#form_localidad').selectpicker('refresh');
+                $.each(data.localidad, function (i, value) {
+                    $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $('#form_localidad').selectpicker('refresh');
+            }
+        });
+    }
+
+    function distrito(d) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('le_buscar_distritos', {'idDepartamento': d}),
+            beforeSend: function () {
+                $("#form_distrito").empty();
+                $("#form_distrito").selectpicker('refresh');
+                $("#form_distrito").append('<option value="">Buscando...</option>');
+                $("#form_distrito").selectpicker('refresh');
+            },
+            success: function (data) {
+                $("#form_distrito").empty();
+                $("#form_distrito").selectpicker('refresh');
+                $("#form_distrito").append('<option value="">Seleccionar...</option>');
+                $("#form_distrito").selectpicker('refresh');
+                $.each(data.distrito, function (i, value) {
+                    $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $("#form_distrito").selectpicker('refresh');
+            }
+        });
+    }
+</script>
+{% endblock %}

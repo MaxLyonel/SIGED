@@ -1,0 +1,114 @@
+review_apoderado_sie_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:index }
+
+review_apoderado_sie_build:
+    path:     /sie/buildfile/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:build }
+    options:
+         expose: true
+
+review_apoderado_sie_download:
+    path:     /download/{file}
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:download }
+
+review_apoderado_sie_getgestion:
+    path:     /getGestion/{sie}
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:getgestion }
+    options:
+         expose: true
+
+review_apoderado_sie_getnivel:
+    path:     /getNivel/{sie}/{gestion}
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:getnivel }
+    options:
+         expose: true
+
+review_apoderado_sie_getgrado:
+    path:     /getGrado/{sie}/{nivel}/{gestion}
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:getgrado }
+    options:
+         expose: true
+
+review_apoderado_sie_getparalelo:
+    path:     /getParalelo/{sie}/{nivel}/{grado}/{gestion}
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:getparalelo }
+    options:
+         expose: true
+
+review_apoderado_sie_getturno:
+    path:     /getTurno/{sie}/{nivel}/{grado}/{paralelo}/{gestion}
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:getturno }
+    options:
+         expose: true
+
+review_apoderado_sie_students:
+    path:     /sie/students/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:students }
+    options:
+         expose: true
+
+review_apoderado_sie_infoApoderados:
+    path:     /sie/apoderados/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:infoApoderados }
+    options:
+         expose: true
+
+review_apoderado_sie_dataApoderado:
+    path:     /sie/dataApoderado/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:dataApoderado }
+    options:
+         expose: true
+
+review_apoderado_sie_updateApoderado:
+    path:     /sie/updateApoderado/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:updateApoderado }
+    options:
+         expose: true
+
+review_apoderado_sie_saveApoderado:
+    path:     /sie/saveApoderado/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:saveApoderado }
+    options:
+         expose: true
+
+review_apoderado_sie_removeApoderado:
+    path:     /sie/removeApoderado/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:removeApoderado }
+    options:
+         expose: true
+
+review_apoderado_sie_newApoderado:
+    path:     /sie/newApoderado/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:newApoderado }
+    options:
+         expose: true
+
+review_apoderado_sie_lookForApoderado:
+    path:     /sie/lookForApoderado/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:lookForApoderado }
+    options:
+         expose: true
+
+review_apoderado_sie_addApoderado:
+    path:     /sie/addApoderado/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:addApoderado }
+    options:
+         expose: true
+
+
+review_apoderado_sie_changedate:
+    path:     /changedate
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:changedate }
+
+review_apoderado_sie_buildAgain:
+    path:     /sie/buildfileagain/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:buildAgain }
+    options:
+         expose: true
+
+review_apoderado_sie_studentsandconfirm:
+    path:     /sie/confirm/
+    defaults: { _controller: SieRegularBundle:ReviewApoderado:studentsAndConfirm }
+    options:
+         expose: true

@@ -1,0 +1,3 @@
+sie_tramite_documento_error:
+    path:     /documento/error
+    defaults: { _controller: SieTramitesBundle:Default:Generar }

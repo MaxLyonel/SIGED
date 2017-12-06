@@ -1,0 +1,228 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAlternativa:
+    type: entity
+    table: estudiante_inscripcion_socioeconomico_alternativa
+    indexes:
+        IDX_7749FE9D16853EBF:
+            columns:
+                - seccionv_estudiante_grupo_sanguineo_tipo_id
+        IDX_7749FE9D8AB39CFD:
+            columns:
+                - seccionv_estudiante_nacionoriginaria_tipo_id
+        IDX_7749FE9DA1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_7749FE9D7D5399FB:
+            columns:
+                - seccioniv_grado_tipo_id
+        IDX_7749FE9D691D9D38:
+            columns:
+                - seccioniv_discapacitad_tipo_id
+        IDX_7749FE9DABD6144D:
+            columns:
+                - seccioniii_localidad_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        seccioniiHijos:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: seccionii_hijos
+        seccioniiEsserviciomilitar:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: seccionii_esserviciomilitar
+        seccioniiEsserviciomilitarCea:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: seccionii_esserviciomilitar_cea
+        seccioniiiZona:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: seccioniii_zona
+        seccioniiiAvenida:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: seccioniii_avenida
+        seccioniiiNumero:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: seccioniii_numero
+        seccioniiiTelefonofijo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: seccioniii_telefonofijo
+        seccioniiiTelefonocelular:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: seccioniii_telefonocelular
+        seccionivEscarnetDiscapacidad:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: seccioniv_escarnet_discapacidad
+        seccionivNumeroCarnetDiscapacidad:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+            column: seccioniv_numero_carnet_discapacidad
+        seccionivCarnetIbc:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: seccioniv_carnet_ibc
+        seccionivNumeroCarnetIbc:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+            column: seccioniv_numero_carnet_ibc
+        seccionivEscegueratotal:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: seccioniv__escegueratotal
+        seccionvEstudianteEsnacionoriginaria:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: seccionv_estudiante_esnacionoriginaria
+        seccionvEstudianteEsocupacion:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: seccionv_estudiante_esocupacion
+        seccionvEstudianteEsseguroSalud:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: seccionv_estudiante_esseguro_salud
+        seccionvEstudianteSeguroSaludDonde:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: seccionv_estudiante_seguro_salud_donde
+        seccionvEstudianteDemoraLlegarCentroHoras:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: seccionv_estudiante_demora_llegar_centro_horas
+        seccionvEstudianteDemoraLlegarCentroMinutos:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: seccionv_estudiante_demora_llegar_centro_minutos
+        seccionviEstudiantePorqueInterrupcionservicios:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: seccionvi_estudiante_porque_interrupcionservicios
+        lugar:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        fecha:
+            type: date
+            nullable: false
+            comment: ''
+            default: now()
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            default: now()
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        seccionvEstudianteGrupoSanguineoTipo:
+            targetEntity: SangreTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccionv_estudiante_grupo_sanguineo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccionvEstudianteNacionoriginariaTipo:
+            targetEntity: NacionOriginariaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccionv_estudiante_nacionoriginaria_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccionivGradoTipo:
+            targetEntity: GradoDiscapacidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccioniv_grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccionivDiscapacitadTipo:
+            targetEntity: DiscapacidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccioniv_discapacitad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccioniiiLocalidadTipo:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccioniii_localidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

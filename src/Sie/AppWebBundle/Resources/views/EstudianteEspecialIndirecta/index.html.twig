@@ -1,0 +1,195 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+    <style>
+        table th{
+            text-align: center;
+            vertical-align: middle;
+            color: #006699;
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>ESTUDIANTES CON DISCAPACIDAD
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-file-o"></i> Estudiantes</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('registroEspecial') %}
+                <div class="alert alert-success text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('registroEspecialError') %}
+                <div class="alert alert-danger text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('registroEliminado') %}
+                <div class="alert alert-success text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('registroActualizado') %}
+                <div class="alert alert-success text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newInscripcion') %}
+                <div class="alert alert-success text-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage.mensaje }}<br>
+                    Codigo Sie: <b>{{ flashMessage.codigosie }}</b><br>
+                    Codigo Rude: <b>{{ flashMessage.codigorude }}</b>
+                </div>
+            {% endfor %} 
+            <!-- Website Stats  Widget -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 text-right">
+            <h4><a href="{{path('estudianteespecialindirecta_new')}}" class="text-primary"><i class="fa fa-file-text"></i> Nuevo Registro</a></h4>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-green">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>ESTUDIANTES CON DISCAPACIDAD REGISTRADOS</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            {% if estdiscapacidad is empty %}
+                                No hay estudiantes con discapacidad registrados.
+                            {% else %}
+                            <div class="table-responsive">
+                            <div id="no-more-tables">
+                                <table class="table table-bordered table-hover cf">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th rowspan="3">Estudiante</th>
+                                            <th colspan="9">Discapacidad</th>
+                                            <th rowspan="3" colspan="2">Acciones</th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="3">Intelectual</th>
+                                            <th colspan="2">Visual</th>
+                                            <th rowspan="2">Auditiva</th>
+                                            <th rowspan="2">Fisico/Motora</th>
+                                            <th rowspan="2">Multiple</th>
+                                            <th rowspan="2">Otros</th>
+                                        </tr>
+                                        <tr class="info">
+                                            <th>Intelectual General</th>
+                                            <th>Sindrome de Down</th>
+                                            <th>Autismo</th>
+                                            <th>Ceguera Total</th>
+                                            <th>Baja Visión</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for ed in estdiscapacidad %}
+                                            <tr>
+                                                <td data-title='Estudiante'>{{ ed.estudiante }}</td>
+                                                <td data-title='Intelectual en General' align="center">{% if ed.disIntelectualGenerlal %}<i class="glyphicon glyphicon-ok"></i>{% endif %}
+                                                </td>
+                                                <td data-title='Sindrome de Down' align="center">{% if ed.disIntelectualDown %}<i class="glyphicon glyphicon-ok"></i>{% endif %}</td>
+                                                <td data-title='Autismo' align="center">{% if ed.disIntelectualAutismo %}<i class="glyphicon glyphicon-ok"></i>{% endif %}</td>
+                                                <td data-title='Ceguera Total' align="center">{% if ed.disVisualTotal %}<i class="glyphicon glyphicon-ok"></i>{% endif %}</td>
+                                                <td data-title='Baja Visión' align="center">{% if ed.disVisualBaja %}<i class="glyphicon glyphicon-ok"></i>{% endif %}</td>
+                                                <td data-title='Auditiva' align="center">{% if ed.disAuditiva %}<i class="glyphicon glyphicon-ok"></i>{% endif %}</td>
+                                                <td data-title='Físico/Motora' align="center">{% if ed.disFisicomotora %}<i class="glyphicon glyphicon-ok"></i>{% endif %}</td>
+                                                <td data-title='Múltiple' align="center">{% if ed.disMultiple %}<i class="glyphicon glyphicon-ok"></i>{% endif %}</td>
+                                                <td data-title='Otros' align="center">{% if ed.disOtros %}<i class="glyphicon glyphicon-ok"></i>{% endif %}</td>
+                                                <td data-title='Acción'>
+                                                    <form action="{{path('estudianteespecialindirecta_edit')}}" style="display: inline-block" method="post">
+                                                        <input type="hidden" name="id" value="{{ ed.id }}">
+                                                        <button type="submit" class="btn-link" data-toggle="tooltip" data-placement="top" title="{{ ed.estudiante }}"><i class="fa fa-edit text-dark-blue"></i> Modificar</button>
+                                                    </form>
+                                                    <form action="{{path('estudianteespecialindirecta_delete')}}" style="display: inline-block" method="post">
+                                                        <input type="hidden" name="id" value="{{ ed.id }}">
+                                                        <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');" data-toggle="tooltip" data-placement="top" title="{{ ed.estudiante }}"><i class="glyphicon glyphicon-trash text-danger"></i> Eliminar</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            </div>
+                            {% endif %}
+                            <div class="row">
+                                <div class="col-lg-12 text-center">
+                                    <a href="" class="btn-link" style="display:none"><i class="fa fa-print"></i> Imprimir</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>                                
+
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function validarDatos() {
+            var nombre = document.getElementById('').value;
+            var paterno = document.getElementById('').value;
+            var materno = document.getElementById('').value;
+            var genero = document.getElementById('').value;
+            var fechanac = document.getElementById('').value;
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('validardatosestudiante', {'nombre': nombre, 'paterno': paterno, 'materno': materno, 'genero': genero, 'fechanac': fechanac}),
+                beforeSend: function () {
+                    $("#respuesta").append('Verificando los datos del estudiante...');
+                },
+                success: function (data) {
+                    $("#respuesta").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+            return false;
+        }
+
+    </script>
+{% endblock %}
+
+

@@ -1,0 +1,48 @@
+personaladministrativogestion:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:PersonalAdministrativoGestion:index }
+
+personaladministrativogestion_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:PersonalAdministrativoGestion:show" }
+
+personaladministrativogestion_new:
+    path:     /new/
+    defaults: { _controller: "SieAppWebBundle:PersonalAdministrativoGestion:new" }
+
+personaladministrativogestion_create:
+    path:     /create/
+    defaults: { _controller: "SieAppWebBundle:PersonalAdministrativoGestion:create" }
+    methods:  POST
+
+personaladministrativogestion_edit:
+    path:     /edit/
+    defaults: { _controller: "SieAppWebBundle:PersonalAdministrativoGestion:edit" }
+    methods:  [POST, PUT]
+
+personaladministrativogestion_update:
+    path:     /update/
+    defaults: { _controller: "SieAppWebBundle:PersonalAdministrativoGestion:update" }
+    methods:  [POST, PUT]
+
+personaladministrativogestion_es_vigente_administrativo:
+    path:     /administrativo/
+    defaults: { _controller: "SieAppWebBundle:PersonalAdministrativoGestion:esVigenteAdministrativo" }
+    methods:  [POST, PUT]      
+    
+personaladministrativogestion_list:
+    path:     /list/
+    defaults: { _controller: "SieAppWebBundle:PersonalAdministrativoGestion:list" }
+
+personaladministrativogestion_find:
+    path:     /find/
+    defaults: { _controller: "SieAppWebBundle:PersonalAdministrativoGestion:find" }
+    
+personaladministrativogestion_result:
+    path:     /result/
+    defaults: { _controller: "SieAppWebBundle:PersonalAdministrativoGestion:result" }    
+    
+personaladministrativogestion_delete:
+    path:     /delete/
+    defaults: { _controller: "SieAppWebBundle:PersonalAdministrativoGestion:delete" }
+    methods:  [POST, DELETE]   

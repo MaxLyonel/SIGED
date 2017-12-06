@@ -1,0 +1,222 @@
+{% extends 'layoutPermanente.html.twig' %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Cursos Cortos
+                    <small>Centro Educativo</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i> <a href="{{path('institucioncursocorto',{'op':'search'})}}"> Buscar</a></li>
+                    <li><i class="fa fa-dashboard"></i>  Cursos Cortos
+                    </li>
+                    <li><i class="fa fa-users"></i> Participantes</li>
+                    <li> Nuevo</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>{{ app.session.get('institucion') }}</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div id="no-more-tables">
+                            <table class="table table-bordered cf">
+                                <thead class="cf">
+                                <tr>
+                                    <th>Código SIE</th>
+                                    <th>Nombre</th>
+                                    <th>Gestión</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <td data-title="Código SIE">{{institucion.id}}</td>
+                                    <td data-title="Nombre">{{institucion.institucioneducativa}}</td>
+                                    <td data-title="Gestión">{{gestion}}</td>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Curso</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelcurso"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelcurso" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <div id="no-more-tables">
+                            <table class="table table-bordered cf">
+                                <thead class="cf">
+                                <tr>
+                                    <th>Curso</th>
+                                    <th>Inicio</th>
+                                    <th>Conclusión</th>
+                                    <th>Duracion</th>
+                                    
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <td data-title="Código SIE">{{cursoCorto.curso}}</td>
+                                    <td data-title="Inicio">{{cursoCorto.fechaInicio|date('d-m-Y')}}</td>
+                                    <td data-title="Inicio">{{cursoCorto.fechaConclusion|date('d-m-Y')}}</td>
+                                    <td data-title="Duracion">{{cursoCorto.duracionhoras}} horas</td>
+                                    
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Nuevo Participante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <span class="divider"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelmaestro"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelmaestro" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.carnet)}}
+                                        {{form_widget(form.carnet)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.paterno)}}
+                                        {{form_widget(form.paterno)}}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.materno)}}
+                                        {{form_widget(form.materno) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.nombre)}}
+                                        {{form_widget(form.nombre) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.edad)}}
+                                        {{form_widget(form.edad) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.genero)}}
+                                        {{form_widget(form.genero) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6">
+                                        {{ form_label(form.organizacion)}}
+                                        {{form_widget(form.organizacion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="form-group">
+                                    <div class="col-lg-12 text-center">
+                                        {{ form_widget(form.guardar ) }}
+                                        <a href="{{path('institucioncursocorto_participante_session')}}" class="btn btn-default">Cancelar</a>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function validarEdad(edad){
+            
+        }
+    </script>
+{% endblock %}

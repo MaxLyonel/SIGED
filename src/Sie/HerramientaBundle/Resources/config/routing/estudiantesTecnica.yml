@@ -1,0 +1,3 @@
+herramienta_estudiantesTecnica_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:EstudiantesTecnica:index}

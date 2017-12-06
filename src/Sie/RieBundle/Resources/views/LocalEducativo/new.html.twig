@@ -1,0 +1,223 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="block-header">
+        <h2>NUEVO LOCAL EDUCATIVO</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('lei')}}">Registro - Local Educativo</a></li>
+        <li class="active">Nuevo</li>
+    </ol>
+
+    <div class="row clearfix">
+        <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        Formulario de Registro
+                    </h2>
+                </div>
+
+                <div class="body">
+                    {{ form_start(form) }}
+                        <fieldset>
+                            <label class="form-label">{{form_label(form.departamento)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.departamento,{'attr':{'onchange':'provincia(this.value)'}}) }}
+                                </div>
+                            </div>
+                            <label class="form-label">{{form_label(form.provincia)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.provincia,{'attr':{'onchange':'municipio(this.value)'}}) }}
+                                </div>
+                            </div>
+                            <label class="form-label">{{form_label(form.municipio)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.municipio,{'attr':{'onchange':'canton(this.value)'}}) }}
+                                </div>
+                            </div>
+                            <label class="form-label">{{form_label(form.canton)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.canton,{'attr':{'onchange':'localidad(this.value)'}}) }}
+                                </div>
+                            </div>
+                            <label class="form-label">{{form_label(form.localidad)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.localidad) }}
+                                </div>
+                            </div>
+                            <label class="form-label">{{form_label(form.zona)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.zona) }}
+                                </div>
+                            </div>
+                            <label class="form-label">{{form_label(form.direccion)}}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.direccion) }}
+                                </div>
+                            </div>
+                        </fieldset>
+                        {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+                        <a href="{{path('lei')}}" class="btn btn-danger btn-lg m-l-15 waves-effect">Cancelar</a>
+                    {{ form_end(form) }}
+                </div>    
+            </div>
+        </div>
+    </div>                
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    function provincia(d) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('lei_buscar_provincias', {'idDepartamento': d}),
+            beforeSend: function () {
+                $("#form_provincia").empty();
+                $("#form_provincia").selectpicker('refresh');
+                $("#form_municipio").empty();
+                $("#form_municipio").selectpicker('refresh');
+                $("#form_canton").empty();
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").empty();
+                $("#form_localidad").selectpicker('refresh');
+                $("#form_provincia").append('<option value="">Buscando...</option>');
+                $("#form_provincia").selectpicker('refresh');
+                $("#form_municipio").append('<option value="">Buscando...</option>');
+                $("#form_municipio").selectpicker('refresh');
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+                $("#form_localidad").selectpicker('refresh');
+            },
+            success: function (data) {
+                $("#form_provincia").empty();
+                $("#form_provincia").selectpicker('refresh');
+                $("#form_municipio").empty();
+                $("#form_municipio").selectpicker('refresh');
+                $("#form_canton").empty();
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").empty();
+                $("#form_localidad").selectpicker('refresh');
+                $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                $("#form_provincia").selectpicker('refresh');
+                $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                $("#form_municipio").selectpicker('refresh');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").selectpicker('refresh');
+                $.each(data.provincia, function (i, value) {
+                    $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $("#form_provincia").selectpicker('refresh');
+            }
+        });
+    }
+
+    function municipio(p) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('lei_buscar_municipios', {'idProvincia': p}),
+            beforeSend: function () {
+                $("#form_municipio").empty();
+                $("#form_municipio").selectpicker('refresh');
+                $("#form_canton").empty();
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").empty();
+                $("#form_localidad").selectpicker('refresh');
+                $("#form_municipio").append('<option value="">Buscando...</option>');
+                $("#form_municipio").selectpicker('refresh');
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+                $("#form_localidad").selectpicker('refresh');
+            },
+            success: function (data) {
+                $("#form_municipio").empty();
+                $("#form_municipio").selectpicker('refresh');
+                $("#form_canton").empty();
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").empty();
+                $("#form_localidad").selectpicker('refresh');
+                $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                $("#form_municipio").selectpicker('refresh');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").selectpicker('refresh');
+                $.each(data.municipio, function (i, value) {
+                    $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $("#form_municipio").selectpicker('refresh');
+            }
+        });
+    }
+
+    function canton(m) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('lei_buscar_cantones', {'idMunicipio': m}),
+            beforeSend: function () {
+                $("#form_canton").empty();
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").empty();
+                $("#form_localidad").selectpicker('refresh');
+                $("#form_canton").append('<option value="">Buscando...</option>');
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+                $("#form_localidad").selectpicker('refresh');
+            },
+            success: function (data) {
+                $("#form_canton").empty();
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").empty();
+                $("#form_localidad").selectpicker('refresh');
+                $("#form_canton").append('<option value="">Seleccionar...</option>');
+                $("#form_canton").selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").selectpicker('refresh');
+                $.each(data.canton, function (i, value) {
+                    $("#form_canton").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $("#form_canton").selectpicker('refresh');
+            }
+        });
+    }
+
+    function localidad(c) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('lei_buscar_localidades', {'idCanton': c}),
+            beforeSend: function () {
+                $("#form_localidad").empty();
+                $("#form_localidad").selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Buscando...</option>');
+                $("#form_localidad").selectpicker('refresh');
+            },
+            success: function (data) {
+                $("#form_localidad").empty();
+                $("#form_localidad").selectpicker('refresh');
+                $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                $("#form_localidad").selectpicker('refresh');
+                $.each(data.localidad, function (i, value) {
+                    $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                });
+                $("#form_localidad").selectpicker('refresh');
+            }
+        });
+    }
+    
+    </script>
+{% endblock %}

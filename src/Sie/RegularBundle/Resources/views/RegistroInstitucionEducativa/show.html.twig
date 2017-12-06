@@ -1,0 +1,60 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Institucioneducativa</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Institucioneducativa</th>
+                <td>{{ entity.institucioneducativa }}</td>
+            </tr>
+            <tr>
+                <th>Rueue</th>
+                <td>{{ entity.rueUe }}</td>
+            </tr>
+            <tr>
+                <th>Fecharesolucion</th>
+                <td>{{ entity.fechaResolucion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Nroresolucion</th>
+                <td>{{ entity.nroResolucion }}</td>
+            </tr>
+            <tr>
+                <th>Obsrue</th>
+                <td>{{ entity.obsRue }}</td>
+            </tr>
+            <tr>
+                <th>Desueantes</th>
+                <td>{{ entity.desUeAntes }}</td>
+            </tr>
+            <tr>
+                <th>Fechacreacion</th>
+                <td>{{ entity.fechaCreacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Fechacierre</th>
+                <td>{{ entity.fechaCierre }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('institucioneducativa') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('institucioneducativa_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

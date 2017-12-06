@@ -1,0 +1,69 @@
+{% if sw %}
+
+<div class="col-md-12 col-sm-12">
+    <!-- Start toolbar location top sub -->
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">Resetear reporte BJP</h3>
+        </div><!-- /.panel-heading -->
+        <div class="panel-sub-heading inner-all">
+
+            <div class="clearfix"></div>
+        </div><!-- /.panel-sub-heading -->
+        <div class="panel-body">
+
+          <div class="table-responsive mb-20">
+                              <table class="table" border=1>
+                                  <thead>
+                                  <tr class='active'>
+                                      <th class="text-center" style="width: 45px">#</th>
+                                      <th>SIE</th>
+                                      <th>Unidad Educativa</th>
+                                      <th>Fecha Registro</th>
+                                      <th>Estado</th>
+
+                                      <th>Opción</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr class="">
+                                      <td class="text-center">1</td>
+                                      <td>{{objInstitucionEducativa.id}}</td>
+                                      <td>{{objInstitucionEducativa.institucioneducativa}}</td>
+                                      <td>{{objValidacionBjp.fechaFinVal | date('d-m-y H:m:s')}}</td>
+                                      <td>{% if objValidacionBjp.esactivo %} <b> Reportardo </b>  {% endif %}</td>
+
+
+                                      <td>
+                                        <div id="doneReset">
+                                          <a href="#" onclick=" resetBjp('{{validacionId}}'); ">Resetear</a>
+                                        </div>
+                                      </td>
+                                  </tr>
+
+                                  </tbody>
+                              </table>
+                          </div>
+
+
+
+        </div><!-- /.panel-body -->
+    </div><!-- /.panel -->
+    <!--/ End toolbar location top sub -->
+</div
+{% else %}
+    <div class='col-md-7 col-md-offset-3'>
+      <div class="panel panel-default rounded shadow">
+            <div class="panel-body">
+                <div class="alert alert-warning">
+                    <strong>Verificar!</strong> {{message}}
+                </div>
+
+            </div><!-- /.panel-body -->
+        </div>
+
+    </div>
+
+
+
+{% endif %}

@@ -1,0 +1,87 @@
+dgesttla_info_personal_adm_carr_index:
+    path:     /
+    defaults: { _controller: SieDgesttlaBundle:InfoPersonalAdmCarrera:index}
+
+dgesttla_info_personal_adm_carr_tsie_index:
+    path:     /tsie
+    defaults: { _controller: SieDgesttlaBundle:InfoPersonalAdmCarrera:indexTecSie}
+
+dgesttla_info_personal_adm_carr_second:
+    path:     /sie/second
+    defaults: { _controller: SieDgesttlaBundle:InfoPersonalAdmCarrera:second}
+
+dgesttla_info_personal_adm_carr_third:
+    path:     /sie/third
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:loadThird"}
+    options:
+         expose: true
+         
+dgesttla_info_personal_adm_carr_index:
+    path:     /
+    defaults: { _controller: SieDgesttlaBundle:InfoPersonalAdmCarrera:index }
+
+dgesttla_info_personal_adm_carr_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:show" }
+
+dgesttla_info_personal_adm_carr_new:
+    path:     /new/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:new" }
+
+dgesttla_info_personal_adm_carr_create:
+    path:     /create/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:create" }
+    methods:  POST
+
+dgesttla_info_personal_adm_carr_edit:
+    path:     /edit/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:edit" }
+    methods:  [POST, PUT]
+
+dgesttla_info_personal_adm_carr_update:
+    path:     /update/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:update" }
+    methods:  [POST, PUT]
+
+dgesttla_info_personal_adm_carr_es_vigente_administrativo:
+    path:     /administrativo/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:esVigenteAdministrativo" }
+    methods:  [POST, PUT]         
+
+dgesttla_info_personal_adm_carr_delete:
+    path:     /delete/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:delete" }
+    methods:  [POST, DELETE]    
+    
+dgesttla_info_personal_adm_carr_search:
+    path:     /search/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:search" }
+    methods:  POST
+
+dgesttla_info_personal_adm_carr_find:
+    path:     /find/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:find" }
+    
+dgesttla_info_personal_adm_carr_result:
+    path:     /result/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:result" }
+
+dgesttla_info_personal_adm_carr_migrar_index:
+    path:     /admmigrar/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarreraMigrar:index" }
+
+dgesttla_info_personal_adm_carr_ratificar:
+    path:     /ratificarAdm/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarreraMigrar:ratificarAdm" }
+
+dgesttla_info_personal_adm_carr_ddjj:
+    path:     /admDJJ/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarreraMigrar:admDDJJ" }
+
+dgesttla_info_personal_adm_carr_ratificar_currentyear:
+    path:     /ratificarAdmCurrent/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarreraMigrar:ratificarAdmCurrent" }
+
+dgesttla_info_personal_adm_carr_habilitar_ddjj:
+    path:     /admhabilitarDDJJ/
+    defaults: { _controller: "SieDgesttlaBundle:InfoPersonalAdmCarrera:admHabilitarDDJJ" }

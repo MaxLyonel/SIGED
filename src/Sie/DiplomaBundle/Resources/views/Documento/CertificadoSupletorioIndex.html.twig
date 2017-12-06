@@ -1,0 +1,99 @@
+{% extends 'SieDiplomaBundle:Default:Registros.html.twig' %}
+{% block contenttitulo %}{{ titulo }}{% endblock %}
+{% block contenttitulosmall %}{{ subtitulo }}{% endblock %}
+{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Formulario</li>{% endblock %}  
+{% block contentbuscador %}    
+    <div class="col-md-12">
+        <div class="portlet portlet-default">
+            <div class="portlet-body">
+                {% if entityDocumento is defined %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4><strong>Bachiller:</strong> {{ entityDocumento[0].paterno }} {{ entityDocumento[0].materno }} {{ entityDocumento[0].nombre }}</h4>
+                            <address>
+                                <strong>Código rude: </strong>{{ entityDocumento[0].rude}}
+                                <br><strong>Código SIE / Gestión: </strong>{{ entityDocumento[0].sie }} - {{ entityDocumento[0].gestion }}
+                                <br><strong>Fecha de nacimiento: </strong>{{ (entityDocumento[0].fechanacimiento)|date('d/m/Y') }}
+                                <br><strong>Lugar de nacimiento: </strong>
+                                    {% if entityDocumento[0].departamentonacimiento != "" %}{{ entityDocumento[0].departamentonacimiento }} - {% endif %}
+                                    {{ entityDocumento[0].paisnacimiento }}
+                            </address>
+                        </div>
+                        <div class="col-md-6 invoice-terms">
+                            <h4><b>N° SERIE: </b>{{entityDocumento[0].serie}}</h4>
+                            <p>
+                                <strong>Fecha de emisión: </strong>{{ entityDocumento[0].fechaemision|date('d/m/Y') }}
+                                <br><strong><abbr title="Dirección Departamental de Educación">D.D.E.</abbr> Emisor: </strong>{{ entityDocumento[0].departamentoemision }}
+                            </p>
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}      
+                                <input type="hidden" name="info" value="{{infoBusqueda}}">  
+                                <div class="input-group">
+                                    {{ form_widget(form.certificado) }}
+                                    <span class="input-group-btn">
+                                        {{ form_widget(form.search,{ 'attr':{'class':'btn btn-green pull-right' } } ) }}
+                                    </span>
+                                </div>
+                            {{form_end(form)}}                            
+                        </div>
+                    </div>
+                {% endif %}
+                <!-- /.row -->
+                </hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Certificados Supletorios</h3>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-green table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Número y Serie</th>
+                                        <th>Fecha de emisión</th>
+                                        <th>D.D.E. emisor</th>
+                                        <th>Estado</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set cont = 0 %}
+                                    {% for supletorio in entityDocumentoSupletorio %}     
+                                        {% set cont = cont + 1 %}                             
+                                        {% set codigo = supletorio.id %}                        
+                                        {% set serie = supletorio.serie %}
+                                        {% set fecha = (supletorio.fechaemision)|date('d/m/Y') %}
+                                        {% set departamento = supletorio.departamentoemision %}  
+                                        {% set estado = supletorio.estado %}  
+                                        {% set estadoId = supletorio.estadoid %}  
+                                        <tr>
+                                            <td>{{ cont }}</td>
+                                            <td>{{ serie }}</td>
+                                            <td>{{ fecha }}</td>
+                                            <td>{{ departamento }}</td>
+                                            <td>
+                                                {% if estadoId == 1 %}
+                                                    <a class="btn btn-xs btn-success"><i class="fa fa-check"></i> {{ estado }}</a>
+                                                {% else %}                                                      
+                                                    <a class="btn btn-xs btn-danger"><i class="fa fa-times-circle"></i> {{ estado }}</a>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <form name="form" role="form" action="{{ path('sie_diploma_tramite_documento_certificado_supletorio_pdf') }}" method="POST"> 
+                                                    <input type="hidden" name="supletorio" value="{{codigo|base64_encode}}"/>                                                 
+                                                    <input type="hidden" name="info" value="{{ infoBusqueda }}">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token(codigo) }}">   
+                                                    <button type="submit" class="btn btn-success btn-xs" data-original-title="Descargar"><i class="fa fa-download"></i></button>   
+                                                </form> 
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </div>    
+{% endblock %} 

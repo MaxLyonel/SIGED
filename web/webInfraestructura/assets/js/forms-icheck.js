@@ -1,0 +1,1 @@
+$(document).ready(function(){"use strict";$("input.icheck-minimal-grey").iCheck({checkboxClass:"icheck icheckbox_minimal-grey",radioClass:"iradio_minimal-grey"})});

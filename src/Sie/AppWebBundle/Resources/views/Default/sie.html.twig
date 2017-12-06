@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sistema de Información Educativa - Educación Regular</title>
+        <link href='http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic' rel='stylesheet' type='text/css'>
+
+        <!-- GLOBAL STYLES - Include these on every page. -->
+        <link href="{{ asset('css/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <style type="text/css">
+            .login{
+                padding-top: 70px;
+                padding-bottom: 70px;
+            }
+            #error-up img, #error-center img{
+                margin: 0 auto;
+            }
+        </style>
+        <!--[if lt IE 9]>
+        <script src="{{asset('bower_components/html5shiv/dist/html5shiv.js')}}"></script>
+        <script src="{{asset('bower_components/respond/src/respond.min.js')}}"></script>
+        <![endif]-->
+    </head>
+
+    <body class="login">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2" id="error-up">
+                    <img src="{{asset('images/minedu_blanco.png') }}" data-1x="{{asset('images/minedu_blanco.png')}}" data-2x="{{asset('images/minedu_blanco.png')}}" class="hisrc img-responsive" alt="MINEDU">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center" id="error-center">
+                    <img src="{{asset('images/error500.png')}}" data-1x="{{asset('images/error500.png')}}" data-2x="{{asset('images/error500.png')}}" class="hisrc img-responsive" alt="error500">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2" id="error-down">
+                    <footer class="footer text-center">
+                        <p >Ministerio de Educación &copy 2017 | <a href="http://www.sie.gob.bo" class="credits" target="_blank">http://www.sie.gob.bo</a><br/>
+                            Avenida Arce No. 2147 - Teléfono: 2681200 int. 371 / 317<br/>
+                            La Paz - Bolivia
+                        </p>
+                    </footer>
+                </div>
+            </div> 
+        </div> 
+    </body>
+</html>

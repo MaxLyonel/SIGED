@@ -1,0 +1,49 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH4Ambientepedagogico list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>N12ambienteanchomts</th>
+                <th>N12ambientelargomts</th>
+                <th>N12ambientealtomts</th>
+                <th>N14capacidadambiente</th>
+                <th>Fecharegistro</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('infraestructurah4ambientepedagogico_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.n12AmbienteAnchoMts }}</td>
+                <td>{{ entity.n12AmbienteLargoMts }}</td>
+                <td>{{ entity.n12AmbienteAltoMts }}</td>
+                <td>{{ entity.n14CapacidadAmbiente }}</td>
+                <td>{% if entity.fecharegistro %}{{ entity.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('infraestructurah4ambientepedagogico_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('infraestructurah4ambientepedagogico_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('infraestructurah4ambientepedagogico_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

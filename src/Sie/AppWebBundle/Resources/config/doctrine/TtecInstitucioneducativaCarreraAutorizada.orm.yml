@@ -1,0 +1,60 @@
+Sie\AppWebBundle\Entity\TtecInstitucioneducativaCarreraAutorizada:
+    type: entity
+    table: ttec_institucioneducativa_carrera_autorizada
+    indexes:
+        IDX_2287C431A83B07A:
+            columns:
+                - ttec_carrera_tipo_id
+        IDX_2287C4313AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        esEnviado:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_enviado
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+    manyToOne:
+        ttecCarreraTipo:
+            targetEntity: TtecCarreraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_carrera_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,63 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaControlOperativoMenus:
+    type: entity
+    table: institucioneducativa_control_operativo_menus
+    indexes:
+        IDX_1712CAA1756DFBFA:
+            columns:
+                - nota_tipo_id
+        IDX_1712CAA13AB163FE:
+            columns:
+                - institucioneducativa_id
+    uniqueConstraints:
+        uq_insti_contr_oper_menu:
+            columns:
+                - institucioneducativa_id
+                - gestion_tipo_id
+                - nota_tipo_id
+                - estado_menu
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestionTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        estadoMenu:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estado_menu
+        fecharegistro:
+            type: date
+            nullable: true
+            comment: ''
+    manyToOne:
+        notaTipo:
+            targetEntity: NotaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nota_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

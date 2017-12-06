@@ -1,0 +1,99 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    	<form action="" id="formNotas" onsubmit="registrarNotas(); return false">
+
+
+    	<input type="hidden" name="tipo" value="t">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Registro Especialidad</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body no-padding" id="modal-body"><div class="alert alert-info"><span class="alert-icon"><i class="fa fa-user"></i></span><div class="notification-info">
+              <ul class="clearfix notification-meta">
+                <li class="pull-left notification-sender">
+                  <span>
+                    <a href="javascript:void()">
+                      {{student.paterno}} {{student.materno}} {{student.nombre}}
+                    </a>
+                  </span>
+                </li>
+                <li class="pull-right notification-time"></li>
+              </ul>
+              {% if objSpecialityStudent  %}
+              <ul class="clearfix notification-meta">
+                <li class="pull-left notification-sender">
+                  <h5>
+                    <p class="text-inverse"><code>Especialidad</code> : {{objSpecialityStudent.especialidad}}</p>
+                  </h5>
+                </li>
+                <li class="pull-center notification-sender">
+                  <h5>
+                    <p class="text-inverse"><code>horas</code> : {{objSpecialityStudent.horas}}</p>
+                  </h5>
+                </li>
+              </ul>
+              {% else %}
+              <h3 class='text-danger'>ESPECIALIDAD NO REGISTRADA...</h3>
+              {% endif %}
+
+            </div></div>
+            <table>
+              <tr>
+                <td>
+                  <div class="row">
+                      <div class="col-md-12">
+
+
+                          {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form', 'id':'specialityFormId'} } )}}
+                          <div class="form-group">
+                              <label for="form_codigoRude" class="col-sm-4 control-label">
+                                  {{form_label(form.especialidad)}}
+
+                              </label>
+                              <div class="col-sm-8">
+                                  {{ form_widget(form.especialidad) }}
+                                  <div class="help-block with-errors"></div>
+                              </div>
+
+                              <label for="form_codigoRude" class="col-sm-4 control-label">
+                                  {{form_label(form.horas)}}
+
+                              </label>
+                              <div class="col-sm-8">
+                                  {{ form_widget(form.horas) }}  <p id="noNumber" class="text-center"></p>
+                                  <div class="help-block with-errors"></div>
+                              </div>
+
+                          </div>
+
+                          <div class="form-group">
+                              <div class="col-sm-offset-2 col-sm-10">
+
+                                  {{ form_widget(form.registrar) }}
+                              </div>
+                          </div>
+                          {{form_end(form)}}
+
+                      </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+           </div>
+        </div>
+        <div class="modal-footer">
+            <!--button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-theme">Guardar Cambios</button-->
+        </div>
+    </div><!-- /.modal-content -->
+	</form>
+</div><!-- /.modal-dialog -->
+<script>
+
+</script>

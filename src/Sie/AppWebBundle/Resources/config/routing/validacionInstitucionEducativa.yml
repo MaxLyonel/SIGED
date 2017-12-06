@@ -1,0 +1,15 @@
+sie_app_bjp_validacion_ie_lista_paso_1:
+    path:     /listado
+    defaults: { _controller: "SieAppWebBundle:ValidacionInstitucionEducativa:listado" }
+
+sie_app_bjp_validacion_ie_lista_paso_1_save:
+    path:     /listado/save
+    defaults: { _controller: "SieAppWebBundle:ValidacionInstitucionEducativa:listadoSave" }
+
+sie_app_bjp_validacion_ie_lista_descarga_dpf:
+    path:     /listado/descarga/pdf
+    defaults: { _controller: "SieAppWebBundle:ValidacionInstitucionEducativa:impresionListaUEPdf" }
+
+sie_app_bjp_validacion_ie_lista_depto_descarga_dpf:
+    path:     /listado/descarga/depto/pdf
+    defaults: { _controller: "SieAppWebBundle:ValidacionInstitucionEducativa:impresionListaDistPdf" }

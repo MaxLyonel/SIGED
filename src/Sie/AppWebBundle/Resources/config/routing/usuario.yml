@@ -1,0 +1,74 @@
+usuario:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:Usuario:index" }
+
+usuario_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:Usuario:show" }
+
+usuario_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:Usuario:new" }
+
+usuario_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:Usuario:create" }
+    methods:  POST
+
+usuario_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:Usuario:edit" }
+
+usuario_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:Usuario:update" }
+    methods:  [POST, PUT]
+
+usuario_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:Usuario:delete" }
+    methods:  [POST, DELETE]
+
+usuario_main_find:
+    path:     /result
+    defaults: { _controller: "SieAppWebBundle:Usuario:result" }    
+
+usuario_main_create_account:
+    path:     /userConfig/
+    defaults: { _controller: "SieAppWebBundle:Usuario:createAccount" }   
+
+usuario_main_reset_passwd:
+    path:     /{id}/{rude}/userresetpasswd
+    defaults: { _controller: "SieAppWebBundle:Usuario:resetPasswd" }     
+    
+usuario_main_new_rol:
+    path:     /save_rol
+    defaults: { _controller: "SieAppWebBundle:Usuario:saveNewRol" } 
+
+my_app_user:    
+    path:     /result
+    defaults: { _controller: "SieAppWebBundle:Usuario:result" }   
+    
+usuario_main_save_new:
+    path:     /save_new
+    defaults: { _controller: "SieAppWebBundle:Usuario:saveNew" }
+
+usuario_main_save_activar:
+    path:     /save_activo
+    defaults: { _controller: "SieAppWebBundle:Usuario:saveActivo" }
+    
+usuario_reset_passwd_save:
+    path:     /resetResetPasswdsave
+    defaults: { _controller: "SieAppWebBundle:Usuario:resetPasswdSave" }
+    
+usuario_asignar:
+    path:     /asignar/
+    defaults: { _controller: "SieAppWebBundle:Usuario:asignarUsuario" }
+    
+usuario_nuevo:
+    path:     /nuevo/
+    defaults: { _controller: "SieAppWebBundle:Usuario:nuevo" }
+    
+usuario_main_save_active:
+    path:     /save_active
+    defaults: { _controller: "SieAppWebBundle:Usuario:saveActive" }    

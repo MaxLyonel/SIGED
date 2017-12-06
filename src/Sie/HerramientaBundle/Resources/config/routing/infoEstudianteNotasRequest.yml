@@ -1,0 +1,17 @@
+herramienta_infoEstudianteNotasRequest_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteNotasRequest:index"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteNotasRequest_create_update:
+    path:     /createUpdate
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteNotasRequest:createUpdate"}
+    options:
+         expose: true
+
+herramienta_infoEstudianteNotasRequest_delete:
+    path:     /delete
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteNotasRequest:delete"}
+    options:
+         expose: true

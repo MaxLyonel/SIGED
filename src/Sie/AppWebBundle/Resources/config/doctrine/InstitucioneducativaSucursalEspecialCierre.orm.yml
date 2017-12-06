@@ -1,0 +1,43 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaSucursalEspecialCierre:
+    type: entity
+    table: institucioneducativa_sucursal_especial_cierre
+    indexes:
+        IDX_54E99CE57A322B24:
+            columns:
+                - institucioneducativa_sucursal_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fecha:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+    manyToOne:
+        institucioneducativaSucursal:
+            targetEntity: InstitucioneducativaSucursal
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_sucursal_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

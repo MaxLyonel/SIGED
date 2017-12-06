@@ -1,0 +1,44 @@
+Sie\AppWebBundle\Entity\CarreraTipo:
+    type: entity
+    table: carrera_tipo
+    indexes:
+        IDX_52D4A6FAE653442:
+            columns:
+                - orgcurricular_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        carrera:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+        descripcion:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+    manyToOne:
+        orgcurricularTipo:
+            targetEntity: OrgcurricularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                orgcurricular_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

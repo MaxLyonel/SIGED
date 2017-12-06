@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegHablaFrecTipo:
+    type: entity
+    table: estudiante_inscripcion_socioeconomico_reg_habla_frec_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        hablaFrec:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: habla_frec
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

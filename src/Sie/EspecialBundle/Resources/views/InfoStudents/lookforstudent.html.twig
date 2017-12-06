@@ -1,0 +1,145 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="row">
+                        <div class="col-md-12">
+
+                            <!-- Start inline form -->
+                            <div class="panel rounded shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">Buscar Estudiante por codigo RUDES</h3>
+                                    </div>
+                                    <div class="pull-right">
+                                        <!-- <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                        <button class="btn btn-sm" data-action="remove" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Remove" data-original-title="" title=""><i class="fa fa-times"></i></button> -->
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding">
+                                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'idSearchStudentForm', 'class':'form-inline'} } )}}
+
+                                        <div class="form-body">
+                                           <div class='row'>
+                                              <div class='col-md-8 col-md-offset-4'>
+                                                <label class="sr-only" for="exampleInputEmail2">{{form_label(form.rudeal)}}</label>
+                                                {{form_widget(form.rudeal)}}
+                                                {{form_widget(form.find)}}
+                                                <button type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancel</button>
+                                              </div>
+                                          </div>
+                                        </div><!-- /.form-body -->
+
+                                    {{form_end(form)}}
+                                </div><!-- /.panel-body -->
+                            </div><!-- /.panel -->
+                            <!--/ End inline form -->
+
+                        </div>
+                    </div>
+
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-12'>
+          <div id='idanswer'></div>
+        </div>
+      </div>
+    </div><!-- /.modal-dialog -->
+</div>
+<script>
+
+  var findStudent = function() {
+    var rudeal = $('#form_rudeal').val();
+
+    if(!(rudeal.length >0)){
+      alert('Necesita Codigo Rudeal para realizar la busqueda');
+      return false;
+    }
+	  var formData = $('#idSearchStudentForm').serialize();
+     $.ajax({
+         type: 'post',
+         url: Routing.generate('info_students_findstudent'),
+         data: formData,
+         beforeSend: function () {
+             $("#idanswer").empty();
+             $("#idanswer").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+         },
+         success: function (data) {
+             $("#idanswer").empty();
+             $("#idanswer").append(data);
+         },
+         statusCode: {
+             500: function () {
+
+             },
+             404: function () {
+
+             }
+         }
+     });
+  };
+
+  var doInscription = function (){
+
+    if(confirm('Esta completamente seguro de realizar la inscripción?')){
+
+      var formData = $('#idInscriptionForm').serialize();
+      $.ajax({
+          type: 'post',
+          url: Routing.generate('info_students_saveinscription'),
+          data: formData,
+          beforeSend: function () {
+              $('#modal-body').empty();
+              $('.modal-footer').empty();
+              $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+              $("#idstudents").empty();
+              $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+          },
+          success: function (data) {
+              $('#modal').modal('hide');
+              $("#idstudents").empty();
+              $("#idstudents").append(data);
+          },
+          error: function (data) {
+
+          }
+      });
+    }else{
+      return false;
+    }
+
+
+
+
+  };
+	$(".jnumbersletters").keypress(function (key) {
+        var key = key || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 97 || k > 122)//letras minusculas
+            && (k < 65 || k > 90) //letras mayusculas
+            && (k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+            && (k != 241) //ñ
+             && (k != 209) //Ñ
+             && (k != 32) //espacio
+             && (k != 225) //á
+             && (k != 233) //é
+             && (k != 237) //í
+             && (k != 243) //ó
+             && (k != 250) //ú
+             && (k != 193) //Á
+             && (k != 201) //É
+             && (k != 205) //Í
+             && (k != 211) //Ó
+             && (k != 218) //Ú
+             && (k != 44) //coma ,
+             && (k != 46) //punto .
+            )
+            return false;
+    });
+</script>

@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH6ServicioAlimentacionTipo:
+    type: entity
+    table: infraestructura_h6_servicio_alimentacion_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraServicioAlimentacion:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_servicio_alimentacion
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

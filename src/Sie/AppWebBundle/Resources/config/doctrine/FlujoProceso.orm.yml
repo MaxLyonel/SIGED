@@ -1,0 +1,63 @@
+Sie\AppWebBundle\Entity\FlujoProceso:
+    type: entity
+    table: flujo_proceso
+    indexes:
+        IDX_C5263C38640D1D53:
+            columns:
+                - proceso_id
+        IDX_C5263C38FE1D168D:
+            columns:
+                - flujo_tipo_id
+        IDX_C5263C38EF3F27EB:
+            columns:
+                - rol_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        orden:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+    manyToOne:
+        proceso:
+            targetEntity: ProcesoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                proceso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        flujoTipo:
+            targetEntity: FlujoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                flujo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rolTipo:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rol_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

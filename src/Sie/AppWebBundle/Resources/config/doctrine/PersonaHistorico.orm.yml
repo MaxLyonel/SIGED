@@ -1,0 +1,82 @@
+Sie\AppWebBundle\Entity\PersonaHistorico:
+    type: entity
+    table: persona_historico
+    indexes:
+        IDX_8C919778DB38439E:
+            columns:
+                - usuario_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        carnet:
+            type: string
+            nullable: false
+            length: 15
+            fixed: false
+            comment: ''
+            default: '0'
+        complemento:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+        fechaNacimiento:
+            type: date
+            nullable: false
+            comment: ''
+            column: fecha_nacimiento
+        generoTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: genero_tipo_id
+        correo:
+            type: string
+            nullable: true
+            length: 40
+            fixed: false
+            comment: ''
+        fechaActualizacion:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_actualizacion
+    manyToOne:
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,28 @@
+{% if  app.session.get('ue_humanistica') %}
+          <div class="row">
+            <div class="col-md-12">
+
+              {% if  app.session.get('closeRude') %}
+                <div class="callout callout-info mb-20">
+                  <p><b>Operativo Rude terminado satisfactoriamente</b></p>
+                </div>
+              {% else %}
+                <div class="panel shadow panel-primary">
+                      <div class="panel-heading">
+                          <div class="pull-left">
+                              <h3 class="panel-title">OPERATIVO RUDE {{app.session.get('currentyear')}}</h3>
+                          </div>
+                          <div class="clearfix"></div>
+                      </div><!-- /.panel-heading -->
+                      <div class="panel-body pt-10">
+                        <button type="button" class="btn btn-info" onclick="cerrarRude('{{odataUedu.id}}','{{gestion}}')">Cerrar Operativo RUDE</button>
+                        <div id="idCerrarRude" style="overflow:scroll; max-height:150px; ">
+                        </div>
+                      </div><!-- /.panel-body -->
+                  </div>
+                {% endif %}
+
+
+            </div>
+          </div>
+ {% endif %}

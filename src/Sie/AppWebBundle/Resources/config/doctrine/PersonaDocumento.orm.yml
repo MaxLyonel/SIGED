@@ -1,0 +1,40 @@
+Sie\AppWebBundle\Entity\PersonaDocumento:
+    type: entity
+    table: persona_documento
+    indexes:
+        IDX_B78A8CD545C0CF75:
+            columns:
+                - documento_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        personaId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: persona_id
+        ruta:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        documento:
+            targetEntity: DocumentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                documento_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

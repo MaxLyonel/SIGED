@@ -1,0 +1,75 @@
+Sie\AppWebBundle\Entity\UsuarioRol:
+    type: entity
+    table: usuario_rol
+    indexes:
+        fk_usuariorol_usuario1_fk:
+            columns:
+                - usuario_id
+        fk_usuariorol_rol_tipo1_fk:
+            columns:
+                - rol_tipo_id
+        IDX_72EDD1A4606841D:
+            columns:
+                - lugar_tipo_id
+        IDX_72EDD1A47281438B:
+            columns:
+                - circunscripcion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+        subSistema:
+            type: string
+            nullable: true
+            length: 200
+            fixed: true
+            comment: ''
+            column: sub_sistema
+    manyToOne:
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rolTipo:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rol_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lugarTipo:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        circunscripcionTipo:
+            targetEntity: CircunscripcionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                circunscripcion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

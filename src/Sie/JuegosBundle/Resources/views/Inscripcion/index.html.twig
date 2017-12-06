@@ -1,0 +1,429 @@
+{# extends 'SieJuegosBundle:Default:Registros.html.twig' #}
+{% extends 'layoutJuegos.html.twig' %}
+
+{% block contentoption %} 
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="glyphicon glyphicon-pencil"></i> Registro <span>Juegos Deportivos Plurinacionales</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label"></span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('sie_juegos_inscripcion_fp_busqueda') }}">Busqueda</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Fase Previa</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <!-- Start search panel -->
+                <div class="panel">
+                    <div class="panel-heading bg-lilac ">
+                        <div class="pull-left">
+                            <h5 class="text-uc"><i class="fa fa-home"></i> {% if infoUnidadEducativa is defined %}{{infoUnidadEducativa.id}} - {{infoUnidadEducativa.institucioneducativa}}{% endif %}</h5>
+                        </div>
+                        <div class="pull-right">
+                            {{form_start(formBusqueda, { 'attr': {'role': "form", 'class': "form-horizontal"} } )}}
+                                <div class="form-group no-margin no-padding has-success has-feedback">
+                                    {{ form_widget(formBusqueda.sieBusqueda, { 'attr': {'class': "form-control input-sm"} }) }}
+                                    <span class="fa fa-search form-control-feedback no-right lh-30"></span>
+                                </div>
+                            {{form_end(formBusqueda)}}
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                </div><!-- /.panel -->
+                <!--/ End search panel -->
+            </div>
+        </div>
+
+
+        {% if infoUnidadEducativa is defined %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="page-content">
+                        {% for type, flashMessage in app.session.flashbag.all() %}
+                            <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {% if flashMessage.title is defined %}
+                                <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                                    {{ flashMessage.message }}
+                                {% else %}
+                                    {{ type }}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>        
+            </div>
+
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <form name="formReport" id="formReport" role="form" action="{{ path('sie_juegos_inscripcion_fp_index') }}" method="POST">  
+                                    <input type="hidden" name="sieBusqueda" value="{{ infoUnidadEducativa.id }}" />
+                                    <button id="tour-13" type="submit" title="Listado de deportistas registrados" class="btn btn-info">
+                                        <i class='fa fa-1x fa-book' aria-hidden="true"></i>
+                                    </button>
+                                </form>  
+                            </div>  
+                            <div class="pull-right">
+                                <form name="formReport" id="formReport" role="form" action="{{ path('sie_juegos_inscripcion_lista_estudiantes_ue') }}" method="POST">  
+                                    <input type="hidden" name="sie" value="{{ infoUnidadEducativa.id }}" />
+                                    <button id="tour-13" type="submit" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                        <i class="fa fa-1x fa-file-pdf-o" aria-hidden="true"></i> Descargar listado
+                                    </button>
+                                </form>                       
+                            </div>     
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>  
+
+                    <div class="panel panel-primary shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">Nivel / Grado / Género</h3>
+                            </div><!-- /.pull-left -->
+                            <div class="pull-right">
+
+                            </div><!-- /.pull-right -->
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <!-- Start project overview -->
+                            <small>
+                                <div class="tree well">
+                                    {%for nivelKey, dataNivel in infoNiveles%}
+                                        <ul style="padding-left: 0px;">
+                                            <li>
+                                                <span><i class="icon-folder-open"></i> {{nivelKey}}</span> 
+                                                <ul>
+                                                    {% for gradoKey,dataGrado in dataNivel %}
+                                                        <li>
+                                                            <span><i class="icon-minus-sign"></i> {{gradoKey}}</span>
+                                                            <ul>
+                                                                {% for generoKey, dataGenero in dataGrado %}
+                                                                    <li>
+                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+                                                                            <span ><i class="icon-leaf"></i>  
+                                                                                <a href="#" onclick="seeStudents('{{dataGenero.infoUe}}');">{{generoKey}} </a>
+                                                                            </span>
+                                                                        </div>                                                            
+                                                                    </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    {% endfor %}
+                                </div>
+                            </small>
+                            <!--/ End project overview -->  
+                        </div><!-- /.panel-body -->
+                    </div> 
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">                         
+                    <div id="idstudents">    
+                        {% if infoDeportistas is defined %}
+                            <table id="datatable-deportistas" class="table table-striped table-info">
+                                <thead>
+                                    <tr>                            
+                                        <th data-class="expand">#</th>
+                                        <th data-hide="phone,tablet">P.</th>
+                                        <th>C.I.</th>
+                                        <th>Código Rude</th>
+                                        <th>Estudiante</th>
+                                        <th>Disciplina</th>
+                                        <th>Prueba</th>
+                                        <th style="min-width: 50px">&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {#init the array info student #}
+                                    {% set objInfoStudent = [] %}
+                                    {% for data in infoDeportistas%}
+                                        {% set nombre = data.paterno~' '~data.materno~' '~data.nombre %}
+                                        {% set rude = data.codigoRude %}                            
+                                        {% set paralelo = data.paralelo %}      
+                                        {% if data.complemento == "" %}
+                                            {% set ci = data.carnetIdentidad %}
+                                        {% else %}
+                                            {% set ci = data.carnetIdentidad~'-'~data.complemento%}
+                                        {% endif %}                         
+                                        {% set disciplina = data.disciplina %} 
+                                        {% set prueba = data.prueba %}
+                                        <tr>
+                                            <td align="">{{loop.index}}</td>
+                                            <td align="">{{paralelo}}</td>
+                                            <td align="">{{ci}}</td>
+                                            <td align="">{{rude}}</td>
+                                            <td align="">{{nombre}}</td>
+                                            <td align="">{{disciplina}}</td>
+                                            <td align="">{{prueba}}</td>
+                                            <td align="">
+                                                <form name="formElimina" id="formElimina" role="form" action="{{ path('sie_juegos_eliminacion_inscripcion_estudiante') }}" method="POST">  
+                                                    <input type="hidden" name="inscripcion" value="{{ data.eInsId }}" />
+                                                    <input type="hidden" name="sie" value="{{ infoUnidadEducativa.id }}" />
+                                                    <button id="tour-13" type="submit" title="Elimina inscripción" class="btn btn-circle btn-googleplus btn-stroke">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>  
+                                            </td>
+                                        </tr>
+                                    {%endfor%}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <tr>                            
+                                            <th data-class="expand">#</th>
+                                            <th data-hide="phone,tablet">P.</th>
+                                            <th>C.I.</th>
+                                            <th>Código Rude</th>
+                                            <th>Estudiante</th>
+                                            <th>Disciplina</th>
+                                            <th>Prueba</th>
+                                            <th style="min-width: 50px">&nbsp;</th>
+                                        </tr>
+                                    </tr>
+                                </tfoot>
+                            </table> 
+                        {% endif %}                   
+                    </div>                                        
+                </div>                
+            </div>                          
+            <!--/div-->
+        {% endif %}
+        <!--/ End mail page -->
+    </div>
+    <!-- Start body content -->
+    <!--/ End body content -->
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+
+    </div><!-- /.modal -->
+    <!--/ End body content -->
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>          
+
+        /**
+         * this is to the tree menu option
+         * @returns {undefined}
+         */
+        $(function () {
+            $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+            $('.tree li.parent_li > span').on('click', function (e) {
+                var children = $(this).parent('li.parent_li').find(' > ul > li');
+                if (children.is(":visible")) {
+                    children.hide('fast');
+                    $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+                } else {
+                    children.show('fast');
+                    $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+                }
+                e.stopPropagation();
+            });
+        });
+
+        function getEliminarInscripcion(es) {  
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_juegos_eliminacion_prueba_estudiantes', {'inscripcion': parseInt(es)}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    dep = document.getElementById('list' + es);   
+                    if (dep){        
+                        $.each(data.aregistro, function (i, value) {
+                            padre = dep.parentNode;
+                            padre.removeChild(dep);
+                        });
+                    }
+                }
+            });
+        }
+
+
+        var getStudents = function (infoUe) {
+
+            $.ajax({
+                type: 'get',
+                /*data: ({iecId: iecId, nivel: nivel, sie: sie, gestion: gestion, grado: grado, paralelo: paralelo, turno: turno, ciclo: ciclo}),*/
+                /*url: Routing.generate('inscription_ue_all_sie_get_students'),*/
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_info_estudiante_get_students'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var seeStudents = function (infoUe) {
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('sie_juegos_inscripcion_lista_estudiantes'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        };
+
+        var doInscription = function () {
+            var elem = document.getElementById('formStudentInscription').elements;
+            var sw = true;
+            for (var i = 0; i < elem.length; i++) {
+                if (elem[i].type == 'checkbox')
+                    if ((elem[i].checked))
+                        sw = false;
+            }
+            if (sw) {
+                alert('Tiene que Seleccionar por lo menos una Inscripción...');
+                return flase;
+            }
+            var formIns = $('#formStudentInscription').serialize();
+            $.ajax({
+                type: 'post',
+                data: formIns,
+                url: Routing.generate('inscription_ue_all_sie_get_inscription'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+        var selectAllEle = function () {
+            $("#checkAll").on("change", function () {
+                $(this).closest("div").find("input:checkbox").prop("checked", $(this).prop("checked"));
+            });
+
+        };
+        var getTurnos = function (nivel, sie, gestion, nivelname, key) {
+            $.ajax({
+                type: 'post',
+                data: ({nivel: nivel, sie: sie, gestion: gestion, nivelname: nivelname}),
+                /*url: Routing.generate('inscription_ue_all_sie_get_turnos'),*/
+                url: "{{ path('herramienta_info_estudiante_get_turnos') }}",
+                beforeSend: function () {
+                    /* $("#idgrados").empty();
+                     $("#idparalelos").empty();
+                     $("#idstudents").empty();*/
+                    $("#idgrados_" + key).append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idgrados_" + key).empty();
+                    $("#idgrados_" + key).append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getParalelos = function (nivel, sie, gestion, turno, turnoname, nivelname, key) {
+
+            $.ajax({
+                type: 'post',
+                data: ({nivel: nivel, sie: sie, gestion: gestion, turno: turno, turnoname: turnoname, nivelname: nivelname}),
+                /*url: Routing.generate('inscription_ue_all_sie_get_paralelos'),*/
+                url: "{{ path('inscription_ue_all_sie_get_paralelos') }}",
+                beforeSend: function () {
+                    /* $("#idparalelos").empty();
+                     $("#idstudents").empty();*/
+                    $("#idparalelos_" + key).append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    /*$("#idstudents").empty();
+                     $("#idparalelos").empty();*/
+                    $("#idparalelos_" + key).append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getAreas = function (infoUe) {
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe}),
+                url: "{{ path('herramienta_infoEstudianteAreas_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+    </script>
+
+
+{%endblock%}

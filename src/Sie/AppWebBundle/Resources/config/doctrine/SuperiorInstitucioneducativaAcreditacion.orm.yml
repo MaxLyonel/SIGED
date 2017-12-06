@@ -1,0 +1,108 @@
+Sie\AppWebBundle\Entity\SuperiorInstitucioneducativaAcreditacion:
+    type: entity
+    table: superior_institucioneducativa_acreditacion
+    indexes:
+        IDX_A6C39B7821B796C6:
+            columns:
+                - acreditacion_especialidad_id
+        IDX_A6C39B78179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_A6C39B783AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_A6C39B787A322B24:
+            columns:
+                - institucioneducativa_sucursal_id
+        IDX_A6C39B78670FA542:
+            columns:
+                - superior_turno_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        pensumNumero:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: pensum_numero
+        fechaInicio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+        horasEspecialidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: horas_especialidad
+    manyToOne:
+        acreditacionEspecialidad:
+            targetEntity: SuperiorAcreditacionEspecialidad
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                acreditacion_especialidad_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaSucursal:
+            targetEntity: InstitucioneducativaSucursal
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_sucursal_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        superiorTurnoTipo:
+            targetEntity: SuperiorTurnoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_turno_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

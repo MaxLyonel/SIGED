@@ -1,0 +1,79 @@
+Sie\AppWebBundle\Entity\EstudianteAsignatura:
+    type: entity
+    table: estudiante_asignatura
+    indexes:
+        fk_estudianteasignatura3_inscrip2:
+            columns:
+                - estudiante_inscripcion_id
+        fk_estudianteasignatura3_inscrip:
+            columns:
+                - gestion_tipo_id
+                - estudiante_inscripcion_id
+        ix_estu_asignatura3:
+            columns:
+                - institucioneducativa_curso_oferta_id
+        IDX_7B364864B40F732B:
+            columns:
+                - estudianteasignatura_estado_id
+        IDX_7B364864179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        institucioneducativaTecnicaCursoOfertaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_tecnica_curso_oferta_id
+    manyToOne:
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteasignaturaEstado:
+            targetEntity: EstudianteasignaturaEstado
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudianteasignatura_estado_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaCursoOferta:
+            targetEntity: InstitucioneducativaCursoOferta
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_oferta_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

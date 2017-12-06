@@ -1,0 +1,323 @@
+{% extends '::layoutCertification.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .panel-amarillo{
+            background-color: #8CC152;
+            border: 1px solid #8ac04e;
+            color: white;
+        }
+        .panel-princ{
+            border: 1px solid #8CC152;
+            box-shadow: 1px  1px 6px rgba(0,0,0,.3);
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-exchange"></i> Resultado Declaración Jurada
+
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag.get('noticeddjj') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successddjj') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div class="panel panel-princ  rounded shadow">
+                <div class="panel-heading panel-amarillo">
+                    <div class="pull-left">
+                        <h3 class="panel-title">
+                            <i class="fa fa-search"></i>
+                            Buscar Estudiantes / Participantes
+
+                        </h3>
+                    </div>
+                    <div class="pull-right">
+                        <span class="divider"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="panel-body">
+                    {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                    <div class="row">
+                        <div class="col-lg-2 col-md-7 col-sm-9 col-xs-12">
+                            {{ form_widget(form.gestiones, { 'attr':{'class':'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="col-lg-2 col-md-7 col-sm-9 col-xs-12">
+                            {{ form_widget(form.sies) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="col-lg-4 col-md-7 col-sm-9 col-xs-12">
+                            {{ form_widget(form.especialidad,{ 'attr':{'class':'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="col-lg-4 col-md-7 col-sm-9 col-xs-12">
+                            {{ form_widget(form.nivel,{ 'attr':{'class':'form-control col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
+                            {{ form_widget(form.search,{ 'attr':{'class':'btn btn-success col-lg-12 col-md-12 col-sm-12 col-xs-12 glyphicon glyphicon-search ' } } ) }}
+                        </div>
+                    </div>
+                    {{form_end(form)}}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successdata') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4><i class="fa fa-home fa-fw"></i> Estudiante/Participante {{ gestionSelected }} de {{ unidadEducativa.institucioneducativa }} - {{ unidadEducativa.id }}  - {{ esp }}</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <!-- Button Dropdown -->
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+
+                            {#<div class='row'>
+                                <div class='col-md-4 col-md-offset-4'>
+                                    <a class="btn btn-block btn-success btn-pinterest" href="{{ path('tramite_download_ddjjgroup_web', {'sie':unidadEducativa.id,'gestion':gestionSelected, 'especialidad':esp_id, 'nivel':nivel} )}}">
+                                        <i class="fa fa-download"></i> Imprimir Formulario de  Declaración Jurada
+                                    </a>
+
+                                </div>
+                            </div>#}
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="no-more-tables">
+{#                                        {{dump(bachilleres)}}#}
+                                        <table id="myTable" class="table table-bordered table-hover cf dataTable">
+                                            <thead class="">
+                                                <tr class="">
+                                                    <th>No.</th>
+                                                    <th>Codigo Rude</th>
+                                                    <th>Paterno</th>
+                                                    <th>Materno</th>
+                                                    <th>Nombre</th>
+                                                    <th>Fecha Nacimiento</th>
+                                                    <th>Form</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for entity in bachilleres %}
+                                                    <tr>
+                                                        <td data-title="No."> {{ entity.item}} </td>
+                                                        <td data-title="Cod. Rude"> {{ entity.codigo_rude }} </td>
+                                                        <td data-title="Paterno"> {{ entity.paterno }} </td>
+                                                        <td data-title="Materno"> {{ entity.materno }} </td>
+                                                        <td data-title="Nombre" > {{ entity.nombre }} </td>
+                                                        <td data-title="F. Nac."> {{ entity.fecha_nacimiento|date('d-m-Y') }} </td>
+                                                        <td class="text-center">
+                                                            <a href="{{ path('tramite_download_ddjjone_web', {'rude': entity.codigo_rude, 'gestion':entity.gestiontipo, 'sie': entity.insteduid, 'esp': entity.especialidad_id, 'nivel': entity.grado_id} )}}">
+                                                                <img src="{{ asset('img/pdf.png') }}" data-1x="{{ asset('img/pdf.png') }}" data-2x="{{ asset('img/pdf.png') }}" height="40" width="40"   class="hisrc img-responsive" alt="Descargar"/>                                                        
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{ path('tramite_declaracion_jurada_index') }}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+        function buscarBoton(a) {
+            if (a != '') {
+                $('#form_search').removeAttr('disabled');
+            }
+        }
+        $(document).ready(function () {
+            $('#check_table').removeClass('sorting');
+            $('#check_table').removeAttr('aria-controls');
+            $('#check_table').removeAttr('role');
+            $('#check_table').removeAttr('aria-label');
+            $('#check_table').removeAttr('tabindex');
+        });
+        $('#check_table').click(function () {
+            $('#check_table').removeAttr('tabindex');
+            $('#check_table').removeAttr('aria-label');
+            $('#check_table').removeAttr('aria-sort');
+            $('#check_table').removeClass('sorting_asc');
+            $('#check_table').removeClass('sorting_desc');
+        });
+        {#        $('#myTable').addClass('noOrdenar');#}
+
+            function openHistoryInsc(idStudent, especialidad) {
+                $('#historyInscriptions').modal('show');
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ path('estudiante_historial_notas') }}',
+                    data: {'estudiante_id': idStudent, 'especialidad': especialidad},
+                    beforeSend: function () {
+                        $("#idHistory").empty();
+                        $("#idHistory").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+                        $("#idHistory").empty();
+                        $("#idHistory").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }
+            function listar_especialidad(sie_listar) {
+                var gestion_listar = document.getElementById('form_gestiones').value;
+                var error = 0;
+                if (gestion_listar == '' || gestion_listar == null) {
+                    alert('Debe seleccionar una Gestión')
+                    error = error + 1;
+                }
+                if (sie_listar == '' || sie_listar == null) {
+                    alert('Debe llenar el campo C.E.A.')
+                    error = error + 1;
+                }
+                if (error > 0) {
+                    return false;
+                } else {
+                    var peticion1;
+                    if (peticion1 && peticion1.readyState != 4) {
+                        peticion1.abort();
+                    }
+                    peticion1 = $.ajax({
+                        type: 'POST',
+                        url: '{{ path('sie_tramite_listar_especialidad')}}',
+                        data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar},
+                        beforeSend: function () {
+        {#                            $("#form_especialidad").attr('disabled', 'true');#}
+                            $('#form_especialidad').empty();
+                            $("#form_especialidad").append('<option value="">Cargando Datos..</option>');
+                        },
+                        success: function (data) {
+                            console.log(data.listaespecialidades.length);
+                            if (data.listaespecialidades.length == 0) {
+        {#                                $("#form_especialidad").attr('disabled', 'true');#}
+                                $('#form_especialidad').empty();
+                                $('#form_especialidad').append('<option value="">Datos no encontrados</option>');
+                            } else {
+                                $('#form_especialidad').empty();
+                                $("#form_especialidad").append('<option value=""></option>');
+                                for (var i in data.listaespecialidades) {
+                                    $("#form_especialidad").append('<option value="' + data.listaespecialidades[i].especialidad_id + '">' + data.listaespecialidades[i].ciclo + '</option>');
+                                }
+        {#$("#form_especialidad").removeAttr('disabled');#}
+                            }
+                        }
+                    });
+                }
+            }
+            function listarNivel(esp_listar) {
+                var peticion2;
+                var gestion_listar = document.getElementById('form_gestiones').value;
+                var sie_listar = document.getElementById('form_sies').value;
+                if (peticion2 && peticion2.readyState != 4) {
+                    peticion2.abort();
+                }
+                peticion2 = $.ajax({
+                    type: 'POST',
+                    url: '{{ path('sie_tramite_listar_nivel')}}',
+                    data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar, 'especialidad': esp_listar},
+                    beforeSend: function () {
+                        $('#form_nivel').attr('disabled', 'true');
+                        $('#form_nivel').empty();
+                        $("#form_nivel").append('<option value="">Cargando Datos..</option>');
+                    },
+                    success: function (data) {
+                        if (data.listanivel.length == 0) {
+                            $('#form_nivel').attr('disabled', 'true');
+                        } else {
+
+                            $('#form_nivel').empty();
+                            $("#form_nivel").append('<option value=""></option>');
+                            for (var i in data.listanivel) {
+                                $("#form_nivel").append('<option value="' + data.listanivel[i].grado_id + '">' + data.listanivel[i].grado + '</option>');
+                            }
+                            $('#form_nivel').removeAttr('disabled');
+                        }
+                    }
+                });
+            }
+            function limpiar_dato_sie() {
+                $('#form_sies').val('');
+            }
+    </script>
+{%endblock%}

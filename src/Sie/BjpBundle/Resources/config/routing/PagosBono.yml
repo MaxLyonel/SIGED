@@ -1,0 +1,180 @@
+PagosBono:
+    path:     /{op}
+    defaults: { _controller: SieBjpBundle:PagosBono:index, op:search }
+
+PagosBono_webForm:
+    path:     /webForm/
+    defaults: { _controller: SieBjpBundle:PagosBono:webForm }
+
+PagosBono_new:
+    path:     /new/
+    defaults: { _controller: "SieBjpBundle:PagosBono:new" }
+    methods:  POST
+
+PagosBono_create:
+    path:     /create/
+    defaults: { _controller: "SieBjpBundle:PagosBono:create" }
+    methods:  POST
+
+listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieBjpBundle:PagosBono:listargrados" }
+    options:
+         expose: true
+
+PagosBono_cargar_niveles:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}/{turno}/
+    defaults: { _controller: "SieBjpBundle:PagosBono:cargarNiveles"}
+    options:
+         expose: true
+
+PagosBono_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{nivel}/
+    defaults: { _controller: "SieBjpBundle:PagosBono:cargarGrados"}
+    options:
+         expose: true
+
+PagosBono_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{nivel}/{grado}/
+    defaults: { _controller: "SieBjpBundle:PagosBono:cargarParalelos"}
+    options:
+         expose: true
+
+PagosBono_listar_areas_curso:
+    path:     /lista_areas_curso_a/
+    defaults: { _controller: "SieBjpBundle:PagosBono:lista_areas_curso" }
+    options:
+         expose: true
+
+PagosBono_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    defaults: { _controller: "SieBjpBundle:PagosBono:lista_areas_nivel" }
+    options:
+         expose: true
+
+PagosBono_listar_areas_curso_adicionar_eliminar:
+    path:     /lista_areas_curso_adicionar_eliminar/
+    defaults: { _controller: "SieBjpBundle:PagosBono:lista_areas_curso_adicionar_eliminar" }
+    options:
+         expose: true
+
+PagosBono_asignar_maestro_area:
+    path:     /asignar_maestro_area/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieBjpBundle:PagosBono:asignar_maestro" }
+    options:
+         expose: true
+
+PagosBono_delete:
+    path:     /delete/{idCursoOferta}
+    defaults: { _controller: "SieBjpBundle:PagosBono:delete" }
+    options:
+         expose: true
+
+PagosBono_file:
+    path:     /sie/build/
+    defaults: { _controller: SieBjpBundle:PagosBono:build }
+    options:
+         expose: true
+
+PagosBono_maestros:
+    path:     /maestros_materia/
+    defaults: { _controller: "SieBjpBundle:PagosBono:maestros"}
+    options:
+         expose: true
+
+PagosBono_maestros_asignar_siged:
+    path:     /maestros_asignar_siged/
+    defaults: { _controller: "SieBjpBundle:PagosBono:maestrosAsignar"}
+    options:
+         expose: true
+
+
+PagosBono_buscar_infoUe:
+    path:     /buscar_infoUe/
+    defaults: { _controller: "SieBjpBundle:PagosBono:buscarInfoUe"}
+    options:
+         expose: true
+
+PagosBono_buscar_infoUecombo:
+    path:     /buscar_infoUecombo/
+    defaults: { _controller: "SieBjpBundle:PagosBono:buscarInfoUecombo"}
+    options:
+         expose: true
+
+PagosBono_mover_habilitados:
+    path:     /mover_habilitados/
+    defaults: { _controller: "SieBjpBundle:PagosBono:moverHabilitados"}
+    options:
+         expose: true
+
+PagosBono_mover_pagados:
+    path:     /mover_pagados/
+    defaults: { _controller: "SieBjpBundle:PagosBono:moverPagados"}
+    options:
+         expose: true
+
+PagosBono_mover_inhabilitados:
+    path:     /mover_inhabilitados/
+    defaults: { _controller: "SieBjpBundle:PagosBono:moverInhabilitados"}
+    options:
+         expose: true
+
+sie_bono_cambiar_estado:
+    path:     /cambiarestadounidad/{id}
+    defaults: { _controller: "SieBjpBundle:AbrirInstitucionesBono:cambiarestadounidad"}
+    options:
+         expose: true
+
+pg_nuevo_estudiante:
+    path:     /pg_nuevo_estudiante/
+    defaults: { _controller: "SieBjpBundle:PagosBono:nuevoEstudiante"}
+    options:
+         expose: true
+
+pg_buscar_nuevo_estudiante:
+    path:     /buscar_nuevo_estudiante/
+    defaults: { _controller: "SieBjpBundle:PagosBono:buscarNuevoEstudiante"}
+    options:
+         expose: true
+         
+pg_buscar_nuevo_estudiante_nuevocurso:
+    path:     /buscar_nuevo_estudiante_nuevo_curso/
+    defaults: { _controller: "SieBjpBundle:PagosBono:buscarNuevoEstudianteNuevoCurso"}
+    options:
+         expose: true         
+
+PagosBono_inscribir_bono_curso:
+    path:     /inscribir_bono_curso/{dataEnviar}/{idEstudiante}/{paralelo}
+    defaults: { _controller: "SieBjpBundle:PagosBono:inscribirBonoCurso"}
+    options:
+         expose: true
+         
+PagosBono_inscribir_bono_curso_nuevo_paralelo:
+    path:     /inscribir_bono_curso_nuev_parale/{dataEnviar}/{idEstudiante}/{nivel}/{grado}/{paralelo}
+    defaults: { _controller: "SieBjpBundle:PagosBono:inscribirBonoCursoNuevoParalelo"}
+    options:
+         expose: true         
+
+PagosBono_inscribir_bono_nuevo_curso:
+    path:     /inscribir_bono_curso/{paralelo}
+    defaults: { _controller: "SieBjpBundle:PagosBono:inscribirBonoNuevoCurso"}
+    options:
+         expose: true
+         
+PagosBono_inscribir_nuevo_paralelo:
+    path:     /inscribir_bono_paralelo/{nivel}/{grado}/{paralelo}
+    defaults: { _controller: "SieBjpBundle:PagosBono:inscribirBonoNuevoCursoNuevoParalelo"}
+    options:
+         expose: true         
+
+pg_estudiantes_eliminar:
+    path:     /eliminar_bono_curso/
+    defaults: { _controller: "SieBjpBundle:PagosBono:eliminarBonoNuevoCurso"}
+    options:
+         expose: true
+         
+pg_nuevo_curso:
+    path:     /nuevo_curso_bono/
+    defaults: { _controller: "SieBjpBundle:PagosBono:NuevoCursoBono"}
+    options:
+         expose: true         

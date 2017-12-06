@@ -1,0 +1,34 @@
+Sie\AppWebBundle\Entity\CicloTipo:
+    type: entity
+    table: ciclo_tipo
+    uniqueConstraints:
+        ciclo_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        ciclo:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        acreditacionId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: acreditacion_id
+        vigente:
+            type: boolean
+            nullable: false
+            comment: ''
+    lifecycleCallbacks: {  }

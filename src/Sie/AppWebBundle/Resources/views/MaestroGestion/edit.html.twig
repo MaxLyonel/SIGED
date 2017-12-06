@@ -1,0 +1,341 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+    <style>
+        .loading{
+            background-image: url("{{asset('img/loading.gif')}}}");
+        }
+    </style>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Información {{ app.session.get('tituloTipo') }}
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('maestrogestion',{'op':'search'})}}"> Buscar</a></li>
+                    <li><i class="fa fa-users"></i>  <a href="{{path('maestrogestion',{'op':'result'})}}">{{ app.session.get('tituloTipo') }}</a></li>
+                    <li>Editar</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Datos {{ app.session.get('tituloTipo') }}</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'onsubmit': 'return validaIdioma()'} } )}}
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.carnetIdentidad)}}
+                                        {{form_widget(form.carnetIdentidad) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.complemento)}}
+                                        <div class="input-group">
+                                            <div class="input-group-addon">-</div>
+                                            {{form_widget(form.complemento,{'attr':{'data-toggle':'tooltip','data-placement':'bottom','data-original-title':'El complemento del CI no es el lugar de expedicion, no coloque abreviaciones de departamentos'} }) }}
+                                        </div>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.paterno)}}
+                                        {{form_widget(form.paterno) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.materno)}}
+                                        {{form_widget(form.materno) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.nombre)}}
+                                        {{form_widget(form.nombre) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.genero)}}
+                                        {{form_widget(form.genero) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.fechaNacimiento)}}
+                                        <div>
+                                        {{form_widget(form.fechaNacimiento) }}
+                                        </div>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.direccion)}}
+                                        {{form_widget(form.direccion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.celular)}}
+                                        {{form_widget(form.celular) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.correo)}}
+                                        {{form_widget(form.correo) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.rda)}} 
+                                        {{form_widget(form.rda,{'attr':{'data-toggle':'tooltip','data-placement':'bottom','data-original-title':'En caso de no contar con RDA colocar 0'} }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.item)}}
+                                        {{form_widget(form.item) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.normalista)}}
+                                        {{form_widget(form.normalista) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.funcion)}}
+                                        {{form_widget(form.funcion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.financiamiento)}}
+                                        {{form_widget(form.financiamiento) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.formacion)}}
+                                        {{form_widget(form.formacion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.formacionDescripcion)}}
+                                        {{form_widget(form.formacionDescripcion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <fieldset>
+                                            <legend>Idioma(s) que conoce el {{ app.session.get('tituloTipo') }} <img src="{{asset('img/loading.gif')}}" id="loading">  <small class="text-danger">Debe registrar al menos un idioma</small></legend>
+                                            <div id="no-more-tables">
+                                                <table class="table table-bordered cf">
+                                                    <thead class="cf">
+                                                        <tr>
+                                                            <th class="col-lg-4">Idioma</th>
+                                                            <th class="col-lg-2">Lee</th>
+                                                            <th class="col-lg-2">Habla</th>
+                                                            <th class="col-lg-2">Escribe</th>
+                                                            <th class="col-lg-2">Eliminar</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="idiomas">
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <a onclick="agregarHijo()" class="btn-link"><i class="fa fa-plus-square"></i> Agregar Idioma</a>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    {% if app.session.get('sysname') == 'PERMANENTE' %}
+                                        {% set display = 'none' %}
+                                    {% else %}
+                                        {% set display = 'block' %}
+                                    {% endif %}
+                                    <div class="form-group col-lg-6 col-md-12" style=" display: {{display}}">
+                                        {{ form_label(form.idiomaOriginario)}} 
+                                        {{form_widget(form.idiomaOriginario) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.leeEscribeBraile)}}
+                                        {{form_widget(form.leeEscribeBraile) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-lg-12 text-center">
+                                        {{ form_widget(form.guardar,{'attr':{'data-toggle':'tooltip','data-placement':'top','data-original-title':'Antes de guardar asegúrese que tiene registrado al menos un Idioma que conoce la/el Maestra(o)'} }) }}
+                                        <a href="{{path('maestrogestion',{'op':'result'})}}" class="btn btn-default">Cancelar</a>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var cantidad = 0;
+        var cont = 0;
+        
+        $(function () {
+            var idMaestro = document.getElementById('form_idMaestroInscripcion').value;
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('listaridiomasleehablaescribe_edit', {'idMaestroInscripcion': idMaestro}),
+                beforeSend: function () {
+                    $("#idiomas").empty();
+                    $("#loading").css('display','inline-block');
+                },
+                success: function (data) {
+                    $.each(data.idiomasMaestro, function (i, valores) {
+                        cantidad++;
+                        cont++;
+                        var idioma = 'idioma' + cantidad;
+                        var lee = 'lee' + cantidad;
+                        var habla = 'habla' + cantidad;
+                        var escribe = 'escribe' + cantidad;
+
+                        $('#idiomas').append("\
+                        <tr id='" + cantidad + "' class='info'>\n\
+                            <td data-title='Idioma' class='form-group'><select name='" + idioma + "' id='" + idioma + "' class='form-control' required></select></td>\n\
+                            <td data-title='Lee' class='form-group'><select name='" + lee + "' id='" + lee + "' class='form-control' required></select></td>\n\
+                            <td data-title='Habla' class='form-group'><select name='" + habla + "' id='" + habla + "' class='form-control' required></select></td>\n\
+                            <td data-title='Escribe' class='form-group'><select name='" + escribe + "' id='" + escribe + "' class='form-control' required></select></td>\n\
+                            <td><button type='button' onclick='eliminaridioma(" + cantidad + " )' class='btn-link'><i class='fa fa-trash-o text-danger'> Eliminar</button></td>\n\
+                        </tr>");
+                        //select idioma
+                        $("#" + idioma).empty();
+                        $("#" + idioma).append('<option value="">Seleccionar...</option>');
+                        $.each(data.idiomas, function (i, value) {
+                            if(i==valores.idioma){sel = 'selected';}else{sel = '';}
+                            $("#" + idioma).append('<option value="' + i + '"'+ sel +'>' + value + '</option>');
+                        });
+                        // select lee
+                        $("#" + lee).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            if(i==valores.lee){sel = 'selected';}else{sel = '';}
+                            $("#" + lee).append('<option value="' + i + '"'+ sel +'>' + value + '</option>');
+                        });
+                        // select habla
+                        $("#" + habla).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            if(i==valores.habla){sel = 'selected';}else{sel = '';}
+                            $("#" + habla).append('<option value="' + i + '"'+ sel +'>' + value + '</option>');
+                        });
+                        // select escribe
+                        $("#" + escribe).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            if(i==valores.escribe){sel = 'selected';}else{sel = '';}
+                            $("#" + escribe).append('<option value="' + i + '"'+ sel +'>' + value + '</option>');
+                        });
+                    });
+                    $("#loading").css('display','none');
+                }
+            });
+        })
+
+        function validaIdioma(){
+            if(cont == 0){
+                alert('Debe registrar al menos un idioma');
+                return false;
+            }
+            return true;
+        }
+        
+        function agregarHijo()
+        {
+            cont++;
+            if (cont < 5) {
+                cantidad++;
+                var idioma = 'idioma' + cantidad;
+                var lee = 'lee' + cantidad;
+                var habla = 'habla' + cantidad;
+                var escribe = 'escribe' + cantidad;
+                $('#idiomas').append("<tr id='" + cantidad + "' class='info'>\n\
+                                        <td data-title='Idioma' class='form-group'><select name='" + idioma + "' id='" + idioma + "' class='form-control' required></select></td>\n\
+                                        <td data-title='Lee' class='form-group'><select name='" + lee + "' id='" + lee + "' class='form-control' required></select></td>\n\
+                                        <td data-title='Habla' class='form-group'><select name='" + habla + "' id='" + habla + "' class='form-control' required></select></td>\n\
+                                        <td data-title='Escribe' class='form-group'><select name='" + escribe + "' id='" + escribe + "' class='form-control' required></select></td>\n\
+                                        <td><button type='button' onclick='eliminaridioma(" + cantidad + " )' class='btn-link'><i class='fa fa-trash-o text-danger'> Eliminar</button></td>\n\
+                                    </tr>");
+
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('listaridiomasleehablaescribe'),
+                    beforeSend: function () {
+                        $("#" + idioma).empty();
+                    },
+                    success: function (data) {
+                        $("#" + idioma).empty();
+                        $("#" + idioma).append('<option value="">Seleccionar...</option>');
+                        $.each(data.idiomas, function (i, value) {
+                            $("#" + idioma).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select lee
+                        $("#" + lee).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + lee).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select habla
+                        $("#" + habla).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + habla).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select escribe
+                        $("#" + escribe).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + escribe).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                });
+            } else {
+                cont--;
+            }
+        }
+
+        function eliminaridioma(i) {
+            cont--;
+            $("#" + i).remove();
+        }
+    </script>
+{% endblock %}

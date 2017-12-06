@@ -1,0 +1,66 @@
+
+{% if exist == true %}
+    <div id="datatable-dom_wrapper" class="dataTables_wrapper form-inline">
+
+        <table id="datatable-dom" class="table table-striped table-lilac dataTable" role="grid" aria-describedby="datatable-dom_info">
+            <thead>
+                <tr role="row">
+                    <th data-hide="krlos" class="text-center " colspan="2" class="sorting_disabled" rowspan="1" colspan="1" aria-label="Title">{{nivelname}}</br>{{turnoname}}</th>
+                </tr>
+                <tr role="row">
+                    <th data-hide="krlos" class="text-center " colspan="2" class="sorting_disabled" rowspan="1" colspan="1" aria-label="Description">Cursos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in objparalelos%}
+                    <tr role="row" class="odd">
+
+                        <td class="text-center sorting_1" style="width: 1%">
+                            <span class="responsiveExpander"></span>
+                            {{data.grado}} - {{data.paralelo}}
+                        </td>
+
+                        <td  align="center">
+                            <!--button class="btn btn-sm btn-success btn-xs btn-push" onclick="getStudents('{{data.iecId}}', '{{data.gradoTipo}}', '{{sie}}', '{{gestion}}', '{{data.paraleloTipo}}', '{{nivel}}', '{{turno}}', '{{data.cicloTipo}}', '{{data.grado}}', '{{data.paralelo}}');" ><span class="fa fa-pencil"></span>Incripción</button>
+                            <br />
+                            <button  class="btn btn-sm btn-primary btn-xs btn-push" onclick="seeStudents('{{data.iecId}}', '{{data.gradoTipo}}', '{{sie}}', '{{gestion}}', '{{data.paraleloTipo}}', '{{nivel}}', '{{turno}}', '{{data.cicloTipo}}', '{{data.grado}}', '{{data.paralelo}}');" ><span class="fa fa-eye"></span> Inscritos</button-->
+
+                            <button type="button" class="btn btn-link"  onclick="getStudents('{{data.iecId}}', '{{data.gradoTipo}}', '{{sie}}', '{{gestion}}', '{{data.paraleloTipo}}', '{{nivel}}', '{{turno}}', '{{data.cicloTipo}}', '{{data.grado}}', '{{data.paralelo}}');" ><i class="fa fa-pencil"></i> Inscripción</button>
+                            <br />
+                            <button type="button" class="btn btn-link"  onclick="seeStudents('{{data.iecId}}', '{{data.gradoTipo}}', '{{sie}}', '{{gestion}}', '{{data.paraleloTipo}}', '{{nivel}}', '{{turno}}', '{{data.cicloTipo}}', '{{data.grado}}', '{{data.paralelo}}');"><i class="fa fa-eye"></i> Inscritos </button>
+                        </td>
+
+
+                    </tr>
+
+                {%endfor%}
+
+            </tbody>
+
+        </table>
+    </div>
+
+
+    <!-- /.row -->
+{%else%}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{%endif%}
+
+
+
+<script>
+
+
+</script>
+

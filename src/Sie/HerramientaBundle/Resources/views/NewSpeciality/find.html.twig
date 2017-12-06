@@ -1,0 +1,45 @@
+
+
+<div class="row">
+    <div class="col-md-12">
+        {% for flashMessage in app.session.flashbag.get('noticeSpeciality') %}
+            <div class="alert alert-{{app.session.get('typemessage')}} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+
+<div class="table-responsive mb-20">
+  <p align='right'>
+
+     <button class="btn btn-bitbucket btn-xs" data-toggle="modal" data-target=".bs-example-modal-lg" onclick="newSpeciality('{{dataForm}}')">Nueva Especialidad</button>
+  </p>
+  <table class="table">
+      <thead>
+      <tr>
+          <th class="text-center" style="width: 45px">#</th>
+          <th>SIE</th>
+          <th>ESPECIALIDAD</th>
+          <th></th>
+          <th></th>
+      </tr>
+      </thead>
+      <tbody>
+        {% for speciality in specialities %}
+          <tr class="info">
+              <td class="text-center">{{loop.index}}</td>
+              <td>{{speciality.sie}}</td>
+              <td>{{speciality.especialidad}}</td>
+              <td><a href='#'>Editar  </a></td>
+              <td>
+                <button type='button' class="btn btn-link" onclick="removeSpeciality2('{{speciality.specialidadId}}','{{dataForm}}')">Eliminar</button>
+              </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+</div>

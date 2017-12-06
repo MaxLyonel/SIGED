@@ -1,0 +1,84 @@
+institucioncursocorto:
+    path:     /{op}
+    defaults: { _controller: SiePermanenteBundle:InstitucionCursoCorto:index, op:1 }
+
+institucioncursocorto_new:
+    path:     /new/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:new" }
+
+institucioncursocorto_create:
+    path:     /create/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:create" }
+    methods:  POST
+
+institucioncursocorto_edit:
+    path:     /edit/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:edit" }
+    methods:  [POST, PUT]
+
+institucioncursocorto_update:
+    path:     /update/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:update" }
+    methods:  [POST, PUT]
+
+institucioncursocorto_delete:
+    path:     /delete/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:delete" }
+    methods:  [POST, DELETE]
+
+institucioncursocorto_close:
+    path:     /close/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:close" }
+    methods:  [POST, DELETE]
+
+institucioncursocorto_participante_index:
+    path:     /participante/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:participante_index" }
+    methods:  POST
+
+institucioncursocorto_participante_session:
+    path:     /participantes/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:participante_session" }
+
+institucioncursocorto_participante_new:
+    path:     /participante/new/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:participante_new" }
+    methods:  POST
+
+institucioncursocorto_participante_create:
+    path:     /participante/create/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:participante_create" }
+    methods:  POST
+
+institucioncursocorto_participante_edit:
+    path:     /participante/edit/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:participante_edit" }
+    methods:  POST
+
+institucioncursocorto_participante_update:
+    path:     /participante/update/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:participante_update" }
+    methods:  POST
+
+institucioncursocorto_participante_delete:
+    path:     /participante/delete/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:participante_delete" }
+    methods:  POST
+
+institucioncursocorto_facilitadores:
+    path:     /facilitadores/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:facilitadores" }
+    options:
+         expose: true
+
+institucioncursocorto_facilitadores_edit:
+    path:     /facilitadores/edit/{idCursoCorto}
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:facilitadores_edit" }
+    options:
+         expose: true
+
+download_certificado:
+    path:     /certificado/{centro}/{estudiante}/{curso}/{duracion}
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoCorto:downloadCertificado" }
+    options:
+         expose: true 

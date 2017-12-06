@@ -1,0 +1,23 @@
+lugar_tipo_provincias_2012:
+     path:    /provincias2012
+     defaults: { _controller: SieAppWebBundle:LugarTipo:provincias2012 }
+     options:
+         expose: true         
+
+lugar_tipo_municipios_2012:
+     path:    /municipios2012
+     defaults: { _controller: SieAppWebBundle:LugarTipo:municipios2012 }
+     options:
+         expose: true    
+
+lugar_tipo_comunidades_2012:
+     path:    /comunidades2012
+     defaults: { _controller: SieAppWebBundle:LugarTipo:comunidades2012 }
+     options:
+         expose: true    
+
+lugar_tipo_localidades_2012:
+     path:    /localidades2012
+     defaults: { _controller: SieAppWebBundle:LugarTipo:localidades2012 }
+     options:
+         expose: true    

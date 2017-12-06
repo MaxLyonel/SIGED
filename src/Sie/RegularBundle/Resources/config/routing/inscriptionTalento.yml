@@ -1,0 +1,33 @@
+inscription_talento_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InscriptionTalento:index }
+
+inscription_talento_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InscriptionTalento:result }
+
+inscription_talento_findIE:
+     path:    /findIE/{id}/{nivel}/{grado}
+     defaults: { _controller: SieRegularBundle:InscriptionTalento:findIE }
+     options:
+         expose: true
+
+inscription_talento_saveMateriasNotas:
+    path: /saveMateriasNotas
+    defaults: { _controller: SieRegularBundle:InscriptionTalento:saveMateriasNotas }
+
+inscription_talento_regNotas:
+    path:    /regNotas
+    defaults: { _controller: SieRegularBundle:InscriptionTalento:regNotas }
+    options:
+        expose: true
+
+inscription_talento_saveData:
+    path: /saveData
+    defaults: { _controller: SieRegularBundle:InscriptionTalento:saveData }
+
+inscription_talento_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieRegularBundle:InscriptionTalento:findturno }
+    options:
+        expose: true

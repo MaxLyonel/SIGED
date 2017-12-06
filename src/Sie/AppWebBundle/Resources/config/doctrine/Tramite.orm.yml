@@ -1,0 +1,120 @@
+Sie\AppWebBundle\Entity\Tramite:
+    type: entity
+    table: tramite
+    indexes:
+        IDX_9F322F25507C3B49:
+            columns:
+                - apoderado_inscripcion_id
+        IDX_9F322F25A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_9F322F25FE1D168D:
+            columns:
+                - flujo_tipo_id
+        IDX_9F322F25A4B6FF2:
+            columns:
+                - maestro_inscripcion_id
+        IDX_9F322F25D4ED56B:
+            columns:
+                - tramite_tipo
+        IDX_9F322F253AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: tramite_id_seq
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        tramite:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        fechaTramite:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_tramite
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+        gestionId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_id
+    manyToOne:
+        apoderadoInscripcion:
+            targetEntity: ApoderadoInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                apoderado_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        flujoTipo:
+            targetEntity: FlujoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                flujo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        maestroInscripcion:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestro_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tramiteTipo:
+            targetEntity: TramiteTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tramite_tipo:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

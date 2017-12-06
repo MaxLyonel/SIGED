@@ -1,0 +1,96 @@
+
+{% if exist == true %}
+    <small>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                  <div class="alert alert-warning alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                  <div class="alert alert-success alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+              {% for flashMessage in app.session.flashbag.get('removeNoAcredit') %}
+                  <div class="alert alert-success alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded swadow panel-teal">
+                <div class="panel-heading">
+                    <h4>Estudiantes </h4>
+                </div>
+                <div id="no-more-tables">
+                    <div class="row">
+
+                    </div>
+
+                    <table class="table table-bordered table-hover cf">
+                        <tr>
+
+
+                        <td align="center" class="warning" colspan="4">Estudiantes Inscritos</br>
+
+                        </td>
+                        <td class="warning">Opciones</td>
+                        <!--td>
+                            <input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"   >
+                        </td-->
+                        </tr>
+                        {#init the array info student #}
+                        {% set objInfoStudent = [] %}
+                        {% for data in objStudents%}
+                            {# set the array student info and convert on json string #}
+                            {% set objInfoStudent = objInfoStudent|merge(data) %}
+                            {% set jsnInfoStudent = objInfoStudent|json_encode() %}
+                            <tr >
+                                <td>{{loop.index}}</td>
+                                <td  align="">{{data.codigoRude}} </td>
+                                <td  align="">{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
+                                <td  align="">{{data.fechaNacimiento |date('d-m-Y')}}</td>
+                                <td>
+                                  <a href='#' onclick="removeInscriptionNoAcredit('{{idCurso}}','{{dataInfo}}','{{data.id}}')"><i class="fa fa-times-circle"></i> Eliminar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    </table>
+
+                </div>
+                <!-- /.portlet -->
+                </div>
+            </div>
+        </div>
+    </small>
+    <!-- /.row -->
+{% else %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endif %}

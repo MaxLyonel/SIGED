@@ -1,0 +1,158 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Información General <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">
+                    Información Unidad Educativa
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+
+
+    <div class="body-content animated fadeIn">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="panel panel-tab panel-tab-double rounded shadow">
+                                <!-- Start tabs heading -->
+                                <div class="panel-heading no-padding">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active">
+                                            <a href="#tab2-1" data-toggle="tab" aria-expanded="true">
+                                                <i class="fa fa-home"></i>
+                                                <div>
+                                                    <span class="text-strong">SIE</span>
+                                                    <span>{{sie}}</span>
+                                                </div>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div><!-- /.panel-heading -->
+                                <!--/ End tabs heading -->
+
+                                <!-- Start tabs content -->
+                                <div class="panel-body">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade active in" id="tab2-1">
+                                            <p>
+                                              <div class="row">
+                                                  <div class="col-md-4"></div>
+                                                  <div class="col-md-4">
+                                                  {% if objValidateUePlena or app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') %}
+                                                    {{form(form)}}
+                                                  {% endif %}
+                                                  </div>
+                                                  <div class="col-md-4"></div>
+                                              </div>
+
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div><!-- /.panel-body -->
+                                <!--/ End tabs content -->
+                            </div>
+
+        </div>
+
+      </div>
+      <div class="row">
+
+        <div class="col-lg-12 col-md-9 col-sm-8">
+          <!-- Lista de tramites aprobados por la DDE -->
+          {% if entities %}
+            <div class="panel">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title">Solicitudes aprobadas</h3>
+                                        </div>
+                                        <a href="{{path('sie_herramienta_tramite_index')}}" class="btn btn-facebook btn-md pull-right"><i class="fa fa-fw fa-plus-circle"></i>Nuevo</a>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body no-padding">
+                                        <div class="table-responsive" style="margin-top: -1px;">
+                                          <table class="table table-primary">
+                                              <thead>
+                                              <tr>
+                                                  <th >#</th>
+                                                  <th ></th>
+                                                  <th>Tramite</th>
+                                                  <th>Código SIE</th>
+                                                  <th>Unidad Educativa</th>
+                                                  <th>Descripción</th>
+                                                  <th>Fecha Envio</th>
+                                                  <th>Observación</th>
+                                                  <th>Estado Tramite</th>
+                                                  <th>Acciones</th>
+                                              </tr>
+                                              </thead>
+                                              <tbody>
+
+                                              {% for entity in entities %}
+                                              <tr class="info">
+                                                <td class="text-center">{{ loop.index }}</td>
+                                                  <td class="text-center border-right"><strong></strong></td>
+                                                  <td>{{ entity.tramite.id }}</td>
+                                                  <td>{{ entity.tramite.institucioneducativa.id }}</td>
+                                                  <td>{{ entity.tramite.institucioneducativa }}</td>
+                                                  <td>{{ entity.tramite.tramiteTipo.tramiteTipo }} - {{ entity.tramite.gestionId }}</td>
+                                                  <td>{{ entity.fechaEnvio|date('d-m-Y') }}</td>
+                                                  <td>{{ entity.obs }}</td>
+                                                  <td class="text-center">
+                                                      {{ entity.flujoProceso.proceso.procesoTipo }}
+                                                  </td>
+                                                  <td class="text-center">
+
+                                                      <form action="{{path('herramienta_findsie_openbygestion_tramite')}}" method="post" style="display: inline-block">
+                                                          <input type="hidden" id="form_tramiteId" name="form[tramiteId]" value="{{entity.tramite.id}}">
+                                                          <input type="hidden" id="form_tipo" name="form[tipo]" value="{{ entity.tramite.tramiteTipo.id }}">
+                                                          <input type="hidden" id="form_idInstitucion" name="form[idInstitucion]" value="{{entity.tramite.institucioneducativa.id}}">
+                                                          <input type="hidden" id="form_gestion" name="form[gestion]" value="{{entity.tramite.gestionId}}">
+                                                          <button type="submit" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Regularizar Gestión {{entity.tramite.gestionId}}"><i class="fa fa-pencil"></i></button>
+                                                      </form>
+
+                                                  </td>
+                                              </tr>
+                                              {% endfor %}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                    </div><!-- /.panel-body -->
+                                </div><!-- /.panel -->
+                                <!--/ End team table -->
+                    {% else %}
+                      <div class="callout callout-info">
+                        <p><strong>¡Información!</strong> No tiene solicitudes aprobadas por la DDE.</p>
+                        <p>Ir a <a href="{{path('sie_herramienta_tramite_index')}}"><strong>Seguimiento de solicitudes</strong></a></p>
+                      </div>
+                      {% endif %}
+                    <!--end lista tramites aprobados por la DDE -->
+                  </div>
+              </div>
+            </div>
+
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    </script>
+{%endblock%}

@@ -1,0 +1,160 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption %}
+
+	<div class="block-header">
+        <h2>DATOS DE INSTITUTO TÉCNICO/TECNOLÓGICO</h2>
+    </div>
+
+	<ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('rie_list')}}">Inicio</a></li>
+        <li class="active">Ver Instituto Técnico/Tecnológico</li>
+    </ol>
+
+    {% for flashMessage in app.session.flashbag.get('msgSearch') %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>¡Error!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert bg-green text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+	<div class="row clearfix">
+		<!-- Basic Examples -->
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="card">
+				<div class="header bg-blue-grey"> 
+					<h2><span class="pull-left">{{entity.id}} - {{entity.institucioneducativa}}</span></h2>
+				</div>
+				<div class="body">
+					<ul class="list-group">
+						<li class="list-group-item">Con R. M. : &nbsp;&nbsp; <b>{{entity.nroResolucion}}</b> &nbsp;&nbsp; DEL &nbsp;&nbsp; <b>{{entity.fechaResolucion|date('d/m/Y')}}</b></li>
+						<li class="list-group-item">Departamento/Provincia/Municipio : &nbsp;&nbsp;
+																		<b>
+																		{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar}} /
+																		{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugar}} /
+																		{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugar}}
+																		</b>
+						</li>
+						<li class="list-group-item">Caracter Jurídico : &nbsp;&nbsp; <b>{{entity.dependenciaTipo.dependencia}}</b></li>
+					</ul>
+				</div>				
+			</div>
+		</div>		
+	</div>
+
+	<div class="row clearfix">
+		<!-- Basic Examples -->
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="card">
+				<div class="header bg-blue-grey">
+					<h2><span class="pull-left">Datos Históricos (opcional)</span></h2>
+				</div>
+				<div class="body">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
+							<div class="js-modal-buttons"> 
+								<button type="button" data-nombre="ABC" data-idresol="XYZ"  data-color="teal1" class="btn btn-md bg-orange waves-effect"><i class="material-icons">add_box</i>Nuevo</button>
+							</div>	
+                        </div>
+                    </div>  
+					{% for historico in historicos %}
+					<ul>
+						<li class="list-group-item">
+							<a href="{{path('rie_elimina_historico', {'idHistorico': historico.id})}}" id="eliminar" class="btn btn-default waves-effect"><i class="material-icons">delete</i></a>
+
+							R. M.  <b>{{historico.nroResolucion}}</b> &nbsp;&nbsp;  DE &nbsp;&nbsp;  <b>{{historico.fechaResolucion|date('d/m/Y')}}</b>
+							&nbsp;&nbsp; DESCRIPCIÓN : {{historico.descripcion}}
+						</li>
+					</ul>
+					{% endfor %}					
+				</div>				
+			</div>
+		</div>		
+	</div>	
+
+    <!-- modal confirm -->
+    <form action="{{path('rie_create_historico')}}" method="post" style="display:inline-block" id="target">    
+    <div class="modal fade" id="mdModalRie" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="defaultModalLabel">Registro de Datos Histórico</h4>
+                </div>
+                <div class="modal-body" id="modal-body">
+					<label class="form-label">{{form_label(form.nroResolucion)}}</label>
+					<div class="form-group">
+						<div class="form-line">
+							{{form_widget(form.nroResolucion) }}
+						</div>
+					</div>                     
+
+					<label class="form-label">{{form_label(form.fechaResolucion)}}</label>
+					<div class="form-group">
+						<div class="form-line">
+							{{form_widget(form.fechaResolucion) }}
+						</div>
+					</div>                     
+					
+					<label class="form-label">{{form_label(form.descripcion)}}</label>
+					<div class="form-group">
+						<div class="form-line">
+							{{form_widget(form.descripcion) }}
+						</div>
+					</div>  					
+
+					<label class="form-label">{{form_label(form.datoAdicional)}}</label>
+					<div class="form-group">
+						<div class="form-line">
+							{{form_widget(form.datoAdicional) }}
+						</div>
+					</div>  					
+					
+                </div>
+                <div class="modal-footer">
+					{{form_widget(form.idRie) }}
+					{{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}                 
+                    <button type="button" class="btn btn-secondary btn-lg m-l-15 waves-effect" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+	
+
+
+    $(function () {
+    $('.js-modal-buttons .btn').on('click', function () {
+        var color = $(this).data('color');
+        var nombre = $(this).data('nombre');
+        var idresol = $(this).data('idresol');
+        $('#resolucion').val(idresol);
+        $('#mdModalRie .modal-content').removeAttr('class').addClass('modal-content modal-col-'+color);
+        $('#mdModalRie').modal('show');
+        });
+    });
+
+
+
+
+    </script>
+{% endblock %}

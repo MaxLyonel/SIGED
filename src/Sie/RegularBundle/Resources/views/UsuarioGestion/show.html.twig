@@ -1,0 +1,88 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block body -%}
+    <h1>EstudianteInscripcion</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Nummatricula</th>
+                <td>{{ entity.numMatricula }}</td>
+            </tr>
+            <tr>
+                <th>Codueprocedenciaid</th>
+                <td>{{ entity.codUeProcedenciaId }}</td>
+            </tr>
+            <tr>
+                <th>Observacionid</th>
+                <td>{{ entity.observacionId }}</td>
+            </tr>
+            <tr>
+                <th>Observacion</th>
+                <td>{{ entity.observacion }}</td>
+            </tr>
+            <tr>
+                <th>Fechainscripcion</th>
+                <td>{{ entity.fechaInscripcion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Apreciacionfinal</th>
+                <td>{{ entity.apreciacionFinal }}</td>
+            </tr>
+            <tr>
+                <th>Operativoid</th>
+                <td>{{ entity.operativoId }}</td>
+            </tr>
+            <tr>
+                <th>Modalidadtipoid</th>
+                <td>{{ entity.modalidadTipoId }}</td>
+            </tr>
+            <tr>
+                <th>Acreditacionniveltipoid</th>
+                <td>{{ entity.acreditacionnivelTipoId }}</td>
+            </tr>
+            <tr>
+                <th>Permanenteprogramatipoid</th>
+                <td>{{ entity.permanenteprogramaTipoId }}</td>
+            </tr>
+            <tr>
+                <th>Lugarcurso</th>
+                <td>{{ entity.lugarcurso }}</td>
+            </tr>
+            <tr>
+                <th>Organizacion</th>
+                <td>{{ entity.organizacion }}</td>
+            </tr>
+            <tr>
+                <th>Facilitadorcurso</th>
+                <td>{{ entity.facilitadorcurso }}</td>
+            </tr>
+            <tr>
+                <th>Fechainiciocurso</th>
+                <td>{{ entity.fechainiciocurso|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Fechafincurso</th>
+                <td>{{ entity.fechafincurso|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('estudianteinscripcion') }}">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('estudianteinscripcion_edit', { 'id': entity.id }) }}">
+                Edit
+            </a>
+        </li>
+        <li>{{ form(delete_form) }}</li>
+    </ul>
+{% endblock %}

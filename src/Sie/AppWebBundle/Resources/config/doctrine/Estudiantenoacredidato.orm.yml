@@ -1,0 +1,108 @@
+Sie\AppWebBundle\Entity\Estudiantenoacredidato:
+    type: entity
+    table: estudiantenoacredidato
+    repositoryClass: Sie\AppWebBundle\Entity\EstudiantenoacredidatoRepository
+    indexes:
+        IDX_11B5E899F805A743:
+            columns:
+                - institucioneducativanoacreditada_id
+    uniqueConstraints:
+        estudiantenoacreditado_ci_key:
+            columns:
+                - carnet_identidad
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        carnetIdentidad:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: carnet_identidad
+        paterno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        generoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: genero_tipo_id
+        fechaNacimiento:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_nacimiento
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        correo:
+            type: string
+            nullable: true
+            length: 40
+            fixed: false
+            comment: ''
+        gestion:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        nivelId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nivel_id
+        gradoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: grado_id
+        paralelo:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        turnoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: turno_id
+    manyToOne:
+        institucioneducativanoacreditada:
+            targetEntity: Institucioneducativanoacreditado
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativanoacreditada_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

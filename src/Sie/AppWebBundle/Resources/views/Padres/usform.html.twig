@@ -1,0 +1,67 @@
+{% extends 'SieAppWebBundle:Default:index.html.twig' %}
+
+{% block siecontent %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="page-header">
+                <h3 class="heading pull-left"><i class="fa fa-desktop animated flip"></i> Gestión de Usuarios Apoderado <span class="sub-heading">{{app.session.get('fullname')}}</span></h3>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Datos de usuario</div>
+                    <div class="panel-body">
+                
+                        <form class="form-horizontal" method="POST" action="{{ path('usuario_padre_add') }}">
+
+                            <input type="hidden" name="idapoderado" value="{{datosApoderado.id}}">
+
+                            <div class="form-group">
+                              <label for="input1" class="col-sm-2 control-label">USUARIO</label>
+                              <div class="col-sm-9">
+                                <input type="text" name="usuario" class="form-control" id="input1" placeholder="" required="required" autocomplete="off"/>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="pass1" class="col-sm-2 control-label">PASSWORD</label>
+                              <div class="col-sm-9">
+                                <input type="password" name="password" class="form-control" id="pass1" placeholder="" onkeyUp="validarPassword()" required/>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label for="pass2" class="col-sm-2 control-label">CONFIRMAR PASSWORD</label>
+                              <div class="col-sm-9">
+                                <input type="password" name="password2" class="form-control" id="pass2" placeholder="" onkeyUp="validarPassword()" required/>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <input type="text" id="textmensaje" readonly style="border:none"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                  <button type="submit" class="btn btn-primary">Registrar</button>
+                                  <a href="{{path('apoderado_show',{'idApoderado':datosApoderado.id})}}" class="btn btn-default">Cancelar</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                    </div>
+                      {% for flashMessage in app.session.flashbag.get('mensaje2') %}
+                    <span class="alert-success">
+                        {{ flashMessage }}
+                        <hr />
+                    </span>
+                    {% endfor %} 
+        </div>      
+    </div>
+                
+{% endblock %}
+{% block javascripts %}
+    {{ parent()}}
+    <script src="{{asset("js/funciones.js")}}" type="text/javascript"></script>
+{% endblock %}

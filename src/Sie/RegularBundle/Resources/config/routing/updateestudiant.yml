@@ -1,0 +1,73 @@
+sie_estudiantes:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:index" }
+ 
+sie_estudiantes_updatestudentA:
+    path:     /{id}/updateStudentA
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:updateStudentA" }
+    methods:  [POST, PUT]    
+
+sie_estudiantes_updatestudentB:
+    path:     /{id}/updateStudentB
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:updateStudentB" }
+    methods:  [POST, PUT]
+    
+sie_estudiantes_updatestudentC:
+    path:     /{id}/updateStudentC
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:updateStudentC" }
+    methods:  [POST, PUT]
+
+sie_estudiantes_updatestudentD:
+    path:     /{id}/updateStudentD
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:updateStudentD" }
+    methods:  [POST, PUT]        
+
+sie_estudiantes_updatestudentE:
+    path:     /{id}/updateStudentE
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:updateStudentE" }
+    methods:  [POST, PUT]        
+    
+    
+
+sie_estudiantes_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:show" }
+
+sie_estudiantes_new:
+    path:     /new
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:new" }
+
+sie_estudiantes_create:
+    path:     /create
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:create" }
+    methods:  POST
+
+sie_estudiantes_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:edit" }
+
+sie_estudiantes_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:update" }
+    methods:  [POST, PUT]
+
+sie_estudiantes_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:delete" }
+    methods:  [POST, DELETE]
+    
+sie_estudiantes_result:
+    path:     /result
+    defaults: { _controller: "SieRegularBundle:EstudianteUpdate:result" }   
+    
+search_departamentos_st:
+     path:    /depto/departamentos/{pais}/
+     defaults: { _controller: SieRegularBundle:EstudianteUpdate:departamentos }
+     options:
+         expose: true
+
+search_provincias_st:
+     path:    /provin/provincias/{departamento}/
+     defaults: { _controller: SieRegularBundle:EstudianteUpdate:provincias }
+     options:
+         expose: true         

@@ -1,0 +1,164 @@
+    <div id="tablaListadoPersonas_fil" style="visibility: hidden;">        
+    
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4>{{titulo}}</h4>
+        </div>    
+        <div class="panel-body">
+            
+                <table class="display" id="tablaListadoPersonas" cellspacing="0" width="100%">    
+
+                    <thead>
+                        <tr>
+                            <th>Acciones</th>
+                            <th>Nombre de Usuario</th>
+                            <th>Estado</th>                            
+                            <th>Nombre, Apellidos y Carnet</th>
+                            <th>Roles-Cobertura-Juridicción</th>                                                                                   
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {% if (accion == 'okuser') or (accion == 'stop') or (accion == 'sintuision') %}
+                        {% for persona in po %}
+                            <tr>                  
+                                <td>
+                                    {% if (accion == 'okuser') %}
+                                        {% include 'SieUsuariosBundle:Default:menuprincipalusuario.html.twig' with {'persona': persona} %}                                        
+                                    {% elseif (accion == 'sintuision') %}
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-info btn-xs dropdown-toggle glyphicon glyphicon-tasks" data-toggle="dropdown" aria-haspopup="true">
+                                                Acciones <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li>
+                                                <li><span class="label label-danger">Sin tuición.</span></li>
+                                            </ul>
+                                        </div>
+                                    {% elseif (accion == 'stop') %}
+                                        <span class="label label-danger">Inconsistencia de Datos</span>
+                                    {% endif %}      
+                                </td>                                                        
+                                <td>{{ persona.username }}</td>
+                                <td>                        
+                                    {% if persona.usuarioesactivo == true %}
+                                        <span class="label label-success">Activo</span>
+                                    {% else %}
+                                        <span class="label label-default">Desactivado</span>
+                                    {% endif %}        
+                                </td>
+                                <td>{{ persona.nombre }} {{ persona.paterno }} {{ persona.materno }}, CI:{{ [persona.carnet,persona.complemento]|join|trim}}</td>   
+                                <td>
+                                    {% set roles_depu = persona.roles|replace({'"':'','{':'','}':''}) %}
+                                    {% set rolesarray = roles_depu|split(',') %}   
+
+                                    {% set roles_depu_est = persona.roles_estado|replace({'"':'','{':'','}':''}) %}
+                                    {% set rolesarray_est = roles_depu_est|split(',') %}                                                                                 
+
+                                    {% set roles_depu_jur = persona.jurisdiccion|replace({'"':'','{':'','}':''}) %}
+                                    {% set rolesarray_jur = roles_depu_jur|split(',') %}    
+
+                                    {% set roles_depu_cob = persona.cobertura|replace({'"':'','{':'','}':''}) %}
+                                    {% set rolesarray_cob = roles_depu_cob|split(',') %}
+
+                                    {% set roles_sub_sis = persona.subsistema|replace({'{':'','}':''}) %}
+                                    {% set roles_sub_sis = roles_sub_sis|replace({'","':'|','"':''}) %}
+
+                                    {#
+                                    {% set roles_sub_sis = persona.subsistema|replace({',"':'|','",':'|',',':'|'}) %}
+                                    {% set roles_sub_sis = roles_sub_sis|replace({'"':''}) %}#}
+                                    {% set rolesarray_sub_sis = roles_sub_sis|split('|') %}    
+
+                                    {% for i in 0..rolesarray|length-1 %}
+                                            {% if rolesarray_est[i] == 'false'%}
+                                                <div class="panel panel-default">
+                                            {% else %}
+                                                <div class="panel panel-success">
+                                            {% endif %}
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title text-center"><b>{{rolesarray[i]}}</b> - {{rolesarray_cob[i]}}</h3>
+                                                    </div>
+                                                    <div class="panel-body no-padding">
+                                                        <span class="pull-left text-capitalize">{{rolesarray_jur[i]}}</span>
+                                                        <span class="pull-right text-strong">{{rolesarray_sub_sis[i]}}</span>                                                        
+                                                    </div>
+                                                </div>
+                                            
+
+                                    {% endfor %}                                                
+                                </td>                                                     
+                            </tr>
+                        {% endfor %}
+                    {% elseif (accion == 'newuser') %}
+                        {% for persona in po %}
+                            <tr>                  
+                                <td>
+                                    <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="usuarioForm('{{persona.id}}')"> Asignar Usuario</a>                                    
+                                </td>                                                        
+                                <td><span class="label label-warning">Sin usuario</span></td>
+                                <td> </td>
+                                <td>{{ persona.nombre }} {{ persona.paterno }} {{ persona.materno }}, CI:{{ [persona.carnet,persona.complemento]|join|trim}}</td>   
+                                <td> </td>                                                     
+                            </tr>
+                        {% endfor %}
+                    {% elseif (accion == 'newperson') %}
+                            <tr>                  
+                                <td>
+                                    <a role="button" class="btn btn-warning btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="personaFormNew('{{po.ci}}','{{po.complemento}}')"> Insertar Persona</a>                                    
+                                </td>                                                        
+                                <td> <span class="label label-warning">Sin usuario</span> </td>
+                                <td> <span class="label label-warning">¡C.I. Sin registro!</span> </td>
+                                <td><span class="label label-warning">{{ [po.ci,po.complemento]|join|trim}}</span></td> 
+                                <td> </td>                                                     
+                            </tr>
+                    {% elseif (accion == 'stopall') %}
+                            <tr>                  
+                                <td>
+                                    <span class="label label-danger">Inconsistencia de Datos</span>
+                                </td>                                                        
+                                <td> </td>
+                                <td> </td>
+                                <td> </td> 
+                                <td> </td>                                                     
+                            </tr>
+                    {% elseif (accion == 'sinusuario') %}
+                            <tr>                  
+                                <td> </td>                                                        
+                                <td> </td>
+                                <td> </td>
+                                <td> </td> 
+                                <td> </td>                                                     
+                            </tr>
+                    {% elseif (accion == 'userfound') %}
+                            <tr>                  
+                                <td>        
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-info btn-xs dropdown-toggle fa fa-search" data-toggle="dropdown" aria-haspopup="true">
+                                                Mas opciones con la opción: Busquedas <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">                                                
+                                                <li><a class="fa fa-credit-card" href="{{ path('sie_personas_usuario_carnet') }}"> Por número de carnet.</a></li>                                                
+                                            </ul>
+                                        </div>
+                                </td>                                                               
+                                <td>{{ po.username }}</td>
+                                <td>                        
+                                    {% if po.usuarioesactivo == true %}
+                                        <span class="label label-success">Activo</span>
+                                    {% else %}
+                                        <span class="label label-default">Desactivado</span>
+                                    {% endif %}        
+                                </td>
+                                <td>{{ po.nombre }} {{ po.paterno }} {{ po.materno }}, CI:{{ [po.carnet,po.complemento]|join|trim}}</td>   
+                                <td> </td>                                                     
+                            </tr>
+                    {% endif %}    
+                    </tbody>
+
+                </table>
+            
+        </div>
+    </div>
+
+  

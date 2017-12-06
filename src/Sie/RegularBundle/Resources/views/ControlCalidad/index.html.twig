@@ -1,0 +1,91 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Control de Calidad
+                    <small>Index</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-home"></i>  <a href="{{path('ccalidad_index')}}"> Menú principal</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('warning') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <p><i class="fa fa-warning"></i> Tenga en cuenta que la información registrada a través de los módulos para resolver inconsistencias es responsabilidad de las/los Técnicos SIE Distritales, por tanto, se debe tener mucho cuidado durante este proceso.</p>
+                <p><strong>Nota.- Es importante resolver todas las inconsistencias correspondientes a Maestro y Estudiante para poder descargar el archivo del Primer Bimestre - Gestión 2017.</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for entidad in entidades %}
+            <div class="col-lg-6 col-sm-12">
+                <div class="circle-tile">
+                    <a href="{{ path('ccalidad_list', { 'id': entidad.id, 'gestion': currentyear }) }}">
+                        <div class="circle-tile-heading blue">
+                            <i class="fa fa-users fa-fw fa-3x"></i>
+                        </div>
+                    </a>
+                    <div class="circle-tile-content blue">
+                        <div class="circle-tile-description text-faded">
+                            {{ entidad.obs }}
+                        </div>
+                        <div class="circle-tile-number text-faded">
+                            {{ entidad.entidad }}
+                        </div>
+                        {% for gest in gestiones %}
+                            <a href="{{ path('ccalidad_list', { 'id': entidad.id, 'gestion': gest.id }) }}" class="circle-tile-footer">Ver inconsistencias {{gest.id}} <i class="fa fa-chevron-circle-right"></i></a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% if app.session.get('roluser') == 10 %}
+        <div class="row">
+            <div class="col-lg-6 col-sm-12">
+                <div class="circle-tile">
+                    <a href="{{ path('ccalidad_reporte', { 'lugar_tipo_id': lugar_tipo_id }) }}">
+                        <div class="circle-tile-heading dark-blue">
+                            <i class="fa fa-save fa-fw fa-3x"></i>
+                        </div>
+                    </a>
+                    <div class="circle-tile-content dark-blue">
+                        <div class="circle-tile-description text-faded">
+                            Generar
+                        </div>
+                        <div class="circle-tile-number text-faded">
+                            Reporte
+                        </div>
+                        <a href="{{ path('ccalidad_reporte', { 'lugar_tipo_id': lugar_tipo_id }) }}" class="circle-tile-footer">Generar reporte<i class="fa fa-save"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <!-- end DASHBOARD CIRCLE TILES --> 
+{% endblock %}

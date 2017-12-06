@@ -1,0 +1,92 @@
+
+{% if exist == true %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-basic">
+                <div class="portlet-body">
+                    <p>Información Estudiantes</p>
+
+                    <div class="row">
+                        <div class="col-md-3 col-lg-offset-9">
+                            {{form(formnewinscription)}}
+                        </div>
+                    </div>
+                    <div id="no-more-tables">
+                        <table class="table table-bordered table-hover cf">
+                            <thead class="cf">
+                                <tr class="info">
+                                    <th class="text-center">Código Rude</th>
+                                    <th class="text-center">Paterno</th>
+                                    <th class="text-center">Materno</th>
+                                    <th class="text-center">Nombre</th>
+                                    <th class="text-center">Fecha Nacimiento</th>
+                                    <th class="text-center">Opción</th>
+
+                                    <!--th class="text-center">Opción</th-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in students%}
+                                    <tr>
+                                        <td data-title="Codigo Rude" class="text-left">
+                                            {{data.codigoRude}}
+                                        </td>
+                                        <td data-title="Paterno" class="text-left">
+                                            {{data.paterno}}
+                                        </td>
+                                        <td data-title="Materno" class="text-left">
+                                            {{data.materno}}
+                                        </td>
+                                        <td data-title="Nombre" class="text-left">
+                                            {{data.nombre}}
+                                        </td><td data-title="Fec. Nac" class="text-left">
+                                            {{data.fechaNacimiento|date('d-m-Y')}}
+                                        </td>
+                                        <td data-title="Opción" class="text-center">
+                                            <span class="glyphicon glyphicon-duplicate"></span>
+
+                                            <form action="{{path('inscription_techum_exist')}}" style="display: inline-block" method="post">
+                                                <input type="hidden" name="form[rude]" id="form_rude" value="{{ data.codigoRude }}">
+                                                <input type="hidden" name="form[idstudent]" id="form_rude" value="{{ data.id }}">
+                                                <button type="submit" class="btn-link" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fa fa-edit"></i> Inscribir</button>
+                                            </form>
+                                        </td>
+
+                                    </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+{%else%}
+
+    <div class="row">
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag.get('warningrein') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {{form(formnewinscription)}}
+
+        </div>
+    </div>
+{%endif%}
+
+
+
+<script>
+
+
+</script>
+

@@ -1,0 +1,57 @@
+infra_ambientesAdministrativosRecreativos_index:
+    path:     /
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesAdministrativosRecreativos:index" }
+
+infra_ambientesAdministrativosRecreativos_ambienteAdicionar:
+    path:     /ambienteAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesAdministrativosRecreativos:ambienteAdicionar" }
+    options:
+        expose: true
+
+infra_ambientesAdministrativosRecreativos_equipamientoAdicionar:
+    path:     /equipamientoAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesAdministrativosRecreativos:equipamientoAdicionar" }
+    options:
+        expose: true
+
+infra_ambientesAdministrativosRecreativos_canchaAdicionar:
+    path:     /canchaAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesAdministrativosRecreativos:canchaAdicionar" }
+    options:
+        expose: true
+
+infra_ambientesAdministrativosRecreativos_patioAdicionar:
+    path:     /patioAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesAdministrativosRecreativos:patioAdicionar" }
+    options:
+        expose: true
+
+infra_ambientesAdministrativosRecreativos_parqueAdicionar:
+    path:     /parqueAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesAdministrativosRecreativos:parqueAdicionar" }
+    options:
+        expose: true
+
+infra_ambientesAdministrativosRecreativos_coliseoAdicionar:
+    path:     /coliseoAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesAdministrativosRecreativos:coliseoAdicionar" }
+    options:
+        expose: true
+
+infra_ambientesAdministrativosRecreativos_piscinaAdicionar:
+    path:     /piscinaAdicionar
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesAdministrativosRecreativos:piscinaAdicionar" }
+    options:
+        expose: true
+
+infra_ambientesAdministrativosRecreativos_infoComplete:
+    path:     /infoComplete
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesAdministrativosRecreativos:infoComplete" }
+    options:
+        expose: true
+
+infra_ambientesAdministrativosRecreativos_infosave:
+    path:     /infoSave
+    defaults: { _controller: "SieInfraestructuraBundle:AmbientesAdministrativosRecreativos:infoSave" }
+    options:
+        expose: true

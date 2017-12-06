@@ -1,0 +1,351 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <!-- Start widget newsletter -->
+                <div class="panel text-center rounded shadow">
+                    <div class="panel-body bg-lilac rounded">
+                        <div class="inner-all">
+                            <h4 class="text-uc">Información Unidad Educativa</h4>
+                            <p>SIE : {{institucion.id}}</p>
+                            <p>Unidad Educativa :{{institucion.institucioneducativa}} - {{gestion}}</p>
+                            <h5 class="text-uc">Opción: Información Estudiante</h5>
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End widget newsletter -->
+            </div>
+        </div><!-- /.row -->
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-danger">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Administrativo Nuevo</h3>
+                        </div>
+                        <div class="pull-right">
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.carnetIdentidad)}}
+                                        {{form_widget(form.carnetIdentidad) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.complemento)}}
+                                        <div class="input-group">
+                                            <div class="input-group-addon">-</div>
+                                            {{form_widget(form.complemento,{'attr':{'data-toggle':'tooltip','data-placement':'bottom','data-original-title':'El complemento del CI no es el lugar de expedicion, no coloque abreviaciones de departamentos'} }) }}
+                                        </div>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.paterno)}}
+                                        {{form_widget(form.paterno) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.materno)}}
+                                        {{form_widget(form.materno) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.nombre)}}
+                                        {{form_widget(form.nombre) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.genero)}}
+                                        {{form_widget(form.genero) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.fechaNacimiento)}}
+                                        <div id='sandbox-container'>
+                                            {{form_widget(form.fechaNacimiento) }}
+                                        </div>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.direccion)}}
+                                        {{form_widget(form.direccion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.celular)}}
+                                        {{form_widget(form.celular) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.correo)}}
+                                        {{form_widget(form.correo) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.rda)}} 
+                                        {{form_widget(form.rda,{'attr':{'data-toggle':'tooltip','data-placement':'bottom','data-original-title':'En caso de no contar con RDA colocar 0'} }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.normalista)}}
+                                        {{form_widget(form.normalista) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.funcion)}}
+                                        {{form_widget(form.funcion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.financiamiento)}}
+                                        {{form_widget(form.financiamiento) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.formacion)}}
+                                        {{form_widget(form.formacion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.formacionDescripcion)}}
+                                        {{form_widget(form.formacionDescripcion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <fieldset>
+                                            <a onclick="agregarHijo()" class="btn-link"><i class="fa fa-plus-square"></i> Agregar Idioma</a>
+                                            <legend>Idioma(s) que conoce </legend>
+                                            <div id="no-more-tables">
+                                                <table class="table table-striped table-danger">
+                                                    <thead class="cf">
+                                                        <tr>
+                                                            <th class="col-lg-4">Idioma</th>
+                                                            <th class="col-lg-2">Lee</th>
+                                                            <th class="col-lg-2">Habla</th>
+                                                            <th class="col-lg-2">Escribe</th>
+                                                            <th class="col-lg-2">Eliminar</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="idiomas">
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    {% if app.session.get('sysname') == 'PERMANENTE' %}
+                                        {% set display = 'none' %}
+                                    {% else %}
+                                        {% set display = 'block' %}
+                                    {% endif %}
+                                    <div class="form-group col-lg-6 col-md-12" style=" display: {{display}}">
+                                        {{ form_label(form.idiomaOriginario)}} 
+                                        {{form_widget(form.idiomaOriginario) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        {{ form_label(form.leeEscribeBraile)}}
+                                        {{form_widget(form.leeEscribeBraile) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-lg-12 text-center">
+                                        {{ form_widget(form.guardar ) }}
+                                        <a href="javascript:window.history.back()" class="btn btn-default">Cancelar</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var cantidad = 0;
+        var cont = 0;
+        function agregarHijo()
+        {
+            cont++;
+            if (cont < 5) {
+                cantidad++;
+                var idioma = 'idioma' + cantidad;
+                var lee = 'lee' + cantidad;
+                var habla = 'habla' + cantidad;
+                var escribe = 'escribe' + cantidad;
+                $('#idiomas').append("<tr id='" + cantidad + "' class='info'>\n\
+                                        <td data-title='Idioma' class='form-group'><select name='" + idioma + "' id='" + idioma + "' class='form-control' required></select></td>\n\
+                                        <td data-title='Lee' class='form-group'><select name='" + lee + "' id='" + lee + "' class='form-control' required></select></td>\n\
+                                        <td data-title='Habla' class='form-group'><select name='" + habla + "' id='" + habla + "' class='form-control' required></select></td>\n\
+                                        <td data-title='Escribe' class='form-group'><select name='" + escribe + "' id='" + escribe + "' class='form-control' required></select></td>\n\
+                                        <td><button type='button' onclick='eliminaridioma(" + cantidad + " )' class='btn-link'><i class='fa fa-trash-o text-danger'> Eliminar</button></td>\n\
+                                    </tr>");
+
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('listaridiomasleehablaescribe'),
+                    beforeSend: function () {
+                        $("#" + idioma).empty();
+                    },
+                    success: function (data) {
+                        $("#" + idioma).empty();
+                        $("#" + idioma).append('<option value="">Seleccionar...</option>');
+                        $.each(data.idiomas, function (i, value) {
+                            $("#" + idioma).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select lee
+                        $("#" + lee).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + lee).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select habla
+                        $("#" + habla).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + habla).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        // select escribe
+                        $("#" + escribe).append('<option value="">Seleccionar...</option>');
+                        $.each(data.conoce, function (i, value) {
+                            $("#" + escribe).append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                });
+            } else {
+                cont--;
+            }
+        }
+
+        function eliminaridioma(i) {
+            cont--;
+            $("#" + i).remove();
+        }
+
+        /* Funcion para averifuar si existe el maestro */
+        var xhrVerificar;
+        function verificarExistePersona(carnet) {
+            if (carnet.length > 5) {
+                if (xhrVerificar && xhrVerificar.readyState != 4) {
+                    xhrVerificar.abort();
+                }
+                xhrVerificar = $.ajax({
+                    type: 'get',
+                    url: Routing.generate('verificar_existe_persona', {'carnet': carnet}),
+                    beforeSend: function () {
+                        Messenger.options = {
+                            extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+                            theme: 'flat'
+                        }
+
+                        Messenger().post({
+                            message: 'Buscando coincidencias de carnet...',
+                            id: "Only-one-message",
+                            type: 'info',
+                            showCloseButton: true
+                        });
+                    },
+                    success: function (data) {
+                        if (data.encontrado == 'si') {
+                            $("#form_paterno").val(data.paterno);
+                            $("#form_materno").val(data.materno);
+                            $("#form_nombre").val(data.nombre);
+                            $("#form_fechaNacimiento").val(data.fechaNacimiento);
+                            $("#form_genero").empty();
+                            $.each(data.generosArray, function (i, value) {
+                                if (i == data.genero) {
+                                    sel = 'selected';
+                                } else {
+                                    sel = '';
+                                }
+                                $("#form_genero").append('<option value="' + i + '"' + sel + '>' + value + '</option>');
+                            });
+                            $("#form_direccion").val(data.direccion);
+                            $("#form_celular").val(data.celular);
+                            $("#form_rda").val(data.rda);
+                            $("#form_correo").val(data.correo);
+
+                            /* Borrar los mensajes de notificacion */
+                            Messenger().hideAll();
+                            /* crear nuevo mensaje de encontrado */
+                            Messenger.options = {
+                                extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+                                theme: 'flat'
+                            }
+
+                            Messenger().post({
+                                message: 'Encontrado: El numero de carnet ingresado pertenece a: ' + data.paterno + ' ' + data.materno + ' ' + data.nombre,
+                                id: "Only-one-message",
+                                type: 'success',
+                                showCloseButton: true
+                            });
+                        } else {
+                            /* crear nuevo mensaje de encontrado */
+                            Messenger.options = {
+                                extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+                                theme: 'flat'
+                            }
+
+                            Messenger().post({
+                                message: 'No se encontraron conincidencias',
+                                id: "Only-one-message",
+                                type: 'error',
+                                showCloseButton: true
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+{% endblock %}

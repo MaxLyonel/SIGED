@@ -1,0 +1,47 @@
+sie_rie_homepage:
+    path:     /hello
+    defaults: { _controller: SieRieBundle:Default:index }
+
+sie_rie_main:
+    resource: "@SieRieBundle/Resources/config/routing/rie.yml"
+    prefix:   /acceso/rie
+
+sie_cap_main:
+    resource: "@SieRieBundle/Resources/config/routing/cap.yml"
+    prefix:   /acceso/cap    
+
+sie_historico_main:
+    resource: "@SieRieBundle/Resources/config/routing/historico.yml"
+    prefix:   /acceso/historico   
+
+sie_lei_main:
+    resource: "@SieRieBundle/Resources/config/routing/lei.yml"
+    prefix:   /acceso/lei
+
+sie_oac_main:
+    resource: "@SieRieBundle/Resources/config/routing/oac.yml"
+    prefix:   /acceso/oac
+
+sie_consulta_rie_main:
+    resource: "@SieRieBundle/Resources/config/routing/consultaRie.yml"
+    prefix:   /acceso/consultapublica  
+
+sie_consultains_rie_main:
+    resource: "@SieRieBundle/Resources/config/routing/consultaIns.yml"
+    prefix:   /acceso/consultainstituto  
+
+sie_certificado_rie_main:
+    resource: "@SieRieBundle/Resources/config/routing/certificadoRie.yml"
+    prefix:   /acceso/certificadorie  
+
+sie_reportes_rie_main:
+    resource: "@SieRieBundle/Resources/config/routing/reporte.yml"
+    prefix:   /acceso/reporterie
+
+sie_areas_rie_main:
+    resource: "@SieRieBundle/Resources/config/routing/areas.yml"
+    prefix:   /acceso/areasrie      
+
+sie_carreras_rie_main:
+    resource: "@SieRieBundle/Resources/config/routing/carreras.yml"
+    prefix:   /acceso/carrerasrie   

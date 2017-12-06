@@ -1,0 +1,1 @@
+$(document).ready(function(){"use strict";$(".percentage").easyPieChart({barColor:"#40babd",lineWidth:5,onStep:function(t,e,n){$(this.el).find("span").text(Math.round(n))}})});

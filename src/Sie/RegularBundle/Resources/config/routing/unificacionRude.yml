@@ -1,0 +1,27 @@
+unificacion_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:UnificacionRude:index }
+
+unificacion_ver_historial:
+    path:    /uni_historial/{rudea}/{rudeb}
+    defaults: { _controller: SieRegularBundle:UnificacionRude:unificarverhistorial }
+    options:
+       expose: true
+       
+unificacion_ver_cor_inc:
+    path:    /uni_historialcorinc/{rudecor}/{rudeinc}
+    defaults: { _controller: SieRegularBundle:UnificacionRude:unificarvercorinc }
+    options:
+       expose: true       
+    
+unificacion_unificar:
+    path:    /unificar/{rudecor}/{rudeinc}
+    defaults: { _controller: SieRegularBundle:UnificacionRude:unificar }
+    options:
+       expose: true
+       
+unificacion_index_calidad:
+    path:    /unificarcalidad/
+    defaults: { _controller: SieRegularBundle:UnificacionRude:indexcalidad }
+    options:
+       expose: true       

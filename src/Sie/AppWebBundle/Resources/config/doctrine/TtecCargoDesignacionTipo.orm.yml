@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo:
+    type: entity
+    table: ttec_cargo_designacion_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        formaDesignacion:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+            column: forma_designacion
+        obs:
+            type: string
+            nullable: true
+            length: 105
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,111 @@
+<?php
+
+namespace Sie\AppWebBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ComisionTipo
+ */
+class ComisionTipo
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $comision;
+
+    /**
+     * @var integer
+     */
+    private $cantidad;
+
+    /**
+     * @var integer
+     */
+    private $departamentoTipoId;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set comision
+     *
+     * @param string $comision
+     * @return ComisionTipo
+     */
+    public function setComision($comision)
+    {
+        $this->comision = $comision;
+    
+        return $this;
+    }
+
+    /**
+     * Get comision
+     *
+     * @return string 
+     */
+    public function getComision()
+    {
+        return $this->comision;
+    }
+
+    /**
+     * Set cantidad
+     *
+     * @param integer $cantidad
+     * @return ComisionTipo
+     */
+    public function setCantidad($cantidad)
+    {
+        $this->cantidad = $cantidad;
+    
+        return $this;
+    }
+
+    /**
+     * Get cantidad
+     *
+     * @return integer 
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
+    }
+
+    /**
+     * Set departamentoTipoId
+     *
+     * @param integer $departamentoTipoId
+     * @return ComisionTipo
+     */
+    public function setDepartamentoTipoId($departamentoTipoId)
+    {
+        $this->departamentoTipoId = $departamentoTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get departamentoTipoId
+     *
+     * @return integer 
+     */
+    public function getDepartamentoTipoId()
+    {
+        return $this->departamentoTipoId;
+    }
+}

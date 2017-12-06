@@ -1,0 +1,29 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Cod. UE</th>
+            <th>Unidad Educativa</th>
+            <th>Junta Escolar</th>
+            <th>Teléfono Ref.</th>
+            <th>Tenencia</th>
+            <th>Organización Curricular</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ie in institucionesEducativas %}
+            <tr>
+                <td>{{ie.institucioneducativa.id}}</td>
+                <td>{{ie.institucioneducativa.institucioneducativa}}</td>
+                <td>{{ie.persona.paterno}} {{ie.persona.materno}} {{ie.persona.nombre}}</td>
+                <td>{{ie.telefonoJe}}</td>
+                <td>{{ie.tenenciaTipo.tenenciaTipo}}</td>
+                <td>{{ie.orgcurricularTipo.orgcurricula}}</td>
+                <td>
+                	<button type="button" class="btn btn-info" onclick="uedelete({{ie.id}});">Excluir UE</button>
+					<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal" onclick="ueeditar({{ie.id}});">Actualizar Datos UE</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

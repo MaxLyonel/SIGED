@@ -1,0 +1,13 @@
+herramienta_inboxrequest_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InboxRequest:index}
+
+herramienta_inboxrequest_open:
+    path:     /sie/open
+    defaults: { _controller: SieHerramientaBundle:InboxRequest:open}
+
+notas_cargar_turnos:
+    path:     /cargarTurnos/{idInstitucion}/{gestion}/
+    defaults: { _controller: "SieHerramientaBundle:Inbox:cargarTurnos"}
+    options:
+         expose: true

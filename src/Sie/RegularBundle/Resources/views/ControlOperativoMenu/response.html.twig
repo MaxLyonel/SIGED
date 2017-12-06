@@ -1,0 +1,52 @@
+{% if tuicion %}
+<div class="row">
+	<div class="col-md-6">
+		<h4 style="text-align:left; color:#7EAECE; margin-left:20px">Datos de la Unidad Educativa</h4>
+		<br>
+		<table class="table table-bordered" style="font-size: 1.2em">
+			<tr>
+				<th bgcolor="#E5E5E5">Tipo de UE</th><td style="background:#4A9FFF; color:#FFFFFF; font-size: 1.1em">{{tipoUE.tipo}}</td>
+			</tr>
+			<tr>
+				<th bgcolor="#E5E5E5" class="col-md-4">SIE</th><td>{{institucion.id}}</td>
+			</tr>
+			<tr>
+				<th bgcolor="#E5E5E5">Unidad Educativa</th><td>{{institucion.institucioneducativa}}</td>
+			</tr>
+			<tr>
+				<th bgcolor="#E5E5E5">Gestión</th><td>{{gestion}}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="col-md-6">
+		<h4 style="text-align:left; color:#7EAECE; margin-left:20px">Actualmente la Unidad Educativa se encuentra en operativo de:</h4><br>
+		<div style="font-size: 1.7em; background:#4A9FFF; color:#FFFFFF; padding: 5px; text-align:center">
+			{{nombreOperativo}}____{{gestion}}
+		</div>
+		{% if tipoUE.id in [5,6,7] and registro is not null %}
+			<div style="text-align:center; background:#EAEAEA; padding:5px 0 5px 0">Archivo</div>
+			<div id="estado" style="font-size:25px; text-align:center; background:#EAEAEA; padding:5px 0 10px 0">
+				{% if registro.estadoMenu == 0 %}
+					No descargado
+				{% else %}
+					Descargado
+					<br>
+					<small style="font-size:12px">En fecha {{registro.fecharegistro|date('d-m-Y')}}</small>
+				{% endif %}
+			</div>
+			<br>
+			<div id="msg" style="display:none ;color:#C18C72; background:#FFDCB4; padding:5px; margin-bottom: 15px; text-align:center">
+				
+			</div>
+			<div style="text-align:center;">
+				<button class="btn btn-info" onclick="cambiarEstado({{registro.id}})"> <i class="fa fa-refresh"></i> Habilitar descarga</button>
+			</div>
+		{% else %}
+			<div class="alert alert-info" style="font-size: 1.2em"> <i class="fa fa-info-circle"></i> {{ mensaje }}</div>
+		{% endif %}
+	</div>
+</div>
+{% else %}
+	<div class="alert alert-info-circle" style="font-size: 1.2em"> <i class="fa fa-info"></i> {{mensaje}}</div>
+{% endif %}
+

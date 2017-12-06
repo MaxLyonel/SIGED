@@ -1,0 +1,41 @@
+remove_inscription_student_free_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:RemoveInscriptionStudentFree:index }
+
+remove_inscription_student_free_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:RemoveInscriptionStudentFree:result }
+
+remove_inscription_student_free_save:
+    path: /save
+    defaults: { _controller: SieRegularBundle:RemoveInscriptionStudentFree:save }
+
+remove_inscription_student_free_modify:
+    path: /modify
+    defaults: { _controller: SieRegularBundle:RemoveInscriptionStudentFree:modify }
+
+remove_inscription_student_free_remove:
+    path: /remove
+    defaults: { _controller: SieRegularBundle:RemoveInscriptionStudentFree:remove }
+
+remove_inscription_student_free_result_param:
+    path:    /{rude}/{gestion}/resultparam/
+    defaults: { _controller: SieRegularBundle:RemoveInscriptionStudentFree:resultparam }
+
+remove_inscription_student_free_maincambioestado:
+    path:     /maincambioestado
+    defaults: { _controller: "SieRegularBundle:RemoveInscriptionStudentFree:mainCambioEstado" }
+    options:
+       expose: true
+
+remove_inscription_student_free_verificarcambio:
+    path:     /verificarcambio
+    defaults: { _controller: "SieRegularBundle:RemoveInscriptionStudentFree:verificarCambio" }
+    options:
+       expose: true
+
+remove_inscription_student_free_savecambioestado:
+    path:     /savecambioestado
+    defaults: { _controller: "SieRegularBundle:RemoveInscriptionStudentFree:saveCambioEstado" }
+    options:
+       expose: true

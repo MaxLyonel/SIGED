@@ -1,0 +1,7 @@
+Sie\AppWebBundle\Entity\EstudianteDestacado:
+    properties:
+        promedioFinal:
+            - NotBlank: ~
+        #dueDate:
+        #    - NotBlank: ~
+        #    - Type: \DateTime

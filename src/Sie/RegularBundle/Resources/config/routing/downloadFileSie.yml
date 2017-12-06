@@ -1,0 +1,35 @@
+download_file_sie_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:DownloadFileSie:index }
+
+download_file_sie_build:
+    path:     /sie/buildfile/
+    defaults: { _controller: SieRegularBundle:DownloadFileSie:build }
+    options:
+         expose: true
+
+download_file_sie_download:
+    path:     /download/{file}/{datadownload}
+    defaults: { _controller: SieRegularBundle:DownloadFileSie:download }
+
+download_file_sie_getgestion:
+    path:     /getGestion/{sie}
+    defaults: { _controller: SieRegularBundle:DownloadFileSie:getgestion }
+    options:
+         expose: true
+
+download_file_sie_getbimestre:
+    path:     /getBimestre/{sie}/{gestion}
+    defaults: { _controller: SieRegularBundle:DownloadFileSie:getbimestre }
+    options:
+         expose: true
+
+download_file_sie_changedate:
+    path:     /changedate
+    defaults: { _controller: SieRegularBundle:DownloadFileSie:changedate }
+
+download_file_sie_buildAgain:
+    path:     /sie/buildfileagain/
+    defaults: { _controller: SieRegularBundle:DownloadFileSie:buildAgain }
+    options:
+         expose: true

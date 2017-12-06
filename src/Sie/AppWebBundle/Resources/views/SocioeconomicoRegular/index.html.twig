@@ -1,0 +1,98 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>REGISTRO ÚNICO DE ESTUDIANTES
+                    <small>RUDE ELECTRÓNICO</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{ path('socioeconomicoregular') }}">Buscar Estudiante</a></li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notiext') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Error!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('goodext') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!-- Website Stats  Widget -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i> Inserte Rude
+                            </div>
+                            <div class="panel-body">
+
+                                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                <div class="form-group">
+                                    <label for="form_codigoSie" class="col-sm-2 control-label">
+                                        {{form_label(form.codigoSie)}}
+                                    </label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.codigoSie) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                        
+                                <div class="form-group">
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">
+                                        {{form_label(form.codigoRude)}}
+                                    </label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.codigoRude) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="form_gestion" class="col-sm-2 control-label">
+                                        {{form_label(form.gestion)}}
+                                    </label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.gestion) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+
+                                        {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+
+                                    </div>
+                                </div>
+                                {{form_end(form)}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- End of Website Stats Widget -->
+
+        </div>
+    </div>
+
+
+{% endblock %}

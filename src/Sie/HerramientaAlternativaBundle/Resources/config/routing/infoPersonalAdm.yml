@@ -1,0 +1,63 @@
+herramientalt_info_personal_adm_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:InfoPersonalAdm:index}
+
+herramientalt_info_personal_adm_second:
+    path:     /sie/second
+    defaults: { _controller: SieHerramientaAlternativaBundle:InfoPersonalAdm:second}
+
+herramientalt_info_personal_adm_third:
+    path:     /sie/third
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoPersonalAdm:loadThird"}
+    options:
+         expose: true
+         
+herramientalt_info_personal_adm_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:InfoPersonalAdm:index }
+
+herramientalt_info_personal_adm_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoPersonalAdm:show" }
+
+herramientalt_info_personal_adm_new:
+    path:     /new/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoPersonalAdm:new" }
+
+herramientalt_info_personal_adm_create:
+    path:     /create/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoPersonalAdm:create" }
+    methods:  POST
+
+herramientalt_info_personal_adm_edit:
+    path:     /edit/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoPersonalAdm:edit" }
+    methods:  [POST, PUT]
+
+herramientalt_info_personal_adm_update:
+    path:     /update/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoPersonalAdm:update" }
+    methods:  [POST, PUT]
+
+herramientalt_info_personal_adm_es_vigente_administrativo:
+    path:     /administrativoVigente/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoPersonalAdm:esVigenteAdministrativo" }
+    methods:  [POST, PUT]         
+
+herramientalt_info_personal_adm_delete:
+    path:     /delete/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoPersonalAdm:delete" }
+    methods:  [POST, DELETE]    
+    
+herramientalt_info_personal_adm_search:
+    path:     /search/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoPersonalAdm:search" }
+    methods:  POST
+
+herramientalt_info_personal_adm_find:
+    path:     /find/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoPersonalAdm:find" }
+    
+herramientalt_info_personal_adm_result:
+    path:     /result/
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoPersonalAdm:result" }

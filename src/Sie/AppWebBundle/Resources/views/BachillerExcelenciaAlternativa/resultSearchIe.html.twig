@@ -1,0 +1,234 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+    <div class="modal modal-flex fade" id="historyInscriptions" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Historial de Inscripción</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idHistory"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal modal-flex fade" id="registroBachiller" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Registro Bachiller de Excelencia</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idBachiller"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Paso 3.- Registrar Bachiller de Excelencia <span>Bachiller de Excelencia</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                    Bachiller de Excelencia
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Registrar Bachiller de Excelencia</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <p><i class="fa fa-info-circle fa-fw"></i> En la parte inferior se tiene dos recuadros con el listado de bachilleres candidatas y candidatos a la obtención del incentivo y certificado de reconocimiento a "Bachiller destacado - Excelencia en el bachillerato".</p>
+                <p>Una vez que se identifique a la y el Bachiller Destacado, presione sobre el botón "Registrar calificación", a continuación se despliega el formulario donde debe registrar el <strong>Promedio Anual</strong> obtenido por la/el estudiante. Presione sobre el botón "Guardar".</p>
+                <p>Posteriormente, a través de una ventana emergente se pide la confirmación de los datos ingresados. Para confirmar presione sobre el botón "Aceptar", para corregir la información introducida presione sobre el botón "Cancelar".</p>
+                <p class="label label-danger"><strong>Nota.- Tenga en cuenta que la información registrada se constituye en declaración jurada, por tanto debe verificar minuciosamente los datos ingresados, ya que no se podrá realizar cambios posteriores.</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Estudiantes (Femenino)-->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-teal">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h4><i class="fa fa-users"></i> Lista de Estudiantes Candidatas a Bachiller de Excelencia (Género: Femenino)</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive"  id="bachFem">
+                        <table class="table table-bordered table-striped table-hover cf dataTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Código RUDE</th>
+                                    <th>C.I.</th>
+                                    <th>Apellido Paterno</th>
+                                    <th>Apellido Materno</th>
+                                    <th>Nombre(s)</th>
+                                    <th>Paralelo</th>
+                                    <th class="text-center">Calificación Final</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for estudiante in estudiantesF%}
+                                    <tr>
+                                        <td style="width: .1em">{{ loop.index }}</td>
+                                        <td><a href="#" onclick="openHistoryInsc({{estudiante.estId}})" data-toggle="tooltip" data-placement="right" title="Ver historial de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-info-circle"></i> {{ estudiante.codigoRude }}</a></td>
+                                        <td>{{ estudiante.carnetIdentidad }}</td>
+                                        <td>{{ estudiante.paterno }}</td>
+                                        <td>{{ estudiante.materno }}</td>
+                                        <td>{{ estudiante.nombre }}</td>
+                                        <td>{{ estudiante.paralelo }}</td>
+                                        <td class="text-center"><a href="#" onclick="openRegistroBachiller({{estudiante.estId}}, {{estudiante.estinsId}}, {{estudiante.instId}}, {{estudiante.genId}})" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: {{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}"><i class="fa fa-pencil-square"></i> Registrar Calificación</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+
+        <!-- Estudiantes (Masculino)-->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-teal">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <h4><i class="fa fa-users"></i> Lista de Estudiantes Candidatos a Bachiller de Excelencia (Género: Masculino)</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive" id="bachMas">
+                        <table class="table table-bordered table-striped table-hover cf dataTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Código RUDE</th>
+                                    <th>C.I.</th>
+                                    <th>Apellido Paterno</th>
+                                    <th>Apellido Materno</th>
+                                    <th>Nombre(s)</th>
+                                    <th>Paralelo</th>
+                                    <th class="text-center">Calificación Final</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for estudiante in estudiantesM%}
+                                    <tr>
+                                        <td style="width: .1em">{{ loop.index }}</td>
+                                        <td><a href="#" onclick="openHistoryInsc({{estudiante.estId}})" data-toggle="tooltip" data-placement="right" title="Ver historial de: '{{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}'"><i class="fa fa-info-circle"></i> {{ estudiante.codigoRude }}</a></td>
+                                        <td>{{ estudiante.carnetIdentidad }}</td>
+                                        <td>{{ estudiante.paterno }}</td>
+                                        <td>{{ estudiante.materno }}</td>
+                                        <td>{{ estudiante.nombre }}</td>
+                                        <td>{{ estudiante.paralelo }}</td>
+                                        <td class="text-center"><a href="#" onclick="openRegistroBachiller('{{estudiante.estId}}', '{{estudiante.estinsId}}', '{{estudiante.instId}}', '{{estudiante.genId}}')" data-toggle="tooltip" data-placement="left" title="Registrar calificación de: '{{ estudiante.paterno ~' '~ estudiante.materno ~' '~ estudiante.nombre }}'"><i class="fa fa-pencil-square"></i> Registrar Calificación</a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row" id="botonesAcc">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <a href="{{ path('bach_exc_alt_ddjj') }}" class="btn btn-block btn-success">Ir a: "Paso 4.- Declaración Jurada (Bachilleres)"</a>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <a href="{{ path('bach_exc_alt') }}" class="btn btn-block btn-default">Salir</a>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+
+{%block javascripts %}    
+    {{ parent() }}
+    <script>
+        $("#botonesAcc").hide();
+
+        var openHistoryInsc = function (idStudent) {
+            $('#historyInscriptions').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('student_main_history', {'idStudent': idStudent}),
+                beforeSend: function () {
+                    $("#idHistory").empty();
+                    $("#idHistory").append('<div class="text-center"><img src="{{ asset('img/loading.gif') }}" class="loading" /></div>');
+                },
+                success: function (data) {
+                    $("#idHistory").empty();
+                    $("#idHistory").append(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $("#idHistory").empty();
+                    },
+                    404: function () {
+                        $("#idHistory").empty();
+                    }
+                }
+            });
+        };
+
+        var openRegistroBachiller = function (estId, estinsId, instId, genId) {
+            $('#registroBachiller').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('bach_exc_alt_student_info', {'estId': estId, 'estinsId': estinsId, 'instId': instId, 'genId': genId}),
+                beforeSend: function () {
+                    $("#idBachiller").empty();
+                    $("#idBachiller").append('<div class="text-center"><img src="{{ asset('img/loading.gif') }}" class="loading" /></div>');
+                },
+                success: function (data) {
+                    $("#idBachiller").empty();
+                    $("#idBachiller").append(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $("#idBachiller").empty();
+                    },
+                    404: function () {
+                        $("#idBachiller").empty();
+                    }
+                }
+            });
+        };
+
+    </script>
+{% endblock %}

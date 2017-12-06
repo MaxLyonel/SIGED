@@ -1,0 +1,11 @@
+remove_inscription_student_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:RemoveInscriptionStudent:index }
+
+remove_inscription_student_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:RemoveInscriptionStudent:result }
+
+remove_inscription_student_remove:    
+    path: /remove
+    defaults: { _controller: SieRegularBundle:RemoveInscriptionStudent:remove }    

@@ -1,0 +1,338 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}SIE{% endblock %}
+
+{% block body %}
+
+    <div id="wrapper">
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle pull-left margin left" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="?page=index">
+                    <img src="{{asset('assets/images/d1-logo.png')}}">
+                </a>
+
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right hidden-xs">
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-envelope fa-fw"></i> <span class="badge badge-notification badge-warning animated fadeIn">7</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages animated flipInY">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <img src="../assets/images/people/25x25/1.jpg" alt="" data-src="../assets/images/people/25x25/1.jpg" data-src-retina="../assets/images/people/x2/1x2.jpg" class="img-responsive img-circle">
+                                    <strong></strong>
+                                    <span class="pull-right text-muted">
+                                        <em class="label label-info">Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <img src="../assets/images/people/25x25/1.jpg" alt="" data-src="../assets/images/people/25x25/1.jpg" data-src-retina="../assets/images/people/x2/1x2.jpg" class="img-responsive img-circle">
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em class="label label-info">Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <img src="../assets/images/people/25x25/1.jpg" alt="" data-src="../assets/images/people/25x25/1.jpg" data-src-retina="../assets/images/people/x2/1x2.jpg" class="img-responsive img-circle">
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em class="label label-info">Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>Read All Messages</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-messages -->
+                </li>
+                <!-- /.dropdown -->
+
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-tasks fa-fw"></i> <span class="badge badge-notification badge-danger animated fadeIn">3</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks animated fadeInUp">
+                        <li class="dropdown-header text-center">You have 3 Tasks alerts</li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Deadline on ACME</strong>
+                                        <span class="pull-right text-muted">40%</span>
+                                    </p>
+                                    <div class="progress progress-bar-mini progress-striped active">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                            <span class="sr-only">40% (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Moving to new Headquarters</strong>
+                                        <span class="pull-right text-muted">20%</span>
+                                    </p>
+                                    <div class="progress progress-bar-mini progress-striped active">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                                            <span class="sr-only">20%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Writing the ACME code</strong>
+                                        <span class="pull-right text-muted">60%</span>
+                                    </p>
+                                    <div class="progress progress-bar-mini progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% (warning)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="dropdown-footer">
+                            <a class="text-center" href="#">
+                                <strong>See All Tasks</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+                <!-- /.dropdown -->
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-bell fa-fw"></i> <span class="badge badge-notification badge-info animated fadeIn">3</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts animated fadeInUp">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-comment fa-fw"></i> New Comment
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
+                                    <span class="pull-right text-muted small">12 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-envelope fa-fw"></i> Message Sent
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-tasks fa-fw"></i> New Task
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
+                                    <span class="pull-right text-muted small">4 minutes ago</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Alerts</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-alerts -->
+                </li>
+                <!-- /.dropdown -->
+
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle user" data-toggle="dropdown" href="#">
+                        
+                        <img src="../assets/images/people/25x25/1.jpg" alt="" data-src="../assets/images/people/25x25/1.jpg" data-src-retina="../assets/images/people/x2/1x2.jpg" class="img-responsive img-circle user-img">
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user animated fadeInUp">
+                        <li>
+                            <div class="media">
+                                <a class="pull-left" href="#">
+                                    <img class="media-object user-profile-image img-circle" src="../assets/images/people/65x65/1.jpg">
+                                </a>
+                                <div class="media-body">
+                                    <h4 class="media-heading"><small> USA</small></h4>
+                                    <h5>Software Developer at <a href="http://defthemes.com">DefThemes</a></h5>
+                                    <hr style="margin:8px auto">
+
+                                    <span class="label label-default">HTML5/CSS3</span>
+                                    <span class="label label-default">jQuery</span>
+                                    <span class="label label-info">PHP5</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="#"><i class="fa fa-tasks"></i> Tasks <span class="badge badge-info pull-right">6 new</span></a></li>
+                        <li><a href="#"><i class="fa fa-envelope"></i> Messages <span class="badge badge-info pull-right">4 new</span></a></li>
+                        <li class="divider"></li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" class="text-danger"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+                <!--li class="active"><a href="#" class="animated fadeIn trigger-sidebar"><i class="fa fa-comments"></i> </a></li-->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+        </nav>
+        <div id="menuleft">
+            <!-- /.navbar-static-top -->
+            {% block menuleft%}
+                <nav id="menu" class="navbar-default navbar-static-side hidden-xs" role="navigation">
+                    <div class="sidebar-collapse">
+                        <ul class="nav" id="side-menu">
+                            <li class="sidebar-user">
+                                <div class="user-img">
+                                    <img src="{{asset('assets/images/people/65x65/1.jpg')}}" alt="" data-src="../assets/images/people/65x65/1.jpg" data-src-retina="../assets/images/people/x2/1x2.jpg" width="65" height="65" class="img-responsive img-circle animated bounceIn">
+                                </div>
+
+                                <div class="user-info">
+                                    {% block welcomesiged %}
+                                        <div class="user-greet">Bienvenido</div>
+                                        <div class="user-name">{{ app.session.get('fullname') }}</div>
+                                        <div class="user-status animated bounceInLeft">
+                                            <span class="label label-success dropdown-toggle">Online</span>
+                                        </div>
+                                    {% endblock %}
+                                </div>
+                            </li>
+
+                            <li class="active">
+                                <a href="index.html"><i class="fa fa-desktop fa-fw"></i> Dashboard krlos</a>
+                            </li>
+
+                            {% for key,menu in app.session.get('aMenu') %}
+                                <li >
+                                    <a href="#"><i class="fa fa-files-o fa-fw"></i> {{key}}<span class="fa arrow"></span></a>
+                                        {% for menu in app.session.get('aMenuOption') %}
+                                        <ul class="nav nav-second-level ">
+                                            <li >
+                                                <a href="{{ path(menu.ruta) }}" >{{menu.nombre}} </a>
+                                            </li>
+                                        </ul>
+                                    {% endfor %}
+                                    <!-- /.nav-second-level -->
+                                </li>
+                            {% endfor %}
+
+                        </ul>
+                        <!-- /#side-menu -->
+                    </div>
+                </nav>
+                <!-- /.navbar-static-side -->
+            {% endblock %}
+        </div>
+        <div id="siecontent">
+            {% block siecontent%}
+                <div id="page-wrapper">
+                    <div class="row">
+                        <div class="page-header">
+                            <h3 class="heading pull-left"><i class="fa fa-desktop animated flip"></i> Buscar Estudiante <span class="sub-heading">{{app.session.get('fullname')}}</span></h3>
+                        </div>
+                        <!-- /.col-lg-12 -->
+                    </div>
+                    <!-- /.row -->
+                    <div class="separator bottom"></div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <!-- Website Stats  Widget -->
+                            <div class="panel" id="dashboard-tour-visits">
+
+                                <h1 class="page-header">Busqueda Estudiante</h1>
+
+
+                            </div>
+                            <!-- End of Website Stats Widget -->
+
+                        </div>
+                    </div>
+
+                </div>
+            {% endblock %}
+        </div>
+        <!-- /#page-wrapper -->
+
+        <!-- Side Bar Chat & Mail & History & Settings -->
+
+        <!-- End of Sidebar Right -->
+
+
+    </div>
+    <!-- /#wrapper -->
+    <!-- Core Scripts - Include with every page -->
+{% endblock %}
+
+
+

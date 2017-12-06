@@ -1,0 +1,47 @@
+sie_diploma_homologacion_index:
+    path:    /
+    defaults: { _controller: SieDiplomaBundle:Homologacion:index }
+
+sie_diploma_homologacion_result:
+    path:    /result
+    defaults: { _controller: SieDiplomaBundle:Homologacion:result }
+
+sie_diploma_homologacion_saveMateriasNotas:
+    path: /saveMateriasNotas
+    defaults: { _controller: SieDiplomaBundle:Homologacion:saveMateriasNotas }
+    
+sie_diploma_homologacion_new:
+    path: /new
+    defaults: { _controller: SieDiplomaBundle:Homologacion:new }
+    
+sie_diploma_homologacion_exist:
+    path: /exist
+    defaults: { _controller: SieDiplomaBundle:Homologacion:exist}
+    
+sie_diploma_homologacion_savenew:
+    path: /savenew
+    defaults: { _controller: SieDiplomaBundle:Homologacion:savenew}
+    
+sie_diploma_homologacion_findIE:
+     path:    /findIE/{ges}/{id}
+     defaults: { _controller: SieDiplomaBundle:Homologacion:findIE }
+     options:
+         expose: true   
+
+sie_diploma_homologacion_findgrado:
+     path:    /findgrado/{idnivel}/{ges}/{sie}
+     defaults: { _controller: SieDiplomaBundle:Homologacion:findgrado }
+     options:
+         expose: true
+
+sie_diploma_homologacion_findparalelo:
+     path:    /findparalelo/{grado}/{ges}/{sie}/{nivel}
+     defaults: { _controller: SieDiplomaBundle:Homologacion:findparalelo }
+     options:
+         expose: true
+         
+sie_diploma_homologacion_findturno:         
+    path:    /findturno/{paralelo}/{ges}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieDiplomaBundle:Homologacion:findturno }
+    options:
+        expose: true    

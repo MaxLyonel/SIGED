@@ -1,0 +1,116 @@
+Sie\AppWebBundle\Entity\EstudianteEspecialIndirecta:
+    type: entity
+    table: estudiante_especial_indirecta
+    indexes:
+        IDX_E48685559590C39:
+            columns:
+                - estudiante_id
+        IDX_E486855179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        institucioneducativaId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        institucioneducativaTipoId:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: institucioneducativa_tipo_id
+        disIntelectualGenerlal:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: dis_intelectual_generlal
+        disIntelectualDown:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: dis_intelectual_down
+        disIntelectualAutismo:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: dis_intelectual_autismo
+        disVisualTotal:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: dis_visual_total
+        disVisualBaja:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: dis_visual_baja
+        disAuditiva:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: dis_auditiva
+        disFisicomotora:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: dis_fisicomotora
+        disMultiple:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: dis_multiple
+        disOtros:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: dis_otros
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        usuarioId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_id
+    manyToOne:
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

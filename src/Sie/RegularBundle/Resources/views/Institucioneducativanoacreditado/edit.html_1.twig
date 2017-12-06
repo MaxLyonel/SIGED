@@ -1,0 +1,298 @@
+
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:auto;
+            margin-top:100px;
+        }
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Unidades Educativas en Proceso de Apertura
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="index.html">Registro de Estudiantes</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+
+
+
+    <div class="portlet portlet-green">
+        <div class="portlet-heading">
+            <div class="portlet-title">
+                <h4>Unidades Educativas en Proceso de Apertura </h4>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="portlet-body">
+            <ul id="myTab" class="nav nav-tabs">
+                <li class=""><a href="tabs-accordions.html#home" data-toggle="tab">Unidad Educativa</a>
+                </li>
+                {% if entity.id is defined %}
+                    <li class="active"><a href="tabs-accordions.html#profile" data-toggle="tab">Estudiantes</a>
+                    </li>
+                {% endif %}
+
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade " id="home">
+
+                    <h1>Institucioneducativa no acreditado </h1>
+                    {{ form_start(edit_form,{'attr':{'data-toggle':'validator', 'form':'role'} }) }}
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            {{form_label(edit_form.institucioneducativa)}}
+
+                            {{form_widget(edit_form.institucioneducativa)}}
+
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{form_label(edit_form.dependenciaTipo)}}
+                            {{form_widget(edit_form.dependenciaTipo)}}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="col-md-6">
+                            {{form_label(edit_form.orgcurricularTipo)}}
+                            {{form_widget(edit_form.orgcurricularTipo)}}
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+
+                    {{form_end(edit_form)}}
+                </div>
+                <div class="tab-pane fade active in" id="profile">
+                    <div class="row show-grid">
+                        <!--div class="col-md-4">
+                            <div class="text-center"> Inicial en Familia Comunitaria</div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir"  id="studentInscription" onclick="openStudents(11, 1)">1 <i class="fa fa-pencil-square-o"></i></a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir"  id="studentInscription" onclick="openStudents(11, 2)">2 <i class="fa fa-pencil-square-o"></i></a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">Paralelos</div>
+                            </div>
+                            <div class="row">
+                        {% for paralelo in paralels %}
+                            <div class="col-md-6"><a href="#" class="btn" onclick="openStudents(11, 1,{{paralelo.id}} )">{{paralelo.paralelo}}</a></div>
+                            <div class="col-md-6"><a href="#" class="btn" onclick="openStudents(11, 1,{{paralelo.id}} )">{{paralelo.paralelo}}</a></div>
+                        {% endfor %}
+                </div>
+
+            </div-->
+                        <div class="col-md-6">
+                            <div class="text-center"> Primaria  Comunitaria Vocacional</div>
+                            <div class="row">
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir" onclick="openStudents(12, 1)">1 <i class="fa fa-pencil-square-o"></i></a></div>
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir"  onclick="openStudents(12, 2)">2 <i class="fa fa-pencil-square-o"></i></a></div>
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir" onclick="openStudents(12, 3)">3 <i class="fa fa-pencil-square-o"></i></a></div>
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir" onclick="openStudents(12, 4)">4 <i class="fa fa-pencil-square-o"></i></a></div>
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir" onclick="openStudents(12, 5)">5 <i class="fa fa-pencil-square-o"></i></a></div>
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir" onclick="openStudents(12, 6)">6 <i class="fa fa-pencil-square-o"></i></a></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">Paralelos</div>
+                            </div>
+
+
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-center"> Secundaria Comunitaria Vocacional</div>
+                            <div class="row">
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir" onclick="openStudents(13, 1)">1 <i class="fa fa-pencil-square-o"></i></a></div>
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir" onclick="openStudents(13, 2)">2 <i class="fa fa-pencil-square-o"></i></a></div>
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir" onclick="openStudents(13, 3)">3 <i class="fa fa-pencil-square-o"></i></a></div>
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir" onclick="openStudents(13, 4)">4 <i class="fa fa-pencil-square-o"></i></a></div>
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir" onclick="openStudents(13, 5)">5 <i class="fa fa-pencil-square-o"></i></a></div>
+                                <div class="col-md-2"><a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="" data-original-title="Inscribir" onclick="openStudents(13, 6)">6 <i class="fa fa-pencil-square-o"></i></a></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">Paralelos</div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <div class="row"><div class="col-md-12 col-md-offset-6"><a href="{{path('sie_ienoacreditadas')}}" class="btn btn-default">Aceptar</a></div></div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- /.portlet-body -->
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('sie_ienoacreditadas')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog  higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Estudiantes</h4>
+                </div>
+                <div class="modal-body">
+                    {{form_start(paralelo_form)}}
+
+
+
+                    <input type="text" name="nivel" id="nivel" value=""/>
+                    <input type="text" name="grado" id="grado" value=""/>
+                    <input type="text" name="paralelo" id="paralelo" value=""/>
+                    <input type="text" name="id" id="id" value="{{entity.id}}" />
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <fieldset>
+                                <legend>Lista de Estudiantes</legend>
+                                <div class="text-right"><a onclick="agregarHijo()" class="btn-link"><i class="fa fa-plus-square"></i> Nuevo</a></div>
+                                <div id="no-more-tables">
+                                    <table class="table table-bordered cf">
+                                        <thead class="cf">
+                                            <tr>
+                                                <th class="">CI</th>
+                                                <th class="">Paterno</th>
+                                                <th class="">Materno</th>
+                                                <th class="">Nombre</th>
+                                                <th class="col-lg-1">Género</th>
+                                                <th class="col-lg-2">F. Nacimiento</th>
+                                                <th class="col-lg-1">Paralelo</th>
+                                                <th class="col-lg-2">Turno</th>
+                                                <th class="col-lg-1"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="datastudents">
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!--button type="button" class="btn btn-default" data-dismiss="modal">Close</button-->
+
+                    {{form_widget(paralelo_form.save)}}
+                </div>
+                {{form_end(paralelo_form)}}
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        /* function checkSubmitFrm() {
+         document.getElementById('sie_appwebbundle_persona_submit').disabled = true;
+         return true;
+         }
+
+         $('#studentInscription').click(function (event) {
+         alert(343434);
+         $("#myModal").modal("show");
+         });*/
+        var cantidad = 0;
+        var cont = 0;
+        var openStudents = function (nivel, grado, paralelo) {
+
+            cantidad = 0;
+            cont = 0;
+            $("#myModal").modal("show");
+            $(".modal-body #nivel").val(nivel);
+            $(".modal-body #grado").val(grado);
+            $(".modal-body #paralelo").val(paralelo);
+        }
+
+
+
+        function agregarHijo()
+        {
+            cont++;
+            if (cont < 40) {
+                cantidad++;
+                var ci = 'ci' + cantidad;
+                var paterno = 'paterno' + cantidad;
+                var materno = 'materno' + cantidad;
+                var nombre = 'nombre' + cantidad;
+                var genero = 'genero' + cantidad;
+                var fnac = 'fnac' + cantidad;
+                var paralelo = 'paralelo' + cantidad;
+                var turno = 'turno' + cantidad;
+                $('#datastudents').append("<tr id='" + cantidad + "' class='info'>\n\
+                                        <td class='form-group'><input type='text' name='form[" + ci + "]' id='form_" + ci + "' class='form-control' /></td>\n\
+                                        <td class='form-group'><input type='text' name='form[" + paterno + "]' id='form_" + paterno + "' class='form-control'  /></td>\n\
+                                        <td class='form-group'><input type='text' name='form[" + materno + "]' id='form_" + materno + "' class='form-control'  /></td>\n\
+                                        <td class='form-group'><input type='text' name='form[" + nombre + "]' id='form_" + nombre + "' class='form-control' required /></td>\n\
+                                        <td class='form-group'><select name='form[" + genero + "]' id='form_" + genero + "' class='form-control' required ></select></td>\n\
+                                        <td class=''><div id='sandbox-container'><input type='date' name='form[" + fnac + "]' id='form_" + fnac + "' class='form-control' required />\n\
+            <td class='form-group'><select name='form[" + paralelo + "]' id='form_" + paralelo + "' class='form-control' required ></select></td>\n\
+<td class='form-group'><select name='form[" + turno + "]' id='form_" + turno + "' class='form-control' required ></select></td>\n\</div></td>\n\
+                                        <td><button type='button' onclick='eliminaridioma(" + cantidad + " )' ><i class='fa fa-trash-o btn-link'> </button></td>\n\
+                                    </tr>");
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('sie_ienoacreditadas_getgeneros'),
+                    beforeSend: function () {
+                        $('#form_' + genero).empty();
+
+                    },
+                    success: function (data) {
+                        $('#form_' + genero).empty();
+                        $.each(data.ageneros, function (i, value) {
+                            $('#form_' + genero).append('<option value="' + i + '">' + value + '</option>');
+                        });
+
+                        $('#form_' + paralelo).empty();
+                        $.each(data.aparalelos, function (i, value) {
+                            $('#form_' + paralelo).append('<option value="' + i + '">' + value + '</option>');
+                        });
+
+                        $('#form_' + turno).empty();
+                        $.each(data.aturnos, function (i, value) {
+                            $('#form_' + turno).append('<option value="' + i + '">' + value + '</option>');
+                        });
+
+                    }
+                });
+            } else {
+                cont--;
+            }
+        }
+
+        function eliminaridioma(i) {
+            cont--;
+            $("#" + i).remove();
+        }
+    </script>
+{% endblock %}

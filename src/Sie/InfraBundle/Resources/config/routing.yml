@@ -1,0 +1,31 @@
+sie_infra_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SieInfraBundle:Default:index }
+
+infra_list_main:
+    resource: "@SieInfraBundle/Resources/config/routing/list.yml"
+    prefix:   "/sie/list"
+
+infra_sheetOne_main:
+    resource: "@SieInfraBundle/Resources/config/routing/sheetone.yml"
+    prefix:   "/sie/sheetone"
+
+infra_sheetTwo_main:
+    resource: "@SieInfraBundle/Resources/config/routing/sheettwo.yml"
+    prefix:   "/sie/sheettwo"
+
+infra_sheetThree_main:
+    resource: "@SieInfraBundle/Resources/config/routing/sheetthree.yml"
+    prefix:   "/sie/sheetthree"
+
+infra_sheetFour_main:
+    resource: "@SieInfraBundle/Resources/config/routing/sheetfour.yml"
+    prefix:   "/sie/sheetfour"
+
+infra_sheetFive_main:
+    resource: "@SieInfraBundle/Resources/config/routing/sheetfive.yml"
+    prefix:   "/sie/sheetfive"
+
+infra_sheetSix_main:
+    resource: "@SieInfraBundle/Resources/config/routing/sheetsix.yml"
+    prefix:   "/sie/sheetsix"

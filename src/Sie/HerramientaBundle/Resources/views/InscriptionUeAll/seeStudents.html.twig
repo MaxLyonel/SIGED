@@ -1,0 +1,62 @@
+
+{% if exist == true %}
+    <small>
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="no-more-tables">
+                    <div class="row">
+
+                    </div>
+                    
+                    <table class="table table-bordered table-hover cf">
+                        <tr>
+
+                        <input type="text" id="formdata_data" name="formdata[data]" value="{{aData}}">
+                        <td align="center" class="warning" colspan="6">Estudiantes Inscritos</br>
+                            {{gradoname}} - {{paraleloname}}
+                        </td>
+                        <!--td> 
+                            <input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"   >
+                        </td-->
+                        </tr>
+                        {% for data in objStudents%}
+                            <tr >
+                                <td>{{loop.index}}</td>
+                                <td  align="">{{data.codigoRude}}</td>
+                                <td  align="">{{data.nombre}}</td>
+                                <td  align="">{{data.paterno}}</td>
+                                <td  align="">{{data.materno}}</td>
+                                <td  align="">{{data.fechaNacimiento |date('d-m-Y')}}</td>
+
+                            </tr>
+                        {%endfor%}
+                    </table>
+                    
+                </div>
+                <!-- /.portlet -->
+            </div>
+        </div>
+    </small>
+    <!-- /.row -->
+{%else%}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{%endif%}
+
+
+
+<script>
+
+
+</script>
+

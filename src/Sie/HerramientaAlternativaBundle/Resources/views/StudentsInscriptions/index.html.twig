@@ -1,0 +1,85 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Notas</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body no-padding">
+
+
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center border-right">No.</th>
+                                <th>Código</th>
+                                <th>Asignatura</th>
+                                <th>Maestro</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-theme" data-dismiss="modal">Guardar Cambios</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+<script>
+    var newArea = function(ida, infoUe){
+        $.ajax({
+            type: 'post',
+            data: ({ida:ida, infoUe: infoUe}),
+            url: "{{ path('herramienta_infoEstudianteAreas_new') }}",
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+    var deleteArea = function(idco, infoUe){
+        $.ajax({
+            type: 'post',
+            data: ({idco:idco, infoUe: infoUe}),
+            url: "{{ path('herramienta_infoEstudianteAreas_delete') }}",
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+</script>

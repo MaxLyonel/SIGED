@@ -1,0 +1,107 @@
+Sie\AppWebBundle\Entity\ValidacionProceso:
+    type: entity
+    table: validacion_proceso
+    repositoryClass: Sie\AppWebBundle\Entity\ValidacionProcesoRepository
+    indexes:
+        idx__validacion_proceso:
+            columns:
+                - validacion_regla_tipo_id
+                - llave
+                - gestion_tipo_id
+        idx_regla_alumno:
+            columns:
+                - llave
+        IDX_FB191DA496157FA0:
+            columns:
+                - periodo_tipo_id
+        IDX_FB191DA4179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_FB191DA4D62B85B7:
+            columns:
+                - validacion_regla_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaProceso:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_proceso
+        llave:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        esActivo:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: true
+            column: es_activo
+        obs:
+            type: string
+            nullable: true
+            length: 1000
+            fixed: false
+            comment: ''
+        institucionEducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucion_educativa_id
+        lugarTipoIdDistrito:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: lugar_tipo_id_distrito
+        solucionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: solucion_tipo_id
+        omitido:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+    manyToOne:
+        periodoTipo:
+            targetEntity: PeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        validacionReglaTipo:
+            targetEntity: ValidacionReglaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                validacion_regla_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-md-12"> <div id="no-more-tables">
+            <table class="table table-bordered table-hover cf">
+                <thead class="cf">
+                    <tr class="info">
+                        <th >Área</th>
+                            {% for bim in bimestres %}
+                            <th>
+                                {{bim}}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key,notas in notastudent %}
+                        <tr>
+                            <td data-title="Asignatura">
+                                <small>{{ key }}</small>
+                            </td>
+                            {% for k,nota in notas %}
+                                <td data-title="{{ k }}. Bimestre" align='center'> 
+                                    <small>{{nota}}</small>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

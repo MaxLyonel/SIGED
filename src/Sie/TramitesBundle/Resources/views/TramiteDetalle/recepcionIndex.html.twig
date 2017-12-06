@@ -1,0 +1,155 @@
+{% extends 'SieTramitesBundle:Tramite:index.html.twig' %}
+{% block contentSearchBread %}
+    <li class="active">Recepción Trámite</li>
+{% endblock %} 
+{% block contentsearch %}          
+    <div class="row">    
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <form name="formtable" role="form" action="{{ path('sie_tramite_detalle_certificado_tecnico_recepcion_guarda') }}" method="POST" onsubmit="return verificaCampos()">  
+                <input type="hidden" name="_token" value="{{ csrf_token('recepcionar') }}">  
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h4 class="panel-title">C.E.A.: {{infoAutorizacionCentro.institucioneducativa}}</h4>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn btn-danger" id="botonModalDevolver" name="botonModalDevolver" data-action="search" data-toggle="tooltip" data-placement="top" data-title="Devolver" data-original-title="" title="Devolver" disabled="true" >Devolver</button>
+                            <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-primary" value="Registrar" disabled="true" />
+                            <a class="btn btn-lilac" href="{{ path('sie_tramite_detalle_certificado_tecnico_recepcion_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-search" style="display: none;">
+                        <div class="input-group mb-15">
+                            <input class="form-control" placeholder="Observación..." type="text" id="obs" name="obs" >
+                            <span class="input-group-btn">
+                                <input type="submit" name="botonDevolver" id="botonDevolver" class="btn btn-primary" value="Registrar la devolución" />
+                                <button type="button" id="botonCancelarDevolver" name="botonCancelarDevolver" data-action="search" class="btn btn-danger">Cancelar</button>
+                            </span>
+                        </div>
+                    </div><!-- /.panel-sub-heading -->
+                    <div class="panel-body">  
+                        {% if listaParticipante is defined and listaParticipante|length > 0 %}  
+                            {% if infoAutorizacionCentro.tec_basico == 0 and listaParticipante[0].nivel == 1 %}
+                                <div class="alert alert-danger">
+                                    <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel básico.
+                                </div>
+                            {% endif %}         
+                            {% if infoAutorizacionCentro.tec_auxiliar == 0 and listaParticipante[0].nivel == 2 %}
+                                <div class="alert alert-danger">
+                                    <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel auxiliar.
+                                </div>
+                            {% endif %}   
+                            {% if infoAutorizacionCentro.tec_medio == 0 and listaParticipante[0].nivel == 3 %}
+                                <div class="alert alert-danger">
+                                    <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel medio.
+                                </div>
+                            {% endif %}                     
+                            <table id="tablaParticipantes" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th style="width:50px; text-align:center;">#</th>
+                                        <th style="text-align:center;">Trámite</th>
+                                        <th style="text-align:center;">Código RUDEAL</th>
+                                        <th style="text-align:center;">C.I.</th>
+                                        <th style="text-align:center;">Paterno</th>
+                                        <th style="text-align:center;">Materno</th>
+                                        <th style="text-align:center;">Nombre</th>
+                                        <th style="text-align:center;">Fecha y Lugar de Nacimiento</th>
+                                        <th style="width:50px; text-align:center;">
+                                            <div class="ckbox ckbox-primary">
+                                                <input id="participantesAll" type="checkbox" onchange="marcarTodos(this);">
+                                                <label for="participantesAll"></label>
+                                            </div> 
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Trámite</th>
+                                        <th>Código RUDEAL</th>
+                                        <th>C.I.</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>
+                                        <th>Nombre</th>
+                                        <th>Fecha y Lugar de Nacimiento</th>
+                                        <th style="text-align:center;">
+                                            &nbsp; 
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for participante in listaParticipante %}
+                                        <tr {% if participante.segip_id > 1 or participante.segip_id == 0 %}class="text-danger"{% endif %}>
+                                            <td style="text-align:center;">{{ loop.index }}</td>
+                                            <td>{{ participante.tramite_id }}</td>
+                                            <td>{{ participante.codigo_rude }}</td>
+                                            <td>{{ participante.carnet_identidad }}</td>
+                                            <td>{{ participante.paterno }}</td>
+                                            <td>{{ participante.materno }}</td>
+                                            <td>{{ participante.nombre }}</td>
+                                            <td>{{ participante.fecha_nacimiento }} - {{ participante.lugar_nacimiento }}</td>
+                                            <td>
+                                                {% set registro = true %} 
+
+                                                {% if participante.carnet_identidad == "" %}
+                                                    <span class="label label-danger rounded">Sin C.I.</span>
+                                                    {% set registro = false %} 
+                                                {% endif %} 
+
+                                                {% if participante.fecha_nacimiento == "" %}
+                                                    <span class="label label-danger rounded">Sin Fecha Nac.</span>
+                                                    {% set registro = false %} 
+                                                {% endif %} 
+
+                                                {% if participante.lugar_nacimiento == "" %}
+                                                    <span class="label label-danger rounded">Sin Lugar Nac.</span>
+                                                    {% set registro = false %} 
+                                                {% endif %} 
+
+                                                {% if participante.nivel == 1 %}
+                                                    {% if infoAutorizacionCentro.tec_basico == 0 %}
+                                                        <span class="label label-inverse rounded">No autorizado</span>
+                                                        {% set registro = false %} 
+                                                    {% endif %} 
+                                                {% endif %} 
+
+                                                {% if participante.nivel == 2 %}
+                                                    {% if infoAutorizacionCentro.tec_auxiliar == 0 %}
+                                                        <span class="label label-inverse rounded">No autorizado</span>
+                                                        {% set registro = false %} 
+                                                    {% endif %} 
+                                                {% endif %} 
+
+                                                {% if participante.nivel == 3 %}
+                                                    {% if infoAutorizacionCentro.tec_medio == 0 %}
+                                                        <span class="label label-inverse rounded">No autorizado</span>
+                                                        {% set registro = false %} 
+                                                    {% endif %} 
+                                                {% endif %} 
+
+                                                {% if registro %}
+                                                    <div class="ckbox ckbox-info">
+                                                        <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.tramite_id|base64_encode }}"  type="checkbox" onchange="validarMarcar(this);">
+                                                        <label for="{{ ("participantes"~loop.index)|base64_encode }}"></label>
+                                                    </div>   
+                                                {% endif %}                          
+                                            </td>
+                                        </tr> 
+                                    {% endfor %} 
+                                </tbody>  
+                            </table>                        
+                        {% else %}    
+                            <div class="alert alert-warning">
+                                <strong>!</strong> Sin participantes.
+                            </div>
+                        {% endif %} 
+                    </div><!-- /.panel-body -->
+                    <div class="panel-footer"> 
+                    </div><!-- /.panel-foot -->
+                </div>
+            </form> 
+        </div> 
+    </div><!-- /.row -->   
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+
+{% block contentoption%}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="page-header">
+                <h3 class="heading pull-left"><i class="fa fa-desktop animated flip"></i> Gestión Apoderados <span class="sub-heading">{{app.session.get('fullname')}}</span></h3>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="separator bottom"></div>
+        <div class="row">
+
+            <div class="col-md-12">
+
+                <!-- Website Stats  Widget -->
+                <div class="panel" id="dashboard-tour-visits">
+
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <i class="fa fa-file-text animated flip"></i> Datos del Estudiante
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <label class="col-md-2 text-right">CÓDIGO RUDE</label>
+                                <div class="col-md-10">{{ datosEst.codigoRude }}</div>
+                            </div>
+                            <div class="row">
+                                <label class="col-md-2 text-right">C.I.</label>
+                                <div class="col-md-10">{{ datosEst.carnetIdentidad }}</div>
+                            </div>
+                            
+                            <div class="row">
+                                <label class="col-md-2 text-right">NOMBRE</label>
+                                <div class="col-md-10">{{ datosEst.nombre }} {{ datosEst.paterno }} {{ datosEst.materno }}</div></div>
+                            <div class="row"><label class="col-md-2 text-right">UNIDAD EDUCATIVA</label><div class="col-md-10"></div></div>
+                            <div class="row"><label class="col-md-2 text-right">PARALELO</label><div class="col-md-10"></div></div>
+                            <div class="row"><label class="col-md-2 text-right">PERIODO</label><div class="col-md-10"></div></div>
+                            <div class="row"><label class="col-md-2 text-right">GESTIÓN</label><div class="col-md-10">{{ "now"|date("Y") }}</div></div>
+                        </div>
+                    </div> 
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Padres y/o Apoderados
+                        </div>
+                        <div class="panel-body">
+                            {% if apoderados is defined %}
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <tr>
+                                            <th class="hidden-phone">CARNET</th>
+                                            <th>NOMBRE</th>
+                                            <th>FECHA NACIMIENTO</th>
+                                            <th>TELEFONO</th>
+                                            <th>PARENTESCO</th>
+                                            <th>EMPLEO</th>
+                                            <th>ACCION</th>
+                                        </tr>
+                                        {% for ap in apoderados %}
+                                            {% set apid = ap.PersonaApoderado %}
+                                            <tr>
+                                                <td class="hidden-phone">{{ apid.carnet }}</td>
+                                                <td>{{ ap.PersonaApoderado }}</td>
+                                                <td>{{ apid.fechaNacimiento|date('d-m-Y')}}</td>
+                                                <td>{{ ap.telefono }}</td>
+                                                <td>{{ ap.apoderadoTipo }}</td>
+                                                <td>{{ ap.empleo }}</td>
+                                                <td>
+                                                    <a href="{{path('apoderado_show',{'idApoderado':apid.id})}}" data-toggle="tooltip" data-placement="top" title="{{ ap.PersonaApoderado }}"><span class="glyphicon glyphicon-info-sign"></span>Ver</a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            {% else %}
+                                No se encontraron apoderados.
+                                {% set foo = 'mensaje' %}
+                                <hr>
+                                
+                                <!-- Modal -->
+                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Asignar Usuario</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form class="form-horizontal" method="POST" action="">
+                                                    <div class="form-group">
+                                                        <label for="input1" class="col-sm-3 control-label">USUARIO</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" name="usuario" class="form-control" id="input1" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="input1" class="col-sm-3 control-label">CONTRASEÑA</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="password" name="contrasena" class="form-control" id="input1" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="input1" class="col-sm-3 control-label">REPETIR CONTRASEÑA</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="password" name="contrasenaconfirm" class="form-control" id="input1" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                                <button type="button" class="btn btn-primary">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            {% endif %}
+                            <!--<a onclick="usuarios('218');" href="#Roles">Roles</a>-->
+                            <div id="Usuarios" class="tab_content" style="display: none;"></div>
+
+                            <a href="{{ path('apoderado_add',{'idEstudiante':datosEst.id}) }}" class="btn btn-info">Nuevo Apoderado</a>
+
+
+                        </div>
+                    </div>
+                    <!-- End of Website Stats Widget -->
+                    <a href="{{path('padres_admin')}}" class="btn btn-link">Volver</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}
+
+

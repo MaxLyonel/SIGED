@@ -1,0 +1,110 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption -%}
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="jumbotron">
+                    <div class="container">
+                        <h2>Distrito: {{ disdesc }}</h2>
+                        <p>Código Distrito: {{ discod }}</p>
+                        <p>Departamento: {{ depto }}</p>
+                    </div>                    
+                </div>         
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Información</a></li>
+                </ol> 
+            </div>
+        </div>    
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4><i class="fa fa-circle text-dpl"></i> Lista de unidades educativas con observaciones.</h4>
+                        </div>
+{#                        <div class="portlet-widgets">
+                            <span class="divider"></span>
+                            <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                        </div>#}
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table id="tablaListadoieobservados" class="table table-bordered table-hover cf">    
+                                <thead class="cf">
+                                    <tr>
+                                        <th>Código U.E.</th>                        
+                                        <th>Nombre</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ies in eoEntity %}
+                                        <tr>
+                                            <td>{{ ies.cod_ue }}</td>
+                                            <td>{{ ies.institucioneducativa }}</td>
+                                            <td data-title="VerNota" class="text-left">
+                                                 <a href="{{ path('sie_ue_inscripcion_observados_busqueda_ie', { 'ie': ies.cod_ue }) }}" ><span class="glyphicon glyphicon-eye-open"></span> Ver Observados</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     }
+                    };
+
+    var currentLang = espanol;    
+        
+    $(document).ready(function() {
+        var dtable = $('#tablaListadoieobservados').dataTable( {"oLanguage": espanol} );
+       
+        $('#tablaListadoieobservados tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                dtable.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+        
+        {#$('#btn').click(function(){
+            dtable.fnDestroy();
+            dtable = null;
+            currentLang = (currentLang == english) ? espanol : english;
+            dtable = $('#tablaListadoieobservados').dataTable( {"oLanguage": currentLang} );
+        });#}
+        
+    });
+    </script>
+{% endblock %}

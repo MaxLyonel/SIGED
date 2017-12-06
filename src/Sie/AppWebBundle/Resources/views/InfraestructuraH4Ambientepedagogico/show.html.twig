@@ -1,0 +1,48 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH4Ambientepedagogico</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>N12ambienteanchomts</th>
+                <td>{{ entity.n12AmbienteAnchoMts }}</td>
+            </tr>
+            <tr>
+                <th>N12ambientelargomts</th>
+                <td>{{ entity.n12AmbienteLargoMts }}</td>
+            </tr>
+            <tr>
+                <th>N12ambientealtomts</th>
+                <td>{{ entity.n12AmbienteAltoMts }}</td>
+            </tr>
+            <tr>
+                <th>N14capacidadambiente</th>
+                <td>{{ entity.n14CapacidadAmbiente }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fecharegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('infraestructurah4ambientepedagogico') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('infraestructurah4ambientepedagogico_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

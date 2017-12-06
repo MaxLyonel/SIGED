@@ -1,0 +1,43 @@
+estudianteinscripcion:
+    path:     /{op}
+    defaults: { _controller: SieAppWebBundle:EstudianteInscripcion:index, op:search }
+
+estudianteinscripcion_show:
+    path:     /{id}/show/
+    defaults: { _controller: "SieAppWebBundle:EstudianteInscripcion:show" }
+
+estudianteinscripcion_new:
+    path:     /new/
+    defaults: { _controller: "SieAppWebBundle:EstudianteInscripcion:new" }
+
+estudianteinscripcion_create:
+    path:     /create/
+    defaults: { _controller: "SieAppWebBundle:EstudianteInscripcion:create" }
+    methods:  POST
+
+estudianteinscripcion_edit:
+    path:     /edit/
+    defaults: { _controller: "SieAppWebBundle:EstudianteInscripcion:edit" }
+    methods:  POST
+
+estudianteinscripcion_update:
+    path:     /update/
+    defaults: { _controller: "SieAppWebBundle:EstudianteInscripcion:update" }
+    methods:  [POST, PUT]
+
+estudianteinscripcion_delete:
+    path:     /delete/
+    defaults: { _controller: "SieAppWebBundle:EstudianteInscripcion:delete" }
+    methods:  [POST, DELETE]
+
+validardatosestudiante:
+    path:     /validar/{nombre}/{paterno}/{materno}/{genero}/{fechanac}/
+    defaults: { _controller: "SieAppWebBundle:EstudianteInscripcion:validardatosestudiante" }
+    options:
+         expose: true
+
+buscarestudiantes_institucion:
+    path:     /estudianteslista/
+    defaults: { _controller: "SieAppWebBundle:EstudianteInscripcion:buscarestudiantesinstitucion" }
+    options:
+         expose: true

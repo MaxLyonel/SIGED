@@ -1,0 +1,236 @@
+Sie\AppWebBundle\Entity\MaestroInscripcion:
+    type: entity
+    table: maestro_inscripcion
+    repositoryClass: Sie\AppWebBundle\Entity\MaestroInscripcionRepository
+    indexes:
+        fk_dat_sie_docenteadministrati2:
+            columns:
+                - especialidad_tipo_id
+        fk_maestroinscripcion_periodo_t:
+            columns:
+                - periodo_tipo_id
+        fk_dat_sie_docenteadministrati3:
+            columns:
+                - financiamiento_tipo_id
+        fk_dat_sie_docenteadministrati4:
+            columns:
+                - formacion_tipo_id
+        fk_dat_sie_docenteadministrati5:
+            columns:
+                - rda_planillas_id
+        fk_dat_sie_docenteadministrati6:
+            columns:
+                - persona_id
+        fk_dat_sie_docenteadministrati1:
+            columns:
+                - cargo_tipo_id
+        fk_maestroinscripcion_gestion_t:
+            columns:
+                - gestion_tipo_id
+        fk_maestroinscripcion_instituc1:
+            columns:
+                - institucioneducativa_id
+        IDX_E7472B997A322B24:
+            columns:
+                - institucioneducativa_sucursal_id
+        IDX_E7472B99990CBEC3:
+            columns:
+                - estudia_idioma_materno_id
+        IDX_E7472B99B332D85C:
+            columns:
+                - estadomaestro_id
+        IDX_E7472B99EF3F27EB:
+            columns:
+                - rol_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        rdaPlanillasId:
+            type: string
+            nullable: false
+            length: 10
+            fixed: false
+            comment: ''
+            column: rda_planillas_id
+        ref:
+            type: string
+            nullable: true
+            length: 80
+            fixed: false
+            comment: ''
+        normalista:
+            type: boolean
+            nullable: true
+            comment: ''
+        idiomaMaternoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: idioma_materno_id
+        leeescribebraile:
+            type: boolean
+            nullable: true
+            comment: ''
+        formaciondescripcion:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        lugarTipo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: lugar_tipo
+        itemDirector:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: item_director
+        horas:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        item:
+            type: string
+            nullable: true
+            length: 6
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        esVigenteAdministrativo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente_administrativo
+    manyToOne:
+        institucioneducativaSucursal:
+            targetEntity: InstitucioneducativaSucursal
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_sucursal_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiaiomaMaterno:
+            targetEntity: IdiomaMaterno
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudia_idioma_materno_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        cargoTipo:
+            targetEntity: CargoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cargo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        especialidadTipo:
+            targetEntity: EspecialidadMaestroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                especialidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        financiamientoTipo:
+            targetEntity: FinanciamientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                financiamiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        formacionTipo:
+            targetEntity: FormacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                formacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadomaestro:
+            targetEntity: EstadomaestroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadomaestro_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        periodoTipo:
+            targetEntity: PeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rolTipo:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rol_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

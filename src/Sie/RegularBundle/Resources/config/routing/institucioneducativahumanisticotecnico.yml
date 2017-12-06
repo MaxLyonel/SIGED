@@ -1,0 +1,30 @@
+sie_ueHumTec:
+    path:     /
+    defaults: { _controller: "SieRegularBundle:InstitucioneducativaHumanisticoTecnico:index" }
+
+sie_ueHumTec_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieRegularBundle:InstitucioneducativaHumanisticoTecnico:show" }
+
+sie_ueHumTec_new:
+    path:     /new
+    defaults: { _controller: "SieRegularBundle:InstitucioneducativaHumanisticoTecnico:new" }
+
+sie_ueHumTec_create:
+    path:     /create
+    defaults: { _controller: "SieRegularBundle:InstitucioneducativaHumanisticoTecnico:create" }
+    methods:  POST
+
+sie_ueHumTec_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieRegularBundle:InstitucioneducativaHumanisticoTecnico:edit" }
+
+sie_ueHumTec_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieRegularBundle:InstitucioneducativaHumanisticoTecnico:update" }
+    methods:  [POST, PUT]
+
+sie_ueHumTec_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieRegularBundle:InstitucioneducativaHumanisticoTecnico:delete" }
+    methods:  [POST, DELETE]

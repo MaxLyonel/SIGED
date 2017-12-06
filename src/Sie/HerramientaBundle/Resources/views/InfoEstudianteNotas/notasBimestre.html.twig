@@ -1,0 +1,387 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    	<form action="" id="formNotas" onsubmit="registrarNotas(); return false">
+    	<input type="hidden" name="infoUe" id="infoUe" value="{{infoUe}}">
+    	<input type="hidden" name="infoStudent" id="infoStudent" value="{{infoStudent}}">
+    	<input type="hidden" name="tipo" value="b">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Notas del Estudiante</h3>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body no-padding" id="modal-body">
+
+
+              {% include 'SieHerramientaBundle:InfoEstudianteNotas:encabezadoNotas.html.twig' %}
+              <h5 class="text-success" style="margin-left:10px">Notas <span style="float:right; margin-right:10px; font-size:1.1em;">Gestion: {{gestion}}</span></h5>
+              <div class="row">
+                <div class="col-md-12">
+
+
+                    {% if app.session.get('ue_plena') %}
+                      {% if swspeciality %}
+                          {% if objLevelModular.gradoTipo.id > 5 %}
+                            {% if grado == 5 or grado == 6 %}
+                              <div class="alert alert-danger alert-dismissable">
+                                  <strong>Especialidad!</strong> Debe de registrar este dato para el Estudiante
+                              </div>
+                              <a href="#" onclick='newSpeciality();' class="btn btn-danger btn-danger btn-inset btn-xs">Registrar Especialidad</a>
+                              <div class="" id="respSpeciality"></div>
+                            {% endif %}
+                          {% else %}
+                            {% if grado == 5  %}
+                              <div class="alert alert-danger alert-dismissable">
+                                  <strong>Especialidad!</strong> Debe de registrar este dato para el Estudiante
+                              </div>
+                              <a href="#" onclick='newSpeciality();' class="btn btn-danger btn-stroke btn-inset btn-xs">Registrar Especialidad</a>
+                              <div class="" id="respSpeciality"></div>
+                            {% endif %}
+                          {% endif %}
+                      {% endif %}
+                    {% endif %}
+
+
+                </div>
+              </div>
+
+            	{% if nivel == 11 %}
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th rowspan="2" style="vertical-align: middle">Campo de Saberes y Conocimientos</th>
+								<th rowspan="2" style="vertical-align: middle">Áreas Curriculares</th>
+								<th colspan="4">Valoración Cualitativa</th>
+							</tr>
+							<tr>
+								<th>1er Bimestre</th>
+								<th>2do Bimestre</th>
+								<th>3er Bimestre</th>
+								<th>4to Bimestre</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% set cont = 0 %}
+							{% for key, a in areas %}
+								{% for asig in a %}
+									<tr>
+										{% if cont == 0 %}
+											<td rowspan="{{a|length}}">{{key}}</td>
+										{% endif %}
+										<td>{{asig.asignatura}}</td>
+										{% for n in asig.notas %}
+											{% if ((n.idNotaTipo <= operativo and n.nota == "" and estudiante.idEstadoMatricula == 4 and operativo < 5) or (n.idNotaTipo == operativo and (estudiante.idEstadoMatricula == 4 or estudiante.idEstadoMatricula == 5 or estudiante.idEstadoMatricula == 11 or estudiante.idEstadoMatricula == 55)) and (gestion == gestionActual)) or (gestion < gestionActual and n.nota == "") %}
+												<td>
+													<input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+													<input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+													<input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+
+													<textarea name="notas[]" class="form-control input-sm jnumbersletters notaCualitativa" cols="50" rows="5" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="15">{{n.nota}}</textarea>
+												</td>
+											{% else %}
+												<td>
+													<textarea class="form-control input-sm jnumbersletters" cols="50" rows="5" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{n.nota}}</textarea>
+												</td>
+											{% endif %}
+										{% endfor %}
+
+									</tr>
+									{% set cont = cont + 1 %}
+								{% endfor %}
+								{% set cont = 0 %}
+							{% endfor %}
+							<tr>
+								<td colspan="6">
+									<hr>
+									{% for c in cualitativas %}
+										{% if ((operativo == 4 and c.notaCualitativa == "" and estudiante.idEstadoMatricula == 4 and operativo < 5) or (operativo == 4 and (estudiante.idEstadoMatricula == 4 or estudiante.idEstadoMatricula == 5 or estudiante.idEstadoMatricula == 11 or estudiante.idEstadoMatricula == 55)) and (gestion == gestionActual)) or (gestion < gestionActual and c.notaCualitativa == "") %}
+											<input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
+											<input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
+											<p>{{c.notaTipo}}</p>
+											<p class="text-justify">
+												<textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" style="resize:none; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="15">{{c.notaCualitativa}}</textarea>
+											</p>
+										{% else %}
+											<p>{{c.notaTipo}}</p>
+											<p class="text-justify">
+												<textarea class="form-control jnumbersletters" rows="5" style="resize:none; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
+											</p>
+										{% endif %}
+									{% endfor %}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+            	{% else %}
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th rowspan="2" style="vertical-align: middle">Campo de Saberes y Conocimientos</th>
+								<th rowspan="2" style="vertical-align: middle">Áreas Curriculares</th>
+								<th colspan="5">Valoración Cuantitativa</th>
+								<th rowspan="2" style="vertical-align: middle;" class="col-md-3 col-xs-4">Valoración Cualitativa</th>
+							</tr>
+							<tr>
+								<th>1er Bimestre</th>
+								<th>2do Bimestre</th>
+								<th>3er Bimestre</th>
+								<th>4to Bimestre</th>
+								<th>Promedio Final</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% set cont = 0 %}
+							{% set contCuali = 0 %}
+							{% for key, a in areas %}
+								{% for asig in a %}
+									<tr>
+										{% if cont == 0 %}
+											<td rowspan="{{a|length}}">{{key}}</td>
+										{% endif %}
+										<td>{{asig.asignatura}}</td>
+										{% for n in asig.notas %}
+											{% if n.idNotaTipo != 5 %}
+												{% if (((n.idNotaTipo <= operativo) and (n.nota == 0 or n.nota == "") and (estudiante.idEstadoMatricula == 4 or estudiante.idEstadoMatricula == 55 or (n.nota == 0 or n.nota == "")) and operativo < 5) or (n.idNotaTipo == operativo and (estudiante.idEstadoMatricula == 4 or estudiante.idEstadoMatricula == 5 or estudiante.idEstadoMatricula == 11 or estudiante.idEstadoMatricula == 55)) and (gestion == gestionActual)) or ((gestion < gestionActual and n.nota == 0) )  %}
+													<td>
+														<input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+														<input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+														<input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+
+														<input name="notas[]" type="text" size="3" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="promedio(this,{{asig.idAsignatura}});" onblur="notaVacia(this,{{asig.idAsignatura}})" class="form-control input-sm {{asig.idAsignatura}} nota" autocomplete="off" maxlength="3">
+													</td>
+												{% else %}
+													<td>
+														<input type="text" size="3" value="{{n.nota}}" class="form-control input-sm {{asig.idAsignatura}}" autocomplete="off" disabled="disabled">
+													</td>
+												{% endif %}
+											{% else %}
+												{% if (operativo == 4 or n.nota > 0) or (gestion < gestionActual) %}
+													<td>
+														<input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
+														<input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
+														<input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
+
+														<input name="notas[]" type="text" size="3" value="{{n.nota}}" onkeypress="return validarNota(event)" onkeyup="promedio(this,{{asig.idAsignatura}});" class="form-control input-sm p{{asig.idAsignatura}} nota" autocomplete="off" readonly="readonly" maxlength="3">
+													</td>
+												{% else %}
+													<td>
+														<input type="text" size="3" value="{{n.nota}}" class="form-control input-sm {{asig.idAsignatura}}" autocomplete="off" disabled="disabled">
+													</td>
+												{% endif %}
+											{% endif %}
+
+										{% endfor %}
+										{% if contCuali == 0 %}
+											<td rowspan="20">
+												{% for c in cualitativas %}
+													{% if ((c.idNotaTipo <= operativo and c.notaCualitativa == "" and (estudiante.idEstadoMatricula == 4 or estudiante.idEstadoMatricula == 55 and operativo < 5) and operativo < 5) or (c.idNotaTipo == operativo and (estudiante.idEstadoMatricula == 4 or estudiante.idEstadoMatricula == 5 or estudiante.idEstadoMatricula == 11 or estudiante.idEstadoMatricula == 55)) and (gestion == gestionActual)) or (gestion < gestionActual and c.notaCualitativa == "") %}
+														<input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
+														<input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
+														<p><b>{{c.notaTipo}}</b></p>
+														<p class="text-justify">
+															<textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" minlength="15">{{c.notaCualitativa}}</textarea>
+														</p>
+													{% else %}
+														<p><b>{{c.notaTipo}}</b></p>
+														<p class="text-justify">
+															<textarea class="form-control jnumbersletters" rows="5" cols="30" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="200" disabled="disabled">{{c.notaCualitativa}}</textarea>
+														</p>
+													{% endif %}
+												{% endfor %}
+											</td>
+										{% endif %}
+									</tr>
+									{% set cont = cont + 1 %}
+									{% set contCuali = contCuali + 1 %}
+								{% endfor %}
+								{% set cont = 0 %}
+							{% endfor %}
+						</tbody>
+					</table>
+				{% endif %}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            {% if (((estudiante.idEstadoMatricula == 4 or estudiante.idEstadoMatricula == 55) and operativo != 5) or (operativo < 5 and (estudiante.idEstadoMatricula == 4 or estudiante.idEstadoMatricula == 5 or estudiante.idEstadoMatricula == 11 or estudiante.idEstadoMatricula == 55) )) or (gestion < gestionActual) %}
+	            <button type="submit" class="btn btn-theme">Guardar Cambios</button>
+	        {% endif %}
+        </div>
+    </div><!-- /.modal-content -->
+    </form>
+</div><!-- /.modal-dialog -->
+<script>
+	var promedio = function(control,clase){
+		//if(control.value == ""){ control.value = 0; }
+		if(control.value < 0){ control.value = 0; }
+		if(control.value > 100){ control.value = 100; }
+		var suma = 0;
+		$("."+clase).each(function (index) {
+            suma = suma + parseInt($(this).val());
+        })
+        var promedio = Math.round(suma/4);
+        if(isNaN(promedio)){
+    		promedio = 0;
+    	}
+        $('.p'+clase).val(promedio);
+	}
+
+	var notaVacia = function(control,clase){
+		if(control.value == ""){ control.value = 0; }
+		if(control.value < 0){ control.value = 0; }
+		if(control.value > 100){ control.value = 100; }
+		var suma = 0;
+		$("."+clase).each(function (index) {
+            suma = suma + parseInt($(this).val());
+        })
+        var promedio = Math.round(suma/4);
+        if(isNaN(promedio)){
+    		promedio = 0;
+    	}
+        $('.p'+clase).val(promedio);
+	}
+
+	var validarNota = function(e){
+        var key = e || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+        )
+        return false;
+    }
+
+    var registrarNotas = function(){
+    	var enviar = true;
+    	$(".nota").each(function (index) {
+            if($(this).val() == 0){
+            	enviar = false;
+            }
+        });
+        if(enviar == false){
+        	alert('Las notas registradas no pueden ser cero');
+        }
+        if(enviar == true){
+        	$(".notaCualitativa").each(function (index) {
+	            if($(this).val().length < 15){
+	            	alert('Las notas cualitativas deben tener al menos 15 dígitos');
+	            	enviar = false;
+	            }
+	        });
+        }
+
+        if(enviar == true){
+	    	var formData = $('#formNotas').serialize();
+		    $.ajax({
+		        type: 'post',
+		        url: Routing.generate('herramienta_infoEstudianteNotas_create_update'),
+		        data: formData,
+		        beforeSend: function () {
+		            $('#modal-body').empty();
+		            $('.modal-footer').empty();
+		            $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+		        },
+		        success: function (data) {
+		            $('#modal').modal('hide');
+		        },
+		        error: function (data) {
+
+		        }
+		    });
+		}
+	}
+
+	$(".jnumbersletters").keypress(function (key) {
+        var key = key || window.event;
+        var k = key.charCode || key.keyCode;
+        if ((k < 97 || k > 122)//letras minusculas
+            && (k < 65 || k > 90) //letras mayusculas
+            && (k < 48 || k > 57) //NUmeros
+            && (k != 13) //ENTER
+            && (k != 8) //retroceso
+            && (k != 9) //tab
+            && (k != 241) //ñ
+             && (k != 209) //Ñ
+             && (k != 32) //espacio
+             && (k != 225) //á
+             && (k != 233) //é
+             && (k != 237) //í
+             && (k != 243) //ó
+             && (k != 250) //ú
+             && (k != 193) //Á
+             && (k != 201) //É
+             && (k != 205) //Í
+             && (k != 211) //Ó
+             && (k != 218) //Ú
+             && (k != 44) //coma ,
+             && (k != 46) //punto .
+            )
+            return false;
+    });
+    var newSpeciality = function(){
+      //get the values to reload
+      infoStudent = $('#infoStudent').val();
+      infoUe = $('#infoUe').val();
+      $.ajax({
+          type: 'post',
+          url: Routing.generate('herramienta_infoEstudianteNotas_putspeciality'),
+          data: ({infoStudent:infoStudent, infoUe:infoUe}),
+          beforeSend: function () {
+            $('#respSpeciality').empty();
+              //$('#modal-body').empty();
+              //$('.modal-footer').empty();
+              //$('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+          },
+          success: function (data) {
+            $('#respSpeciality').append(data);
+              //$('#modal').modal('hide');
+          },
+          error: function (data) {
+
+          }
+      });
+
+    };
+
+
+    var saveSpecialityNew = function (infoUe, infoStudent) {
+
+        var  specialityForm = $('#specialityFormId').serialize();
+        var specialityId = $('#form_especialidad').val();
+        var horas = $('#form_horas').val();
+        var eInsId = $('#form_eInsId').val();
+        if(confirm('Está seguro de registrar la especialidad?\nDespues de guardar no podrá realizar modificación a lo reportado.')){
+          $('#modal').modal('hide');
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('herramienta_info_register_speciality_save'),
+                data: ({specialityId: specialityId, horas: horas, eInsId: eInsId}),
+                beforeSend: function () {
+                  $('#modal').empty();
+                },
+                success: function (data) {
+                  $('#modal').empty();
+                  //$('#modal').append(data);
+                  //location.reload(true);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }else{
+          return false;
+        }
+
+
+     };
+
+
+</script>

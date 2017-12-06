@@ -1,0 +1,4 @@
+services:
+#    sie_infraestructura.example:
+#        class: Sie\InfraestructuraBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

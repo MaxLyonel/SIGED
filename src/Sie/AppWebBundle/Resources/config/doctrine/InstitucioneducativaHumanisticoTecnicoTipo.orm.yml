@@ -1,0 +1,28 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnicoTipo:
+    type: entity
+    table: institucioneducativa_humanistico_tecnico_tipo
+    repositoryClass: Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnicoTipoRepository
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        institucioneducativaHumanisticoTecnicoTipo:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: institucioneducativa_humanistico_tecnico_tipo
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,8 @@
+<form action="" id="formMaestros" onsubmit="asignarMaestro(); return false">
+	<input type="hidden" name="cursoOfertaId" value="{{ieco}}">
+	{% include 'SieAppWebBundle:Services/MaestroAsignacion:maestroAsignacion.html.twig' with {'m':maestros} %}
+	<div style="background:#EEEEEE; text-align:right; padding:5px;">
+		<button type="button" class="btn btn-default" onclick="cerrarMaestros({{ieco}})">Cerrar</button>
+		<button type="submit" class="btn btn-success">Guardar Cambios</button>
+	</div>
+</form>

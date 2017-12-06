@@ -1,0 +1,103 @@
+Sie\AppWebBundle\Entity\Apoderado:
+    type: entity
+    table: apoderado
+    indexes:
+        fk_apoderado_1_fk:
+            columns:
+                - apoderado_tipo_id
+        fk_apoderado_persona_apoderado_:
+            columns:
+                - persona_apoderado_id
+        fk_apoderado_persona_estudiante:
+            columns:
+                - persona_estudiante_id
+        IDX_EAB782CE8ADDF3C3:
+            columns:
+                - gestion_id
+        IDX_EAB782CECD9F4106:
+            columns:
+                - idioma_materno_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        empleo:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        instruccionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: instruccion_id
+        telefono:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+        validado:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+    manyToOne:
+        gestion:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        apoderadoTipo:
+            targetEntity: ApoderadoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                apoderado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        personaApoderado:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_apoderado_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        personaEstudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaMaterno:
+            targetEntity: IdiomaMaterno
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_materno_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

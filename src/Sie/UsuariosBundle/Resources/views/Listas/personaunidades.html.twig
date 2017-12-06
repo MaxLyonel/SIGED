@@ -1,0 +1,49 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo -%}
+    <p>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4>Lista de unidades educativas donde usted tiene tuision como director.</h4>
+        </div>
+        <div class="panel-body">
+            <table id="tablaListadoPersonas" class="table table-striped" cellspacing="0" width="100%">    
+                <thead>
+                    <tr>
+                        <th>Seleccione una Unidad Educativa</th>
+                        <th>Cod: I.E.</th>
+                        <th>Nombre Unidad Educativa</th>                       
+                        <th>Cargo</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                {% for persona in personas %}
+                    <tr>
+                        <td>
+                            {% if ( app.session.get('roluser') == '9' ) %}
+                                <a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_usuario_persona_show',{'ie_id': persona.institucioneducativa_id, 'ie_nombre': persona.institucioneducativa}) }}"> Trabajar con esta unidad.</a>
+                            {% endif %}
+                        </td>
+                        <td>{{ persona.institucioneducativa_id }}</td>
+                        <td>{{ persona.institucioneducativa }}</td>                       
+                        <td>{{ persona.cargo }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#tablaListadoPersonas').find('tr').click( function(){
+            $('#tablaListadoPersonas_fil').text($(this).index());
+        });                
+    } );
+    </script>
+{% endblock %}

@@ -1,0 +1,74 @@
+Sie\AppWebBundle\Entity\PersonaAdministrativoInscripcion:
+    type: entity
+    table: persona_administrativo_inscripcion
+    indexes:
+        IDX_268132BD179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_268132BD340DE5C5:
+            columns:
+                - persona_administrativo_inscripcion_tipo_id
+        IDX_268132BDF5F88DB9:
+            columns:
+                - persona_id
+        IDX_268132BDFE19D46C:
+            columns:
+                - distrito_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        personaAdministrativoInscripcionTipo:
+            targetEntity: PersonaAdministrativoInscripcionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_administrativo_inscripcion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        distritoTipo:
+            targetEntity: DistritoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                distrito_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

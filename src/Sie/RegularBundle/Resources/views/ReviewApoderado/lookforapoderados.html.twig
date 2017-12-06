@@ -1,0 +1,55 @@
+<small>
+    {% if condition %}
+
+        <div class="alert alert-warning alert-dismissible" role="alert">
+
+            <strong><i class='fa fa-archive'></i></strong> Seleccione Apoderado 
+
+        </div>
+
+        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form', 'id':'addApoderado'} } )}}
+        <table class="table table-bordered table-hover cf">
+            <thead class="cf">
+                <tr class="info">
+                    <th class="text-center">No</th>
+                    <th class="text-center">Paterno</th>
+                    <th class="text-center">Materno</th>
+                    <th class="text-center">Nombre</th>
+                    <th class="text-center">CI</th>
+                    <th class="text-center">F. Nacimiento</th>
+                    <th class="text-center">Opción</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {%for apoderado in apoderados %}
+                    <tr ><td data-title="No">{{loop.index}}</td>
+
+                        <td data-title="Paterno"> {{apoderado.paterno}}</td>
+                        <td data-title="Materno"> {{apoderado.materno}}</td>
+                        <td data-title="Nombre"> {{apoderado.nombre}}</td>
+                        <td data-title="Carnet"> {{apoderado.carnet}}</td>
+                        <td data-title="F. Nac."> {{apoderado.fechaNacimiento | date('d-m-Y')}}</td>
+                        <td data-title="Opcion" class="success" >
+                            <div class="checkbox">
+                                <label>
+                                    <input type="radio" id="form_idpersona_{{loop.index}}" name="form[idpersona]"   value='{{apoderado.id}}'>
+                                </label>
+                            </div>
+
+                        </td>
+                    </tr>
+                {% endfor%}
+            </tbody>
+        </table>
+        {{form_end(form)}}
+    {% else %}
+        {% for flashMessage in app.session.flashbag.get('errorapo') %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong><i class='fa fa-ban'></i></strong> {{ flashMessage }}
+            </div>
+        {% endfor %}      
+    {% endif %}
+</small>
+

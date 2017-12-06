@@ -1,0 +1,199 @@
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Datos de la persona
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  Actualizar Datos</li>
+                    <li class="active">Nueva Persona</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    {{ form_start(form, { 'attr': {'id':'sie_usuarios_persona_edit', 'data-toggle': 'validator', 'role': "form", 'onsubmit': 'enviaformpersona(); return false;', 'class':'form-horizontal' } } )}}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-green">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Personal</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pdatauser"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pdatauser" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body">                            
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    {{ form_row(form.nombre, { 'id': 'nombre' }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>                              
+                            </div>
+                            <div class="row">                                
+                                <div class="col-lg-6">
+                                    {{ form_row(form.paterno, { 'id': 'paterno' }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>    
+                                <div class="col-lg-6">
+                                    {{ form_row(form.materno, { 'id': 'materno' }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>                                
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <div>
+                                        <label for="complemento">C.I.</label>
+                                        <input class="form-control" type="text" value="{{ci}}" disabled>
+                                    </div>                                    
+                                </div>
+                                <div class="col-lg-3">                                    
+                                    <label for="complemento">Complemento</label>
+                                    <input class="form-control" type="text" value="{{complemento}}" disabled>                                    
+                                </div>                                                                   
+                                <div class="col-lg-6">
+                                    {{ form_row(form.fechaNacimiento, { 'id': 'fechanacimiento' }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    {{ form_row(form.generoTipo, { 'id': 'genero' }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-lg-9">
+                                    {{ form_row(form.correo, { 'id': 'correo' }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div style="visibility: hidden;">
+                                {{ form_row(form.carnet, { 'id': 'carnet' }) }}
+                                {{ form_row(form.complemento, { 'id': 'complemento' }) }}                              
+                            </div>                                    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-6">
+                    {{ form_row(form.save) }}
+                </div>                        
+                <div class="col-xs-6">
+                    <a role="button" class="btn btn-default btn-large glyphicon glyphicon-remove-sign" href="#" onclick="modaluserclose();"> Cerrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }} 
+    <script>
+        {#$(document).ready(function() {
+        
+        } );#}
+        function enviaformpersona() {
+            $("#menprincipal").empty();
+
+
+            var nombre = $('#nombre').val();
+            var paterno = $('#paterno').val();
+            var materno = $('#materno').val();
+            nombre = nombre.toUpperCase();
+            paterno = paterno.toUpperCase();
+            materno = materno.toUpperCase();
+            var stop = true;
+            //alert(paterno); alert(nombre); alert(materno); die;            
+            if (((paterno === '') && (materno === '')) && (stop == true)){
+                alert('Debe incluir alguno de los apellidos.(materno,paterno)');
+                stop = false;
+            }
+            if ((nombre === paterno) && (stop == true)){
+                alert('El apellido paterno no puede ser igual al nombre.');
+                stop = false;
+            }
+            if ((nombre === materno) && (stop == true)){
+                alert('El apellido materno no puede ser igual al nombre.');
+                stop = false;
+            }            
+            if ((nombre.length < 3) && (stop == true)){
+                alert('El nombre debe tener un minimo de 3 caracteres.');
+                stop = false;
+            }
+            if((stop == true) && ((nombre.substring(0, 3) === 'ASD') || (nombre.substring(0, 3) === 'QWE') || (nombre.substring(0, 3) === 'ZXC') || (nombre.substring(0, 3) === 'SDF') || (nombre.substring(0, 3) === 'XCV'))){
+                    alert('El nombre debe tener coherencia.');
+                    stop = false;
+                }
+            if ((paterno != '') && (stop == true)){
+                if (paterno.length < 2){
+                    alert('El apellido paterno debe tener un minimo de 2 caracteres.');
+                    stop = false;
+                } 
+                if((paterno.substring(0, 3) === 'ASD') || (paterno.substring(0, 3) === 'QWE') || (paterno.substring(0, 3) === 'ZXC') || (paterno.substring(0, 3) === 'SDF') || (paterno.substring(0, 3) === 'XCV')){
+                    alert('El apellido paterno debe tener coherencia.');
+                    stop = false;
+                }
+            }            
+            if ((materno != '') && (stop == true)){
+                if (materno.length < 2){
+                    alert('El apellido materno debe tener un minimo de 2 caracteres.');
+                    stop = false;
+                }                
+                if((materno.substring(0, 3) === 'ASD') || (materno.substring(0, 3) === 'QWE') || (materno.substring(0, 3) === 'ZXC') || (materno.substring(0, 3) === 'SDF') || (materno.substring(0, 3) === 'XCV')){
+                    alert('El apellido materno debe tener coherencia.');
+                    stop = false;
+                }
+            }                               
+            
+            if (stop == false){
+                return false;
+            }
+
+
+            //GUARDAR FORMULARIO PERSONA
+            //GUARDAR FORMULARIO PERSONA
+            if (confirm('Está por modificar datos personales del SIGED, se registrara la fecha y su usuario para esta acción.¿Esta seguro de continuar?')) {
+                var formData = $('#sie_usuarios_persona_edit').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('sie_usuario_persona_insert'),
+                    data: formData,
+                    beforeSend: function () {
+                        
+                        {#$("#divAlert").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");#}                                
+                    },
+                    success: function (data) {
+                        var numfila = 0;
+                        //ACTUALIZANDO TABLA alert(numfila+data.username);                                            
+                        $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[0].innerHTML = '<a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="#" onclick="usuarioForm('+ data.personaid +')"> Asignar Usuario</a>';
+                        $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[2].innerHTML = '<span class="label label-warning">Sin usuario</span>';
+
+                        $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[3].innerHTML = $("#nombre").val().toUpperCase()+$("#paterno").val().toUpperCase()+$("#materno").val().toUpperCase()+' Ci:'+$("#carnet").val().toUpperCase()+$("#complemento").val().toUpperCase();
+                        
+                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[4].innerHTML = $("#nombre").val().toUpperCase()+$("#paterno").val().toUpperCase()+$("#materno").val().toUpperCase();
+                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[5].innerHTML = $("#paterno").val().toUpperCase();
+                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[6].innerHTML = $("#materno").val().toUpperCase();                        
+                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[7].innerHTML = $("#sie_usuarios_persona_edit_fechaNacimiento_day").val().toUpperCase()+'/'+$("#sie_usuarios_persona_edit_fechaNacimiento_month").val().toUpperCase()+'/'+$("#sie_usuarios_persona_edit_fechaNacimiento_year").val().toUpperCase();
+                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[8].innerHTML = '<span class="label label-success"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>';
+                        //$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[9].innerHTML = '<span class="label label-success"><i class="fa fa-check-square-o" aria-hidden="true"></i></span>';
+                        
+                        $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                        $('#ModalUser').modal('hide');                        
+                    },
+                    error: function () {                        
+                        $("#divAlertUser").empty();
+                        $("#divAlertUser").append('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Proceso detenido. Se ha detectado inconsistencia de datos.</div>');
+                        $('#ModalUser').modal('hide');
+                    }
+                });
+            }
+            return false;
+        }
+    </script>

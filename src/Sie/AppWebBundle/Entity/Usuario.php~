@@ -1,0 +1,210 @@
+<?php
+
+namespace Sie\AppWebBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+/**
+ * Usuario
+ */
+class Usuario implements UserInterface {
+
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $username;
+
+    /**
+     * @var string
+     */
+    private $password;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistro;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Persona
+     */
+    private $persona;
+
+    public function __toString() {
+        return $this->username;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     * @return Usuario
+     */
+    public function setUsername($username) {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string 
+     */
+    public function getUsername() {
+        return $this->username;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return Usuario
+     */
+    public function setPassword($password) {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string 
+     */
+    public function getPassword() {
+        return $this->password;
+    }
+
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     * @return Usuario
+     */
+    public function setFechaRegistro($fechaRegistro) {
+        $this->fechaRegistro = $fechaRegistro;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistro() {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * Set persona
+     *
+     * @param \Sie\AppWebBundle\Entity\Persona $persona
+     * @return Usuario
+     */
+    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null) {
+        $this->persona = $persona;
+
+        return $this;
+    }
+
+    /**
+     * Get persona
+     *
+     * @return \Sie\AppWebBundle\Entity\Persona 
+     */
+    public function getPersona() {
+        return $this->persona;
+    }
+
+    //Implementation of user login
+
+    public function equals(UserInterface $users) {
+        return $this->username() == $users->getUsername();
+    }
+
+    public function eraseCredentials() {
+        return false;
+    }
+
+    public function getRoles() {
+        return $this->getRoles();
+    }
+
+    public function getSalt() {
+        return false;
+    }
+
+    /**
+     * @var string
+     */
+    private $password2;
+
+
+    /**
+     * Set password2
+     *
+     * @param string $password2
+     * @return Usuario
+     */
+    public function setPassword2($password2)
+    {
+        $this->password2 = $password2;
+    
+        return $this;
+    }
+
+    /**
+     * Get password2
+     *
+     * @return string 
+     */
+    public function getPassword2()
+    {
+        return $this->password2;
+    }
+    /**
+     * @var boolean
+     */
+    private $esactivo;
+
+
+    /**
+     * Set esactivo
+     *
+     * @param boolean $esactivo
+     * @return Usuario
+     */
+    public function setEsactivo($esactivo)
+    {
+        $this->esactivo = $esactivo;
+    
+        return $this;
+    }
+
+    /**
+     * Get esactivo
+     *
+     * @return boolean 
+     */
+    public function getEsactivo()
+    {
+        return $this->esactivo;
+    }
+}

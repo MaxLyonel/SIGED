@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegInternetTipo:
+    type: entity
+    table: estudiante_inscripcion_socioeconomico_reg_internet_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        accesointernetTipo:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: accesointernet_tipo
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

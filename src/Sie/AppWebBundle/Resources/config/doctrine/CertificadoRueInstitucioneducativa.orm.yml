@@ -1,0 +1,150 @@
+Sie\AppWebBundle\Entity\CertificadoRueInstitucioneducativa:
+    type: entity
+    table: certificado_rue_institucioneducativa
+    indexes:
+        IDX_44A47F58CC1457D1:
+            columns:
+                - le_juridicciongeografica_id
+        IDX_44A47F583AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_44A47F58C877D7CB:
+            columns:
+                - certificado_rue_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nroCertificado:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nro_certificado
+        institucioneducativades:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        departamento:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        provincia:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        seccion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        canton:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        localidad:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        area:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: ''
+        dependencia:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        distrito:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        orgcurricular:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        niveles:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        areas:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        operacionRue:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: operacion_rue
+        nroResolucion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: nro_resolucion
+        institucioneducativatipo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        leJuridicciongeografica:
+            targetEntity: JurisdiccionGeografica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                le_juridicciongeografica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        certificadoRue:
+            targetEntity: CertificadoRue
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                certificado_rue_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

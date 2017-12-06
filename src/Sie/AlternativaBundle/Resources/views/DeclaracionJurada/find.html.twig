@@ -1,0 +1,88 @@
+{% extends 'layoutAlternativa.html.twig' %}
+
+{% block contentoption %} 
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-home animated flip"></i>Declaración Jurada
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar</a>
+                    </li>
+
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag.get('noticeddjj') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successddjj') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div class="portlet portlet-{{app.session.get('sysporlet')}}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Buscar por SIE</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#inputSizing"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="inputSizing" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                        <div class="row">
+                            <label for="form_codigoRude" class="col-sm-2 col-sm-offset-2 control-label">{{ form_label(form.sie) }}</label>
+                            <div class="col-sm-8">
+                                {{ form_widget(form.sie) }}
+                                <div class="help-block with-errors"></div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+
+                                    {{ form_widget(form.search,{ 'attr':{'class':'btn btn-green' } } ) }}
+                                </div>
+                            </div>
+                        </div>
+                        {{form_end(form)}}
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+{% endblock %}

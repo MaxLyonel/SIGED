@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\SessionRol:
+    type: entity
+    table: session_rol
+    indexes:
+        fk_sessionrol_session_fk:
+            columns:
+                - session_id
+        fk_sessionrol_rol_tipo1_fk:
+            columns:
+                - rol_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        rolTipo:
+            targetEntity: RolTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rol_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        session:
+            targetEntity: UsuarioSession
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                session_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

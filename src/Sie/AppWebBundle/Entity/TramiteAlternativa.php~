@@ -1,0 +1,166 @@
+<?php
+
+namespace Sie\AppWebBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TramiteAlternativa
+ */
+class TramiteAlternativa {
+
+    /**
+     * @var integer
+     */
+    private $estudiante;
+
+    /**
+     * @var integer
+     */
+    private $esp;
+
+    /**
+     * @var integer
+     */
+    private $nivel;
+
+    /**
+     * @var integer
+     */
+    private $periodo;
+
+    /**
+     * @var integer
+     */
+    private $institucioneducativa;
+
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * Set estudiante
+     *
+     * @param integer $estudiante
+     * @return TramiteAlternativa
+     */
+    public function setEstudiante($estudiante) {
+        $this->estudiante = $estudiante;
+
+        return $this;
+    }
+
+    /**
+     * Get estudiante
+     *
+     * @return integer 
+     */
+    public function getEstudiante() {
+        return $this->estudiante;
+    }
+
+    /**
+     * Set esp
+     *
+     * @param integer $esp
+     * @return TramiteAlternativa
+     */
+    public function setEsp($esp) {
+        $this->esp = $esp;
+
+        return $this;
+    }
+
+    /**
+     * Get esp
+     *
+     * @return integer 
+     */
+    public function getEsp() {
+        return $this->esp;
+    }
+
+    /**
+     * Set nivel
+     *
+     * @param integer $nivel
+     * @return TramiteAlternativa
+     */
+    public function setNivel($nivel) {
+        $this->nivel = $nivel;
+
+        return $this;
+    }
+
+    /**
+     * Get nivel
+     *
+     * @return integer 
+     */
+    public function getNivel() {
+        return $this->nivel;
+    }
+
+    /**
+     * Set periodo
+     *
+     * @param integer $periodo
+     * @return TramiteAlternativa
+     */
+    public function setPeriodo($periodo) {
+        $this->periodo = $periodo;
+
+        return $this;
+    }
+
+    /**
+     * Get periodo
+     *
+     * @return integer 
+     */
+    public function getPeriodo() {
+        return $this->periodo;
+    }
+
+    /**
+     * Set institucioneducativa
+     *
+     * @param integer $institucioneducativa
+     * @return TramiteAlternativa
+     */
+    public function setInstitucioneducativa($institucioneducativa) {
+        $this->institucioneducativa = $institucioneducativa;
+
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativa
+     *
+     * @return integer 
+     */
+    public function getInstitucioneducativa() {
+        return $this->institucioneducativa;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId() {
+        return $this->id;
+    }
+    /**
+     * Set institucioneducativa
+     *
+     * @param integer $id
+     * @return TramiteAlternativa
+     */
+
+    function setId($id) {
+        $this->id = $id;
+    }
+
+}

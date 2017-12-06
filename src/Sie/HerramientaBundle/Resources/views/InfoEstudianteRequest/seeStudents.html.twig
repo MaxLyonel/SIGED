@@ -1,0 +1,163 @@
+
+{% if exist == true %}
+    <small>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                  <div class="alert alert-warning alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                  <div class="alert alert-success alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+        <div class="row">
+          <div class="col-md-4">
+                <a class="btn btn-block btn-facebook" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}">
+                  <i class="fa fa-download"></i> Listado de Estudiantes del Curso
+                </a>
+          </div>
+          <div class="col-md-4">
+
+                <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
+                  <i class="fa fa-download"></i> Boletin Centralizador
+                </a>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
+                <i class="fa fa-user"></i> Inscrip. con Rude
+            </button>
+          </div>
+          <!--div class="col-md-3" >
+            <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{{infoUe}}');" >
+              <i class="fa fa-user-plus"></i> Inscrip. sin Rude
+            </button>
+          </div-->
+      </div>
+<br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded swadow panel-teal">
+                <div class="panel-heading">
+                    <h4>Estudiantes [ {{gradoname}} - {{paraleloname}} ]</h4>
+                </div>
+                <div id="no-more-tables">
+                    <div class="row">
+
+                    </div>
+
+                    <table class="table table-bordered table-hover cf">
+                        <tr>
+
+                        <input type="hidden" id="formdata_data" name="formdata[data]" value="{{aData}}">
+                        <td align="center" class="warning" colspan="4">Estudiantes Inscritos</br>
+                            {{gradoname}} - {{paraleloname}}
+                        </td>
+                        <td class="warning">Opciones</td>
+                        <!--td>
+                            <input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"   >
+                        </td-->
+                        </tr>
+                        {#init the array info student #}
+                        {% set objInfoStudent = [] %}
+                        {% for data in objStudents%}
+                            {# set the array student info and convert on json string #}
+                            {% set objInfoStudent = objInfoStudent|merge(data) %}
+                            {% set jsnInfoStudent = objInfoStudent|json_encode() %}
+                            <tr >
+                                <td>{{loop.index}}</td>
+                                <td  align="">{{data.codigoRude}}</td>
+                                <td  align="">{{data.nombre}} {{data.paterno}} {{data.materno}}</td>
+                                <td  align="">{{data.fechaNacimiento |date('d-m-Y')}}</td>
+                                <td  align="">
+                                    {% if gestion != 2016 %}
+                                      <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                          <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}');" >
+                                              <i class="fa fa-list"></i>
+                                          </button>
+                                      </div>
+                                    {% endif %}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Imprimir">
+                                      {% if app.session.get('ue_tecteg') == true and sie != '80730460' and gestion >= 2011 and gestion <= 2015 and nivel == 13 %}
+                                          <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':1} )}}">
+                                            <i class="fa fa-archive"></i>
+                                          </a>
+                                      {% else %}
+                                          {% if sie == '80730460' and gestion == 2014 and nivel == 13 and grado >= 4 and paralelo >= 6 %}
+                                              <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':1} )}}">
+                                                <i class="fa fa-archive"></i>
+                                              </a>
+                                          {% endif %}
+                                          {% if sie == '80730460' and gestion == 2015 and nivel == 13 and grado >= 5 and paralelo >= 6 %}
+                                              <a class="btn btn-circle btn-lilac" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':1} )}}">
+                                                <i class="fa fa-archive"></i>
+                                              </a>
+                                          {% endif %}
+
+                                      {% endif %}
+                                    </div>
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+
+                    </table>
+
+                </div>
+                <!-- /.portlet -->
+                </div>
+            </div>
+        </div>
+    </small>
+    <!-- /.row -->
+{% else %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    var getNotas = function (infoUe, infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('herramienta_infoEstudianteNotasRequest_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+</script>

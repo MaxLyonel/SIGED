@@ -1,0 +1,194 @@
+{% extends 'layoutDiplomas.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>{% block contenttitulo %}Panel Principal{% endblock %}
+                    <small>{% block contenttitulosmall %}Información sobre el usuario{% endblock %}</small>
+                </h1>
+                <ol class="breadcrumb">
+                    {% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li>{% endblock %}                    
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-content">
+                {% for type, flashMessage in app.session.flashbag.all() %}
+                    <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {% if flashMessage.title is defined %}
+                        <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                            {{ flashMessage.message }}
+                        {% else %}
+                            {{ type }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>        
+    </div>
+    
+    <div class="row">        
+        {% block contentbuscador %}
+            <!-- here the iptions content -->
+        {% endblock %}
+    </div>
+    
+    <div class="row">        
+        {% block contentregistros %}
+            <!-- here the iptions content -->
+        {% endblock %}
+    </div>
+
+    <div class="row">        
+        {% block pieregistros %}
+            <!-- here the iptions content -->
+        {% endblock %}
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function marcarTodasAreas(){
+            var marcar = document.getElementById('marcarTodos');
+            var botonAceptar = document.getElementsByName('botonAceptar')[0];            
+            var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
+            var estudiantes = document.getElementsByName('estudiantes[]');
+            if(marcar.checked){
+                for (var i=0; i < estudiantes.length; i++){
+                    estudiantes[i].checked = true;
+                }                 
+                botonAceptar.disabled = false;          
+                botonModalDevolver.disabled = false; 
+            }else{                
+                for (var i=0; i < estudiantes.length; i++){
+                    estudiantes[i].checked = false;
+                }
+                botonAceptar.disabled = true;          
+                botonModalDevolver.disabled = true; 
+            }           
+        }
+
+        function habilitarBotones(){
+            var estudiantes = document.getElementsByName('estudiantes[]');
+            var botonAceptar = document.getElementsByName('botonAceptar')[0];            
+            var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];            
+            var numeroSerie = document.getElementsByName('numeroSerie')[0];                    
+            var botonAnular = document.getElementsByName('botonAnular')[0];                     
+            var botonEntregar = document.getElementsByName('botonEntregar')[0];       
+            var fecha = document.getElementsByName('fecha')[0];
+            var cant = 0;                    
+            
+            for (var i=0; i < estudiantes.length; i++){
+                if(estudiantes[i].checked == true){
+                    cant = 1;
+                }
+            }
+            
+            if(cant == 1){                
+                botonAceptar.disabled = false;          
+                botonModalDevolver.disabled = false;                     
+                if(botonEntregar){
+                    botonEntregar.disabled = false; 
+                }                    
+                if(botonAnular){
+                    botonAnular.disabled = false; 
+                } 
+                if(numeroSerie){
+                    if(numeroSerie.value === ""){
+                        botonAceptar.disabled = true;        
+                    } 
+                } 
+                if(fecha){
+                    if(fecha.value === ""){
+                        botonAceptar.disabled = true;       
+                    } 
+                } 
+            } else {
+                botonAceptar.disabled = true;          
+                botonModalDevolver.disabled = true; 
+                if(botonAnular){
+                    botonAnular.disabled = true; 
+                }                   
+                if(botonEntregar){
+                    botonEntregar.disabled = true; 
+                }       
+            }
+        }
+        
+        function verificaCampos(){    
+            var estudiantes = document.getElementsByName('estudiantes[]');
+            var botonAceptar = document.getElementsByName('botonAceptar')[0];            
+            var botonDevolver = document.getElementsByName('botonDevolver')[0];          
+            var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];          
+            var botonCancelar = document.getElementsByName('botonCancelar')[0];                
+            var botonAnular = document.getElementsByName('botonAnular')[0];                   
+            var botonEntregar = document.getElementsByName('botonEntregar')[0];            
+            var textObs = document.getElementsByName('obs')[0]; 
+            var botonPrint;
+            var r = confirm("¿ Desea continuar con la operación ?");
+            if (r == false) { 
+                if (botonAceptar){
+                    botonAceptar.style.display = "";
+                }
+                if (botonDevolver){
+                    botonDevolver.style.display = "";
+                }
+                if (botonAnular){
+                    botonAnular.style.display = "";
+                }
+                if (botonCancelar){
+                    botonCancelar.style.display = "";
+                }
+                if (botonModalDevolver){
+                    botonModalDevolver.style.display = "";
+                }
+                if (botonEntregar){
+                    botonEntregar.style.display = "";
+                }
+                return false;
+            } else { 
+                for (var i=0; i < estudiantes.length; i++){
+                    if(estudiantes[i].checked == true){
+                        //estudiantes[i].readOnly = true;
+                        estudiantes[i].style.visibility = 'hidden';
+                        botonPrint = document.getElementsByName('boton'+estudiantes[i].value)[0]; 
+                        if (botonPrint){
+                            botonPrint.style.display = "";
+                        }
+                            
+                    }
+                }
+                if (botonAceptar){
+                    botonAceptar.style.display = "none";
+                }
+                if (botonDevolver){
+                    botonDevolver.style.display = "none";
+                }
+                if (botonAnular){
+                    botonAnular.style.display = "none";
+                }
+                if (botonCancelar){
+                    botonCancelar.style.display = "none";
+                }
+                if (botonModalDevolver){
+                    botonModalDevolver.style.display = "none";
+                }
+                if (botonEntregar){
+                    botonEntregar.style.display = "none";
+                }
+                return true;
+            }
+        }        
+    </script>
+{% endblock %}

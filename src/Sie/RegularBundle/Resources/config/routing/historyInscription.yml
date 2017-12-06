@@ -1,0 +1,7 @@
+history_inscription_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:HistoryInscription:index }
+    
+history_inscription_quest:
+    path:    /{rude}/quest
+    defaults: { _controller: SieRegularBundle:HistoryInscription:quest }   

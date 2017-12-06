@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\IdiomaorigenTipo:
+    type: entity
+    table: idiomaorigen_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        idiomaorigen:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

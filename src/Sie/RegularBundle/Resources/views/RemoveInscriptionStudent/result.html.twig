@@ -1,0 +1,236 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Cambio de Estado
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('history_inscription_index')}}">Busqueda</a></li>
+                    <li class="active"> Resultado</li>
+
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>ATENCIÓN!</strong> OJO...!!!... TODA MODIFICACIÓN QUE SE REALICE NO PODRA RECTIFICARSE, REVISE BIEN SU DOCUMENTACIÓN.
+            <br /> En caso de cometer alguna equivocación recurra a su técnico Departamental
+        </div>
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        {% for flashMessage in app.session.flashbag.get('notihistory') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información del Estudiante</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Rude</th>
+                                        <th class="text-center">Nombre(s)</th>
+                                        <th class="text-center">Paterno</th>
+                                        <th class="text-center">Materno</th>
+                                        <th class="text-center">CI</th>
+                                        <th class="text-center">Complemento</th>
+                                        <th class="text-center">Genero</th>
+                                        <th class="text-center">F. Nacimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Rude">{{datastudent.codigoRude}}</td>
+                                        <td data-title="Nombre">{{ datastudent.nombre|e }} </td>
+                                        <td data-title="Paterno">{{datastudent.paterno|e}}</td>
+                                        <td data-title="Materno">{{datastudent.materno|e}}</td>
+                                        <td data-title="CI">{{datastudent.carnetIdentidad}} </td>
+                                        <td data-title="Complemento" class="text-center">{{datastudent.complemento}}</td>
+                                        <td data-title="Genero" class="text-center">{{datastudent.generoTipo}} </td>
+                                        <td data-title="F. Nacimiento" class="text-center">{{datastudent.fechaNacimiento|date('d-m-Y')}}</td>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Historial de Inscripciones</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#omitidos"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="omitidos" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <th class="text-center">Gestion</th>
+                                        <th class="text-center">SIE</th>
+                                        <th class="text-center">Unidad Educativa</th>
+                                        <th class="text-center">Nivel</th>
+                                        <th class="text-center">Grado</th>
+                                        <th class="text-center">Paralelo</th>
+                                        <th class="text-center">Turno</th>
+                                        <th class="text-center">Estado Matricula</th>
+                                        <th class="text-center">Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data in dataInscription %}
+                                        {% if data.idObservacion  == '' %} 
+                                            <tr class = "success">                                            
+                                                <td data-title="Gestion">{{ data.gestion }}</td>
+                                                <td data-title="Gestion">{{ data.sie }}</td>
+                                                <td data-title="U.E.">{{ data.institucioneducativa }}</td>
+                                                <td data-title="Nombre">{{ data.nivel|e }} </td>
+                                                <td data-title="Paterno">{{ data.grado|e }}</td>
+                                                <td data-title="Materno">{{ data.paralelo|e }}</td>
+                                                <td data-title="CI">{{data.turno }} </td>
+                                                <td data-title="Est. Matricula" class="text-center">{{data.estadoMatricula}}</td>
+                                                {% if (data.gestion  == '2016') %}
+                                                    <td data-title="VerNota" class="text-center">                                                    
+                                                        <form action="{{ path('remove_inscription_student_remove') }}" method="post" style="display:inline-block">
+                                                            <select id="form_reason" name="form[matricula]" class="form-control">
+                                                                <option value="6">No Incorporado</option>
+                                                                <option value="10">Abandono</option>
+                                                            </select>
+                                                            <input type="hidden" id="form_sie"name="form[sie]" value="{{data.sie}}">
+                                                            <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{datastudent.codigoRude}}">
+                                                            <input type="hidden" id="form_gestion"name="form[gestion]" value="{{data.gestion}}">
+                                                            <input type="hidden" id="form_inscripcionid"name="form[inscripcionid]" value="{{data.inscripcionid}}">                                                            
+                                                            <button type="submit" class="btn-link"><i class="fa fa-remove"></i> Aplicar</button>
+                                                        </form>
+                                                    </td>
+                                                {% else %}
+                                                    <td data-title="VerNota" class="text-center">
+                                                        ---
+                                                    </td>
+                                                {% endif %}
+                                            </tr>
+                                        {% else %}
+                                            {% if ((data.idObsTipo  == '1') or (data.idObsTipo  == '3') or (data.idObsTipo  == '4'))%} 
+                                                <tr class = "warning">     
+                                                {% else %}
+                                                    {% if ((data.idObsTipo  == '2') or (data.idObsTipo  == '5')) and (data.obsActivo  == 'true') %} 
+                                                    <tr class = "danger">     
+                                                    {% else%}
+                                                    <tr class = "success">     
+                                                    {% endif %}
+                                                {% endif %}  
+                                                <td data-title="Rude">{{data.gestion}}</td>
+                                                <td data-title="Rude">{{data.sie}}</td>
+                                                <td data-title="Rude">{{data.institucioneducativa}}</td>
+                                                <td data-title="Nombre">{{ data.nivel|e }} </td>
+                                                <td data-title="Paterno">{{data.grado|e}}</td>
+                                                <td data-title="Materno">{{data.paralelo|e}}</td>
+                                                <td data-title="CI"> {{data.turno}} </td>
+                                                <td data-title="Est. Matricula" class="text-center">{{data.estadoMatricula}}</td>                                                            
+                                                {% if data.obsActivo  == '' %} 
+                                                    {% if (data.gestion  == '2016') and (data.estadoMatricula == 'EFECTIVO') %} 
+                                                        <td data-title="VerNota" class="text-center">
+                                                            <form action="{{ path('remove_inscription_student_remove') }}" method="post" style="display:inline-block">
+                                                                <select id="form_reason" name="form[matricula]" class="form-control">
+                                                                    <option value="6">No Incorporado</option>
+                                                                    <option value="10">Abandono</option>
+                                                                </select>
+                                                                <input type="hidden" id="form_sie"name="form[sie]" value="{{data.sie}}">
+                                                                <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{datastudent.codigoRude}}">
+                                                                <input type="hidden" id="form_gestion"name="form[gestion]" value="{{data.gestion}}">
+                                                                <input type="hidden" id="form_inscripcionid"name="form[inscripcionid]" value="{{data.inscripcionid}}">                                                            
+                                                                <button type="submit" class="btn-link"><i class="fa fa-remove"></i> Aplicar</button>
+                                                            </form>
+                                                        </td>
+                                                    {% else %}
+                                                        <td data-title="VerNota" class="text-center">
+                                                            ---
+                                                        </td>
+                                                    {% endif %}
+                                                {% else%}
+                                                    <td data-title="VerNota" class="text-center">
+                                                        <button type = "button" class = "btn btn-warning btn-sm" title = "{{data.ObsTipoDesc}}"  
+                                                                data-container = "body" data-toggle = "popover" data-placement = "left" 
+                                                                data-content = "{{data.Obs}}">
+                                                            i
+                                                        </button>
+
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-primary btn-xs dropdown-toggle glyphicon glyphicon-tasks text-left" data-toggle="dropdown" aria-haspopup="true">
+                                                                Acciones <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu" role="menu">                                        
+                                                                <li><a href="#" onclick="seeNota('{{data.idStudent}}', '{{data.nivelId}}', '{{data.gradoId}}', '{{data.paraleloId}}', '{{data.turnoId}}', '{{data.gestion}}', '{{data.sie}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a></li>                                                                        
+                                                                    {% if ( (app.session.get('roluser') == '8') or (app.session.get('roluser') == '7') or (app.session.get('roluser') == '10')) %}                                                                
+                                                                        {% if data.idObsTipo == '2' %} {#CAMBIO DE ESTADO #}
+                                                                        <li><a class="fa fa-plus-square text-left" href="{{ path('remove_inscription_student_free_result_param', { 'rude': datastudent.codigoRude, 'gestion': data.gestion }) }}"> Cambio de Estado</a></li>
+                                                                        {% endif %}
+                                                                        {% if data.idObsTipo == '5' %} {#ELIMINACION #}
+                                                                        <li><a href="{{path( 'remove_inscription_sie_remove', {'idstudent':data.idStudent, 'nivel':data.nivelId,'grado':data.gradoId ,'paralelo':data.paraleloId, 'turno':data.turnoId,'sie':data.sie,'gestion':data.gestion,'eiid':data.inscripcionid } )}}" onclick="javascript:if (confirm('¿Está seguro de Eliminar la inscripción ?')) {
+                                                                                    return true;
+                                                                                } else {
+                                                                                    return false;
+                                                                                }
+                                                                               "><span class="glyphicon glyphicon-remove"></span> Eliminar </a></li>
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                            </ul>    
+                                                        </div> 
+                                                    </td>
+                                                {% endif %}
+                                            </tr>                                        
+                                        {% endif %}
+                                    {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{path('remove_inscription_student_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+        </div>
+    </div>
+{% endblock %}

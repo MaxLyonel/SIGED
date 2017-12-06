@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5MaterialPisoTipo:
+    type: entity
+    table: infraestructura_h5_material_piso_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraMaterialPiso:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_material_piso
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

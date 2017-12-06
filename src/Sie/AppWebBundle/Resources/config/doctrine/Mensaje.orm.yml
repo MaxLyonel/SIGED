@@ -1,0 +1,42 @@
+Sie\AppWebBundle\Entity\Mensaje:
+    type: entity
+    table: mensaje
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        asunto:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        mensaje:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fecha:
+            type: datetime
+            nullable: true
+            comment: ''
+        adjunto1:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        adjunto2:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

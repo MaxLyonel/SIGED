@@ -1,0 +1,27 @@
+herramienta_newspeciality_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:NewSpeciality:index}
+
+herramienta_newspeciality_find:
+    path:     /find
+    defaults: { _controller: SieHerramientaBundle:NewSpeciality:find}
+    options:
+         expose: true
+
+herramienta_newspeciality_new:
+    path:     /open
+    defaults: { _controller: SieHerramientaBundle:NewSpeciality:new}
+    options:
+         expose: true
+
+herramienta_newspeciality_save:
+    path:     /save
+    defaults: { _controller: SieHerramientaBundle:NewSpeciality:save}
+    options:
+         expose: true
+
+herramienta_newspeciality_remove:
+    path:     /remove
+    defaults: { _controller: SieHerramientaBundle:NewSpeciality:remove}
+    options:
+         expose: true

@@ -1,0 +1,110 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block contentoption %}
+	<div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Control Operativo
+                    <small>Descarga de archivos</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('controlOperativoMenu')}}">Buscar</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+			<div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Buscar Unidad Educativa</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#inlineFormExample"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="inlineFormExample" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <form id="formSearch" class="form-inline" role="form" action="" onsubmit="buscarSie(); return false" method="post"  style="text-align:center">
+                            <div class="form-group">
+                                <label class="sr-only" for="sie">Codigo Sie</label>
+                                <input type="text" class="form-control" id="sie" placeholder="Código Sie" name="sie" autocomplete="off" maxlength="8" required="required">
+                            </div>
+                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Buscar</button>
+                        </form>
+                        <hr>
+						<div id="response">
+							
+						</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+	{{parent()}}
+	<script>
+		function buscarSie(){
+			var sie = $('#sie').val();
+			if(sie.length >= 8){
+				var formData = $('#formSearch').serialize();
+				$.ajax({
+	                type: 'post',
+	                url: Routing.generate('controlOperativoMenu_search'),
+	                data: formData,
+	                beforeSend: function () {
+	                	$("#response").empty();
+	                    $("#response").append("<div style='text-align:center' id='img-loading'><img src='{{asset('img/loading.gif')}}'></div>");
+	                },
+	                success: function (data) {
+	                    $("#response").empty();
+	                    $("#response").append(data);
+	                },
+	                error: function(data){
+	                	$("#response").empty();
+	                    $("#img-loading").css('display','none');
+	                    $("#response").append("<div class='alert alert-danger'>El código SIE ingresado no es válido</div>");
+	                }
+	            });
+			}else{
+				$("#response").empty();
+	            $("#img-loading").css('display','none');
+	            $("#response").append("<div class='alert alert-danger'>El código SIE ingresado no es válido</div>");
+			}
+			
+		}
+
+		function cambiarEstado(id){
+			var anterior = $('#estado').html();
+			$.ajax({
+                type: 'post',
+                url: Routing.generate('controlOperativoMenu_change'),
+                data: {id: id},
+                beforeSend: function () {
+                	$("#estado").empty();
+                    $("#estado").append("<div style='text-align:center' id='img-loading'><img src='{{asset('img/loading-sm.gif')}}'></div>");
+                    $('#msg').empty();
+                    $('#msg').css('display','none');
+                },
+                success: function (data) {
+                    $("#estado").empty();
+                    $("#estado").append(data.nuevoEstadoText);
+                    if(data.msg != ''){
+                        $('#msg').empty();
+                        $('#msg').css('display','block');
+                        $('#msg').append(data.msg);
+                    }
+                },
+                error: function(data){
+                	$("#estado").empty();
+                    $("#img-loading").css('display','none');
+                    $('#estado').append(anterior);
+                }
+            });
+		}
+	</script>
+{% endblock %}

@@ -1,0 +1,278 @@
+    {#<div class="row">
+        <div class="col-lg-12">#}
+            <div class="portlet portlet-orange">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4><i class="fa fa-search"></i> Segundo paso: Datos adicionales.</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#busquedadatos"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="busquedadatos" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body">
+                            <form id="busquedaDatosTotForm" name="busquedaDatosTotForm" method="get" class="navbar-form" onsubmit="return enviaformdatostotal();">
+                                <div class="form-group has-feedback">                                           
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label class="required">C.I :</label>
+                                            <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[InputCi]" id="busquedaDatosTotForm_InputCi" placeholder="Carnet de identidad" onkeypress="return soloNumeros(event);">                                                    
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label class="required">Genero :</label><br/>
+                                            <select class="form-control" id="busquedaDatosTotForm_Genero" name="busquedaDatosTotForm[Genero]">                                                            
+                                                <option value="-999">...</option> 
+                                                <option value="1">MASCULINO</option> 
+                                                <option value="2">FEMENINO</option> 
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">    
+                                        <div class="col-lg-12">
+                                            <label class="required">País :</label><br/>
+                                            <select class="form-control" class="form-control" id="busquedaDatosTotForm_Pais" name="busquedaDatosTotForm[Pais]">
+                                                {#<option value="-999">...</option>#}
+                                                {% for pais in pt %}
+                                                   <option value="{{pais.id}}">{{pais.pais}}</option>
+                                                {% endfor %}                                               
+                                            </select>
+                                        </div>     
+                                    </div>
+                                    <div class="row">    
+                                        <div class="col-lg-6">    
+                                            <label class="required">Departamento :</label><br/>
+                                            <select  class="form-control" id="busquedaDatosTotForm_Depto" name="busquedaDatosTotForm[Depto]">                                                            
+                                                <option value="-999">...</option>                            
+                                            </select>
+                                        </div> 
+                                        <div class="col-lg-6">    
+                                            <label class="required">Provincia :</label><br/>
+                                            <select class="form-control" id="busquedaDatosTotForm_Provincia" name="busquedaDatosTotForm[Provincia]">                                                            
+                                                <option value="-999">...</option>                                                                              
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row"> 
+                                        <div class="col-lg-6">
+                                            <label class="required">Localidad :</label>
+                                            <input  type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[Localidad]" id="busquedaDatosTotForm_Localidad" placeholder="Localidad" onkeypress="return soloLetras(event);">                
+                                        
+                                        </div>
+                                        <div class="col-lg-6">    
+                                            <label class="required">Cod. Sie donde se inscribira :</label><br/>
+                                                {% if app.session.get('ie_id') != '-1' %}
+                                                    <input value="{{app.session.get('ie_id')}}" type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[Sie]" id="busquedaDatosTotForm_Sie" placeholder="Código Sie" onkeypress="return soloNumeros(event);">
+                                                {% else %}
+                                                    <input type="text" class="form-control typeahead rounded" name="busquedaDatosTotForm[Sie]" id="busquedaDatosTotForm_Sie" placeholder="Código Sie" onkeypress="return soloNumeros(event);" readonly>
+                                                {% endif %}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <center>
+                                                <input type="hidden" id="busquedaDatosTotForm_Nombre" name="busquedaDatosTotForm[Nombre]" value="{{datbas['nombre']}}">
+                                                <input type="hidden" id="busquedaDatosTotForm_Paterno" name="busquedaDatosTotForm[Paterno]" value="{{datbas['paterno']}}">
+                                                <input type="hidden" id="busquedaDatosTotForm_Materno" name="busquedaDatosTotForm[Materno]" value="{{datbas['materno']}}">
+                                                <input type="hidden" id="busquedaDatosTotForm_Day" name="busquedaDatosTotForm[Day]" value="{{datbas['day']}}">
+                                                <input type="hidden" id="busquedaDatosTotForm_Mount" name="busquedaDatosTotForm[Mount]" value="{{datbas['mount']}}">
+                                                <input type="hidden" id="busquedaDatosTotForm_Year" name="busquedaDatosTotForm[Year]" value="{{datbas['year']}}">
+                                                <div id="butguardar">
+                                                    <button type="submit" class="btn btn-danger fa fa-plus-square form-control-feedback rounded"> Registrar datos en nuevo Rude</button>                                                
+                                                </div>    
+                                            </center> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>                        
+                    </div>
+                </div>                                              
+            </div>
+        {#</div>
+    </div>#}
+    
+    
+<script>
+    $('#busquedaDatosTotForm_Localidad').keyup(function() {
+            this.value = this.value.toUpperCase();
+    });
+        
+    $(function(){            
+            $("#busquedaDatosTotForm_Pais").change(function(){                            
+            var idpais = $(this).val();            
+            if (idpais == 1){
+                $('#busquedaDatosTotForm_Depto').html("<option>...</option>");
+                $('#busquedaDatosTotForm_Provincia').html("<option>...</option>");                                
+                $("#busquedaDatosTotForm_Localidad").val("");
+                $("#busquedaDatosTotForm_Depto").prop("disabled", false );
+                $("#busquedaDatosTotForm_Provincia").prop("disabled", false );
+                $("#busquedaDatosTotForm_Localidad").prop("disabled", false );    
+                var route = Routing.generate('sie_usuario_estudiante_departamento_showrude');                        
+                var data;
+                $.ajax({
+                    type: 'get',     
+                    url: route,
+                    data: data,
+                    success: function(data) {                        
+                            datos = $.parseJSON(data);
+                            $("#busquedaDatosTotForm_Depto").html('');                       
+                            var $depto_selector = $('#busquedaDatosTotForm_Depto');
+                            $depto_selector.html('<option value="-999">Departamento</option>');
+
+                            for (var i=0, total = datos.length; i < total; i++) {
+                                $depto_selector.append('<option value="' + datos[i].id + '">' + datos[i].departamento + '</option>');
+                            }
+                            $('#busquedaDatosTotForm_Provincia').html("<option>...</option>");
+                        }
+                    });            
+                }
+            else{
+                $('#busquedaDatosTotForm_Depto').html("<option>...</option>");
+                $('#busquedaDatosTotForm_Provincia').html("<option>...</option>");                                
+                $("#busquedaDatosTotForm_Localidad").val("");
+                $("#busquedaDatosTotForm_Depto").prop("disabled", true );
+                $("#busquedaDatosTotForm_Provincia").prop("disabled", true );
+                $("#busquedaDatosTotForm_Localidad").prop("disabled", true );
+            }    
+            });
+            $("#busquedaDatosTotForm_Depto").change(function(){                            
+            var iddepto = $(this).val();            
+            var route = Routing.generate('sie_usuario_estudiante_provincia_showrude', { id: iddepto });                        
+            var data;            
+            $.ajax({
+                type: 'get',     
+                url: route,
+                data: data,
+                success: function(data) {                        
+                        datos = $.parseJSON(data);                       
+                        $("#busquedaDatosTotForm_Provincia").html('');                        
+                        var $province_selector = $('#busquedaDatosTotForm_Provincia');
+                        $province_selector.html('<option value="-999">Provincia</option>');
+                        
+                        for (var i=0, total = datos.length; i < total; i++) {
+                            $province_selector.append('<option value="' + datos[i].id + '">' + datos[i].provincia + '</option>');
+                        }                      
+                    }
+                });            
+            });
+        });
+    
+    function valcampos() {            
+            var carnet = $('#busquedaDatosTotForm_InputCi').val();
+            var genero = $('#busquedaDatosTotForm_Genero').val();
+            var pais = $('#busquedaDatosTotForm_Pais').val();
+            var depto = $('#busquedaDatosTotForm_Depto').val();
+            var provincia = $('#busquedaDatosTotForm_Provincia').val();
+            var localidad = $('#busquedaDatosTotForm_Localidad').val();
+            var sie = $('#busquedaDatosTotForm_Sie').val();
+            
+            var stop = true;
+            
+            /*if ((carnet === '') && (stop == true)){
+                alert('Debe digitar un número de carnet.');
+                stop = false;                
+            }*/
+            
+            /*if ((carnet.length < 6) && (stop == true)){
+                alert('El número carnet debe tener un minimo de 6 caracteres.');
+                stop = false;
+            }*/
+            
+            if ((genero == '-999') && (stop == true)){                
+                alert('Debe seleccionar un genero.');
+                stop = false;
+            }
+            
+            if ((pais == '0') && (stop == true)){                
+                alert('Debe seleccionar un pais.');
+                stop = false;
+            }   
+            if (pais == '1'){
+                if ((depto == '-999') && (stop == true)){                
+                    alert('Debe seleccionar un departamento.');
+                    stop = false;
+                }
+                if ((provincia == '-999') && (stop == true)){                
+                    alert('Debe seleccionar una provincia.');
+                    stop = false;
+                }                
+                if ((localidad === '') && (stop == true)){
+                    alert('Debe digitar el dato de la localidad.');
+                    stop = false;                
+                }            
+                if ((localidad.length < 4) && (stop == true)){
+                    alert('La localidad debe tener un minimo de 4 caracteres.');
+                    stop = false;
+                }
+                if((stop == true) && ((localidad.substring(0, 3) === 'ASD') || (localidad.substring(0, 3) === 'QWE') || (localidad.substring(0, 3) === 'ZXC') || (localidad.substring(0, 3) === 'SDF') || (localidad.substring(0, 3) === 'XCV'))){
+                    alert('La localidad debe tener coherencia.');
+                    stop = false;
+                }
+            }
+            
+            if ((sie === '') && (stop == true)){
+                alert('Debe digitar el código Sie donde se realizara la inscripción.');
+                stop = false;                
+            }
+            
+            if ((sie.length != 8) && (stop == true)){
+                    alert('El código Sie debe tener un 8 caracteres.');
+                    stop = false;
+            }
+            
+            return stop;
+        }
+    
+    function enviaformdatostotal() {
+        var msj = '¡ADVERTENCIA! ¡Lea atentamente!';    
+            msj += '\nUsted esta por generar un nuevo Código Rude';
+            msj += '\ndentro del sistema de información educativa.(Minedu-Bo)';            
+            msj += '\nLa inserción de la información de este nuevo alumno';
+            msj += '\nserá registrado con nombre de usuario y fecha correspondiente';
+            msj += '\na fin de verificar futuras módificaciones en los datos.';
+            msj += '\n\n¿Esta seguro de continuar?';
+                
+        if (valcampos()){
+            if (confirm(msj)) {
+                var formDataTot = $('#busquedaDatosTotForm').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('sie_usuario_estudiante_insert_rude'),
+                    data: formDataTot,
+                    beforeSend: function () {
+                        $("#butguardar").empty();
+                    },
+                    success: function (data) {
+                        $("#busquedaDatosTotForm_InputCi").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Genero").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Pais").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Depto").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Provincia").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Localidad").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Sie").prop("disabled", true );
+                        
+                        $("#butguardar").empty();
+                        $("#butguardar").html('<div class="alert alert-success alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');
+                    },
+                    error: function () {
+                        $("#busquedaDatosTotForm_InputCi").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Genero").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Pais").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Depto").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Provincia").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Localidad").prop("disabled", true );
+                        $("#busquedaDatosTotForm_Sie").prop("disabled", true );
+                        
+                        $("#butguardar").empty();
+                        $("#butguardar").html('<div class="alert alert-success alert-dismissible" role="alert"><strong>'+data.mensaje+'</strong></div>');
+                    }
+                });
+            }
+            return false;
+        }
+        return false;      
+    }
+</script>

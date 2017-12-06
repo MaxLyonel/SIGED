@@ -1,0 +1,34 @@
+socioeconomicoregular:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:SocioeconomicoRegular:index" }
+
+socioeconomicoregular_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:SocioeconomicoRegular:show" }
+
+socioeconomicoregular_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:SocioeconomicoRegular:new" }
+
+socioeconomicoregular_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:SocioeconomicoRegular:create" }
+    methods:  POST
+
+socioeconomicoregular_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:SocioeconomicoRegular:edit" }
+
+socioeconomicoregular_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:SocioeconomicoRegular:update" }
+    methods:  [POST, PUT]
+
+socioeconomicoregular_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:SocioeconomicoRegular:delete" }
+    methods:  [POST, DELETE]
+
+socioeconomicoregular_result:
+    path:    /result
+    defaults: { _controller: "SieAppWebBundle:SocioeconomicoRegular:result" } 

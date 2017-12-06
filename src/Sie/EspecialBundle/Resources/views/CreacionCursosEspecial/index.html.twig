@@ -1,0 +1,235 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+{% block contentoption %}
+
+<!-- Start page header -->
+<div class="header-content">
+    <h2><i class="fa fa-table"></i> Creación de Cursos <span>Buscar</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aqui:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="#">Creación de Cursos</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+
+            <li class="active">Buscar</li>
+        </ol>
+    </div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+<div class="body-content animated fadeIn">
+
+    {% include 'SieEspecialBundle:Principal:infoue.html.twig' with {'titulo': 'Creación de Cursos', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+    {% include 'SieEspecialBundle:Principal:onlyview.html.twig'%}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('updateError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            <!--  cursos -->
+            {% for flashMessage in app.session.flashbag.get('newCursoOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('newCursoError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteCursoOk') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('deleteCursoError') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="pull-right">
+                <form action="{{path('creacioncursos_especial_new')}}" style="display: inline-block" method="post">
+                    <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                    <input type="hidden" name="idGestion" value="{{gestion}}">
+                    <button type="submit" class="btn btn-md btn-teal"><i class="fa fa-save"></i> Nuevo Curso</button>
+                </form>
+            </div>
+            <div class="callout callout-warning">
+                <strong>Recuerde que:</strong><br />
+                - Es obligatorio el registro de todos los cursos existentes en el Centro de Educación Especial.<br />
+                - Una vez finalizado el registro y validación, se debe generar e imprimir el reporte.
+            </div>
+        </div>
+    </div> 
+
+    <div class="row">
+        <div class="col-lg-12">
+            {% if cursos is not empty %}
+                {% set turno = cursos[0].institucioneducativaCurso.turnoTipo.id %}
+                {% set turnoNombre = cursos[0].institucioneducativaCurso.turnoTipo.turno %}
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <h4>Turno - {{turnoNombre}}</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-collapse collapse in" id="panel{{turno}}">
+                        <div class="panel-body">
+                            <div id="no-more-tables">
+                                <table class="table table bordered cf dataTable">
+                                    <thead class="cf">
+                                        <tr>
+
+                                            <th>Area Esp.</th>
+                                            <th>Nivel</th>
+                                            <th>Grado</th>
+                                            <th>Paralelo</th>
+                                            <th>Programa</th>
+                                            <th>Servicio</th>
+                                            <th>Tecnica</th>
+                                            <th>Turno</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for c in cursos %}
+                                            {% if c.institucioneducativaCurso.turnoTipo.id != turno %}
+
+                                                {% set turno = c.institucioneducativaCurso.turnoTipo.id %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <h4>Turno - {{c.institucioneducativaCurso.turnoTipo.turno}}</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="panel-collapse collapse in" id="panel{{turno}}">
+                                <div class="panel-body">
+                                    <div id="no-more-tables">
+                                        <table class="table table bordered cf dataTable">
+                                            <thead class="cf">
+                                                <tr>
+
+                                                    <th>Area Esp.</th>
+                                                    <th>Nivel</th>
+                                                    <th>Grado</th>
+                                                    <th>Paralelo</th>
+                                                    <th>Programa</th>
+                                                    <th>Servicio</th>
+                                                    <th>Tecnica</th>
+                                                    <th>Turno</th>                                                    
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr {% if c.institucioneducativaCurso.nivelTipo.id == 11 %} 
+                                                    class="success" 
+                                                {% else %}
+                                                    {% if c .institucioneducativaCurso.nivelTipo.id == 12 %}
+                                                        class="warning"
+                                                    {% else %}
+                                                        class="info"
+                                                    {% endif %}
+                                                {% endif %}>
+
+                                                <td data-title="Area">{{c.especialAreaTipo.areaEspecial}}</td>
+                                                <td data-title="Nivel">{{c.institucioneducativaCurso.nivelTipo.nivel}}</td>
+                                                <td data-title="Grado">{{c.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
+                                                <td data-title="Paralelo">{{c.institucioneducativaCurso.paraleloTipo.paralelo}}</td>
+                                                <td data-title="Programa">{{c.especialProgramaTipo.programa}}</td>
+                                                <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
+                                                <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
+                                                <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
+                                                <td data-title="Acciones">
+                                                    <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
+                                                        <input type="hidden" name="idCurso" value="{{c.id}}">
+                                                        <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {% else %}
+                                            <tr {% if c.institucioneducativaCurso.nivelTipo.id == 11 %} 
+                                                class="success" 
+                                            {% else %}
+                                                {% if c .institucioneducativaCurso.nivelTipo.id == 12 %}
+                                                    class="warning"
+                                                {% else %}
+                                                    class="info"
+                                                {% endif %}
+                                                {% endif %}>
+
+                                                    <td data-title="Area">{{c.especialAreaTipo.areaEspecial}}</td>
+                                                    <td data-title="Nivel">{{c.institucioneducativaCurso.nivelTipo.nivel}}</td>
+                                                    <td data-title="Grado">{{c.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
+                                                    <td data-title="Paralelo">{{c.institucioneducativaCurso.paraleloTipo.paralelo}}</td>
+                                                    <td data-title="Programa">{{c.especialProgramaTipo.programa}}</td>
+                                                    <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
+                                                    <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
+                                                    <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
+                                                    <td data-title="Acciones">
+                                                        <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
+                                                            <input type="hidden" name="idCurso" value="{{c.id}}">
+                                                            <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                {% endif %}
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% endif %}    
+
+                                </div>
+                            </div>
+                        </div>
+                            {% endblock %}

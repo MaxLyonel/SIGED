@@ -1,0 +1,26 @@
+<small>
+    <div class="row">
+
+        {% for flashMessage in app.session.flashbag.get('changestate') %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Verificar!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+<form class="" action="index.html" method="post" id="formCambioEstadoNotasId">
+{% if swverification %}
+<input type='hidden' id="form_estadoNew" name="form[estadoNew]" value="{{estadoNew}}" class="form-control">
+<input type='hidden' id="form_dataInfo" name="form[dataInfo]" value="{{dataInfo}}" class="form-control">
+<input type='hidden' id="form_idProcess" name="form[idProcess]" value="{{idProceso}}" class="form-control">
+    <hr>
+    <div class="text-center">
+        <button type="button" name="button" class="btn btn-green" onclick="saveCambioEstado();">Registrar cambio de estado</button>
+    </div>
+{% else %}
+
+{% endif %}
+
+</form>
+</small>

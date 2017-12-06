@@ -1,0 +1,15 @@
+sie_restartbjp_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:ResetBjp:index }
+
+sie_restartbjp_looksie:
+    path:     /looksie
+    defaults: { _controller: SieRegularBundle:ResetBjp:looksie }
+    options:
+         expose: true
+
+sie_restartbjp_resetbjp:
+    path:     /resetbjp
+    defaults: { _controller: SieRegularBundle:ResetBjp:resetbjp }
+    options:
+         expose: true

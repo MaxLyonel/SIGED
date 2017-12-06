@@ -1,0 +1,92 @@
+InstructivoBono:
+    path:     /{op}
+    defaults: { _controller: SieBjpBundle:InstructivoBono:index, op:search }
+
+InstructivoBono_new:
+    path:     /new/
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:new" }
+    methods:  POST
+
+InstructivoBono_create:
+    path:     /create/
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:create" }
+    methods:  POST
+
+listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:listargrados" }
+    options:
+         expose: true
+
+InstructivoBono_cargar_niveles:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}/{turno}/
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:cargarNiveles"}
+    options:
+         expose: true
+
+InstructivoBono_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{turno}/{nivel}/
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:cargarGrados"}
+    options:
+         expose: true
+
+InstructivoBono_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:cargarParalelos"}
+    options:
+         expose: true
+
+InstructivoBono_listar_areas_curso:
+    path:     /lista_areas_curso_a/
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:lista_areas_curso" }
+    options:
+         expose: true
+
+InstructivoBono_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:lista_areas_nivel" }
+    options:
+         expose: true
+
+InstructivoBono_listar_areas_curso_adicionar_eliminar:
+    path:     /lista_areas_curso_adicionar_eliminar/
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:lista_areas_curso_adicionar_eliminar" }
+    options:
+         expose: true
+
+InstructivoBono_asignar_maestro_area:
+    path:     /asignar_maestro_area/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:asignar_maestro" }
+    options:
+         expose: true
+
+InstructivoBono_delete:
+    path:     /delete/{idCursoOferta}
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:delete" }
+    options:
+         expose: true
+
+InstructivoBono_file:
+    path:     /sie/build/
+    defaults: { _controller: SieBjpBundle:InstructivoBono:build }
+    options:
+         expose: true          
+
+InstructivoBono_maestros:
+    path:     /maestros_materia/
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:maestros"}
+    options:
+         expose: true
+
+InstructivoBono_maestros_asignar_siged:
+    path:     /maestros_asignar_siged/
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:maestrosAsignar"}
+    options:
+         expose: true
+
+
+InstructivoBono_buscar_infoUe:
+    path:     /buscar_infoUe/
+    defaults: { _controller: "SieBjpBundle:InstructivoBono:buscarInfoUe"}
+    options:
+         expose: true         

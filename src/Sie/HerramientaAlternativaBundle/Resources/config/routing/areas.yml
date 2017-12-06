@@ -1,0 +1,29 @@
+herramienta_alter_areas_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:index }
+    options:
+         expose: true
+
+herramienta_alter_areas_maestros:
+    path:     /areamaestro
+    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:areamaestro }
+    options:
+         expose: true         
+         
+herramienta_alter_areas_add:
+    path:     /areasadd
+    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:areasadd }
+    options:
+         expose: true            
+         
+herramienta_alter_areas_delete:
+    path:     /areasdelete
+    defaults: { _controller: SieHerramientaAlternativaBundle:Areas:areasdelete }
+    options:
+         expose: true          
+
+herramienta_alter_infoEstudianteAreas_maestros_asignar:
+    path:     /maestrosAsignar
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Areas:maestrosAsignar"}
+    options:
+         expose: true         

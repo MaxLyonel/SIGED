@@ -1,0 +1,39 @@
+sie_infraestructura_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SieInfraestructuraBundle:Default:index }
+
+sie_infra_info:
+  resource: "@SieInfraestructuraBundle/Resources/config/routing/info.yml"
+  prefix: /sie/info/
+
+sie_infra_maps:
+    resource: "@SieInfraestructuraBundle/Resources/config/routing/maps.yml"
+    prefix:   /sie/maps
+
+sie_infra_ambientesPedagogicos:
+    resource: "@SieInfraestructuraBundle/Resources/config/routing/ambientesPedagogicos.yml"
+    prefix:   /sie/ambientesPedagogicos
+
+sie_infra_servicios:
+    resource: "@SieInfraestructuraBundle/Resources/config/routing/servicios.yml"
+    prefix:   /sie/servicios
+
+sie_infra_caracteristicas:
+    resource: "@SieInfraestructuraBundle/Resources/config/routing/caracteristicas.yml"
+    prefix:   /sie/caracteristicas
+
+sie_infra_datosGenerales:
+    resource: "@SieInfraestructuraBundle/Resources/config/routing/datosGenerales.yml"
+    prefix:   /sie/datosGenerales
+
+sie_infra_ambientesAdministrativosRecreativos:
+    resource: "@SieInfraestructuraBundle/Resources/config/routing/ambientesAdministrativosRecreativos.yml"
+    prefix:   /sie/ambientesAdministrativosRecreativos
+
+sie_infra_equipamiento:
+    resource: "@SieInfraestructuraBundle/Resources/config/routing/equipamiento.yml"
+    prefix:   /sie/equipamiento
+
+sie_infra_infraestructurah1datosgenerales:
+    resource: "@SieInfraestructuraBundle/Resources/config/routing/infraestructurah1datosgenerales.yml"
+    prefix:   /sie/infraestructurah1datosgenerales

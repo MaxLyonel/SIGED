@@ -1,0 +1,43 @@
+notascualitativas:
+    path:     /{op}
+    defaults: { _controller: SieHerramientaBundle:NotasCualitativas:index, op:search }
+
+notascualitativas_search:
+    path:     /search/
+    defaults: { _controller: "SieHerramientaBundle:NotasCualitativas:search"}
+
+notascualitativas_show:
+    path:     /{id}/show/
+    defaults: { _controller: "SieHerramientaBundle:NotasCualitativas:show" }
+
+notascualitativas_new:
+    path:     /new/
+    defaults: { _controller: "SieHerramientaBundle:NotasCualitativas:new" }
+    methods:  POST
+
+notascualitativas_create:
+    path:     /create/
+    defaults: { _controller: "SieHerramientaBundle:NotasCualitativas:create" }
+    methods:  POST
+
+notascualitativas_edit:
+    path:     /edit/
+    defaults: { _controller: "SieHerramientaBundle:NotasCualitativas:edit" }
+    methods:  POST
+
+notascualitativas_update:
+    path:     /update/
+    defaults: { _controller: "SieHerramientaBundle:NotasCualitativas:update" }
+    methods:  [POST]
+
+notascualitativas_delete:
+    path:     /delete/
+    defaults: { _controller: "SieHerramientaBundle:NotasCualitativas:delete" }
+    methods:  [POST, DELETE]
+
+         
+notascualitativas_ajax:
+    path:     /asignar_maestro/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieAppWebBundle:NotasCualitativas:asignar_maestro" }
+    options:
+         expose: true

@@ -1,0 +1,241 @@
+{% extends '::layoutCertification.html.twig' %}
+
+{% block contenttitulo %}{{ titulo }}{% endblock %}
+{% block contenttitulosmall %}{{ subtitulo }}{% endblock %}
+{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Gestiones Anteriores</li>{% endblock %}  
+
+{% block contentoption %} 
+    <br />
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-content">
+                {% for type, flashMessage in app.session.flashbag.all() %}
+                    <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {% if flashMessage.title is defined %}
+                            <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                            {{ flashMessage.message }}
+                        {% else %}
+                            {{ type }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>        
+    </div>
+    <br />
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="portlet portlet-default">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4><i class="fa fa-circle text-dpl"></i> Actualización de Gestiones Anteriores</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <span class="divider"></span>
+                            <a data-toggle="collapse" data-parent="#accordion" href="index.html#formulario"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="portlet-body" id="formulario">
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form" , 'onsubmit':'return verificarCamposLlenados()'} } )}}
+                        <div class="form-group">
+                            <div class="row">
+
+                                <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.rudeal) }}
+                                </div>
+                                <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.nombre_student) }}
+                                </div>
+                                <div class="col-lg-12 col-md-7 col-sm-9 col-xs-12">
+                                    <hr />
+                                </div>
+                                <div class="col-lg-2 col-md-7 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.sies) }}
+                                </div>                                
+                                <div class="col-lg-4 col-md-7 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.ue) }}
+                                    <input type="hidden" name="nombre_ue" id="ue" value=""/>
+                                </div>                                
+                                <div class="col-lg-3 col-md-7 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.gestiones,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                </div>
+                                <div class="col-lg-3 col-md-7 col-sm-9 col-xs-12">
+                                    {{ form_widget(form.grado,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-7 col-sm-9 col-xs-12">
+                                        {{ form_widget(form.nivel,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                    </div>
+                                    <div class="col-lg-4 col-md-7 col-sm-9 col-xs-12">
+                                        {{ form_widget(form.especialidad,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                    </div>
+                                    <div class="col-lg-4 col-md-7 col-sm-9 col-xs-12">
+                                        {{ form_widget(form.certificado,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-7 col-sm-9 col-xs-12">
+                            <hr />
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-12">
+                                {{ form_widget(form.registrar,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12 glyphicon glyphicon-search' } } ) }}
+                            </div>
+                        </div>
+                    </div>
+                    {{form_end(form)}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $(document).ready(function () {
+            $('#form_sies').attr('disabled', 'true');
+            $('#form_ue').attr('disabled', 'true');
+            $('#form_gestiones').attr('disabled', 'true');
+            $('#form_grado').attr('disabled', 'true');
+            $('#form_nivel').attr('disabled', 'true');
+            $('#form_especialidad').attr('disabled', 'true');
+            $('#form_certificado').attr('disabled', 'true');
+            $('#form_registrar').attr('disabled', 'true');
+            $('#form_sies').val('');
+            $('#form_ue').val('');
+            $('#form_gestiones').val('');
+            $('#form_grado').val('');
+            $('#form_nivel').val('');
+            $('#form_especialidad').val('');
+            $('#form_certificado').val('');
+        });
+        function verificarCamposLlenados(){
+            var rudeal = document.getElementById('form_rudeal');
+            var sie = document.getElementById('form_sies');
+            var gestion = document.getElementById('form_gestiones');
+            var grado = document.getElementById('form_grado');
+            var nivel =  document.getElementById('form_nivel');
+            var esp =  document.getElementById('form_especialidad');
+            var cert =  document.getElementById('form_certificado');
+            if(rudeal.value == ''){rudeal.style.borderColor='red';return false}else{rudeal.style.borderColor='#ccc';}
+            if(sie.value == ''){sie.style.borderColor='red';return false}else{sie.style.borderColor='#ccc';}
+            if(gestion.value == ''){gestion.style.borderColor='red';return false}else{gestion.style.borderColor='#ccc';}
+            if(grado.value == ''){grado.style.borderColor='red';return false}else{grado.style.borderColor='#ccc';}
+            if(nivel.value == ''){nivel.style.borderColor='red';return false}else{nivel.style.borderColor='#ccc';}
+            if(esp.value == ''){esp.style.borderColor='red';return false}else{esp.style.borderColor='#ccc';}
+            if(cert.value == ''){cert.style.borderColor='red';return false}else{cert.style.borderColor='#ccc';}
+        }
+        function verificarEstudiante(rudeal) {
+            var peticion;
+            if (peticion && peticion1.readyState != 4) {
+                peticion.abort();
+            }
+
+            peticion = $.ajax({
+                type: 'POST',
+                url: '{{ path('sie_tramite_homologacion_verificar_estudiante')}}',
+                data: {'rudeal': rudeal},
+                beforeSend: function () {
+                    $("#form_nombre_student").attr('disabled', 'true');
+                    $('#form_nombre_student').empty();
+                    $("#form_nombre_student").val('Cargando Datos..');
+                },
+                success: function (data) {
+                    console.log(data.students)
+                    if (data.students == '') {
+                        $("#form_nombre_student").attr('disabled', 'true');
+                        $('#form_nombre_student').empty();
+                        $("#form_nombre_student").val('No se encontró ningún estudiante con ese RUDEAL');
+                        $('#form_sies').val('');
+                        $('#form_ue').val('');
+                        $('#form_gestiones').val('');
+                        $('#form_grado').val('');
+                        $('#form_nivel').val('');
+                        $('#form_especialidad').val('');
+                        $('#form_certificado').val('');
+                    } else {
+                        $('#form_nombre_student').empty();
+
+                        for (var i in data) {
+                            $("#form_nombre_student").val(data.students[0].nombre + " " + data.students[0].paterno + " " + data.students[0].materno);
+                        }
+                        $('#form_sies').removeAttr('disabled');
+                        $('#form_gestiones').removeAttr('disabled');
+                        $('#form_grado').removeAttr('disabled');
+                        $('#form_nivel').removeAttr('disabled');
+                        $('#form_especialidad').removeAttr('disabled');
+                        $('#form_certificado').removeAttr('disabled');
+                        $('#form_registrar').removeAttr('disabled');
+                    }
+                }
+            });
+        }
+
+
+        function llenarEspecialidad(id) {
+            var peticion1;
+            if (peticion1 && peticion1.readyState != 4) {
+                peticion1.abort();
+            }
+
+            peticion1 = $.ajax({
+                type: 'POST',
+                url: '{{ path('sie_tramite_homologacion_listar_especialidad')}}',
+                data: {'id': id},
+                beforeSend: function () {
+                    $("#form_especialidad").attr('disabled', 'true');
+                    $('#form_especialidad').empty();
+                    $("#form_especialidad").append('<option value="">Cargando Datos..</option>');
+                },
+                success: function (data) {
+                    if (data.especialidades == '') {
+                        $("#form_especialidad").attr('disabled', 'true');
+                    } else {
+                        $('#form_especialidad').empty();
+                        $("#form_especialidad").append('<option value="">Seleccione Especialidad</option>');
+                        for (var i in data.especialidades) {
+                            $("#form_especialidad").append('<option value="' + data.especialidades[i].id + '">' + data.especialidades[i].esp + '</option>');
+                        }
+                        $("#form_especialidad").removeAttr('disabled');
+                    }
+                }
+            });
+        }
+        function llenar_ue(sie) {
+            var peticion2;
+            if (peticion2 && peticion2.readyState != 4) {
+                peticion2.abort();
+            }
+
+            peticion2 = $.ajax({
+                type: 'POST',
+                url: '{{ path('sie_tramite_homologacion_sie_ue')}}',
+                data: {'sies': sie},
+                beforeSend: function () {
+                    $("#form_ue").attr('disabled', 'true');
+                    $('#form_ue').empty();
+                    $("#form_ue").val('Cargando Datos..');
+                },
+                success: function (data) {
+                    console.log(data)
+                    if (data.ue == '') {
+                        $("#form_ue").attr('disabled', 'true');
+                    } else {
+                        $('#form_ue').empty();
+                        $("#form_ue").val(data.ue[0].institucioneducativa);
+                        $("#ue").val(data.ue[0].institucioneducativa);
+        {#                                $("#form_ue").removeAttr('disabled');#}
+                        }
+                    }
+                });
+            }
+    </script>
+{% endblock %}

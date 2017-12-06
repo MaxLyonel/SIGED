@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\PersonaAdministrativoInscripcionTipo:
+    type: entity
+    table: persona_administrativo_inscripcion_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        personaAdministrativoInscripcion:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: persona_administrativo_inscripcion
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

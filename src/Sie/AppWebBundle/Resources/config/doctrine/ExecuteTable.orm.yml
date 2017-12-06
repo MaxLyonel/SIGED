@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\ExecuteTable:
+    type: entity
+    table: execute_table
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cod1:
+            type: string
+            nullable: true
+            length: 5000
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

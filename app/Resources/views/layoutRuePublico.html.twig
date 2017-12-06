@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+
+{% block stylesheets %}
+    <head>
+        <title>Registro de Unidades Educativas - RUE</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <meta name="description" content="Registro de Unidades Educativas - RUE">
+        <meta name="author" content="">
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
+
+        <!-- Bootstrap Core Css -->
+        <link href="{{asset('webRue/assets/css/bootstrap.css')}}" rel="stylesheet" />
+
+        <!-- Waves Effect Css -->
+        <link href="{{asset('webRue/assets/css/waves.css')}}" rel="stylesheet" />
+
+        <!-- Animation Css -->
+        <link href="{{asset('webRue/assets/css/animate.css')}}" rel="stylesheet" />
+
+        <!-- Bootstrap Material Datetime Picker Css -->
+        <link href="{{asset('webRue/assets/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet" />
+
+        <!-- Bootstrap Select Css -->
+        <link href="{{asset('webRue/assets/css/bootstrap-select.css')}}" rel="stylesheet" />
+
+        <!-- JQuery DataTable Css -->
+        <link href="{{asset('webRue/assets/css/dataTables.bootstrap.css')}}" rel="stylesheet">
+
+        <!-- Sweet Alert Css -->
+        <link href="{{asset('webRue/assets/css/sweetalert.css')}}" rel="stylesheet" />
+
+        <!-- Materialize Css -->
+        <link href="{{asset('webRue/assets/css/materialize.css')}}" rel="stylesheet" />
+
+        <!-- Custom Css -->
+        <link href="{{asset('webRue/assets/css/style.css')}}" rel="stylesheet" />
+
+        <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+        <link href="{{asset('webRue/assets/css/all-themes.css')}}" rel="stylesheet" />
+    </head>
+{% endblock %}
+<body class="theme-teal">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Cargando...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    
+    <!-- Top Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars"></a>
+                <a class="navbar-brand" href="{{path('consulta_rue')}}">Registro de Unidades Educativas - RUE</a>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- Menu -->
+            <div class="menu">
+                <ul class="list">
+                    <li class="header">NAVEGACIÓN PRINCIPAL</li>
+                    <li class="active">
+                        <a href="{{path('consulta_rue')}}">
+                            <i class="material-icons">home</i>
+                            <span>Inicio / Buscar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{path('consulta_rue_localizacion')}}">
+                            <i class="material-icons">content_copy</i>
+                            <span>Formulario Actualización Geográfica</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{path('reporte_rue_index')}}">
+                            <i class="material-icons">show_chart</i>
+                            <span>Reportes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{path('consulta_rue_guia')}}">
+                            <i class="material-icons">content_copy</i>
+                            <span>Guía rápida</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- #Menu -->
+            <!-- Footer -->
+            <div class="legal">
+                <div class="copyright">
+                    &copy; 2017 <a href="javascript:void(0);">Ministerio de Educación</a>.
+                </div>
+                <div class="version">
+                    <b>Versión: </b> 2.0.0
+                </div>
+            </div>
+            <!-- #Footer -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            {% block contentoption %}{% endblock %}
+        </div>
+    </section>
+
+    {% block javascripts %}
+
+        <!-- Jquery Core Js -->
+        <script src="{{asset('webRue/assets/js/jquery.min.js')}}"></script>
+
+        <!-- Bootstrap Core Js -->
+        <script src="{{asset('webRue/assets/js/bootstrap.js')}}"></script>
+
+        <!-- Select Plugin Js -->
+        <script src="{{asset('webRue/assets/js/bootstrap-select.js')}}"></script>
+
+        <!-- Slimscroll Plugin Js -->
+        <script src="{{asset('webRue/assets/js/jquery.slimscroll.js')}}"></script>
+
+        <!-- Waves Effect Plugin Js -->
+        <script src="{{asset('webRue/assets/js/waves.js')}}"></script>
+
+        <!-- Jquery CountTo Plugin Js -->
+        <script src="{{asset('webRue/assets/js/jquery.countTo.js')}}"></script>
+
+        <!-- Autosize Plugin Js -->
+        <script src="{{asset('webRue/assets/js/autosize.js')}}"></script>
+
+        <!-- Moment Plugin Js -->
+        <script src="{{asset('webRue/assets/js/moment.js')}}"></script>
+
+        <!-- Jquery DataTable Plugin Js -->
+        <script src="{{asset('webRue/assets/js/jquery.dataTables.js')}}"></script>
+        <script src="{{asset('webRue/assets/js/dataTables.bootstrap.js')}}"></script>
+        
+        <!-- Bootstrap Material Datetime Picker Plugin Js -->
+        <script src="{{asset('webRue/assets/js/bootstrap-material-datetimepicker.js')}}"></script>
+
+        <!-- Custom Js -->
+        <script src="{{asset('webRue/assets/js/admin.js')}}"></script>
+        <script src="{{asset('webRue/assets/js/jquery-datatable.js')}}"></script>
+        <script src="{{asset('webRue/assets/js/basic-form-elements.js')}}"></script>
+
+        <!-- Demo Js -->
+        <script src="{{asset('webRue/assets/js/demo.js')}}"></script>
+
+        <!-- GLOBAL SCRIPTS -->
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+    {% endblock %}
+
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+{% extends 'layoutInfra.html.twig' %}
+
+{% block contentoption %}
+
+
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Operativos <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                       Operativos
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <!-- <li class="active">Lista</li> -->
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+
+
+    <div class="body-content animated fadeIn">
+
+      <div class="row">
+
+                    <div class="col-md-10 col-sm-8 col-md-offset-1">
+                      <!-- Lista de tramites aprobados por la DDE -->
+
+                        <div class="panel">
+                                                <div class="panel-heading">
+                                                    <div class="pull-left">
+                                                        <h3 class="panel-title">Operativos</h3>
+                                                    </div>
+                                                    <a href="#" class="btn btn-facebook btn-md pull-right"><i class="fa fa-fw fa-plus-circle"></i>Nuevo</a>
+                                                    <div class="clearfix"></div>
+                                                </div><!-- /.panel-heading -->
+                                                <div class="panel-body no-padding">
+                                                    <div class="table-responsive" style="margin-top: -1px;">
+                                                        <table class="table table-primary">
+                                                            <thead>
+                                                            <tr>
+                                                                <th class="text-center border-right" style="width: 1%;">No.</th>
+                                                                <th>Código SIE</th>
+                                                                <th>Unidad Educativa</th>
+                                                                <th class="text-center" style="width: 12%;">Acciones</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                            <tr class="border-primary">
+                                                                <td class="text-center border-right"><strong></strong></td>
+                                                                <td>{{ app.session.get('currentyear') }}</td>
+                                                                <td>{{ app.session.get('ie_id') }}</td>
+                                                                <td class="text-center">
+                                                                    <form action="{{path('infra_list_open')}}" method="post" style="display: inline-block">
+
+                                                                        <input type="hidden" id="form_gestion" name="form[gestion]" value="{{app.session.get('currentyear')}}">
+                                                                        <!-- this is the new start-->
+                                                                        <input type="hidden" id="form_data" name="form[sie]" required="required" value="{{app.session.get('ie_id')}}">
+                                                                        <!-- this is the new end-->
+                                                                        <button type="submit" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Regularizar Gestión {{app.session.get('currentyear')}}"><i class="fa fa-pencil"></i></button>
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div><!-- /.panel-body -->
+                                            </div><!-- /.panel -->
+                                            <!--/ End team table -->
+
+                                        <div id="logs"></div>
+                                <!--end lista tramites aprobados por la DDE -->
+                              </div>
+                            </div>
+                          </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %} 
+
+
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Index</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Abrir</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <!-- Start body content -->
+    <div class="body-content animated fadeIn">
+
+        <!-- Start misc widget -->
+
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <!-- Start widget newsletter -->
+                <div class="panel text-center rounded shadow">
+                    <div class="panel-body bg-lilac rounded">
+                        <div class="inner-all">
+                            <h4 class="text-uc">Unidad Educativa</h4>
+                            <p>Unidad Educativa</p>
+                            <!--form class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-addon no-border btn btn-lilac btn-alt">@</span>
+                                        <input class="form-control input-lg no-border" placeholder="Your email" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-lilac btn-alt">Subscribe</button>
+                                </div>
+                            </form-->
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End widget newsletter -->
+            </div>
+
+
+        </div><!-- /.row -->
+        <div class="row">
+
+
+            <div class="col-md-4 col-sm-4 col-xs-6">
+                {{form_start(mallaCurricularform, { 'attr':{'data-toggle':'validator','role':'form', 'class':'' } } )}}
+                <div class="panel panel-warning rounded shadow">
+                    <div class="panel-heading text-center">
+                        <p class="inner-all no-margin">
+                            <i class="fa fa-edit fa-5x"></i>
+                        </p>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body text-center">
+                        <p class="h4 no-margin text-strong">{{form_widget(mallaCurricularform.next)}}</p>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                {{form_end(mallaCurricularform)}}
+            </div>
+
+
+            <div class="col-md-4 col-sm-4 col-xs-6">
+                {{form_start(cursoform, { 'attr':{'data-toggle':'validator','role':'form', 'class':'' } } )}}
+                <div class="panel panel-success rounded shadow">
+                    <div class="panel-heading text-center">
+                        <p class="inner-all no-margin">
+                            <i class="fa fa-home fa-5x"></i>
+                        </p>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body text-center">
+                        <p class="h4 no-margin text-strong">{{form_widget(cursoform.next)}}</p>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                {{form_end(cursoform)}}
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-6">
+                {{form_start(estudiantesform, { 'attr':{'data-toggle':'validator','role':'form', 'class':'' } } )}}
+                <div class="panel panel-danger rounded shadow">
+                    <div class="panel-heading text-center">
+                        <p class="inner-all no-margin">
+                            <i class="fa fa-user-plus fa-5x"></i>
+                        </p>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body text-center">
+                        <p class="h4 no-margin text-strong">{{form_widget(estudiantesform.next)}}</p>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                {{form_end(estudiantesform)}}
+            </div>
+
+        </div><!-- /.row -->
+
+        <!-- End misc widget -->
+
+    </div><!-- /.body-content -->
+    <div class="body-content animated fadeIn">
+
+
+
+        <!-- End misc widget -->
+
+    </div><!-- /.body-content -->
+    <!--/ End body content -->
+
+
+
+
+    <!--/ End body content -->
+
+
+
+
+    <!--/ End body content -->
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    </script>
+{%endblock%}
+

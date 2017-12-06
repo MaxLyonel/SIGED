@@ -1,0 +1,7 @@
+consultalibreta:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:ConsultaLibreta:index" }
+
+consultalibreta_buscar:
+    path:     /buscar
+    defaults: { _controller: "SieAppWebBundle:ConsultaLibreta:buscar" }    

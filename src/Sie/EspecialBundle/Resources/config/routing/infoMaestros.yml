@@ -1,0 +1,3 @@
+info_maestros_index:
+    path:     /
+    defaults: { _controller: SieEspecialBundle:InfoMaestros:index }

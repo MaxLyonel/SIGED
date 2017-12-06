@@ -1,0 +1,74 @@
+Sie\AppWebBundle\Entity\BonojuancitoInstitucioneducativa:
+    type: entity
+    table: bonojuancito_institucioneducativa
+    indexes:
+        IDX_B13634CE3AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_B13634CE11EB9E41:
+            columns:
+                - bonojuancito_institucioneducativa_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestionTipoId:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        cantidadEstudiantes:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cantidad_estudiantes
+        institucioneducativaIdNueva:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id_nueva
+        obs:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+        tipo:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        bonojuancitoInstitucioneducativaTipo:
+            targetEntity: BonojuancitoInstitucioneducativaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bonojuancito_institucioneducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

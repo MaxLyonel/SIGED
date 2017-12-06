@@ -1,0 +1,188 @@
+{% extends 'layoutAlternativa.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+
+
+
+    <link href="{{asset('filefile/css/bootstrap-fileupload.min.css')}}" rel="stylesheet">
+    <link href="{{asset('filefile/css/bootstrap-fileupload.css')}}" rel="stylesheet">
+{% endblock %}
+
+
+
+{% block contentoption%}
+
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-upload animated flip"></i> Subir Archivo emp
+                    <small></small>
+                </h1>
+
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warningcons') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successcons') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+    <div class="col-lg-12">
+
+        <div class="portlet portlet-green">
+            <div class="portlet-heading">
+                <div class="portlet-title">
+                    <h4>Subir archivo EMP</h4>
+                </div>
+                <div class="portlet-widgets">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#basicFormExample"><i class="fa fa-chevron-down"></i></a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div id="basicFormExample" class="panel-collapse collapse in">
+                <div class="portlet-body">
+                    {{form_start(form, { 'attr': {'id':'upformemp'} })}}
+
+                    <div class="form-group">
+                        {{form_row(form.sie)}}
+                    </div>
+                    <div class="form-group">
+                        {{form_row(form.gestion)}}
+                    </div>
+                    {{ form_widget(form.search,{ 'attr':{'class':'btn btn-green' } } ) }}
+                    {{form_end(form)}}
+                </div>
+            </div>
+        </div>
+        <!-- /.portlet -->
+    </div>
+
+
+    <div class='row'>
+        <div class='col-md-12'>
+            <div id='uploadform'></div>
+        </div>
+
+        <div class='col-md-12'>
+            <div id='uploadfilehistory'></div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{asset('filefile/js/bootstrap-fileupload.js')}}"></script>
+    <script src="{{asset('filefile/js/bootstrap-fileupload.min.js')}}"></script>
+    <script>
+
+        $('#form_up').click(function () {
+            if ($('#form_upfile').val() == '') {
+                alert('Debe seleccionar un archivo...');
+                return false;
+            }
+            //alert($('#form_upfile').val());return false;
+            $.ajax({
+                url: "{{ path('consolidation_checkit_web') }}",
+                type: "POST",
+                data: {"data": 'krlos'},
+                success: function (data) {
+                    $('#resultloading').html(data.formulario);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown)
+                {
+                    alert('Error: ' + errorThrown);
+                }
+            });
+
+        });
+
+
+        var formUpFileEmp = function () {
+            var sie = $('#form_sie').val();
+            var gestion = $('#form_gestion').val();
+            if (sie.length == 0) {
+                alert('Necesita Código SIE para realizar la subida de archivo');
+            }
+            //alert($('#form_upfile').val());return false;
+            var formdata = $('#upformemp').serialize();
+            $.ajax({
+                type: "POST",
+                data: formdata,
+                url: "{{ path('alternativa_up_file_emp_form') }}",
+                beforeSend: function () {
+                    $("#uploadform").empty();
+                    $("#uploadform").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#uploadform").empty();
+                    $("#uploadform").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+
+            });
+
+
+        };
+
+        var upfileemp = function () {
+            alert('krlos');
+            return false;
+            var formdataup = $('#formfilesend').serialize();
+
+            $.ajax({
+                type: "POST",
+                data: formdataup,
+                url: "{{ path('alternativa_up_file_up_file_emp') }}",
+                beforeSend: function () {
+                    $("#uploadfilehistory").empty();
+                    $("#uploadfilehistory").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#uploadfilehistory").empty();
+                    $("#uploadfilehistory").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+
+            });
+        };
+
+    </script>
+
+
+{% endblock %}

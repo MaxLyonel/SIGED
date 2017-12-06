@@ -1,0 +1,18 @@
+accesopub_rue_main:
+    resource: "@SieRueBundle/Resources/config/routing/rue.yml"
+    prefix:   /accesopub/rue
+accesopub_rue_certificado:
+    resource: "@SieRueBundle/Resources/config/routing/certificadoRue.yml"
+    prefix:   /accesopub/certificadorue
+accesopub_le_main:
+    resource: "@SieRueBundle/Resources/config/routing/le.yml"
+    prefix:   /accesopub/le
+accesopub_rue_download:
+    resource: "@SieRueBundle/Resources/config/routing/download.yml"
+    prefix:   /accesopub/downloadrue
+accesopub_rue_consulta:
+    resource: "@SieRueBundle/Resources/config/routing/consultaRue.yml"
+    prefix:   /accesopub/consultarue
+accesopub_rue_reportes:
+    resource: "@SieRueBundle/Resources/config/routing/reportesRue.yml"
+    prefix:   /accesopub/reportesrue

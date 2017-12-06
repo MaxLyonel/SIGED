@@ -1,0 +1,73 @@
+Sie\AppWebBundle\Entity\DatosPersonales:
+    type: entity
+    table: datos_personales
+    indexes:
+        idx_87e529406a06bef9:
+            columns:
+                - dat_rde_persona_id_persona
+    id:
+        iddatosPersonales:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: iddatos_personales
+            generator:
+                strategy: SEQUENCE
+    fields:
+        datRdePersonaIdPersona:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: dat_rde_persona_id_persona
+        telefono:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        correo:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        direccion:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        gestionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_id
+        oficialia:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        libro:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        partida:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        folio:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

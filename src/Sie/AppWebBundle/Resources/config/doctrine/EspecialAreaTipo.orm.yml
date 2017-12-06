@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\EspecialAreaTipo:
+    type: entity
+    table: especial_area_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        areaEspecial:
+            type: string
+            nullable: false
+            length: 70
+            fixed: false
+            comment: ''
+            column: area_especial
+    lifecycleCallbacks: {  }

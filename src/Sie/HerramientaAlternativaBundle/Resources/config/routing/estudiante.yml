@@ -1,0 +1,38 @@
+estudiantealt_index:
+    path:     /
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Estudiante:index" }
+
+estudiantealt_main_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Estudiante:show" }
+
+estudiantealt_main_new:
+    path:     /new
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Estudiante:new" }
+
+estudiantealt_main_create:
+    path:     /create
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Estudiante:create" }
+    methods:  POST
+
+estudiantealt_main_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Estudiante:edit" }
+
+estudiantealt_main_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Estudiante:update" }
+    methods:  [POST, PUT]
+
+estudiantealt_main_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Estudiante:delete" }
+    methods:  [POST, DELETE]
+
+studentalt_result:
+    path:     /result
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Estudiante:result" }
+
+studentalt_main_history:
+    path:     /history/{idStudent}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Estudiante:history" }    

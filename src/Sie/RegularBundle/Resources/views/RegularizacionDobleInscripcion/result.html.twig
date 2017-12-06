@@ -1,0 +1,465 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block contentoption  %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="page-title">
+            <h1>Regularizacion Doble Inscripción
+                <small></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><i class="fa fa-search"></i>  <a href="{{path('regularizacionDobleInscripcion')}}">Buscar</a></li>
+                <li class="active">
+                    Regularizar
+                </li>
+            </ol>
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+
+
+{% if arrayInscripciones is defined and arrayInscripciones|length > 0 %}
+
+
+
+
+<div class="row">
+<form class="" action="" method="post" name="form" id="form">
+    {% set cont = 0 %}
+    {% for ai in arrayInscripciones %}
+
+        <input type="hidden" name="rude" value="{{ai.inscripcion.estudiante.codigoRude}}">
+        <input type="hidden" name="estadoMatriculaActual[]" value="{{ai.inscripcion.estadomatriculaTipo.id}}">
+
+        {% if ai.inscripcion.institucioneducativaCurso.nivelTipo.id != 11 %}
+        <div class="col-lg-6 col-md-6" style="background:#FFFFFF">
+        {% else %}
+        <div class="col-lg-12 col-md-12" style="background:#FFFFFF">
+        {% endif %}
+            <table class="table alert-info">
+                <tr>
+                    <th>Estudiante</th><td>{{ai.inscripcion.estudiante.nombre}} {{ai.inscripcion.estudiante.paterno}} {{ai.inscripcion.estudiante.materno}}</td>
+                </tr>
+                <tr>
+                    <th>Código Rude</th><td>{{ai.inscripcion.estudiante.codigoRude}}</td>
+                </tr>
+                <tr>
+                    <th>Unidad Educativa</th><td>{{ai.inscripcion.institucioneducativaCurso.institucioneducativa.institucioneducativa}}</td>
+                </tr>
+                <tr>
+                    <th>Nivel - Grado - Paralelo</th>
+                    <td>
+                        {{ai.inscripcion.institucioneducativaCurso.nivelTipo.nivel}}
+                         - {{ai.inscripcion.institucioneducativaCurso.gradoTipo.grado}}
+                         - {{ai.inscripcion.institucioneducativaCurso.paraleloTipo.paralelo}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Gestion</th><td>{{ai.inscripcion.institucioneducativaCurso.gestionTipo.gestion}}</td>
+                </tr>
+                <tr>
+                    <th>Estado Matrícula</th><td style="color:#2447E2; font-weight:bold; font-size:1.2em">{{ai.inscripcion.estadomatriculaTipo.estadomatricula}}</td>
+                </tr>
+            </table>
+
+            <hr>
+
+            <input type="hidden" name="idInscripcion[]" value="{{ai.inscripcion.id}}" class="idInscripcion" id="{{cont}}_inscripcion">
+            <input type="hidden" id="{{cont}}_nivel" name="nivel[]" value="{{ai.inscripcion.institucioneducativaCurso.nivelTipo.id}}">
+            <div class="col-md-12">
+                <h5>Notas</h5>
+                <small>
+                    <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>
+                                Asignatura
+                            </th>
+                            <th>1er Bimestre</th>
+                            <th>2do Bimestre</th>
+                            <th>3er Bimestre</th>
+                            <th>4to Bimestre</th>
+                            {% if ai.inscripcion.institucioneducativaCurso.nivelTipo.id != 11 %}
+                                <th>Promedio</th>
+                            {% endif %}
+                        </tr>
+                        <tbody>
+                            {% for a in ai.notas %}
+                                <tr>
+                                    <td>
+                                        {{a.asignatura}}
+                                    </td>
+                                    {% if a.notas is defined and a.notas|length > 0 %}
+                                    {% for n in a.notas %}
+                                        {% if ai.inscripcion.estadomatriculaTipo.id != 4 and ai.inscripcion.estadomatriculaTipo.id != 5 and ai.inscripcion.estadomatriculaTipo.id != 11 and ai.inscripcion.estadomatriculaTipo.id != 26 and ai.inscripcion.estadomatriculaTipo.id != 37 and ai.inscripcion.estadomatriculaTipo.id != 55 and ai.inscripcion.estadomatriculaTipo.id != 56 and ai.inscripcion.estadomatriculaTipo.id != 57 and ai.inscripcion.estadomatriculaTipo.id != 58 %}
+                                            {% if n.idEstudianteNota != 'nuevo' and n.idNotaTipo != 5 and ((ai.inscripcion.institucioneducativaCurso.nivelTipo.id == 11 and n.nota != "") or (ai.inscripcion.institucioneducativaCurso.nivelTipo.id != 11 and n.nota != 0)) %}
+                                                <td>
+                                                    <input type="hidden" name="idEstudianteNota[{{cont}}][]" value="{{n.idEstudianteNota}}">
+                                                    <input type="hidden" name="idNotaTipo[{{cont}}][]" value="{{n.idNotaTipo}}">
+                                                    <input type="hidden" name="idEstudianteAsignatura[{{cont}}][]" value="{{n.idEstudianteAsignatura}}">
+                                                    {% if ai.inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+                                                        <textarea class="nota" name="nota[{{cont}}][]" id="{{cont}}_{{n.id2}}" onkeypress="return validarNotaCualitativa(event,this.id,this.value)" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:200px" rows="6" minlength="15" maxlength="400">{{n.nota}}</textarea>
+                                                    {% else %}
+                                                        <input type="text" id="{{cont}}_{{n.id2}}" name="nota[{{cont}}][]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="promedio(this,'{{ai.inscripcion.id}}_{{a.idAsignatura}}')" onblur="notaVacia(this,'{{ai.inscripcion.id}}_{{a.idAsignatura}}')"  class="form-control input-sm nota {{ai.inscripcion.id}}_{{a.idAsignatura}}" style="width:50px" maxlength="3" autocomplete="off">
+                                                    {% endif %}
+                                                </td>
+                                            {% else %}
+                                                <td>
+                                                    <input type="hidden" name="idEstudianteNota[{{cont}}][]" value="{{n.idEstudianteNota}}">
+                                                    <input type="hidden" name="idNotaTipo[{{cont}}][]" value="{{n.idNotaTipo}}">
+                                                    <input type="hidden" name="idEstudianteAsignatura[{{cont}}][]" value="{{n.idEstudianteAsignatura}}">
+                                                    {% if ai.inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+                                                        <textarea class="" name="nota[{{cont}}][]" id="{{cont}}_{{n.id2}}" onkeyup="this.focus();" pattern="[0-9A-Z]{1,200}" required autocomplete="off" style="text-transform: uppercase; width:200px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="15" maxlength="400" readonly="readonly">{{n.nota}}</textarea>
+                                                    {% else %}
+                                                        <input type="text" id="{{cont}}_{{n.id2}}" name="nota[{{cont}}][]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="notaVacia(this.id,this.value)" class="form-control input-sm {% if n.idNotaTipo == 5 and n.nota > 0 %} p{{ai.inscripcion.id}}_{{a.idAsignatura}} {% endif %}" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly">
+                                                    {% endif %}
+                                                </td>
+                                            {% endif %}
+                                        {% else %}
+                                            <td>
+                                            {% if ai.inscripcion.institucioneducativaCurso.nivelTipo.id == 11 %}
+                                                <textarea id="{{cont}}_{{n.id2}}" class="" style="text-transform: uppercase; width:200px; background:#EFEFEF; border-color:#E2E2E2" rows="6" minlength="15" maxlength="400" disabled="disabled">{{n.nota}}</textarea>
+                                            {% else %}
+                                                <input id="{{cont}}_{{n.id2}}" type="text" size="2" class="form-control input-sm" style="width:50px" maxlength="3" autocomplete="off" disabled="disabled" value="{{n.nota}}">
+                                            {% endif %}
+                                            </td>
+                                        {% endif %}
+
+                                    {% endfor %}
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                </small>
+                <hr>
+                <table class="table alert-info">
+                    <tr>
+                        {% if ai.inscripcion.estadomatriculaTipo.id != 5 and ai.inscripcion.estadomatriculaTipo.id != 11 and ai.inscripcion.estadomatriculaTipo.id != 26 and ai.inscripcion.estadomatriculaTipo.id != 37 and ai.inscripcion.estadomatriculaTipo.id != 55 and ai.inscripcion.estadomatriculaTipo.id != 56 and ai.inscripcion.estadomatriculaTipo.id != 57 and ai.inscripcion.estadomatriculaTipo.id != 58  and  ai.inscripcion.estadomatriculaTipo.id != 4%}
+                        <th>Actualizar estado de matrícula a:</th>
+                        <td>
+
+                            <select name="estadoMatriculaNuevo[]" id="{{cont}}_nuevoEstado" class="form-control idNuevoEstado">
+                                {% for e in estados %}
+                                    <option value="{{e.id}}">{{e.estadomatricula}}</option>
+                                {% endfor %}
+                            </select>
+
+                        </td>
+                        {% else %}
+                            <td colspan="2">No se puede actualizar el estado de matrícula</td>
+                            <input type="hidden" name="estadoMatriculaNuevo[{{cont}}]" id="{{cont}}_nuevoEstado" value="{{ai.inscripcion.estadomatriculaTipo.id}}" class="idNuevoEstado">
+                        {% endif %}
+                    </tr>
+                </table>
+                <br>
+            </div>
+        </div>
+        {% set cont = cont + 1 %}
+    {% endfor %}
+</form>
+</div>
+
+{% endif %}
+
+<div id="respuesta" class="alert" style="display:none;">
+
+</div>
+<div class="row">
+    <div class="col-lg-12 text-left" style="margin-top:10px">
+        <button class="btn btn-success" onclick="guardar()" id="btnGuardar">Guardar</button>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+
+    <script>
+        var promedio = function(control,clase){
+            //if(control.value == ""){ control.value = 0; }
+            if(control.value < 0){ control.value = 0; }
+            if(control.value > 100){ control.value = 100; }
+            var suma = 0;
+            $("."+clase).each(function (index) {
+                suma = suma + parseInt($(this).val());
+            })
+            var promedio = Math.round(suma/4);
+            if(isNaN(promedio)){
+                promedio = 0;
+            }
+            $('.p'+clase).val(promedio);
+        }
+
+        var validarNota = function(e){
+            var key = e || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 48 || k > 57) //NUmeros
+                && (k != 13) //ENTER
+                && (k != 8) //retroceso
+                && (k != 9) //tab
+            )
+            return false;
+        }
+
+        var notaVacia = function(control,clase){
+            if(control.value == ""){ control.value = 0; }
+            if(control.value < 0){ control.value = 0; }
+            if(control.value > 100){ control.value = 100; }
+            var suma = 0;
+            $("."+clase).each(function (index) {
+                suma = suma + parseInt($(this).val());
+            })
+            var promedio = Math.round(suma/4);
+            if(isNaN(promedio)){
+                promedio = 0;
+            }
+            $('.p'+clase).val(promedio);
+        }
+
+        function validarNotaCualitativa(e,id,nota){
+            var key = e || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 97 || k > 122)//letras minusculas
+                && (k < 65 || k > 90) //letras mayusculas
+                && (k < 48 || k > 57) //NUmeros
+                && (k != 13) //ENTER
+                && (k != 8) //retroceso
+                && (k != 9) //tab
+                && (k != 241) //ñ
+                 && (k != 209) //Ñ
+                 && (k != 32) //espacio
+                 && (k != 225) //á
+                 && (k != 233) //é
+                 && (k != 237) //í
+                 && (k != 243) //ó
+                 && (k != 250) //ú
+                 && (k != 193) //Á
+                 && (k != 201) //É
+                 && (k != 205) //Í
+                 && (k != 211) //Ó
+                 && (k != 218) //Ú
+                 && (k != 44) //coma ,
+                 && (k != 46) //punto .
+                )
+            return false;
+        }
+
+        function guardar(){
+
+            $(".nota").each(function (index) {
+                $(this).css('background-color','#FFFFFF');
+            });
+
+            var enviar = true;
+            var mensaje = "";
+
+            var validarNotas = false;
+            $(".idNuevoEstado").each(function (index) {
+                if($(this).val() == 6){ // Estado es no incorporado
+                    var idEst = $(this).attr('id');
+                    var valor = idEst.split('_');
+
+                    var nivel = $('#'+valor[0]+'_nivel').val();
+
+                    var tieneNotas = false;
+                    if(nivel == 11){ var idNotaInscripcion = valor[0]+'_1000_1';}
+                    if(nivel == 12){ var idNotaInscripcion = valor[0]+'_1011_1';}
+                    if(nivel == 13){ var idNotaInscripcion = valor[0]+'_1031_1';}
+
+                    console.log(idNotaInscripcion);
+                    if(($('#'+idNotaInscripcion).val() > 0 && nivel != 11) || ($('#'+idNotaInscripcion).val() != "" && nivel == 11)){
+                        tieneNotas = true;
+                        console.log($('#'+idNotaInscripcion).val());
+                        if(!confirm('La inscripción ya cuenta con notas se sugiere cambiar al estado Retirado Traslado. \nUsted esta cambiando al estado No Incorporado, ¿Desea continuar?.')){
+                            enviar = false;
+                        }
+                        //mensaje = "La inscripcion ya cuenta con notas, y esta cambiando al estado No Incorporado. Desea continuar?";
+                        //enviar = false;
+                        //return false;
+                    }
+                }
+                if($(this).val() == 9){ // Estado es traslado
+                    var idEst = $(this).attr('id');
+                    var valor = idEst.split('_');
+
+                    var tieneNotas = true;
+                    if(nivel == 11){ var idNotaInscripcion = valor[0]+'_1000_1';}
+                    if(nivel == 12){ var idNotaInscripcion = valor[0]+'_1011_1';}
+                    if(nivel == 13){ var idNotaInscripcion = valor[0]+'_1031_1';}
+
+                    console.log(idNotaInscripcion);
+                    if($('#'+idNotaInscripcion).val() == 0 || $('#'+idNotaInscripcion).val() == ""){
+                        tieneNotas = false;
+                        mensaje = "La inscripción no cuenta con notas o tiene notas en cero, no se puede cambiar al estado Retirado Traslado.";
+                        enviar = false;
+                        //return false;
+                    }
+
+                    validarNotas = true;
+                }
+            });
+            console.log('validarNota',validarNotas);
+            //return false;
+            if(validarNotas == true){
+                var nivel = $('#0_nivel').val();
+                var cantidad = $(".idInscripcion").length;
+
+                if(cantidad == 3){
+
+                    $(".nota").each(function (index) {
+                        var ids = $(this).attr('id');
+                        var valor = ids.split('_');
+                        var a = $('#0_'+valor[1]).val();
+                        var b = $('#1_'+valor[1]).val();
+                        var c = $('#2_'+valor[1]).val();
+
+                        if(a === undefined){
+                            if(nivel == 11){
+                                a = '';
+                            }else{
+                                a = 0;
+                            }
+                        }
+                        if(b === undefined){
+                            if(nivel == 11){
+                                b = '';
+                            }else{
+                                b = 0;
+                            }
+                        }
+                        if(c === undefined){
+                            if(nivel == 11){
+                                c = '';
+                            }else{
+                                c = 0;
+                            }
+                        }
+
+                        if(a != 0 && a != ''){
+                            if(b != 0 && b != ''){
+                                if(a != b){
+                                    $(this).css('background-color','#FFBEAB');
+                                    enviar = false;
+                                    mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
+                                }else{
+                                    if(c != 0 && c != ''){
+                                        if(b != c){
+                                            $(this).css('background-color','#FFBEAB');
+                                            enviar = false;
+                                            mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
+                                        }
+                                    }
+                                }
+                            }else{
+                                if(c != 0 && c != ''){
+                                    if(a != c){
+                                        $(this).css('background-color','#FFBEAB');
+                                        enviar = false;
+                                        mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
+                                    }
+                                }
+                            }
+                        }else{
+                            if(b != 0 && b != ''){
+                                if(c != 0 && c != ''){
+                                    if(b != c){
+                                        $(this).css('background-color','#FFBEAB');
+                                        enviar = false;
+                                        mensaje = "Las notas no coinciden, verifique e iguale las notas de las inscripciones.";
+                                    }
+                                }
+                            }
+                        }
+
+                    });
+                }
+                if(cantidad == 2){
+                    $(".nota").each(function (index) {
+                        var ids = $(this).attr('id');
+                        var valor = ids.split('_');
+
+                        var a = $('#0_'+valor[1]+'_'+valor[2]).val();
+                        console.log('a',a);
+                        var b = $('#1_'+valor[1]+'_'+valor[2]).val();
+                        console.log('b',b);
+
+                        if(a === undefined){
+                            if(nivel == 11){
+                                a = '';
+                            }else{
+                                a = 0;
+                            }
+                        }
+                        if(b === undefined){
+                            if(nivel == 11){
+                                b = '';
+                            }else{
+                                b = 0;
+                            }
+                        }
+
+                        if(a != 0 && a != ''){
+                            if(b != 0 && b != ''){
+                                if(a != b){
+                                    $(this).css('background-color','#FFBEAB');
+                                    enviar = false;
+                                    mensaje = "Las notas no coinciden, verifique e iguale las notas de ambas inscripciones.";
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+
+            $(".nota").each(function (index) {
+                if($(this).val() == 0 || $(this).val() == ''){
+                    enviar = false;
+                    mensaje = "Las notas registradas no pueden ser cero y/o no pueden estar vacias.";
+                }
+            });
+            if(enviar == false && mensaje != ""){
+                alert(mensaje);
+            }
+
+            console.log(enviar);
+
+            //return false;
+
+            if(enviar == true){
+                if(confirm('¿Está seguro de realizar los cambios?, tenga en cuenta que esta ratificando los estados y notas del estudiante. ¿Desea continuar?')){
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('regularizacionDobleInscripcion_guardar'),
+                        data: $('#form').serialize(),
+                        beforeSend: function () {
+                            $("#respuesta").empty();
+                            $("#respuesta").css('display','block');
+                            $("#respuesta").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $("#respuesta").empty();
+                            $("#respuesta").addClass('alert-'+data.typeMessage)
+                            $("#respuesta").append('<p>'+data.mensaje+'</p>');
+                            if(data.typeMessage == 'success'){
+                                $('#btnGuardar').css('display','none');
+                                $("#respuesta").append('<p><a class="btn btn-md btn-danger" href="{{ path('ccalidad_list', {id: 5, gestion: gestion}) }}">Finalizar</a></p>');
+                            }
+                        },
+                        statusCode: {
+                            500: function () {
+
+                            },
+                            404: function () {
+
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+{% endblock %}

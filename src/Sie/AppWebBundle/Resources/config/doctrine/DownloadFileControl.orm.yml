@@ -1,0 +1,60 @@
+Sie\AppWebBundle\Entity\DownloadFileControl:
+    type: entity
+    table: download_file_control
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codUe:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cod_ue
+        bimestre:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        operativo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        estadoDescarga:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: estado_descarga
+        gestion:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+        dateDownload:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: date_download
+        remoteAddr:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+            column: remote_addr
+        userAgent:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: user_agent
+    lifecycleCallbacks: {  }

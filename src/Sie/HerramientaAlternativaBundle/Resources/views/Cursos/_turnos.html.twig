@@ -1,0 +1,29 @@
+{% if exist == true %}
+    {% for key,data in objturnos%}
+        <li class="parent_li" style="display: block;">
+            <span class="label label-primary" title="Encojer"><i class="fa-minus-circle"></i> 
+                {{key}}   <a href="#" onclick="getParalelos('{{data.nivelTipo}}', '{{sie}}', '{{gestion}}', '{{data.turnoTipo}}', '{{data.turno}}', '{{nivelname}}', '{{key}}');" ><span class="fa fa-hand-o-right"></span> {{data.turno}}</a>
+            </span>
+            <ul>
+                <div id="idparalelos_{{key}}">
+
+                </div>
+            </ul>
+        </li>
+    {%endfor%}
+{%else%}
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{%endif%}
+<script>
+</script>
+

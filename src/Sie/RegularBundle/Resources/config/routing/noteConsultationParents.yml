@@ -1,0 +1,29 @@
+note_consultation_parents_sie_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:NoteConsultationParents:index }
+
+note_consultation_parents_sie_result:
+    path:     /sie/result/
+    defaults: { _controller: SieRegularBundle:NoteConsultationParents:result }
+    options:
+         expose: true
+
+note_consultation_parents_sie_nota:
+    path:     /seeNota/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}/{sie}
+    defaults: { _controller: SieRegularBundle:NoteConsultationParents:nota }
+    options:
+         expose: true
+
+note_consultation_parents_sie_nota_new:
+    path:     /seeNotaNew/{inscripcionid}/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}/{sie}/{estadomatriculaTipo}
+    defaults: { _controller: SieRegularBundle:NoteConsultationParents:notaNew }
+    options:
+         expose: true
+
+note_consultation_parents_sie_download:
+    path:     /download/{file}
+    defaults: { _controller: SieRegularBundle:NoteConsultationParents:download }
+
+note_consultation_parents_sie_remove:
+    path:     /remove/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{sie}/{gestion}/{eiid}
+    defaults: { _controller: SieRegularBundle:NoteConsultationParents:remove }

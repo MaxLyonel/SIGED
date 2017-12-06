@@ -1,0 +1,80 @@
+{% extends 'SieAppWebBundle:Default:sie.html.twig' %}
+
+{% block contentoption%}
+
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="page-header">
+                <h3 class="heading pull-left"><i class="fa fa-file-text animated flip"></i> Administracion de Usuarios <span class="sub-heading">{{app.session.get('fullname')}}</span></h3>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="separator bottom"></div>
+        <div class="row">
+
+            <div class="col-md-12">
+                <!-- Website Stats  Widget -->
+                <div class="panel" id="dashboard-tour-visits">
+                    <!--h1 class="page-header">Resultado de la Busqueda</h1-->
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="panel panel-icon panel-success">
+                                    <div class="panel-heading">
+                                        <i class="fa fa-search"></i> Informacion de la Busqueda
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <table class="records_list">
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Username</th>
+                                                    <th>Password</th>
+                                                    <th>Fecharegistro</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for entity in pagination %}
+                                                    <tr>
+                                                        <td><a href="{{ path('usuario_main_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                                                        <td>{{ entity.username }}</td>
+                                                        <td>{{ entity.password }}</td>
+                                                        <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                                        <td>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="{{ path('usuario_main_show', { 'id': entity.id }) }}">show</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="{{ path('usuario_main_edit', { 'id': entity.id }) }}">edit</a>
+                                                                </li>
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="panel-footer">
+                                        <div class="panel-footer">
+                                            <div class="paginacion">
+                                                {{ knp_pagination_render(pagination) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>         
+
+
+    {% endblock %}

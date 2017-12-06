@@ -1,0 +1,10 @@
+maestroAsignacion:
+    path:     /
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:index }
+    methods: [ GET, POST]
+
+maestroAsignacion_asignar:
+    path:     /asignar
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestro }
+    options:
+        expose: true

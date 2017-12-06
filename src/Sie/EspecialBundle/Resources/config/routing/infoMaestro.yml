@@ -1,0 +1,102 @@
+herramienta_especial_info_maestro_index:
+    path:     /
+    defaults: { _controller: SieEspecialBundle:InfoMaestro:index}
+
+herramienta_especial_info_maestro_tsie_index:
+    path:     /tsie
+    defaults: { _controller: SieEspecialBundle:InfoMaestro:indexTecSie}    
+
+herramienta_especial_info_maestro_second:
+    path:     /sie/second
+    defaults: { _controller: SieEspecialBundle:InfoMaestro:second}
+
+herramienta_especial_info_maestro_third:
+    path:     /sie/third
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:loadThird"}
+    options:
+         expose: true
+
+herramienta_especial_info_maestro_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:show" }
+
+herramienta_especial_info_maestro_new:
+    path:     /new/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:new" }
+    methods:  [POST, PUT]
+
+herramienta_especial_info_maestro_create:
+    path:     /create/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:create" }
+    methods:  POST
+
+herramienta_especial_info_maestro_edit:
+    path:     /edit/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:edit" }
+    methods:  [POST, PUT]
+
+herramienta_especial_info_maestro_update:
+    path:     /update/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:update" }
+    methods:  [POST, PUT]
+
+herramienta_especial_info_maestro_delete:
+    path:     /delete/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:delete" }
+    methods:  [POST, DELETE]
+    
+herramienta_especial_info_maestro_search:
+    path:     /search/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:search" }
+    methods:  POST
+
+herramienta_especial_info_maestro_find:
+    path:     /find/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:find" }
+    
+herramienta_especial_info_maestro_result:
+    path:     /result/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:result" }    
+
+herramienta_especial_listaridiomasleehablaescribe:
+     path:    /idiomas/
+     defaults: { _controller: SieEspecialBundle:InfoMaestro:listaridiomasleehablaescribe }
+     options:
+         expose: true
+
+herramienta_especial_listaridiomasleehablaescribe_edit:
+     path:    /idiomasmaestro/{idMaestroInscripcion}/
+     defaults: { _controller: SieEspecialBundle:InfoMaestro:listaridiomasleehablaescribeedit }
+     options:
+         expose: true
+
+herramienta_especial_verificar_existe_persona:
+     path:    /verificar_existe_persona/{carnet}/
+     defaults: { _controller: SieEspecialBundle:InfoMaestro:verificar_existe_persona }
+     options:
+         expose: true    
+
+herramienta_especial_info_maestro_es_vigente_maestro:
+    path:     /maestro/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:esVigenteMaestro" }
+    methods:  [POST, PUT]         
+
+herramienta_especial_info_maestro_migrar_index:
+    path:     /maestromigrar/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroMigrar:index" }
+
+herramienta_especial_info_maestro_ratificar:
+    path:     /ratificarMaestro/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroMigrar:ratificarMaestro" }
+
+herramienta_especial_info_maestro_ddjj:
+    path:     /maestroDDJJ/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroMigrar:maestroDDJJ" }
+
+herramienta_especial_info_maestro_ratificar_currentyear:
+    path:     /ratificarMaestroCurrent/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestroMigrar:ratificarMaestroCurrent" }
+
+herramienta_especial_info_maestro_habilitar_ddjj:
+    path:     /maestrohabilitarDDJJ/
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:maestroHabilitarDDJJ" }

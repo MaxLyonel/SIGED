@@ -1,0 +1,31 @@
+sie_personas_usuario_carnet:
+    path:     /formcarnet/
+    defaults: { _controller: SieUsuariosBundle:Busquedas:formcarnet }
+
+sie_usuario_persona_buscar_carnet:
+    path:     /carnetpersonabuscar/
+    defaults: { _controller: SieUsuariosBundle:Busquedas:carnetpersonabuscar }
+    
+sie_personas_usuario_cod_ie:
+    path:     /formcodie/
+    defaults: { _controller: SieUsuariosBundle:Busquedas:formcodie }
+
+sie_usuario_cod_ie_buscar:
+    path:     /codiepersonas/
+    defaults: { _controller: SieUsuariosBundle:Busquedas:codiepersonas }    
+
+sie_usuario_busqueda_nombreusuario:
+    path:     /formusuario/
+    defaults: { _controller: "SieUsuariosBundle:Busquedas:formusuario" }
+    
+sie_usuario_resultado_nombreusuario:
+    path:     /resultadobusquedausuario/
+    defaults: { _controller: "SieUsuariosBundle:Busquedas:resultadobusquedausuario" }    
+    
+sie_usuario_persona_unidades:
+    path:     /{usuarioid}/resultadopersonaunidades/
+    defaults: { _controller: "SieUsuariosBundle:Busquedas:resultadopersonaunidades" }    
+
+sie_usuarios_apoderados_ie:
+    path:     /apoderadosie/
+    defaults: { _controller: SieUsuariosBundle:Busquedas:apoderadosie }   

@@ -1,0 +1,45 @@
+reporte_upfile_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:ReporteUpFile:default }
+    
+reporte_upfile_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:ReporteUpFile:result }
+    options:
+         expose: true
+    
+reporte_upfile_departamental_regular:
+    path:     /regular/departamento/b/{bimestre}
+    defaults: { _controller: SieRegularBundle:ReporteUpFile:departamentoRegular } 
+
+reporte_upfile_distrital_regular:
+    path:     /regular/distrito
+    defaults: { _controller: SieRegularBundle:ReporteUpFile:distritoRegular } 
+    
+reporte_upfile_institucional_regular:
+    path:     /regular/unidadeducativa
+    defaults: { _controller: SieRegularBundle:ReporteUpFile:ueRegular } 
+        
+reporte_upfile_departamental_especial_fin_2014:
+    path:     /especial/departamento/fin/2014
+    defaults: { _controller: SieRegularBundle:ReporteUpFile:departamentoEspecialFin2014 }
+    
+reporte_upfile_departamental_especial_ini_2015:
+    path:     /especial/departamento/inicio/2015
+    defaults: { _controller: SieRegularBundle:ReporteUpFile:departamentoEspecialIni2015 }    
+    
+reporte_valapoderado_index:
+    path:    /regular/reporte/valapoderado
+    defaults: { _controller: SieRegularBundle:ReporteUpFile:valapoderado }
+
+reporte_distrital_regular_valapoderado:
+    path:     /regular/reporte/valapoderado/distrito
+    defaults: { _controller: SieRegularBundle:ReporteUpFile:distritoRegularValapoderado }
+
+reporte_institucional_regular_valapoderado:
+    path:     /regular/reporte/valapoderado/unidadeducativa
+    defaults: { _controller: SieRegularBundle:ReporteUpFile:ueRegularValapoderado }  
+
+reporte_valapoderado_pdf:
+    path:     /regular/reporte/valapoderado/pdf/{codigo_sie}/{gestion}
+    defaults: { _controller: SieRegularBundle:ReporteUpFile:pdfValapoderado }  

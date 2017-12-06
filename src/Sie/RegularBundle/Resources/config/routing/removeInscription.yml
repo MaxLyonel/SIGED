@@ -1,0 +1,17 @@
+remove_inscription_sie_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:RemoveInscription:index }
+         
+remove_inscription_sie_nota:
+    path:     /seeNota/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}/{sie}
+    defaults: { _controller: SieRegularBundle:RemoveInscription:nota }           
+    options:
+         expose: true 
+    
+remove_inscription_sie_remove:
+    path:     /remove/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{sie}/{gestion}/{eiid}
+    defaults: { _controller: SieRegularBundle:RemoveInscription:remove }
+    
+remove_inscription_sie_result_quest:
+    path:     /sie/quest/{rude}
+    defaults: { _controller: SieRegularBundle:RemoveInscription:quest }

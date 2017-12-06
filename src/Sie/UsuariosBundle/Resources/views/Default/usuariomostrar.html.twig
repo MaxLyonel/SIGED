@@ -1,0 +1,146 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Información del usuario y persona.
+                    <small> Muestra los datos de la persona asignada a este usuario.</small>
+                </h1>
+            </div>
+        </div>        
+    </div>    
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información del Usuario</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <h3>Nombre de usuario: <span class="label label-primary">{{ app.session.get('userName') }} </span></h3>                                                                                    
+                            <p>
+                            <table class="table table-bordered">
+                                <tbody>
+                                        <tr>
+                                            <th>Rol</th>
+                                            <th>Lugar</th>
+                                            <th>Cod</th>
+                                            <th>Nivel</th>
+                                        </tr> 
+                                    {% for persona in usuariodatos %}
+                                        <tr>
+                                            <td>{{ persona.rol }}</td>
+                                            <td>{{ persona.lugar }}</td>
+                                            <td>{{ persona.discod }}</td>
+                                            <td>{{ persona.nivel }}</td>
+                                        </tr>                                       
+                                    {% endfor %}
+                                </tbody>
+                            </table>                             
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="{{path('sie_usuarios_reset_login', {'usuarioid': app.session.get('userId')})}}" method="post">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-gear"></i> Cambiar Contraseña </button>
+                            </form>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+                                
+        <div class="col-lg-6">
+            <div class="portlet portlet-red">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Actualizar Foto</h4>
+                        {% if personas[0].foto is empty %}
+                            Persona no asignada
+                        {% else %}
+                            {{ form_start(form, { 'attr': {'id': 'sie_usuarios_foto_form' } } )}}
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    {{ form_row(form.foto, { 'id': 'foto_persona_upload'}) }}  
+                                </div>
+                                {#<div class="col-lg-4">
+                                    {{ form_row(form.foto, { 'id': 'foto_persona_upload'}) }}  
+                                </div>#}
+                                <div class="col-lg-4">
+                                    {{ form_row(form.subir) }}
+                                </div>
+                            </div>
+                            {{ form_end(form) }}    
+                        {% endif %}
+                        {#sie_persona_uploadfoto#}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="portlet-body">
+                    <center>
+                        {% if personas[0].foto is empty %}
+                            <img class="img-circle" src ="{{ asset('uploads/krlos.jpg') }} " height="150" width="150" >
+                        {% else %}
+                            <img class="img-circle" src ="/uploads/personasfotos/{{personas[0].foto}} " height="150" width="150" >
+                        {% endif %}
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>                
+                    
+    <div class="row">  
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información de la Persona</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr><th>Carnet</th><td>{{ personas[0].carnet }}</td></tr>
+                                    <tr><th>Nombre</th><td>{{ personas[0].nombre }}</td></tr>
+                                    <tr><th>Materno</th><td> {{ personas[0].materno }}</td></tr>
+                                    <tr><th>Paterno</th><td>{{ personas[0].paterno }}</td></tr>
+                                    <tr><th>Fecha de Nacimiento:</th><td>{% if personas[0].fecha_nacimiento %}{{ personas[0].fecha_nacimiento|date('d-m-Y') }}{% endif %}</td></tr>
+                                    <tr><th>Complemento:</th><td> {{ personas[0].complemento }}</td></tr>
+                                    <tr><th>Género:</th><td>{{ personas[0].genero|upper }}</td></tr>
+                                    <tr><th>Libreta Militar</th><td> {{ personas[0].libreta_militar }}</td></tr>
+                                    <tr><th>Pasaporte</th><td>{{ personas[0].pasaporte }}</td></tr>
+                                    <tr><th>Estado Civil:</th><td>{{ personas[0].estado_civil|upper }}</td></tr>                                        
+                                    <tr><th>Idioma Materno:</th><td>{{ personas[0].idioma|upper }}</td></tr>
+                                </tbody>
+                            </table> 
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="row">                        
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {#<a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{personas[0].id}}')"> Editar datos personales</a>#}
+                            {% if personas[0].count_edit <= 3 %}
+                                <a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{personas[0].id}}')"> Editar datos personales</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>                     
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}    
+
+

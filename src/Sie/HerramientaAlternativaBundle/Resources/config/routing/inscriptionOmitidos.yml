@@ -1,0 +1,9 @@
+alternativa_inscriptionOmitidos_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:inscriptionExcepcionales:index}
+
+alternativa_inscriptionOmitidos_result:
+    path:     /cargarTurnos/{idInstitucion}/{gestion}/
+    defaults: { _controller: "SieHerramientaBundle:inscriptionExcepcionales:result"}
+    options:
+         expose: true

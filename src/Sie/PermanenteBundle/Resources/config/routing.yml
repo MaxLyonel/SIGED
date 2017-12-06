@@ -1,0 +1,35 @@
+sie_permanente_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SiePermanenteBundle:Default:index }
+
+sie_app_web_carreras_tecnica:
+    resource: "@SiePermanenteBundle/Resources/config/routing/carrerastecnica.yml"
+    prefix:   /sie/carreras
+    
+sie_app_web_institucioneducativa_curso_tecnica:
+    resource: "@SiePermanenteBundle/Resources/config/routing/institucioneducativaCursoTecnica.yml"
+    prefix:   /sie/institucioncursotecnica
+    
+sie_app_web_estudianteinscripcion_tecnica:
+    resource: "@SiePermanenteBundle/Resources/config/routing/estudianteinscripcionTecnica.yml"
+    prefix:   /sie/estudianteinscripciontecnica
+
+sie_app_web_curso_corto:
+    resource: "@SiePermanenteBundle/Resources/config/routing/cursocorto.yml"
+    prefix:   /sie/cursocorto
+
+sie_app_web_curso_largo:
+    resource: "@SiePermanenteBundle/Resources/config/routing/cursolargo.yml"
+    prefix:   /sie/cursolargo
+
+sie_app_web_institucion_curso_corto:
+    resource: "@SiePermanenteBundle/Resources/config/routing/institucioncursocorto.yml"
+    prefix:   /sie/institucioncursocorto
+
+sie_app_web_institucion_curso_largo:
+    resource: "@SiePermanenteBundle/Resources/config/routing/institucioncursolargo.yml"
+    prefix:   /sie/institucioncursolargo
+
+sie_app_web_area_tematica:
+    resource: "@SiePermanenteBundle/Resources/config/routing/areatematica.yml"
+    prefix:   /sie/areatematica

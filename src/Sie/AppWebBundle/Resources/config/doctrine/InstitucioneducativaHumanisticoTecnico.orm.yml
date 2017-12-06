@@ -1,0 +1,63 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico:
+    type: entity
+    table: institucioneducativa_humanistico_tecnico
+    repositoryClass: Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnicoRepository
+    indexes:
+        IDX_C6AECF52B57AF92D:
+            columns:
+                - institucioneducativa_humanistico_tecnico_tipo_id
+        IDX_C6AECF52C6447610:
+            columns:
+                - grado_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        institucioneducativa:
+            type: string
+            nullable: true
+            length: 70
+            fixed: false
+            comment: ''
+        esimpreso:
+            type: boolean
+            nullable: true
+            comment: ''
+    manyToOne:
+        institucioneducativaHumanisticoTecnicoTipo:
+            targetEntity: InstitucioneducativaHumanisticoTecnicoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_humanistico_tecnico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gradoTipo:
+            targetEntity: GradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

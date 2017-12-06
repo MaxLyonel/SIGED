@@ -1,0 +1,62 @@
+Sie\AppWebBundle\Entity\TtecCarreraTipo:
+    type: entity
+    table: ttec_carrera_tipo
+    indexes:
+        IDX_53FA34D45F0A6EFE:
+            columns:
+                - ttec_estado_carrera_tipo_id
+        IDX_53FA34D449A35138:
+            columns:
+                - ttec_area_formacion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombre:
+            type: text
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+        codigo:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        ttecEstadoCarreraTipo:
+            targetEntity: TtecEstadoCarreraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_estado_carrera_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecAreaFormacionTipo:
+            targetEntity: TtecAreaFormacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_area_formacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

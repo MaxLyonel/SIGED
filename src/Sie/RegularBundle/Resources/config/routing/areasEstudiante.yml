@@ -1,0 +1,67 @@
+areas_estudiante:
+    path:     /{op}
+    defaults: { _controller: SieRegularBundle:AreasEstudiante:index, op:search }
+
+areas_estudiante_new:
+    path:     /new/
+    defaults: { _controller: "SieRegularBundle:AreasEstudiante:new" }
+    methods:  POST
+
+areas_estudiante_create:
+    path:     /create/
+    defaults: { _controller: "SieRegularBundle:AreasEstudiante:create" }
+    methods:  POST
+
+areas_estudiante_listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieRegularBundle:AreasEstudiante:listargrados" }
+    options:
+         expose: true
+
+areas_estudiante_cargar_niveles:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}/{turno}/
+    defaults: { _controller: "SieRegularBundle:AreasEstudiante:cargarNiveles"}
+    options:
+         expose: true
+
+areas_estudiante_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{turno}/{nivel}/
+    defaults: { _controller: "SieRegularBundle:AreasEstudiante:cargarGrados"}
+    options:
+         expose: true
+
+areas_estudiante_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieRegularBundle:AreasEstudiante:cargarParalelos"}
+    options:
+         expose: true
+
+areas_estudiante_listar_estudiantes_curso:
+    path:     /listar_estudiantes_curso/
+    defaults: { _controller: "SieRegularBundle:AreasEstudiante:lista_estudiantes_curso" }
+    options:
+         expose: true
+
+areas_estudiante_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}/{idEstudianteInscripcion}/
+    defaults: { _controller: "SieRegularBundle:AreasEstudiante:lista_areas_nivel" }
+    options:
+         expose: true
+
+areas_estudiante_listar_areas_estudiante_adicionar_eliminar:
+    path:     /lista_areas_estudiante_adicionar_eliminar/
+    defaults: { _controller: "SieRegularBundle:AreasEstudiante:lista_areas_estudiante_adicionar_eliminar" }
+    options:
+         expose: true
+
+areas_estudiante_listar_areas_sin_notas:
+    path:     /lista_areas_sin_notas/{idEstudianteInscripcion}/{idNivel}/
+    defaults: { _controller: "SieRegularBundle:AreasEstudiante:lista_areas_sin_notas" }
+    options:
+         expose: true
+
+areas_estudiante_registrar_notas:
+    path:     /areas_estudiante_registrar_notas/
+    defaults: { _controller: "SieRegularBundle:AreasEstudiante:registrar_notas" }
+    options:
+         expose: true

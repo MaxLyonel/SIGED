@@ -1,0 +1,72 @@
+Sie\AppWebBundle\Entity\AsignaturaTipo:
+    type: entity
+    table: asignatura_tipo
+    indexes:
+        IDX_49B906A2AAF70791:
+            columns:
+                - area_tipo_id
+        IDX_49B906A261CE1C23:
+            columns:
+                - asignatura_nivel_id
+    uniqueConstraints:
+        asignatura_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        asignatura:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        descAbrev:
+            type: string
+            nullable: true
+            length: 7
+            fixed: false
+            comment: ''
+            column: desc_abrev
+        oficial:
+            type: boolean
+            nullable: false
+            comment: ''
+        contenido:
+            type: string
+            nullable: false
+            length: 250
+            fixed: false
+            comment: ''
+        esobligatorio:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: true
+    manyToOne:
+        areaTipo:
+            targetEntity: AreaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                area_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        asignaturaNivel:
+            targetEntity: AsignaturaNivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                asignatura_nivel_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

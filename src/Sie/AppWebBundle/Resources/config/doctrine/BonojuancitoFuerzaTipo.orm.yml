@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\BonojuancitoFuerzaTipo:
+    type: entity
+    table: bonojuancito_fuerza_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fuerza:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

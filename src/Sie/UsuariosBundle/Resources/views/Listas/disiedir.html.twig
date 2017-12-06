@@ -1,0 +1,120 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+    {% block cuerpo %}    
+        <p>        
+            <h3>Lista de directores y sus unidades educativas en su distrito.</h3>
+        <p>   
+        <div id="tablaListadoPersonas_fil" style="visibility: hidden;">        
+        </div>
+        <div id="idmaestrodir_fil" style="visibility: hidden;">
+        </div>
+        <div class="contenedor-tabla" style="width: 1500px; overflow: scroll;">
+            <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+                <thead>
+                    <tr>
+                        <th>Selección</th>                         
+                        <th>Código SIE.</th>
+                        <th>Institución Educativa</th>
+                    </tr>
+                </thead>                
+                <tbody>
+                    {% for entity in entities %}
+                        <tr>
+                            <td>
+                                <a role="button" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_usuario_persona_show',{'ie_id': entity.cod_ue, 'ie_nombre': entity.institucioneducativa}) }}"> Trabajar con esta unidad</a>                                
+                            </td>                            
+                            <td>{{entity.cod_ue}}</td>                
+                            <td>{{entity.institucioneducativa}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        <script type="text/javascript">    
+        $(document).ready(function() {
+            $('#tablaListadoPersonas').find('tr').click( function(){
+                $('#tablaListadoPersonas_fil').text($(this).index());
+                $('#idmaestrodir_fil').text($("td:eq(10)", this).text()); 
+            });
+            
+            $('#tablaListadoPersonas tbody').on( 'click', 'tr', function () {
+                if ( $(this).hasClass('selected') ) {
+                    $(this).removeClass('selected');
+                }
+                else {
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+            
+            var table = $('#tablaListadoPersonas').DataTable({
+                language: {
+                    "sProcessing":     "Procesando...",
+                    "sLengthMenu":     "Mostrar _MENU_ registros",
+                    "sZeroRecords":    "No se encontraron resultados",
+                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":    "",
+                    "sSearch":         "Buscar:",
+                    "sUrl":            "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "Cargando...",                
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                },
+            'dom': 'lBfrtip <"clear">',
+            'buttons': [
+                {   
+                    extend: 'colvis',
+                    text:'Visibilizar Columnas'
+                },
+                {
+                    extend: 'print',
+                    text: 'Imprimir',
+                    autoPrint: true,
+                    title: 'SIGED - LISTA DE USUARIO',
+                    header:true,
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend:'pdf',
+                    title: 'SIGED - LISTA DE USUARIO',
+                    filename:'Lista de usuarios filtrados',
+                    orientation:'landscape',
+                    exportOptions: {
+                    modifier: {
+                        page: 'Lista de usuarios filtrados'
+                        }
+                    }
+                },
+                {
+                extend: 'excel',
+                text: 'Excel',
+                filename:'Lista de usuarios filtrados',
+                exportOptions: {
+                    modifier: {
+                        page: 'Lista de usuarios filtrados'
+                        }
+                    }
+                },
+            ] 
+            });
+        } );
+        </script>
+    {% endblock %}

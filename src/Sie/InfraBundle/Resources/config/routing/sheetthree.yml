@@ -1,0 +1,7 @@
+infra_sheet_three_index:
+    path:     /index
+    defaults: { _controller: SieInfraBundle:SheetThree:index }
+
+infra_sheet_three_access:
+    path:     /access
+    defaults: { _controller: SieInfraBundle:SheetThree:access }

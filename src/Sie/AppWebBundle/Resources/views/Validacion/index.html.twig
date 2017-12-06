@@ -1,0 +1,149 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+    <div class="modal modal-flex fade" id="masDetalles" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Detalles</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idDetalle"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Validación
+                    <small>Lista de insconsistencias</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-home"></i>  <a href="{{ path('validacion') }}"> Lista</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <div class="well well-lg text-dark-blue">
+                <h4>MÓDULO DE VALIDACIÓN</h4>
+                <h5>INCONSISTENCIAS POR DISTRITO EDUCATIVO</h5>
+            </div>
+        </div>
+    </div>
+
+    {% if app.session.get('roluser') != 8 %} 
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="well text-center">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <span class="text-dark-blue">CÓDIGO DEL DISTRITO EDUCATIVO:</span> <span class="text-green">{{ distrito.codigo }}</span>
+                        </div>
+                        <div class="col-lg-6">
+                            <span class="text-dark-blue">DISTRITO EDUCATIVO:</span> <span class="text-green">{{ distrito.lugar }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %} 
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="pull-left">
+                        <h4 class="portlet-title">Lista de Unidades Educativas que presentan inconsistencias</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="portlet-body">
+                    <div class="panel-body panel-primary">
+                        {% if ieducativa is not empty %}
+                            <div id="no-more-tables" class="table-responsive">
+                                <!--table class="table table-bordered table-hover cf dataTable" id="myTable"-->
+                                <table class="table table-bordered table-striped cf dataTable">
+                                    <thead  class="cf">
+                                        <tr>
+                                            <th>N°</th>
+                                            <th>Gestión</th>
+                                            <th>Código SIE</th>
+                                            <th>Institucion Educativa</th>
+                                            <th>Observación</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for validacionProceso in validacionProceso %}
+                                            <tr>
+                                                <td>{{ loop.index }}</td>
+                                                <td>{{ validacionProceso['gestion'] }}</td>
+                                                <td>{{ validacionProceso['ie_id'] }}</td>
+                                                <td>{{ validacionProceso['institucioneducativa'] }}</td>
+                                                <td>{{ validacionProceso['obs'] }}</td>
+                                                <td class="text-center"><a href="#" onclick="verDetalles({{ validacionProceso['id'] }})" class="btn btn-default btn-sm"><i class="fa fa-plus-circle"></i> Detalles</a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}                      
+                            {% if app.session.get('roluser') != 8 %}                            
+                                <div class="alert alert-success" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <i class="glyphicon glyphicon-ok"></i> <strong>¡Bien!</strong> No se encontraron inconsistencias.
+                                </div>
+                            {% else %}
+                                <a href="{{ path('validacion_validar_todo') }}" class="btn btn-success btn-md"><i class="fa fa-check"></i> Validar</a>
+                            {% endif %}
+                        {% endif %}
+
+                    </div>
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div> 
+{% endblock %}
+
+{% block javascripts %}    
+    {{ parent() }}
+    <script>
+
+        var verDetalles = function (vpId) {
+            $('#masDetalles').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('validacion_detalle', {'vpId': vpId}),
+                beforeSend: function () {
+                    $("#idDetalle").empty();
+                    $("#idDetalle").append('<div class="text-center"><img src="{{ asset('img/loading.gif') }}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#idDetalle").empty();
+                    $("#idDetalle").append(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $("#idDetalle").empty();
+                    },
+                    404: function () {
+                        $("#idDetalle").empty();
+                    }
+                }
+            });
+        };
+
+    </script>
+{% endblock %}

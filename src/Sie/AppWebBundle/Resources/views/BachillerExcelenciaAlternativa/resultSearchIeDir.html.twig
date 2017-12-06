@@ -1,0 +1,253 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Paso 1.- Actualizar Datos Directora/Director <span>Bachiller de Excelencia</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">
+                    Bachiller de Excelencia
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Actualizar Datos Directora/Director</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <p><i class="fa fa-info-circle fa-fw"></i> En el recuadro inferior se tiene la información actual de la Directora o del Director de la Unidad Educativa.</p>
+                <p>En caso de que existiera algún cambio en la información, la misma deberá ser actualizada. Solamente complete la información acerca de la entidad financiera, en caso de tener cuenta en "BANCO UNIÓN", caso contrario deje los valores que aprecen por defecto.</p>
+                <p>Posteriormente, a través de una ventana emergente se pide la confirmación de los datos ingresados. Para confirmar presione sobre el botón "Aceptar", para corregir la información introducida presione sobre el botón "Cancelar".</p>
+                <p class="label label-danger"><strong>Nota.- Tenga en cuenta que la información registrada se constituye en declaración jurada, por tanto debe verificar minuciosamente los datos ingresados, ya que no se podrá realizar cambios posteriores.</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Institución Educativa -->
+        <!-- Director/a -->
+        <div class="col-lg-6 col-lg-offset-3">
+                <div class="col-xs-12 col-lg-12">
+                    <div class="panel panel-icon panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-user"></i> Actualización de datos de la Directora o el Director y Registro 
+                        </div>
+                        <div class="panel-body">
+                    <div id="divAlertDir">
+                    <div>
+                        <p class="text text-danger"><strong>1.- Información Actual: </strong></p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Código SIE</th><td>{{ entity.instId }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Institución Educativa</th><td>{{ entity.institucioneducativa }}</td>
+                                </tr>
+                                <tr>
+                                    <th>C.I.</th><td>{{ entity.carnet }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Complemento</th><td>{{ entity.complemento }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Apellido Paterno</th><td>{{ entity.paterno }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Apellido Materno</th><td>{{ entity.materno }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre(s)</th><td>{{ entity.nombre }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Cargo</th><td>{{ entity.cargo }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <p class="text text-danger"><strong>2.- Actualizar Información Vigente: </strong></p>
+                    </div>
+                    
+                        {{form_start(form_dir, { 'attr': {'role': "form", 'class':'form-horizontal', 'onsubmit': 'guardarDirector(); return false;', 'id': 'sie_appwebbundle_maestrocuentabancaria' } } )}}
+                        <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_carnet" class="col-sm-4 control-label">{{ form_label(form_dir.carnet) }}</label>
+                            <div class="col-sm-4">
+                                {{ form_widget(form_dir.carnet, { 'attr': {'class': 'form-control', 'value': entity.carnet, 'style': 'text-transform:uppercase' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.carnet) }}</div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_complemento" class="col-sm-4 control-label">{{ form_label(form_dir.complemento) }}</label>
+                            <div class="col-sm-2">
+                                {{ form_widget(form_dir.complemento, { 'attr': {'class': 'form-control', 'value': entity.complemento, 'style': 'text-transform:uppercase' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.complemento) }}</div>
+                            </div>
+                            <div class="col-sm-6 text-info">El "complemento" NO se refiere al "lugar de expedición del C.I."</div>
+                        </div>    
+                        <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_paterno" class="col-sm-4 control-label">{{ form_label(form_dir.paterno) }}</label>
+                            <div class="col-sm-4">
+                                {{ form_widget(form_dir.paterno, { 'attr': {'class': 'form-control jletters', 'value': entity.paterno, 'style': 'text-transform:uppercase' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.paterno) }}</div>
+                            </div>
+                            <div class="col-sm-4 text-info">En algunos casos es posible dejar este campo en blanco.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_materno" class="col-sm-4 control-label">{{ form_label(form_dir.materno) }}</label>
+                            <div class="col-sm-6">
+                                {{ form_widget(form_dir.materno, { 'attr': {'class': 'form-control jletters', 'value': entity.materno, 'style': 'text-transform:uppercase' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.materno) }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_nombre" class="col-sm-4 control-label">{{ form_label(form_dir.nombre) }}</label>
+                            <div class="col-sm-6">
+                                {{ form_widget(form_dir.nombre, { 'attr': {'class': 'form-control jletters', 'value': entity.nombre, 'style': 'text-transform:uppercase' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.nombre) }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_entidadfinancieraTipo" class="col-sm-4 control-label">{{ form_label(form_dir.entidadfinancieraTipo) }}</label>
+                            <div class="col-sm-6">
+                                {{ form_widget(form_dir.entidadfinancieraTipo, { 'attr': {'class': 'form-control' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.entidadfinancieraTipo) }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_cuentabancaria" class="col-sm-4 control-label">{{ form_label(form_dir.cuentabancaria) }}</label>
+                            <div class="col-sm-6">
+                                {{ form_widget(form_dir.cuentabancaria, { 'attr': {'class': 'form-control jnumbers', 'style': 'text-transform:uppercase', 'placeholder': 'Ingrese los 14 dígitos de su cuenta Banco Unión' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.cuentabancaria) }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-6 col-sm-offset-4">
+                                {{ form_widget(form_dir.submit, { 'attr': {'class': 'btn btn-primary' } } ) }}
+                            </div>
+                        </div>
+                        <div class="hidden">
+                            {{ form_widget(form_dir.persona, { 'attr': {'class': 'form-control', 'value': entity.dirId}  }) }}
+                            {{ form_widget(form_dir.maestroInscripcion, { 'attr': {'class': 'form-control', 'value': entity.dirinsId}  }) }}
+                            {{ form_widget(form_dir.institucioneducativa, { 'attr': {'class': 'form-control', 'value': entity.instId}  }) }}
+                            {{ form_widget(form_dir.cargoTipo, { 'attr': {'class': 'form-control', 'value': 1}  }) }}
+                        </div>
+                        {{form_end(form_dir)}}
+                    </div>
+                    <div class="row" id="botonesAcc">
+                        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                            <a href="{{ path('bach_exc_alt_ddjj_dir') }}" class="btn btn-block btn-success">Ir a: "Paso 2.- Declaración Jurada (Directora/Director)"</a>
+                        </div>
+                        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                            <a href="{{ path('bach_exc_alt_dir') }}" class="btn btn-block btn-default">Salir</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.portlet -->
+        </div>
+        <!-- /.col-lg-6 -->
+    </div>
+</div>
+{% endblock %}
+
+{%block javascripts %}    
+    {{ parent() }}
+    <script>
+        $("#botonesAcc").hide();
+        function guardarDirector() {
+            var ent = $("#sie_appwebbundle_maestrocuentabancaria_entidadfinancieraTipo").val();
+            if (ent == 1) {
+                ent = 'SIN DATO';
+            } else {
+                ent = 'BANCO UNIÓN';
+            }
+            var msj = '\n- Carnet de Identidad: ' + $("#sie_appwebbundle_maestrocuentabancaria_carnet").val();
+            msj += '\n- Complemento: ' + $("#sie_appwebbundle_maestrocuentabancaria_complemento").val();
+            msj += '\n- Apellido Paterno: ' + $("#sie_appwebbundle_maestrocuentabancaria_paterno").val();
+            msj += '\n- Apellido Materno: ' + $("#sie_appwebbundle_maestrocuentabancaria_materno").val();
+            msj += '\n- Nombre(s): ' + $("#sie_appwebbundle_maestrocuentabancaria_nombre").val();
+            msj += '\n- Entidad Financiera: ' + ent;
+            msj += '\n- Nro. Cta. Bancaria: ' + $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").val();
+            msj += '\n\nTenga en cuenta que no podrá realizar cambios posteriores. Verifique la información introducida.';
+            msj += '\n\nNota.- Para confirmar los datos ingresados presione sobre el botón "Aceptar", para corregir la información introducida presione sobre el botón "Cancelar".';
+
+            if (confirm('Está a punto de registrar la siguiente información: ' + msj)) {
+                var formData = $('#sie_appwebbundle_maestrocuentabancaria').serialize();
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('cta_banc_dir_create'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#divAlertDir").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                    },
+                    success: function (data) {
+                        $("#divAlertDir").empty();
+                        $("#divAlertDir").append('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');
+                        $("#botonesAcc").show();
+                    },
+                    error: function () {
+                        $("#divAlertDir").empty();
+                        $("#divAlertDir").append('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Datos Incorrectos</div>');
+                    }
+                });
+            }
+            return false;
+        }
+
+        $(".letters").keypress(function (key) {
+            var key = key || window.event;
+            var k = key.charCode || key.keyCode;
+            if (((k < 65 || k > 90) || (k < 97 || k > 122)) //Letras
+                    && (k != 13) //Enter
+                    && (k != 8) //retroceso
+                    && (k != 9) //tab
+                    && (k != 46) //punto(.)
+                    )
+                return false;
+        });
+
+        $(".jnumbers").keypress(function (key) {
+            var key = key || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 48 || k > 57) //Números
+                    && (k != 13) //Enter
+                    && (k != 8) //retroceso
+                    && (k != 9) //tab
+                    )
+                return false;
+        });
+
+        $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").val('0');
+        $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").attr('readonly', true);
+
+        $('#sie_appwebbundle_maestrocuentabancaria_entidadfinancieraTipo').on('change', function () {
+            if ($(this).val() != 1) {
+                $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").focus();
+                $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").val('');
+                $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").attr('readonly', false);
+            }
+            else {
+                $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").focus();
+                $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").val('0');
+                $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").attr('readonly', true);
+            }
+        });
+    </script>
+{% endblock %}

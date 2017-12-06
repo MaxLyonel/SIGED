@@ -1,0 +1,60 @@
+alternativa_inscriptionTecnicas_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:index}
+
+alternativa_inscriptionTecnicas_goinscription:
+    path:     /goinscription
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:goInscription}
+
+alternativa_inscriptionTecnicas_result:
+    path:     /alt/result
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:result}
+    options:
+         expose: true
+
+alternativa_inscriptionTecnicas_findIE:
+     path:    /findIE/{id}/{gestion}
+     defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:findIE }
+     options:
+         expose: true
+
+alternativa_inscriptionTecnicas_findciclo:
+    path:    /findciclo/{sie}/{subcea}/{semestre}/{gestion}
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:findCiclo }
+    options:
+        expose: true
+
+alternativa_inscriptionTecnicas_findgrado:
+    path:    /findgrado/{sie}/{subcea}/{semestre}/{gestion}
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:findGrado }
+    options:
+        expose: true
+
+
+alternativa_inscriptionTecnicas_findmodulo:
+    path:    /findmodulo/{sie}/{gestion}/{facultad}/{especialidad}
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:findModulo }
+    options:
+        expose: true
+
+alternativa_inscriptionTecnicas_findareasuperior:
+    path:    /findareasuperior/{sie}/{gestion}/{facultad}/{especialidad}/{modulo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:findAreaSuperior }
+    options:
+        expose: true
+
+alternativa_inscriptionTecnicas_saveTecnicos:
+    path: /savetec
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:saveTecnicos }
+
+alternativa_inscriptionTecnicas_withoutrude:
+    path: /withoutrudeexcepcional
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:withoutRudeExcepcional }
+
+alternativa_inscriptionTecnicas_searchstudents:
+    path: /searchstudents
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:searchStudents }
+
+alternativa_inscriptionTecnicas_newexcepcional:
+    path: /newexcepcional
+    defaults: { _controller: SieHerramientaAlternativaBundle:InscriptionTecnicas:newExcepcional }

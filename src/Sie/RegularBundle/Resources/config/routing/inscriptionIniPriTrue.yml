@@ -1,0 +1,64 @@
+
+inscription_ini_pri_rue_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:index }
+
+inscription_ini_pri_rue_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:result }
+
+inscription_ini_pri_rue_norude:
+    path:    /norude
+    defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:norude }
+
+inscription_ini_pri_rue_save:
+    path:    /save
+    defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:save }
+
+inscription_ini_pri_rue_findIE:
+     path:    /findIE/{id}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:findIE }
+     options:
+         expose: true
+
+inscription_ini_pri_rue_findgrado:
+     path:    /findgrado/{idnivel}/{sie}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:findgrado }
+     options:
+         expose: true
+
+inscription_ini_pri_rue_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:findparalelo }
+     options:
+         expose: true
+
+inscription_ini_pri_rue_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}/{gestionselected}
+    defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:findturno }
+    options:
+        expose: true
+
+inscription_ini_pri_rue_verificainscription:
+     path:    /verificainscription
+     defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:verificaInscription }
+     options:
+         expose: true
+
+inscription_ini_pri_rue_saveext:
+    path: /saveext
+    defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:saveext }
+
+inscription_ini_pri_rue_savenew:
+    path:    /saveNew
+    defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:savenew }
+
+inscription_ini_pri_rue_savenewextranjero:
+    path:    /saveNewExtranjero
+    defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:savenewextranjero }
+
+inscription_ini_pri_rue_notasInscription:
+     path:    /notasInscription
+     defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:saveNotasInscription }
+     options:
+         expose: true

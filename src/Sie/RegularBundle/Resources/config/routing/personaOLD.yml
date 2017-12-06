@@ -1,0 +1,11 @@
+sie_usuario_persona_new:
+    path:     /{ci}/personanew/
+    defaults: { _controller: "SieUsuariosBundle:Persona:personanew" }
+    
+sie_usuario_persona_insert:
+    path:     /personainsert/
+    defaults: { _controller: "SieUsuariosBundle:Persona:personainsert" }
+    
+sie_usuario_persona_show:
+    path:     /{ie_id}/{ie_nombre}/personashow/
+    defaults: { _controller: "SieUsuariosBundle:Default:mostrarUsuarioPersona" }    

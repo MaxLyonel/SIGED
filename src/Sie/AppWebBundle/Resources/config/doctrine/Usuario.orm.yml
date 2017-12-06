@@ -1,0 +1,64 @@
+Sie\AppWebBundle\Entity\Usuario:
+    type: entity
+    table: usuario
+    repositoryClass: Sie\AppWebBundle\Entity\UsuarioRepository
+    uniqueConstraints:
+        usuario_persona_key:
+            columns:
+                - persona_id
+        usuario_username_key:
+            columns:
+                - username
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        username:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        password:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        password2:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+        estadopassword:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+    manyToOne:
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

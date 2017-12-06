@@ -1,0 +1,41 @@
+Sie\AppWebBundle\Entity\EstudianteNotaObservacion:
+    type: entity
+    table: estudiante_nota_observacion
+    indexes:
+        IDX_C2DB59AD91796576:
+            columns:
+                - estudiante_nota_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estudianteNotaObservacion:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: estudiante_nota_observacion
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        estudianteNota:
+            targetEntity: EstudianteNota
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_nota_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

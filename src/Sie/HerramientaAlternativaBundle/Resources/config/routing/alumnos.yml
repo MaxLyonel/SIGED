@@ -1,0 +1,49 @@
+herramienta_alter_info_estudianterequest_see_students:
+    path:     /sie_alter/seestudents/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Cursos:seeStudents }
+    options:
+         expose: true
+
+herramienta_alter_info_estudiante_notas:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/estudianteNotas.yml"
+    prefix:   /sie/estudiante_notas_alt
+
+herramienta_alter_info_estudiante_inscriptions:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/studentInscriptions.yml"
+    prefix:   /sie/estudiante_inscriptions_alt
+
+herramienta_alter_info_estudiante_inscriptions_without_rude:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/studentInscriptionsWithoutRude.yml"
+    prefix:   /sie/estudiante_inscriptions_without_rude_alt
+
+herramienta_alter_info_estudianterequest_get_students:
+    path:     /sie_alter/getstudents/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Cursos:getStudents }
+    options:
+         expose: true
+
+herramienta_alter_info_estudianterequest_inscription:
+    path:     /sie/inscription/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Cursos:inscription }
+    options:
+         expose: true
+
+herramienta_alter_estudianterequest_removeinscription:
+    path:     /sie/removeinscription/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Cursos:removeInscription }
+    options:
+         expose: true
+
+herramienta_alter_add_student_module:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/studentModule.yml"
+    prefix:   /sie/student_module
+    
+herramienta_alter_direct_find_rude:
+    path:     /sie/directfindrude/
+    defaults: { _controller: SieHerramientaAlternativaBundle:Cursos:directfindrude }
+
+herramientalt_ceducativa_curso_duplicado:
+    path:     /cursoduplicado
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Cursos:cursoduplicado"}
+    options:
+         expose: true    

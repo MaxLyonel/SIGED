@@ -1,0 +1,52 @@
+
+inscription_special_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InscriptionSpecial:index }
+
+inscription_special_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InscriptionSpecial:result }
+
+inscription_special_norude:
+    path:    /norude
+    defaults: { _controller: SieRegularBundle:InscriptionSpecial:norude }
+
+inscription_special_save:
+    path:    /save
+    defaults: { _controller: SieRegularBundle:InscriptionSpecial:save }      
+
+inscription_special_findIE:
+     path:    /findIE/{id}
+     defaults: { _controller: SieRegularBundle:InscriptionSpecial:findIE }
+     options:
+         expose: true   
+
+inscription_special_findgrado:
+     path:    /findgrado/{idnivel}/{sie}
+     defaults: { _controller: SieRegularBundle:InscriptionSpecial:findgrado }
+     options:
+         expose: true
+
+inscription_special_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}
+     defaults: { _controller: SieRegularBundle:InscriptionSpecial:findparalelo }
+     options:
+         expose: true
+         
+inscription_special_findturno:         
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieRegularBundle:InscriptionSpecial:findturno }
+    options:
+        expose: true
+
+inscription_special_saveext:
+    path: /saveext
+    defaults: { _controller: SieRegularBundle:InscriptionSpecial:saveext }
+    
+inscription_special_savenew:
+    path:    /saveNew
+    defaults: { _controller: SieRegularBundle:InscriptionSpecial:savenew } 
+    
+inscription_special_savenewextranjero:    
+    path:    /saveNewExtranjero
+    defaults: { _controller: SieRegularBundle:InscriptionSpecial:savenewextranjero } 

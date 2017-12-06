@@ -1,0 +1,21 @@
+sie_usuarios_rol_admin:
+    path:     /asignacionroles
+    defaults: { _controller: SieUsuariosBundle:RolAdmin:roladmin }
+    
+sie_usuarios_rol_nuevo:
+    path:     /rolnuevo/
+    defaults: { _controller: SieUsuariosBundle:RolAdmin:rolnuevo }
+    options:
+         expose: true
+    
+sie_usuarios_rol_insert:
+    path:     /rolinsert/
+    defaults: { _controller: SieUsuariosBundle:RolAdmin:rolinsert }    
+    
+sie_usuarios_rol_delete:
+    path:     /{id}/roldelete/
+    defaults: { _controller: SieUsuariosBundle:RolAdmin:roldelete }
+
+sie_usuarios_rol_change_in_hot:
+    path:     /rolchangeinhot/
+    defaults: { _controller: SieUsuariosBundle:RolAdmin:rolchangeinhot }    

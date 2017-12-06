@@ -1,0 +1,61 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Nuevo Especialidad Tipo Humnistico Tecnico
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <!--li><i class="fa fa-dashboard"></i>  <a href="{{path('estudiante_main')}}">Buscar</a></li>
+                    <li><i class="fa fa-reddit"></i> Resultado</li-->
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+            {% for flashMessage in app.session.flashbag().get('successth') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Especialidades</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a href="{{ path('sie_especialidadHumanisticoTecnico') }}">
+                            Volver al listado
+                        </a>
+                        <span class="divider"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+                        <div id="no-more-tables">
+
+                            {{ form(form) }}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

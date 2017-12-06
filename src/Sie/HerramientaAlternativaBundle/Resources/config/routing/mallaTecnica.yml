@@ -1,0 +1,89 @@
+herramienta_alter_malla_tecnica_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:index}
+    options:
+         expose: true
+    
+herramienta_alter_malla_tecnica_modulos:
+    path:     /matecmodulos
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:seemodulos}
+    options:
+         expose: true
+         
+herramienta_alter_malla_tecnica_modulos_change_semestre:
+    path:     /changesemestre
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:changesemestre}
+    options:
+         expose: true         
+
+herramienta_alter_malla_tecnica_modulos_change_horas:
+    path:     /changehoras
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:changehoras}
+    options:
+         expose: true    
+         
+herramienta_alter_malla_tecnica_modulos_duracion:
+    path:     /changeduracion
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:changeduracion}
+    options:
+         expose: true       
+         
+herramienta_alter_malla_tecnica_modulos_duracion_bas:
+    path:     /changeduracionbas
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:changeduracionbas}
+    options:
+         expose: true           
+         
+herramienta_alter_malla_tecnica_modulos_duracion_aux:
+    path:     /changeduracionaux
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:changeduracionaux}
+    options:
+         expose: true   
+         
+herramienta_alter_malla_tecnica_modulos_duracion_med:
+    path:     /changeduracionmed
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:changeduracionmed}
+    options:
+         expose: true            
+         
+herramienta_alter_malla_tecnica_modulos_duracion_new:
+    path:     /changeduracionnew
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:changeduracionnew}
+    options:
+         expose: true            
+         
+herramienta_alter_malla_tecnica_modulos_change_area:
+    path:     /changearea
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:changearea}
+    options:
+         expose: true          
+         
+herramienta_alter_malla_tecnica_modulos_add:
+    path:     /addmodulo
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:addmodulo}
+    options:
+         expose: true     
+         
+herramienta_alter_malla_tecnica_modulos_ver:
+    path:     /matecmodulosver
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:seemodulosver}
+    options:
+         expose: true         
+         
+herramienta_alter_malla_tecnica_modulos_delete:
+    path:     /{smpid}/matecmodulodelete
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:modulodelete}
+    options:
+         expose: true     
+         
+herramienta_nueva_acreditacion:
+    path:     /nuevaacreditacion
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:nuevaacreditacion }
+    options:
+         expose: true         
+         
+herramienta_acreditacion_alternativa_new:
+    path:     /newacreditacion
+    defaults: { _controller: SieHerramientaAlternativaBundle:MallaTecnica:newacreditacion }
+    options:
+         expose: true         

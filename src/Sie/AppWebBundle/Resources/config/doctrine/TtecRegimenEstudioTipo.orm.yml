@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo:
+    type: entity
+    table: ttec_regimen_estudio_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        regimenEstudio:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: regimen_estudio
+        descripcion:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

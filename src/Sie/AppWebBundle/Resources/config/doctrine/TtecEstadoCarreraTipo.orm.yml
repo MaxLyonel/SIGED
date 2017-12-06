@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\TtecEstadoCarreraTipo:
+    type: entity
+    table: ttec_estado_carrera_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estadoCarrera:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: estado_carrera
+    lifecycleCallbacks: {  }

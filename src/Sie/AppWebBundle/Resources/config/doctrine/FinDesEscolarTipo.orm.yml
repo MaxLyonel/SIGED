@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\FinDesEscolarTipo:
+    type: entity
+    table: fin_des_escolar_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        finDesEscolar:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: fin_des_escolar
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

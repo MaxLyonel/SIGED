@@ -1,0 +1,13 @@
+validacion:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:Validacion:index" }
+
+validacion_detalle:
+    path:     /detalle/{vpId}
+    defaults: { _controller: "SieAppWebBundle:Validacion:detalle" }    
+    options:
+        expose: true
+        
+validacion_validar_todo:
+    path:     /validall
+    defaults: { _controller: "SieAppWebBundle:Validacion:validarTodo" }

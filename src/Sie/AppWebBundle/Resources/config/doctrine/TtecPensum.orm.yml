@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\TtecPensum:
+    type: entity
+    table: ttec_pensum
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        pensum:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        resolucionAdministriva:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: resolucion_administriva
+        nroResolucion:
+            type: string
+            nullable: true
+            length: 10
+            fixed: false
+            comment: ''
+            column: nro_resolucion
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    lifecycleCallbacks: {  }

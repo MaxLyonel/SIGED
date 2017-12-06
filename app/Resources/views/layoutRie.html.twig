@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+{% block stylesheets %}
+    <head>
+        <title>Registro de Institutos TT - RIE</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <meta name="description" content="Registro de Institutos Técnicos Tecnológicos - RIE">
+        <meta name="author" content="">
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
+
+        <!-- Bootstrap Core Css -->
+        <link href="{{asset('webRue/assets/css/bootstrap.css')}}" rel="stylesheet" />
+
+        <!-- Waves Effect Css -->
+        <link href="{{asset('webRue/assets/css/waves.css')}}" rel="stylesheet" />
+
+        <!-- Animation Css -->
+        <link href="{{asset('webRue/assets/css/animate.css')}}" rel="stylesheet" />
+
+        <!-- Bootstrap Material Datetime Picker Css -->
+        <link href="{{asset('webRue/assets/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet" />
+
+        <!-- Bootstrap Select Css -->
+        <link href="{{asset('webRue/assets/css/bootstrap-select.css')}}" rel="stylesheet" />
+
+        <!-- JQuery DataTable Css -->
+        <link href="{{asset('webRue/assets/css/dataTables.bootstrap.css')}}" rel="stylesheet">
+        
+        <!-- Sweet Alert Css -->
+        <link href="{{asset('webRue/assets/css/sweetalert.css')}}" rel="stylesheet" />
+
+        <!-- Materialize Css -->
+        <link href="{{asset('webRue/assets/css/materialize.css')}}" rel="stylesheet" />
+
+        <!-- Custom Css -->
+        <link href="{{asset('webRue/assets/css/style.css')}}" rel="stylesheet" />
+        
+        <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+        <link href="{{asset('webRue/assets/css/all-themes.css')}}" rel="stylesheet" />
+    </head>
+{% endblock %}
+<!-- <body class="theme-teal"> -->
+<body class="theme-teal">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Cargando...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    
+    <!-- Top Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars"></a>
+                <a class="navbar-brand" href="{{path('principal_web')}}">RITTA - REGISTRO DE INSTITUTOS TÉCNICOS Y TECNOLÓGICOS</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{{path('logout')}}" class="btn btn-danger waves-effect">CERRAR SESIÓN</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="user-info">
+                
+                <div class="image">
+                    <img src="{{asset('webRue/assets/images/user.png')}}" width="48" height="48" alt="Usuario" />
+                </div>
+                
+                <div class="info-container">
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ app.session.get('name') }}</div>
+                    <div class="email">{{ app.session.get('cuentauser') }}</div>
+                    <div class="btn-group user-helper-dropdown">
+                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="{{path('sie_usuarios_homepage')}}"><i class="material-icons">mode_edit</i>Usuarios</a></li>
+                            <li role="seperator" class="divider"></li>
+                            <li><a href="{{path('logout')}}"><i class="material-icons">input</i>Cerrar sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- #User Info -->
+            <!-- Menu -->
+            <div class="menu">
+                <ul class="list">
+                    <li class="header">NAVEGACIÓN PRINCIPAL</li>
+                    <li class="active">
+                        <a href="{{path('principal_web')}}">
+                            <i class="material-icons">home</i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <!--
+                    <li>
+                        <a href="{{path('certificado_rie')}}">
+                            <i class="material-icons">content_copy</i>
+                            <span>Certificado RIE</span>
+                        </a>
+                    </li>
+                    -->
+                    <li>
+                        <a href="{{path('lei')}}">
+                            <i class="material-icons">account_balance</i>
+                            <span>Registro - Local Educativo</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{path('rie_list')}}">
+                            <i class="material-icons">location_city</i>
+                            <span>Registro - Institutos</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{path('historico_list_itt')}}">
+                            <i class="material-icons">filter_none</i>
+                            <span>Registro - Datos Históricos</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{path('oac_list_instituto')}}">
+                            <i class="material-icons">list</i>
+                            <span>Registro - Carreras</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{path('cap_list_instituto')}}">
+                            <i class="material-icons">clear_all</i>
+                            <span>Registro - Cursos</span>
+                        </a>
+                    </li>                       
+                    
+                    <li>
+                        <a href="{{path('carrera_rie_list')}}">
+                            <i class="material-icons">view_comfy</i>
+                            <span>Catálogo de Carreras</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{path('consultains_rie')}}">
+                            <i class="material-icons">low_priority</i>
+                            <span>Consulta</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{path('reporte_list')}}">
+                            <i class="material-icons">report</i>
+                            <span>Reportes</span>
+                        </a>
+                    </li>
+                 
+                </ul>
+            </div>
+            <!-- #Menu -->
+            <!-- Footer -->
+            <div class="legal">
+                <div class="copyright">
+                    &copy; 2017 <a href="javascript:void(0);">Ministerio de Educación</a>.
+                </div>
+                <div class="version">
+                    <b>Versión: </b> 2.0.0
+                </div>
+            </div>
+            <!-- #Footer -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            {% block contentoption %} {% endblock %}
+        </div>
+    </section>
+
+    {% block javascripts %}
+
+        <!-- Jquery Core Js -->
+        <script src="{{asset('webRue/assets/js/jquery.min.js')}}"></script>
+        
+        <!-- Bootstrap Core Js -->
+        <script src="{{asset('webRue/assets/js/bootstrap.js')}}"></script>
+
+        <!-- Select Plugin Js -->
+        <script src="{{asset('webRue/assets/js/bootstrap-select.js')}}"></script>
+
+        <!-- Slimscroll Plugin Js -->
+        <script src="{{asset('webRue/assets/js/jquery.slimscroll.js')}}"></script>
+
+        <!-- Waves Effect Plugin Js -->
+        <script src="{{asset('webRue/assets/js/waves.js')}}"></script>
+
+        <!-- Jquery CountTo Plugin Js -->
+        <script src="{{asset('webRue/assets/js/jquery.countTo.js')}}"></script>
+
+        <!-- Autosize Plugin Js -->
+        <script src="{{asset('webRue/assets/js/autosize.js')}}"></script>
+
+        <!-- Moment Plugin Js -->
+        <script src="{{asset('webRue/assets/js/moment.js')}}"></script>
+
+        <!-- Jquery DataTable Plugin Js -->
+        <script src="{{asset('webRue/assets/js/jquery.dataTables.js')}}"></script>
+        <script src="{{asset('webRue/assets/js/dataTables.bootstrap.js')}}"></script>
+        
+        <!-- Bootstrap Material Datetime Picker Plugin Js -->
+        <script src="{{asset('webRue/assets/js/bootstrap-material-datetimepicker.js')}}"></script>
+
+        <!-- Custom Js -->
+        <script src="{{asset('webRue/assets/js/admin.js')}}"></script>
+        <script src="{{asset('webRue/assets/js/jquery-datatable.js')}}"></script>
+        <script src="{{asset('webRue/assets/js/basic-form-elements.js')}}"></script>
+        <script src="{{asset('webRue/assets/js/tooltips-popovers.js')}}"></script>
+
+        <!-- Demo Js -->
+        <script src="{{asset('webRue/assets/js/demo.js')}}"></script>
+        
+
+        <!-- GLOBAL SCRIPTS -->
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+    {% endblock %}
+
+</body>
+
+</html>

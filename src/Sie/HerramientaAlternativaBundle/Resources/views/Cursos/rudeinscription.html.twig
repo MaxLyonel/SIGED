@@ -1,0 +1,75 @@
+
+{% if exist == true %}
+
+    <small>
+        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form', 'id':'formStudentInscription'} } )}}
+        <div class="portlet-body">
+            <center><h4 id="grid-nesting">Datos Inscripción</h4></center>
+
+            <div class="row show-grid">
+
+                <div class="col-md-12">
+
+                    <div class="row show-grid">
+                        <div class='col-md-4'>
+                            <b>Paterno:</b> {{objStudent.paterno}}
+                        </div>
+                        <div class='col-md-4'>
+                            <b>Materno:</b> {{objStudent.materno}}
+                        </div>
+                        <div class='col-md-4'>
+                            <b>Nombre: </b> {{objStudent.nombre}}
+                        </div>
+
+                    </div>
+                    <div class="row show-grid">
+
+                        <div class='col-md-4'>
+                            <b> Fecha Nacimiento: </b>{{objStudent.fechaNacimiento | date('d-m-Y')}}
+                        </div>
+                        <div class='col-md-4'>
+                            <b>CI:</b> {{objStudent.carnetIdentidad}}
+                        </div>
+                        <div class='col-md-4'>
+                            <b> Rude: </b>{{objStudent.codigoRude}}
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class='col-md-3 col-md-offset-9'>
+                    {{form_row(form.doInscription)}}
+                </div>
+            </div>
+        </div>
+
+        {{form_end(form)}}
+    </small>
+    <!-- /.row -->
+{%else%}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninrudeInscription') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{%endif%}
+
+
+
+<script>
+
+
+</script>
+

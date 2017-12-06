@@ -1,0 +1,119 @@
+<p>  
+    {% if opcion == 1 %}
+        <form action="{{ path('sie_pnp_registrar_estudiante_curso',{'rude':filas.id,'curso_id':curso_id,'tipo':1}) }}" method="POST">
+    {% else %}
+        <form action="{{ path('sie_pnp_registrar_estudiante_curso',{'rude':filas.rude,'curso_id':curso_id,'tipo':2}) }}" method="POST">
+    {% endif %}    
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4>ESTUDIANTE A REGISTRAR EN EL CURSO.</h4>
+    </div>
+    <div class="panel-body">
+        <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+            <table id="tablaListadoPersonas" class="display" border="0" cellspacing="0" width="100%">    
+                    <tr>
+                        <td align="center"><strong>Paterno</strong></td>
+                        <td align="center"><strong>Materno</strong></td>
+                        <td align="center"><strong>Nombre</strong></td>
+                    </tr>             
+                    <tr>
+                        <td align="center">{{ filas.paterno }}</td>
+                        <td align="center">{{ filas.materno }}</td>
+                        <td align="center">{{ filas.nombre }}</td>
+                    </tr>                
+                    <tr>
+                        <td align="center"><br/><strong>Fecha Nac.</strong></td>
+                        <td align="center"><br/><strong>C.I.</strong></td>
+                    </tr>
+                    <tr>
+                        <td align="center">{{ filas.fecha_nac|date("d-m-Y") }}</td>
+                        <td align="center">{{ filas.ci }}{% if filas.complemento != '' %}-{{filas.complemento}}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td align="center"><br/><strong>Alfabetizado</strong></td>
+                        <td align="center"><br/><strong>Idioma</strong></td>
+                        <td align="center"><br/><strong>Ocupación</strong></td>
+                    </tr>
+                     <tr>
+                        <td align="center">
+                            <select name="alfabetizado" class="form-control">
+                                <option value="SI">Si</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </td>
+                        <td align="center">
+                            <select name="idioma" class="form-control">
+                                <option value="CASTELLANO">CASTELLANO</option>
+                                <option value="ATAONA">ATAONA</option>
+                                <option value="AIMARA">AIMARA</option>
+                                <option value="AYOREO">AYOREO</option>
+                                <option value="BAURE">BAURE</option>
+                                <option value="CAVINEÑO">CAVINEÑO</option>
+                                <option value="CANICHANA">CANICHANA</option>
+                                <option value="CAYUBABA">CAYUBABA</option>
+                                <option value="CHÁCOBO">CHÁCOBO</option>
+                                <option value="CHIMAN">CHIMAN</option>
+                                <option value="CHIQUITANO">CHIQUITANO</option>
+                                <option value="ESSE EJJA">ESSE EJJA</option>
+                                <option value="GUARANI">GUARANI</option>
+                                <option value="GUARAYA">GUARAYA</option>
+                                <option value="ITONOMA">ITONOMA</option>
+                                <option value="JOAQUINIANO">JOAQUINIANO</option>
+                                <option value="LECO">LECO</option>
+                                <option value="MACHINERI">MACHINERI</option>
+                                <option value="MORÉ">MORÉ</option>
+                                <option value="MOSETÉN">MOSETÉN</option>
+                                <option value="MOVIMA">MOVIMA</option>
+                                <option value="MOXEÑO">MOXEÑO</option>
+                                <option value="NAHUA">NAHUA</option>
+                                <option value="PACAHUARA">PACAHUARA</option>
+                                <option value="PAICONECA">PAICONECA</option>
+                                <option value="QUECHUA">QUECHUA</option>
+                                <option value="SIRIONO">SIRIONO</option>
+                                <option value="TACANA">TACANA</option>
+                                <option value="TAPIETE">TAPIETE</option>
+                                <option value="TORONOMA">TORONOMA</option>
+                                <option value="URU">URU</option>
+                                <option value="WEENHAYEK">WEENHAYEK</option>
+                                <option value="YUMINAHUA">YUMINAHUA</option>
+                                <option value="YUKI">YUKI</option>
+                                <option value="YURACARÉ">YURACARÉ</option>
+                                <option value="NO ORIGINARIO">NO ORIGINARIO</option>
+                                <option value="AFRO BOLIVIANO">AFRO BOLIVIANO</option>
+                            </select>
+                        </td>
+                        <td align="center">
+                            <select name="ocupacion" class="form-control">
+                                <option value="AMA DE CASA">AMA DE CASA</option>
+                                <option value="AGRICULTOR">AGRICULTOR</option>
+                                <option value="MINERO">MINERO</option>
+                                <option value="CHOFER">CHOFER</option>
+                                <option value="CARPINTERO">CARPINTERO</option>
+                                <option value="ZAPATERO">ZAPATERO</option>
+                                <option value="CHOFER">CHOFER</option>
+                                <option value="COMERCIANTE">COMERCIANTE</option>
+                                <option value="PANADERO">PANADERO</option>
+                                <option value="AVICULTOR">AVICULTOR</option>
+                                <option value="PELUQUERO">PELUQUERO</option>
+                                <option value="OTRO">OTRO</option>
+                            </select>
+                        </td>
+                    </tr>                 
+            </table>
+        </div>
+    </div>
+
+</div>
+<div align="center"><input type="submit" onclick="cambio()" id="boton" value="Guardar Estudiante" class="btn btn-success btn-large">
+</div>
+ </form> 
+ <script type="text/javascript">
+    function cambio(){
+        document.getElementById("boton").style.visibility = 'hidden';
+    }
+</script>
+{#<!--<div class="row"
+    <div class="col-xs-12">
+        <a role="button" class="btn btn-success btn-large glyphicon glyphicon-ok" href="{{ path('sie_pnp_registrar_estudiante_curso', { 'rude': filas.id,'curso_id':curso_id,'tipo':1 }) }}"> Registrar estudiante</a>
+    </div>
+</div>#}

@@ -1,0 +1,31 @@
+{% extends 'layoutUsuarios.html.twig' %}
+
+{% block cuerpo %}  
+
+    
+    
+        {% include 'SieUsuariosBundle:Busquedas:usuariotable.html.twig' with {'po': po, 'titulo': 'Datos del resultado :'} %}
+    
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#tablaListadoPersonas').find('tr').click( function(){
+            $('#tablaListadoPersonas_fil').text($(this).index());
+        });
+
+        {% if accion == 'newuser' %}
+            $('#tablaListadoPersonas_fil').text('0');
+            usuarioForm('{{ po[0].id }}');
+                    
+        {% elseif accion == 'newperson' %}        
+            $('#tablaListadoPersonas_fil').text('0');            
+            personaFormNew('{{po.ci}}','{{po.complemento}}');        
+        {% endif %}                 
+    } );
+    </script>
+{% endblock %}

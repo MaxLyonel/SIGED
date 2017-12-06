@@ -1,0 +1,11 @@
+herramienta_inscription_tecnica_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:InscriptionTec:index}
+    
+herramienta_inscription_find_inscription:
+    path:     /sie/findinscription
+    defaults: { _controller: SieHerramientaBundle:InscriptionTec:findInscription}    
+    
+herramienta_inscription_save_inscription:
+    path:     /sie/saveinscription
+    defaults: { _controller: SieHerramientaBundle:InscriptionTec:saveInscription}        

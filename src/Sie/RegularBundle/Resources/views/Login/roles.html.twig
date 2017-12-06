@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="{{asset('favicon.ico')}}" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Siged</title>
+
+        <!-- GLOBAL STYLES -->
+        <link href="{{asset('css/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel="stylesheet" type="text/css">
+        <link href="{{asset('icons/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+
+        <!-- PAGE LEVEL PLUGIN STYLES -->
+
+        <!-- THEME STYLES -->
+        <link href="{{asset('css/style.css')}}" rel="stylesheet">
+        <link href="{{asset('css/plugins.css')}}" rel="stylesheet">
+
+        <!-- THEME DEMO STYLES -->
+        <link href="{{asset('css/demo.css')}}" rel="stylesheet">
+
+        <!--[if lt IE 9]>
+        <script src="{{asset('js/html5shiv.js')}}"></script>
+        <script src="{{asset('js/respond.min.js')}}"></script>
+        <![endif]-->
+
+    </head>
+
+    <body class="login">
+
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="login-banner text-center">
+                        <h1><i class="fa fa-gears"></i> SIGED</h1>
+                    </div>
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading login-heading">
+                            <div class="portlet-title">
+                                <h4><strong>Seleccione el rol con el cual desea acceder al sistema.</strong>
+                                </h4>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% for flashMessage in app.session.flashbag.get('info') %}
+                                        <div class="alert alert-success alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <strong>Bien!</strong> {{ flashMessage }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+
+                            <div class="portlet portlet-default">
+                                <div class="portlet-heading">
+                                    <div class="portlet-title">
+                                        <h4>Datos del Usuario - Roles</h4>
+                                    </div>
+                                    <div class="portlet-widgets">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#formControls"><i class="fa fa-chevron-down"></i></a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+
+                                <div id="formControls" class="panel-collapse collapse in">
+                                    <div class="portlet-body">
+
+                                        {{ form_start(form, {'attr':{'data-toggle':'validator', '':''} })  }}
+
+
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Nombre</label>
+                                            {{ form_widget(form.name, { 'attr': {'class': 'form-control'} }) }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Paterno</label>
+                                            {{ form_widget( form.lastName,{ 'attr': {'class':'form-control'} }) }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Usuario</label>
+                                            {{ form_widget( form.username,{ 'attr': {'class':'form-control'} }) }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputFile">Rol</label>
+                                            {{ form_widget(form.roluser, { 'attr':{'class':'form-control '} }) }}
+                                        </div>
+                                        <div class="">
+                                            {{ form_widget( form.goin, { 'attr':{'class':'btn btn-default'} }) }}
+
+                                            <a href="" onclick="window.history.back();" class="btn btn-white">Cancelar</a>
+                                        </div>
+
+                                        {{ form_end(form)}}
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GLOBAL SCRIPTS -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="{{asset('js/plugins/bootstrap/bootstrap.min.js')}}"></script>
+        <script src="{{asset('js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
+        <!-- HISRC Retina Images -->
+        <script src="{{asset('js/plugins/hisrc/hisrc.js')}}"></script>
+
+        <!-- PAGE LEVEL PLUGIN SCRIPTS -->
+
+        <!-- THEME SCRIPTS -->
+        <script src="{{asset('js/flex.js')}}"></script>
+        <script>
+
+
+                                                $('#sie_appwebbundle_usuario_save').click(function () {
+
+                                                    if ($('#sie_appwebbundle_usuario_username').val() == '' && $('#sie_appwebbundle_usuario_password').val() == '') {
+                                                        $('#myModal').modal('show');
+                                                        return false;
+                                                    }
+                                                    $('#sie_appwebbundle_usuario').submit();
+
+                                                });
+
+
+                                                $("#form_captcha").keyup(function () {
+                                                    $("#form_captcha").val($("#form_captcha").val().toUpperCase());
+                                                });
+
+                                                function showCaptcha() {
+                                                    element = document.getElementById("divCaptcha");
+                                                    check = document.getElementById("form_check");
+                                                    captcha = document.getElementById("form_captcha");
+                                                    if (check.checked) {
+                                                        element.style.display = 'none';
+                                                        $('#form_captcha').removeAttr("required");
+                                                        $('#form_captcha').val('');
+                                                    }
+                                                    else {
+                                                        element.style.display = 'block';
+                                                        $('#form_captcha').attr('required', 'true');
+                                                    }
+                                                }
+
+
+
+        </script>
+        <script src="{{asset('validator/js/validator.js')}}"></script>
+    </body>
+
+</html>
+

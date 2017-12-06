@@ -1,0 +1,95 @@
+{% extends app.session.get('layout') %}
+
+{% block contentoption%}
+<!--      <div id="page-wrapper">-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Registro de Instituciones Educativas en proceso de apertura
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('bjp_rue')}}">Buscar</a></li>
+					<li class="active">Resultado de la Búsqueda</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+   <div class="row">
+       <div class="col-md-12">
+        <div class="panel panel-icon panel-primary">
+                <div class="panel-heading">
+                    <i class="fa fa-search"></i> Resultado de la Búsqueda
+                </div>
+
+                <div class="panel-body">
+            <div id="no-more-tables">
+                 <table id="myTable" class="table table-bordered table-hover cf dataTable">
+
+                        <thead class="">
+                               <tr class="">
+                                   <th>No.</th>
+                                   <th>Código RUE</th>
+                                   <th>Institución Educativa</th>
+                                   <th>Código LE</th>
+                                   <th>Dependencia</th>
+                                   <th>Tipo</th>
+                                   <th>Departamento</th>
+                                   <th>Distrito</th>
+                                   <th>Acciones</th>
+                               </tr>
+                        </thead>
+                        <tbody>
+                                  {% for entity in entities %}
+                                  <tr>
+                                     <td data-title="No.">{{ loop.index }}</td>
+                                     <td data-title="Codigo RUE">{{ entity.id }}</td>
+                                     <td data-title="Institucion Educativa" >{{ entity.institucioneducativa }}</td>
+                                     <td data-title="Codigo LE" >{{ entity.leJuridicciongeografica.id }}</td>
+                                     <td data-title="Dependencia" >{{ entity.dependenciaTipo.dependencia }}</td>
+                                     <td data-title="Tipo" >{{ entity.institucioneducativaTipo.descripcion }}</td>
+                                     <td data-title="Departamento" >{{ entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>
+                                     <td data-title="Distrito" >{{ entity.leJuridicciongeografica.distritoTipo.distrito }}</td>
+                                     <td data-title="Acciones">
+                                       <small>
+                                        <ul id="" class="">
+                                          <lo >
+                                            <form action="{{path('bjp_rue_delete')}}" method="post" style="display: inline-block">
+                                               <input type="hidden" name="idInstitucion" value="{{entity.id}}">
+                                               <input type="hidden" name="idInstitucionLe" value="{{entity.leJuridicciongeografica.id}}">
+                                               <button type="submit" class="btn btn-link" onclick="return confirm('Se eliminará el registro!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
+                                             </form>
+                                          </lo>
+                                          <lo>
+                                            <form action="{{path('bjp_rue_edit')}}" method="post" style="display: inline-block">
+                                              <input type="hidden" name="idInstitucion" value="{{entity.id}}">
+                                              <input type="hidden" name="idInstitucionLe" value="{{entity.leJuridicciongeografica.id}}">
+                                              <button type="submit" class="btn btn-link"><i class="fa fa-edit text-danger"></i> Editar</button>
+                                            </form>
+                                          </lo>
+                                          <lo>
+                                            <!-- next form to do the inscription by krlos-->
+                                            {{form_start(form)}}
+                                              <i class="fa fa-plus text-danger"></i>{{form_widget(form.open)}}
+                                              {% set datainfo = {'sie':entity.id, 'leJuridicciongeograficaId':entity.leJuridicciongeografica.id, 'dependencia':entity.dependenciaTipo.dependencia, 'tipo':entity.institucioneducativaTipo.descripcion, 'depto':entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar, 'distrito':entity.leJuridicciongeografica.distritoTipo.distrito,'unidadEducativa':entity.institucioneducativa  } %}
+                                              <input type="hidden" id="form_dataInfo" name="form[dataInfo]" required="required" value="{{datainfo|json_encode}}">
+                                            {{form_end(form)}}
+                                            <!-- end form to do the inscription by krlos-->
+                                          </lo>
+                                      </ul>
+                                    </small>
+                                     </td>
+                                  </tr>
+                                  {% endfor %}
+                        </tbody>
+                 </table>
+            </div>
+          </div>
+        </div>
+       </div>
+   </div>
+{% endblock %}

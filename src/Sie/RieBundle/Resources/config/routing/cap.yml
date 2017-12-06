@@ -1,0 +1,87 @@
+
+cap:
+    path:     /
+    defaults: { _controller: "SieRieBundle:CursoCapacitacion:index" }
+
+cap_list_instituto:
+    path:     /listinstituto
+    defaults: { _controller: SieRieBundle:CursoCapacitacion:listinstituto }   
+
+cap_list:
+    path:     /list
+    defaults: { _controller: SieRieBundle:CursoCapacitacion:list } 
+
+cap_new:
+    path:     /new
+    defaults: { _controller: SieRieBundle:CursoCapacitacion:new } 
+    methods:  POST      
+
+cap_create:
+    path:     /create
+    defaults: { _controller: "SieRieBundle:CursoCapacitacion:create" }
+    methods:  POST      
+
+cap_delete:
+    path:     /delete/{idAutorizado}
+    defaults: { _controller: "SieRieBundle:CursoCapacitacion:delete" }
+    methods:  GET      
+
+cap_list_resolucion:
+    path:     /listresoluciones
+    defaults: { _controller: SieRieBundle:CursoCapacitacion:listresoluciones } 
+    #methods:  POST      
+
+cap_new_resolucion:
+    path:     /newresolucion
+    defaults: { _controller: SieRieBundle:CursoCapacitacion:newresolucion } 
+    methods:  POST                 
+
+cap_create_resolucion:
+    path:     /createresolucion
+    defaults: { _controller: SieRieBundle:CursoCapacitacion:createresolucion } 
+    methods:  POST      
+
+cap_edit_resolucion:
+    path:     /editresolucion
+    defaults: { _controller: SieRieBundle:CursoCapacitacion:editresolucion } 
+    methods:  POST                 
+
+cap_update_resolucion:
+    path:     /updateresolucion
+    defaults: { _controller: SieRieBundle:CursoCapacitacion:updateresolucion } 
+    methods:  POST   
+
+cap_delete_resolucion:
+    path:     /deleteresolucion/{idResolucion}
+    defaults: { _controller: "SieRieBundle:CursoCapacitacion:deleteresolucion" }
+    methods:  GET  
+
+
+
+
+
+
+cap_edit_tramite:
+    path:     /edittramite
+    defaults: { _controller: SieRieBundle:CursoCapacitacion:edittramite } 
+    methods:  POST                 
+
+cap_update_tramite:   
+    path:     /updatetramite
+    defaults: { _controller: "SieRieBundle:CursoCapacitacion:updatetramite" }
+    methods:  POST    
+
+cap_edit_tramite_edit:   
+    path:     /editresolucion
+    defaults: { _controller: "SieRieBundle:CursoCapacitacion:editresolucion" }
+    methods:  POST  
+
+cap_edit_tramite_update:   
+    path:     /updateresolucion
+    defaults: { _controller: "SieRieBundle:CursoCapacitacion:updateresolucion" }
+    methods:  POST          
+
+cap_edit_tramite_delete:   
+    path:     /deleteresolucion
+    defaults: { _controller: "SieRieBundle:CursoCapacitacion:deleteresolucion" }
+    methods:  POST   

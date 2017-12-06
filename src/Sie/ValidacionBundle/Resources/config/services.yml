@@ -1,0 +1,4 @@
+services:
+#    sie_validacion.example:
+#        class: Sie\ValidacionBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

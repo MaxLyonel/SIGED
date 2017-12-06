@@ -1,0 +1,39 @@
+reg_changestadoqa_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:Changestadoqa:index }
+
+reg_changestadoqa_save:
+    path:     /changestadoqa_save/
+    defaults: { _controller: "SieRegularBundle:Changestadoqa:save" }
+    options:
+         expose: true
+
+reg_changestadoqa_reload:
+    path:     /changestadoqa_reload/
+    defaults: { _controller: "SieRegularBundle:Changestadoqa:reload" }
+    options:
+         expose: true
+
+reg_changestadoqa_maincambioestado:
+    path:     /maincambioestado
+    defaults: { _controller: "SieRegularBundle:Changestadoqa:mainCambioEstado" }
+    options:
+       expose: true
+
+reg_changestadoqa_maineliminarInsc:
+    path:     /maineliminarInscription
+    defaults: { _controller: "SieRegularBundle:Changestadoqa:mainEliminarInscription" }
+    options:
+       expose: true
+
+reg_changestadoqa_verificarcambio:
+    path:     /verificarcambio
+    defaults: { _controller: "SieRegularBundle:Changestadoqa:verificarCambio" }
+    options:
+       expose: true
+
+reg_changestadoqa__savecambioestado:
+    path:     /savecambioestado
+    defaults: { _controller: "SieRegularBundle:Changestadoqa:saveCambioEstado" }
+    options:
+       expose: true

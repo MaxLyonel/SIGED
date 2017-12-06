@@ -1,0 +1,119 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Panel Principal
+                    <small>Información sobre el usuario</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-dashboard"></i> Principal</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="portlet portlet-red">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4><i class="fa fa-circle text-green"></i> Información sobre el Usuario</h4>
+                            </div>
+                            <div class="portlet-widgets">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-white dropdown-toggle btn-xs" data-toggle="dropdown">
+                                        <i class="fa fa-circle text-green"></i> Datos
+                                        <span class="caret"></span>
+                                    </button>
+                                </div>
+                                <span class="divider"></span>
+                                <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="infouser" class="panel-collapse collapse in">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <td>Apellido Paterno:</td>
+                                                <td>{{ app.session.get('lastname') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Apellido Materno:</td>
+                                                <td>{{ app.session.get('lastname2')}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Nombre(s):</td>
+                                                <td>{{ app.session.get('name') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Usuario:</td>
+                                                <td>{{ app.session.get('userName') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cuenta:</td>
+                                                <td>{{ app.session.get('cuentauser') }}</td>
+                                            </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="tile tile-img tile-time" style="height: 265px">
+                        <p class="time-widget">
+                            <span class="time-widget-heading">Actualmente es:</span>
+                            <br>
+                            <strong>
+                                <span id="datetime"></span>
+                            </strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-red">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4><i class="fa fa-map-marker fa-fw text-orange"></i> Ubicación Geográfica</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <!-- Button Dropdown -->
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="portlet-body">
+                    <div id="map-canvas">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1912.6916797002393!2d-68.12771857556899!3d-16.506732802198506!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0000000000000000%3A0x7859d489f4594fb5!2sMinisterio+de+Educacion!5e0!3m2!1ses-419!2sbo!4v1438027708651" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+sie_usuario_estudiante_new:
+    path:     /estudiantenew/
+    defaults: { _controller: "SieUsuariosBundle:Estudiante:estudiantenew" }
+    options:
+         expose: true
+
+sie_usuario_estudiante_busqueda_datos:
+    path:     /busquedadatos/
+    defaults: { _controller: "SieUsuariosBundle:Estudiante:busquedadatos" }
+    options:
+         expose: true         
+         
+sie_usuario_estudiante_siguiente:
+    path:     /siguientedatos/
+    defaults: { _controller: "SieUsuariosBundle:Estudiante:siguientedatos" }
+    options:
+         expose: true
+         
+sie_usuario_estudiante_departamento_showrude:
+    path:     /departamentoshowrude/
+    defaults: { _controller: "SieUsuariosBundle:Estudiante:deptoshow" }
+    options:
+        expose: true
+        
+sie_usuario_estudiante_provincia_showrude:
+    path:     /{id}/provinciashowrude/
+    defaults: { _controller: "SieUsuariosBundle:Estudiante:provinciashow" }
+    options:
+        expose: true        
+
+sie_usuario_estudiante_insert_rude:
+    path:     /estudianteinsertrude/
+    defaults: { _controller: "SieUsuariosBundle:Estudiante:estudianteinsertrude" }
+    options:
+        expose: true        
+        
+#sie_usuario_estudiante_new:
+#    path:     /{ci}/personanew/
+#    defaults: { _controller: "SieUsuariosBundle:Persona:personanew" }
+#    options:
+#         expose: true
+#         
+#sie_usuario_estudiante_insert:
+#    path:     /personainsert/
+#    defaults: { _controller: "SieUsuariosBundle:Persona:personainsert" }
+#    options:
+#         expose: true
+#    
+#sie_usuario_estudiante_edit:
+#    path:     /{personaid}/personaedit/
+#    defaults: { _controller: "SieUsuariosBundle:Persona:personaedit" }
+#    options:
+#         expose: true 
+#
+#sie_usuario_estudiante_update:
+#    path:     /personaupdate/
+#    defaults: { _controller: "SieUsuariosBundle:Persona:personaupdate" }
+#    options:
+#         expose: true

@@ -1,0 +1,7 @@
+sie_juegos_seguimiento_index:
+    path:    /index
+    defaults: { _controller: SieJuegosBundle:Seguimiento:index }
+
+sie_juegos_seguimiento_save_index:
+    path:    /index/save
+    defaults: { _controller: SieJuegosBundle:Seguimiento:save }

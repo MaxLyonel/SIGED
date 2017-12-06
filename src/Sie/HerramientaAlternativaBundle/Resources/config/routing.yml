@@ -1,0 +1,85 @@
+sie_herramienta_alternativa_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Default:index }
+
+sie_herramienta_alternativa_ceducativa:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/ceducativa.yml"
+    prefix:   /altsie/ieducativa
+
+sie_herramienta_alternativa_administrativos:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/administrativos.yml"
+    prefix:   /altsie/administrativos
+
+sie_herramienta_alternativa_maestros:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/maestros.yml"
+    prefix:   /altsie/maestros
+
+sie_herramienta_alternativa_cursos:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/cursos.yml"
+    prefix:   /altsie/cursos
+
+sie_herramienta_alternativa_alumnos:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/alumnos.yml"
+    prefix:   /altsie/alumnos
+
+sie_herramienta_alternativa_malla_tecnica:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/mallaTecnica.yml"
+    prefix:   /altsie/mallaTecnica
+
+herramienta_ceducativo_change:
+    path:     /changeyear/{year}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:changegestion}
+    options:
+         expose: true
+
+sie_herramienta_alternativa_inscriptionExcepcionales:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/inscriptionExcepcionales.yml"
+    prefix:   /altsie/inscriptionexcepcional
+
+sie_herramienta_alternativa_inscriptionObservado:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/inscriptionObservados.yml"
+    prefix:   /altsie/inscriptionobservados
+
+sie_herramienta_alternativa_inscriptionOmitidos:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/inscriptionOmitidos.yml"
+    prefix:   /altsie/inscriptionomitidos
+
+sie_herramienta_alternativa_inscriptionHumanisticas:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/inscriptionHumanisticas.yml"
+    prefix:   /altsie/inscriptionhumanisticas
+
+sie_herramienta_alternativa_inscriptionTecnicas:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/inscriptionTecnicas.yml"
+    prefix:   /altsie/inscriptiontecnicas
+
+sie_herramienta_alternativa_socioeconomico:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/socioeconomico.yml"
+    prefix:   /altsie/socioeconomicoalt
+
+sie_herramienta_alternativa_areas:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/areas.yml"
+    prefix:   /altsie/areasalt
+
+sie_herramienta_alternativa_reportes:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/reportes.yml"
+    prefix:   /altsie/reportesalt
+
+sie_herramienta_alternativa_notas_maestro:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/notasMaestro.yml"
+    prefix:   /altsie/modulosMaestro
+
+sie_herramienta_alternativa_info_maestro:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/infoMaestro.yml"
+    prefix:   /altsie/infoMaestroAlt
+
+sie_herramienta_alternativa_info_personal_adm:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/infoPersonalAdm.yml"
+    prefix:   /altsie/infoPersonalAdmAlt
+
+sie_herramienta_alternativa_info_estudiante:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/estudiante.yml"
+    prefix:   /altsie/infoEstudianteAlt
+
+sie_herramienta_alternativa_curso:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/cursoAlternativa.yml"
+    prefix:   /altsie/cursoAlternativa 

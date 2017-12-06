@@ -1,0 +1,3 @@
+reportes_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:Reportes:index }

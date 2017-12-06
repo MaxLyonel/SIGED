@@ -1,0 +1,49 @@
+{% extends 'layoutInfra.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Sheet # <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('infra_list_index')}}">
+                       Operativos
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">
+                  <form action="{{path('infra_list_open')}}" method="post" style="display: inline-block">
+                      <input type="hidden" id="form_gestion" name="form[gestion]" value="{{app.session.get('currentyear')}}">
+                      <input type="hidden" id="form_data" name="form[sie]" required="required" value="{{app.session.get('ie_id')}}">
+                      <button class='btn btn-link'>Menu de Opciones</button>
+                  </form>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+      <div class="row">
+
+            <div class="col-md-10 col-sm-8 col-md-offset-1">
+            <!-- Lista de tramites aprobados por la DDE -->
+
+                        <!--/ End team table -->
+
+                    <div id="logs"></div>
+            <!--end lista tramites aprobados por la DDE -->
+            </div>
+      </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+
+{% endblock %}

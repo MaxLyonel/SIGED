@@ -1,0 +1,257 @@
+sie_pnp_homepage:
+    path:     /pnp_xls/
+    defaults: { _controller: SiePnpBundle:Default:index }
+
+sie_pnp_index:
+    path:     /pnp_index/
+    defaults: { _controller: SiePnpBundle:Default:pnp_index }    
+   
+sie_pnp_xls_form:
+    path:     /archivo_enviar/
+    defaults: { _controller: SiePnpBundle:Default:xls }
+    options:
+         expose: true
+         
+sie_pnp_curso_listado:
+    path:     /curso_listado/{id}
+    defaults: { _controller: SiePnpBundle:Default:cursolistar }
+    
+sie_pnp_see_notas:
+    path:     /ver_notas/{idinscripcion}
+    defaults: { _controller: SiePnpBundle:Default:vernotas }
+    options:
+         expose: true
+
+sie_pnp_see_notas_edit:
+    path:     /ver_notas_edit/{idinscripcion}/{id_curso}
+    defaults: { _controller: SiePnpBundle:Default:vernotas_edit }
+    options:
+         expose: true
+
+sie_pnp_persona_insert:
+    path:     /personasinsert/
+    defaults: { _controller: SiePnpBundle:Default:personasinsert }
+    
+sie_pnp_totales_gestion_depto:
+    path:     /totalesgestiondepto/
+    defaults: { _controller: SiePnpBundle:Default:totalesgestiondepto }    
+        
+sie_pnp_busqueda_facilitador_carnet:
+    path:     /facilitadorbusqueda/
+    defaults: { _controller: SiePnpBundle:Default:facilitadorbusquedacarnet }   
+    
+sie_pnp_resultado_facilitador_carnet:
+    path:     /cursosporfacilitador/{id}
+    defaults: { _controller: SiePnpBundle:Default:cursosporfacilitador, id:0 }   
+
+sie_pnp_curso_id:
+    path:     /cursoid/
+    defaults: { _controller: SiePnpBundle:Default:cursoid } 
+    
+sie_pnp_resultado_curso_listado_id:
+    path:     /curso_listado_busqueda/
+    defaults: { _controller: SiePnpBundle:Default:cursolistarbusqueda }    
+    
+sie_pnp_estadisticas:
+    path:     /pnp/estadisticas/
+    defaults: { _controller: SiePnpBundle:Default:estadisticas }       
+    
+sie_pnp_reportes:
+    path:     /pnp/reportesfiltro/
+    defaults: { _controller: SiePnpBundle:Default:reportesfiltro }      
+    
+sie_pnp_reportesejecutar:
+    path:     /pnp/reportesfiltroejecutar/
+    defaults: { _controller: SiePnpBundle:Default:reportesfiltroejecutar } 
+    
+sie_pnp_reportesprovincia:
+    path:     /pnp/reportesprovincia/{ieid}
+    defaults: { _controller: SiePnpBundle:Default:reportesprovincia }
+    options:
+         expose: true
+
+sie_pnp_buscar_provincia:
+    path:     /pnp/buscar_provincia/{ieid}
+    defaults: { _controller: SiePnpBundle:Default:buscarprovincia }
+    options:
+         expose: true
+
+sie_pnp_reportesmunicipio_java:
+    path:     /pnp/reportesmunicipio/{ieid}/{provincia}
+    defaults: { _controller: SiePnpBundle:Default:reportesmunicipio }
+    options:
+         expose: true
+
+sie_pnp_listar_archivos:
+    path:     /listararchivos/{id}
+    defaults: { _controller: SiePnpBundle:Default:listararchivos, id:0 }   
+
+sie_pnp_listar_facilitadores:
+    path:     /listarfacilitadores/{id}
+    defaults: { _controller: SiePnpBundle:Default:listarfacilitadores, id:0 } 
+
+sie_pnp_eliminar_duplicados:
+    path:     /pnp/eliminarduplicados/{id}/{id_eliminar}
+    defaults: { _controller: SiePnpBundle:Default:eliminarduplicados, id:0, id_eliminar:0}   
+
+sie_pnp_curso_vacio:
+    path:     /pnp/cursovacio/{id_eliminar}
+    defaults: { _controller: SiePnpBundle:Default:cursovacio, id_eliminar:0}
+
+sie_pnp_curso_vacionew:
+    path:     /pnp/cursosvacios/{id_eliminar}
+    defaults: { _controller: SiePnpBundle:Default:cursovacionew, id_eliminar:0}
+
+sie_pnp_listar_archivos_edit:
+    path:     /pnp/listararchivos_edit
+    defaults: { _controller: SiePnpBundle:Default:listararchivos_edit }
+
+sie_pnp_listar_archivos_editnew:
+    path:     /pnp/listararchivos_editar/{id}/{gestion}
+    defaults: { _controller: SiePnpBundle:Default:listararchivos_editnew, id:0,gestion:0 }   
+
+sie_pnp_curso_listado_edit:
+    path:     /pnp/curso_listado_edit/{id}
+    defaults: { _controller: SiePnpBundle:Default:cursolistar_edit}
+
+sie_pnp_curso_listado_editnew:
+    path:     /pnp/curso_listado_editar/{id}/{val}
+    defaults: { _controller: SiePnpBundle:Default:cursolistar_editnew, val:0}    
+
+sie_pnp_buscar_estudiante:
+    path:     /pnp/buscarestudiante/{ci}/{curso_id}/{complemento}/{rude}
+    defaults: { _controller: SiePnpBundle:Default:buscarestudiante }
+    options:
+         expose: true
+
+sie_pnp_imprimir_consolidado:
+    path:     /pnp/imprimirconsolidado/{id}/{esactivo}
+    defaults: { _controller: SiePnpBundle:Default:imprimirconsolidado, id:0,esactivo:1 }
+    options:
+         expose: true
+
+sie_pnp_imprimir_boletaelectronica:
+    path:     /pnp/imprimirboletaelectronica/{id}
+    defaults: { _controller: SiePnpBundle:Default:imprimirboletaelectronica, id:0 }
+    options:
+         expose: true
+
+sie_pnp_registrar_estudiante_curso:
+    path:     /pnp/registrarestudiantecurso/{rude}/{curso_id}/{tipo}
+    defaults: { _controller: SiePnpBundle:Default:registrarestudiantecurso }
+    methods: [GET,POST]
+    options:
+         expose: true  
+
+sie_pnp_eliminarregistro_estudiante_curso:
+    path:     /pnp/eliminarregistroestudiante/{estudiante_inscripcion_id}/{curso_id}
+    defaults: { _controller: SiePnpBundle:Default:elminarregistroestudiantecurso }
+    options:
+         expose: true    
+
+sie_pnp_registrar_curso:
+    path:     /pnp/registrar_curso
+    defaults: { _controller: SiePnpBundle:Default:registrar_curso }
+    options:
+         expose: true 
+
+sie_pnp_buscar_facilitador:
+    path:     /pnp/buscar_facilitador/{ci}/{complemento}/{extranjero}
+    defaults: { _controller: SiePnpBundle:Default:buscar_facilitador, extranjero:1 }
+    options:
+         expose: true 
+
+sie_pnp_insertar_facilidaor:
+    path:     /pnp/registrar_facilitador/{ci}
+    defaults: { _controller: SiePnpBundle:Default:registrar_facilitador }
+    options:
+         expose: true  
+
+sie_pnp_buscar_facilitadores:
+    path:     /pnp/buscar_facilitadores
+    defaults: { _controller: SiePnpBundle:Default:buscar_facilitadores }
+    options:
+         expose: true   
+
+sie_pnp_verificar_form:
+    path:     /pnp/verificar_form/{id_curso}
+    defaults: { _controller: SiePnpBundle:Default:verificar_form }
+    options:
+         expose: true
+
+sie_pnp_crear_curso_automatico:
+    path:     /pnp/crear_curso_automatico
+    defaults: { _controller: SiePnpBundle:Default:crear_curso_automatico }
+    options:
+         expose: true
+
+sie_pnp_buscar_historial_estudiante:
+    path:     /pnp/buscar_historial_estudiante
+    defaults: { _controller: SiePnpBundle:Default:buscar_historial_estudiante }
+    options:
+         expose: true
+
+sie_pnp_buscar_historial_estudiante_result:
+    path:     /pnp/buscar_historial_estudiante/result
+    defaults: { _controller: SiePnpBundle:Default:buscar_historial_estudiante_result }
+
+sie_pnp_buscar_historial_estudiante_result_list:
+    path:     /pnp/buscar_historial_estudiante/result/list/{idStudent}
+    defaults: { _controller: SiePnpBundle:Default:buscar_historial_estudiante_result_list }
+    options:
+         expose: true
+
+sie_pnp_buscar_historial_estudiante_ci:
+    path:    /pnp/buscar_historial_estudiante_ci
+    defaults: { _controller: SiePnpBundle:Default:buscar_historial_estudiante_ci }
+    options:
+         expose: true
+
+sie_pnp_reporte_general:
+    path:     /pnp/reporte_general/{nivel_ini}/{lugar}/{nivel_fin}
+    defaults: { _controller: SiePnpBundle:Reporte:reporte_general, nivel_ini:1, lugar:1, nivel_fin:1 }
+    options:
+         expose: true
+
+sie_pnp_reporte_por_gestion:
+    path:     /pnp/reporte_por_gestion/{nivel_ini}/{lugar}/{nivel_fin}
+    defaults: { _controller: SiePnpBundle:Reporte:reporte_por_gestion, nivel_ini:1, lugar:1, nivel_fin:1 }
+    options:
+         expose: true
+
+
+sie_pnp_reconocimiento_saberes:
+    path:    /pnp/reconocimiento_saberes
+    defaults: { _controller: SiePnpBundle:Reconocimientosaberes:reconocimiento_saberes }
+    options:
+         expose: true
+
+sie_pnp_reconocimiento_saberes_buscar_estudiante:
+    path:     /pnp/reconocimiento_saberes/buscar_estudiante/{ci}/{complemento}/{rude}
+    defaults: { _controller: SiePnpBundle:Reconocimientosaberes:buscar_estudiante }
+    options:
+         expose: true
+
+sie_pnp_reconocimiento_saberes_validar:
+    path:     /pnp/reconocimiento_saberes/validar/{opcion}/{reconocimiento_saberes_id}
+    defaults: { _controller: SiePnpBundle:Reconocimientosaberes:reconocimiento_saberes_validar, opcion:0, reconocimiento_saberes_id:0 }
+    options:
+         expose: true
+
+sie_pnp_reconocimiento_saberes_listar:
+    path:     /pnp/reconocimiento_saberes/listar
+    defaults: { _controller: SiePnpBundle:Reconocimientosaberes:reconocimiento_saberes_listar }
+    options:
+         expose: true
+
+sie_pnp_reconocimiento_saberes_imprimir:
+    path:     /pnp/reconocimiento_saberes/imprimir_certificacion/{id}
+    defaults: { _controller: SiePnpBundle:Reconocimientosaberes:imprimir_certificacion, id:0 }
+    options:
+         expose: true
+
+sie_pnp_reporte_con_estadistica:
+    path:     /pnp/reporte_con_estadistica
+    defaults: { _controller: SiePnpBundle:Reporte:reporte_con_estadistica }
+    options:
+         expose: true

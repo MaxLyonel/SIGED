@@ -1,0 +1,42 @@
+{% if listaModuloCargaHoraria is defined  %}   
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="pull-left">
+                    <span class="media-heading block mb-0 h4 text-white"><strong>{{ listaModuloCargaHoraria[0]['participante'] }}</strong></span>
+                    <span class="text-white h6"> {{ listaModuloCargaHoraria[0]['codigo_rude'] }} </span>
+                
+            </div>
+            <div class="pull-right text-right">
+                <span class="media-heading block mb-0 h4 text-white"><strong>{{ listaModuloCargaHoraria[0]['especialidad'] }}</strong></span>
+                <span class="text-white h6"> {{ listaModuloCargaHoraria[0]['acreditacion'] }} </span>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="panel-body no-padding">              
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-center border-right">No.</th>
+                        <th class="text-center">Periodo</th>
+                        <th class="text-center">Gestión</th>
+                        <th class="text-center">Módulo</th>
+                        <th class="text-center">Horas</th>
+                        <th class="text-center">Calificación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for moduloHoras in listaModuloCargaHoraria %}
+                        <tr>
+                            <td class="text-center border-right">{{ loop.index }}</td>
+                            <td class="text-center">{{ moduloHoras.periodo }}</td>
+                            <td class="text-center">{{ moduloHoras.gestion }}</td>
+                            <td class="text-center">{{ moduloHoras.modulo }}</td>
+                            <td class="text-center border-right">{{ moduloHoras.horas_modulo }}</td>  
+                            <td class="text-center border-right {% if moduloHoras.gestion <= 2015 %}{% if moduloHoras.nota_cuantitativa < 36 %}text-danger{% endif %}{% else %}{% if moduloHoras.nota_cuantitativa < 51 %}text-danger{% endif %}{% endif %}">{{ moduloHoras.nota_cuantitativa }}</td>                
+                        </tr>  
+                    {% endfor %}         
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}

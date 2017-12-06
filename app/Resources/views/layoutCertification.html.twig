@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    {% block stylesheets %}
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="description" content="">
+            <meta name="author" content="">
+
+            <title>Educación Alternativa</title>
+
+            <!-- PACE LOAD BAR PLUGIN - This creates the subtle load bar effect at the top of the page. -->
+            <link href="{{ asset('css/plugins/pace/pace.css')}}" rel="stylesheet">
+            <script src="{{ asset('js/plugins/pace/pace.js')}}"></script>
+
+            <link href='http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic' rel='stylesheet' type='text/css'>
+
+            <!-- GLOBAL STYLES - Include these on every page. -->
+            <link href="{{ asset('css/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+            <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel="stylesheet" type="text/css">
+            <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel="stylesheet" type="text/css">
+            <link href="{{ asset('css/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+
+            <!-- PAGE LEVEL PLUGIN STYLES -->
+            <link href="{{ asset('css/plugins/messenger/messenger-theme-flat.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/messenger/messenger.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/jvectormap/jquery-jvectormap-1.2.2.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins/datatables/datatables.css') }}" rel="stylesheet">
+            <link href="{{ asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+            <!-- THEME STYLES - Include these on every page. -->
+            <link href="{{ asset('tramite_cert/css/style.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/plugins.css') }}" rel="stylesheet">
+            <link href="{{ asset('tramite_cert/css/principal.css') }}" rel="stylesheet">
+
+            <!-- THEME DEMO STYLES - Use these styles for reference if needed. Otherwise they can be deleted. -->
+            <link href="{{ asset('css/demo.css') }}" rel="stylesheet">
+
+            <!--[if lt IE 9]>
+        <script src="{{asset('bower_components/html5shiv/dist/html5shiv.js')}}"></script>
+        <script src="{{asset('bower_components/respond/src/respond.min.js')}}"></script>
+        <![endif]-->
+            <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
+            <link href="{{asset('css/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css')}}" rel="stylesheet">
+
+            <link href="{{asset('css/jquery.typeahead.min.css')}}" rel="stylesheet">
+            <link href="{{asset('tramite_cert/css/reset.css')}}" rel="stylesheet" />
+            <link href="{{asset('tramite_cert/css/style_cert.css')}}" rel="stylesheet" />
+            <script src="{{asset('tramite_cert/js/modernizr.js')}}"></script>
+
+            {#            <script src="{{asset('tramite_cert/js/script.js')}}"></script>#}
+            <script src="{{asset('tramite_cert/js/script_principal.js')}}"></script>
+
+        {% endblock %}
+
+    </head>
+    <body>
+        <noscript>
+        <div class="contenedor_navegador">
+            <div class="scriptN">
+                Para utilizar las funcionalidades completas de este sitio es necesario tener
+                JavaScript habilitado. Aquí están las <a href="http://www.enable-javascript.com/es/"
+                                                         target="_blank"> instrucciones para habilitar JavaScript en tu navegador web</a>.
+            </div>
+        </div>
+        </noscript>
+
+        <div id="wrapper">
+
+            <!-- begin TOP NAVIGATION -->
+            <nav class="navbar-top" role="navigation">
+
+                <!-- begin BRAND HEADING -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle pull-right" data-toggle="collapse" data-target=".sidebar-collapse">
+                        <i class="fa fa-bars"></i> Menu
+                    </button>
+                    <div class="navbar-brand">
+                        <a href="{{path('sie_tramites_homepage')}}" style="color:#FFFFFF;">
+                            CERTIFICACION
+                        </a>
+                    </div>
+                </div>
+                <!-- end BRAND HEADING -->
+
+                <div class="nav-top">
+
+                    <!-- begin LEFT SIDE WIDGETS -->
+                    <ul class="nav navbar-left">
+                        <li class="tooltip-sidebar-toggle">
+                            <a href="index.html#" id="sidebar-toggle" data-toggle="tooltip" data-placement="right" title="Menu principal">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                        </li>
+                        <!-- You may add more widgets here using <li> -->
+                    </ul>
+                    <!-- end LEFT SIDE WIDGETS -->
+
+                    <!-- begin MESSAGES/ALERTS/TASKS/USER ACTIONS DROPDOWNS -->
+                    <ul class="nav navbar-right">
+
+                        <!-- begin MESSAGES DROPDOWN -->
+                        <li class="dropdown">
+                            <a href="index.html#" class="messages-link dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-envelope"></i>
+                                <span class="number">1</span> <i class="fa fa-caret-down"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-scroll dropdown-messages">
+
+                                <!-- Messages Dropdown Heading -->
+                                <li class="dropdown-header">
+                                    <i class="fa fa-envelope"></i> 1 Mensaje Nuevo
+                                </li>
+
+                                <!-- Messages Dropdown Body - This is contained within a SlimScroll fixed height box. You can change the height using the SlimScroll jQuery features. -->
+                                <li id="messageScroll">
+                                    <ul class="list-unstyled">
+
+                                        <li>
+                                            <a href="#">
+                                                <div class="row">
+                                                    <div class="col-xs-2">
+                                                        <img class="img-circle" src="{{asset('img/user-profile-4.jpg') }}" alt="">
+                                                    </div>
+                                                    <div class="col-xs-10">
+                                                        <p>
+                                                            <strong>DGEA - Administrador
+                                                            </strong>: Bienvenido al nuevo Sistema Web de "Certificación, Titulación y Legalización"
+                                                        </p>
+                                                        <br/>
+                                                        <p class="small">
+                                                            <i class="fa fa-clock-o"></i> 3:39 PM
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+                                <!-- Messages Dropdown Footer -->
+                                <li class="dropdown-footer">
+                                    <a href="#">Leer todos los Mensajes</a>
+                                </li>
+
+                            </ul>
+                            <!-- /.dropdown-menu -->
+                        </li>
+                        <!-- /.dropdown -->
+                        <!-- end MESSAGES DROPDOWN -->
+
+                        <!-- begin ALERTS DROPDOWN -->
+
+                        <!-- end ALERTS DROPDOWN -->
+
+                        <!-- begin TASKS DROPDOWN -->
+
+
+                        <!-- /.dropdown -->
+                        <!-- end TASKS DROPDOWN -->
+
+                        <!-- begin USER ACTIONS DROPDOWN -->
+                        <li class="dropdown">
+                            <a href="index.html#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-user"></i>  <i class="fa fa-caret-down"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li>
+                                    <a href="#">
+                                        <i class="fa fa-user"></i> <span class="text-green"> Mi Perfil</span>
+                                    </a>
+                                </li>
+                                <!--li>
+                                    <a href="mailbox.html">
+                                        <i class="fa fa-envelope"></i> My Messages
+                                        <span class="badge green pull-right">4</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index.html#">
+                                        <i class="fa fa-bell"></i> My Alerts
+                                        <span class="badge orange pull-right">9</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="index.html#">
+                                        <i class="fa fa-tasks"></i> My Tasks
+                                        <span class="badge blue pull-right">10</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="calendar.html">
+                                        <i class="fa fa-calendar"></i> My Calendar
+                                    </a>
+                                </li>
+                                <li class="divider"></li-->
+                                <li>
+                                    <a href="{{path('usuariopasswd')}}">
+                                        <i class="fa fa-gear"></i> <span class="text-green"> Cambiar Password</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="logout_open" href="index.html#logout">
+                                        <i class="fa fa-sign-out"></i><span class="text-red"> Salir</span>
+                                        <strong>{{ app.session.get('name') }}</strong>
+                                    </a>
+                                </li>
+                            </ul>
+                            <!-- /.dropdown-menu -->
+                        </li>
+                        <!-- /.dropdown -->
+                        <!-- end USER ACTIONS DROPDOWN -->
+
+                    </ul>
+                    <!-- /.nav -->
+                    <!-- end MESSAGES/ALERTS/TASKS/USER ACTIONS DROPDOWNS -->
+
+                </div>
+                <!-- /.nav-top -->
+            </nav>
+            <!-- /.navbar-top -->
+            <!-- end TOP NAVIGATION -->
+
+            <!-- begin SIDE NAVIGATION -->
+            <nav class="navbar-side" role="navigation">
+                <div class="navbar-collapse sidebar-collapse collapse">
+                    <ul id="side" class="nav navbar-nav side-nav">
+                        <!-- begin SIDE NAV USER PANEL -->
+                        <li class="side-user hidden-xs">
+                            {% if app.session.get('userfoto') is empty %}
+                                <img class="img-circle" src ="{{asset('uploads/krlos.jpg')}} " height="150" width="150" >
+                            {% else %}
+                                <img class="img-circle" src ="uploads/{{app.session.get('userfoto')}} " height="150" width="150" >
+                            {% endif %}
+                            <p class="welcome">
+                                <i class="fa fa-key"></i> Bienvenida/o
+                            </p>
+                            <p class="name tooltip-sidebar-logout">
+                                {{ app.session.get('name') }}
+                                <span class="last-name"> {{ app.session.get('lastname') }}</span> <a style="color: inherit" class="logout_open" href="index.html#logout" data-toggle="tooltip" data-placement="top" title="Salir"><i class="fa fa-sign-out"></i></a>
+                            </p>
+                            <div class="clearfix"></div>
+                        </li>
+                        <!-- end SIDE NAV USER PANEL --> 
+                        {% for item in app.session.get('roluser') %}  
+
+                            {% if item.id == 16 or item.id == 8 %}   
+                                {#<li>
+                                    <a href="{{ path('sie_tramite_entrega_departamento') }}">
+                                        <i class="fa fa-arrow-up"></i> Entrega - Departamento
+                                    </a>
+                                </li>#} 
+                            {% endif %}                                               
+                            {% if item.id == 13 or item.id == 8 or item.id == 10 %}   
+                                <li>
+                                    <a href="{{ path('sie_tramite_entrega_distrito') }}">
+                                        <i class="fa fa-arrow-up"></i> Entrega - Distrito
+                                    </a>
+                                </li> 
+                            {% endif %} 
+                        {% endfor %} 
+                        {% for item in app.session.get('roluser') %}                        
+                            {% if item.id == 13 or item.id == 8 or item.id == 10 %}   
+                                <li>
+                                    <a href="{{ path('sie_tramite_recepcion_distrito') }}">
+                                        <i class="fa fa-arrow-up"></i> Recepción - Distrito
+                                    </a>
+                                </li> 
+                            {% endif %}    
+                            {% if item.id == 13 or item.id == 8 or item.id == 10 %}   
+                                <li>
+                                    <a href="{{ path('sie_tramite_homologacion') }}">
+                                        <i class="fa fa-arrow-up"></i> Gestiones Anteriores
+                                    </a>
+                                </li> 
+                            {% endif %}    
+                            {% if item.id == 14 or item.id == 8%}   
+                                <li>
+                                    <a href="{{ path('sie_tramite_recibir_departamento') }}">
+                                        <i class="fa fa-arrow-up"></i> Recepción - Departamento
+                                    </a>
+                                </li>  
+                            {% endif %}                       
+                            {% if item.id == 15 or item.id == 8 %}                                 
+                                <li>
+                                    <a href="{{ path('sie_tramite_autorizacion') }}">
+                                        <i class="fa fa-arrow-up"></i> Autorización Tŕamite
+                                    </a>
+                                </li>                                 
+                                {#                                <li>
+                                                                    <a href="{{ path('history_inscription_index') }}">
+                                                                        <i class="fa fa-arrow-up"></i> Consulta - Notas
+                                                                    </a>
+                                                                </li>#}                               
+                                {#                                <li>
+                                                                    <a href="{{ path('sie_diploma_homologacion_index') }}">
+                                                                        <i class="fa fa-arrow-up"></i> Homologación
+                                                                    </a>
+                                                                </li> #}                         
+                                {#                                <li>
+                                                                    <a href="{{ path('sie_diploma_tramite_tecnico_recepcion') }}">
+                                                                        <i class="fa fa-arrow-up"></i> Diploma Técnico
+                                                                    </a>
+                                                                </li> #}                     
+                                {#                                <li>
+                                                                    <a href="{{ path('sie_diploma_tramite_tecnico_impresion_formulario') }}">
+                                                                        <i class="fa fa-arrow-up"></i> Impresión Diploma Técnico
+                                                                    </a>
+                                                                </li>#}
+                            {% endif %}                        
+                            {% if item.id == 40 or item.id == 8 %}   
+                                <li>
+                                    <a href="{{ path('sie_tramite_impresion') }}">
+                                        <i class="fa fa-arrow-up"></i> Impresión Certificado 
+                                    </a>
+                                </li> 
+                                {#<li>
+                                    <a href="{{ path('sie_tramite_impresion_serie_form') }}">
+                                        <i class="fa fa-arrow-up"></i> Impresión por Serie
+                                    </a>
+                                </li> #}
+                            {% endif %}  
+                            {% if item.id == 8 or  item.id == 40 %}
+                                <li>
+                                    <a href="{{ url('tramite_generar_series_certificados') }}">
+                                        <i class="glyphicon glyphicon-barcode"></i> Generar Números de Serie <span class="fa arrow"></span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {#                            {% if item.id == 17 or item.id == 8 %}   #}
+                            {#<li>
+                                <a href="{{ path('sie_tramite_legalizacion') }}">
+                                    <i class="fa fa-arrow-up"></i> Legalización
+                                </a>
+                            </li>#} 
+                            {#                                <li>#}
+                            {#                                    <a href="{{ path('sie_diploma_tramite_reactivacion') }}">#}
+                            {#                                        <i class="fa fa-arrow-up"></i> Reactivar Trámite#}
+                            {#                                    </a>#}
+                            {#                                </li> #}
+                            {#                            {% endif %}#}
+                            {% if item.id == 40 or item.id == 8 %}   
+                                <li>
+                                    <a href="{{path('tramite_tecnico_medio_index')}}"><i class="fa fa-bars fa-fw"></i> Listado Técnico Medio - ME<span class="fa arrow"></span></a>
+                                </li>                    
+                            {% endif %}
+
+
+                            {% for dato in app.session.get('mensaje_tramite') %}
+                                {% if item.id == 13 or item.id == 14 or item.id == 15 or item.id == 16 or item.id == 17 or item.id == 8 or item.id == 10 or item.id == 7 or item.id == 40%}
+                                    <li class="panel">
+                                        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuSeguimiento">
+                                            <i class="fa fa-bar-chart-o"></i> Seguimiento - Trámite <i class="fa fa-caret-down"></i>
+                                        </a>
+                                        <ul class="collapse nav" id="menuSeguimiento">
+                                            <li>
+                                                <a href="{{ path('sie_tramite_seguimiento_busqueda') }}">
+                                                    <i class="fa fa-arrow-up"></i> Por Número de Trámite
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ path('sie_tramite_seguimiento_busqueda_rude') }}">
+                                                    <i class="fa fa-arrow-up"></i> Por Código RUDE
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <!-- /.nav-second-level -->
+                                    </li>    
+
+                                    <li>
+                                        <a href="{{path('tramite_declaracion_jurada_index')}}"><i class="fa fa-bars fa-fw"></i> Declaración Jurada - Técnica <span class="fa arrow"></span></a>
+                                    </li>                           
+                                    <li>
+                                        <a href="{{path('estudiante_index')}}"><i class="fa fa-bars fa-search"></i> Buscar Estudiante <span class="fa arrow"></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('sie_tramite_impresion_listados') }}"><i class="fa fa-paperclip fa-fw"></i> Listados<span class="fa arrow"></span></a>
+                                    </li>                                
+                                    {# <li>
+                                         <a href="{{path('sie_diploma_tramite_reporte_nacional_impreso')}}"><i class="fa fa-bars fa-fw"></i> Reportes<span class="fa arrow"></span></a>
+                                     </li>#}
+                                    <li>
+                                        <a href="{{asset('manual_alternativa.pdf')}}"><i class="fa fa-question fa-fw"></i> Ayuda<span class="fa arrow"></span></a>
+                                    </li>  
+                                {% endif %}
+                            {% endfor %} 
+                        {% endfor %} 
+                        <!-- begin DASHBOARD LINK --> 
+                        {% for key,menu in app.session.get('aMenu') %}
+                            <li class="panel">
+                                <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#{{loop.index}}">
+                                    <i class="fa fa-bar-chart-o"></i> {{key}} <i class="fa fa-caret-down"></i>
+                                </a>
+                                <ul class="collapse nav" id="{{loop.index}}">
+                                    {% for smenu in menu %}
+                                        <li>
+                                            <a href="{{ path(smenu.ruta) }}">
+                                                <i class="{{smenu.icono}}"></i> {{smenu.label}} 
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <!-- /.nav-second-level -->
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- /.navbar-side -->
+            <!-- end SIDE NAVIGATION -->
+
+            <!-- begin MAIN PAGE CONTENT -->
+            <div id="page-wrapper">
+
+
+
+
+                <div class="page-content">
+                    {% for dato in app.session.get('mensaje_tramite')%}
+                        {%if dato.estado == 1 %}
+
+                            {% for item in app.session.get('roluser') %}  
+                                {% set array = dato.tipo_user|split(',') %}
+                                {% if (item.id in array)%}
+                                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="font-size:20px; color: #fff; background: #bf4c4c; border-radius: 5px 5px 0 0; ">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-warning-sign"></span> {{dato.titulo}} </h4>
+                                                </div>
+                                                <div class="modal-body" style="line-height: 30px">
+                                                    <ul>
+                                                        <li style="color: #d86c6c; ">{{dato.mensaje|nl2br}}</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% block contentoption %}
+                        <!-- here the iptions content -->
+                    {% endblock %}
+                </div>
+                <!-- /.page-content -->
+                <div class="clearfix">
+                </div>
+            </div>
+            <!-- /#page-wrapper -->
+            <!-- end MAIN PAGE CONTENT -->
+
+        </div>
+        <!-- /#wrapper -->
+
+
+        {% block javascripts %}
+
+            <script src="{{asset('tramite_cert/js/jquery-2.1.4.js')}}"></script>
+            <script src="{{asset('tramite_cert/js/jquery.mobile.custom.min.js')}}"></script>
+            <script src="{{asset('tramite_cert/js/main.js')}}"></script>
+            <!-- GLOBAL SCRIPTS -->
+            <script src="{{asset('bower_components/jquery/dist/jquery.min.js')}}"></script>
+            <script src="{{ asset('js/plugins/bootstrap/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/popupoverlay/jquery.popupoverlay.js') }}"></script>
+            <script src="{{ asset('js/plugins/popupoverlay/defaults.js') }}"></script>
+            <!-- Logout Notification Box -->
+            <div id="logout">
+                <div class="logout-message">
+                    {% if app.session.get('userfoto') is empty %}
+                        <img class="img-circle" src ="{{asset('uploads/krlos.jpg')}} " height="150" width="150" >
+                    {% else %}
+                        <img class="img-circle" src ="/uploads/{{app.session.get('userfoto')}} " height="150" width="150" >
+                    {% endif %}
+                    <!--img class="img-circle img-logout" src="{{asset('img/profile-pic.jpg') }}" alt=""-->
+                    <h3>
+                        <i class="fa fa-sign-out text-blue"></i> ¿Lista/o para salir?
+                    </h3>
+                    <p>Seleciona "Salir" si estas lista/o<br> para terminar tu sesión en el sistema.</p>
+                    <ul class="list-inline">
+                        <li>
+                            <a href="{{path('logout')}}" class="btn btn-blue">
+                                <strong>Salir</strong>
+                            </a>
+                        </li>
+                        <li>
+                            <button class="logout_close btn btn-blue">Cancel</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /#logout -->
+            <!-- Logout Notification jQuery -->
+            <script src="{{ asset('js/plugins/popupoverlay/logout.js') }}"></script>
+            <!-- HISRC Retina Images -->
+            <script src="{{ asset('js/plugins/hisrc/hisrc.js') }}"></script>
+
+            <!-- PAGE LEVEL PLUGIN SCRIPTS -->
+            <!-- HubSpot Messenger -->
+            <script src="{{ asset('js/plugins/messenger/messenger.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/messenger/messenger-theme-flat.js') }}"></script>
+            <!-- Date Range Picker -->
+            <script src="{{ asset('js/plugins/daterangepicker/moment.js') }}"></script>
+            <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+
+            <!-- Flot Charts -->
+            <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
+            <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+            <!-- Sparkline Charts -->
+            <script src="{{ asset('js/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
+            <!-- Moment.js -->
+            <script src="{{ asset('bower_components/moment/moment.js') }}"></script>
+            <script src="{{ asset('bower_components/moment/locale/es.js') }}"></script>
+            <!-- jQuery Vector Map -->
+            <script src="{{ asset('js/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
+            <script src="{{ asset('js/plugins/jvectormap/maps/jquery-jvectormap-world-mill-en.js') }}"></script>
+            <script src="{{ asset('js/demo/map-demo-data.js') }}"></script>
+            <!-- Easy Pie Chart -->
+            <script src="{{ asset('js/plugins/easypiechart/jquery.easypiechart.min.js') }}"></script>
+            <!-- DataTables -->
+            <script src="{{ asset('js/plugins/datatables/jquery.dataTables.js') }}"></script>
+            <script src="{{ asset('js/plugins/datatables/datatables-bs3.js') }}"></script>
+
+            <!-- THEME SCRIPTS -->
+            <script src="{{ asset('js/flex.js') }}"></script>
+            <script src="{{asset('js/demo/advanced-form-demo.js')}}"></script>
+            <script src="{{ asset('js/demo/dashboard-demo.js') }}"></script>
+            <!--script src="{{ asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
+            <script src="{{ asset('js/demo/validation-demo.js')}}"></script-->
+            <script src="{{asset('validator/js/validator.js')}}"></script>
+
+            <script src="{{asset('js/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js')}}"></script>
+            <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
+
+            <script src="{{asset('js/jquery.typeahead.min.js')}}"></script>
+
+            <script src="{{asset('js/funciones.js')}}"></script>
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+            <script src="{{ asset('js/initialize.js')}}"></script>
+            <script src="{{asset('tramite_cert/js/inicializar.js')}}"></script>
+
+
+            <script>
+
+                var datetime = null,
+                        date = null;
+                var update = function () {
+                    date = moment(new Date());
+                    date = date.locale('fr');
+                    datetime.html(date.format('dddd<br>D [de] MMMM [de] YYYY<br>h:mm:ss A'));
+                };
+                $(document).ready(function () {
+                    $('#myModal').modal('show');
+                    datetime = $('#datetime');
+                    update();
+                    setInterval(update, 1000);
+                {#                    $("#form_especialidad").attr('disabled', 'true');
+                                    $("#form_nivel").attr('disabled', 'true');#}
+                                        });
+                                        $(document).ready(function () {
+                                            datetoday = new Date(); // create new Date()
+                                            timenow = datetoday.getTime(); // grabbing the time it is now
+                                            datetoday.setTime(timenow); // setting the time now to datetoday variable
+                                            hournow = datetoday.getHours(); //the hour it is
+
+                                            if (hournow >= 18) // if it is after 6pm
+                                                $('div.tile-img').addClass('evening');
+                                            else if (hournow >= 12) // if it is after 12pm
+                                                $('div.tile-img').addClass('afternoon');
+                                            else if (hournow >= 6) // if it is after 6am
+                                                $('div.tile-img').addClass('morning');
+                                            else if (hournow >= 0) // if it is after midnight
+                                                $('div.tile-img').addClass('midnight');
+                                        });
+                                        function num_mayor() {
+                                            var inic = parseInt(document.getElementById('form_num_inicial').value);
+                                            var fin = parseInt(document.getElementById('form_num_final').value);
+
+                                            if (fin < inic) {
+                                                alert('El número Inicial ' + inic + ' debe ser MENOR o IGUAL al Número Final ' + fin);
+                                                document.getElementById('form_num_final').value = '';
+                                                $('#form_num_final').focus();
+                                            }
+                                        }
+                                        function verificarSelect() {
+                                            var c = 0;
+                                            var series = $('#form_series');
+                                            var gestiones = $('#form_gestiones');
+                                            var depto = $('#form_departamento');
+                                            var inicial = $('#form_num_inicial');
+                                            var final = $('#form_num_final');
+                                            var niveles = $('#form_niveles');
+                                            var boton = $('#form_verificarBtn');
+                                            if (series.val() == '') {
+                                                series.css('border', '1px solid red');
+                                                c = c + 1;
+                                            } else {
+                                                series.css('border', '1px solid #8cc152');
+                                            }
+                                            if (gestiones.val() == '') {
+                                                gestiones.css('border', '1px solid red');
+                                                c = c + 1;
+                                            } else {
+                                                gestiones.css('border', '1px solid #8cc152');
+                                            }
+                                            if (depto.val() == '') {
+                                                depto.css('border', '1px solid red');
+                                                c = c + 1;
+                                            } else {
+                                                depto.css('border', '1px solid #8cc152');
+                                            }
+                                            if (inicial.val() == '') {
+                                                inicial.css('border', '1px solid red');
+                                                c = c + 1;
+                                            } else {
+                                                inicial.css('border', '1px solid #ccc');
+                                            }
+                                            if (final.val() == '') {
+                                                final.css('border', '1px solid red');
+                                                c = c + 1;
+                                            } else {
+                                                final.css('border', '1px solid #ccc');
+                                            }
+                                            if (niveles.val() == '') {
+                                                niveles.css('border', '1px solid red');
+                                                c = c + 1;
+                                            } else {
+                                                niveles.css('border', '1px solid #8cc152');
+                                            }
+                                            if (c == 0) {
+                                                $('#form_verificarBtn').css('transition', '0.5s all ease-in-out');
+                                                $('#form_verificarBtn').removeClass('disabled');
+                                                $('#form_verificarBtn').removeAttr('disabled');
+                                            }
+                                        }
+            </script>
+        {% endblock %}
+        {% block javascriptssec %}
+        {% endblock %}
+    </body>
+
+</html>

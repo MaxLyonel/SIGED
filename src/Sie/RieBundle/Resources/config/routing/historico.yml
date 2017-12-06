@@ -1,0 +1,36 @@
+
+historico:
+    path:     /
+    defaults: { _controller: "SieRieBundle:DatoHistorico:index" }
+
+historico_list_itt:
+    path:     /listitt
+    defaults: { _controller: SieRieBundle:DatoHistorico:listitt }   
+
+historico_list:
+    path:     /list
+    defaults: { _controller: SieRieBundle:DatoHistorico:list }    
+
+historico_new:
+    path:     /new
+    defaults: { _controller: "SieRieBundle:DatoHistorico:new" }
+    methods:  [POST]
+
+historico_create:
+    path:     /create
+    defaults: { _controller: "SieRieBundle:DatoHistorico:create" }
+    methods:  [POST]     
+
+historico_edit:
+    path:     /edit
+    defaults: { _controller: "SieRieBundle:DatoHistorico:edit" }
+
+historico_update:
+    path:     /update
+    defaults: { _controller: "SieRieBundle:DatoHistorico:update" }
+    methods:  [POST]     
+
+historico_delete:
+     path:    /delete/{idhistorico}
+     defaults: { _controller: "SieRieBundle:DatoHistorico:delete" }
+     methods:  GET                   

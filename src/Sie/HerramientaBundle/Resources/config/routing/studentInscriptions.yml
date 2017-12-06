@@ -1,0 +1,17 @@
+inscriptionstudent_index:
+    path:     /index
+    defaults: { _controller: "SieHerramientaBundle:StudentsInscriptions:index"}
+    options:
+         expose: true
+
+inscriptionstudent_findstudent:
+    path:     /findstudent
+    defaults: { _controller: "SieHerramientaBundle:StudentsInscriptions:findStudent"}
+    options:
+         expose: true
+
+inscriptionstudent_saveinscription:
+    path:     /save
+    defaults: { _controller: "SieHerramientaBundle:StudentsInscriptions:saveInscription"}
+    options:
+         expose: true

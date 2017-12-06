@@ -1,0 +1,99 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+
+{% block contentoption%}
+
+<!-- Start page header -->
+<div class="header-content">
+    <h2><i class="fa fa-table"></i> Estudiante <span>Buscar</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aqui:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="#">Buscar Estudiante</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+
+            <li class="active">Inicio</li>
+        </ol>
+    </div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+<div class="body-content animated fadeIn">
+        
+    {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Estudiante', 'gestion': '-', 'sie': '-', 'ieducativa': '-', 'opcion': 'Buscar'} %}
+
+    <div class="row">
+
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag().get('warningstudent') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Error!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+            <!-- Website Stats  Widget -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12">
+
+                    <div class="panel panel-teal">
+                            <div class="panel-heading">
+                                <div class="panel-title">
+                                    <h4><i class="fa fa-search"></i> Inserte Datos</h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <div class="panel-body">
+                                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {{form_label(form.paterno)}}
+                                        {{form_widget(form.paterno)}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form_label(form.materno)}}
+                                        {{form_widget(form.materno)}}
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        {{form_label(form.nombre)}}
+                                        {{form_widget(form.nombre)}}
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">{{form_widget(form.lookfor,{ 'attr':{'class':'btn btn-primary' } } ) }}</div>
+                                </div>
+                                {{form_end(form)}}
+                            </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Website Stats Widget -->
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        //call the ajax function by krlos
+        $('#form_lookfor').click(function () {
+
+            if ($('#form_paterno').val().length == 0 && $('#form_materno').val().length == 0 && $('#form_nombre').val().length == 0) {
+                alert('Debe introducir por lo menos Nombre y/o Apellido Paterno y/o Apellido Materno');
+                return false
+            }
+
+        });
+
+    </script>
+
+
+{% endblock %}

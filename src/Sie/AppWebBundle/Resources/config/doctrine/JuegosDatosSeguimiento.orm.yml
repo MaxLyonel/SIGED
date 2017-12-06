@@ -1,0 +1,78 @@
+Sie\AppWebBundle\Entity\JuegosDatosSeguimiento:
+    type: entity
+    table: juegos_datos_seguimiento
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestionTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        departamentoTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: departamento_tipo_id
+        nivelTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: nivel_tipo_id
+        estudianteCantidadLlegada:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estudiante_cantidad_llegada
+        estudianteCantidadSalida:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estudiante_cantidad_salida
+        delegadoCantidadLlegada:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: delegado_cantidad_llegada
+        delegadoCantidadSalida:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: delegado_cantidad_salida
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioRegistro:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_registro
+        usuarioModificacion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_modificacion
+    lifecycleCallbacks: {  }

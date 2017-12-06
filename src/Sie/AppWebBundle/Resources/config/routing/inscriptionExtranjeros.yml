@@ -1,0 +1,52 @@
+
+inscription_extranjeros_index:
+    path:    /
+    defaults: { _controller: SieAppWebBundle:InscriptionExtranjeros:index }
+
+inscription_extranjeros_result:
+    path:    /result
+    defaults: { _controller: SieAppWebBundle:InscriptionExtranjeros:result }
+
+inscription_extranjeros_norude:
+    path:    /norude
+    defaults: { _controller: SieAppWebBundle:InscriptionExtranjeros:norude }
+
+inscription_extranjeros_save:
+    path:    /save
+    defaults: { _controller: SieAppWebBundle:InscriptionExtranjeros:save }      
+
+inscription_extranjeros_findIE:
+     path:    /findIE/{id}
+     defaults: { _controller: SieAppWebBundle:InscriptionExtranjeros:findIE }
+     options:
+         expose: true   
+
+inscription_extranjeros_findgrado:
+     path:    /findgrado/{idnivel}/{sie}
+     defaults: { _controller: SieAppWebBundle:InscriptionExtranjeros:findgrado }
+     options:
+         expose: true
+
+inscription_extranjeros_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}
+     defaults: { _controller: SieAppWebBundle:InscriptionExtranjeros:findparalelo }
+     options:
+         expose: true
+         
+inscription_extranjeros_findturno:         
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieAppWebBundle:InscriptionExtranjeros:findturno }
+    options:
+        expose: true
+
+inscription_extranjeros_saveext:
+    path: /saveext
+    defaults: { _controller: SieAppWebBundle:InscriptionExtranjeros:saveext }
+    
+inscription_extranjeros_savenew:
+    path:    /saveNew
+    defaults: { _controller: SieAppWebBundle:InscriptionExtranjeros:savenew } 
+    
+inscription_extranjeros_savenewextranjero:    
+    path:    /saveNewExtranjero
+    defaults: { _controller: SieAppWebBundle:InscriptionExtranjeros:savenewextranjero } 

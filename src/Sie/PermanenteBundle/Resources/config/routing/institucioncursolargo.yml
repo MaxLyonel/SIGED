@@ -1,0 +1,167 @@
+institucioncursolargo:
+    path:     /{op}
+    defaults: { _controller: SiePermanenteBundle:InstitucionCursoLargo:index, op:1 }
+
+institucioncursolargo_show:
+    path:     /{id}/show
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:show" }
+
+institucioncursolargo_new:
+    path:     /new/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:new" }
+
+institucioncursolargo_create:
+    path:     /create/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:create" }
+    methods:  POST
+
+institucioncursolargo_edit:
+    path:     /edit/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:edit" }
+    methods:  [POST, PUT]
+
+institucioncursolargo_update:
+    path:     /update/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:update" }
+    methods:  [POST, PUT]
+
+institucioncursolargo_delete:
+    path:     /delete/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:delete" }
+    methods:  [POST, DELETE]
+
+institucioncursolargo_close:
+    path:     /close/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:close" }
+    methods:  [POST, DELETE]
+    
+institucioncursolargo_listar_especialidades:
+     path:    /institucion/listar_especialidades/{carrera}/
+     defaults: { _controller: SiePermanenteBundle:InstitucionCursoLargo:listar_especialidades }
+     options:
+         expose: true
+
+asignaturas:
+    path:     /asignaturas/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:asignaturas" }
+    methods:  POST
+    
+asignaturas_session:
+    path:     /asignaturass/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:asignaturas_session" }
+    
+asignaturas_new:
+    path:     /asignaturas_new/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:asignaturas_new" }
+    
+asignaturas_create:
+    path:     /asignaturas_create/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:asignaturas_create" }
+    methods:  POST
+    
+asignaturas_edit:
+    path:     /asignaturas_edit/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:asignaturas_edit" }
+    methods:  POST
+    
+asignaturas_update:
+    path:     /asignaturas_update/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:asignaturas_update" }
+    methods:  POST
+    
+asignaturas_delete:
+    path:     /asignaturas_delete/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:asignaturas_delete" }
+    methods:  POST
+
+institucioncursolargo_participante_index:
+    path:     /participante/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_index" }
+    methods:  POST
+
+institucioncursolargo_participante_session:
+    path:     /participantes/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_session" }
+    
+
+institucioncursolargo_participante_search:
+    path:     /participante/search/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_search" }
+
+institucioncursolargo_participante_new_rude:
+    path:     /participante/newr/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_new_rude" }
+    methods:  POST
+
+institucioncursolargo_participante_create_rude:
+    path:     /participante/creater/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_create_rude" }
+    methods:  POST
+
+
+institucioncursolargo_participante_search_name:
+    path:     /participante/search_name/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_search_name" }
+
+institucioncursolargo_participante_search_result:
+    path:     /participante/search_name/result
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_search_result" }
+    methods:  POST
+
+institucioncursolargo_participante_new_name:
+    path:     /participante/newn/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_new_name" }
+    methods:  POST
+
+institucioncursolargo_participante_create_name:
+    path:     /participante/createn/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_create_name" }
+    methods:  POST
+
+institucioncursolargo_participante_new:
+    path:     /participante/new/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_new" }
+    methods:  POST
+
+institucioncursolargo_participante_create:
+    path:     /participante/create/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_create" }
+    methods:  POST
+
+institucioncursolargo_participante_edit:
+    path:     /participante/edit/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_edit" }
+    methods:  POST
+
+institucioncursolargo_participante_update:
+    path:     /participante/update/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_update" }
+    methods:  POST
+
+institucioncursolargo_participante_show:
+    path:     /participante/show/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_show" }
+    methods:  POST
+
+institucioncursolargo_participante_delete:
+    path:     /participante/delete/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:participante_delete" }
+    methods:  POST
+
+icl_departamento:
+    path:     /departamento/{pais}/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:departamento" }
+    options:
+         expose: true
+
+icl_provincia:
+    path:     /provincia/{departamento}/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:provincia" }
+    options:
+         expose: true
+
+icl_municipio:
+    path:     /municipio/{provincia}/
+    defaults: { _controller: "SiePermanenteBundle:InstitucionCursoLargo:municipio" }
+    options:
+         expose: true

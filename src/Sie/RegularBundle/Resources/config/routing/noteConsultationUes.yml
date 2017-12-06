@@ -1,0 +1,23 @@
+note_consultation_ues_sie_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:NoteConsultationUes:index }
+
+note_consultation_ues_sie_result:
+    path:     /sie/result/
+    defaults: { _controller: SieRegularBundle:NoteConsultationUes:result }
+    options:
+         expose: true 
+         
+note_consultation_ues_sie_nota:
+    path:     /seeNota/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{gestion}
+    defaults: { _controller: SieRegularBundle:NoteConsultationUes:nota }           
+    options:
+         expose: true 
+         
+note_consultation_ues_sie_download:
+    path:     /download/{file}
+    defaults: { _controller: SieRegularBundle:NoteConsultationUes:download }         
+    
+note_consultation_ues_sie_remove:
+    path:     /remove/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{sie}/{gestion}/{eiid}
+    defaults: { _controller: SieRegularBundle:NoteConsultationUes:remove }

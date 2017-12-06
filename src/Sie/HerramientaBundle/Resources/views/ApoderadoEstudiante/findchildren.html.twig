@@ -1,0 +1,75 @@
+<small>
+
+{% if swExist %}
+
+<div class="row">
+  <div class="col-md-6">
+
+    <div class="row">
+        <div class="col-md-12">
+          <div class="alert alert-info">
+                  <strong>Información Estudiante</strong>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        Paterno: {{estudiante.paterno}}
+      </div>
+      <div class="col-md-4">
+        Materno: {{estudiante.materno}}
+      </div>
+      <div class="col-md-4">
+        Nombre: {{estudiante.nombre}}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+  {%if swApoderado %}
+    <div class="row">
+        <div class="col-md-12">
+          <div class="alert alert-info">
+                  <strong>Información Apoderado</strong> (APODERADO REGISTRADO)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        Paterno: {{apoderado.paterno}}
+      </div>
+      <div class="col-md-4">
+        Materno: {{apoderado.materno}}
+      </div>
+      <div class="col-md-4">
+        Nombre: {{apoderado.nombre}}
+      </div>
+    </div>
+  {% else %}
+  <div class="alert alert-lilac">
+          <strong>Resultado!</strong> Estudiante sin Apoderado, click sobre el boton para adicionar
+    </div>
+    {{form_start(formAddchild, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form', 'id':'seeSaveChildrenId'} } )}}
+
+    {{ form_end(formAddchild) }}
+  {%endif%}
+  </div>
+</div>
+
+{% else %}
+
+<div class="row">
+  <div class="col-md-12">
+    {% if app.session.flashBag.has('errorApoderado') %}
+       <div class="alert alert-warning">
+           {% for msg in app.session.flashBag.get('errorApoderado') %}
+               {{ msg }}
+           {% endfor %}
+       </div>
+   {% endif %}
+  </div>
+</div>
+{% endif %}
+
+
+
+</small>

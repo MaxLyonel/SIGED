@@ -1,0 +1,117 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Datos de la Cuenta
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="">Actualizar Datos</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('msgUpdate') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-lg-3">
+            <div class="portlet portlet-red">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Usuario</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="portlet-body">
+                    <center>
+                        {% if app.session.get('userfoto') is empty %}
+                            <img class="img-circle" src ="{{ asset('uploads/krlos.jpg') }} " height="150" width="150" >
+                        {% else %}
+                            <img class="img-circle" src ="/uploads/{{app.session.get('userfoto')}} " height="150" width="150" >
+
+                        {% endif %}
+
+                        <br>
+                        <br>
+                    </center>
+                </div>
+            </div>
+        </div>
+        <!-- /.c
+        <!-- HubSpot Messenger -->
+        <div class="col-lg-9">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Usuario</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+
+                        <div class="col-md-8 col-md-offset-2">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr><th>Carnet</th><td>{{ persona.carnet }}</td></tr>
+                                    <tr><th>Libreta Militar</th><td> {{ persona.libretaMilitar }}</td></tr>
+                                    <tr><th>Pasaporte</th><td>{{ persona.pasaporte }}</td></tr>
+
+
+
+                                    <tr><th>Paterno</th><td>{{ persona.paterno }}</td></tr>
+                                    <tr><th>Materno</th><td> {{ persona.materno }}</td></tr>
+                                    <tr><th>Nombre</th><td>{{ persona.nombre }}</td></tr>
+
+                                    <tr><th>Fecha de Nacimiento:</th><td>{% if persona.fechaNacimiento %}{{ persona.fechaNacimiento|date('d-m-Y') }}{% endif %}</td></tr>
+                                    <tr><th>Complemento:</th><td> {{ persona.complemento }}</td></tr>
+                                    <tr><th>Género:</th><td>{{ persona.generoTipo|upper }}</td></tr>
+
+                                    <tr><th>Estado Civil:</th><td>{{ persona.estadoCivilTipo }}</td></tr>
+                                    <tr><th>Grupo Sanguineo:</th><td> {{ persona.sangreTipo }}</td></tr>
+                                    <tr><th>Idioma Materno:</th><td>{{ persona.idiomaMaterno }}</td></tr>
+                                </tbody>
+                            </table> 
+                            <br>
+                            <br>
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="{{path('persona_main_edit')}}" method="post">
+                                <input type="hidden" name="id" value="{{persona.id}}">
+                                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-edit"></i> Editar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+{% endblock %}

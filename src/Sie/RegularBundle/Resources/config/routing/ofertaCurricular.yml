@@ -1,0 +1,73 @@
+oc_areas:
+    path:     /{op}
+    defaults: { _controller: SieRegularBundle:OfertaCurricular:index, op:search }
+
+oc_areas_new:
+    path:     /new/
+    defaults: { _controller: "SieRegularBundle:OfertaCurricular:new" }
+    methods:  POST
+
+oc_areas_create:
+    path:     /create/
+    defaults: { _controller: "SieRegularBundle:OfertaCurricular:create" }
+    methods:  POST
+
+oc_listargrados:
+    path:     /listargrados/{nivel}
+    defaults: { _controller: "SieRegularBundle:OfertaCurricular:listargrados" }
+    options:
+         expose: true
+
+oc_areas_cargar_niveles:
+    path:     /cargarNiveles/{idInstitucion}/{gestion}/{turno}/
+    defaults: { _controller: "SieRegularBundle:OfertaCurricular:cargarNiveles"}
+    options:
+         expose: true
+
+oc_areas_cargar_grados:
+    path:     /cargarGrados/{idInstitucion}/{gestion}/{turno}/{nivel}/
+    defaults: { _controller: "SieRegularBundle:OfertaCurricular:cargarGrados"}
+    options:
+         expose: true
+
+oc_areas_cargar_paralelos:
+    path:     /cargarParalelos/{idInstitucion}/{gestion}/{turno}/{nivel}/{grado}/
+    defaults: { _controller: "SieRegularBundle:OfertaCurricular:cargarParalelos"}
+    options:
+         expose: true
+
+oc_areas_listar_areas_curso:
+    path:     /lista_areas_curso_a/
+    defaults: { _controller: "SieRegularBundle:OfertaCurricular:lista_areas_curso" }
+    options:
+         expose: true
+
+oc_areas_listar_areas_nivel:
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    defaults: { _controller: "SieRegularBundle:OfertaCurricular:lista_areas_nivel" }
+    options:
+         expose: true
+
+oc_areas_listar_areas_curso_adicionar_eliminar:
+    path:     /lista_areas_curso_adicionar_eliminar/
+    defaults: { _controller: "SieRegularBundle:OfertaCurricular:lista_areas_curso_adicionar_eliminar" }
+    options:
+         expose: true
+
+oc_areas_asignar_maestro_area:
+    path:     /asignar_maestro_area/{idCursoOferta}/{idMaestro}
+    defaults: { _controller: "SieRegularBundle:OfertaCurricular:asignar_maestro" }
+    options:
+         expose: true
+
+oc_areas_delete:
+    path:     /delete/{idCursoOferta}
+    defaults: { _controller: "SieRegularBundle:OfertaCurricular:delete" }
+    options:
+         expose: true
+
+oc_build_file:
+    path:     /sie/build/
+    defaults: { _controller: SieRegularBundle:OfertaCurricular:build }
+    options:
+         expose: true          

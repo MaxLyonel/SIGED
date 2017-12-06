@@ -1,0 +1,13 @@
+rue_download_certificado:
+    path:    /certificados/{certificado}
+    defaults: { _controller: "SieRueBundle:Download:certificados" }
+    
+rue_download_lista_certificado:
+    path:    /lista/{certificado}
+    defaults: { _controller: "SieRueBundle:Download:lista" }
+
+rue_download_lista_certificado_xls:
+    path:    /listaxls/{certificado}
+    defaults: { _controller: "SieRueBundle:Download:listaxls" }
+
+    

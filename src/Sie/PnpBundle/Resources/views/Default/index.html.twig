@@ -1,0 +1,1064 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1 class="glyphicon glyphicon-open"> SUBIR ARCHIVOS RUP-4</h1>
+                <ol class="breadcrumb">
+                    <li>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div style="width: 100%;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger alert-dismissible" role="alert" id="result" style="display: none;">
+                    <strong>¡Advertencia!</strong> <input type="text" id="errorxls" class="form-control input-sm" readonly='true'>
+                </div>
+            </div>
+        </div>
+          {% for flashMessage in app.session.flashbag.get('success') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet portlet-blue">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>Subir Archivo RUP-4</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="pinformation" class="panel-collapse collapse in">
+                        <div class="portlet-body" align="center">
+                            <span class="btn btn-white btn-file">
+                            Seleccione un archivo PNP-Rup 4 para consolidar información :<input name="xlf" id="xlf" type="file">
+                            </span>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        
+        
+        {#<div class="row">
+            <div class="col-xs-12">            
+                <div class="alert alert-danger alert-dismissible" role="alert" id="result">
+                    <strong>¡Aviso!</strong> La subida de archivos Rup-4 estara detenido por motivos de mantenimiento de la base de datos del SIGED, hasta el dia martes 12 de julio.
+                </div>
+            </div>
+        </div>#}
+        
+    </div>
+    
+    <pre id="out" style="display: none;">
+    </pre>
+    {{form_start(form, { 'method': 'POST',  'id': 'formxls' } )}}    
+    {#{{ form_start(form, {'method': 'POST',  'id': 'formxls' }) }}#}
+        
+    <div class="modal modal-flex fade" id="ModalUser" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">INFORMACIÓN DEL ARCHIVO PNP - RUP 4 A CONSOLIDAR.</h4>             
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            {{ form_row(form.typexls, { 'id': 'typexls' }) }}
+                        </div>
+                        <div class="col-xs-6">
+                             <B> Parte y Bloque </B> <input type="text" id="labelxlstype" class="form-control input-sm" readonly='true'>
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-xs-12">
+                            {{ form_row(form.facilitador, { 'id': 'facilitador' }) }}
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-xs-12">
+                            {{ form_row(form.facilitadorci, { 'id': 'facilitadorci' }) }}
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-xs-6">
+                            {{ form_row(form.gestion, { 'id': 'gestion' }) }}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ form_row(form.gestionfin, { 'id': 'gestionfin' }) }}                                    
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-xs-6">
+                            {{ form_row(form.mes, { 'id': 'mes' }) }}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ form_row(form.mesfin, { 'id': 'mesfin' }) }}
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-xs-6">
+                            {{ form_row(form.dia, { 'id': 'dia' }) }}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ form_row(form.diafin, { 'id': 'diafin' }) }}
+                        </div> 
+                    </div>
+                    <div class="row"> 
+                        <div class="col-xs-6">
+                            <B> Departamento :</B> <input type="text" id="departamentolabel" class="form-control input-sm" readonly='true'>
+                        </div>
+                        <div class="col-xs-6">
+                            {{ form_row(form.provincia, { 'id': 'provincia' }) }}
+                        </div> 
+                    </div>
+                    <div class="row"> 
+                        <div class="col-xs-6">
+                            {{ form_row(form.municipio, { 'id': 'municipio' }) }}
+                        </div>
+                        <div class="col-xs-6">
+                            {{ form_row(form.localidad, { 'id': 'localidad' }) }}
+                        </div> 
+                    </div>
+                    <div class="row">                  
+                        <div class="col-xs-6" style="visibility: hidden;">
+                            {{ form_row(form.xls, { 'id': 'xls' }) }}
+                        </div>
+                        <div class="col-xs-6" style="visibility: hidden;">
+                            {{ form_row(form.departamento, { 'id': 'departamento' }) }}
+                        </div>
+                    </div>                        
+                    <div class="row">
+                        <div class="col-xs-12">
+                            {{ form_row(form.save, { 'id': 'save' }) }}
+                            {{ form_end(form) }} 
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-pie">
+                    
+                </div>                    
+            </div>                
+        </div>
+    </div>
+    
+    <p>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    var X = XLSX;
+    var wtf_mode = false;
+    
+    var xlstype = '';
+    var facilitador = '';
+    var gestion = '';
+    var mes = '';
+    var dia = '';
+    var gestionfin = '';
+    var mesfin = '';
+    var diafin = '';
+    var labelxlstype = '';    
+    var departamento = '';
+    var provincia = '';
+    var municipio = '';
+    var localidad = '';
+    
+    function fixdata(data) {
+            var o = "", l = 0, w = 10240;
+            for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint8Array(data.slice(l*w,l*w+w)));
+            o+=String.fromCharCode.apply(null, new Uint8Array(data.slice(l*w)));
+            return o;
+    }
+
+    function ab2str(data) {
+            var o = "", l = 0, w = 10240;
+            for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint16Array(data.slice(l*w,l*w+w)));
+            o+=String.fromCharCode.apply(null, new Uint16Array(data.slice(l*w)));
+            return o;
+    }
+
+    function s2ab(s) {
+            var b = new ArrayBuffer(s.length*2), v = new Uint16Array(b);
+            for (var i=0; i != s.length; ++i) v[i] = s.charCodeAt(i);
+            return [v, b];
+    }
+
+    function xw_noxfer(data, cb) {
+            var worker = new Worker(XW.noxfer);
+            worker.onmessage = function(e) {
+                    switch(e.data.t) {
+                            case 'ready': break;
+                            case 'e': console.error(e.data.d); break;
+                            case XW.msg: cb(JSON.parse(e.data.d)); break;
+                    }
+            };
+            var arr = rABS ? data : btoa(fixdata(data));
+            worker.postMessage({d:arr,b:rABS});
+    }
+
+    function xw_xfer(data, cb) {
+            var worker = new Worker(rABS ? XW.rABS : XW.norABS);
+            worker.onmessage = function(e) {
+                    switch(e.data.t) {
+                            case 'ready': break;
+                            case 'e': console.error(e.data.d); break;
+                            default: xx=ab2str(e.data).replace(/\n/g,"\\n").replace(/\r/g,"\\r"); console.log("done"); cb(JSON.parse(xx)); break;
+                    }
+            };
+            if(rABS) {
+                    var val = s2ab(data);
+                    worker.postMessage(val[1], [val[1]]);
+            } else {
+                    worker.postMessage(data, [data]);
+            }
+    }
+
+    function xw(data, cb) {
+            transferable = document.getElementsByName("xferable")[0].checked;
+            if(transferable) xw_xfer(data, cb);
+            else xw_noxfer(data, cb);
+    }
+
+    function get_radio_value( radioName ) {
+            var radios = document.getElementsByName( radioName );
+            for( var i = 0; i < radios.length; i++ ) {
+                    if( radios[i].checked || radios.length === 1 ) {
+                            return radios[i].value;
+                    }
+            }
+    }
+
+    function to_formulae(workbook) {
+            var result = [];
+            workbook.SheetNames.forEach(function(sheetName) {
+                    var formulae = X.utils.get_formulae(workbook.Sheets[sheetName]);
+                    if(formulae.length > 0){
+                            result.push("SHEET: " + sheetName);
+                            result.push("");
+                            result.push(formulae.join("\n"));
+                    }
+            });
+            return result.join("\n");
+    }
+
+    function process_wb(wb) {            
+            var output = "";
+            output = to_formulae(wb);
+            
+{#            if(out.innerText === undefined){#}
+                //out.textContent = trasform(output);
+                //$("#sie_pnp_xls_form_xls").val(output);                
+                $("#typexls").val(identificarxls(output));
+                $("#labelxlstype").val(labelxlstype);
+                if (validarfacilitador(output)){
+                    if (validarfechainicio(output)){
+                        if (validarfechafin(output)){
+                            if (validardepartamento(output)){
+                                $("#errorxls").val('');
+                                $('#result').hide();
+                                $("#xls").val(trasform(output));
+                                $("#facilitador").val(facilitador);
+                                $("#gestion").val('20'+gestion);
+                                $("#mes").val(mes);
+                                $("#dia").val(dia);                            
+                                $("#gestionfin").val('20'+gestionfin);
+                                $("#mesfin").val(mesfin);
+                                $("#diafin").val(diafin);
+                                $("#departamentolabel").val(departamento);
+                                $("#departamento").val(departamentoid(departamento));
+                                $("#provincia").val(provincia);
+                                $("#municipio").val(municipio);
+                                $("#localidad").val(localidad);
+                                $('#save').prop('disabled', false);
+                                $('#ModalUser').modal('show');
+                            }
+                            else{
+                                $("#errorxls").val('ERROR EN EL DATO DEL DEPARTAMENTO');
+                                $('#result').show();
+                                $('#save').prop('disabled', true);
+                            }
+                        }
+                        else{
+                            $("#errorxls").val('ERROR EN LA FECHA DE FIN. COMPRUEBE QUE LA FECHA TENGA EL FORMATO :dia/mes/año (Ej. 25/12/2015) o que sea menor que 2016');
+                            $('#result').show();
+                            $('#save').prop('disabled', true);
+                        }
+                    }
+                    else{
+                        $("#errorxls").val('ERROR EN LA FECHA DE INICIO. COMPRUEBE QUE LA FECHA TENGA EL FORMATO :dia/mes/año (Ej. 25/12/2015) o que sea menor que 2016');
+                        $('#result').show();
+                        $('#save').prop('disabled', true);
+                    } 
+                }
+                else{
+                    $("#errorxls").val('ERROR EN EL CAMPO FACILITADOR, COMPRUEBE QUE ESTE DATO ESTE PRESENTE');
+                    $('#result').show();
+                    $('#save').prop('disabled', true);
+                }
+{#            }
+            else{
+                out.innerText = output;
+            }
+            if(typeof console !== 'undefined'){
+                console.log("output", new Date());
+            }#}
+    }
+    
+    function departamentoid(depto){
+        
+        if (depto.substr(0, 2) == 'CH'){
+            return '2';
+        }       
+        if (depto.substr(0, 2) == 'LA'){
+            return '3';
+        }
+        if (depto.substr(0, 2) == 'CO'){
+            return '4';
+        }
+        if (depto.substr(0, 2) == 'OR'){
+            return '5';
+        }
+        if (depto.substr(0, 2) == 'PO'){
+            return '6';
+        }
+        if (depto.substr(0, 2) == 'TA'){
+            return '7';
+        }
+        if (depto.substr(0, 2) == 'SA'){
+            return '8';
+        }
+        if (depto.substr(0, 2) == 'BE'){
+            return '9';
+        }
+        if (depto.substr(0, 2) == 'PA'){
+            return '10';
+        }
+    }
+
+    function deptovaltext(depto){
+        val = false;
+        
+        if (depto.substr(0, 2) == 'CH'){
+            val = true;
+        }       
+        if (depto.substr(0, 2) == 'LA'){
+            val = true;
+        }
+        if (depto.substr(0, 2) == 'CO'){
+            val = true;
+        }
+        if (depto.substr(0, 2) == 'OR'){
+            val = true;
+        }
+        if (depto.substr(0, 2) == 'PO'){
+            val = true;
+        }
+        if (depto.substr(0, 2) == 'TA'){
+            val = true;
+        }
+        if (depto.substr(0, 2) == 'SA'){
+            val = true;
+        }
+        if (depto.substr(0, 2) == 'BE'){
+            val = true;
+        }
+        if (depto.substr(0, 2) == 'PA'){
+            val = true;
+        }
+        
+        return val;
+    }
+
+    var xlf = document.getElementById('xlf');
+    function handleFile(e) {
+            //$("#sie_pnp_xls_form_xls").val('');
+            //alert('d');
+            rABS = false;
+            var files = e.target.files;
+            var f = files[0];
+                {
+                    var reader = new FileReader();
+                    var name = f.name;                    
+                    
+                    reader.onload = function(e) {
+                        if(typeof console !== 'undefined'){                             
+                            console.log("onload", new Date());
+                            var data = e.target.result;
+                            var wb;
+                            var arr = fixdata(data);                            
+                            wb = X.read(btoa(arr), {type: 'base64'});
+                            
+                            if (wb === '0'){                                
+                                $("#errorxls").val('¡NO SE PUEDE LEER EL ARCHIVO! INTENTE EDITARLO CON EXCEL.');
+                                $('#result').show();
+                                $('#save').prop('disabled', true);                                
+                            }
+                            else{                                
+                                process_wb(wb);
+                            }
+                        };
+                    };                    
+                    reader.readAsArrayBuffer(f);                                        
+                }   
+    }
+    if(xlf.addEventListener)
+        xlf.addEventListener('change', handleFile, false);
+
+    function trasform(form){
+        form = form.replace(/(\r\n|\n|\r)/gm,"$%$");
+        return form;
+    }
+
+    function xlsSend(){        
+        var formData = $('#formxls').serialize();
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_pnp_xls_form'),
+            data: formData,
+            beforeSend: function () {
+                $("#result").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#result").empty();
+                $("#result").append(data);
+            },
+            error: function(data){
+                $("#result").empty();
+                $("#result").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+    }
+    function validardepartamento(xlsform){
+        if (xlstype == 'B1_P1'){            
+            var n = xlsform.indexOf("C9='");
+            if (n != -1){
+                var res = xlsform.substr(n+4, 50);
+                res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                var n = res.indexOf("$%$"); 
+                var res = res.substr(0, n);
+                if (deptovaltext(res)){
+                    departamento = res;
+                }
+                else{
+                    return false;
+                }                
+                
+                var n = xlsform.indexOf("C11='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    provincia = res;
+                }
+                else{
+                    provincia = '';
+                }
+                
+                var n = xlsform.indexOf("C13='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    municipio = res;
+                }
+                else{
+                    municipio = '';
+                }
+                
+                var n = xlsform.indexOf("C15='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    localidad = res;
+                }
+                else{
+                    localidad = '';
+                }
+                
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        
+        if (xlstype == 'B1_P2'){            
+            var n = xlsform.indexOf("C9='");
+            if (n != -1){
+                var res = xlsform.substr(n+4, 50);
+                res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                var n = res.indexOf("$%$"); 
+                var res = res.substr(0, n);
+                if (deptovaltext(res)){
+                    departamento = res;
+                }
+                else{
+                    return false;
+                }
+                
+                var n = xlsform.indexOf("C11='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    provincia = res;
+                }
+                else{
+                    provincia = '';
+                }
+                
+                var n = xlsform.indexOf("C13='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    municipio = res;
+                }
+                else{
+                    municipio = '';
+                }
+                
+                var n = xlsform.indexOf("C15='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    localidad = res;
+                }
+                else{
+                    localidad = '';
+                }
+                
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        
+        if (xlstype == 'B2_P1'){            
+            var n = xlsform.indexOf("C8='");
+            if (n != -1){
+                var res = xlsform.substr(n+4, 50);
+                res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                var n = res.indexOf("$%$"); 
+                var res = res.substr(0, n);
+                if (deptovaltext(res)){
+                    departamento = res;
+                }
+                else{
+                    return false;
+                }
+                
+                var n = xlsform.indexOf("C10='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    provincia = res;
+                }
+                else{
+                    provincia = '';
+                }
+                
+                var n = xlsform.indexOf("C12='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    municipio = res;
+                }
+                else{
+                    municipio = '';
+                }
+                
+                var n = xlsform.indexOf("C14='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    localidad = res;
+                }
+                else{
+                    localidad = '';
+                }                
+                
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        
+        if (xlstype == 'B2_P2'){            
+            var n = xlsform.indexOf("C9='");
+            if (n != -1){
+                var res = xlsform.substr(n+4, 50);
+                res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                var n = res.indexOf("$%$"); 
+                var res = res.substr(0, n);
+                if (deptovaltext(res)){
+                    departamento = res;
+                }
+                else{
+                    return false;
+                }
+                
+                var n = xlsform.indexOf("C11='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    provincia = res;
+                }
+                else{
+                    provincia = '';
+                }
+                
+                var n = xlsform.indexOf("C13='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    municipio = res;
+                }
+                else{
+                    municipio = '';
+                }
+                
+                var n = xlsform.indexOf("C15='");
+                if (n != -1){
+                    var res = xlsform.substr(n+5, 50);
+                    res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                    var n = res.indexOf("$%$"); 
+                    var res = res.substr(0, n);
+                    localidad = res;
+                }
+                else{
+                    localidad = '';
+                }
+                
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+    }
+    
+    function validarfacilitador(xlsform){        
+        if (xlstype == 'B1_P1'){            
+            var n = xlsform.indexOf("H9='");
+            if (n != -1){
+                var res = xlsform.substr(n+4, 50);
+                res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                var n = res.indexOf("$%$"); 
+                var res = res.substr(0, n);
+                facilitador = res;
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        
+        if (xlstype == 'B1_P2'){            
+            var n = xlsform.indexOf("J9='");
+            if (n != -1){
+                var res = xlsform.substr(n+4, 50);
+                res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                var n = res.indexOf("$%$"); 
+                var res = res.substr(0, n);
+                facilitador = res;
+                return true;
+            }
+            else{
+                return false;
+            }
+        } 
+        
+        if (xlstype == 'B2_P1'){            
+            var n = xlsform.indexOf("J8='");
+            if (n != -1){
+                var res = xlsform.substr(n+4, 50);
+                res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                var n = res.indexOf("$%$"); 
+                var res = res.substr(0, n);
+                facilitador = res;
+                return true;
+            }
+            else{
+                return false;
+            }
+        } 
+        
+        if (xlstype == 'B2_P2'){            
+            var n = xlsform.indexOf("G9='");
+            if (n != -1){
+                var res = xlsform.substr(n+4, 50);
+                res = res.replace(/(\r\n|\n|\r)/gm,"$%$");
+                var n = res.indexOf("$%$"); 
+                var res = res.substr(0, n);
+                facilitador = res;
+                return true;
+            }
+            else{
+                return false;
+            }
+        } 
+    }
+    
+    function validarfechainicio(xlsform){   
+        var intRegex = /^\d+$/;
+        if (xlstype == 'B1_P1'){            
+            var n = xlsform.indexOf("H11='");
+            if (n != -1){
+                var res = xlsform.substr(n+5, 10);
+                res=res.replace(/-/g,"/");
+                var result=res.split('/');
+                gestion = (result[2]);
+                letra_final=gestion.charAt(3);
+                if (isNaN(letra_final))
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(0, 2))) {
+                        gestion = result[2].substr(0, 2); 
+                        mes = result[0];
+                        dia = result[1];
+                    
+                    }
+                    else{
+                       return false;
+                    }
+                else
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(2, 4))) {
+                        gestion = result[2].substr(2, 4);
+                        alert("aqui");
+                        mes = result[0];
+                        dia = result[1];
+                        
+                    }
+                    else{
+                        return false;
+                    }
+            }else{
+                return false;
+            }
+        }
+        
+        if (xlstype == 'B1_P2'){            
+            var n = xlsform.indexOf("J11='");
+            if (n != -1){
+                var res = xlsform.substr(n+5, 10);
+                res=res.replace(/-/g,"/");
+                var result=res.split('/');
+                gestion = (result[2]);
+                letra_final=gestion.charAt(3);
+                if (isNaN(letra_final))
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(0, 2))) {
+                        gestion = result[2].substr(0, 2);
+                        mes = result[0];
+                        dia = result[1];
+                    }
+                    else{
+                       return false;
+                    }
+                else
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(2, 4))) {
+                        gestion = result[2].substr(2, 4);
+                        mes = result[0];
+                        dia = result[1];
+                    }
+                    else{
+                        return false;
+                    }
+            }else{
+                return false;
+            }
+        }
+        
+        if (xlstype == 'B2_P1'){            
+            var n = xlsform.indexOf("J10='");
+            if (n != -1){
+                var res = xlsform.substr(n+5, 10);
+                res=res.replace(/-/g,"/");
+                var result=res.split('/');
+                gestion = (result[2]);
+                letra_final=gestion.charAt(3);
+                if (isNaN(letra_final))
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(0, 2))) {
+                        gestion = result[2].substr(0, 2);
+                        mes = result[0];
+                        dia = result[1];
+                    }
+                    else{
+                       return false;
+                    }
+                else
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(2, 4))) {
+                        gestion = result[2].substr(2, 4);
+                        mes = result[0];
+                        dia = result[1];
+                    }
+                    else{
+                        return false;
+                    }
+            }else{
+                return false;
+            }
+        }
+        
+        if (xlstype == 'B2_P2'){            
+            var n = xlsform.indexOf("G11='");
+         if (n != -1){
+                var res = xlsform.substr(n+5, 10);
+                res=res.replace(/-/g,"/");
+                var result=res.split('/');
+                gestion = (result[2]);
+                letra_final=gestion.charAt(3);
+                if (isNaN(letra_final))
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(0, 2))) {
+                        gestion = result[2].substr(0, 2);
+                        mes = result[0];
+                        dia = result[1];
+                    }
+                    else{
+                       return false;
+                    }
+                else
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(2, 4))) {
+                        gestion = result[2].substr(2, 4);
+                        mes = result[0];
+                        dia = result[1];
+                    }
+                    else{
+                        return false;
+                    }
+            }else{
+                return false;
+            }
+        }    
+        if (gestion>=16) {
+            return false;
+        }
+        else
+            return true;
+                       
+    }
+    
+    function validarfechafin(xlsform){   
+        var intRegex = /^\d+$/;
+        if (xlstype == 'B1_P1'){            
+            var n = xlsform.indexOf("H13='");
+            if (n != -1){
+                var res = xlsform.substr(n+5, 10);
+                res=res.replace(/-/g,"/");
+                var result=res.split('/');
+                gestionfin = (result[2]);
+                letra_final2=gestionfin.charAt(3);
+                if (isNaN(letra_final2))
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(0, 2))) {
+                        gestionfin = result[2].substr(0, 2);
+                        mesfin = result[0];
+                        diafin = result[1];
+                        return true;
+                    }
+                    else{
+                       return false;
+                    }
+                else
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(2, 4))) {
+                        gestionfin = result[2].substr(2, 4);
+                        mesfin = result[0];
+                        diafin = result[1];
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }  
+            }else{
+                return false;
+            }
+        }
+        
+        
+        if (xlstype == 'B1_P2'){            
+            var n = xlsform.indexOf("J13='");
+            if (n != -1){
+                var res = xlsform.substr(n+5, 10);
+                res=res.replace(/-/g,"/");
+                var result=res.split('/');
+                gestionfin = (result[2]);
+                letra_final2=gestionfin.charAt(3);
+                if (isNaN(letra_final2))
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(0, 2))) {
+                        gestionfin = result[2].substr(0, 2);
+                        mesfin = result[0];
+                        diafin = result[1];
+                        return true;
+                    }
+                    else{
+                       return false;
+                    }
+                else
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(2, 4))) {
+                        gestionfin = result[2].substr(2, 4);
+                        mesfin = result[0];
+                        diafin = result[1];
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+            }else{
+                return false;
+            }
+        }
+        
+        if (xlstype == 'B2_P1'){            
+            var n = xlsform.indexOf("J12='");
+            if (n != -1){
+                var res = xlsform.substr(n+5, 10);
+                res=res.replace(/-/g,"/");
+                var result=res.split('/');
+                gestionfin = (result[2]);
+                letra_final2=gestionfin.charAt(3);
+                if (isNaN(letra_final2))
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(0, 2))) {
+                        gestionfin = result[2].substr(0, 2);
+                        mesfin = result[0];
+                        diafin = result[1];
+                        return true;
+                    }
+                    else{
+                       return false;
+                    }
+                else
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(2, 4))) {
+                        gestionfin = result[2].substr(2, 4);
+                        mesfin = result[0];
+                        diafin = result[1];
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+            }else{
+                return false;
+            }
+        }
+        
+        if (xlstype == 'B2_P2'){            
+            var n = xlsform.indexOf("G13='");
+            if (n != -1){
+                var res = xlsform.substr(n+5, 10);
+                res=res.replace(/-/g,"/");
+                var result=res.split('/');
+                gestionfin = (result[2]);
+                letra_final2=gestionfin.charAt(3);
+                if (isNaN(letra_final2))
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(0, 2))) {
+                        gestionfin = result[2].substr(0, 2);
+                        mesfin = result[0];
+                        diafin = result[1];
+                        return true;
+                    }
+                    else{
+                       return false;
+                    }
+                else
+                    if (intRegex.test(result[0]) && intRegex.test(result[1]) && intRegex.test(result[2].substr(2, 4))) {
+                        gestionfin = result[2].substr(2, 4);
+                        mesfin = result[0];
+                        diafin = result[1];
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+            }else{
+                return false;
+            }
+        } 
+    }
+    
+    function identificarxls(xlsform){
+        var n = xlsform.indexOf("AC9='");
+        var res = xlsform.substr(n, 10);
+        if (/Punto/i.test(res))
+            {
+            xlstype = 'B1_P1';
+            labelxlstype = 'Bloque 1 - Parte 1';
+            return 'B1_P1';
+            }
+        else{
+            var n = xlsform.indexOf("AM9='");
+            var res = xlsform.substr(n, 10);
+            if (/Punto/i.test(res))
+                {
+                xlstype = 'B1_P2';
+                labelxlstype = 'Bloque 1 - Parte 2';
+                return 'B1_P2';
+                }
+            else{
+                var n = xlsform.indexOf("AF2='");
+                var res = xlsform.substr(n, 10);
+                if (/Punto/i.test(res))
+                    {
+                    xlstype = 'B2_P1';
+                    labelxlstype = 'Bloque 2 - Parte 1';
+                    return 'B2_P1';
+                    }
+                else{
+                    var n = xlsform.indexOf("W3='");
+                    var res = xlsform.substr(n, 10);
+                    if (/Punto/i.test(res))
+                        {
+                        xlstype = 'B2_P2';
+                        labelxlstype = 'Bloque 2 - Parte 2';
+                        return 'B2_P2';
+                        }
+                    else{
+                        xlstype = 'false';
+                        labelxlstype = '!! Error Archivo no Identificado ¡¡';
+                        return 'false';
+                    }
+                }
+            }
+        }        
+    }
+</script>
+{% endblock %}

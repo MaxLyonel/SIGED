@@ -1,0 +1,30 @@
+Sie\AppWebBundle\Entity\OrgcurricularTipo:
+    type: entity
+    table: orgcurricular_tipo
+    uniqueConstraints:
+        orgcurricular_tipo_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        orgcurricula:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 105
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

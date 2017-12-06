@@ -1,0 +1,65 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaEspecialidadTecnicoHumanistico:
+    type: entity
+    table: institucioneducativa_especialidad_tecnico_humanistico
+    repositoryClass: Sie\AppWebBundle\Entity\InstitucioneducativaEspecialidadTecnicoHumanisticoRepository
+    indexes:
+        IDX_ED26391CD72DBC59:
+            columns:
+                - especialidad_tecnico_humanistico_tipo_id
+        IDX_ED26391C179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_ED26391C3AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        especialidadTecnicoHumanisticoTipo:
+            targetEntity: EspecialidadTecnicoHumanisticoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                especialidad_tecnico_humanistico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

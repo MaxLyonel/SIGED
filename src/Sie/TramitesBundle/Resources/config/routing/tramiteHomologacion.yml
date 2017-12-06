@@ -1,0 +1,28 @@
+sie_tramite_certificacion_homologacion:
+    path:     /index
+    defaults: { _controller: SieTramitesBundle:Homologacion:certTecIndex }
+
+sie_tramite_certificacion_homologacion_guarda:
+    path:     /guarda
+    defaults: { _controller: SieTramitesBundle:Homologacion:certTecGuarda }
+
+sie_tramite_certificacion_homologacion_detalle:
+    path:     /detalle
+    defaults: { _controller: SieTramitesBundle:Homologacion:certTecDetalle }
+    
+sie_tramite_certificacion_homologacion_lista_especialidad:
+    path:     /lista/especialidad
+    defaults: { _controller: SieTramitesBundle:Homologacion:certTecListaEspecialidad}
+    methods:  [POST]   
+    
+sie_tramite_certificacion_homologacion_lista_cea:
+    path:     /lista/cea
+    defaults: { _controller: SieTramitesBundle:Homologacion:certTecListaCea}
+    methods:  [POST]   
+    
+sie_tramite_certificacion_homologacion_verifica_estudiante:
+    path:     /verifica/estudiante
+    defaults: { _controller: SieTramitesBundle:Homologacion:certTecListaVerificarParticipante}
+    methods:  [POST]   
+
+    

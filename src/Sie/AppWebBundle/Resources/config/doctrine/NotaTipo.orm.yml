@@ -1,0 +1,64 @@
+Sie\AppWebBundle\Entity\NotaTipo:
+    type: entity
+    table: nota_tipo
+    indexes:
+        IDX_4BC64E094080FEFA:
+            columns:
+                - institucioneducativa_tipo_id
+        IDX_4BC64E09E653442:
+            columns:
+                - orgcurricular_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        notaTipo:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: nota_tipo
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        abrev:
+            type: string
+            nullable: false
+            length: 15
+            fixed: false
+            comment: ''
+        orden:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+    manyToOne:
+        institucioneducativaTipo:
+            targetEntity: InstitucioneducativaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        orgcurricularTipo:
+            targetEntity: OrgcurricularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                orgcurricular_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

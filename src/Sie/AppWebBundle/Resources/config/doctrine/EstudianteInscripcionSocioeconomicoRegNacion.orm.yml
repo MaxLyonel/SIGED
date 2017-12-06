@@ -1,0 +1,57 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegNacion:
+    type: entity
+    table: estudiante_inscripcion_socioeconomico_reg_nacion
+    indexes:
+        IDX_D23CA96B8AF589F2:
+            columns:
+                - estudiante_inscripcion_socioeconomico_regular_id
+        IDX_D23CA96BE4EFFB48:
+            columns:
+                - nacion_originaria_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            default: now()
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estudianteInscripcionSocioeconomicoRegular:
+            targetEntity: EstudianteInscripcionSocioeconomicoRegular
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_socioeconomico_regular_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        nacionOriginariaTipo:
+            targetEntity: NacionOriginariaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nacion_originaria_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

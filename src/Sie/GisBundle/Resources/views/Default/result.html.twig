@@ -1,0 +1,341 @@
+{% if jurisdiccion is not null %}
+	<div class="col-md-12">
+	    <div class="panel panel-default rounded shadow">
+	        <div class="panel-heading">
+	            <div class="pull-left">
+	                <h3 class="panel-title">Datos del Edificio Educativo</h3>
+	            </div>
+	            <div class="pull-right">
+	                <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+	                <button class="btn btn-sm" data-action="remove" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Remove" data-original-title="" title=""><i class="fa fa-times"></i></button>
+	            </div>
+	            <div class="clearfix"></div>
+	        </div><!-- /.panel-heading -->
+	        <div class="panel-sub-heading">
+	            <div class="callout callout-info"><p><a href="http://www.dropzonejs.com/" target="_blank">DropzoneJS</a> is an open source library that provides drag'n'drop file uploads with image previews. <span class="text-danger">This is just a demo dropzone. Uploaded files are not stored.</span></p><span class="label label-info">Not available in IE9 &amp; below</span></div>
+	        </div><!-- /.panel-subheading -->
+	        <div class="panel-body">
+	        	<h4>Unidades educativas que funcionan en el edificio</h4>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>SIE</th>
+							<th>Institucion Educativa</th>
+							<th>Org. Curricular</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for ue in unidadesEducativas %}
+							<tr>
+								<td>{{ue.id}}</td>
+								<td>{{ue.institucioneducativa}}</td>
+								<td>{{ue.orgcurricularTipo.orgcurricula}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+	        </div><!-- /.panel-body -->
+	    </div><!-- /.panel -->
+	</div>
+
+	<div class="col-md-4">
+        <div class="panel panel-default rounded shadow">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Ubicaciòn Polìtica</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body">
+				
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel -->
+        <!--/ End dropzone js -->
+
+    </div>
+
+{% else %}
+
+{% endif %}
+
+
+<script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDROD2n5aHXRd8k_LaEPmgRNnLm576G-Kc&callback=initMap">
+    </script>
+    <script>
+        var peticion1;
+        function listarProvincias(idDpto) {
+            if (peticion1 && peticion1.readyState != 4) {
+                peticion1.abort();
+            }
+            peticion1 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_provincias_2012', {'departamento': idDpto}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_provincia').empty();
+                    $('#form_municipio').empty();
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion2;
+        function listarMunicipios(provincia) {
+            if (peticion2 && peticion2.readyState != 4) {
+                peticion2.abort();
+            }
+            peticion2 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_municipios_2012', {'provincia': provincia}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_municipio').empty();
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.municipio, function (i, value) {
+                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion3;
+        function listarComunidades(municipio) {
+            if (peticion3 && peticion3.readyState != 4) {
+                peticion3.abort();
+            }
+            peticion3 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_comunidades_2012', {'municipio': municipio}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_comunidad').empty();
+                    $('#form_localidad').empty();
+                    $("#form_comunidad").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.comunidad, function (i, value) {
+                        $("#form_comunidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+        var peticion4;
+        function listarLocalidades(comunidad) {
+            if (peticion4 && peticion4.readyState != 4) {
+                peticion4.abort();
+            }
+            peticion4 = $.ajax({
+                type: 'get',
+                url: Routing.generate('lugar_tipo_localidades_2012', {'comunidad': comunidad}),
+                beforeSend: function () {
+                    $('#btnBuscar').css('display','none');
+                },
+                success: function (data) {
+                    $('#form_localidad').empty();
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.localidad, function (i, value) {
+                        $("#form_localidad").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        function verificarLocalidad(){
+            if($("#form_localidad option:selected").val().trim() === ''){
+                $('#btnBuscar').css('display','none');
+            }else{
+                $('#btnBuscar').css('display','block');
+                //buscar();
+            }
+        }
+    
+        var map;
+        var myLatLng;
+        var marker;
+        var contMarker = 1;
+        var infowindow;
+        var image = "{{asset('images/marker.png')}}";
+        var contentString;
+
+        function initMap() {
+            var latitud = {{latitud}}; //parseInt($('#latitud').val());
+            var longitud = {{longitud}}; //parseInt($('#longitud').val());
+            var codigoEdificio = 123455;
+
+            myLatLng = {lat: latitud, lng: longitud};
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: myLatLng,
+                zoom: 17,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            
+            marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                title: 'Edificio Escolar',
+                icon: image,
+                draggable: true
+            });
+
+            contentString = '<h5>Código Local Educativo: '+codigoEdificio+'</h5>'+
+                            '<p>Mover a la nueva ubicación</p>'+
+                            '<!--button onclick="confirmarUbicacion()" class="btn btn-success btn-xs">Confirmar</button-->';
+
+            infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+                map.setZoom(17);
+            });
+
+            // Eventos del movimiento del marker Draggable
+            marker.addListener('dragstart', function() {
+                console.log('Empezando');
+                infowindow.close();
+            });
+            marker.addListener('drag', function() {
+                console.log('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
+                //infowindow.open(map, marker);
+                $('#latitud').val(marker.getPosition().lat());
+                $('#longitud').val(marker.getPosition().lng());
+                $('#latitudText').text(marker.getPosition().lat());
+                $('#longitudText').text(marker.getPosition().lng());
+            });
+            marker.addListener('dragend', function() {
+                console.log('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
+                //infowindow.open(map, marker);
+                $('#latitud').val(marker.getPosition().lat());
+                $('#longitud').val(marker.getPosition().lng());
+                $('#latitudText').text(marker.getPosition().lat());
+                $('#longitudText').text(marker.getPosition().lng());
+            });
+
+            $('#latitud').val(marker.getPosition().lat());
+            $('#longitud').val(marker.getPosition().lng());
+
+            $('#latitudText').text(marker.getPosition().lat());
+            $('#longitudText').text(marker.getPosition().lng());
+            /*google.maps.event.addListener(marker, 'dragend', function() 
+            {
+                alert('soltado en LAT:'+marker.getPosition().lat()+' LON:'+marker.getPosition().lng());
+            });*/
+        }
+
+        function eliminar(){
+            marker.setMap(null);
+        }
+
+        function confirmarUbicacion(){
+            alert(marker.getPosition().lat());
+            return false;
+        }
+
+        /*
+         *
+         */
+         function buscar(niv){
+            var departamento = $('#form_departamento option:selected').text().toLowerCase();
+            var provincia = $('#form_provincia option:selected').text().toLowerCase();
+            var municipio = $('#form_municipio option:selected').text().toLowerCase();
+            var comunidad = $('#form_comunidad option:selected').text().toLowerCase();
+            var localidad = $('#form_localidad option:selected').text().toLowerCase();
+            var address = '';
+            switch(niv){
+                case 2:
+                    address = 'Bolivia, departamento '+departamento;
+                    break;
+                case 3:
+                    address = 'Bolivia, departamento '+departamento+', provincia '+provincia;
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                    address = 'Bolivia, departamento '+departamento+', provincia '+provincia+', localidad '+localidad;
+                    break;
+            }
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({'address':address}, geocodeResult);
+         }
+
+         function geocodeResult(results, status){
+            if(status == 'OK'){
+                //marker.setAnimation(google.maps.Animation.BOUNCE,results[0].geometry.location);
+                //marker.animateCamera(CameraUpdateFactory.newLatLng(results[0].geometry.location));
+                map.setCenter(results[0].geometry.location);
+                map.setZoom(7);
+                marker.setPosition(results[0].geometry.location);
+
+                $('#latitud').val(marker.getPosition().lat());
+                $('#longitud').val(marker.getPosition().lng());
+
+                $('#latitudText').text(marker.getPosition().lat());
+                $('#longitudText').text(marker.getPosition().lng());
+                /*var mapOptions = {
+                    center: results[0].geometry.location,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                map = new google.maps.Map($("#map").get(0), mapOptions);
+                map.fitBounds(results[0].geometry.viewport);*/
+
+                //var markerOptions = { position: results[0].geometry.location };
+                //marker = new google.maps.Marker(markerOptions);
+                //marker.setMap(map);
+            }else{
+                console.log(status);
+            }
+         }
+        var marker1 = null;
+        var marker2 = null;
+         function predio(item){
+            var icono = '';
+            switch(item){
+                case 'cancha': icono = "{{asset('images/cancha32.png')}}";
+                                if(marker1 == null){
+                                    marker1 = new google.maps.Marker({
+                                        position: myLatLng,
+                                        map: map,
+                                        title: 'Cancha deportiva',
+                                        icon: icono,
+                                        draggable: true
+                                    });
+                                }else{
+                                    map.setCenter(marker1.getPosition().lat(),marker1.getPosition().lng());
+                                }
+                                break;
+                case 'auditorio': icono2 = "{{asset('images/edificio.png')}}";
+                                if(marker2 == null){
+                                    marker2 = new google.maps.Marker({
+                                        position: myLatLng,
+                                        map: map,
+                                        title: 'Auditorio',
+                                        icon: icono2,
+                                        draggable: true
+                                    });
+                                }else{
+                                    map.setCenter(marker2.getPosition().lat(),marker2.getPosition().lng());
+                                }
+                                break;
+                default:
+                     break;
+            }
+         }
+    </script>

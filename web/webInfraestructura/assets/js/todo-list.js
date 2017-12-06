@@ -1,0 +1,1 @@
+$(document).ready(function(){"use strict";$("#todo-list-1").todoList({title:"Todo List",items:[{title:"task 1",done:!0},{title:"task 2",done:!0},{title:"task 3",done:!0},{title:"task 4"},{title:"task 5"},{title:"task 6"}],removeLabel:"Delete?",newItemPlaceholder:"Add a new item",editItemTooltip:"Click to edit",focusOnTitle:!1})});

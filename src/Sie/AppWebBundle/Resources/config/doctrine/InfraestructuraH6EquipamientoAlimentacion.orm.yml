@@ -1,0 +1,63 @@
+Sie\AppWebBundle\Entity\InfraestructuraH6EquipamientoAlimentacion:
+    type: entity
+    table: infraestructura_h6_equipamiento_alimentacion
+    indexes:
+        IDX_76E1468A2CCBCD40:
+            columns:
+                - infraestructura_h6_equipamiento_id
+        IDX_76E1468A92FE0558:
+            columns:
+                - n3_ambientes_estadogeneral_tipo_id
+        IDX_76E1468A8789770C:
+            columns:
+                - n3_servicio_alimentacion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n3NroAmbientes:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: n3_nro_ambientes
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        infraestructuraH6Equipamiento:
+            targetEntity: InfraestructuraH6Equipamiento
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h6_equipamiento_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n3AmbientesEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_ambientes_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n3ServicioAlimentacionTipo:
+            targetEntity: InfraestructuraH6ServicioAlimentacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_servicio_alimentacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

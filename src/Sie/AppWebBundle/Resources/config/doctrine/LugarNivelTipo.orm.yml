@@ -1,0 +1,36 @@
+Sie\AppWebBundle\Entity\LugarNivelTipo:
+    type: entity
+    table: lugar_nivel_tipo
+    uniqueConstraints:
+        lugar_nivel_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nivel:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        orden:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

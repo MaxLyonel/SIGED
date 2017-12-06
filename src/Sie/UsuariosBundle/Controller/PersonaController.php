@@ -1,0 +1,345 @@
+<?php
+
+namespace Sie\UsuariosBundle\Controller;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Session\Session;
+
+use Sie\AppWebBundle\Entity\Persona;
+use Sie\AppWebBundle\Entity\PersonaHistorico;
+use Sie\UsuariosBundle\Form\PersonaType;
+use Sie\UsuariosBundle\Form\PersonaApropiacionType;
+use Sie\UsuariosBundle\Form\UploadFotoPersonaType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Sie\AppWebBundle\Form\BuscarPersonaType;
+
+class PersonaController extends Controller
+{
+    private $session;
+    /**
+     * the class constructor
+     */
+    public function __construct() {
+        $this->session = new Session();
+    }
+    
+    public function personanewAction($ci, $complemento) {        
+        $form = $this->createForm(new PersonaType(), null, array('method' => 'POST',));
+        $form->get('carnet')->setData($ci);
+        if ($complemento === '-1'){
+            $complemento = '';
+        }
+        $form->get('complemento')->setData($complemento);
+        $form->get('idpersona')->setData($ci);
+        return $this->render('SieUsuariosBundle:Persona:new.html.twig', array(           
+            'form'   => $form->createView(),
+            'accion' => 'new',
+            'ci' => $ci,
+            'complemento' => $complemento,
+        ));
+    }
+    
+    public function personainsertAction(Request $request) {
+        $form = $request->get('sie_usuarios_persona_edit');
+ 
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $response = new JsonResponse();
+        try {
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');");
+            $query->execute();
+            //dump($form );
+            //die;
+            $newpersona = new Persona();            
+            $newpersona->setPaterno(mb_strtoupper($form['paterno'], "utf-8"));
+            $newpersona->setMaterno(mb_strtoupper($form['materno'], "utf-8"));    
+            $newpersona->setNombre(mb_strtoupper($form['nombre'], "utf-8"));    
+            $newpersona->setCarnet($form['carnet']);  
+            $newpersona->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));
+            $newpersona->setCorreo(mb_strtolower($form['correo'], "utf-8"));
+            $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
+            $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
+            $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
+            $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
+            $newpersona->setRda('0');
+            $newpersona->setSegipId('11');            
+            $newpersona->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));
+            $newpersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
+            $newpersona->setCorreo(mb_strtolower($form['correo'], "utf-8"));            
+            $newpersona->setActivo('1');
+            $newpersona->setEsVigente('1');
+            $newpersona->setEsvigenteApoderado('1');
+            $newpersona->setCountEdit('1');
+            $em->persist($newpersona);
+            $em->flush();
+            
+            $newpersonahistorico = new PersonaHistorico();
+            $newpersonahistorico->setCarnet($form['carnet']); 
+            $newpersonahistorico->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));
+            $newpersonahistorico->setNombre(mb_strtoupper($form['nombre'], "utf-8"));    
+            $newpersonahistorico->setPaterno(mb_strtoupper($form['paterno'], "utf-8"));
+            $newpersonahistorico->setMaterno(mb_strtoupper($form['materno'], "utf-8"));              
+            $newpersonahistorico->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));            
+            $newpersonahistorico->setGeneroTipoId($form['generoTipo']);
+            $newpersonahistorico->setCorreo(mb_strtolower($form['correo'], "utf-8"));            
+            $newpersonahistorico->setUsuario($em->getRepository('SieAppWebBundle:usuario')->find($this->session->get('userId')));
+            $newpersonahistorico->setFechaActualizacion(new \DateTime());
+            $em->persist($newpersonahistorico);
+            $em->flush();
+            $em->getConnection()->commit();
+//            return $response->setData(array('mensaje' => 'El proceso de insercion de personas se encuentra temporalmente en mantenimiento.'));
+            return $response->setData(array('mensaje' => 'Proceso realizado exitosamente.','personaid' => $newpersona->getId()));
+            } 
+        catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!'.$ex)); 
+        }
+    }
+    
+    public function personaeditAction($personaid) {        
+        $persona = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($personaid);
+        //dump($persona);die;
+        $form = $this->createForm(new PersonaType(), null, array(        
+        'method' => 'POST',));
+        $form->get('idpersona')->setData($personaid);
+        $form->get('carnet')->setData($persona->getCarnet());
+        $form->get('paterno')->setData($persona->getPaterno());
+        $form->get('materno')->setData($persona->getMaterno());
+        $form->get('nombre')->setData($persona->getNombre());
+        $form->get('complemento')->setData($persona->getComplemento());
+        $form->get('fechaNacimiento')->setData($persona->getFechaNacimiento());
+        $form->get('generoTipo')->setData($persona->getGeneroTipo());
+        $form->get('correo')->setData($persona->getCorreo());
+                
+        return $this->render('SieUsuariosBundle:Persona:edit.html.twig', array(
+                    'form' => $form->createView(),
+                    'ci' => $persona->getCarnet(),
+                    'complemento' => $persona->getComplemento(),
+                    'count_edit' => $persona->getCountEdit(),
+                    'segipId' => $persona->getSegipId(),
+        ));        
+    }
+    
+    public function personaupdateAction(Request $request) {        
+        $form = $request->get('sie_usuarios_persona_edit');
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->find($form['idpersona']);
+        $response = new JsonResponse();
+        try {
+            if (($persona->getSegipId() > 0) || ($persona->getCountEdit() > 2)){
+                //dump($persona); die; 4537043
+                $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));                
+                $persona->setCorreo($form['correo']);                
+                $persona->setEsVigente('1');
+                $persona->setEsVigenteApoderado('1');                
+                $em->persist($persona);
+                $em->flush();
+            } else {
+                $persona->setPaterno(mb_strtoupper($form['paterno'], "utf-8"));
+                $persona->setMaterno(mb_strtoupper($form['materno'], "utf-8"));
+                $persona->setNombre(mb_strtoupper($form['nombre'], "utf-8"));
+                $persona->setCarnet($form['carnet'], "utf-8");
+                $persona->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));            
+                $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
+                $persona->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));                
+                $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));                
+                $persona->setCorreo($form['correo']);
+                //$persona->setActivo('0');
+                $persona->setEsVigente('1');
+                $persona->setEsVigenteApoderado('1');
+                if ( $persona->getCountEdit() == ''){
+                    $persona->setCountEdit(1);    
+                }else{
+                    $persona->setCountEdit($persona->getCountEdit() + 1);
+                }                
+                $em->persist($persona);
+                $em->flush();
+                
+                $newpersonahistorico = new PersonaHistorico();
+                $newpersonahistorico->setCarnet($form['carnet']); 
+                $newpersonahistorico->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));
+                $newpersonahistorico->setNombre(mb_strtoupper($form['nombre'], "utf-8"));    
+                $newpersonahistorico->setPaterno(mb_strtoupper($form['paterno'], "utf-8"));
+                $newpersonahistorico->setMaterno(mb_strtoupper($form['materno'], "utf-8"));              
+                $newpersonahistorico->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));
+                $newpersonahistorico->setGeneroTipoId($form['generoTipo']);
+                $newpersonahistorico->setCorreo(mb_strtolower($form['correo'], "utf-8"));
+                $newpersonahistorico->setUsuario($em->getRepository('SieAppWebBundle:usuario')->find($this->session->get('userId')));
+                $newpersonahistorico->setFechaActualizacion(new \DateTime());
+                $em->persist($newpersonahistorico);
+                $em->flush();
+            }
+            
+            $em->getConnection()->commit();
+
+            //return $response->setData(array('mensaje' => 'El proceso de actualización de datos personales se encuentra temporalmente en mantenimiento.'));   
+            return $response->setData(array('mensaje' => 'Proceso realizado exitosamente.'));                
+            } 
+        catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!'.$ex));                
+        }
+        
+    }
+    
+    public function personaactedicionAction($personaid) {  
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->find($personaid);
+        $response = new JsonResponse();
+        try {
+            $persona->setCountEdit('1');            
+            $em->persist($persona);
+            $em->flush();
+            $em->getConnection()->commit();
+            return $response->setData(array('mensaje' => 'Proceso realizado exitosamente.'));                
+            } 
+        catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!'.$ex));                
+        }
+    }
+    
+    public function personauploadfotoAction(Request $request) {            
+        $form = $this->createForm(new UploadFotoPersonaType());        
+        $form->handleRequest($request);
+        if ($form->isValid()) {             
+            $data = $form->getData();
+            $entity = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($data['personaid']); 
+            $file = $data['foto']; 
+            $extension = $file->guessExtension();
+                if (!$extension) {
+                    $extension = 'bin';
+                }
+            
+            $filename = md5(uniqid()) . '.' . $extension;
+            $adjuntoDir = $this->container->getParameter('kernel.root_dir') . '/../web/uploads/personasfotos';
+            $file->move($adjuntoDir, $filename);            
+            $this->session->set('userfoto',$filename);                    
+            $entity->setFoto($filename);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();            
+        }
+        $this->session->getFlashBag()->add('success', 'Proceso realizado exitosamente.');        
+        if ($this->session->get('roluser') == '9'){//UNIDAD EDUCATIVA
+            return $this->redirect($this->generateUrl('sie_usuario_persona_show',array('ie_id' => $this->session->get('ie_id'), 'ie_nombre' => $this->session->get('ie_nombre') )));
+        }
+        //NACIONAL - DEPARTAMENTO - DISTRITO 
+        if (($this->session->get('roluser') == '8') || ($this->session->get('roluser') == '7') || ($this->session->get('roluser') == '10')) {       
+            return $this->redirect($this->generateUrl('sie_usuarios_homepage'));
+        }
+    }
+
+    public function apropiacionpersonaAction() {
+
+        $formBuscarPersona = $this->createForm(new BuscarPersonaType(array('opcion'=>1)), null, array('action' => $this->generateUrl('sie_usuario_persona_buscar_carnet'), 'method' => 'POST',));
+
+        return $this->render('SieUsuariosBundle:Default:usuariocarnet.html.twig', array(           
+            'formBuscarPersona'   => $formBuscarPersona->createView(),            
+        ));
+        
+    }
+
+    public function apropiacionpersonabuscarAction($ci,$complemento,$extranjero,Request $request){
+        $em = $this->getDoctrine()->getManager();    
+        //$em = $this->getDoctrine()->getEntityManager();
+        $db = $em->getConnection();
+        $servicioPersona = $this->get('sie_app_web.persona');
+        $persona = $servicioPersona->buscarPersona($ci,$complemento,$extranjero);
+            if($persona->type_msg === "success"){   
+                $persona_id = $persona->result[0]->id;
+                $personaresult = $persona->result[0];
+                $form = $this->createForm(new PersonaApropiacionType(), null, array('method' => 'POST',));
+                $form->get('idpersona')->setData($persona->result[0]->id);
+                $form->get('carnet')->setData($ci);
+                if ($complemento === '0'){
+                $complemento = '';
+                }
+                $form->get('complemento')->setData($complemento);
+                
+                return $this->render('SieUsuariosBundle:Persona:apropiaciondecarnet.html.twig',array('persona'=>$personaresult, 'form'   => $form->createView(),));
+
+            }else{
+                echo '<div class="alert alert-danger">'.$persona->msg.'</div>';
+                die;
+            }
+    }
+
+    public function apropiacionpersonainsertarAction(Request $request) {        
+        $form = $request->get('sie_usuarios_persona_apropiacion');
+        //dump($form); die;
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $response = new JsonResponse();
+        try {
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');");
+            $query->execute();
+
+            $em = $this->getDoctrine()->getManager();
+            //$em = $this->getDoctrine()->getEntityManager();
+            $db = $em->getConnection();            
+            $query = "  select max(carnet)
+                        from persona 
+                        where char_length(carnet)>9 and substring(carnet,1,2)='90'";
+            $stmt = $db->prepare($query);
+            $params = array();
+            $stmt->execute($params);
+            $po = $stmt->fetchAll();
+            $newcarnet = (float)($po[0]['max']) + 1;
+            $newcarnetstr = strval ($newcarnet);            
+            $personaobs = $em->getRepository('SieAppWebBundle:Persona')->find($form['idpersona']);
+            $personaobs->setCarnet($newcarnetstr);
+            $em->persist($personaobs);
+            $em->flush();
+            
+            $newpersona = new Persona();            
+            $newpersona->setPaterno(mb_strtoupper($form['paterno'], "utf-8"));
+            $newpersona->setMaterno(mb_strtoupper($form['materno'], "utf-8"));    
+            $newpersona->setNombre(mb_strtoupper($form['nombre'], "utf-8"));    
+            $newpersona->setCarnet($form['carnet']);  
+            $newpersona->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));
+            $newpersona->setCorreo(mb_strtolower($form['correo'], "utf-8"));
+            $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
+            $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
+            $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
+            $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
+            $newpersona->setRda('0');
+            $newpersona->setSegipId('0');            
+            $newpersona->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));
+            $newpersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
+            $newpersona->setCorreo(mb_strtolower($form['correo'], "utf-8"));            
+            $newpersona->setActivo('1');
+            $newpersona->setEsVigente('1');
+            $newpersona->setEsvigenteApoderado('1');
+            $newpersona->setCountEdit('1');
+            $em->persist($newpersona);
+            $em->flush();
+            
+            $newpersonahistorico = new PersonaHistorico();
+            $newpersonahistorico->setCarnet($form['carnet']); 
+            $newpersonahistorico->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));
+            $newpersonahistorico->setNombre(mb_strtoupper($form['nombre'], "utf-8"));    
+            $newpersonahistorico->setPaterno(mb_strtoupper($form['paterno'], "utf-8"));
+            $newpersonahistorico->setMaterno(mb_strtoupper($form['materno'], "utf-8"));              
+            $newpersonahistorico->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));            
+            $newpersonahistorico->setGeneroTipoId($form['generoTipo']);
+            $newpersonahistorico->setCorreo(mb_strtolower($form['correo'], "utf-8"));            
+            $newpersonahistorico->setUsuario($em->getRepository('SieAppWebBundle:usuario')->find($this->session->get('userId')));
+            $newpersonahistorico->setFechaActualizacion(new \DateTime());
+            $em->persist($newpersonahistorico);
+            $em->flush();
+            $em->getConnection()->commit();
+            return $response->setData(array('mensaje' => 'Proceso realizado exitosamente.','personaid' => $newpersona->getId()));
+            } 
+        catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!'.$ex)); 
+        }
+    }
+
+
+
+}

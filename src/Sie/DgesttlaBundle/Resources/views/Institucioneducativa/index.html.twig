@@ -1,0 +1,77 @@
+{% extends 'layoutDgesttla.html.twig' %}
+
+{% block headercontent %}
+<!-- Start header content -->
+<div class="header-content">
+    <h2><i class="fa fa-file-o"></i>Formación Técnica Tecnológica <span>Administración de Carreras</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Estás aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('principal_web')}}">Inicio</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Carreras</li>
+        </ol>
+    </div>
+</div><!-- /.header-content -->
+<!--/ End header content -->
+{% endblock %}
+
+{% block bodycontent %}
+
+    {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Gestión de Carreras', 'gestion': '-','sie': institucioneducativa.id, 'ieducativa':institucioneducativa.institucioneducativa, 'opcion': 'Menú carreras'} %}
+
+    <!-- Basic Examples -->
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">SELECCIONAR PERIODO DE TRABAJO</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive mb-20">
+                        <table class="table table-border table-hover table-primary">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Área de formación</th>
+                                    <th>Carrera</th>
+                                    <th>Régimen de estudio</th>
+                                    <th>Tiempo de estudio</th>
+                                    <th>Periodo</th>
+                                    <th>Gestión</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for entity in entities %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ entity.atAreaFormacion }}</td>
+                                        <td>{{ entity.ctCarrera }}</td>
+                                        <td>{{ entity.reRegimenEstudio }}</td>
+                                        <td>{{ entity.rcTiempoEstudio }}</td>
+                                        <td>1</td>
+                                        <td>{{gestion}}</td>
+                                        <td>
+                                            <form action="{{path('dgesttla_inst_grales_carrera')}}" method="post" style="display:inline-block">
+                                                <input type="hidden" name="institucioneducativaId" value="{{institucioneducativa.id}}">
+                                                <input type="hidden" name="gestionId" value="{{gestion}}">
+                                                <input type="hidden" name="carreraId" value="{{entity.ctId}}">
+                                                <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Ingresar</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Basic Examples -->
+
+{% endblock %}

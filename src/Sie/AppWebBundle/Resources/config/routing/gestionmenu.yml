@@ -1,0 +1,15 @@
+gestionmenu:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:GestionMenu:index }
+
+gestionmenu_estado:
+    path:     /{id}/estado
+    defaults: { _controller: "SieAppWebBundle:GestionMenu:estado" }
+
+gestionmenu_list:
+    path:     /{id}/list
+    defaults: { _controller: "SieAppWebBundle:GestionMenu:list" }
+
+gestionmenu_consol:
+    path:     /consol
+    defaults: { _controller: "SieAppWebBundle:GestionMenu:consolidar" }

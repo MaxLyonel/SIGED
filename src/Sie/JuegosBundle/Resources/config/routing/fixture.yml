@@ -1,0 +1,3 @@
+sie_juegos_fixture_index:
+    path:    /index
+    defaults: { _controller: SieJuegosBundle:Fixture:index }

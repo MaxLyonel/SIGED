@@ -1,0 +1,90 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Notificación
+                    <small>Listar</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-edit"></i> Listar</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="portlet portlet-blue">
+                        <div class="portlet-heading">
+                            <div class="portlet-title">
+                                <h4><i class="fa fa-list-alt"></i> Notificaciones</h4>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped cf dataTable">
+                                    <thead class="cf">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Título</th>
+                                            <th>Mensaje</th>
+                                            <th>Adjunto</th>
+                                            <th>Creado</th>
+                                            <th>Publicado</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for key, entity in entities %}
+                                            <tr>
+                                                <td class="text-center">{{ key + 1 }}</td>
+                                                <td>{{ entity.titulo }}</td>
+                                                <td>{{ entity.mensaje|slice(0,150) }}...</td>
+                                                <td align="center">
+                                                    {% if entity.adjunto %}
+                                                        <a href="{{ asset('uploads/adjuntos/' ~ entity.adjunto) }}" target="_blank"><img src="{{asset('img/pdf.png') }}" class="img-responsive" alt="{{ entity.adjunto }}" width="20" height="20"></a>
+                                                        {% else %}
+                                                        -
+                                                    {% endif %}
+                                                </td>
+                                                <td class="text-center">{% if entity.fechaCrea %}{{ entity.fechaCrea|date('Y-m-d') }}{% endif %}</td>
+                                                <td class="text-center">{% if entity.fechaPub %}{{ entity.fechaPub|date('Y-m-d') }}{% endif %}</td>
+                                                <td class="text-center">
+                                                    {% if entity.estado == 1 %}
+                                                        <a href="{{ path('notificacion_estado', { 'id': entity.id }) }}" class="btn btn-xs btn-success">Activo</a>
+                                                    {% else %}
+                                                        <a href="{{ path('notificacion_estado', { 'id': entity.id }) }}" class="btn btn-xs btn-danger">Inactivo</a>
+                                                    {% endif %}
+                                                </td>
+                                                <td  class="text-center">
+                                                    <a href="{{ path('notificacion_show', { 'id': entity.id }) }}"><i class="fa fa-eye fa-fw"></i> Ver</a> | 
+                                                    <a href="{{ path('notificacion_edit', { 'id': entity.id }) }}"><i class="fa fa-edit fa-fw"></i> Editar</a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p>
+                                <a href="{{ path('notificacion_new') }}" class="btn btn-green">
+                                    <i class="fa fa-plus"></i> Nuevo
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

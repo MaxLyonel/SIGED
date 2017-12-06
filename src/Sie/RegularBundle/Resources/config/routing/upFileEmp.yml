@@ -1,0 +1,11 @@
+alternativa_up_file_emp_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:UpFileEmp:index }
+
+alternativa_up_file_emp_form:
+    path:    /upfileform
+    defaults: { _controller: SieRegularBundle:UpFileEmp:upfileForm }
+    
+alternativa_up_file_up_file_emp:
+    path:    /upfileemp
+    defaults: { _controller: SieRegularBundle:UpFileEmp:upfileEmp }         

@@ -1,0 +1,10 @@
+<table class="table table-striped">
+    <tr>
+        <th>Institucion</th>
+    </tr>
+    {% for pad in padres %}
+        <tr>
+            <td>{{ pad.institucioneducativa }}</td>
+        </tr>
+    {% endfor %}
+</table>

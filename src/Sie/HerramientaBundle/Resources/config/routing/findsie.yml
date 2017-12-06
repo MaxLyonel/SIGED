@@ -1,0 +1,25 @@
+herramienta_findsie_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:FindSie:index}
+
+herramienta_findsie_opensie:
+    path:     /opensie
+    defaults: { _controller: SieHerramientaBundle:FindSie:openSie}
+
+herramienta_findsie_open:
+    path:     /open
+    defaults: { _controller: SieHerramientaBundle:FindSie:open}
+
+herramienta_findsie_turnos:
+    path:     /cargarTurnos/{idInstitucion}/{gestion}/
+    defaults: { _controller: "SieHerramientaBundle:FindSie:cargarTurnos"}
+    options:
+         expose: true
+
+herramienta_findsie_openbygestion:
+    path:     /sie/open/{number}/
+    defaults: { _controller: SieHerramientaBundle:FindSie:openByGestion}
+
+herramienta_findsie_openbygestion_tramite:
+    path:     /regularizarUe/
+    defaults: { _controller: SieHerramientaBundle:FindSie:openByGestionTramite}

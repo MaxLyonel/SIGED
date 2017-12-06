@@ -1,0 +1,11 @@
+modificar_ci_localidad_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:ModCiLocalidad:index }
+
+modificar_ci_localidad_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:ModCiLocalidad:result }
+
+modificar_ci_localidad_save:
+    path: /savemod
+    defaults: { _controller: SieRegularBundle:ModCiLocalidad:save }

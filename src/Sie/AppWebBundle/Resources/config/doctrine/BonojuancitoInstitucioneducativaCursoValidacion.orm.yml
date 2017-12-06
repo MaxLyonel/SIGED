@@ -1,0 +1,76 @@
+Sie\AppWebBundle\Entity\BonojuancitoInstitucioneducativaCursoValidacion:
+    type: entity
+    table: bonojuancito_institucioneducativa_curso_validacion
+    indexes:
+        IDX_3D4FE259179FF95:
+            columns:
+                - gestion_tipo_id
+    id:
+        id:
+            type: bigint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        nivelTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nivel_tipo_id
+        nivel:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        gradoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: grado_tipo_id
+        grado:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        paralelo:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        turnoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: turno_tipo_id
+        turno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

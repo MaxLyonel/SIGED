@@ -1,0 +1,489 @@
+
+{% if exist == true %}
+  <small>
+        <div class="header-content">
+            <h4><i class="glyphicon glyphicon-list-alt"></i> {{etapaespecialidad}} <span> - {{dataUe['paralelo']}}</span></h4>
+            <div class="breadcrumb-wrapper hidden-xs">
+                <span class="label"> Turno:</span>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="">{{dataUe['turno']}}</a>
+                    </li>
+                </ol>
+            </div><!-- /.breadcrumb-wrapper -->
+        </div>
+        <BR>
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% for flashMessage in app.session.flashbag.get('errorcursoduplicado') %}
+        <div class="row">
+            <div class="col-md-12" align="center">
+                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+                    {% for flashIdcurso in app.session.flashbag.get('idcursodup') %}                    
+                        <a href="#" onclick="doCursoDuplicado('{{ infoUe }}','{{ flashIdcurso }}');">
+                            <span><i class="icon-leaf"></i>
+                                VER CURSO DUPLICADO -- {{ flashIdcurso }}
+                            </span>
+                        </a>
+                    {% endfor %}    
+                </div>                
+            </div>
+            <p>
+            <div class="col-md-12">                
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}                        
+                </div>
+            </div>                                 
+        </div>
+        {% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('seedatoscursoduplicado') %}
+        <div class="row">            
+            <div class="col-md-12">                
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}                        
+                </div>
+            </div>                                 
+        </div>
+        {% endfor %}
+        
+        <div class="row">
+        {% if (app.session.get('ie_per_estado') != '1')%}
+            <div class="col-md-3">
+                <form action="{{path('herramienta_alter_reporte_centralizadores')}}" method="post" style="">
+                    <input type="hidden" name="dat" value="{{infoUe}}">
+                    <button type="submit" class="btn btn-primary btn-stroke">
+                        <i class="fa fa-cloud-download"></i> Imprimir centralizador.
+                    </button>
+                </form>
+            </div>
+        {% endif%}
+        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') %}
+            {# if existins == false #}
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-danger btn-stroke" onclick="deletecurso('{{infoUe}}');" >
+                        <i class="fa fa-eraser"></i> Eliminar Curso
+                    </button>
+                </div>
+            {# endif #}
+            <div class="col-md-3">
+                <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptions('{{infoUe}}');" >
+                    <i class="fa fa-user"></i> Inscrip. con Rudeal
+                </button>
+            </div>
+            <!--div class="col-md-3">
+                <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{#{{infoUe}}#}');" >
+                    <i class="fa fa-user-plus"></i> Inscrip. sin Rudeal
+                </button>
+            </div-->
+        {% endif %}
+      </div>
+      <BR>
+    {#<div class="row">
+      <div class="col-md-12">
+        <div class="header-content">
+
+              <i class="fa fa-mouse-pointer"></i>
+              {{dataUe['nivel']}} <code>/</code> {{dataUe['grado']}} <code>/</code> {{dataUe['paralelo']}}
+
+        </div>
+      </div>
+    </div>#}
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded swadow panel-teal">
+                    <div class="panel-heading">
+                        <h4>Estudiantes inscritos: <span class="label label-success">{{totalInscritos}}</label></h4>
+                    </div>
+                    <div id="no-more-tables">
+                        <table class="table table-bordered table-hover cf">
+                            <tr>
+                                <td align="center" class="warning"></td>
+                                <td align="center" class="warning">Código Rudeal</td>
+                                <td align="center" class="warning">Paterno</td>
+                                <td align="center" class="warning">Materno</td>
+                                <td align="center" class="warning">Nombres</td>
+                                <td align="center" class="warning">Fecha de Nacimiento</td>
+                                <td class="warning">Opciones</td>
+                                <!--td>
+                                    <input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"   >
+                                </td-->
+                            </tr>
+                            {#init the array info student #}
+                            {% set objInfoStudent = [] %}
+                            {% for data in objStudents %}
+
+                              {% set items = {
+                                              'estadomatriculaId': data.estadomatriculaId,
+                                              'id': data.id,
+                                              'carnetIdentidad': data.carnetIdentidad,
+                                              'codigoRude': data.codigoRude,
+                                              'paterno': '',
+                                              'materno': '',
+                                              'nombre': '',
+                                              'fechaNacimiento': data.fechaNacimiento,
+                                              'eInsId': data.eInsId,
+                                              'nivelId': data.nivelId,
+                                              'cicloId': data.cicloId,
+                                              'gradoId': data.gradoId,
+                                              } %}
+
+                                {# set the array student info and convert on json string #}
+                                {# set objInfoStudent = objInfoStudent|merge(data) #}
+                                {# set jsnInfoStudent = objInfoStudent #}
+                                {% set jsnInfoStudent = items|json_encode() %}
+
+                                <tr >
+                                    <td>{{loop.index}}</td>
+                                    <td  align="">{{data.codigoRude}}</td>
+                                    <td  align="">{{data.paterno}}</td>
+                                    <td  align="">{{data.materno}}</td>
+                                    <td  align="">{{data.nombre}}</td>
+                                    <td  align="">{{data.fechaNacimiento |date('d-m-Y')}}</td>
+                                    <td  align="center">
+                                          <div class="input-group mb-8">
+                                            <div class="">
+                                                <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" type="button" aria-expanded="false">Opciones <span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
+                                                    {% if (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') %}
+                                                        <li>
+                                                          <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                            <span class="label label-primary"><i class="fa fa-list"></i> Registro de Notas</span>
+                                                          </a>
+                                                        </li>
+                                                    {% endif %}
+
+                                                    {#LIBRETAS SOLO EN MODO LECTURA Y AÑOS 2015,2016,2017#}
+                                                    {% if (app.session.get('ie_per_estado') == '0') and ((app.session.get('ie_gestion') == '2015') or (app.session.get('ie_gestion') == '2016') or (app.session.get('ie_gestion') == '2017')) %}
+                                                        <li>
+                                                          <a href="{{path('herramienta_alter_libretas', {'eInsId': data.eInsId, 'nivel': data.nivelId})}}">
+                                                              <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Libreta</span>
+                                                          </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    
+                                                    {#IMPRIMIR FORMULARIO RUDE AL SEGUN EL CASO#}
+                                                    {% if (((app.session.get('ie_gestion') == '2016') and (app.session.get('ie_per_cod') == '3')) 
+                                                            or ((app.session.get('ie_gestion') == '2017') and (app.session.get('ie_per_cod') == '2'))
+                                                            or ((app.session.get('ie_gestion') == '2017') and (app.session.get('ie_per_cod') == '3'))
+                                                            or ((app.session.get('ie_gestion') == '2018') and (app.session.get('ie_per_cod') == '2'))
+                                                            or ((app.session.get('ie_gestion') == '2018') and (app.session.get('ie_per_cod') == '3'))
+                                                            or ((app.session.get('ie_gestion') == '2019') and (app.session.get('ie_per_cod') == '2'))
+                                                            or ((app.session.get('ie_gestion') == '2019') and (app.session.get('ie_per_cod') == '3'))
+                                                            ) %}
+                                                            {% if (app.session.get('ie_per_estado') == '0') %}
+                                                                <li>
+                                                                <a href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId': data.eInsId,'rude': data.codigoRude })}}">
+                                                                    <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Formulario Rudeal</span>
+                                                                </a>
+                                                                </li>
+                                                            {% else %}
+                                                                    <li>
+                                                                        <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getRudeal('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                                            <span class="label label-success"><i class="fa fa-edit"></i> Registro de Rudeal</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a href="{{path('herramienta_alter_reporte_socioeconomico', {'inscripcionId': data.eInsId,'rude': data.codigoRude })}}">
+                                                                            <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Formulario Rudeal</span>
+                                                                        </a>
+                                                                    </li>
+                                                                {% endif %}                                                            
+                                                    {% endif %} 
+                                                    
+                                                    {#ACTIVO ELIMINACION SOLO EN INSCRIPCIONES Y REGULARIZAION#}
+                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') %}                                                        
+                                                        <li>
+                                                            <a href="#" type="link"  class="" onclick="removeInscriptionStudent('{{infoUe}}', '{{ jsnInfoStudent }}');" >
+                                                              <span class="label label-danger"><i class="fa fa-remove"></i>Eliminar Inscripción</span>
+                                                          </a>
+                                                        </li>
+                                                    {% endif %}
+
+                                                    {#ACTIVO TOMA DE AREAS SOLO EN NOTAS Y REGULARIZAION#}
+                                                    {% if (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') %}                                                          
+                                                        <li>
+                                                          <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudeent('{{infoUe}}', '{{jsnInfoStudent}}');" >
+                                                            <span class="label label-lilac"><i class="fa fa-file-text"></i> Toma de Areas/Módulo</span>
+                                                          </a>
+                                                        </li>                                                        
+                                                    {% endif %}
+                                                    <li class="divider"></li>
+                                                    {#ACTIVO DECLARACION JURADA EN LOS ULTIMOS GRADOS DE HUMANISTICA Y TECNICA#}
+                                                    {% if ( ((data.nivelId == 15) and (data.cicloId == 2) and (data.gradoId == 3)) or ((data.nivelId == 5) and (data.cicloId == 2) and (data.gradoId == 2)) )%}
+                                                        <li>
+                                                          <a href="{{path('herramienta_alter_reporte_ddjj_hum', {'rude': data.codigoRude, 'gestion':app.session.get('ie_gestion') , 'sie': app.session.get('ie_id') } )}}">
+                                                              <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ</span>
+                                                          </a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% if data.nivelId in ['18','19','20','21','22','23','24','25'] %}
+                                                        <li>
+                                                          <a href="{{path('herramienta_alter_reporte_ddjj_tec', {'insId': data.eInsId, 'rude': data.codigoRude, 'gestion':app.session.get('ie_gestion') } )}}">
+                                                              <span class="label label-warning"> <i class="fa fa-cloud-download"></i>Descargar DDJJ</span>
+                                                          </a>
+                                                        </li>
+                                                    {% endif %}
+                                                </ul>
+                                            </div>
+                                          </div>
+
+
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <!-- /.portlet -->
+                </div>
+            </div>
+        </div>
+    </small>
+    <!-- /.row -->
+{% else %}
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    $(document).ready( function(){
+        $(".tooltips").tooltip();
+    });
+
+    var getNotas = function (infoUe, infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('herramienta_alter_infoEstudianteNotas_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+
+    var getRudeal = function (infoUe, infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('socioeconomicoalt_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $("#modal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    }
+
+    var removeInscriptionStudent = function (infoUe, infoStudent) {
+
+      if(confirm('¡¡Advertencia!! Esta por eliminar una inscripción. ¿Esta seguro de continuar?')){
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('herramienta_alter_estudianterequest_removeinscription') }}",
+            beforeSend: function () {
+              $("#idstudents").empty();
+              $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+              $("#idstudents").empty();
+              $("#idstudents").append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+      }else{
+        return false;
+      }
+
+    };
+
+    var doInscriptions = function(data){
+     $.ajax({
+         type: 'post',
+         data: ({infoUe: data }),
+         url: "{{ path('alter_inscriptionstudent_index') }}",
+         beforeSend: function () {
+             $('#modal').empty();
+         },
+         success: function (data) {
+             $('#modal').empty();
+             $('#modal').append(data);
+         },
+         statusCode: {
+             500: function () {
+
+             },
+             404: function () {
+
+             }
+         }
+     });
+   };
+
+
+   var doCursoDuplicado = function (infoUe,idcursodup) {
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe, idcursodup: idcursodup}),
+                url: Routing.generate('herramientalt_ceducativa_curso_duplicado'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+   var doInscriptionsWithOutRude = function(data){
+     $.ajax({
+         type: 'post',
+         data: ({infoUe: data }),
+         url: "{{ path('alter_inscriptionstudent_without_rude_index') }}",
+         beforeSend: function () {
+             $('#modal').empty();
+         },
+         success: function (data) {
+             $('#modal').empty();
+             $('#modal').append(data);
+         },
+         statusCode: {
+             500: function () {
+
+             },
+             404: function () {
+
+             }
+         }
+     });
+   };
+
+   var addModulosToStudeent = function (infoUe, infoStudent) {
+
+    $.ajax({
+        type: 'post',
+        data: ({infoUe: infoUe, infoStudent: infoStudent}),
+        url: "{{ path('herramienta_alter_studentModule_index') }}",
+        beforeSend: function () {
+            $('#modal').empty();
+        },
+        success: function (data) {
+            $('#modal').empty();
+            $('#modal').append(data);
+        },
+        statusCode: {
+            500: function () {
+
+            },
+            404: function () {
+
+            }
+        }
+      });
+    };
+
+    var deletecurso = function(infoUe){
+     $.ajax({
+         type: 'post',
+         data: ({infoUe: infoUe }),
+         url: "{{ path('herramienta_curso_alternativa_delete') }}",
+         beforeSend: function () {
+            $('#mengestioncurso').empty();
+            $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Eliminando curso...</div>");
+        },
+        success: function (data) {
+            $('#mengestioncurso').empty();
+            $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+            window.location.href =  Routing.generate('herramienta_alter_cursos_index');
+        },
+        error: function(data){
+            $('#mengestioncurso').empty();            
+            $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar el curso debe antes eliminar lo siguiente: Toma de materias, inscripciones, materias/módulos maestro asignados.</div>");
+            //window.location.href =  Routing.generate('herramienta_alter_cursos_index');                            
+        },
+     });
+   };
+</script>

@@ -1,0 +1,46 @@
+<div class="panel panel-info">
+	<div class="panel-heading">
+	    <div class="pull-left">
+	        <h3 class="panel-title">Inconsistencias / Observaciones</h3>
+	    </div>
+	    <div class="clearfix"></div>
+	</div><!-- /.panel-heading -->
+	<div class="panel-body no-padding">
+		{% if observation %}
+		<div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <strong>¡Error!</strong> Se han encontrado inconsistencias, la información no será consolidada para la Unidad Educativa: {{ institucion }}; Gestión: {{ gestion }}; Bimestre: {{ periodo }}.
+    </div>
+
+			{% for logs in inconsistencia %}
+
+				<ul>
+					<li><code>{{ logs.observacion }}</code></li>
+				</ul>
+
+			{% endfor %}
+
+			{% for logs in objObsQA %}
+
+				<ul>
+					<li><code>{{ logs.obs }}</code></li>
+				</ul>
+
+			{% endfor %}
+
+			{% if validacionPersonal %}
+			<ul>
+				<li><code>
+				La Unidad Educativa tiene que realizar la validacion de Docentes/Administrativos/Director.
+				</code></li>
+			</ul>
+			{% endif %}
+
+		{% else %}
+			<div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <strong>¡Bien!</strong> No se han encontrado inconsistencias, la información se ha consolidado exitosamente para la Unidad Educativa: {{ institucion }}; Gestión: {{ gestion }}; Bimestre: {{ periodo }}.
+            </div>
+		{% endif %}
+	</div>
+</div>

@@ -1,0 +1,1 @@
+$(document).ready(function(){"use strict";$(".flexslider").flexslider({animation:"slide"}),$("#owl-demo").owlCarousel({autoPlay:3e3,items:4,itemsDesktop:[1199,3],itemsDesktopSmall:[979,3]})});

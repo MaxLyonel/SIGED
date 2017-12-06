@@ -1,0 +1,318 @@
+{# extends 'SieJuegosBundle:Default:Registros.html.twig' #}
+{% extends 'layoutJuegos.html.twig' %}
+
+{% block contentoption %} 
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="glyphicon glyphicon-pencil"></i> Registro <span>Juegos Deportivos Plurinacionales</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('sie_juegos_inscripcion_index') }}">Registro</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Fase Previa</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+
+        <!-- Start mail page -->
+        <!--div class="container" style="margin-top:30px;"-->
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <!-- Start widget newsletter -->
+                <div class="panel text-center rounded shadow">
+                    <div class="panel-body bg-lilac rounded">
+                        <div class="inner-all">
+                            <h4 class="text-uc">{{infoUnidadEducativa.id}} - {{infoUnidadEducativa.institucioneducativa}}</h4>
+                            <!--<h5 class="text-uc">Opción: Información Estudiante</h5>-->
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End widget newsletter -->
+            </div>
+        </div><!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-content">
+                    {% for type, flashMessage in app.session.flashbag.all() %}
+                        <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            {% if flashMessage.title is defined %}
+                            <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                                {{ flashMessage.message }}
+                            {% else %}
+                                {{ type }}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>        
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-md-5 col-sm-12 col-xs-12">
+                <div class="panel panel-primary shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Nivel / Grado / Género</h3>
+                        </div><!-- /.pull-left -->
+                        <div class="pull-right">
+
+                        </div><!-- /.pull-right -->
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <!-- Start project overview -->
+                        <small>
+                            <div class="tree well" style="border: 0px;">
+                                {%for nivelKey, dataNivel in infoNiveles%}
+                                    <ul>
+                                        <li>
+                                            <span><i class="icon-folder-open"></i> {{nivelKey}}</span> 
+                                            <ul>
+                                                {% for gradoKey,dataGrado in dataNivel %}
+                                                    <li>
+                                                        <span><i class="icon-minus-sign"></i> {{gradoKey}}</span>
+                                                        <ul>
+                                                            {% for generoKey, dataGenero in dataGrado %}
+                                                                <li>
+                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+                                                                        <span ><i class="icon-leaf"></i>  
+                                                                            <a href="#" onclick="seeStudents('{{dataGenero.infoUe}}');">{{generoKey}} </a>
+                                                                        </span>
+                                                                    </div>                                                            
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                {% endfor %}
+                            </div>
+                        </small>
+                        <!--/ End project overview -->  
+                    </div><!-- /.panel-body -->
+                </div> 
+            </div>
+            <div class="col-lg-9 col-md-7 col-sm-12 col-xs-12">     
+                <small>
+                    <div id="idstudents">                        
+                    </div>
+                </small>
+                 
+            </div>
+        </div>                          
+        <!--/div-->
+        <!--/ End mail page -->
+    </div>
+    <!-- Start body content -->
+    <!--/ End body content -->
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+
+    </div><!-- /.modal -->
+    <!--/ End body content -->
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>          
+
+        /**
+         * this is to the tree menu option
+         * @returns {undefined}
+         */
+        $(function () {
+            $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+            $('.tree li.parent_li > span').on('click', function (e) {
+                var children = $(this).parent('li.parent_li').find(' > ul > li');
+                if (children.is(":visible")) {
+                    children.hide('fast');
+                    $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+                } else {
+                    children.show('fast');
+                    $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+                }
+                e.stopPropagation();
+            });
+        });
+
+
+
+        var getStudents = function (infoUe) {
+
+            $.ajax({
+                type: 'get',
+                /*data: ({iecId: iecId, nivel: nivel, sie: sie, gestion: gestion, grado: grado, paralelo: paralelo, turno: turno, ciclo: ciclo}),*/
+                /*url: Routing.generate('inscription_ue_all_sie_get_students'),*/
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_info_estudiante_get_students'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var seeStudents = function (infoUe) {
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('sie_juegos_representacion_cultural_lista_estudiante'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+                    },
+                    404: function () {
+                    }
+                }
+            });
+        };
+
+        var doInscription = function () {
+            var elem = document.getElementById('formStudentInscription').elements;
+            var sw = true;
+            for (var i = 0; i < elem.length; i++) {
+                if (elem[i].type == 'checkbox')
+                    if ((elem[i].checked))
+                        sw = false;
+            }
+            if (sw) {
+                alert('Tiene que Seleccionar por lo menos una Inscripción...');
+                return flase;
+            }
+            var formIns = $('#formStudentInscription').serialize();
+            $.ajax({
+                type: 'post',
+                data: formIns,
+                url: Routing.generate('inscription_ue_all_sie_get_inscription'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+        var selectAllEle = function () {
+            $("#checkAll").on("change", function () {
+                $(this).closest("div").find("input:checkbox").prop("checked", $(this).prop("checked"));
+            });
+
+        };
+        var getTurnos = function (nivel, sie, gestion, nivelname, key) {
+            $.ajax({
+                type: 'post',
+                data: ({nivel: nivel, sie: sie, gestion: gestion, nivelname: nivelname}),
+                /*url: Routing.generate('inscription_ue_all_sie_get_turnos'),*/
+                url: "{{ path('herramienta_info_estudiante_get_turnos') }}",
+                beforeSend: function () {
+                    /* $("#idgrados").empty();
+                     $("#idparalelos").empty();
+                     $("#idstudents").empty();*/
+                    $("#idgrados_" + key).append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idgrados_" + key).empty();
+                    $("#idgrados_" + key).append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getParalelos = function (nivel, sie, gestion, turno, turnoname, nivelname, key) {
+
+            $.ajax({
+                type: 'post',
+                data: ({nivel: nivel, sie: sie, gestion: gestion, turno: turno, turnoname: turnoname, nivelname: nivelname}),
+                /*url: Routing.generate('inscription_ue_all_sie_get_paralelos'),*/
+                url: "{{ path('inscription_ue_all_sie_get_paralelos') }}",
+                beforeSend: function () {
+                    /* $("#idparalelos").empty();
+                     $("#idstudents").empty();*/
+                    $("#idparalelos_" + key).append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    /*$("#idstudents").empty();
+                     $("#idparalelos").empty();*/
+                    $("#idparalelos_" + key).append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getAreas = function (infoUe) {
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe}),
+                url: "{{ path('herramienta_infoEstudianteAreas_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+    </script>
+{%endblock%}

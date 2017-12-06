@@ -1,0 +1,89 @@
+Sie\AppWebBundle\Entity\InfraestructuraH1Institucioneseducativa:
+    type: entity
+    table: infraestructura_h1_institucioneseducativa
+    indexes:
+        IDX_804A3B13143D594D:
+            columns:
+                - tenencia_tipo_id
+        IDX_804A3B13E653442:
+            columns:
+                - orgcurricular_tipo_id
+        IDX_804A3B13F5F88DB9:
+            columns:
+                - persona_id
+        IDX_804A3B133AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_804A3B13AE969F47:
+            columns:
+                - infraestructura_h1_datosgenerales_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        telefonoJe:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: telefono_je
+    manyToOne:
+        tenenciaTipo:
+            targetEntity: InfraestructuraH1TenenciaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tenencia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        orgcurricularTipo:
+            targetEntity: OrgcurricularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                orgcurricular_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH1Datosgenerales:
+            targetEntity: InfraestructuraH1Datosgenerales
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h1_datosgenerales_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

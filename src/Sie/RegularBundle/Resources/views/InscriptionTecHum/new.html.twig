@@ -1,0 +1,318 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Inscripción Tec-Hum
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('inscription_techum_index')}}">Buscar</a></li>
+                    <li class="active">Nueva Inscripcion</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+
+    <div class="row">
+        {% for flashMessage in app.session.flashbag.get('newUser') %}
+            <div class="alert alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ flashMessage.mensaje }}<br>
+                <button class="btn-link" data-toggle="tooltip" data-placement="top" title="Descargar declaracion jurada"><img src="{{asset('assets/images/pdf.png')}}"> Declaración jurada</button>
+                    {# flashMessage.nombre #}
+                    {# flashMessage.usuario #}
+                    {# flashMessage.password #}
+            </div>
+        {% endfor %}
+
+        {% for flashMessage in app.session.flashbag.get('notice') %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+        {% for flashMessage in app.session.flashbag.get('success') %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Bien!</strong> {{ flashMessage }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Información Estudiante : 
+
+                            {% if   newstudent.rude !='' %}
+                                Rude= {{newstudent.rude}}
+                            {% endif %}
+                        </h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div id="no-more-tables">
+                            <table class="table table-bordered table-hover cf">
+                                <thead class="cf">
+                                    <tr class="info">
+                                        <!--th>Rude</th-->
+                                        <th>Nombre</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>
+                                        <th>F.Nacimiento</th>
+                                        <th>CI</th>
+                                        <th>Genero</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <!--td data-title="Rude"></td-->
+                                        <td data-title="Nombre">{{ newstudent.nombre|upper }} </td>
+                                        <td data-title="Paterno"> {{newstudent.paterno|upper}} </td>
+                                        <td data-title="Materno"> {{newstudent.materno|upper}}</td>
+                                        <td data-title="F. Nacimiento"> {{newstudent.fnacimiento|date('d-m-Y')}}</td>
+                                        <td data-title="CI">{{newstudent.ci}} </td>
+                                        {% if (newstudent.generoTipo ==1)%}
+                                            <td data-title="Genero">MASCULINO </td>
+                                        {%else%}
+                                            <td data-title="Genero">FEMENINO </td>
+                                        {%endif%}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Datos de Inscripción </h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#omitidos"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div id="omitidos" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+
+                        {{form_start(formInscription, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form' } } )}}
+
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                {{form_label(formInscription.institucionEducativa)}}
+                                {{form_widget(formInscription.institucionEducativa, {'attr':{'onkeyUp':'institucionEducativa(this.value)'}  } )}}
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-6">
+                                {{form_label(formInscription.institucionEducativaName)}}
+                                {{form_widget(formInscription.institucionEducativaName)}}
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                {{form_label(formInscription.nivel)}}
+                                {{form_widget(formInscription.nivel,{'attr':{'onchange':'getGrado(this.value)'} })}}
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                {{form_label(formInscription.grado)}}
+                                {{form_widget(formInscription.grado, {'attr':{'onchange':'getParalelo(this.value)' } } )}}
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-2 form-group">
+                                {{form_label(formInscription.paralelo)}}
+                                {{form_widget(formInscription.paralelo,{'attr':{'onchange':'getTurno(this.value)','onmousedown':'getTurno(this.value)' } } )}}
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                {{form_label(formInscription.turno)}}
+                                {{form_widget(formInscription.turno)}}
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        </br>
+
+                        {{form_widget(formInscription.save, {'attr':{'class':'btn btn-default'} }) }}
+                        {{form_end(formInscription)}}
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <!--a href="{{path('inicial_primaria_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver ddd</a-->
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        //call the ajax function by krlos
+        function institucionEducativa(id) {
+            if (id.length > 7) {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('inscription_techum_findIE', {'id': id}),
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        $("#form_institucionEducativaName").val(data.nombre);
+                        $("#form_nivel").empty();
+                        $("#form_nivel").append('<option value="">Seleccionar</option>');
+                        $.each(data.aniveles, function (i, value) {
+                            $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                        $("#form_grado").empty();
+                        $("#form_paralelo").empty();
+                        $("#form_turno").empty();
+                    }
+                });
+            } else {
+                $("#form_institucionEducativaName").val('');
+                $("#form_grado").empty();
+                $("#form_paralelo").empty();
+                $("#form_turno").empty();
+            }
+
+        }
+
+        function getGrado(idnivel) {
+
+            sie = $('#form_institucionEducativa').val();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_techum_findgrado', {'idnivel': idnivel, 'sie': sie}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_grado").empty();
+                    $("#form_grado").append('<option value="">Seleccionar</option>');
+                    $.each(data.agrados, function (i, value) {
+                        $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $("#form_paralelo").empty();
+                    $("#form_turno").empty();
+                }
+            });
+        }
+
+        function getParalelo(grado) {
+
+            sie = $('#form_institucionEducativa').val();
+            nivel = $('#form_nivel').val();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_techum_findparalelo', {'grado': grado, 'sie': sie, 'nivel': nivel}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_paralelo").empty();
+                    $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                    $.each(data.aparalelos, function (i, value) {
+                        $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        function getTurno(paralelo) {
+
+            sie = $('#form_institucionEducativa').val();
+            nivel = $('#form_nivel').val();
+            grado = $('#form_grado').val();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('inscription_techum_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado}),
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    $("#form_turno").empty();
+                    $("#form_turno").append('<option value="">Seleccionar</option>');
+                    $.each(data.aturnos, function (i, value) {
+                        $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+
+        //validate the submit function with the birth day student
+        $('#form_save').click(function () {
+            yearstudent = $('#form_yearStudent').val();
+            nivel = $('#form_nivel').val();
+            grado = $('#form_grado').val();
+            //alert(grado);
+            if (nivel == 11 && grado == 1) {
+                if (yearstudent >= 4) {
+                    return true;
+                } else {
+                    alert('La edad del estudiante no corresponde para el nivel y el grado. \nQueda terminantemente prohibido la alteración de fechas de nacimientos para la inscripción de estudiantes');
+                    return false;
+                }
+            }
+            if (nivel == 11 && grado == 2) {
+                if (yearstudent >= 5) {
+                    return true;
+                } else {
+                    alert('La edad del estudiante no corresponde para el nivel y el grado. \nQueda terminantemente prohibido la alteración de fechas de nacimientos para la inscripción de estudiantes');
+                    return false;
+                }
+            }
+            if (nivel == 12 && grado == 1) {
+                if (yearstudent >= 6) {
+                    return true;
+                } else {
+                    alert('La edad del estudiante no corresponde para el nivel y el grado. \nQueda terminantemente prohibido la alteración de fechas de nacimientos para la inscripción de estudiantes');
+                    return false;
+                }
+            }
+
+            //return false;
+        });
+
+    </script>
+
+
+{% endblock %}

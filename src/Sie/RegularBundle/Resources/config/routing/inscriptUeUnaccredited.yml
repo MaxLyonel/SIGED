@@ -1,0 +1,47 @@
+insc_ue_unaccredited_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InscUeUnaccredited:index }
+
+insc_ue_unaccredited_result:
+    path:    /result
+    defaults: { _controller: SieRegularBundle:InscUeUnaccredited:result }
+
+insc_ue_unaccredited_findIE:
+     path:    /findIE/{id}/
+     defaults: { _controller: SieRegularBundle:InscUeUnaccredited:findIE }
+     options:
+         expose: true
+
+insc_ue_unaccredited_findgrado:
+     path:    /findgrado/{idnivel}/{sie}
+     defaults: { _controller: SieRegularBundle:InscUeUnaccredited:findgrado }
+     options:
+         expose: true
+
+insc_ue_unaccredited_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}
+     defaults: { _controller: SieRegularBundle:InscUeUnaccredited:findparalelo }
+     options:
+         expose: true
+
+insc_ue_unaccredited_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}
+    defaults: { _controller: SieRegularBundle:InscUeUnaccredited:findturno }
+    options:
+        expose: true
+
+insc_ue_unaccredited_saveMateriasNotas:
+    path: /saveMateriasNotas
+    defaults: { _controller: SieRegularBundle:InscUeUnaccredited:saveMateriasNotas }
+
+insc_ue_unaccredited_new:
+    path: /new
+    defaults: { _controller: SieRegularBundle:InscUeUnaccredited:new }
+
+insc_ue_unaccredited_exist:
+    path: /exist
+    defaults: { _controller: SieRegularBundle:InscUeUnaccredited:exist}
+
+insc_ue_unaccredited_savenew:
+    path: /savenew
+    defaults: { _controller: SieRegularBundle:InscUeUnaccredited:savenew}

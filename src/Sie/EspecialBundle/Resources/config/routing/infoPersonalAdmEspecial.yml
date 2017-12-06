@@ -1,0 +1,49 @@
+info_personal_adm_especial_index:
+    path:     /{op}
+    defaults: { _controller: SieEspecialBundle:InfoPersonalAdmEspecial:index, op:search }
+
+info_personal_adm_especial_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdmEspecial:show" }
+
+info_personal_adm_especial_new:
+    path:     /new/
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdmEspecial:new" }
+
+info_personal_adm_especial_create:
+    path:     /create/
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdmEspecial:create" }
+    methods:  POST
+
+info_personal_adm_especial_edit:
+    path:     /edit/
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdmEspecial:edit" }
+    methods:  [POST, PUT]
+
+info_personal_adm_especial_update:
+    path:     /update/
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdmEspecial:update" }
+    methods:  [POST, PUT]
+
+info_personal_adm_especial_es_vigente_administrativo:
+    path:     /administrativo/
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdmEspecial:esVigenteAdministrativo" }
+    methods:  [POST, PUT]         
+
+info_personal_adm_especial_delete:
+    path:     /delete/
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdmEspecial:delete" }
+    methods:  [POST, DELETE]    
+    
+info_personal_adm_especial_search:
+    path:     /search/
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdmEspecial:search" }
+    methods:  POST
+
+info_personal_adm_especial_find:
+    path:     /find/
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdmEspecial:find" }
+    
+info_personal_adm_especial_result:
+    path:     /result/
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdmEspecial:result" }

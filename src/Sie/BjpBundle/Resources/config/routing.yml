@@ -1,0 +1,124 @@
+sie_bjp_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SieBjpBundle:Default:index }
+
+sie_bjp_ReclamoInstitucionEducativa:
+    resource: "@SieBjpBundle/Resources/config/routing/ReclamoInstitucionEducativa.yml"
+    prefix:   /sie/ReclamoInstitucionEducativa
+
+sie_bjp_PagosBono:
+    resource: "@SieBjpBundle/Resources/config/routing/PagosBono.yml"
+    prefix:   /sie/PagosBono
+
+sie_bjp_CaratulasBono:
+    resource: "@SieBjpBundle/Resources/config/routing/CaratulasBono.yml"
+    prefix:   /sie/CaratulasBono
+
+sie_bjp_InstructivoBono:
+    resource: "@SieBjpBundle/Resources/config/routing/InstructivoBono.yml"
+    prefix:   /sie/InstructivoBono
+
+sie_bjp_PlanillasEntregaBono:
+    resource: "@SieBjpBundle/Resources/config/routing/PlanillasEntregaBono.yml"
+    prefix:   /sie/PlanillasEntregaBono
+
+sie_bjp_PlanillasReposicionBono:
+    resource: "@SieBjpBundle/Resources/config/routing/PlanillasReposicionBono.yml"
+    prefix:   /sie/PlanillasReposicionBono
+
+sie_bjp_ActaBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ActaBono.yml"
+    prefix:   /sie/ActaBono
+
+sie_bjp_InstitucionesSinEstudiantesBono:
+    resource: "@SieBjpBundle/Resources/config/routing/InstitucionesSinEstudiantesBono.yml"
+    prefix:   /sie/InstitucionesSinEstudiantesBono
+
+sie_bjp_ReportePreliminarBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ReportePreliminarBono.yml"
+    prefix:   /sie/ReportePreliminarBono
+
+sie_bjp_InstitucionesPagadasBono:
+    resource: "@SieBjpBundle/Resources/config/routing/InstitucionesPagadasBono.yml"
+    prefix:   /sie/InstitucionesPagadasBono
+
+sie_bjp_ImpresionAvanceBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceBono.yml"
+    prefix:   /sie/ImpresionAvanceBono
+
+sie_bjp_AbrirInstitucionesBono:
+    resource: "@SieBjpBundle/Resources/config/routing/AbrirInstitucionesBono.yml"
+    prefix:   /sie/AbrirInstitucionesBono
+
+
+sie_bjp_TerminarPagosBono:
+    resource: "@SieBjpBundle/Resources/config/routing/TerminarPagosBono.yml"
+    prefix:   /sie/TerminarPagosBono
+
+sie_bjp_ReasignarInstitucionBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ReasignarInstitucionBono.yml"
+    prefix:   /sie/ReasignarInstitucionBono
+
+sie_bjp_FormularioABono:
+    resource: "@SieBjpBundle/Resources/config/routing/FormularioABono.yml"
+    prefix:   /sie/FormularioABono
+
+sie_bjp_FormularioBBono:
+    resource: "@SieBjpBundle/Resources/config/routing/FormularioBBono.yml"
+    prefix:   /sie/FormularioBBono
+
+sie_bjp_DespachoConSupuestosBono:
+    resource: "@SieBjpBundle/Resources/config/routing/DespachoConSupuestosBono.yml"
+    prefix:   /sie/DespachoConSupuestosBono
+
+sie_bjp_ControlPagosBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ControlPagosBono.yml"
+    prefix:   /sie/ControlPagosBono
+
+sie_bjp_ImpresionAvanceDAreaBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceDAreaBono.yml"
+    prefix:   /sie/ImpresionAvanceDAreaBono
+
+sie_bjp_ImpresionAvanceDDepartamentoBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceDDepartamentoBono.yml"
+    prefix:   /sie/ImpresionAvanceDDepartamentoBono
+
+sie_bjp_ImpresionAvanceDFuerzaBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceDFuerzaBono.yml"
+    prefix:   /sie/ImpresionAvanceDFuerzaBono
+
+sie_bjp_ImpresionAvanceEstudianteAreaBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceEstudianteAreaBono.yml"
+    prefix:   /sie/ImpresionAvanceEstudianteAreaBono
+
+sie_bjp_ImpresionAvanceEstudianteDepartamentoBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceEstudianteDepartamentoBono.yml"
+    prefix:   /sie/ImpresionAvanceEstudianteDepartamentoBono
+
+sie_bjp_ImpresionAvanceEstudianteFuerzaBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceEstudianteFuerzaBono.yml"
+    prefix:   /sie/ImpresionAvanceEstudianteFuerzaBono
+
+sie_bjp_ImpresionAvanceEstudianteUnidadBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceEstudianteUnidadBono.yml"
+    prefix:   /sie/ImpresionAvanceEstudianteUnidadBono
+
+sie_bjp_ImpresionAvanceInstitucionAreaBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceInstitucionAreaBono.yml"
+    prefix:   /sie/ImpresionAvanceInstitucionAreaBono
+
+sie_bjp_ImpresionAvanceInstitucionDepartamentoBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceInstitucionDepartamentoBono.yml"
+    prefix:   /sie/ImpresionAvanceInstitucionDepartamentoBono
+
+sie_bjp_ImpresionAvanceInstitucionFuerzaBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceInstitucionFuerzaBono.yml"
+    prefix:   /sie/ImpresionAvanceInstitucionFuerzaBono
+
+sie_bjp_ImpresionAvanceInstitucionUnidadBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceInstitucionUnidadBono.yml"
+    prefix:   /sie/ImpresionAvanceInstitucionUnidadBono
+
+sie_bjp_ImpresionAvanceDespachoBono:
+    resource: "@SieBjpBundle/Resources/config/routing/ImpresionAvanceDespachoBono.yml"
+    prefix:   /sie/sie_bjp_ImpresionAvanceDespachoBono

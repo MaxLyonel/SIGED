@@ -1,0 +1,84 @@
+{% extends 'layoutJuegos.html.twig' %}
+
+{% block contentoption %}
+    <div class="body-content animated fadeIn">
+        <!-- Start mail page -->
+        <!--div class="container" style="margin-top:30px;"-->
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <!-- Start widget newsletter -->
+                <div class="panel text-center rounded shadow">
+                    <div class="panel-body bg-lilac rounded">
+                        <div class="inner-all">
+                            <h4 class="text-uc">Su contraseña es igual al nombre de usuario, por seguridad e integridad de la información debe cambiar su contraseña</h4>
+                            <!--<h5 class="text-uc">Opción: Información Estudiante</h5>-->
+                        </div>
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End widget newsletter -->
+            </div>
+        </div><!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="panel panel-primary shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h4>Datos de usuario y contraseña.</h4>
+                        </div>
+                        <div class="pull-right">
+                            <span class="label label-warning">Ingrese la nueva contraseña y vuelva a ingresar!</span>
+                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#passwduser"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="passwduser" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'class':'form-horizontal'} } )}}
+                                <div class="form-group">
+                                    <label for="form_codigoRude" class="col-sm-2 control-label">Usuario</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.username,{ 'attr':{'class': 'form-control','pattern':'[A-Z0-9]{7,16}'}  }) }}
+                                    </div>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="form_gestion" class="col-sm-2 control-label">Contraseña Antigua</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.oldpasswd,{ 'attr':{'class': 'form-control','placeholder':'Inserte Contraseña Antigua','pattern':'[a-zA-Z0-9]{5,17}'}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="form_gestion" class="col-sm-2 control-label">Contraseña Nueva</label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.newpasswd,{ 'attr':{'class': 'form-control','placeholder':'Inserte Contraseña Nueva','pattern':'[a-zA-Z0-9]{5,17}'}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="form_gestion" class="col-sm-2 control-label">Repetir Contraseña </label>
+                                    <div class="col-sm-10">
+                                        {{ form_widget(form.repeatpasswd,{ 'attr':{'class': 'form-control','placeholder':'Repita contraseña Nueva','pattern':'[a-zA-Z0-9]{5,17}'}  }) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        {{ form_widget(form.save,{ 'attr':{'class':'btn btn-blue' } } ) }}
+                                    </div>
+                                </div>
+                                {{form_end(form)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,69 @@
+Sie\AppWebBundle\Entity\AsignaturaEspecialidadTipo:
+    type: entity
+    table: asignatura_especialidad_tipo
+    indexes:
+        IDX_28901C5DED83D5D6:
+            columns:
+                - especialidad_carrera_tipo_id
+        IDX_28901C5D98F17090:
+            columns:
+                - institucion_educativa_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        asignaturaEspecialidad:
+            type: string
+            nullable: false
+            length: 50
+            fixed: false
+            comment: ''
+            column: asignatura_especialidad
+        descAbrev:
+            type: string
+            nullable: true
+            length: 7
+            fixed: false
+            comment: ''
+            column: desc_abrev
+        contenido:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        esobligatorio:
+            type: boolean
+            nullable: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+    manyToOne:
+        especialidadCarreraTipo:
+            targetEntity: EspecialidadCarreraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                especialidad_carrera_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucionEducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucion_educativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

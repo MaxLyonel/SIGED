@@ -1,0 +1,190 @@
+{% extends 'layoutPnp.html.twig' %}
+
+{% block body -%}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1 class="glyphicon glyphicon-home"> REGISTRAR CURSO</h1>
+                <ol class="breadcrumb">
+                    <li>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div style="width: 100%;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger alert-dismissible" role="alert" id="result" style="display: none;">
+                    <strong>¡Advertencia!</strong> <input type="text" id="errorxls" class="form-control input-sm" readonly='true'>
+                </div>
+            </div>
+        </div>
+          {% for flashMessage in app.session.flashbag.get('success') %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Bien!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>¡Advertencia!</strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+
+        <!-- /.row -->
+     {% include 'SieAppWebBundle:Persona:buscarPersona.html.twig' with {'formBuscarPersona': formBuscarPersona} %}
+
+     <div id="facilitador"></div> 
+        </div>
+    </div>    
+           
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        initialise();
+    } );
+    
+    function initialise()
+    {
+         var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     },
+                     "buttons":{
+                        "copy": "Copiar",
+                        "print":"Imprimir"
+                     }
+                    };
+
+        var currentLang = espanol;    
+
+        //var table = $('#tablaListadoPersonas').DataTable();
+        var dtable = $('#tablaListadoPersonas').dataTable( {"oLanguage": espanol,
+         'dom': 'lBfrtip <"clear">',
+        'buttons': [
+             {   
+                extend: 'colvis',
+                text:'Visibilizar Columnas'
+            },
+            {
+                extend: 'print',
+                text: 'Imprimir',
+                autoPrint: true,
+                title: 'PNP - LISTA DE PARTICIPANTES',
+                header:true,
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend:'pdf',
+                title: 'PNP LISTA DE PARTICIPANTES',
+                filename:'Lista de archivos subidos RUP-4',
+                orientation:'landscape',
+                exportOptions: {
+                modifier: {
+                    page: 'Lista de Participantes'
+                    }
+                }
+            },
+            {
+            extend: 'excel',
+            text: 'Excel',
+            filename:'Lista de Participantes',
+            exportOptions: {
+                modifier: {
+                    page: 'Lista de Participantes'
+                    }
+                }
+            },
+        ]} );
+        
+        
+        $('#tablaListadoPersonas tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        } );
+        
+    }
+
+    function BuscarPersona(){
+        
+        var ci = document.getElementById("ci").value;
+        var complemento = document.getElementById("complemento").value;
+        var extranjero = document.getElementById("extranjero").value;
+
+        //alert(opcion);
+        if (complemento=="")complemento=0;
+        
+
+        var formData = $('#formxls').serialize();
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_pnp_buscar_facilitador', {'ci': ci,'complemento':complemento,'extranjero': extranjero}),
+            data: formData,
+            beforeSend: function () {
+                $("#facilitador").empty();
+                $("#facilitador").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#facilitador").empty();
+                $("#facilitador").append(data);
+            },
+            error: function(data){
+                $("#facilitador").empty();
+                $("#facilitador").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+    }
+
+    function SeeNotas(idinscripcion){
+        var formData = $('#formxls').serialize();
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_pnp_see_notas', {'idinscripcion': idinscripcion}),
+            data: formData,
+            beforeSend: function () {
+                $("#notasModal").empty();
+                $("#notasModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#notasModal").empty();
+                $("#notasModal").append(data);
+            },
+            error: function(data){
+                $("#notasModal").empty();
+                $("#notasModal").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+            }
+        });
+        $('#ModalUser').modal('show');
+    }
+    
+    function modaluserclose(){            
+            $('#ModalUser').modal('hide');
+        }
+    </script>
+{% endblock %}

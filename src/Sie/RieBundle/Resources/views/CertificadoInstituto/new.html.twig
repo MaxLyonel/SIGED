@@ -1,0 +1,65 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="block-header">
+        <h2>CERTIFICADO DE INSTITUCIONES EDUCATIVAS</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li><a href="{{path('principal_web')}}">Inicio</a></li>
+        <li><a href="{{path('certificado_rie')}}">Certificado RIE</a></li>
+        <li class="active">Nuevo</li>
+    </ol>
+
+    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %} 
+    {% for flashMessage in app.session.flashbag.get('registroInstitucionError') %}
+        <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+        <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-blue-grey">
+                    <h2>
+                        Datos para procesar la certificación
+                    </h2>
+                </div>
+                <div class="body">
+                    {{ form_start(form) }}
+                        <label class="form-label">Fecha de corte</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                {{ form_widget(form.fechaCorte) }}
+                            </div>
+                        </div>
+                        <label class="form-label">Nro. de certificado</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                {{ form_widget(form.nroCertificadoInicio) }}
+                            </div>
+                        </div>
+                        <label class="form-label">Observaciones</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                {{form_widget(form.observacion) }}
+                            </div>
+                        </div>
+                        {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
+                        <a href="{{path('certificado_rie')}}" class="btn btn-default btn-lg m-l-15 waves-effect">Cancelar</a>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>                   
+    <!-- Vertical Layout -->
+{% endblock %}

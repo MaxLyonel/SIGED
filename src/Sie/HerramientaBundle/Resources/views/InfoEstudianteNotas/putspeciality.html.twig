@@ -1,0 +1,79 @@
+
+
+
+<small>
+
+  <div class="panel panel-danger rounded shadow">
+      <div class="panel-heading">
+          <div class="pull-left">
+              <h3 class="panel-title">Registro de Especialidad</h3>
+          </div>
+
+          <div class="clearfix"></div>
+      </div><!-- /.panel-heading -->
+      <div class="panel-sub-heading">
+          <div class="callout callout-info">
+            <strong>En caso de faltarle alguna especialidad consulte a su TÉCNICO DE DISTRITO.</strong>
+          </div>
+      </div><!-- /.panel-sub-heading -->
+      <div class="panel-body">
+        {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form', 'id':'specialityFormId'} } )}}
+        <div class="form-group">
+            <label class="col-sm-3 text-right">  {{form_label(form.especialidad)}}</label>
+
+            <div class="col-sm-9">
+                <div class="row">
+                    <div class="col-sm-8">
+                      {{ form_widget(form.especialidad) }}
+                      <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <!--
+            <label for="form_horas" class="col-sm-4 control-label">
+                {{form_label(form.horas)}}
+
+            </label>
+            <div class="col-sm-8">
+                {{ form_widget(form.horas) }}  <p id="noNumber" class="text-center"></p>
+                <div class="help-block with-errors"></div>
+            </div>
+            -->
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                {{ form_widget(form.registrar) }}
+            </div>
+        </div>
+        {{form_end(form)}}
+
+
+
+      </div><!-- /.panel-body  -->
+  </div>
+
+
+
+
+  <div class="row">
+    <div class="col-md-9 col-md-offset-3">
+      <table>
+        <tr>
+          <td>
+            <div class="row">
+                <div class="col-md-12">
+
+
+
+                </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</small>
+<script>
+</script>

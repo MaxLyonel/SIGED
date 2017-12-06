@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\MaestroPlanillas:
+    type: entity
+    table: maestro_planillas
+    id:
+        rda:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        ci:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        fechaNacimiento:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: fecha_nacimiento
+        genero:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

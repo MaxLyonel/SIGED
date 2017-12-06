@@ -1,0 +1,76 @@
+estudianteinscripcionTecnica:
+    path:     /{op}
+    defaults: { _controller: SiePermanenteBundle:EstudianteInscripcionTecnica:index, op:1 }
+
+estudianteinscripcionTecnica_show:
+    path:     /show/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:show" }
+    methods:  POST
+  
+estudianteinscripcionTecnica_show_session:
+    path:     /result/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:show_session" }
+
+estudianteinscripcionTecnica_new:
+    path:     /new/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:new" }
+    methods:  POST
+
+estudianteinscripcionTecnica_create:
+    path:     /create/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:create" }
+    methods:  POST
+
+estudianteinscripcionTecnica_edit:
+    path:     /edit/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:edit" }
+    methods:  POST
+
+estudianteinscripcionTecnica_update:
+    path:     /update/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:update" }
+    methods:  [POST, PUT]
+
+estudianteinscripcionTecnica_delete:
+    path:     /delete/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:delete" }
+    methods:  [POST, DELETE]
+
+listargradosTecnica:
+    path:     /grados/{nivel}
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:listargrados" }
+    options:
+         expose: true
+         
+validardatosestudianteTecnica:
+    path:     /validar/{nombre}/{paterno}/{materno}/{genero}/{fechanac}/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:validardatosestudiante" }
+    options:
+         expose: true
+         
+buscarestudiantes_institucionTecnica:
+    path:     /estudianteslista/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:buscarestudiantesinstitucion" }
+    options:
+         expose: true
+         
+listar_asignaturas:
+    path:     /listar_asignaturas/{especialidad}
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:listar_asignaturas" }
+    options:
+         expose: true
+         
+p_estudiantenotas_index:
+    path:     /notas/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:notas" }
+    methods:  [POST]     
+    
+p_estudiantenotas_create:
+    path:     /notas_create/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:notas_create" }
+    methods:  [POST] 
+    
+p_estudiantenotas_show:
+    path:     /notas_show/
+    defaults: { _controller: "SiePermanenteBundle:EstudianteInscripcionTecnica:notas_show" }
+    methods:  [POST] 

@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\IdiomaMaterno:
+    type: entity
+    table: idioma_materno
+    indexes:
+        IDX_F0CF4076EC3F1641:
+            columns:
+                - idiomaorigen_tipo_id
+    uniqueConstraints:
+        idioma_materno_pk:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        idiomaMaterno:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: idioma_materno
+    manyToOne:
+        idiomaorigenTipo:
+            targetEntity: IdiomaorigenTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idiomaorigen_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

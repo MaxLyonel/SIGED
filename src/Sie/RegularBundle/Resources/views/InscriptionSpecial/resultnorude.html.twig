@@ -1,0 +1,96 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption%}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-pencil"></i>  Inscripción Especial
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('inscription_special_index')}}">Buscar</a></li>
+                    <li >Especial</li>
+                    <li class="active">Sin Rude</li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <!-- begin ADVANCED TABLES ROW -->
+    <div class="row">
+        <div class="col-md-2 col-md-offset-10">
+            {{form_start(formninguno)}}
+            {{form_widget(formninguno.ninguno)}}
+            {{form_end(formninguno)}}
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-lg-12">
+
+            <div class="portlet portlet-default">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Resultado</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="portlet-body">
+
+                    <div class="table-responsive">
+                        <table id="myTable" class="table table-striped table-bordered table-hover table-green dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>Rude</th>
+                                    <th>CI</th>
+                                    <th>Acción</th>
+                                    <th>Acción</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in samestudents %}
+                                    <tr class="gradeU">
+                                        <td>{{student.nombre}}</td>
+                                        <td>{{student.paterno}}</td>
+                                        <td>{{student.materno}}</td>
+                                        <td class="center">{{student.codigoRude}}</td>
+                                        <td class="center">{{student.carnetIdentidad}}-{{student.complemento}}</td>
+                                        <td class="center">
+                                            <form id='form' name='form' action="{{path('inscription_extranjeros_result')}}" method="post">
+                                                <input type="hidden" name="id" value="{{student.id}}">
+                                                <input type="hidden" name="codigoRude" id="codigoRude" value="{{ student.codigoRude }}" />
+                                                <input type="hidden" name="pais" id="pais" value="{{newstudent.pais}}">
+                                                <input type="hidden" name="ueprocedencia" id=ueprocedencia"" value="{{newstudent.ueprocedencia}} "/>
+                                                <button class="btn btn-success btn-sm btn-block"> <i class="fa fa-pencil"></i> Inscribir</button>
+                                            </form>
+                                        </td>
+                                        <td class="center"><button class="btn btn-info btn-sm btn-block"><i class="fa fa-eye"></i> Historial</button> </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.portlet-body -->
+            </div>
+            <!-- /.portlet -->
+
+        </div>
+        <!-- /.col-lg-12 -->
+
+    </div>
+    <!-- /.row -->
+
+
+{% endblock %}

@@ -1,0 +1,1 @@
+$(document).ready(function(){"use strict";$(".match-height").matchHeight()});

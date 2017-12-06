@@ -1,0 +1,191 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+
+
+
+    <link href="{{asset('filefile/css/bootstrap-fileupload.min.css')}}" rel="stylesheet">
+    <link href="{{asset('filefile/css/bootstrap-fileupload.css')}}" rel="stylesheet">
+{% endblock %}
+
+
+
+{% block contentoption%}
+
+    <!-- begin PAGE TITLE AREA -->
+    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1><i class="fa fa-upload animated flip"></i> Subir Archivo emp
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active"><i class="fa fa-exchange"></i> Información</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warningcons') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('successcons') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+
+    <!-- Modal -->
+
+
+    <div class="row">
+
+
+
+
+
+        <div class="col-xs-12 col-lg-12">
+            <div class="portlet portlet-white">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4 class=''>Registro de Archivos Cargados</h4>
+
+                    </div>
+                    <div class="portlet-widgets">
+
+                        <span class="divider"></span>
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinfoestudiante"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="pinfoestudiante" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+                        <div id="no-more-tables">
+                            <small>
+                                <table id="myTable" class="table table-bordered table-hover">
+
+                                    <thead class="">
+                                        <tr class="">
+                                            <th>No.</th>
+                                            <th>Departamento</th>
+                                            <th>Ver Archivos</th>
+                                            <th>Subir Archivos</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for entity in files %}
+                                            {% if entity !='..'  and entity !='.' %}
+                                                <tr>
+                                                    <td data-title="No.">{{loop.index}}</td>
+                                                    <td data-title="Departamento">{{entity}}</td>
+                                                    <td data-title="Est. Matricula" class="text-left">
+                                                        <a href="#" onclick="seeFiles('{{entity}}')" ><span class="glyphicon glyphicon-eye-open"></span> {{entity}}</a>
+                                                    </td>
+                                                    <td data-title="Est. Matricula" class="text-left">
+                                                        <a href="#" onclick="upFiles('{{entity}}')" ><span class="glyphicon glyphicon-upload"></span> {{entity}}</a>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </small>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-lg-12">
+            <div id="result">
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+
+    <script>
+        var seeFiles = function (dep) {
+            //get the values
+
+            $.ajax({
+                type: 'post',
+                data: ({dep: dep}),
+                url: Routing.generate('up_file_ftp_sie_seefile_web'),
+                beforeSend: function () {
+                    $("#result").empty();
+                    $("#result").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#result").empty();
+                    $("#result").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+        var upFiles = function (file, depto) {
+            //get the values
+
+            $.ajax({
+                type: 'post',
+                data: ({file: file, depto: depto}),
+                url: Routing.generate('up_file_ftp_sie_upfile_web'),
+                beforeSend: function () {
+                    $("#result").empty();
+                    $("#result").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#result").empty();
+                    $("#result").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+
+    </script>
+
+
+{% endblock %}

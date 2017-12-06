@@ -1,0 +1,73 @@
+reporte_especial_index:
+    path:     /
+    defaults: { _controller: "SieEspecialBundle:Estadistica:index" }
+
+estadistica_especial_informacion_general:
+    path:     /estadistica/general/especial
+    defaults: { _controller: "SieEspecialBundle:Estadistica:estadisticaGeneralEspecial" }
+
+
+         
+reporte_especial_informacion_general:
+    path:     /informacion/general/especial
+    defaults: { _controller: "SieEspecialBundle:Estadistica:informacionGeneralEspecial" }
+
+reporte_especial_informacion_general_chart:
+    path:     /informacion/general/especial/chart
+    defaults: { _controller: "SieEspecialBundle:Estadistica:informacionGeneralEspecialChart" }
+    options:
+         expose: true 
+
+reporte_especial_informacion_general_print_pdf:
+    path:     /informacion/general/especial/print/pdf
+    defaults: { _controller: "SieEspecialBundle:Reportes:informacionGeneralEspecialPrintPdf" }
+
+reporte_especial_informacion_general_print_pdf_temp:
+    path:     /informacion/general/especial/print/pdf/temp
+    defaults: { _controller: "SieEspecialBundle:Estadistica:informacionGeneralEspecialPrintPdfTemp" }
+
+
+reporte_especial_informacion_general_print_xls:
+    path:     /informacion/general/especial/print/xls
+    defaults: { _controller: "SieEspecialBundle:Reportes:informacionGeneralEspecialPrintXls" }
+
+sie_ue_especial_informacion_general_impresion_caratula:
+    path:     /impresion/especial/caratula
+    defaults: { _controller: "SieEspecialBundle:Reportes:impresionUECaratula" }
+    
+sie_ue_especial_informacion_general_impresion_estadistica:
+    path:     /impresion/especial/estadistica
+    defaults: { _controller: "SieEspecialBundle:Reportes:impresionUEInformacionEstadistica" }
+    
+sie_ue_especial_informacion_general_impresion_docente:
+    path:     /impresion/especial/docente
+    defaults: { _controller: "SieEspecialBundle:Reportes:impresionUEDocente" }
+    
+sie_ue_especial_informacion_general_impresion_administrativo:
+    path:     /impresion/especial/administrativo
+    defaults: { _controller: "SieEspecialBundle:Reportes:impresionUEAdministrativo" }
+    
+reporte_especial_directorio_institucioneducativa:
+    path:     /directorio/institucioneducativa/especial
+    defaults: { _controller: "SieEspecialBundle:Estadistica:directorioInstitucionEducativaEspecial" }
+
+reporte_especial_directorio_institucioneducativa_busqueda:
+    path:     /directorio/institucioneducativa/busqueda/especial
+    defaults: { _controller: "SieEspecialBundle:Estadistica:directorioInstitucionEducativaBusquedaEspecial" }
+
+reporte_especial_directorio_institucioneducativa_detalle:
+    path:     /directorio/institucioneducativa/detalle/especial
+    defaults: { _controller: "SieEspecialBundle:Estadistica:directorioInstitucionEducativaDetalleEspecial" }
+
+
+reporte_especial_informacion_general_valoracion_cuantitativa_endesarrollo_print_pdf:
+    path:     /informacion/general/especial/valoracion/cuantitativa/endesarrollo/print/pdf
+    defaults: { _controller: "SieEspecialBundle:Estadistica:informacionGeneralEspecialValoracionCuantitativaEnDesarrolloPrintPdf" }
+
+reporte_especial_informacion_general_valoracion_cuantitativa_endesarrollo_print_xls:
+    path:     /informacion/general/especial/valoracion/cuantitativa/endesarrollo/print/xls
+    defaults: { _controller: "SieEspecialBundle:Estadistica:informacionGeneralEspecialValoracionCuantitativaEnDesarrolloPrintXls" }
+
+reporte_especial_subida_archivos:
+    path:     /archivos/Especial
+    defaults: { _controller: "SieEspecialBundle:Estadistica:subidaArchivosEspecial" }

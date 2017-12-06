@@ -1,0 +1,133 @@
+{% extends 'layoutBjp.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/chosen.css')}}" rel="stylesheet">
+    <link href="{{asset('bootstrap-wizard/css/bwizard.min.css')}}" rel="stylesheet">
+</style>
+{% endblock %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>.
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-chevron-down"></i>  <a href="{{path('ImpresionAvanceEstudianteUnidadBono')}}">Generador de Reportes </a></li>
+                    
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+          
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Beneficiarios</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+
+                            <div style="background: #EEE; padding:3px 10px 10px 10px">
+                                <h4 class="text-orange">Filtros del Reporte</h4>
+                                {{form_start(form,{'attr':{'id':'formAreas','onsubmit':'return validateForm()'} })}}
+
+                              <div class="row">
+                                 {#  <div class="col-lg-8 col-md-1">
+                                  {{form_label(form.fuerza)}}
+                                  </div>
+                                  <div class="col-lg-8 col-md-1">
+                                  {{form_widget(form.fuerza)}}
+                                  </div>
+                                  <div class="col-lg-3 col-md-4">
+                                      {{form_widget(form.buscar)}}
+                                  </div>
+                                  <div class="col-lg-8 col-md-1">
+                                  {{form_label(form.gum)}}
+                                  </div>
+                                  <div class="col-lg-8 col-md-1">
+                                  {{form_widget(form.gum)}}
+                                  </div>
+                                  <div class="col-lg-8 col-md-1">
+                                  {{form_label(form.um)}}
+                                  </div>
+                                  <div class="col-lg-8 col-md-1">
+                                  {{form_widget(form.um)}}
+                                  </div> #}
+                                  <div class="col-lg-8 col-md-1">
+                                  {{form_label(form.c_fechaInscripcion)}}
+                                  </div>
+                                  <div class="col-lg-8 col-md-1" id="sandbox-container">
+                                     {{form_widget(form.c_fechaInscripcion)}}
+                                </div>
+                                  <div class="col-lg-3 col-md-4">
+                                      {{form_widget(form.buscar)}}
+                                  </div>
+                                </div>
+                                {{form_end(form)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div id='resultInfoUe'>    </div>
+   
+
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="{{asset('js/chosen.jquery.js')}}"></script>
+    <script src="{{asset('bootstrap-wizard/js/bwizard.js')}}"></script>
+    <script src="{{asset('bootstrap-wizard/jquery-ui.min.js')}}"></script>
+    <script>
+    function informacionUe(){
+       sie=$('#form_sie').val();
+       formData = $('#formAreas').serialize();
+       $.ajax({
+              type: 'post',
+              url: Routing.generate('PagosBono_buscar_infoUe'),
+              data: formData,
+              beforeSend: function () {
+                  $("#resultInfoUe").empty();
+                  $("#resultInfoUe").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+              },
+              success: function (data) {
+                  $("#resultInfoUe").empty();
+                  $("#resultInfoUe").append(data);
+                  //location.reload(true);
+              },
+              statusCode: {
+                  500: function () {
+
+                  },
+                  404: function () {
+
+                  }
+              }
+          });
+
+    }
+
+      
+    </script>
+{% endblock %}

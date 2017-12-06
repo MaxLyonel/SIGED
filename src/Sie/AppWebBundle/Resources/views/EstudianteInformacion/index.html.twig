@@ -1,0 +1,145 @@
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>SISTEMA DE INFORMACIÓN EDUCATIVA
+                    <small>(SIE)</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="{{ path('estudianteinformacion') }}">Buscar Estudiante</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <div class="well well-lg text-dark-blue">
+                <h4>MÓDULO DE CONSULTA AL SISTEMA DE INFORMACIÓN EDUCATIVA</h4>
+                <h5>INFORMACIÓN ESTUDIANTE</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('notiext') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Error!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('goodext') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <ul id=myTab" class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="tabs-accordions.html#home">BÚSQUEDA POR DATOS PERSONALES</a></li>
+                <li><a data-toggle="tab" href="tabs-accordions.html#buscar2">BÚSQUEDA POR CÓDIGO RUDE</a></li>
+            </ul>
+
+            <div id="myTabContent" class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+                    <div class="panel panel-icon panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-search"></i> Búsqueda por datos personales
+                        </div>
+                        <div class="panel-body">
+                            {{form_start(form2, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                            <div class="form-group">
+                                <label for="form2_carnet" class="col-sm-2 control-label">
+                                    {{form_label(form2.carnet)}}
+                                </label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form2.carnet) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="form2_paterno" class="col-sm-2 control-label">
+                                    {{form_label(form2.paterno)}}
+                                </label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form2.paterno) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="form2_materno" class="col-sm-2 control-label">
+                                    {{form_label(form2.materno)}}
+                                </label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form2.materno) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="form2_nombre" class="col-sm-2 control-label">
+                                    {{form_label(form2.nombre)}}
+                                </label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form2.nombre) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    {{ form_widget(form2.buscar2,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                </div>
+                            </div>
+                            {{form_end(form2)}}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="buscar2" class="tab-pane fade">
+                    <div class="panel panel-icon panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-search"></i> Búsqueda por código RUDE
+                        </div>
+                        <div class="panel-body">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                            <div class="form-group">
+                                <label for="form_codigoRude" class="col-sm-2 control-label">
+                                    {{form_label(form.codigoRude)}}
+                                </label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.codigoRude) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="form_gestion" class="col-sm-2 control-label">
+                                    {{form_label(form.gestion)}}
+                                </label>
+                                <div class="col-sm-10">
+                                    {{ form_widget(form.gestion) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    {{ form_widget(form.buscar,{ 'attr':{'class':'btn btn-success' } } ) }}
+                                </div>
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>   
+
+        </div>
+    </div>
+
+{% endblock %}

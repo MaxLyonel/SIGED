@@ -1,0 +1,238 @@
+{% extends 'layoutBjp.html.twig' %}
+{#{% block stylesheets %}
+    {{parent()}}
+    <link href="{{asset('css/chosen.css')}}" rel="stylesheet">
+    <link href="{{asset('bootstrap-wizard/css/bwizard.min.css')}}" rel="stylesheet">
+</style>
+{% endblock %} #}
+
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Registro de Resultados 
+                    <small>Bono Juancito Pinto</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('RegistroResultados')}}"> Registro de Resultados</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('correcto') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('incorrecto') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-blue">
+                {#<div class="portlet portlet-{{ app.session.get('sysporlet') }}">#}
+                <div class="portlet-heading">
+                    <div class="pull-left">
+                        <h4 class="portlet-title">Menus</h4>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="portlet-body">
+                    <div class="panel-body panel-primary">
+                        {% if miObjeto is not empty %}
+                            <div id="no-more-tables" style="width: 100%; overflow: scroll;">
+                                <!--table class="table table-bordered table-hover cf dataTable" id="myTable"-->
+                                <table id="tablaListadoRoles" class="table table-bordered cf" cellspacing="0" width="100%">
+                                    <thead  class="cf">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Fuerza</th>
+                                            <th>Unidad Militar</th>
+                                            <th>RUE(SIE)</th>
+                                            <th>Institucion Educativa</th>
+                                            <th>Departamento</th>
+                                            <th>Municipio</th>
+                                            <th>Distrito</th>
+                                            <th>Entregado</th>
+                                            <th>Terminado</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>                                            
+                                            <th><input type="text" placeholder="filtrar por Resultado" /></th>
+                                            <th><input type="text" placeholder="filtrar por Fuerza" /></th>
+                                            <th><input type="text" placeholder="filtrar por unidad educativa" /></th>
+                                            <th><input type="text" placeholder="filtrar por RUE(SIE)" /></th>
+                                            <th><input type="text" placeholder="filtrar por Institucion Educativa" /></th>
+                                            <th><input type="text" placeholder="filtrar por Departamento" /></th>
+                                            <th><input type="text" placeholder="filtrar por Municipio" /></th>
+                                            <th><input type="text" placeholder="filtrar por Distrito" /></th>
+                                            <th><input type="text" placeholder="filtrar por Entregado" /></th>                                            
+                                            <th><input type="text" placeholder="filtrar por Terminado" /></th>                                            
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        {% for miObjeto in miObjeto %} 
+                                            <tr>
+                                                <td data-title="Ver Resultado"><a class="navbar-brand" href="{{path('RegistroResultadosPreliminares',{sie: miObjeto.codSie })}}"> Resultados </a> </td>
+                                                <td data-title="Fuerza">{{ miObjeto.fuerza }}</td>
+                                                <td data-title="Unidad Militar">{{ miObjeto.unidadmilitar }}</td>
+                                                <td data-title="RUE(SIE)">{{ miObjeto.codSie }}</td>
+                                                <td data-title="Institucion Educativa">{{ miObjeto.institucioneducativa }}</td>
+                                                <td data-title="Departamento">{{ miObjeto.departamentoTipo }}</td>
+                                                <td data-title="Municipio">{{ miObjeto.municipio }}</td>
+                                                <td data-title="Distrito">{{ miObjeto.distrito }}</td>
+                                                <td data-title="Entregado">
+                                                    {% if miObjeto.espagado == true %}
+                                                        <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                                                    {% else %}
+                                                        <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+                                                    {% endif %}
+                                                </td>
+                                                <td data-title="Terminado">
+                                                    {% if miObjeto.esterminado == true %}
+                                                        <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                                                    {% else %}
+                                                        <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+                                                    {% endif %}
+                                                </td>                                                
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            No hay datos
+                        {% endif %}
+                    </div>
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div>  
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+{#    var espanol = {"sProcessing": "Procesando...",
+                     "sLengthMenu": "Mostrar _MENU_ registros",
+                     "sZeroRecords": "No se encontraron resultados",
+                     "sInfo": "Mostrando desde _START_ hasta _END_ de _TOTAL_ registros",
+                     "sInfoEmpty": "No existen registros",
+                     "sInfoFiltered": "(filtrado de un total de _MAX_ líneas)",
+                     "sInfoPostFix": "",
+                     "sSearch": "Buscar:",
+                     "sUrl": "",
+                     "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                     }
+                    };
+
+    var currentLang = espanol; #}   
+        
+    $(document).ready(function() {
+        $('#tablaListadoRoles tbody').on( 'click', 'tr', function () {
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+                $('#tablaListadoPersonas_fil2').text($(this).index());
+                
+            }
+        });
+        
+        var table = $('#tablaListadoRoles').DataTable({
+            language: {
+                "sProcessing":     "Procesando...",
+                "sLengthMenu":     "Mostrar _MENU_ registros",
+                "sZeroRecords":    "No se encontraron resultados",
+                "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix":    "",
+                "sSearch":         "Buscar:",
+                "sUrl":            "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Cargando...",                
+                "oPaginate": {
+                    "sFirst":    "Primero",
+                    "sLast":     "Último",
+                    "sNext":     "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                }
+            },
+            'dom': 'lBfrtip <"clear">',
+            'buttons': [
+                {   
+                    extend: 'colvis',
+                    text:'Visibilizar Columnas'
+                },
+                {
+                    extend: 'print',
+                    text: 'Imprimir',
+                    autoPrint: true,
+                    title: 'SIGED - LISTA DE USUARIO',
+                    header:true,
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend:'pdf',
+                    title: 'SIGED - LISTA DE USUARIO',
+                    filename:'Lista de usuarios filtrados',
+                    orientation:'landscape',
+                    exportOptions: {
+                    modifier: {
+                        page: 'Lista de usuarios filtrados'
+                        }
+                    }
+                },
+                {
+                extend: 'excel',
+                text: 'Excel',
+                filename:'Lista de usuarios filtrados',
+                exportOptions: {
+                    modifier: {
+                        page: 'Lista de usuarios filtrados'
+                        }
+                    }
+                },
+            ]            
+        });
+        
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                that
+                    .search( this.value )
+                    .draw();
+            } );
+        }); 
+        
+    } );
+    </script>
+{% endblock %}
+

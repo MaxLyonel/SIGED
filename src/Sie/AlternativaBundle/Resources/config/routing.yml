@@ -1,0 +1,7 @@
+sie_alternativa_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SieAlternativaBundle:Default:index }
+    
+sie_alternativa_up_file_emp:
+    resource: "@SieAlternativaBundle/Resources/config/routing/upFileEmp.yml"
+    prefix:   /sie/upFileEmp    
