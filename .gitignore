@@ -1,0 +1,6 @@
+app/logs/*                                                                                                                              
+app/cache/*                                                                                                                             
+/tmp/                                                                                                                                   
+web/empfiles/*                                                                                                                          
+web/downloadempfiles/*
+app/config/parameters.yml
