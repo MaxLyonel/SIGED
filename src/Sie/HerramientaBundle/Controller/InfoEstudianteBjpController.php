@@ -1074,5 +1074,32 @@ class InfoEstudianteBjpController extends Controller {
         ));
     }
 
+    public function viewReportAction(Request $request){
+      //get values send by post
+      $form = $request->get('verificarPagoNuevo');
+      //create db connexion
+      $em = $this->getDoctrine()->getManager();
+
+      $query = $em->getConnection()->prepare("
+      select dept.departamento,dist.distrito,eval.institucioneducativa_id,inst.institucioneducativa,eval.turno,nivel,eval.grado_tipo_id,eval.paralelo,count(*) as  cantidad from bonojuancito_estudiante_validacion eval
+        LEFT JOIN institucioneducativa inst on inst.id = eval.institucioneducativa_id
+        left JOIN jurisdiccion_geografica jurg on jurg.id = inst.le_juridicciongeografica_id
+        left JOIN distrito_tipo dist on dist.id = jurg.distrito_tipo_id
+        left JOIN departamento_tipo dept on dept.id = dist.departamento_tipo_id
+        where eval.es_pagado = 'true' and eval.institucioneducativa_id =  ".$form['sie']."
+        and eval.gestion_tipo_id = cast(date_part('year', current_date) as integer)
+        group by dept.departamento,dist.distrito,eval.institucioneducativa_id,inst.institucioneducativa,eval.turno,nivel,eval.grado_tipo_id,eval.paralelo
+        order by 3,4,5
+        limit 100
+      ");
+      $query->execute();
+      $objReport = $query->fetchAll();
+
+        return $this->render($this->session->get('pathSystem') . ':InfoEstudianteBjp:viewReport.html.twig', array(
+          'objReport' => $objReport,
+          'data' =>  $form
+        ));
+    }
+
 
 }

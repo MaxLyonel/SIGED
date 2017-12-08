@@ -61,12 +61,18 @@
 
         <div class="row">
             <div class="col-md-4">
-                <form method="POST" action="{{path('herramienta_info_estudiante_bjp_verifica_pago_nuevo')}}" name="verificarPagoNuevo" id="verificarPagoNuevo">
+                <form method="POST" action="{{path('herramienta_info_estudiante_bjp_verifica_pago_nuevo')}}" name="verificarPagoNuevo" id="verificarPagoNuevo" >
                       <input type="hidden" id="verificarPagoNuevo_sie" name="verificarPagoNuevo[sie]" value="{{sie}}">
                       <input type="hidden" id="verificarPagoNuevo_gestion" name="verificarPagoNuevo[gestion]" value="{{gestion}}">
                       <input type="submit" class="btn btn-block btn-warning" value="Nuevo Estudiante">
                 </form>
-                <form action="{{path('herramienta_info_estudiante_bjp_verifica_reporte')}}" method="post" onsubmit="document.forms['pepe']['enviar'].disabled=true;"  name="pepe">
+                <form method="POST" action="{{path('herramienta_info_estudiante_bjp_view_report')}}" name="viewReport" id="viewReport" >
+                      <input type="hidden" id="verificarPagoNuevo_sie" name="verificarPagoNuevo[sie]" value="{{sie}}">
+                      <input type="hidden" id="verificarPagoNuevo_gestion" name="verificarPagoNuevo[gestion]" value="{{gestion}}">
+                      <input type="submit" class="btn btn-block btn-success" value="Ver Reporte de Información dfasdfasdf">
+                </form>
+
+                <form action="{{path('herramienta_info_estudiante_bjp_verifica_reporte')}}" method="post"  name="pepe" onsubmit="return doConfirmation()">
                     <input type="hidden" name="idInstitucion" value="{{odataUedu.id}}">
                     <input type="hidden" name="gestion" value="{{gestion}}">
                     <button type="submit" class="btn btn-block btn-primary" name="enviar"><i class="fa fa-save"></i> Generar Reporte de Información</button>
@@ -126,7 +132,6 @@
     <!-- Start body content -->
     <!--/ End body content -->
     <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
-
     </div><!-- /.modal -->
     <!--/ End body content -->
 {% endblock %}
@@ -355,6 +360,23 @@
           }
 
         };
+
+        var  doConfirmation = function() {
+          if(confirm('... esta seguro de realizar la descarga del Reporte?\nPresion en OK para continuar')){
+              document.forms['pepe']['enviar'].disabled=true;
+              return true;
+          }else{
+            return false;
+          }
+        }
+
+        var viewReport = function(sie,gestion){
+            $('#mymodal').modal('show');
+        }
+
+        function goBack() {
+              window.history.back();
+          }
 
 </script>
 {%endblock%}

@@ -113,3 +113,6 @@ herramienta_info_estudiante_bjp_remove_students:
     defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:removeStudents }
     options:
          expose: true
+herramienta_info_estudiante_bjp_view_report:
+    path:     /sie/viewReport/
+    defaults: { _controller: SieHerramientaBundle:InfoEstudianteBjp:viewReport }
