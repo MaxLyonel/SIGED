@@ -95,6 +95,13 @@
                                     </div>
                                 {% endfor %}
 
+                                {% for flashMessage in app.session.flashbag.get('mensajedircod4') %}
+                                    <div class="alert alert-danger alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <strong>¡Usted tiene un mensaje de mucha importancia, Lea atentamente!</strong> {{ flashMessage }}                                        
+                                    </div>
+                                {% endfor %}
+
                                 <div class="portlet-heading">
                                     <div class="portlet-title">
                                         <h4>Usted tiene asignados los siguientes roles y/o instituciónes educativas. Selecciones su tipo de acceso al sistema.</h4>
