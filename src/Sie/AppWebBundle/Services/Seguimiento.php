@@ -141,7 +141,7 @@ class Seguimiento {
             LEFT JOIN lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
             LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
             WHERE
-            dist.id = ".$codDistrito."
+            dist.id = ".$codDistrito." and inst.institucioneducativa_acreditacion_tipo_id = 1
             ORDER BY
             codigo_departamento,
             codigo_distrito,
