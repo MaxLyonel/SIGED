@@ -589,6 +589,7 @@ class DefaultController extends Controller {
                     $mensajedirecto = $em->getRepository('SieAppWebBundle:NotificacionUsuario')->findOneBy(array('usuario' => $personausuarios[0]->getId(), 'notif' => '5713980' ) );
                                         
                     if (sizeof($mensajedirecto) > 0) {
+                        //CORRECCCION DE MENSAJE
                         $mensaje = $em->getRepository('SieAppWebBundle:Notificacion')->find($mensajedirecto->getNotif() );                        
                         $this->session->getFlashBag()->add('mensajedircod4', $mensaje->getMensaje());
                         $mendir = 'true';
