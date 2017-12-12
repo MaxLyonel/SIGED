@@ -33,14 +33,14 @@
                                 <td>{{ reg.semestre }}</td>
                                 {#<td>{{ reg.nombre }} {{ reg.paterno }} {{ reg.materno }}</td>#}
                                 <td>{{ reg.tramite_estado }}</td>
-                                <td class="text-center">
-                                    {% if ((reg.teid == '6') or (reg.teid == '7') or (reg.teid == '11') or (reg.teid == '13')) %}                                
+                                <td class="text-center">                                    
+                                    {% if ((reg.teid == '6') or (reg.teid == '7') or (reg.teid == '11') or (reg.teid == '13') or (reg.teid == '5')) %}                                
                                         <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.obs}}">
                                             <i class="fa fa-hand-paper-o"></i>
                                         </button>
                                     {% elseif (reg.teid == '14') %}     {#¡Fin de Semestre - Cerrado! #}  
                                         <form action="{{path('sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">                                    
-                                            <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Autorización para regularizar operativo Fin de Semestre">
+                                            <button type="submit" class="btn btn-circle btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Autorización para regularizar operativo Fin de Semestre">
                                                 <i class="fa fa-edit"></i>
                                             </button>
                                         </form>
@@ -51,7 +51,7 @@
                                         </form>
                                     {% elseif (reg.teid == '12') %}      {#¡Inicio de Semestre - Cerrado!  #}
                                         <form action="{{path('sie_alt_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado', {'iestid': reg.iestid})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">                                    
-                                            <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Autorización para regularizar operativo Inicio de Semestre">
+                                            <button type="submit" class="btn btn-circle btn-warning btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Autorización para regularizar operativo Inicio de Semestre">
                                                 <i class="fa fa-edit"></i>
                                             </button>
                                         </form>
@@ -71,11 +71,7 @@
                                             <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Continuar con operativo Fin de Semestre">
                                                 <i class="fa fa-arrow-circle-right"></i>
                                             </button>
-                                        </form>     
-                                    {% else %}
-                                        <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Observado">
-                                            <i class="fa fa-hand-paper-o"></i>
-                                        </button>         
+                                        </form>        
                                     {% endif %}
                                 </td>     
                             </tr>
