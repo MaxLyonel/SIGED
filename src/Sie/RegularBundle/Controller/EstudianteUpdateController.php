@@ -86,8 +86,9 @@ class EstudianteUpdateController extends Controller {
         //verificamos si existe el estudiante
         if ($student) {
           //check if it has tramite
-          $validationType = ($this->session->get('roluser')==10)?1:2;
-          if($this->get('seguimiento')->getStudentTramite($form['codigoRude'], $validationType)){
+          //dump($this->session->get('roluser'));
+          //$validationType = ($this->session->get('roluser')==10)?1:2;
+          if($this->get('seguimiento')->getStudentTramite($form['codigoRude'], $this->session->get('roluser'))){
             $this->session->getFlashBag()->add('noticemodi', 'No se permite el cambio, estudiante tiene tramite de diplomas...');
             return $this->redirectToRoute('sie_estudiantes');
           }

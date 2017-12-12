@@ -157,24 +157,37 @@ class Seguimiento {
    * @param  [type] $rude [rude]
    * @return [type]       [true, false]
    */
-  public function getStudentTramite($rude,$validationType){
+  public function getStudentTramite($rude,$rolUser){
 
-    //create the query to find the ues by distrito
-    // $query = $this->em->getConnection()->prepare("
-    //                                             select * from tramite a
-    //                                             inner join estudiante_inscripcion b on a.estudiante_inscripcion_id = b.id
-    //                                             inner join estudiante c on b.estudiante_id = c.id
-    //                                             where c.codigo_rude = '".$rude."'
-    //                                             and a.esactivo is true
-    // ");
-    $query = $this->em->getConnection()->prepare("
-                                              select * from tramite a
-                                              inner join estudiante_inscripcion b on a.estudiante_inscripcion_id = b.id
-                                              inner join documento d on a.id = d.tramite_id
-                                              inner join estudiante c on b.estudiante_id = c.id
-                                              where c.codigo_rude = '".$rude."'
-                                              and d.documento_estado_id = '".$validationType."'
-                                              ");
+    //create the query about the roluser
+    switch ($rolUser) {
+      case 8:
+          $query = $this->em->getConnection()->prepare("
+                                                    select * from tramite a
+                                                    inner join estudiante_inscripcion b on a.estudiante_inscripcion_id = b.id
+                                                    inner join documento d on a.id = d.tramite_id
+                                                    inner join estudiante c on b.estudiante_id = c.id
+                                                    where c.codigo_rude = '".$rude."'
+                                                    and d.documento_tipo_id = '2'
+                                                    and d.documento_estado_id = '1'
+                                                    ");
+        # code...
+        break;
+      case 10:
+          $query = $this->em->getConnection()->prepare("
+                                                      select * from tramite a
+                                                      inner join estudiante_inscripcion b on a.estudiante_inscripcion_id = b.id
+                                                      inner join estudiante c on b.estudiante_id = c.id
+                                                      where c.codigo_rude = '".$rude."'
+                                                      and a.esactivo is true
+          ");
+        break;
+
+      default:
+        return false;
+        break;
+    }
+
     $query->execute();
     $objTramite = $query->fetchAll();
     if($objTramite){
