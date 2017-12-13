@@ -108,4 +108,32 @@ class TtecCatalogoMateria
     {
         return $this->obs;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo
+     */
+    private $ttecDenominacionTituloProfesionalTipo;
+
+
+    /**
+     * Set ttecDenominacionTituloProfesionalTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo $ttecDenominacionTituloProfesionalTipo
+     * @return TtecCatalogoMateria
+     */
+    public function setTtecDenominacionTituloProfesionalTipo(\Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo $ttecDenominacionTituloProfesionalTipo = null)
+    {
+        $this->ttecDenominacionTituloProfesionalTipo = $ttecDenominacionTituloProfesionalTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecDenominacionTituloProfesionalTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo 
+     */
+    public function getTtecDenominacionTituloProfesionalTipo()
+    {
+        return $this->ttecDenominacionTituloProfesionalTipo;
+    }
 }

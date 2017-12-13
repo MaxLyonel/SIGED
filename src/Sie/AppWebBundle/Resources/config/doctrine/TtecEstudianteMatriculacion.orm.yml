@@ -1,17 +1,14 @@
-Sie\AppWebBundle\Entity\TtecEstudianteInscripcion:
+Sie\AppWebBundle\Entity\TtecEstudianteMatriculacion:
     type: entity
-    table: ttec_estudiante_inscripcion
+    table: ttec_estudiante_matriculacion
     indexes:
-        IDX_5AC88493E7E1D11E:
+        IDX_89A758B836041CF1:
             columns:
-                - estadomatricula_tipo_fin_id
-        IDX_5AC884938BB5D58C:
+                - ttec_pensum_id
+        IDX_89A758B8A83B07A:
             columns:
-                - estadomatricula_tipo_inicio_id
-        IDX_5AC88493F8243003:
-            columns:
-                - ttec_paralelo_materia_id
-        IDX_5AC88493F5F88DB9:
+                - ttec_carrera_tipo_id
+        IDX_89A758B8F5F88DB9:
             columns:
                 - persona_id
     id:
@@ -24,42 +21,33 @@ Sie\AppWebBundle\Entity\TtecEstudianteInscripcion:
             generator:
                 strategy: SEQUENCE
     fields:
-        fechaInscripcion:
-            type: date
-            nullable: true
-            comment: ''
-            column: fecha_inscripcion
         fechaRegistro:
             type: date
             nullable: true
             comment: ''
             column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
     manyToOne:
-        estadomatriculaTipoFin:
-            targetEntity: EstadomatriculaTipo
+        ttecPensum:
+            targetEntity: TtecPensum
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                estadomatricula_tipo_fin_id:
+                ttec_pensum_id:
                     referencedColumnName: id
             orphanRemoval: false
-        estadomatriculaTipoInicio:
-            targetEntity: EstadomatriculaTipo
+        ttecCarreraTipo:
+            targetEntity: TtecCarreraTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                estadomatricula_tipo_inicio_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        ttecParaleloMateria:
-            targetEntity: TtecParaleloMateria
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                ttec_paralelo_materia_id:
+                ttec_carrera_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         persona:

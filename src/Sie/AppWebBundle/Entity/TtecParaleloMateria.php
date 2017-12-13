@@ -276,4 +276,60 @@ class TtecParaleloMateria
     {
         return $this->ttecDocentePersona;
     }
+    /**
+     * @var integer
+     */
+    private $cupo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecPeriodoTipo
+     */
+    private $ttecPeriodoTipo;
+
+
+    /**
+     * Set cupo
+     *
+     * @param integer $cupo
+     * @return TtecParaleloMateria
+     */
+    public function setCupo($cupo)
+    {
+        $this->cupo = $cupo;
+    
+        return $this;
+    }
+
+    /**
+     * Get cupo
+     *
+     * @return integer 
+     */
+    public function getCupo()
+    {
+        return $this->cupo;
+    }
+
+    /**
+     * Set ttecPeriodoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecPeriodoTipo $ttecPeriodoTipo
+     * @return TtecParaleloMateria
+     */
+    public function setTtecPeriodoTipo(\Sie\AppWebBundle\Entity\TtecPeriodoTipo $ttecPeriodoTipo = null)
+    {
+        $this->ttecPeriodoTipo = $ttecPeriodoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecPeriodoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecPeriodoTipo 
+     */
+    public function getTtecPeriodoTipo()
+    {
+        return $this->ttecPeriodoTipo;
+    }
 }

@@ -1,0 +1,56 @@
+Sie\AppWebBundle\Entity\TtecHorarioParaleloMateria:
+    type: entity
+    table: ttec_horario_paralelo_materia
+    indexes:
+        IDX_3E9D8FA8F8243003:
+            columns:
+                - ttec_paralelo_materia_id
+        IDX_3E9D8FA8F42B0CCD:
+            columns:
+                - ttec_horario_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        obs:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    manyToOne:
+        ttecParaleloMateria:
+            targetEntity: TtecParaleloMateria
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_paralelo_materia_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecHorarioTipo:
+            targetEntity: TtecHorarioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_horario_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

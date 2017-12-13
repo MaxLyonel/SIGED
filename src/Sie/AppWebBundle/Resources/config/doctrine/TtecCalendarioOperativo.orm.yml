@@ -1,22 +1,19 @@
-Sie\AppWebBundle\Entity\TtecParaleloMateria:
+Sie\AppWebBundle\Entity\TtecCalendarioOperativo:
     type: entity
-    table: ttec_paralelo_materia
+    table: ttec_calendario_operativo
     indexes:
-        IDX_EA4642B53B67F11C:
+        IDX_ECBE52B23B67F11C:
             columns:
                 - ttec_periodo_tipo_id
-        IDX_EA4642B59B276788:
+        IDX_ECBE52B28456B221:
             columns:
-                - turno_tipo_id
-        IDX_EA4642B52E917E5D:
-            columns:
-                - ttec_paralelo_tipo_id
-        IDX_EA4642B56716D8F6:
-            columns:
-                - ttec_materia_tipo_id
-        IDX_EA4642B5179FF95:
+                - ttec_operativo_tipo_id
+        IDX_ECBE52B2179FF95:
             columns:
                 - gestion_tipo_id
+        IDX_ECBE52B23AB163FE:
+            columns:
+                - institucioneducativa_id
     id:
         id:
             type: integer
@@ -37,11 +34,16 @@ Sie\AppWebBundle\Entity\TtecParaleloMateria:
             nullable: true
             comment: ''
             column: fecha_modificacion
-        cupo:
-            type: smallint
+        fechaInicio:
+            type: date
             nullable: true
-            unsigned: false
             comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fin
     manyToOne:
         ttecPeriodoTipo:
             targetEntity: TtecPeriodoTipo
@@ -52,31 +54,13 @@ Sie\AppWebBundle\Entity\TtecParaleloMateria:
                 ttec_periodo_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        turnoTipo:
-            targetEntity: TurnoTipo
+        ttecOperativoTipo:
+            targetEntity: TtecOperativoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                turno_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        ttecParaleloTipo:
-            targetEntity: TtecParaleloTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                ttec_paralelo_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        ttecMateriaTipo:
-            targetEntity: TtecMateriaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                ttec_materia_tipo_id:
+                ttec_operativo_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         gestionTipo:
@@ -86,6 +70,15 @@ Sie\AppWebBundle\Entity\TtecParaleloMateria:
             inversedBy: null
             joinColumns:
                 gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

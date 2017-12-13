@@ -1,6 +1,10 @@
 Sie\AppWebBundle\Entity\TtecPensum:
     type: entity
     table: ttec_pensum
+    indexes:
+        IDX_F1267C0167EB6A63:
+            columns:
+                - ttec_denominacion_titulo_profesional_tipo_id
     id:
         id:
             type: integer
@@ -23,13 +27,13 @@ Sie\AppWebBundle\Entity\TtecPensum:
             unsigned: false
             comment: ''
             column: gestion_tipo_id
-        resolucionAdministriva:
+        resolucionAdministrativa:
             type: string
             nullable: true
             length: 100
             fixed: false
             comment: ''
-            column: resolucion_administriva
+            column: resolucion_administrativa
         nroResolucion:
             type: string
             nullable: true
@@ -47,4 +51,19 @@ Sie\AppWebBundle\Entity\TtecPensum:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+    manyToOne:
+        ttecDenominacionTituloProfesionalTipo:
+            targetEntity: TtecDenominacionTituloProfesionalTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_denominacion_titulo_profesional_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
     lifecycleCallbacks: {  }

@@ -1,10 +1,10 @@
-Sie\AppWebBundle\Entity\TtecCatalogoMateria:
+Sie\AppWebBundle\Entity\TtecHorarioTipo:
     type: entity
-    table: ttec_catalogo_materia
+    table: ttec_horario_tipo
     indexes:
-        IDX_C724201C67EB6A63:
+        IDX_CCFE541EA0CE9632:
             columns:
-                - ttec_denominacion_titulo_profesional_tipo_id
+                - ttec_dia_tipo_id
     id:
         id:
             type: integer
@@ -15,33 +15,30 @@ Sie\AppWebBundle\Entity\TtecCatalogoMateria:
             generator:
                 strategy: SEQUENCE
     fields:
-        codigo:
-            type: string
+        horaInicio:
+            type: time
             nullable: true
-            length: 20
-            fixed: false
             comment: ''
-        catalogoMateria:
-            type: string
+            column: hora_inicio
+        horaFin:
+            type: time
             nullable: true
-            length: 250
-            fixed: false
             comment: ''
-            column: catalogo_materia
+            column: hora_fin
         obs:
             type: string
             nullable: true
-            length: 150
+            length: 100
             fixed: false
             comment: ''
     manyToOne:
-        ttecDenominacionTituloProfesionalTipo:
-            targetEntity: TtecDenominacionTituloProfesionalTipo
+        ttecDiaTipo:
+            targetEntity: TtecDiaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                ttec_denominacion_titulo_profesional_tipo_id:
+                ttec_dia_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

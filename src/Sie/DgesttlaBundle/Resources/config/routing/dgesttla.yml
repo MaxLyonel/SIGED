@@ -33,3 +33,7 @@ dgesttla_inst_info_update:
 dgesttla_inst_info_rep_caratula:
     path:   /infoRepCaratula
     defaults:   { _controller: "SieDgesttlaBundle:Reportes:infoRepCaratula" }
+
+dgesttla_inst_calendario:
+    path:   /calendario
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:calendario" }

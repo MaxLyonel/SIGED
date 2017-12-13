@@ -192,4 +192,60 @@ class TtecEstudianteInscripcion
     {
         return $this->persona;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstadomatriculaTipo
+     */
+    private $estadomatriculaTipoFin;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstadomatriculaTipo
+     */
+    private $estadomatriculaTipoInicio;
+
+
+    /**
+     * Set estadomatriculaTipoFin
+     *
+     * @param \Sie\AppWebBundle\Entity\EstadomatriculaTipo $estadomatriculaTipoFin
+     * @return TtecEstudianteInscripcion
+     */
+    public function setEstadomatriculaTipoFin(\Sie\AppWebBundle\Entity\EstadomatriculaTipo $estadomatriculaTipoFin = null)
+    {
+        $this->estadomatriculaTipoFin = $estadomatriculaTipoFin;
+    
+        return $this;
+    }
+
+    /**
+     * Get estadomatriculaTipoFin
+     *
+     * @return \Sie\AppWebBundle\Entity\EstadomatriculaTipo 
+     */
+    public function getEstadomatriculaTipoFin()
+    {
+        return $this->estadomatriculaTipoFin;
+    }
+
+    /**
+     * Set estadomatriculaTipoInicio
+     *
+     * @param \Sie\AppWebBundle\Entity\EstadomatriculaTipo $estadomatriculaTipoInicio
+     * @return TtecEstudianteInscripcion
+     */
+    public function setEstadomatriculaTipoInicio(\Sie\AppWebBundle\Entity\EstadomatriculaTipo $estadomatriculaTipoInicio = null)
+    {
+        $this->estadomatriculaTipoInicio = $estadomatriculaTipoInicio;
+    
+        return $this;
+    }
+
+    /**
+     * Get estadomatriculaTipoInicio
+     *
+     * @return \Sie\AppWebBundle\Entity\EstadomatriculaTipo 
+     */
+    public function getEstadomatriculaTipoInicio()
+    {
+        return $this->estadomatriculaTipoInicio;
+    }
 }

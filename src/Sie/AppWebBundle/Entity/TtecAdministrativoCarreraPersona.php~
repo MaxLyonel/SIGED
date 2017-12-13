@@ -192,4 +192,116 @@ class TtecAdministrativoCarreraPersona
     {
         return $this->ttecCargoDesignacionTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecCarreraTipo
+     */
+    private $ttecCarreraTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecCargoTipo
+     */
+    private $ttecCargoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Persona
+     */
+    private $persona;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\GestionTipo
+     */
+    private $gestionTipo;
+
+
+    /**
+     * Set ttecCarreraTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecCarreraTipo $ttecCarreraTipo
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setTtecCarreraTipo(\Sie\AppWebBundle\Entity\TtecCarreraTipo $ttecCarreraTipo = null)
+    {
+        $this->ttecCarreraTipo = $ttecCarreraTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecCarreraTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecCarreraTipo 
+     */
+    public function getTtecCarreraTipo()
+    {
+        return $this->ttecCarreraTipo;
+    }
+
+    /**
+     * Set ttecCargoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecCargoTipo $ttecCargoTipo
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setTtecCargoTipo(\Sie\AppWebBundle\Entity\TtecCargoTipo $ttecCargoTipo = null)
+    {
+        $this->ttecCargoTipo = $ttecCargoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecCargoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecCargoTipo 
+     */
+    public function getTtecCargoTipo()
+    {
+        return $this->ttecCargoTipo;
+    }
+
+    /**
+     * Set persona
+     *
+     * @param \Sie\AppWebBundle\Entity\Persona $persona
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
+    {
+        $this->persona = $persona;
+    
+        return $this;
+    }
+
+    /**
+     * Get persona
+     *
+     * @return \Sie\AppWebBundle\Entity\Persona 
+     */
+    public function getPersona()
+    {
+        return $this->persona;
+    }
+
+    /**
+     * Set gestionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\GestionTipo $gestionTipo
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setGestionTipo(\Sie\AppWebBundle\Entity\GestionTipo $gestionTipo = null)
+    {
+        $this->gestionTipo = $gestionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\GestionTipo 
+     */
+    public function getGestionTipo()
+    {
+        return $this->gestionTipo;
+    }
 }

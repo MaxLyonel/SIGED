@@ -986,6 +986,16 @@ class InstitucioneducativaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($insSuc);
 
+        $query = $em->createQuery(
+            'SELECT tt FROM SieAppWebBundle:TurnoTipo tt
+            ORDER BY tt.turno');
+
+        $turnos = $query->getResult();
+        $turnosArray = array();
+        foreach ($turnos as $t) {
+            $turnosArray[$t->getId()] = $t->getTurno();
+        }
+
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('dgesttla_inst_info_update'))
                 ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
@@ -995,8 +1005,9 @@ class InstitucioneducativaController extends Controller {
                 ->add('fax', 'text', array('label' => 'Fax', 'required' => false, 'data' => $sucursal->getFax(), 'attr' => array('class' => 'form-control')))
                 ->add('telefono2', 'text', array('label' => 'Teléfono 2', 'required' => false, 'data' => $sucursal->getTelefono2(), 'attr' => array('class' => 'form-control')))
                 ->add('referenciaTelefono2', 'text', array('label' => 'Pertenece a (cargo o relación)', 'data' => $sucursal->getReferenciaTelefono2(), 'attr' => array('class' => 'form-control')))
-                ->add('email', 'text', array('label' => 'Correo electrónico de la U.E.', 'required' => false, 'data' => $sucursal->getEmail(), 'attr' => array('class' => 'form-control')))
-                ->add('casilla', 'text', array('label' => 'Casilla postal de la U.E.', 'required' => false, 'data' => $sucursal->getCasilla(), 'attr' => array('class' => 'form-control')))
+                ->add('email', 'text', array('label' => 'Correo electrónico del Instituto', 'required' => false, 'data' => $sucursal->getEmail(), 'attr' => array('class' => 'form-control')))
+                ->add('casilla', 'text', array('label' => 'Casilla postal del Instituto', 'required' => false, 'data' => $sucursal->getCasilla(), 'attr' => array('class' => 'form-control')))
+                ->add('turno', 'choice', array('label' => 'Turno', 'required' => true, 'choices' => $turnosArray, 'data' => $sucursal->getTurnoTipo() ? $sucursal->getTurnoTipo()->getId() : 0, 'attr' => array('class' => 'form-control')))
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
 
@@ -1032,6 +1043,7 @@ class InstitucioneducativaController extends Controller {
             $institucion->setCasilla($form['casilla']);
             $institucion->setReferenciaTelefono2(mb_strtoupper($form['referenciaTelefono2']), 'utf-8');
             $institucion->setEmail(mb_strtolower($form['email']), 'utf-8');
+            $institucion->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['turno']));
 
             $em->persist($institucion);
             $em->flush();
@@ -1043,5 +1055,35 @@ class InstitucioneducativaController extends Controller {
             $em->getConnection()->rollback();
         }
     }
+
+    public function calendarioAction(Request $request) {
+        
+        //get the session's values
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        $ieducativa_id = $request->getSession()->get('idInstitucion');
+        $gestion_id = $request->getSession()->get('idGestion');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $calendario = $em->getRepository('SieAppWebBundle:TtecCalendarioOperativo')->findBy(array('institucioneducativa' => $ieducativa_id, 'gestionTipo' => $gestion_id));
+        $institucion = $em->getRepository('SieAppWebBundle:TtecCalendarioOperativo')->findBy(array('institucioneducativa' => $ieducativa_id, 'gestionTipo' => $gestion_id));
+dump($calendario);die;
+        return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:calendario_index.html.twig', array(
+            'institucion' => $institucion,
+            'gestion' => $gestion_id,
+            'calendario' => $calendario
+        ));
+    }    
 
 }

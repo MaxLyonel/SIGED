@@ -94,6 +94,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                            <div class="thumbnail">
+                                <img src="{{asset('img/closeOperativo.jpg')}}" alt="Carreras">
+                                <div class="caption">
+                                    <h3>Calendario</h3>
+                                    <div class="thumbnail-action">
+                                        <form action="{{path('dgesttla_inst_calendario')}}" method="post" style="display:inline-block">
+                                            <input type="hidden" name="institucioneducativaId" value="{{institucioneducativa.id}}">
+                                            <input type="hidden" name="gestionId" value={{gestion}}>
+                                            <button type="submit" class="btn btn-success"><i class="fa fa-eye"></i> Calendario</button>
+                                        </form>
+                                        <a href="javascript:void(0);" class="btn btn-primary" role="button"><i class="fa fa-print"></i> Imprimir reporte</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

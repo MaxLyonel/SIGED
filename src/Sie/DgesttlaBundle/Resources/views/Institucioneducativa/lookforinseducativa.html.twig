@@ -244,15 +244,16 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {{ form_start(form) }}
                                     <div class="col-md-9">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <strong>Turno:</strong>
+                                                <strong>{{ form_label(form.turno) }}</strong>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <input class="form-control" id="disabledInput" type="text" placeholder="{{ iedusu.turnoTipo }}" disabled>
+                                                {{ form_widget(form.turno) }}
                                             </div>
                                         </div>
                                     </div>
@@ -266,7 +267,6 @@
                             <div class="panel-heading">
                                 <h3 class="panel-title">4.- Datos Referenciales</h3>
                             </div><!-- /.panel-heading -->
-                            {{ form_start(form) }}
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-md-4">
