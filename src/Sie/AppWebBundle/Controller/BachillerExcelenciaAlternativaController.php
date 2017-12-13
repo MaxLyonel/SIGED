@@ -653,6 +653,21 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
             $em = $this->getDoctrine()->getManager();
 
+            //added validation to dist potosi and achacachi
+            $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
+            $query = $repository->createQueryBuilder('i')
+             ->select('jg')
+             ->innerJoin('SieAppWebBundle:JurisdiccionGeografica', 'jg', 'WITH', 'i.leJuridicciongeografica = jg.id')
+             ->where('i.id = :institucion')
+             ->setParameter('institucion', $formulario['institucioneducativa'])
+             ->getQuery();
+
+            $distritoBloqueado = $query->getResult()[0];
+
+            if(!($distritoBloqueado->getDistritoTipo()->getId() == 2006 || $distritoBloqueado->getDistritoTipo()->getId() == 5001)){
+              return $this->redirect($this->generateUrl('principal_web'));
+            }
+
             /*
             * Verificar si la UE cuenta con aprendizajes especializados
             */
