@@ -12,6 +12,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaAreaEspecialAutorizado;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\InstitucioneducativaNivelAutorizado;
 use Sie\AppWebBundle\Entity\InstitucioneducativaSucursal;
+use Sie\AppWebBundle\Entity\TtecCalendarioOperativo;
 
 /**
  * Institucioneducativa Controller.
@@ -1085,5 +1086,221 @@ class InstitucioneducativaController extends Controller {
             'calendario' => $calendario
         ));
     }    
+
+    /*
+     * Llamamos al formulario para nuevo operativo/calendario
+     */
+
+    public function calendarioNewAction(Request $request) {
+        
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $form = $request->get('form');
+        
+        $ieducativa_id = $form['idInstitucion'];
+        $gestion_id = $form['idGestion'];
+
+        $em = $this->getDoctrine()->getManager();
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($ieducativa_id);
+
+        return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:calendario_new.html.twig', array(
+                    'form' => $this->newOperativoForm($ieducativa_id, $gestion_id)->createView(),
+                    'institucion' => $institucion,
+                    'gestion' => $gestion_id
+        ));
+    }
+
+     /*
+     * formulario de nueva/o operativo
+     */
+    private function newOperativoForm($idInstitucion, $idGestion) {
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQuery('SELECT ot FROM SieAppWebBundle:TtecOperativoTipo ot ORDER BY ot.id');
+        
+        $operativos = $query->getResult();
+        $operativosArray = array();
+        foreach ($operativos as $value) {
+            $operativosArray[$value->getId()] = $value->getOperativo();
+        }
+
+        $query = $em->createQuery('SELECT pt FROM SieAppWebBundle:TtecPeriodoTipo pt WHERE pt.id in (0) ORDER BY pt.id');
+        
+        $periodos = $query->getResult();
+        $periodosArray = array();
+        foreach ($periodos as $value) {
+            $periodosArray[$value->getId()] = $value->getPeriodo();
+        }
+
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('dgesttla_inst_calendario_create'))
+            ->add('idInstitucion', 'hidden', array('data' => $idInstitucion))
+            ->add('idGestion', 'hidden', array('data' => $idGestion))
+            ->add('operativo', 'choice', array('label' => 'Operativo:', 'required' => true, 'choices' => $operativosArray, 'attr' => array('class' => 'form-control')))
+            ->add('periodo', 'choice', array('label' => 'Periodo:', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
+            ->add('fechaInicio','text',array('label'=>'Fecha Inicio','attr'=>array('class'=>'form-control','autocomplete'=>'off')))
+            ->add('fechaFin','text',array('label'=>'Fecha Fin','attr'=>array('class'=>'form-control','autocomplete'=>'off')))
+            ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+            
+        return $form;
+    }
+
+    /*
+     * registramos el nuevo operativo
+     */
+    public function calendarioCreateAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            $form = $request->get('form');
+
+            $operativo = $em->getRepository('SieAppWebBundle:TtecCalendarioOperativo')->findOneBy(array('institucioneducativa' => $form['idInstitucion'], 'gestionTipo' => $form['idGestion'], 'ttecOperativoTipo' => $form['operativo']));
+
+            if ($operativo) {
+                $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, el operativo ya se encuentra registrado.');
+                return $this->redirect($this->generateUrl('dgesttla_inst_calendario'));
+            }
+
+            // Registro Operativo
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_calendario_operativo');")->execute();
+            $operativoNew = new TtecCalendarioOperativo();
+            $operativoNew->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idInstitucion']));
+            $operativoNew->setTtecOperativoTipo($em->getRepository('SieAppWebBundle:TtecOperativoTipo')->findOneById($form['operativo']));
+            $operativoNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['idGestion']));
+            $operativoNew->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['periodo']));
+            $operativoNew->setFechaInicio(new \DateTime('now'));
+            $operativoNew->setFechaFin(new \DateTime('now'));
+            $operativoNew->setFechaRegistro(new \DateTime('now'));
+            $em->persist($operativoNew);
+            $em->flush();
+            $em->getConnection()->commit();
+
+            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente.');
+            return $this->redirect($this->generateUrl('dgesttla_inst_calendario'));
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Llamar al formulario de edicion
+     */
+    public function calendarioEditAction(Request $request) {
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $form = $request->get('formE');
+          
+        $ieducativa_id = $form['idInstitucion'];
+        $gestion_id = $form['idGestion'];
+        $operativo_id = $form['idOperativo'];
+
+        $em = $this->getDoctrine()->getManager();
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
+
+        return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:calendario_edit.html.twig', array(
+                    'form' => $this->editOperativoForm($ieducativa_id, $gestion_id, $operativo_id)->createView(),
+                    'institucion' => $institucion,
+                    'gestion' => $request->getSession()->get('idGestion')
+        ));
+    }
+
+    /*
+    * formulario de edicion
+    */
+    private function editOperativoForm($idInstitucion, $idGestion, $idOperativo) {
+        $em = $this->getDoctrine()->getManager();
+        $operativo = $em->getRepository('SieAppWebBundle:TtecCalendarioOperativo')->findOneById($idOperativo);
+
+        $query = $em->createQuery('SELECT ot FROM SieAppWebBundle:TtecOperativoTipo ot ORDER BY ot.id');
+        
+        $operativos = $query->getResult();
+        $operativosArray = array();
+        foreach ($operativos as $value) {
+            $operativosArray[$value->getId()] = $value->getOperativo();
+        }
+
+        $query = $em->createQuery('SELECT pt FROM SieAppWebBundle:TtecPeriodoTipo pt WHERE pt.id in (0) ORDER BY pt.id');
+        
+        $periodos = $query->getResult();
+        $periodosArray = array();
+        foreach ($periodos as $value) {
+            $periodosArray[$value->getId()] = $value->getPeriodo();
+        }
+
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('dgesttla_inst_calendario_update'))
+            ->add('idInstitucion', 'hidden', array('data' => $idInstitucion))
+            ->add('idGestion', 'hidden', array('data' => $idGestion))
+            ->add('operativo', 'choice', array('label' => 'Operativo:', 'required' => true, 'choices' => $operativosArray, 'data' => $operativo->getTtecOperativoTipo()->getId(), 'attr' => array('class' => 'form-control')))
+            ->add('periodo', 'choice', array('label' => 'Periodo:', 'required' => true, 'choices' => $periodosArray, 'data' => $operativo->getTtecPeriodoTipo()->getId(), 'attr' => array('class' => 'form-control')))
+            ->add('fechaInicio','text',array('label'=>'Fecha Inicio', 'data' => '20-12-2017', 'attr'=>array('class'=>'form-control','autocomplete'=>'off')))
+            ->add('fechaFin','text',array('label'=>'Fecha Fin', 'data' => '20-05-2017', 'attr'=>array('class'=>'form-control','autocomplete'=>'off')))
+            ->add('guardar', 'submit', array('label' => 'Guardar cambios', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+
+        return $form;
+    }
+
+    /*
+    * guardar datos de modificacion
+    */
+    public function calendarioUpdateAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            $form = $request->get('form');
+            
+            // Actiualización Operativo
+            $operativoEdit = $em->getRepository('SieAppWebBundle:TtecCalendarioOperativo')->findOneById($form['operativo']);
+            $operativoEdit->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idInstitucion']));
+            $operativoEdit->setTtecOperativoTipo($em->getRepository('SieAppWebBundle:TtecOperativoTipo')->findOneById($form['operativo']));
+            $operativoEdit->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['idGestion']));
+            $operativoEdit->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['periodo']));
+            $operativoEdit->setFechaInicio(new \DateTime('now'));
+            $operativoEdit->setFechaFin(new \DateTime('now'));
+            $operativoEdit->setFechaModificacion(new \DateTime('now'));
+            $em->persist($operativoEdit);
+            $em->flush();
+            $em->getConnection()->commit();
+
+            $this->get('session')->getFlashBag()->add('updateOk', 'Datos modificados correctamente.');
+            return $this->redirect($this->generateUrl('dgesttla_inst_calendario'));
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificación de datos.');
+            return $this->redirect($this->generateUrl('dgesttla_inst_calendario'));
+        }
+    }
+
+    /*
+    * Eliminacion de operativo
+    */
+    public function calendarioDeleteAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('formD');
+        $operativoDelete = $em->getRepository('SieAppWebBundle:TtecCalendarioOperativo')->findOneById($form['idOperativo']);
+
+        $em->getConnection()->beginTransaction();
+        try {
+            //eliminamos el registro
+            $em->remove($operativoDelete);
+            $em->flush();
+            $em->getConnection()->commit();
+
+            $this->get('session')->getFlashBag()->add('eliminarOk', 'El registro fue eliminado exitosamente.');
+            return $this->redirect($this->generateUrl('dgesttla_inst_calendario'));
+        } catch (Exception $ex) {
+            $this->get('session')->getFlashBag()->add('eliminarError', 'El registro no se pudo eliminar.');
+            $em->getConnection()->rollback();
+            return $this->redirect($this->generateUrl('dgesttla_inst_calendario'));
+        }
+    }
 
 }
