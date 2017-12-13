@@ -1077,8 +1077,8 @@ class InstitucioneducativaController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $calendario = $em->getRepository('SieAppWebBundle:TtecCalendarioOperativo')->findBy(array('institucioneducativa' => $ieducativa_id, 'gestionTipo' => $gestion_id));
-        $institucion = $em->getRepository('SieAppWebBundle:TtecCalendarioOperativo')->findBy(array('institucioneducativa' => $ieducativa_id, 'gestionTipo' => $gestion_id));
-dump($calendario);die;
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($ieducativa_id);
+
         return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:calendario_index.html.twig', array(
             'institucion' => $institucion,
             'gestion' => $gestion_id,

@@ -221,7 +221,14 @@ class DefaultController extends Controller {
                 $layout = 'layoutPnp.html.twig';
                 $this->session->set('pathSystem', "SiePnpBundle");
                 break;
-
+            case '172.20.196.4':
+            case 'dgesttla.sie.gob.bo':
+                $sysname = 'DGESTTLA';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutDgesttla.html.twig';
+                $this->session->set('pathSystem', "SieDgesttlaBundle");
+                break;
             default :
                 $sysname = 'REGULAR';
                 $sysporlet = 'blue';

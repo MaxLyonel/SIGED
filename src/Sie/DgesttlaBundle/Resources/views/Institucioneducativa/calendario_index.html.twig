@@ -35,10 +35,10 @@
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Código RIE</th>
-                                    <th>Institución Educativa</th>
-                                    <th>Tipo</th>
-                                    <th>Gestión</th>
+                                    <th>Periodo</th>
+                                    <th>Operativo</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -46,16 +46,16 @@
                                 {% for entity in calendario %}
                                     <tr>
                                         <td>{{ loop.index }}</td>
-                                        <td>{{ entity.id }}</td>
-                                        <td>{{ entity.institucioneducativa }}</td>
-                                        <td>{{ entity.institucioneducativaTipo }}</td>
-                                        <td>2017</td>
-                                        <td>
-                                            <form action="{{path('dgesttla_inst_grales')}}" method="post" style="display:inline-block">
+                                        <td>{{ entity.ttecPeriodoTipo.periodo }}</td>
+                                        <td>{{ entity.ttecOperativoTipo.operativo }}</td>
+                                        <td>{% if entity.fechaInicio %}{{ entity.fechaInicio|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                        <td>{% if entity.fechaFin %}{{ entity.fechaFin|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                        <td>-
+                                            {#<form action="{{path('dgesttla_inst_grales')}}" method="post" style="display:inline-block">
                                                 <input type="hidden" name="institucioneducativaId" value="{{entity.id}}">
                                                 <input type="hidden" name="gestionId" value="2017">
                                                 <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Ingresar</button>
-                                            </form>
+                                            </form>#}
                                         </td>
                                     </tr>
                                 {% endfor %}
