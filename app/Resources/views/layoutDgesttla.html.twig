@@ -55,6 +55,8 @@
             <script src="{{asset('webDgesttla/assets/global/plugins/bower_components/respond-minmax/dest/respond.min.js')}}"></script>
             <![endif]-->
             <!--/ END IE SUPPORT -->
+            <link href="{{asset('webDgesttla/assets/global/plugins/bower_components/bootstrap-datepicker-vitalets/css/datepicker.css')}}" rel="stylesheet">
+            <link href="{{asset('webDgesttla/assets/global/plugins/bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet">
         {% endblock %}
     </head>
     <!--/ END HEAD -->
@@ -329,10 +331,17 @@
             <script src="{{asset('webDgesttla/assets/admin/js/pages/blankon.layout.js')}}"></script>
             <script src="{{asset('webDgesttla/assets/admin/js/pages/blankon.table.js')}}"></script>
             <script src="{{asset('webDgesttla/assets/admin/js/demo.js')}}"></script>
+            <script src="{{asset('webDgesttla/assets/global/plugins/bower_components/bootstrap-datepicker-vitalets/js/bootstrap-datepicker.js')}}"></script>
             <!--/ END PAGE LEVEL SCRIPTS -->
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
             <!--/ END JAVASCRIPT SECTION -->
+            <script type="text/javascript">
+                $('.calendario').datepicker({
+                    format: 'mm-dd-yyyy',
+                    todayBtn: 'linked'
+                });
+            </script>
         {% endblock %}
     </body>
     <!--/ END BODY -->

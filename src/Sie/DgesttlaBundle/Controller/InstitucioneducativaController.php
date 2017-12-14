@@ -1151,8 +1151,8 @@ class InstitucioneducativaController extends Controller {
             ->add('idGestion', 'hidden', array('data' => $idGestion))
             ->add('operativo', 'choice', array('label' => 'Operativo:', 'required' => true, 'choices' => $operativosArray, 'attr' => array('class' => 'form-control')))
             ->add('periodo', 'choice', array('label' => 'Periodo:', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
-            ->add('fechaInicio','text',array('label'=>'Fecha Inicio','attr'=>array('class'=>'form-control','autocomplete'=>'off')))
-            ->add('fechaFin','text',array('label'=>'Fecha Fin','attr'=>array('class'=>'form-control','autocomplete'=>'off')))
+            ->add('fechaInicio','text',array('label'=>'Fecha Inicio','attr'=>array('class'=>'form-control calendario','autocomplete'=>'off')))
+            ->add('fechaFin','text',array('label'=>'Fecha Fin','attr'=>array('class'=>'form-control calendario','autocomplete'=>'off')))
             ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
             
