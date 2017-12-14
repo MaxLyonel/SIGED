@@ -222,6 +222,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SiePnpBundle");
                 break;
             case '172.20.196.4':
+            case '172.20.196.9:8024':
             case 'dgesttla.sie.gob.bo':
                 $sysname = 'DGESTTLA';
                 $sysporlet = 'blue';
@@ -574,7 +575,7 @@ class DefaultController extends Controller {
                         $carnetban = 'true';
                     }
                     //dump($carnetban);die;
-                                        
+
                     //*******************
                     //MENSAJE DE RESETEO DE CONTRASEÑA CANTIDAD DE DIAS DESDE EL ULTIMO CAMBIO DE CONTRASEÑA
                     $exp = 'null';
@@ -583,24 +584,24 @@ class DefaultController extends Controller {
                     $datetime1 = new \DateTime($date);
                     $datetime2 = new \DateTime("today");
                     $interval = $datetime1->diff($datetime2);
-                    $dias = $interval->format('%a');                    
+                    $dias = $interval->format('%a');
                     if (intval($dias) > 90) {
                         $this->session->getFlashBag()->add('errorcontraexp', 'La omisión reiterada a esta observación derivara en la ');
                         $exp = 'true';
-                    }                    
+                    }
                     //dump($exp);die;
 
                     //*******************
                     //MENSAJE DIRIGIDO AL USUARIO
                     $mendir = 'null';
                     $mensajedirecto = $em->getRepository('SieAppWebBundle:NotificacionUsuario')->findOneBy(array('usuario' => $personausuarios[0]->getId(), 'notif' => '5713980' ) );
-                                        
+
                     if (sizeof($mensajedirecto) > 0) {
                         //CORRECCCION DE MENSAJE
-                        $mensaje = $em->getRepository('SieAppWebBundle:Notificacion')->find($mensajedirecto->getNotif() );                        
+                        $mensaje = $em->getRepository('SieAppWebBundle:Notificacion')->find($mensajedirecto->getNotif() );
                         $this->session->getFlashBag()->add('mensajedircod4', $mensaje->getMensaje());
                         $mendir = 'true';
-                    } 
+                    }
                     //dump($mensaje->getMensaje());die;
 
                     if (($exp == 'true') || ($carnetban == 'true') || ($mendir == 'true')){
