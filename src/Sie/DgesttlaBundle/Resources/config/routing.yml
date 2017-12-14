@@ -14,6 +14,9 @@ sie_dgesttla_administrativos_carrera:
     resource:   "@SieDgesttlaBundle/Resources/config/routing/infoPersonalAdmCarrera.yml"
     prefix: /dgesttla/administrativocarrera
 
+sie_dgesttla_calificaciones:
+    resource:   "@SieDgesttlaBundle/Resources/config/routing/calificaciones.yml"
+    prefix: /dgesttla/calificaciones
 
 sie_dgesttla_pensum_carrera:
     resource:   "@SieDgesttlaBundle/Resources/config/routing/pensum.yml"
@@ -30,4 +33,3 @@ sie_dgesttla_paralelo_materia_carrera:
 sie_dgesttla_InscriptionDg:
     resource:   "@SieDgesttlaBundle/Resources/config/routing/InscriptionDg.yml"
     prefix: /dgesttla/InscriptionDg
-
