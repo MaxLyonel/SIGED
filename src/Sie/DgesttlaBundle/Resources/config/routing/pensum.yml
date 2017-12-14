@@ -1,0 +1,33 @@
+dgesttla_carrera_pensum:
+    path:   /pensumindex
+    defaults:   { _controller: "SieDgesttlaBundle:Pensum:index" }
+
+dgesttla_carrera_pensum_new:
+    path:   /pensumnew
+    defaults:   { _controller: "SieDgesttlaBundle:Pensum:new" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_pensum_create:
+    path:     /pensumcreate/
+    defaults:   { _controller: "SieDgesttlaBundle:Pensum:create" }
+    methods:  POST
+
+dgesttla_carrera_pensum_edit:
+    path:   /pensumedit
+    defaults:   { _controller: "SieDgesttlaBundle:Pensum:edit" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_pensum_update:
+    path:   /pensumupdate
+    defaults:   { _controller: "SieDgesttlaBundle:Pensum:update" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_pensum_delete:
+    path:   /pensumdelete
+    defaults:   { _controller: "SieDgesttlaBundle:Pensum:delete" }
+    methods:  [POST, DELETE]
+
+dgesttla_carrera_pensum_vigente:
+    path:   /pensumvigente
+    defaults:   { _controller: "SieDgesttlaBundle:Pensum:esVigente" }
+    methods:  [POST, PUT]

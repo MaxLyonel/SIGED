@@ -3,7 +3,7 @@
 {% block headercontent %}
 <!-- Start header content -->
 <div class="header-content">
-    <h2><i class="fa fa-file-o"></i>Formación Técnica Tecnológica <span>Calendario Académico</span></h2>
+    <h2><i class="fa fa-file-o"></i>Formación Técnica Tecnológica <span>Pensum</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
         <span class="label">Estás aquí:</span>
         <ol class="breadcrumb">
@@ -12,7 +12,7 @@
                 <a href="{{path('principal_web')}}">Inicio</a>
                 <i class="fa fa-angle-right"></i>
             </li>
-            <li class="active">Calendario Académico</li>
+            <li class="active">Pensum</li>
         </ol>
     </div>
 </div><!-- /.header-content -->
@@ -21,7 +21,7 @@
 
 {% block bodycontent %}
 
-    {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Calendario Académico', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+    {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Pensum', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
 
     {% for flashMessage in app.session.flashbag.get('newOk') %}
     <div class="alert alert-success" role="alert">
@@ -64,52 +64,71 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="panel rounded shadow">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Operativos</h3>
+                    <h3 class="panel-title">Pensum</h3>
                 </div><!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="pull-right">
-                        <form action="{{path('dgesttla_inst_calendario_new')}}" name="form" method="post" style="display:inline-block">
+                        <form action="{{path('dgesttla_carrera_pensum_new')}}" name="form" method="post" style="display:inline-block">
                             <input type="hidden" id="form_idInstitucion" name="form[idInstitucion]" value="{{institucion.id}}">
                             <input type="hidden" id="form_idGestion" name="form[idGestion]" value="{{gestion}}">
-                            <button type="submit" name="form_btnNew" name="form[btnNew]" class="btn btn-primary btn-md"><i class="fa fa-edit"></i> Nuevo Operativo</button>
+                            <input type="hidden" id="form_idDenominacion" name="form[idDenominacion]" value="{{denominacion}}">
+                            <button type="submit" name="form_btnNew" name="form[btnNew]" class="btn btn-primary btn-md"><i class="fa fa-edit"></i> Nuevo Pensum</button>
                         </form>
                     </div>
                     <div class="callout callout-warning">
                         <strong>Recuerde que:</strong><br />
-                        - Es adsda.<br />
+                        - Debe existir al menos un Pensum vigente.<br />
                     </div>
                     <div class="table-responsive mb-20">
                         <table class="table table-hover table-striped table-primary">
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Periodo</th>
-                                    <th>Operativo</th>
-                                    <th>Fecha Inicio</th>
-                                    <th>Fecha Fin</th>
+                                    <th>Gestión</th>
+                                    <th>Pensum</th>
+                                    <th>Resolución</th>
+                                    <th>Nro de Resolución</th>
+                                    <th>Fecha Registro</th>
+                                    <th>Fecha Modificación</th>
                                     <th>Acciones</th>
+                                    <th>¿Vigente?</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for entity in calendario %}
+                                {% for entity in pensum %}
                                     <tr>
                                         <td>{{ loop.index }}</td>
-                                        <td>{{ entity.ttecPeriodoTipo.periodo }}</td>
-                                        <td>{{ entity.ttecOperativoTipo.operativo }}</td>
-                                        <td>{% if entity.fechaInicio %}{{ entity.fechaInicio|date('d-m-Y') }}{% else %}-{% endif %}</td>
-                                        <td>{% if entity.fechaFin %}{{ entity.fechaFin|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                        <td>{{ entity.gestionTipoId }}</td>
+                                        <td>{{ entity.Pensum }}</td>
+                                        <td>{{ entity.resolucionAdministrativa }}</td>
+                                        <td>{{ entity.nroResolucion }}</td>
+                                        <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                        <td>{% if entity.fechaModificacion %}{{ entity.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                         <td>
-                                            <form name="formE" action="{{path('dgesttla_inst_calendario_edit')}}" method="post" style="display:inline-block">
+                                            <form name="formE" action="{{path('dgesttla_carrera_pensum_edit')}}" method="post" style="display:inline-block">
                                                 <input type="hidden" id="formE_idInstitucion" name="formE[idInstitucion]" value="{{institucion.id}}">
                                                 <input type="hidden" id="formE_idGestion" name="formE[idGestion]" value="{{gestion}}">
-                                                <input type="hidden" id="formE_idOperativo" name="formE[idOperativo]" value="{{entity.id}}">
+                                                <input type="hidden" id="formE_idPensum" name="formE[idPensum]" value="{{entity.id}}">
+                                                <input type="hidden" id="formE_idDenominacion" name="formE[idDenominacion]" value="{{denominacion}}">
                                                 <button type="submit" name="formE[editar]" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
                                             </form>
-                                            <form name="formD" action="{{path('dgesttla_inst_calendario_delete')}}" method="post" style="display:inline-block">
+                                            <form name="formD" action="{{path('dgesttla_carrera_pensum_delete')}}" method="post" style="display:inline-block">
                                                 <input type="hidden" id="formD_idInstitucion" name="formD[idInstitucion]" value="{{institucion.id}}">
                                                 <input type="hidden" id="formD_idGestion" name="formD[idGestion]" value="{{gestion}}">
-                                                <input type="hidden" id="formD_idOperativo" name="formD[idOperativo]" value="{{entity.id}}">
+                                                <input type="hidden" id="formD_idPensum" name="formD[idPensum]" value="{{entity.id}}">
                                                 <button type="submit" name="formD[editar]" class="btn-link" onclick="return confirm('¡Se eliminará el registro! ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="{{path('dgesttla_carrera_pensum_vigente')}}" method="post" style="display: inline-block">
+                                                <input type="hidden" id="formV_idInstitucion" name="formV[idInstitucion]" value="{{institucion.id}}">
+                                                <input type="hidden" id="formV_idGestion" name="formV[idGestion]" value="{{gestion}}">
+                                                <input type="hidden" id="formV_idPensum" name="formV[idPensum]" value="{{entity.id}}">
+                                                {% if entity.esVigente %}
+                                                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Está segura/o de continuar?');">Vigente</button>
+                                                {% else %}
+                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está segura/o de continuar?');">Definir como Vigente</button>
+                                                {% endif %}
                                             </form>
                                         </td>
                                     </tr>
