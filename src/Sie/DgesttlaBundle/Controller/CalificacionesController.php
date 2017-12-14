@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\TtecDocentePersona;
 use Sie\AppWebBundle\Entity\TtecDocenteMateria;
 use GuzzleHttp\Client;
+use Sie\AppWebBundle\Entity\TtecEstudianteNota;
 
 /**
  * EstudianteInscripcion controller.
@@ -63,7 +64,14 @@ class CalificacionesController extends Controller {
         try {
             $paraleloMateriaId = $request->get('paraleloMateriaId');
             $em = $this->getDoctrine()->getManager();
-            $estudiantes = $em->getRepository('SieAppWebBundle:TtecEstudianteInscripcion')->findBy(array('ttecParaleloMateria'=>$paraleloMateriaId), array('persona'=>'ASC'));
+            //$estudiantes = $em->getRepository('SieAppWebBundle:TtecEstudianteInscripcion')->findBy(array('ttecParaleloMateria'=>$paraleloMateriaId), array('persona'=>'ASC'));
+            $estudiantes = $em->createQueryBuilder()
+                                ->select('tei')
+                                ->from('SieAppWebBundle:TtecEstudianteInscripcion','tei')
+                                ->where('tei.ttecParaleloMateria = :paraleloMateriaId')
+                                ->setParameter('paraleloMateriaId', $paraleloMateriaId)
+                                ->getQuery()
+                                ->getResult();
 
             $arrayNotas = array();
             $cont = 0;
@@ -108,9 +116,13 @@ class CalificacionesController extends Controller {
             $estudianteInscripcionId = $request->get('estudianteInscripcionId');
             $estudianteNotaId = $request->get('estudianteNotaId');
             $nota = $request->get('nota');
-
-            for ($i=0; $i < count($estudianteNotaId); $i++) { 
-                if($estudianteNotaId[$i] == 'new'){
+            /*dump($estudianteInscripcionId);
+            dump($estudianteNotaId);
+            dump($nota);
+            //die;*/
+            $em = $this->getDoctrine()->getManager();
+            for ($i=0; $i < count($estudianteNotaId); $i++) {
+                if($estudianteNotaId[$i] == 'new' and $nota[$i] != ""){
                     $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_estudiante_nota');")->execute();
                     $newNota = new TtecEstudianteNota();
                     $newNota->setTtecEstudinateInscripcion($em->getRepository('SieAppWebBundle:TtecEstudianteInscripcion')->find($estudianteInscripcionId[$i]));
@@ -121,14 +133,17 @@ class CalificacionesController extends Controller {
                     $em->persist($newNota);
                     $em->flush();
                 }else{
-                    $notaUpdate = $em->getRepository('SieAppWebBundle:TtecEstudianteNota')->find($estudianteNotaId);
-                    $notaUpdate->setNotaCuantitativa($nota[$i]);
-                    $newNota->setFechaModificacion(new \DateTime('now'));
-                    $em->flush();
+                    if($nota[$i] == ""){ $nota[$i] = 0; }
+                    $notaUpdate = $em->getRepository('SieAppWebBundle:TtecEstudianteNota')->find($estudianteNotaId[$i]);
+                    if($notaUpdate){
+                        $notaUpdate->setNotaCuantitativa($nota[$i]);
+                        $notaUpdate->setFechaModificacion(new \DateTime('now'));
+                        $em->flush();
+                    }
                 }
             }
-
-            dump($nota);die;
+            $this->session->getFlashBag()->add('messaje', 'Registro de calificaciones realizada correctamente');
+            return $this->redirectToRoute('dgesttla_calificaciones_index');
         } catch (Exception $e) {
             
         }
