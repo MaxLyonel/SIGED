@@ -28,7 +28,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="panel">
                 <div class="panel-heading">
-                    <h3 class="panel-title">SELECCIONAR PERIODO DE TRABAJO</h3>
+                    <h3 class="panel-title">SELECCIONAR CARRERA</h3>
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive mb-20">
@@ -38,6 +38,7 @@
                                     <th>No.</th>
                                     <th>Área de formación</th>
                                     <th>Carrera</th>
+                                    <th>Denominación</th>
                                     <th>Régimen de estudio</th>
                                     <th>Tiempo de estudio</th>
                                     <th>Periodo</th>
@@ -51,6 +52,7 @@
                                         <td>{{ loop.index }}</td>
                                         <td>{{ entity.atAreaFormacion }}</td>
                                         <td>{{ entity.ctCarrera }}</td>
+                                        <td>{{ entity.dtpDenominacion }}</td>
                                         <td>{{ entity.reRegimenEstudio }}</td>
                                         <td>{{ entity.rcTiempoEstudio }}</td>
                                         <td>1</td>
@@ -60,6 +62,7 @@
                                                 <input type="hidden" name="institucioneducativaId" value="{{institucioneducativa.id}}">
                                                 <input type="hidden" name="gestionId" value="{{gestion}}">
                                                 <input type="hidden" name="carreraId" value="{{entity.ctId}}">
+                                                <input type="hidden" name="denominacionId" value="{{entity.dtpId}}">
                                                 <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Ingresar</button>
                                             </form>
                                         </td>

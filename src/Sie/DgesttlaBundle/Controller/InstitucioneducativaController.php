@@ -40,6 +40,11 @@ class InstitucioneducativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
         // Creación de formularios de busqueda por codigo SIE o nombre de institucion educativa
         $formInstitucioneducativaId = $this->createSearchFormInstitucioneducativaId();
 
@@ -146,8 +151,9 @@ class InstitucioneducativaController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada');
         
         $query = $repository->createQueryBuilder('ca')
-            ->select('at.id as atId, at.areaFormacion as atAreaFormacion, ct.id as ctId, ct.nombre as ctCarrera, re.id as reId, re.regimenEstudio reRegimenEstudio, rc.tiempoEstudio as rcTiempoEstudio')
+            ->select('at.id as atId, at.areaFormacion as atAreaFormacion, ct.id as ctId, ct.nombre as ctCarrera, dtp.id as dtpId, dtp.denominacion as dtpDenominacion, re.id as reId, re.regimenEstudio reRegimenEstudio, rc.tiempoEstudio as rcTiempoEstudio')
             ->innerJoin('SieAppWebBundle:TtecCarreraTipo', 'ct', 'WITH', 'ca.ttecCarreraTipo = ct.id')
+            ->innerJoin('SieAppWebBundle:TtecDenominacionTituloProfesionalTipo', 'dtp', 'WITH', 'dtp.ttecCarreraTipo = ct.id')
             ->innerJoin('SieAppWebBundle:TtecResolucionCarrera', 'rc', 'WITH', 'rc.ttecInstitucioneducativaCarreraAutorizada = ca.id')
             ->innerJoin('SieAppWebBundle:TtecAreaFormacionTipo', 'at', 'WITH', 'ct.ttecAreaFormacionTipo = at.id')
             ->innerJoin('SieAppWebBundle:TtecregimenEstudioTipo', 're', 'WITH', 'rc.ttecRegimenEstudioTipo = re.id')
@@ -172,22 +178,26 @@ class InstitucioneducativaController extends Controller {
         $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         
+        $denominacion_id = $request->get('denominacionId');
         $carrera_id = $request->get('carreraId');
         $ieducativa_id = $request->get('institucioneducativaId');
         $gestion_id = $request->get('gestionId');
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $ieducativa_id));
         $carrera = $em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneBy(array('id' => $carrera_id));
+        $denominacion = $em->getRepository('SieAppWebBundle:TtecDenominacionTituloProfesionalTipo')->findOneBy(array('id' => $denominacion_id));
 
         $this->session->set('idGestion', $gestion_id);
         $this->session->set('idInstitucion', $ieducativa_id);
         $this->session->set('ie_id', $ieducativa_id);
         $this->session->set('ie_nombre', $institucioneducativa->getInstitucioneducativa());
         $this->session->set('idCarrera', $carrera_id);
+        $this->session->set('idDenominacion', $denominacion_id);
 
         return $this->render('SieDgesttlaBundle:Institucioneducativa:gralescarrera.html.twig', array(
             'institucioneducativa' => $institucioneducativa,
             'gestion' => $gestion_id,
-            'carrera' => $carrera
+            'carrera' => $carrera,
+            'denominacion' => $denominacion
         ));
     }
 

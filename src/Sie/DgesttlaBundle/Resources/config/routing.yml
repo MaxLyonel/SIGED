@@ -13,3 +13,15 @@ sie_dgesttla_administrativos:
 sie_dgesttla_administrativos_carrera:
     resource:   "@SieDgesttlaBundle/Resources/config/routing/infoPersonalAdmCarrera.yml"
     prefix: /dgesttla/administrativocarrera
+
+sie_dgesttla_pensum_carrera:
+    resource:   "@SieDgesttlaBundle/Resources/config/routing/pensum.yml"
+    prefix: /dgesttla/pensumcarrera
+
+sie_dgesttla_horario_carrera:
+    resource:   "@SieDgesttlaBundle/Resources/config/routing/horario.yml"
+    prefix: /dgesttla/horariocarrera
+
+sie_dgesttla_paralelo_materia_carrera:
+    resource:   "@SieDgesttlaBundle/Resources/config/routing/paralelo.yml"
+    prefix: /dgesttla/paralelomateria

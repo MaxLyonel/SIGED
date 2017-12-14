@@ -1,0 +1,33 @@
+dgesttla_carrera_paralelo:
+    path:   /paraleloindex
+    defaults:   { _controller: "SieDgesttlaBundle:Paralelo:index" }
+
+dgesttla_carrera_paralelo_new:
+    path:   /paralelonew
+    defaults:   { _controller: "SieDgesttlaBundle:Paralelo:new" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_paralelo_create:
+    path:     /paralelocreate/
+    defaults:   { _controller: "SieDgesttlaBundle:Paralelo:create" }
+    methods:  POST
+
+dgesttla_carrera_paralelo_edit:
+    path:   /paraleloedit
+    defaults:   { _controller: "SieDgesttlaBundle:Paralelo:edit" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_paralelo_update:
+    path:   /paraleloupdate
+    defaults:   { _controller: "SieDgesttlaBundle:Paralelo:update" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_paralelo_delete:
+    path:   /paralelodelete
+    defaults:   { _controller: "SieDgesttlaBundle:Paralelo:delete" }
+    methods:  [POST, DELETE]
+
+dgesttla_carrera_paralelo_vigente:
+    path:   /paralelovigente
+    defaults:   { _controller: "SieDgesttlaBundle:Paralelo:esVigente" }
+    methods:  [POST, PUT]
