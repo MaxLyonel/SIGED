@@ -239,26 +239,20 @@
                         <span class="pull-right"><i class="fa fa-list"></i></span>
                     </li>
                     <!--/ End category apps -->
-
-                    <!-- Start development - layouts -->
-                    <li class="submenu active">
-                        <a href="javascript:void(0);">
-                            <span class="icon"><i class="fa fa-columns"></i></span>
-                            <span class="text">Herramientas</span>
-                            <span class="plus"></span>
-                            <span class="selected"></span>
-                        </a>
-                        <ul>
-                            <li><a href="{{path('dgesttla_inst_search')}}">Buscar Instituto</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="sidebar-category">
-                        <a href="{{path('dgesttla_calificaciones_index')}}">
-                            <span>Calificaciones</span>
-                            <span class="pull-right"><i class="fa fa-file"></i></span>
-                        </a>
-                    </li>
+                    {% if(app.session.get('roluser') != 2) %}
+                        <!-- Start development - layouts -->
+                        <li class="submenu active">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-columns"></i></span>
+                                <span class="text">Herramientas</span>
+                                <span class="plus"></span>
+                                <span class="selected"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{path('dgesttla_inst_search')}}">Buscar Instituto</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-globe"></i></span>
@@ -266,10 +260,12 @@
                             <span class="arrow fa-angle-double-right"></span>
                         </a>
                         <ul style="display: none;">
-                            <li><a href="{{path('InscriptionDg_index')}}">Incripción</a></li>
+                            {% if(app.session.get('roluser') != 2) %}
+                                <li><a href="{{path('InscriptionDg_index')}}">Incripción</a></li>
+                            {% endif %}
+                                <li><a href="{{path('dgesttla_calificaciones_index')}}">Calificaciones</a></li>
                         </ul>
                     </li>
-
                     <!--/ End development - layouts -->
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->

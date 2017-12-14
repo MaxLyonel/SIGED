@@ -72,12 +72,13 @@
                             <input type="hidden" id="form_idInstitucion" name="form[idInstitucion]" value="{{institucion.id}}">
                             <input type="hidden" id="form_idGestion" name="form[idGestion]" value="{{gestion}}">
                             <input type="hidden" id="form_idDenominacion" name="form[idDenominacion]" value="{{denominacion}}">
-                            <button type="submit" name="form_btnNew" name="form[btnNew]" class="btn btn-primary btn-md"><i class="fa fa-edit"></i> Nuevo Pensum</button>
+                            <button type="submit" name="form_btnNew" name="form[btnNew]" class="btn btn-primary btn-md"><i class="fa fa-edit"></i> Nuevo Paralelo</button>
                         </form>
                     </div>
                     <div class="callout callout-warning">
                         <strong>Recuerde que:</strong><br />
-                        - Debe registrar todos los paralelos corrspondientes.<br />
+                        - No es posible eliminar un paralelo si éste tiene docentes asignados.<br />
+                        - No es posible eliminar un paralelo si éste tiene estudiantes inscritos.
                     </div>
                     <div class="table-responsive mb-20">
                         <table class="table table-hover table-striped table-primary">
@@ -89,6 +90,7 @@
                                     <th>Código de Asignatura</th>
                                     <th>Asignatura</th>
                                     <th>Paralelo</th>
+                                    <th>Cupo</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -101,21 +103,22 @@
                                         <td>{{ entity.codigo_materia }}</td>
                                         <td>{{ entity.asignatura }}</td>
                                         <td>{{ entity.paralelo }}</td>
+                                        <td>{{ entity.cupo }}</td>
                                         <td>
-                                            {#<form name="formE" action="{{path('dgesttla_carrera_pensum_edit')}}" method="post" style="display:inline-block">
+                                            <form name="formE" action="{{path('dgesttla_carrera_paralelo_edit')}}" method="post" style="display:inline-block">
                                                 <input type="hidden" id="formE_idInstitucion" name="formE[idInstitucion]" value="{{institucion.id}}">
                                                 <input type="hidden" id="formE_idGestion" name="formE[idGestion]" value="{{gestion}}">
-                                                <input type="hidden" id="formE_idPensum" name="formE[idPensum]" value="{{entity.id}}">
+                                                <input type="hidden" id="formE_idParalelo" name="formE[idParalelo]" value="{{entity.codigo_paralelo}}">
                                                 <input type="hidden" id="formE_idDenominacion" name="formE[idDenominacion]" value="{{denominacion}}">
                                                 <button type="submit" name="formE[editar]" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
                                             </form>
-                                            <form name="formD" action="{{path('dgesttla_carrera_pensum_delete')}}" method="post" style="display:inline-block">
+                                            <form name="formD" action="{{path('dgesttla_carrera_paralelo_delete')}}" method="post" style="display:inline-block">
                                                 <input type="hidden" id="formD_idInstitucion" name="formD[idInstitucion]" value="{{institucion.id}}">
                                                 <input type="hidden" id="formD_idGestion" name="formD[idGestion]" value="{{gestion}}">
-                                                <input type="hidden" id="formD_idPensum" name="formD[idPensum]" value="{{entity.id}}">
+                                                <input type="hidden" id="formD_idParalelo" name="formD[idParalelo]" value="{{entity.codigo_paralelo}}">
                                                 <button type="submit" name="formD[editar]" class="btn-link" onclick="return confirm('¡Se eliminará el registro! ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
                                             </form>
-                                        </td>#}-
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
