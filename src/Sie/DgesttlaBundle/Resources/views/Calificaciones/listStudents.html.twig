@@ -1,0 +1,73 @@
+{% extends 'layoutDgesttla.html.twig' %}
+
+{% block headercontent %}
+<!-- Start header content -->
+<div class="header-content">
+    <h2><i class="fa fa-file-o"></i>Registro de calificaciones <span>Calificaciones</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Estás aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('principal_web')}}">Inicio</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Registro de calificaciones</li>
+        </ol>
+    </div>
+</div><!-- /.header-content -->
+<!--/ End header content -->
+{% endblock %}
+
+{% block bodycontent %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Estudiantes inscritos</h3>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <table>
+                        
+                    </table>
+                    <form action="{{path('dgesttla_calificaciones_create_update')}}" method="post">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>Nombre</th>
+                                    <th align="center">Calificaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in inscritos %}
+                                    <tr>
+                                        <td>{{i.paterno}}</td>
+                                        <td>{{i.materno}}</td>
+                                        <td>{{i.nombre}}</td>
+                                        <td align="center">
+                                            {% for n in i.notas %}
+                                                <input type="hidden" name="estudianteInscripcionId[]" value="{{i.estudianteInscripcionId}}">
+                                                <input type="hidden" name="estudianteNotaId[]" value="{{n.estudianteNotaId}}">
+                                                <input type="text" name="nota[]" value="{{n.notaCuantitativa}}" class="form-control" style="width: 50px" maxlength="3">
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="btns">
+                            <button type="submit" class="btn btn-success">Registrar Calificaciones</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}
