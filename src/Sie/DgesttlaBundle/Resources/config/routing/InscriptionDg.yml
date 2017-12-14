@@ -1,0 +1,27 @@
+
+InscriptionDg_index:
+    path:     /
+    defaults: { _controller: SieDgesttlaBundle:InscriptionDg:index }
+
+
+InscriptionDg_look_asignatures:
+    path:     /lookAsignatures
+    defaults: { _controller: SieDgesttlaBundle:InscriptionDg:lookAsignatures }
+    options:
+        expose: true
+
+InscriptionDg_get_carreras:
+    path:     /getCarreras
+    defaults: { _controller: SieDgesttlaBundle:InscriptionDg:getCarreras }
+    options:
+        expose: true
+
+InscriptionDg_get_denominacion:
+    path:     /getDenomination
+    defaults: { _controller: SieDgesttlaBundle:InscriptionDg:getDenomination }
+    options:
+        expose: true
+
+InscriptionDg_do_inscription_dg:
+    path:     /doInscriptionDg
+    defaults: { _controller: SieDgesttlaBundle:InscriptionDg:doInscriptionDg }
