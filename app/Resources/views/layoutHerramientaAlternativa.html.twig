@@ -244,17 +244,17 @@
                                                 {% endfor %}
                                             {%endif%}                                            #}
                                             {#{% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) %}#}
-                                                                                        
+
 
                                             <a href="page-messages.html" class="media">
                                                 <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
                                                 <div class="media-body">
                                                     <span class="media-heading">Victor Jimenez</span>
-                                                    <span class="media-text">                                                    
+                                                    <span class="media-text">
                                                     A todos los usuarios del sistema de Alternativa:
                                                     Se les informa que se acerca el plazo final para el cierre definitivo de gestiones pasadas, para tal propósito se ha publicado en la opción de “Panel de Control de Operativos” información de centros y periodos pendientes de finalización, con el cual se espera con urgencia el seguimiento y conclusión del operativo de regularización de gestiones pasadas.
                                                     También se ha actualizado la lista de Centros pendientes de finalización gestión 2017 para su seguimiento y conclusión.
-                                                    ¡Agradeciéndoles los esfuerzos para concluir la presente gestión, el equipo del SIGED les desea felices fiestas!                                                    
+                                                    ¡Agradeciéndoles los esfuerzos para concluir la presente gestión, el equipo del SIGED les desea felices fiestas!
                                                     Atte. Administrador
                                                     </span>
                                                     <span class="media-meta pull-right">14/12/2017</span>
@@ -487,13 +487,13 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                              <li><a href="#">Operativo Concluido</a></li>
-                            {#
+                              <!-- <li><a href="#">Operativo Concluido</a></li> -->
+
                               <li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>
                               <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
                               <li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
                               <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
-                            #}
+                            
 
                             </ul>
                         </li>
