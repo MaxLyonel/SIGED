@@ -1433,7 +1433,17 @@ class InstitucioneducativaController extends Controller {
                             $periodo = '3';                            
                             $estadostramite = '6,13';
                             $titulo = $form['titulo'];
-                        }   
+                        }else{
+                            if ($form['val'] === '5'){
+                                //NOTAS 2BIM
+                                $gestiontecho = '2016';
+                                $periodotecho = '3';
+                                $gestion = '2017,2016,2015,2014,2013,2012,2011,2010,2009,2008,2007,2006';
+                                $periodo = '2,3';                            
+                                $estadostramite = '5';
+                                $titulo = $form['titulo'];
+                            }
+                        }       
                     }
                 }
             }            
@@ -1441,12 +1451,13 @@ class InstitucioneducativaController extends Controller {
             $gestiontecho = '2016';
             $periodotecho = '3';
 
-            $gestion = '2017';
-            $periodo = '3';
+            $gestion = '2017,2016,2015,2014,2013,2012,2011,2010,2009,2008,2007,2006';
+            $periodo = '2,3';
             //NOTAS 8,14
             //INSCRIPCIONES 9,12 
-            $estadostramite = '7,11';
-            $titulo = '2er Semestre 2017-Inscripciones';
+            //$estadostramite = '7,11';
+            $estadostramite = '5';
+            $titulo = 'Regularización Gestiones Pasadas';
         }        
 
         //$sesion = $request->getSession();
@@ -1507,8 +1518,8 @@ class InstitucioneducativaController extends Controller {
                                                 inner join institucioneducativa_sucursal z on ie.id = z.institucioneducativa_id
                                                 inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
                                                 inner join lugar_tipo k on k.id = lt.lugar_tipo_id
-                                        where z.gestion_tipo_id = '".$gestion."'
-                                        and z.periodo_tipo_id = ".$periodo."      
+                                        where z.gestion_tipo_id in (".$gestion.")
+                                        and z.periodo_tipo_id in (".$periodo.")
                                         and w.tramite_estado_id in (".$estadostramite.") 
                                         group by k.lugar, ie.id, ie.institucioneducativa
                                         order by k.lugar, ie.id) dd
@@ -1573,8 +1584,8 @@ class InstitucioneducativaController extends Controller {
                                                     inner join institucioneducativa_sucursal z on ie.id = z.institucioneducativa_id
                                                     inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
                                                     inner join lugar_tipo k on k.id = lt.lugar_tipo_id
-                                            where z.gestion_tipo_id = '".$gestion."'
-                                            and z.periodo_tipo_id = ".$periodo."
+                                            where z.gestion_tipo_id in (".$gestion.")
+                                            and z.periodo_tipo_id in (".$periodo.")
                                             and w.tramite_estado_id in (".$estadostramite.")  
                                             group by k.lugar, ie.id, ie.institucioneducativa
                                             order by k.lugar, ie.id) dd
