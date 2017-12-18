@@ -50,9 +50,39 @@ class TtecResolucionCarrera
     private $fechaModificacion;
 
     /**
+     * @var integer
+     */
+    private $tiempoEstudio;
+
+    /**
+     * @var integer
+     */
+    private $cargaHoraria;
+
+    /**
+     * @var string
+     */
+    private $operacion;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\TtecResolucionTipo
      */
     private $ttecResolucionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo
+     */
+    private $ttecRegimenEstudioTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecInstitucioneducativaCarreraAutorizada
+     */
+    private $ttecInstitucioneducativaCarreraAutorizada;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\NivelTipo
+     */
+    private $nivelTipo;
 
 
     /**
@@ -227,59 +257,6 @@ class TtecResolucionCarrera
     }
 
     /**
-     * Set ttecResolucionTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecResolucionTipo $ttecResolucionTipo
-     * @return TtecResolucionCarrera
-     */
-    public function setTtecResolucionTipo(\Sie\AppWebBundle\Entity\TtecResolucionTipo $ttecResolucionTipo = null)
-    {
-        $this->ttecResolucionTipo = $ttecResolucionTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecResolucionTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecResolucionTipo 
-     */
-    public function getTtecResolucionTipo()
-    {
-        return $this->ttecResolucionTipo;
-    }
-    /**
-     * @var integer
-     */
-    private $tiempoEstudio;
-
-    /**
-     * @var integer
-     */
-    private $cargaHoraria;
-
-    /**
-     * @var string
-     */
-    private $operacion;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecInstitucioneducativaCarreraAutorizada
-     */
-    private $ttecInstitucioneducativaCarreraAutorizada;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\NivelTipo
-     */
-    private $nivelTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo
-     */
-    private $ttecRegimenEstudioTipo;
-
-
-    /**
      * Set tiempoEstudio
      *
      * @param integer $tiempoEstudio
@@ -349,6 +326,52 @@ class TtecResolucionCarrera
     }
 
     /**
+     * Set ttecResolucionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecResolucionTipo $ttecResolucionTipo
+     * @return TtecResolucionCarrera
+     */
+    public function setTtecResolucionTipo(\Sie\AppWebBundle\Entity\TtecResolucionTipo $ttecResolucionTipo = null)
+    {
+        $this->ttecResolucionTipo = $ttecResolucionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecResolucionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecResolucionTipo 
+     */
+    public function getTtecResolucionTipo()
+    {
+        return $this->ttecResolucionTipo;
+    }
+
+    /**
+     * Set ttecRegimenEstudioTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo $ttecRegimenEstudioTipo
+     * @return TtecResolucionCarrera
+     */
+    public function setTtecRegimenEstudioTipo(\Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo $ttecRegimenEstudioTipo = null)
+    {
+        $this->ttecRegimenEstudioTipo = $ttecRegimenEstudioTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecRegimenEstudioTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo 
+     */
+    public function getTtecRegimenEstudioTipo()
+    {
+        return $this->ttecRegimenEstudioTipo;
+    }
+
+    /**
      * Set ttecInstitucioneducativaCarreraAutorizada
      *
      * @param \Sie\AppWebBundle\Entity\TtecInstitucioneducativaCarreraAutorizada $ttecInstitucioneducativaCarreraAutorizada
@@ -392,28 +415,5 @@ class TtecResolucionCarrera
     public function getNivelTipo()
     {
         return $this->nivelTipo;
-    }
-
-    /**
-     * Set ttecRegimenEstudioTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo $ttecRegimenEstudioTipo
-     * @return TtecResolucionCarrera
-     */
-    public function setTtecRegimenEstudioTipo(\Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo $ttecRegimenEstudioTipo = null)
-    {
-        $this->ttecRegimenEstudioTipo = $ttecRegimenEstudioTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecRegimenEstudioTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo 
-     */
-    public function getTtecRegimenEstudioTipo()
-    {
-        return $this->ttecRegimenEstudioTipo;
     }
 }

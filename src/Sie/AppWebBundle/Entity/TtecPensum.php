@@ -27,7 +27,7 @@ class TtecPensum
     /**
      * @var string
      */
-    private $resolucionAdministriva;
+    private $resolucionAdministrativa;
 
     /**
      * @var string
@@ -43,6 +43,16 @@ class TtecPensum
      * @var \DateTime
      */
     private $fechaModificacion;
+
+    /**
+     * @var boolean
+     */
+    private $esVigente;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo
+     */
+    private $ttecDenominacionTituloProfesionalTipo;
 
 
     /**
@@ -102,26 +112,26 @@ class TtecPensum
     }
 
     /**
-     * Set resolucionAdministriva
+     * Set resolucionAdministrativa
      *
-     * @param string $resolucionAdministriva
+     * @param string $resolucionAdministrativa
      * @return TtecPensum
      */
-    public function setResolucionAdministriva($resolucionAdministriva)
+    public function setResolucionAdministrativa($resolucionAdministrativa)
     {
-        $this->resolucionAdministriva = $resolucionAdministriva;
+        $this->resolucionAdministrativa = $resolucionAdministrativa;
     
         return $this;
     }
 
     /**
-     * Get resolucionAdministriva
+     * Get resolucionAdministrativa
      *
      * @return string 
      */
-    public function getResolucionAdministriva()
+    public function getResolucionAdministrativa()
     {
-        return $this->resolucionAdministriva;
+        return $this->resolucionAdministrativa;
     }
 
     /**
@@ -191,44 +201,6 @@ class TtecPensum
     public function getFechaModificacion()
     {
         return $this->fechaModificacion;
-    }
-    /**
-     * @var string
-     */
-    private $resolucionAdministrativa;
-
-    /**
-     * @var boolean
-     */
-    private $esVigente;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo
-     */
-    private $ttecDenominacionTituloProfesionalTipo;
-
-
-    /**
-     * Set resolucionAdministrativa
-     *
-     * @param string $resolucionAdministrativa
-     * @return TtecPensum
-     */
-    public function setResolucionAdministrativa($resolucionAdministrativa)
-    {
-        $this->resolucionAdministrativa = $resolucionAdministrativa;
-    
-        return $this;
-    }
-
-    /**
-     * Get resolucionAdministrativa
-     *
-     * @return string 
-     */
-    public function getResolucionAdministrativa()
-    {
-        return $this->resolucionAdministrativa;
     }
 
     /**

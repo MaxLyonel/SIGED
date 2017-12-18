@@ -25,14 +25,14 @@ class TtecInstitucioneducativaAreaFormacionAutorizado
     private $fechaModificacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
-     */
-    private $institucioneducativa;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\TtecAreaFormacionTipo
      */
     private $ttecAreaFormacionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
+     */
+    private $institucioneducativa;
 
 
     /**
@@ -92,29 +92,6 @@ class TtecInstitucioneducativaAreaFormacionAutorizado
     }
 
     /**
-     * Set institucioneducativa
-     *
-     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
-     * @return TtecInstitucioneducativaAreaFormacionAutorizado
-     */
-    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
-    {
-        $this->institucioneducativa = $institucioneducativa;
-    
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativa
-     *
-     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
-     */
-    public function getInstitucioneducativa()
-    {
-        return $this->institucioneducativa;
-    }
-
-    /**
      * Set ttecAreaFormacionTipo
      *
      * @param \Sie\AppWebBundle\Entity\TtecAreaFormacionTipo $ttecAreaFormacionTipo
@@ -135,5 +112,28 @@ class TtecInstitucioneducativaAreaFormacionAutorizado
     public function getTtecAreaFormacionTipo()
     {
         return $this->ttecAreaFormacionTipo;
+    }
+
+    /**
+     * Set institucioneducativa
+     *
+     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
+     * @return TtecInstitucioneducativaAreaFormacionAutorizado
+     */
+    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
+    {
+        $this->institucioneducativa = $institucioneducativa;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativa
+     *
+     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
+     */
+    public function getInstitucioneducativa()
+    {
+        return $this->institucioneducativa;
     }
 }

@@ -29,6 +29,11 @@ class TtecCatalogoMateria
      */
     private $obs;
 
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo
+     */
+    private $ttecDenominacionTituloProfesionalTipo;
+
 
     /**
      * Get id
@@ -108,11 +113,6 @@ class TtecCatalogoMateria
     {
         return $this->obs;
     }
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo
-     */
-    private $ttecDenominacionTituloProfesionalTipo;
-
 
     /**
      * Set ttecDenominacionTituloProfesionalTipo
