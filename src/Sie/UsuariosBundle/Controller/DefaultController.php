@@ -66,6 +66,7 @@ class DefaultController extends Controller
         ////MAESTRO DE UNIDAD EDUCATIVA////
         if ($this->session->get('roluser') == '2'){
                 $usuariodatos = $this->getDoctrine()->getRepository('SieAppWebBundle:Usuario')->getFindByUserPersolRol($this->session->get('userId'));
+                $usuariodatosrol = $this->getDoctrine()->getRepository('SieAppWebBundle:Usuario')->getFindByUserPersolAndRol($this->session->get('userId'),$this->session->get('roluser'));
                 $p = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($usuariodatos[0]['personaid']);
                 $datos_filas[0]["id"] = $p->getId();
                 $datos_filas[0]["carnet"] = $p->getCarnet();
@@ -82,13 +83,13 @@ class DefaultController extends Controller
                 $datos_filas[0]["count_edit"] = $p->getCountEdit();
                 $datos_filas[0]["foto"] = $p->getFoto(); 
                 
-                $depentity = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($usuariodatos[0]['lugar_tipoid']); 
+                $depentity = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($usuariodatosrol[0]['lugar_tipoid']); 
                 $dep2 = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($depentity->getlugarTipo()->getId());                
                 $this->session->set('dep_id',$dep2->getId());
                 $this->session->set('dep_nombre',$dep2->getLugar());                    
-                $this->session->set('dis_id',$usuariodatos[0]['lugar_tipoid']);                
-                $this->session->set('dis_cod',$usuariodatos[0]['discod']);
-                $this->session->set('dis_nombre',$usuariodatos[0]['lugar']);
+                $this->session->set('dis_id',$usuariodatosrol[0]['lugar_tipoid']);                
+                $this->session->set('dis_cod',$usuariodatosrol[0]['discod']);
+                $this->session->set('dis_nombre',$usuariodatosrol[0]['lugar']);
                 
                 $form = $this->createForm(new UploadFotoPersonaType(), null, array('action' => $this->generateUrl('sie_persona_uploadfoto'), 'method' => 'POST',));                
 //                print_r($usuariodatos[0]['personaid']);
@@ -128,6 +129,8 @@ class DefaultController extends Controller
             }
             if (count($usuariopersona) == 1){//CORRECTO  
                 $usuariodatos = $this->getDoctrine()->getRepository('SieAppWebBundle:Usuario')->getFindByUserPersolRol($this->session->get('userId'));
+                $usuariodatosrol = $this->getDoctrine()->getRepository('SieAppWebBundle:Usuario')->getFindByUserPersolAndRol($this->session->get('userId'),$this->session->get('roluser'));
+                //dump($usuariodatos);die;
                 $p = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($usuariodatos[0]['personaid']);
                 $datos_filas[0]["id"] = $p->getId();
                 $datos_filas[0]["carnet"] = $p->getCarnet();
@@ -157,7 +160,7 @@ class DefaultController extends Controller
                 }
                 //DEPARTAMENTAL
                 if ($this->session->get('roluser') == '7'){
-                    $dep2 = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($usuariodatos[0]['lugar_tipoid']);                
+                    $dep2 = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($usuariodatosrol[0]['lugar_tipoid']);                
                     $this->session->set('dep_id',$dep2->getId());
                     $this->session->set('dep_nombre',$dep2->getLugar());                    
                     $this->session->set('dis_id','');                
@@ -169,13 +172,13 @@ class DefaultController extends Controller
                 }
                 //DISTRITAL
                 if ($this->session->get('roluser') == '10'){ 
-                    $depentity = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($usuariodatos[0]['lugar_tipoid']); 
+                    $depentity = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($usuariodatosrol[0]['lugar_tipoid']); 
                     $dep2 = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($depentity->getlugarTipo()->getId());                
                     $this->session->set('dep_id',$dep2->getId());
                     $this->session->set('dep_nombre',$dep2->getLugar());                    
-                    $this->session->set('dis_id',$usuariodatos[0]['lugar_tipoid']);                
-                    $this->session->set('dis_cod',$usuariodatos[0]['discod']);
-                    $this->session->set('dis_nombre',$usuariodatos[0]['lugar']);
+                    $this->session->set('dis_id',$usuariodatosrol[0]['lugar_tipoid']);                
+                    $this->session->set('dis_cod',$usuariodatosrol[0]['discod']);
+                    $this->session->set('dis_nombre',$usuariodatosrol[0]['lugar']);
                     $this->session->set('ie_activo','0');
                     $this->session->set('ie_id','');
                     $this->session->set('ie_nombre','');
@@ -193,7 +196,7 @@ class DefaultController extends Controller
                 }
                 //PNP INFORMATICO DEPARTAMENTAL
                 if ($this->session->get('roluser') == '21'){
-                    $dep2 = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($usuariodatos[0]['lugar_tipoid']);                
+                    $dep2 = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($usuariodatosrol[0]['lugar_tipoid']);                
                     $this->session->set('dep_id',$dep2->getId());
                     $this->session->set('dep_nombre',$dep2->getLugar());                    
                     $this->session->set('dis_id','');                
@@ -205,7 +208,7 @@ class DefaultController extends Controller
                 }
                  //PNP PEDAGOGO
                 if ($this->session->get('roluser') == '29'){
-                    $dep2 = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($usuariodatos[0]['lugar_tipoid']);                
+                    $dep2 = $this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($usuariodatosrol[0]['lugar_tipoid']);                
                     $this->session->set('dep_id',$dep2->getId());
                     $this->session->set('dep_nombre',$dep2->getLugar());                    
                     $this->session->set('dis_id','');                
