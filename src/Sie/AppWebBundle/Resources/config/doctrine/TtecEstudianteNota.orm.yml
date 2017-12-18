@@ -1,8 +1,8 @@
 Sie\AppWebBundle\Entity\TtecEstudianteNota:
     type: entity
     table: ttec_estudiante_nota
-    indexes:
-        IDX_BFD3EEF5344D40E:
+    uniqueConstraints:
+        uniq_ttec_estudiante_nota:
             columns:
                 - ttec_estudiante_inscripcion_id
     id:

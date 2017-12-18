@@ -212,14 +212,14 @@ class ParaleloController extends Controller {
 
             // Registro paralelo
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_paralelo_materia');")->execute();
-            $paraleloEdit = new TtecParaleloMateria();
-            $paraleloEdit->setTtecMateriaTipo($em->getRepository('SieAppWebBundle:TtecMateriaTipo')->findOneById($form['materia']));
-            $paraleloEdit->setTtecParaleloTipo($em->getRepository('SieAppWebBundle:TtecParaleloTipo')->findOneById($form['paralelo']));
-            $paraleloEdit->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['turno']));
-            $paraleloEdit->setGestionTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['idGestion']));
-            $paraleloEdit->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['idGestion']));
-            $paraleloEdit->setCupo(intval($form['cupo']));
-            $paraleloEdit->setFechaRegistro(new \DateTime('now'));
+            $paraleloNew = new TtecParaleloMateria();
+            $paraleloNew->setTtecMateriaTipo($em->getRepository('SieAppWebBundle:TtecMateriaTipo')->findOneById($form['materia']));
+            $paraleloNew->setTtecParaleloTipo($em->getRepository('SieAppWebBundle:TtecParaleloTipo')->findOneById($form['paralelo']));
+            $paraleloNew->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['turno']));
+            $paraleloNew->setGestionTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['idGestion']));
+            $paraleloNew->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['idGestion']));
+            $paraleloNew->setCupo(intval($form['cupo']));
+            $paraleloNew->setFechaRegistro(new \DateTime('now'));
             $em->persist($paraleloNew);
             $em->flush();
             
@@ -336,7 +336,7 @@ class ParaleloController extends Controller {
         }
 
         $paraleloMateria = $em->getRepository('SieAppWebBundle:TtecParaleloMateria')->findOneById($idParalelo);
-
+ 
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('dgesttla_carrera_paralelo_update'))
             ->add('idInstitucion', 'hidden', array('data' => $idInstitucion))
