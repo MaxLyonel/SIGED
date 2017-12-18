@@ -81,6 +81,7 @@ class CalificacionesController extends Controller {
             foreach ($estudiantes as $e) {
                 $arrayNotas[$cont] = array(
                     'estudianteInscripcionId'=>$e->getId(),
+                    'carnet'=>$e->getPersona()->getCarnet(),
                     'paterno'=>$e->getPersona()->getPaterno(),
                     'materno'=>$e->getPersona()->getMaterno(),
                     'nombre'=>$e->getPersona()->getNombre(),
@@ -128,9 +129,9 @@ class CalificacionesController extends Controller {
             for ($i=0; $i < count($estudianteNotaId); $i++) {
                 $estudianteInscripcion = $em->getRepository('SieAppWebBundle:TtecEstudianteInscripcion')->find($estudianteInscripcionId[$i]);
                 if($estudianteNotaId[$i] == 'new' and $nota[$i] != ""){
-                    $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_estudiante_nota');")->execute();
+                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_estudiante_nota');")->execute();
                     $newNota = new TtecEstudianteNota();
-                    $newNota->setTtecEstudinateInscripcion($em->getRepository('SieAppWebBundle:TtecEstudianteInscripcion')->find($estudianteInscripcionId[$i]));
+                    $newNota->setTtecEstudianteInscripcion($em->getRepository('SieAppWebBundle:TtecEstudianteInscripcion')->find($estudianteInscripcionId[$i]));
                     $newNota->setNotaCuantitativa($nota[$i]);
                     $newNota->setNotaCualitativa('');
                     $newNota->setFechaRegistro(new \DateTime('now'));

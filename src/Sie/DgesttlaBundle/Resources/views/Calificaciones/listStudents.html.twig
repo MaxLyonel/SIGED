@@ -35,9 +35,11 @@
                         
                     </table>
                     <form action="{{path('dgesttla_calificaciones_create_update')}}" method="post">
-                        <table class="table">
+                        <table class="table table-hover table-striped table-primary">
                             <thead>
                                 <tr>
+                                    <th>#</th>
+                                    <th>C.I.</th>
                                     <th>Paterno</th>
                                     <th>Materno</th>
                                     <th>Nombre</th>
@@ -48,6 +50,8 @@
                             <tbody>
                                 {% for i in inscritos %}
                                     <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{i.carnet}}</td>
                                         <td>{{i.paterno}}</td>
                                         <td>{{i.materno}}</td>
                                         <td>{{i.nombre}}</td>

@@ -33,9 +33,10 @@
                     <h3 class="panel-title">Materias</h3>
                 </div><!-- /.panel-heading -->
                 <div class="panel-body">
-                    <table class="table">
+                    <table class="table table-striped table-hover table-primary">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Carrera</th>
                                 <th>Materia</th>
                                 <th>Gestión</th>
@@ -47,6 +48,7 @@
                         <tbody>
                             {% for m in materias %}
                                 <tr>
+                                    <td>{{ loop.index }}</td>
                                     <td>{{m.ttecParaleloMateria.ttecMateriaTipo.ttecPensum.ttecDenominacionTituloProfesionalTipo.ttecCarreraTipo.nombre}}</td>
                                     <td>{{m.ttecParaleloMateria.ttecMateriaTipo.materia}}</td>
                                     <td>{{m.ttecParaleloMateria.gestionTipo.gestion}}</td>

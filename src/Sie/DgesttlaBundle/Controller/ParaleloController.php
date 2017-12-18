@@ -202,7 +202,7 @@ class ParaleloController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
-
+                                        
             $paralelo = $em->getRepository('SieAppWebBundle:TtecParaleloMateria')->findBy(array('ttecPeriodoTipo' => $form['periodo'], 'turnoTipo' => $form['turno'], 'ttecMateriaTipo' => $form['materia'], 'ttecParaleloTipo' => $form['paralelo']));
             
             if ($paralelo) {
@@ -216,8 +216,8 @@ class ParaleloController extends Controller {
             $paraleloNew->setTtecMateriaTipo($em->getRepository('SieAppWebBundle:TtecMateriaTipo')->findOneById($form['materia']));
             $paraleloNew->setTtecParaleloTipo($em->getRepository('SieAppWebBundle:TtecParaleloTipo')->findOneById($form['paralelo']));
             $paraleloNew->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['turno']));
-            $paraleloNew->setGestionTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['idGestion']));
-            $paraleloNew->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['idGestion']));
+            $paraleloNew->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['periodo']));
+            $paraleloNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['idGestion']));            
             $paraleloNew->setCupo(intval($form['cupo']));
             $paraleloNew->setFechaRegistro(new \DateTime('now'));
             $em->persist($paraleloNew);
@@ -336,7 +336,7 @@ class ParaleloController extends Controller {
         }
 
         $paraleloMateria = $em->getRepository('SieAppWebBundle:TtecParaleloMateria')->findOneById($idParalelo);
- 
+
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('dgesttla_carrera_paralelo_update'))
             ->add('idInstitucion', 'hidden', array('data' => $idInstitucion))
@@ -368,8 +368,8 @@ class ParaleloController extends Controller {
             $paraleloEdit->setTtecMateriaTipo($em->getRepository('SieAppWebBundle:TtecMateriaTipo')->findOneById($form['materia']));
             $paraleloEdit->setTtecParaleloTipo($em->getRepository('SieAppWebBundle:TtecParaleloTipo')->findOneById($form['paralelo']));
             $paraleloEdit->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['turno']));
-            $paraleloEdit->setGestionTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['idGestion']));
-            $paraleloEdit->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['idGestion']));
+            $paraleloEdit->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['periodo']));
+            $paraleloEdit->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['idGestion']));
             $paraleloEdit->setCupo(intval($form['cupo']));
             $paraleloEdit->setFechaModificacion(new \DateTime('now'));
             $em->persist($paraleloEdit);
