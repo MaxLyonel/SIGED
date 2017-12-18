@@ -948,7 +948,8 @@ class DefaultController extends Controller
         try {
             $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuarioid);
             $persona = $em->getRepository('SieAppWebBundle:Persona')->find($usuario->getPersona()->getId());
-            $personausuarios = $em->getRepository('SieAppWebBundle:Usuario')->findByUsername($persona->getCarnet());
+            $username = $persona->getCarnet().$persona->getComplemento();
+            $personausuarios = $em->getRepository('SieAppWebBundle:Usuario')->findByUsername($username);
             if (sizeof($personausuarios) == 0) {
                 $persona->setEsVigente('1');
                 $persona->setEsvigenteApoderado('1'); 
@@ -977,12 +978,13 @@ class DefaultController extends Controller
         try {
             $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($usuarioid);
             $persona = $em->getRepository('SieAppWebBundle:Persona')->find($usuario->getPersona()->getId());
-            $personausuarios = $em->getRepository('SieAppWebBundle:Usuario')->findByUsername($persona->getCarnet());
+            $username = $persona->getCarnet().$persona->getComplemento();
+            $personausuarios = $em->getRepository('SieAppWebBundle:Usuario')->findByUsername($username);
             if (sizeof($personausuarios) == 0) {
                 $usuario->setUsername(trim($persona->getCarnet().$persona->getComplemento()));   
                 $em->persist($usuario);
                 $em->flush();            
-                $em->getConnection()->rollback();           
+                $em->getConnection()->commit();           
                 return $this->redirect($this->generateURL('logout'));
             }
             if (sizeof($personausuarios) > 0) {
