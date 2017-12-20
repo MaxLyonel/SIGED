@@ -1,0 +1,11 @@
+dgesttla_calificaciones_index:
+    path:     /sie/calificaciones
+    defaults: { _controller: SieDgesttlaBundle:Calificaciones:index}
+
+dgesttla_calificaciones_list_students:
+    path:     /liststudents
+    defaults: { _controller: "SieDgesttlaBundle:Calificaciones:listStudents"}
+
+dgesttla_calificaciones_create_update:
+    path:     /create_update
+    defaults: { _controller: "SieDgesttlaBundle:Calificaciones:createUpdate"}

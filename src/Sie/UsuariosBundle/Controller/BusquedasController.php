@@ -144,7 +144,19 @@ class BusquedasController extends Controller
                     }else{
                         $accion = 'sintuision';
                     }
-                    $this->session->getFlashBag()->add('success', 'El numero de carnet y su usuario no presentan problemas.');
+
+                    //VERIFICANDO USUARIO Y CARNET COMPLEMENTO PARA MENSAJE
+                    $usercarnet = $po[0]['carnet'].$po[0]['complemento'];                    
+                    $username = $po[0]['carnet'];
+
+                    //dump($usercarnet);dump($username);die;
+
+                    if ($usercarnet <> $username){
+                        $this->session->getFlashBag()->add('warning', 'El nombre de usuario no coincide con el número de carnet y complemento');    
+                    }else{
+                        $this->session->getFlashBag()->add('success', 'El numero de carnet y su usuario no presentan problemas.');
+                    }
+                    
                     return $this->render('SieUsuariosBundle:Busquedas:usuario.html.twig', array(
                         'accion' => $accion,
                         'po' => $po,

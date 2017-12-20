@@ -205,6 +205,35 @@ class Login {
                             f.id = 2 and
                             b.institucioneducativa_tipo_id = 4 and
                             e.esactivo is true
+
+
+                            UNION--DOCENTE TECNICA
+
+                            select '8' as peso, (cast(a.id as varchar)||cast(b.id as varchar)||cast(c.id as varchar)) as key,
+                            
+                            f.id as id, f.rol, h.id as idNivelLugar, h.nivel, g.id as rollugarid, g.lugar, a.persona_id as idPersona, cast(b.id as varchar) as sie,
+                             b.institucioneducativa, cast(b.institucioneducativa_tipo_id as varchar) as idIETipo, 'Técnica Tecnologica' as orgcurricula
+                            
+                            
+                            from ttec_docente_persona a
+                                inner join institucioneducativa b on a.institucioneducativa_id = b.id
+                                inner join orgcurricular_tipo y on b.orgcurricular_tipo_id = y.id
+                                    inner join ttec_docente_materia c on c.ttec_paralelo_materia_id = a.id
+                                        inner join ttec_paralelo_materia z on c.ttec_paralelo_materia_id = z.id
+                            
+                                    inner join usuario d on d.persona_id = a.persona_id
+                                                        left join usuario_rol e on e.usuario_id = d.id
+                                                        left join rol_tipo f on e.rol_tipo_id = f.id
+                                                        inner join lugar_tipo g on e.lugar_tipo_id = g.id
+                                                        inner join lugar_nivel_tipo h on f.lugar_nivel_tipo_id = h.id  
+                            
+                            where 
+                            a.persona_id in(".$id.") and
+                            y.id = 3 and
+                            z.gestion_tipo_id = '".$gestion."' and
+                            f.id = 2 and
+                            b.institucioneducativa_tipo_id in (7,8,9) and
+                            e.esactivo is true
                 ) z";
         if ($key == '-1') {
             $query = $query."

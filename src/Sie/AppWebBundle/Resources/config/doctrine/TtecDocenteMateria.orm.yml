@@ -1,0 +1,60 @@
+Sie\AppWebBundle\Entity\TtecDocenteMateria:
+    type: entity
+    table: ttec_docente_materia
+    indexes:
+        IDX_FC0C0B2BF8243003:
+            columns:
+                - ttec_paralelo_materia_id
+        IDX_FC0C0B2BF8AECF5F:
+            columns:
+                - ttec_docente_persona_id
+    uniqueConstraints:
+        uniq_docente_materia:
+            columns:
+                - es_vigente
+                - ttec_paralelo_materia_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+    manyToOne:
+        ttecParaleloMateria:
+            targetEntity: TtecParaleloMateria
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_paralelo_materia_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecDocentePersona:
+            targetEntity: TtecDocentePersona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_docente_persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

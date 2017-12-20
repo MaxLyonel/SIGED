@@ -27,7 +27,7 @@ class TtecPensum
     /**
      * @var string
      */
-    private $resolucionAdministriva;
+    private $resolucionAdministrativa;
 
     /**
      * @var string
@@ -43,6 +43,16 @@ class TtecPensum
      * @var \DateTime
      */
     private $fechaModificacion;
+
+    /**
+     * @var boolean
+     */
+    private $esVigente;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo
+     */
+    private $ttecDenominacionTituloProfesionalTipo;
 
 
     /**
@@ -102,26 +112,26 @@ class TtecPensum
     }
 
     /**
-     * Set resolucionAdministriva
+     * Set resolucionAdministrativa
      *
-     * @param string $resolucionAdministriva
+     * @param string $resolucionAdministrativa
      * @return TtecPensum
      */
-    public function setResolucionAdministriva($resolucionAdministriva)
+    public function setResolucionAdministrativa($resolucionAdministrativa)
     {
-        $this->resolucionAdministriva = $resolucionAdministriva;
+        $this->resolucionAdministrativa = $resolucionAdministrativa;
     
         return $this;
     }
 
     /**
-     * Get resolucionAdministriva
+     * Get resolucionAdministrativa
      *
      * @return string 
      */
-    public function getResolucionAdministriva()
+    public function getResolucionAdministrativa()
     {
-        return $this->resolucionAdministriva;
+        return $this->resolucionAdministrativa;
     }
 
     /**
@@ -191,5 +201,51 @@ class TtecPensum
     public function getFechaModificacion()
     {
         return $this->fechaModificacion;
+    }
+
+    /**
+     * Set esVigente
+     *
+     * @param boolean $esVigente
+     * @return TtecPensum
+     */
+    public function setEsVigente($esVigente)
+    {
+        $this->esVigente = $esVigente;
+    
+        return $this;
+    }
+
+    /**
+     * Get esVigente
+     *
+     * @return boolean 
+     */
+    public function getEsVigente()
+    {
+        return $this->esVigente;
+    }
+
+    /**
+     * Set ttecDenominacionTituloProfesionalTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo $ttecDenominacionTituloProfesionalTipo
+     * @return TtecPensum
+     */
+    public function setTtecDenominacionTituloProfesionalTipo(\Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo $ttecDenominacionTituloProfesionalTipo = null)
+    {
+        $this->ttecDenominacionTituloProfesionalTipo = $ttecDenominacionTituloProfesionalTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecDenominacionTituloProfesionalTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo 
+     */
+    public function getTtecDenominacionTituloProfesionalTipo()
+    {
+        return $this->ttecDenominacionTituloProfesionalTipo;
     }
 }

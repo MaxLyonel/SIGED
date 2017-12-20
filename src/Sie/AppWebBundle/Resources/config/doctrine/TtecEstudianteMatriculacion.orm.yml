@@ -1,0 +1,62 @@
+Sie\AppWebBundle\Entity\TtecEstudianteMatriculacion:
+    type: entity
+    table: ttec_estudiante_matriculacion
+    indexes:
+        IDX_89A758B836041CF1:
+            columns:
+                - ttec_pensum_id
+        IDX_89A758B8A83B07A:
+            columns:
+                - ttec_carrera_tipo_id
+        IDX_89A758B8F5F88DB9:
+            columns:
+                - persona_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        ttecPensum:
+            targetEntity: TtecPensum
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_pensum_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecCarreraTipo:
+            targetEntity: TtecCarreraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_carrera_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

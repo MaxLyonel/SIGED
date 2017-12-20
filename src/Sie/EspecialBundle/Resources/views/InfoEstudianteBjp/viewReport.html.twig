@@ -1,0 +1,80 @@
+{% extends 'layoutEspecialSie.html.twig' %}
+
+{% block contentoption %}
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Validación Bono Juancito Pinto', 'gestion': data.gestion,'sie': data.sie, 'ieducativa':'', 'opcion': 'Estudiantes para validar el pago del BJP'} %}
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <h4>Informe Reportado</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+
+                      <div class="table-responsive mb-20">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Departamento</th>
+                                        <th>Distrito</th>
+                                        <th>SIE</th>
+
+                                        <th>Institución Educativa</th>
+                                        <th>Turno</th>
+                                        <th>Nivel</th>
+                                        <th>Paralelo</th>
+                                        <th>Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for report in objReport %}
+                                    <tr>
+                                        <td class="text-center">{{report.departamento}}</td>
+                                        <td>{{report.distrito}}</td>
+                                        <td>{{report.institucioneducativa_id}}</td>
+                                        <td>{{report.institucioneducativa}}</td>
+                                        <td>{{report.turno}}</td>
+                                        <td>{{report.nivel}}</td>
+                                        <td>{{report.paralelo}}</td>
+                                        <td>{{report.cantidad}}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="{{ path('herramienta_info_estudiante_bjp_index')}}">Volver Validar Estudiantes</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--/ End body content -->
+{% endblock %}

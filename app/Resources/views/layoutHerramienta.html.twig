@@ -380,7 +380,7 @@
                         </a>
                         <ul>
                         {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 %}
-                        {#   <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li> #}
+                           <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                         {% endif %}
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
                         </ul>

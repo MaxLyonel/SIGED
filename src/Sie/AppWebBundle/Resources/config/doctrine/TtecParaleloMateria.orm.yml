@@ -2,24 +2,29 @@ Sie\AppWebBundle\Entity\TtecParaleloMateria:
     type: entity
     table: ttec_paralelo_materia
     indexes:
-        IDX_EA4642B5F8AECF5F:
+        IDX_EA4642B53B67F11C:
             columns:
-                - ttec_docente_persona_id
+                - ttec_periodo_tipo_id
         IDX_EA4642B59B276788:
             columns:
                 - turno_tipo_id
         IDX_EA4642B52E917E5D:
             columns:
                 - ttec_paralelo_tipo_id
-        IDX_EA4642B5211947BA:
-            columns:
-                - ttec_paralelo_materia_horario_id
         IDX_EA4642B56716D8F6:
             columns:
                 - ttec_materia_tipo_id
         IDX_EA4642B5179FF95:
             columns:
                 - gestion_tipo_id
+    uniqueConstraints:
+        uniq_paralelo_materia:
+            columns:
+                - ttec_materia_tipo_id
+                - ttec_paralelo_tipo_id
+                - turno_tipo_id
+                - gestion_tipo_id
+                - ttec_periodo_tipo_id
     id:
         id:
             type: integer
@@ -40,14 +45,19 @@ Sie\AppWebBundle\Entity\TtecParaleloMateria:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        cupo:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
-        ttecDocentePersona:
-            targetEntity: TtecDocentePersona
+        ttecPeriodoTipo:
+            targetEntity: TtecPeriodoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                ttec_docente_persona_id:
+                ttec_periodo_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         turnoTipo:
@@ -66,15 +76,6 @@ Sie\AppWebBundle\Entity\TtecParaleloMateria:
             inversedBy: null
             joinColumns:
                 ttec_paralelo_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        ttecParaleloMateriaHorario:
-            targetEntity: TtecParaleloMateriaHorario
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                ttec_paralelo_materia_horario_id:
                     referencedColumnName: id
             orphanRemoval: false
         ttecMateriaTipo:

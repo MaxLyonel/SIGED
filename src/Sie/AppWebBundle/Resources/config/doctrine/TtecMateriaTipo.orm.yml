@@ -8,9 +8,6 @@ Sie\AppWebBundle\Entity\TtecMateriaTipo:
         IDX_6CD3483336041CF1:
             columns:
                 - ttec_pensum_id
-        IDX_6CD34833A83B07A:
-            columns:
-                - ttec_carrera_tipo_id
     id:
         id:
             type: integer
@@ -78,15 +75,6 @@ Sie\AppWebBundle\Entity\TtecMateriaTipo:
             inversedBy: null
             joinColumns:
                 ttec_pensum_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        ttecCarreraTipo:
-            targetEntity: TtecCarreraTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                ttec_carrera_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

@@ -25,9 +25,14 @@ class TtecInstitucioneducativaCarreraAutorizada
     private $fechaModificacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
+     * @var boolean
      */
-    private $institucioneducativa;
+    private $esEnviado;
+
+    /**
+     * @var boolean
+     */
+    private $esVigente;
 
     /**
      * @var \Sie\AppWebBundle\Entity\TtecCarreraTipo
@@ -35,14 +40,9 @@ class TtecInstitucioneducativaCarreraAutorizada
     private $ttecCarreraTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo
+     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
      */
-    private $ttecDenominacionTituloProfesionalTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecResolucionCarrera
-     */
-    private $ttecResolucionCarrera;
+    private $institucioneducativa;
 
 
     /**
@@ -102,108 +102,6 @@ class TtecInstitucioneducativaCarreraAutorizada
     }
 
     /**
-     * Set institucioneducativa
-     *
-     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
-     * @return TtecInstitucioneducativaCarreraAutorizada
-     */
-    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
-    {
-        $this->institucioneducativa = $institucioneducativa;
-    
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativa
-     *
-     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
-     */
-    public function getInstitucioneducativa()
-    {
-        return $this->institucioneducativa;
-    }
-
-    /**
-     * Set ttecCarreraTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecCarreraTipo $ttecCarreraTipo
-     * @return TtecInstitucioneducativaCarreraAutorizada
-     */
-    public function setTtecCarreraTipo(\Sie\AppWebBundle\Entity\TtecCarreraTipo $ttecCarreraTipo = null)
-    {
-        $this->ttecCarreraTipo = $ttecCarreraTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecCarreraTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecCarreraTipo 
-     */
-    public function getTtecCarreraTipo()
-    {
-        return $this->ttecCarreraTipo;
-    }
-
-    /**
-     * Set ttecDenominacionTituloProfesionalTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo $ttecDenominacionTituloProfesionalTipo
-     * @return TtecInstitucioneducativaCarreraAutorizada
-     */
-    public function setTtecDenominacionTituloProfesionalTipo(\Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo $ttecDenominacionTituloProfesionalTipo = null)
-    {
-        $this->ttecDenominacionTituloProfesionalTipo = $ttecDenominacionTituloProfesionalTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecDenominacionTituloProfesionalTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecDenominacionTituloProfesionalTipo 
-     */
-    public function getTtecDenominacionTituloProfesionalTipo()
-    {
-        return $this->ttecDenominacionTituloProfesionalTipo;
-    }
-
-    /**
-     * Set ttecResolucionCarrera
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecResolucionCarrera $ttecResolucionCarrera
-     * @return TtecInstitucioneducativaCarreraAutorizada
-     */
-    public function setTtecResolucionCarrera(\Sie\AppWebBundle\Entity\TtecResolucionCarrera $ttecResolucionCarrera = null)
-    {
-        $this->ttecResolucionCarrera = $ttecResolucionCarrera;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecResolucionCarrera
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecResolucionCarrera 
-     */
-    public function getTtecResolucionCarrera()
-    {
-        return $this->ttecResolucionCarrera;
-    }
-    /**
-     * @var boolean
-     */
-    private $esEnviado;
-
-    /**
-     * @var boolean
-     */
-    private $esVigente;
-
-
-    /**
      * Set esEnviado
      *
      * @param boolean $esEnviado
@@ -247,5 +145,51 @@ class TtecInstitucioneducativaCarreraAutorizada
     public function getEsVigente()
     {
         return $this->esVigente;
+    }
+
+    /**
+     * Set ttecCarreraTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecCarreraTipo $ttecCarreraTipo
+     * @return TtecInstitucioneducativaCarreraAutorizada
+     */
+    public function setTtecCarreraTipo(\Sie\AppWebBundle\Entity\TtecCarreraTipo $ttecCarreraTipo = null)
+    {
+        $this->ttecCarreraTipo = $ttecCarreraTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecCarreraTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecCarreraTipo 
+     */
+    public function getTtecCarreraTipo()
+    {
+        return $this->ttecCarreraTipo;
+    }
+
+    /**
+     * Set institucioneducativa
+     *
+     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
+     * @return TtecInstitucioneducativaCarreraAutorizada
+     */
+    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
+    {
+        $this->institucioneducativa = $institucioneducativa;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativa
+     *
+     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
+     */
+    public function getInstitucioneducativa()
+    {
+        return $this->institucioneducativa;
     }
 }

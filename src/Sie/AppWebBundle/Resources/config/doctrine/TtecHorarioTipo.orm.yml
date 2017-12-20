@@ -1,8 +1,8 @@
-Sie\AppWebBundle\Entity\TtecParaleloMateriaHorario:
+Sie\AppWebBundle\Entity\TtecHorarioTipo:
     type: entity
-    table: ttec_paralelo_materia_horario
+    table: ttec_horario_tipo
     indexes:
-        IDX_60F73842A0CE9632:
+        IDX_CCFE541EA0CE9632:
             columns:
                 - ttec_dia_tipo_id
     id:

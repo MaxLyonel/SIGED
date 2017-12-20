@@ -1,0 +1,33 @@
+dgesttla_carrera_horario:
+    path:   /horarioindex
+    defaults:   { _controller: "SieDgesttlaBundle:Horario:index" }
+
+dgesttla_carrera_horario_new:
+    path:   /horarionew
+    defaults:   { _controller: "SieDgesttlaBundle:Horario:new" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_horario_create:
+    path:     /horariocreate/
+    defaults:   { _controller: "SieDgesttlaBundle:Horario:create" }
+    methods:  POST
+
+dgesttla_carrera_horario_edit:
+    path:   /horarioedit
+    defaults:   { _controller: "SieDgesttlaBundle:Horario:edit" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_horario_update:
+    path:   /horarioupdate
+    defaults:   { _controller: "SieDgesttlaBundle:Horario:update" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_horario_delete:
+    path:   /horariodelete
+    defaults:   { _controller: "SieDgesttlaBundle:Horario:delete" }
+    methods:  [POST, DELETE]
+
+dgesttla_carrera_horario_vigente:
+    path:   /horariovigente
+    defaults:   { _controller: "SieDgesttlaBundle:Horario:esVigente" }
+    methods:  [POST, PUT]

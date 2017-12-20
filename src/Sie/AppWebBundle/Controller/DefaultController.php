@@ -221,7 +221,15 @@ class DefaultController extends Controller {
                 $layout = 'layoutPnp.html.twig';
                 $this->session->set('pathSystem', "SiePnpBundle");
                 break;
-
+            case '172.20.196.4':
+            case '172.20.196.9:8024':
+            case 'www.dgesttla.local':
+                $sysname = 'DGESTTLA';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutDgesttla.html.twig';
+                $this->session->set('pathSystem', "SieDgesttlaBundle");
+                break;
             default :
                 $sysname = 'REGULAR';
                 $sysporlet = 'blue';
@@ -554,11 +562,10 @@ class DefaultController extends Controller {
                         //***********************
                 }else{
                     //*******************
-                    //MENSAJE DE QUECORRECCION EN CASO DE QUE USUARIO NO COINCIDA CON CARNET
+                    //MENSAJE DE QUE CORRECCION EN CASO DE QUE USUARIO NO COINCIDA CON CARNET
                     $carnetban = 'null';
+                    $personausuarios = $em->getRepository('SieAppWebBundle:Usuario')->findByUsername($carnet);
                     if ($this->session->get('userName') <> $carnet) {
-                        $personausuarios = $em->getRepository('SieAppWebBundle:Usuario')->findByUsername($carnet);
-
                         if (sizeof($personausuarios) == 0) {
                             $this->session->getFlashBag()->add('errorusername', 'La omisión reiterada a esta observación derivara en la ');
                         }
@@ -567,24 +574,37 @@ class DefaultController extends Controller {
                         }
                         $carnetban = 'true';
                     }
-                    //dump($carnetban);die;
+                    //dump($carnet);dump($this->session->get('userName'));die;
+
                     //*******************
-                    //CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
-                    //SE ENVIA AL CONTROLADOR LOGIN PARA ULTIMAS VERIFICACIONES
-                    //*******SE VERIFºICA CANTIDAD DE DIAS DESDE EL ULTIMO CAMBIO DE CONTRASEÑA
+                    //MENSAJE DE RESETEO DE CONTRASEÑA CANTIDAD DE DIAS DESDE EL ULTIMO CAMBIO DE CONTRASEÑA
+                    $exp = 'null';
                     $dateObject = $user->getFechaRegistro();
                     $date = $dateObject->format('Y-m-d');
                     $datetime1 = new \DateTime($date);
                     $datetime2 = new \DateTime("today");
                     $interval = $datetime1->diff($datetime2);
                     $dias = $interval->format('%a');
-                    $exp = 'null';
                     if (intval($dias) > 90) {
                         $this->session->getFlashBag()->add('errorcontraexp', 'La omisión reiterada a esta observación derivara en la ');
                         $exp = 'true';
                     }
                     //dump($exp);die;
-                    if (($exp == 'true') || ($carnetban == 'true')){
+
+                    //*******************
+                    //MENSAJE DIRIGIDO AL USUARIO
+                    $mendir = 'null';
+                    $mensajedirecto = $em->getRepository('SieAppWebBundle:NotificacionUsuario')->findOneBy(array('usuario' => $this->session->get('userId'), 'notif' => '5713980' ) );
+
+                    if (sizeof($mensajedirecto) > 0) {
+                        //CORRECCCION DE MENSAJE
+                        $mensaje = $em->getRepository('SieAppWebBundle:Notificacion')->find($mensajedirecto->getNotif() );
+                        $this->session->getFlashBag()->add('mensajedircod4', $mensaje->getMensaje());
+                        $mendir = 'true';
+                    }
+                    //dump($mensaje->getMensaje());die;
+
+                    if (($exp == 'true') || ($carnetban == 'true') || ($mendir == 'true')){
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
                         array(
                             'user' => $this->session->get('userName'),
@@ -594,6 +614,9 @@ class DefaultController extends Controller {
                         ));
                     }
                     //dump($rolselected);die;
+                    //*******************
+                    //CUANDO EL USUARIO SOLO TIENE UN ROL ACTIVO
+                    //SE ENVIA AL CONTROLADOR LOGIN PARA ULTIMAS VERIFICACIONES
                     if (count($rolselected) == 1) {
                         if ( ($rolselected[0]['id'] == 2) || ($rolselected[0]['id'] == 9) ){
                             $this->session->set('roluser', $rolselected[0]['id']);

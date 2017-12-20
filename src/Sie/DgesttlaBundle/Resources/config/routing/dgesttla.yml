@@ -33,3 +33,32 @@ dgesttla_inst_info_update:
 dgesttla_inst_info_rep_caratula:
     path:   /infoRepCaratula
     defaults:   { _controller: "SieDgesttlaBundle:Reportes:infoRepCaratula" }
+
+dgesttla_inst_calendario:
+    path:   /calindex
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:calendario" }
+
+dgesttla_inst_calendario_new:
+    path:   /calnew
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:calendarioNew" }
+    methods:  [POST, PUT]
+
+dgesttla_inst_calendario_create:
+    path:     /calcreate/
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:calendarioCreate" }
+    methods:  POST
+
+dgesttla_inst_calendario_edit:
+    path:   /caledit
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:calendarioEdit" }
+    methods:  [POST, PUT]
+
+dgesttla_inst_calendario_update:
+    path:   /calupdate
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:calendarioUpdate" }
+    methods:  [POST, PUT]
+
+dgesttla_inst_calendario_delete:
+    path:   /caldelete
+    defaults:   { _controller: "SieDgesttlaBundle:Institucioneducativa:calendarioDelete" }
+    methods:  [POST, DELETE]

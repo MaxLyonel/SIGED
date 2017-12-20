@@ -1,6 +1,6 @@
-Sie\AppWebBundle\Entity\TtecDocente:
+Sie\AppWebBundle\Entity\TtecOperativoTipo:
     type: entity
-    table: ttec_docente
+    table: ttec_operativo_tipo
     id:
         id:
             type: integer
@@ -11,14 +11,16 @@ Sie\AppWebBundle\Entity\TtecDocente:
             generator:
                 strategy: SEQUENCE
     fields:
-        fechaRegistro:
-            type: date
+        operativo:
+            type: string
             nullable: true
+            length: 255
+            fixed: false
             comment: ''
-            column: fecha_registro
-        fechaModificacion:
-            type: date
+        obs:
+            type: string
             nullable: true
+            length: 255
+            fixed: false
             comment: ''
-            column: fecha_modificacion
     lifecycleCallbacks: {  }

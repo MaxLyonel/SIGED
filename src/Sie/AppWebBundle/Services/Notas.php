@@ -819,6 +819,7 @@ class Notas{
                     }
                 }
 
+
                 if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($asignaturas) > 0 )){
                     $estadoAnterior = $inscripcion->getEstadomatriculaTipo()->getId();
                     $nuevoEstado = 5; // Aprobado
@@ -845,7 +846,7 @@ class Notas{
 
                     $tipoUE = $this->funciones->getTipoUE($sie,$gestion);
 
-                    if($tipoUE['id'] != 3 or ($tipoUE['id'] == 3 and $nivel<13) or ($tipoUE['id'] != 3 and $nivel == 13 and $operativo >= 4 )){
+                    if($tipoUE['id'] != 3 or ($tipoUE['id'] == 3 and $nivel<13) or ($tipoUE['id'] == 3 and $nivel == 13 and $operativo >= 4 )){
                         if(in_array($estadoAnterior,$this->estadosActualizables)){
                             $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
                             $this->em->flush();

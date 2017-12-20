@@ -1,0 +1,84 @@
+Sie\AppWebBundle\Entity\TtecCalendarioOperativo:
+    type: entity
+    table: ttec_calendario_operativo
+    indexes:
+        IDX_ECBE52B23B67F11C:
+            columns:
+                - ttec_periodo_tipo_id
+        IDX_ECBE52B28456B221:
+            columns:
+                - ttec_operativo_tipo_id
+        IDX_ECBE52B2179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_ECBE52B23AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        fechaInicio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fin
+    manyToOne:
+        ttecPeriodoTipo:
+            targetEntity: TtecPeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecOperativoTipo:
+            targetEntity: TtecOperativoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_operativo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

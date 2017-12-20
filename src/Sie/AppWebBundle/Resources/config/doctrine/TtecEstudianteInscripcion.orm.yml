@@ -2,12 +2,23 @@ Sie\AppWebBundle\Entity\TtecEstudianteInscripcion:
     type: entity
     table: ttec_estudiante_inscripcion
     indexes:
+        IDX_5AC88493E7E1D11E:
+            columns:
+                - estadomatricula_tipo_fin_id
+        IDX_5AC884938BB5D58C:
+            columns:
+                - estadomatricula_tipo_inicio_id
         IDX_5AC88493F8243003:
             columns:
                 - ttec_paralelo_materia_id
         IDX_5AC88493F5F88DB9:
             columns:
                 - persona_id
+    uniqueConstraints:
+        uniq_estudiante_inscripcion:
+            columns:
+                - persona_id
+                - ttec_paralelo_materia_id
     id:
         id:
             type: integer
@@ -18,18 +29,6 @@ Sie\AppWebBundle\Entity\TtecEstudianteInscripcion:
             generator:
                 strategy: SEQUENCE
     fields:
-        estadomatriculaTipoInicioId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: estadomatricula_tipo_inicio_id
-        estadomatriculaTipoFinId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: estadomatricula_tipo_fin_id
         fechaInscripcion:
             type: date
             nullable: true
@@ -41,6 +40,24 @@ Sie\AppWebBundle\Entity\TtecEstudianteInscripcion:
             comment: ''
             column: fecha_registro
     manyToOne:
+        estadomatriculaTipoFin:
+            targetEntity: EstadomatriculaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadomatricula_tipo_fin_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadomatriculaTipoInicio:
+            targetEntity: EstadomatriculaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadomatricula_tipo_inicio_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         ttecParaleloMateria:
             targetEntity: TtecParaleloMateria
             cascade: {  }

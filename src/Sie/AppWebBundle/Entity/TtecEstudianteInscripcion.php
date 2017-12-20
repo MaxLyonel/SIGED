@@ -15,16 +15,6 @@ class TtecEstudianteInscripcion
     private $id;
 
     /**
-     * @var integer
-     */
-    private $estadomatriculaTipoInicioId;
-
-    /**
-     * @var integer
-     */
-    private $estadomatriculaTipoFinId;
-
-    /**
      * @var \DateTime
      */
     private $fechaInscripcion;
@@ -33,6 +23,16 @@ class TtecEstudianteInscripcion
      * @var \DateTime
      */
     private $fechaRegistro;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstadomatriculaTipo
+     */
+    private $estadomatriculaTipoFin;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstadomatriculaTipo
+     */
+    private $estadomatriculaTipoInicio;
 
     /**
      * @var \Sie\AppWebBundle\Entity\TtecParaleloMateria
@@ -53,52 +53,6 @@ class TtecEstudianteInscripcion
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set estadomatriculaTipoInicioId
-     *
-     * @param integer $estadomatriculaTipoInicioId
-     * @return TtecEstudianteInscripcion
-     */
-    public function setEstadomatriculaTipoInicioId($estadomatriculaTipoInicioId)
-    {
-        $this->estadomatriculaTipoInicioId = $estadomatriculaTipoInicioId;
-    
-        return $this;
-    }
-
-    /**
-     * Get estadomatriculaTipoInicioId
-     *
-     * @return integer 
-     */
-    public function getEstadomatriculaTipoInicioId()
-    {
-        return $this->estadomatriculaTipoInicioId;
-    }
-
-    /**
-     * Set estadomatriculaTipoFinId
-     *
-     * @param integer $estadomatriculaTipoFinId
-     * @return TtecEstudianteInscripcion
-     */
-    public function setEstadomatriculaTipoFinId($estadomatriculaTipoFinId)
-    {
-        $this->estadomatriculaTipoFinId = $estadomatriculaTipoFinId;
-    
-        return $this;
-    }
-
-    /**
-     * Get estadomatriculaTipoFinId
-     *
-     * @return integer 
-     */
-    public function getEstadomatriculaTipoFinId()
-    {
-        return $this->estadomatriculaTipoFinId;
     }
 
     /**
@@ -145,6 +99,52 @@ class TtecEstudianteInscripcion
     public function getFechaRegistro()
     {
         return $this->fechaRegistro;
+    }
+
+    /**
+     * Set estadomatriculaTipoFin
+     *
+     * @param \Sie\AppWebBundle\Entity\EstadomatriculaTipo $estadomatriculaTipoFin
+     * @return TtecEstudianteInscripcion
+     */
+    public function setEstadomatriculaTipoFin(\Sie\AppWebBundle\Entity\EstadomatriculaTipo $estadomatriculaTipoFin = null)
+    {
+        $this->estadomatriculaTipoFin = $estadomatriculaTipoFin;
+    
+        return $this;
+    }
+
+    /**
+     * Get estadomatriculaTipoFin
+     *
+     * @return \Sie\AppWebBundle\Entity\EstadomatriculaTipo 
+     */
+    public function getEstadomatriculaTipoFin()
+    {
+        return $this->estadomatriculaTipoFin;
+    }
+
+    /**
+     * Set estadomatriculaTipoInicio
+     *
+     * @param \Sie\AppWebBundle\Entity\EstadomatriculaTipo $estadomatriculaTipoInicio
+     * @return TtecEstudianteInscripcion
+     */
+    public function setEstadomatriculaTipoInicio(\Sie\AppWebBundle\Entity\EstadomatriculaTipo $estadomatriculaTipoInicio = null)
+    {
+        $this->estadomatriculaTipoInicio = $estadomatriculaTipoInicio;
+    
+        return $this;
+    }
+
+    /**
+     * Get estadomatriculaTipoInicio
+     *
+     * @return \Sie\AppWebBundle\Entity\EstadomatriculaTipo 
+     */
+    public function getEstadomatriculaTipoInicio()
+    {
+        return $this->estadomatriculaTipoInicio;
     }
 
     /**

@@ -40,14 +40,14 @@ class TtecDocentePersona
     private $esVigente;
 
     /**
+     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
+     */
+    private $institucioneducativa;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\Persona
      */
     private $persona;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecDocente
-     */
-    private $ttecDocente;
 
 
     /**
@@ -176,85 +176,6 @@ class TtecDocentePersona
     }
 
     /**
-     * Set persona
-     *
-     * @param \Sie\AppWebBundle\Entity\Persona $persona
-     * @return TtecDocentePersona
-     */
-    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
-    {
-        $this->persona = $persona;
-    
-        return $this;
-    }
-
-    /**
-     * Get persona
-     *
-     * @return \Sie\AppWebBundle\Entity\Persona 
-     */
-    public function getPersona()
-    {
-        return $this->persona;
-    }
-
-    /**
-     * Set ttecDocente
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecDocente $ttecDocente
-     * @return TtecDocentePersona
-     */
-    public function setTtecDocente(\Sie\AppWebBundle\Entity\TtecDocente $ttecDocente = null)
-    {
-        $this->ttecDocente = $ttecDocente;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecDocente
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecDocente 
-     */
-    public function getTtecDocente()
-    {
-        return $this->ttecDocente;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecParaleloMateria
-     */
-    private $ttecParaleloMateria;
-
-
-    /**
-     * Set ttecParaleloMateria
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecParaleloMateria $ttecParaleloMateria
-     * @return TtecDocentePersona
-     */
-    public function setTtecParaleloMateria(\Sie\AppWebBundle\Entity\TtecParaleloMateria $ttecParaleloMateria = null)
-    {
-        $this->ttecParaleloMateria = $ttecParaleloMateria;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecParaleloMateria
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecParaleloMateria 
-     */
-    public function getTtecParaleloMateria()
-    {
-        return $this->ttecParaleloMateria;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
-     */
-    private $institucioneducativa;
-
-
-    /**
      * Set institucioneducativa
      *
      * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
@@ -275,5 +196,28 @@ class TtecDocentePersona
     public function getInstitucioneducativa()
     {
         return $this->institucioneducativa;
+    }
+
+    /**
+     * Set persona
+     *
+     * @param \Sie\AppWebBundle\Entity\Persona $persona
+     * @return TtecDocentePersona
+     */
+    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
+    {
+        $this->persona = $persona;
+    
+        return $this;
+    }
+
+    /**
+     * Get persona
+     *
+     * @return \Sie\AppWebBundle\Entity\Persona 
+     */
+    public function getPersona()
+    {
+        return $this->persona;
     }
 }

@@ -1,0 +1,100 @@
+{% extends 'layoutDgesttla.html.twig' %}
+
+{% block headercontent %}
+<!-- Start header content -->
+<div class="header-content">
+    <h2><i class="fa fa-file-o"></i>Registro de calificaciones <span>Calificaciones</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Estás aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('principal_web')}}">Inicio</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Registro de calificaciones</li>
+        </ol>
+    </div>
+</div><!-- /.header-content -->
+<!--/ End header content -->
+{% endblock %}
+
+{% block bodycontent %}
+
+    <div class="row">
+        <div class="col-lg-12" style="padding: 5px; background: #FFFFFF; text-align: center">
+            <h3><small>{{paralelo.ttecMateriaTipo.ttecPensum.ttecDenominacionTituloProfesionalTipo.ttecCarreraTipo.nombre}}</small> <br> <span style="color:#0F6BB8; margin-top:10px; display:block">{{paralelo.ttecMateriaTipo.materia}}</span></h3>
+        </div>
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Estudiantes inscritos</h3>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body">
+                    <table>
+                        
+                    </table>
+                    <form action="{{path('dgesttla_calificaciones_create_update')}}" method="post">
+                        <table class="table table-hover table-striped table-primary">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>C.I.</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>Nombre</th>
+                                    <th>Estado Matricula</th>
+                                    <th align="center">Calificaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in inscritos %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{i.carnet}}</td>
+                                        <td>{{i.paterno}}</td>
+                                        <td>{{i.materno}}</td>
+                                        <td>{{i.nombre}}</td>
+                                        <td>{{i.estadoMatricula}}</td>
+                                        <td align="center">
+                                            {% for n in i.notas %}
+                                                <input type="hidden" name="estudianteInscripcionId[]" value="{{i.estudianteInscripcionId}}">
+                                                <input type="hidden" name="estudianteNotaId[]" value="{{n.estudianteNotaId}}">
+                                                <input type="text" name="nota[]" value="{{n.notaCuantitativa}}" class="form-control" style="width: 50px" maxlength="3" onkeypress="return validarNota(event,this.id,this.value)" onkeyup="notaVacia(this)">
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="btns" style="text-align:right">
+                            <a href="{{path('dgesttla_calificaciones_index')}}" class="btn btn-danger">Volver</a>
+                            <button type="submit" class="btn btn-success">Registrar Calificaciones</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        var validarNota = function(e){
+            var key = e || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 48 || k > 57) //NUmeros
+                && (k != 13) //ENTER
+                && (k != 8) //retroceso
+                && (k != 9) //tab
+            )
+            return false;
+        }
+
+        var notaVacia = function(control){
+            //if(control.value == ""){ control.value = 0; }
+            console.log(control.value);
+            if(control.value < 0){ control.value = 0; }
+            if(control.value > 100){ control.value = 100; }
+        }
+    </script>
+{% endblock %}

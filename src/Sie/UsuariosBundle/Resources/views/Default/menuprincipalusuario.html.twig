@@ -4,7 +4,7 @@
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
                                                 {% if [persona.carnet,persona.complemento]|join|trim != persona.username %}
-                                                    <li><a class="glyphicon glyphicon-star-empty" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> <span class="label label-danger">Debe actualizar el Nombre de usuario por número de carnet.</span></a></li>
+                                                    <li><a class="glyphicon glyphicon-star-empty" href="#" onclick="usernameUpdate('{{persona.usuarioid}}')"> <span class="label label-danger">El nombre de usuario no coincide con el número de carnet y complemento.</span></a></li>
                                                 {% endif %}
                                                 <li><a class="glyphicon glyphicon-eye-open" href="#" onclick="usuarioFormShow('{{persona.usuarioid}}')"> Ver</a></li> 
                                                 <li><a class="glyphicon glyphicon-flash" href="#" onclick="usuarioFormReset('{{persona.usuarioid}}')"> Resetear Contraseña</a></li> 

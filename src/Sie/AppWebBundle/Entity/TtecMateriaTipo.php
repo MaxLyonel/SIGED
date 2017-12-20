@@ -50,11 +50,6 @@ class TtecMateriaTipo
     private $fechaModificacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\TtecCarreraTipo
-     */
-    private $ttecCarreraTipo;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\TtecPeriodoTipo
      */
     private $ttecPeriodoTipo;
@@ -234,29 +229,6 @@ class TtecMateriaTipo
     public function getFechaModificacion()
     {
         return $this->fechaModificacion;
-    }
-
-    /**
-     * Set ttecCarreraTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecCarreraTipo $ttecCarreraTipo
-     * @return TtecMateriaTipo
-     */
-    public function setTtecCarreraTipo(\Sie\AppWebBundle\Entity\TtecCarreraTipo $ttecCarreraTipo = null)
-    {
-        $this->ttecCarreraTipo = $ttecCarreraTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecCarreraTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecCarreraTipo 
-     */
-    public function getTtecCarreraTipo()
-    {
-        return $this->ttecCarreraTipo;
     }
 
     /**

@@ -117,7 +117,7 @@ class UnificacionRudeController extends Controller {
         $queryverdipb->execute();
         $dataInscriptionJsonVerDipb = $queryverdipb->fetchAll();
         
-        if ((count($dataInscriptionJsonVerDipa) > 0) || (count($dataInscriptionJsonVerDipb) > 0) && ($val == 1)) {
+        if (((count($dataInscriptionJsonVerDipa) > 0) || (count($dataInscriptionJsonVerDipb) > 0)) && ($val == 1)) {
             $message = 'No se podra realizar la unificación por que ya se inicio tramite de Diplomas.';
             $this->addFlash('notihistory', $message);            
             return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
@@ -134,15 +134,15 @@ class UnificacionRudeController extends Controller {
              
         $query = $em->getConnection()->prepare("select * from get_estudiante_historial_json('" . $rudea . "');");
         $query->execute();
-        $dataInscriptionJson = $query->fetchAll();
+        $dataInscriptionJsona = $query->fetchAll();
         
-        if ( count($dataInscriptionJson) == 0) {
+        if ( count($dataInscriptionJsona) == 0) {
             $message = 'Estudiante con rude ' . $rudea . ' no presenta registro de inscripciones';
             $this->addFlash('notihistory', $message);            
             return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
         }
 
-        foreach ($dataInscriptionJson as $key => $inscription) {            
+        foreach ($dataInscriptionJsona as $key => $inscription) {            
             $dataInscriptiona [] = json_decode($inscription['get_estudiante_historial_json'], true);
         }
         
@@ -154,6 +154,10 @@ class UnificacionRudeController extends Controller {
             $message = 'Estudiante con rude ' . $rudeb . ' no presenta registro de inscripciones';
             $this->addFlash('notihistory', $message);            
             return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulterror.html.twig' );
+        }
+
+        foreach ($dataInscriptionJsonb as $key => $inscription) {            
+            $dataInscriptionb [] = json_decode($inscription['get_estudiante_historial_json'], true);
         }
         
         return $this->render($this->session->get('pathSystem') . ':UnificacionRude:resulthistoriales.html.twig', array(

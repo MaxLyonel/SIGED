@@ -4,8 +4,7 @@
                 <div class="row">                                                
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
-                            <div class="form-group has-feedback">
-                                {#<input id="form_codigoRudeHistory" class="form-control" name="form[codigoRudeHistory]" required="required" maxlength="20" type="text" placeholder="¡Ingrese un rude para ver su historial!">#}
+                            <div class="form-group has-feedback">                                
                                 <span class="form-control">1er Semestre 2017-Inscripciones</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="1" id="est1">
@@ -16,8 +15,7 @@
                     </div>
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
-                            <div class="form-group has-feedback">
-                                {#<input id="form_codigoRudeHistory" class="form-control" name="form[codigoRudeHistory]" required="required" maxlength="20" type="text" placeholder="¡Ingrese un rude para ver su historial!">#}
+                            <div class="form-group has-feedback">                                
                                 <span class="form-control">1er Semestre 2017-Notas</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="2" id="est2">
@@ -28,8 +26,7 @@
                     </div>
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
-                            <div class="form-group has-feedback">
-                                {#<input id="form_codigoRudeHistory" class="form-control" name="form[codigoRudeHistory]" required="required" maxlength="20" type="text" placeholder="¡Ingrese un rude para ver su historial!">#}
+                            <div class="form-group has-feedback">                                
                                 <span class="form-control">2do Semestre 2017-Inscripciones</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="3" id="est3">
@@ -40,12 +37,24 @@
                     </div>
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
-                            <div class="form-group has-feedback">
-                                {#<input id="form_codigoRudeHistory" class="form-control" name="form[codigoRudeHistory]" required="required" maxlength="20" type="text" placeholder="¡Ingrese un rude para ver su historial!">#}
+                            <div class="form-group has-feedback">                                
                                 <span class="form-control">2do Semestre 2017-Notas</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="4" id="est4">
                                 <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="2do Semestre 2017-Notas" id="val4">
+                                <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row" align="center">
+                    <div class="col-lg-12">
+                        <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
+                            <div class="form-group has-feedback">                                
+                                <span class="form-control">Gestiones Pasadas</span>
+                                <hr>
+                                <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="5" id="est5">
+                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="Gestiones Pasadas" id="val4">
                                 <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
                             </div>
                         </form>

@@ -1,6 +1,10 @@
 Sie\AppWebBundle\Entity\TtecCatalogoMateria:
     type: entity
     table: ttec_catalogo_materia
+    indexes:
+        IDX_C724201C67EB6A63:
+            columns:
+                - ttec_denominacion_titulo_profesional_tipo_id
     id:
         id:
             type: integer
@@ -30,4 +34,14 @@ Sie\AppWebBundle\Entity\TtecCatalogoMateria:
             length: 150
             fixed: false
             comment: ''
+    manyToOne:
+        ttecDenominacionTituloProfesionalTipo:
+            targetEntity: TtecDenominacionTituloProfesionalTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_denominacion_titulo_profesional_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
     lifecycleCallbacks: {  }

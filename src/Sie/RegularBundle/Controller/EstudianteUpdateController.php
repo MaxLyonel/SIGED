@@ -86,8 +86,9 @@ class EstudianteUpdateController extends Controller {
         //verificamos si existe el estudiante
         if ($student) {
           //check if it has tramite
-          $validationType = ($this->session->get('roluser')==10)?1:2;
-          if($this->get('seguimiento')->getStudentTramite($form['codigoRude'], $validationType)){
+          //dump($this->session->get('roluser'));
+          //$validationType = ($this->session->get('roluser')==10)?1:2;
+          if($this->get('seguimiento')->getStudentTramite($form['codigoRude'], $this->session->get('roluser'))){
             $this->session->getFlashBag()->add('noticemodi', 'No se permite el cambio, estudiante tiene tramite de diplomas...');
             return $this->redirectToRoute('sie_estudiantes');
           }
@@ -261,9 +262,9 @@ class EstudianteUpdateController extends Controller {
             $form = $this->createFormBuilder($student)
                     ->setAction($this->generateUrl('sie_estudiantes_updatestudentA', array('id' => $student->getId())))
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\']{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\']{2,30}')))
-                    ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'. A-ZÑ-\'.]{2,40}')))
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'-. A-ZÑ-\'-.]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('readonly' => 'readonly', 'class' => 'form-control')))
                     ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                     ->getForm();
@@ -286,9 +287,9 @@ class EstudianteUpdateController extends Controller {
             $form = $this->createFormBuilder($student)
                     ->setAction($this->generateUrl('sie_estudiantes_updatestudentD', array('id' => $student->getId())))
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\']{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\']{2,30}')))
-                    ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'. A-ZÑ-\'.]{2,40}')))
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'-. A-ZÑ-\'-.]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                     ->add('pais', 'entity', array('label' => 'Pais', 'attr' => array('class' => 'form-control'),
                         'mapped' => false, 'class' => 'SieAppWebBundle:PaisTipo',
@@ -368,9 +369,9 @@ class EstudianteUpdateController extends Controller {
             $form = $this->createFormBuilder($student)
                     ->setAction($this->generateUrl('sie_estudiantes_updatestudentB', array('id' => $student->getId())))
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\']{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\']{2,30}')))
-                    ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'. A-ZÑ-\'.]{2,40}')))
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü- A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'.- A-ZÑ-\'.-]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                     ->add('resolAprobatoria', 'textarea', array('required' => false, 'data' => $student->getResolucionaprovatoria(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'rows' => '2', 'cols' => '3', 'maxlength' => '15')))
                     ->add('obsAdicional', 'textarea', array('required' => false, 'data' => $student->getObservacionadicional(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'maxlength' => '50')))
@@ -393,9 +394,10 @@ class EstudianteUpdateController extends Controller {
             $form = $this->createFormBuilder($student)
                     ->setAction($this->generateUrl('sie_estudiantes_updatestudentE', array('id' => $student->getId())))
                     ->add('codigoRude', 'hidden', array('label' => 'codigo rude'))
-                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\']{2,30}')))
-                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\']{2,30}')))
-                    ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'. A-ZÑ-\'.]{2,40}')))
+
+                    ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñü A-ZÑÜÖÄËÏ\'-]{2,30}')))
+                    ->add('nombre', 'text', array('label' => 'Nombre', 'attr' => array('style' => 'text-transform:uppercase', 'class' => 'form-control', 'pattern' => '[a-zñ-\'-. A-ZÑ-\'.-]{2,40}')))
                     ->add('fechaNacimiento', 'text', array('data' => $student->getFechaNacimiento()->format('d-m-Y'), 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                     ->add('resolAprobatoria', 'textarea', array('required' => false, 'data' => $student->getResolucionaprovatoria(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'rows' => '2', 'cols' => '3', 'maxlength' => '15')))
                     ->add('obsAdicional', 'textarea', array('required' => false, 'data' => $student->getObservacionadicional(), 'mapped' => false, 'attr' => array('class' => 'form-control', 'maxlength' => '50')))

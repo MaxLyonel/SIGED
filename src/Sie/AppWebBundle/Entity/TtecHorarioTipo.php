@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * TtecParaleloMateriaHorario
+ * TtecHorarioTipo
  */
-class TtecParaleloMateriaHorario
+class TtecHorarioTipo
 {
     /**
      * @var integer
@@ -49,7 +49,7 @@ class TtecParaleloMateriaHorario
      * Set horaInicio
      *
      * @param \DateTime $horaInicio
-     * @return TtecParaleloMateriaHorario
+     * @return TtecHorarioTipo
      */
     public function setHoraInicio($horaInicio)
     {
@@ -72,7 +72,7 @@ class TtecParaleloMateriaHorario
      * Set horaFin
      *
      * @param \DateTime $horaFin
-     * @return TtecParaleloMateriaHorario
+     * @return TtecHorarioTipo
      */
     public function setHoraFin($horaFin)
     {
@@ -95,7 +95,7 @@ class TtecParaleloMateriaHorario
      * Set obs
      *
      * @param string $obs
-     * @return TtecParaleloMateriaHorario
+     * @return TtecHorarioTipo
      */
     public function setObs($obs)
     {
@@ -118,7 +118,7 @@ class TtecParaleloMateriaHorario
      * Set ttecDiaTipo
      *
      * @param \Sie\AppWebBundle\Entity\TtecDiaTipo $ttecDiaTipo
-     * @return TtecParaleloMateriaHorario
+     * @return TtecHorarioTipo
      */
     public function setTtecDiaTipo(\Sie\AppWebBundle\Entity\TtecDiaTipo $ttecDiaTipo = null)
     {

@@ -25,14 +25,14 @@ class TtecParaleloMateria
     private $fechaModificacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\TtecMateriaTipo
+     * @var integer
      */
-    private $ttecMateriaTipo;
+    private $cupo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\TtecParaleloTipo
+     * @var \Sie\AppWebBundle\Entity\TtecPeriodoTipo
      */
-    private $ttecParaleloTipo;
+    private $ttecPeriodoTipo;
 
     /**
      * @var \Sie\AppWebBundle\Entity\TurnoTipo
@@ -40,19 +40,19 @@ class TtecParaleloMateria
     private $turnoTipo;
 
     /**
+     * @var \Sie\AppWebBundle\Entity\TtecParaleloTipo
+     */
+    private $ttecParaleloTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecMateriaTipo
+     */
+    private $ttecMateriaTipo;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\GestionTipo
      */
     private $gestionTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecDocente
-     */
-    private $ttecDocente;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecParaleloMateriaHorario
-     */
-    private $ttecParaleloMateriaHorario;
 
 
     /**
@@ -112,49 +112,49 @@ class TtecParaleloMateria
     }
 
     /**
-     * Set ttecMateriaTipo
+     * Set cupo
      *
-     * @param \Sie\AppWebBundle\Entity\TtecMateriaTipo $ttecMateriaTipo
+     * @param integer $cupo
      * @return TtecParaleloMateria
      */
-    public function setTtecMateriaTipo(\Sie\AppWebBundle\Entity\TtecMateriaTipo $ttecMateriaTipo = null)
+    public function setCupo($cupo)
     {
-        $this->ttecMateriaTipo = $ttecMateriaTipo;
+        $this->cupo = $cupo;
     
         return $this;
     }
 
     /**
-     * Get ttecMateriaTipo
+     * Get cupo
      *
-     * @return \Sie\AppWebBundle\Entity\TtecMateriaTipo 
+     * @return integer 
      */
-    public function getTtecMateriaTipo()
+    public function getCupo()
     {
-        return $this->ttecMateriaTipo;
+        return $this->cupo;
     }
 
     /**
-     * Set ttecParaleloTipo
+     * Set ttecPeriodoTipo
      *
-     * @param \Sie\AppWebBundle\Entity\TtecParaleloTipo $ttecParaleloTipo
+     * @param \Sie\AppWebBundle\Entity\TtecPeriodoTipo $ttecPeriodoTipo
      * @return TtecParaleloMateria
      */
-    public function setTtecParaleloTipo(\Sie\AppWebBundle\Entity\TtecParaleloTipo $ttecParaleloTipo = null)
+    public function setTtecPeriodoTipo(\Sie\AppWebBundle\Entity\TtecPeriodoTipo $ttecPeriodoTipo = null)
     {
-        $this->ttecParaleloTipo = $ttecParaleloTipo;
+        $this->ttecPeriodoTipo = $ttecPeriodoTipo;
     
         return $this;
     }
 
     /**
-     * Get ttecParaleloTipo
+     * Get ttecPeriodoTipo
      *
-     * @return \Sie\AppWebBundle\Entity\TtecParaleloTipo 
+     * @return \Sie\AppWebBundle\Entity\TtecPeriodoTipo 
      */
-    public function getTtecParaleloTipo()
+    public function getTtecPeriodoTipo()
     {
-        return $this->ttecParaleloTipo;
+        return $this->ttecPeriodoTipo;
     }
 
     /**
@@ -181,6 +181,52 @@ class TtecParaleloMateria
     }
 
     /**
+     * Set ttecParaleloTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecParaleloTipo $ttecParaleloTipo
+     * @return TtecParaleloMateria
+     */
+    public function setTtecParaleloTipo(\Sie\AppWebBundle\Entity\TtecParaleloTipo $ttecParaleloTipo = null)
+    {
+        $this->ttecParaleloTipo = $ttecParaleloTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecParaleloTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecParaleloTipo 
+     */
+    public function getTtecParaleloTipo()
+    {
+        return $this->ttecParaleloTipo;
+    }
+
+    /**
+     * Set ttecMateriaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecMateriaTipo $ttecMateriaTipo
+     * @return TtecParaleloMateria
+     */
+    public function setTtecMateriaTipo(\Sie\AppWebBundle\Entity\TtecMateriaTipo $ttecMateriaTipo = null)
+    {
+        $this->ttecMateriaTipo = $ttecMateriaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecMateriaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecMateriaTipo 
+     */
+    public function getTtecMateriaTipo()
+    {
+        return $this->ttecMateriaTipo;
+    }
+
+    /**
      * Set gestionTipo
      *
      * @param \Sie\AppWebBundle\Entity\GestionTipo $gestionTipo
@@ -201,79 +247,5 @@ class TtecParaleloMateria
     public function getGestionTipo()
     {
         return $this->gestionTipo;
-    }
-
-    /**
-     * Set ttecDocente
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecDocente $ttecDocente
-     * @return TtecParaleloMateria
-     */
-    public function setTtecDocente(\Sie\AppWebBundle\Entity\TtecDocente $ttecDocente = null)
-    {
-        $this->ttecDocente = $ttecDocente;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecDocente
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecDocente 
-     */
-    public function getTtecDocente()
-    {
-        return $this->ttecDocente;
-    }
-
-    /**
-     * Set ttecParaleloMateriaHorario
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecParaleloMateriaHorario $ttecParaleloMateriaHorario
-     * @return TtecParaleloMateria
-     */
-    public function setTtecParaleloMateriaHorario(\Sie\AppWebBundle\Entity\TtecParaleloMateriaHorario $ttecParaleloMateriaHorario = null)
-    {
-        $this->ttecParaleloMateriaHorario = $ttecParaleloMateriaHorario;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecParaleloMateriaHorario
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecParaleloMateriaHorario 
-     */
-    public function getTtecParaleloMateriaHorario()
-    {
-        return $this->ttecParaleloMateriaHorario;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecDocentePersona
-     */
-    private $ttecDocentePersona;
-
-
-    /**
-     * Set ttecDocentePersona
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecDocentePersona $ttecDocentePersona
-     * @return TtecParaleloMateria
-     */
-    public function setTtecDocentePersona(\Sie\AppWebBundle\Entity\TtecDocentePersona $ttecDocentePersona = null)
-    {
-        $this->ttecDocentePersona = $ttecDocentePersona;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecDocentePersona
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecDocentePersona 
-     */
-    public function getTtecDocentePersona()
-    {
-        return $this->ttecDocentePersona;
     }
 }
