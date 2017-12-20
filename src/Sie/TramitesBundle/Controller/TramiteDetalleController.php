@@ -1411,6 +1411,77 @@ class TramiteDetalleController extends Controller {
     }
 
 
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO: 
+    // Controlador que genera los certificados generados para impresión con el formato de CI por la direccion departamental en formato pdf
+    // PARAMETROS: sie, gestion, especialidad, nivel
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function certTecImpresionCertificadoCiPdfAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        $this->session->set('save', false);
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $rolPermitido = 16;
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$esValidoUsuarioRol){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+        }
+
+        $documentoController = new documentoController();
+        $documentoController->setContainer($this->container);
+
+        $departamentoCodigo = $documentoController->getCodigoLugarRol($id_usuario,$rolPermitido);
+        $departamentoCodigo = $departamentoCodigo + 1;
+
+        try { 
+            $info = $request->get('info');
+            $form = unserialize(base64_decode($info));
+            $sie = $form['sie'];
+            $ges = $form['gestion'];
+            $especialidad = $form['especialidad'];
+            $nivel = $form['nivel'];
+
+            switch ($nivel) {
+                case 1:
+                    $n = 6;
+                    break;
+                case 2:
+                    $n = 7;
+                    break;
+                case 3:
+                    $n = 8;
+                    break;
+            }
+           
+            $arch = $sie.'_'.$ges.'_certificado_'.date('YmdHis').'.pdf';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_tec_basico_tec_auxiliar_ci_v2_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&'));
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
+        } catch (\Doctrine\ORM\NoResultException $exc) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
+            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_impresion_lista', ['form' => $form], 307);
+        }
+    }
+
+
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO: 
