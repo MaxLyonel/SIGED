@@ -76,21 +76,21 @@
 <script>
     var peticion1;
     //$('#form_turno').on('change',function(){
-    function listarMaterias(idPeriodo){
+    function listarParalelos(idPeriodo){
         
         if(peticion1 && peticion1.readyState != 4) { 
             peticion1.abort();
         }
         peticion1 = $.ajax({
             type: 'get',
-            url: Routing.generate('dgesttla_listarmaterias',{'idPeriodo': idPeriodo}),
+            url: Routing.generate('dgesttla_listarparalelos',{'idPeriodo': idPeriodo}),
             beforeSend: function(){
                 
             },
             success: function(data){
                 $('#form_materia').empty();
                 $("#form_materia").append('<option value="">Seleccionar...</option>');
-                $.each(data.listamaterias, function (i, value) {
+                $.each(data.listaparalelos, function (i, value) {
                     $("#form_materia").append('<option value="' + i + '">' + value + '</option>');
                 });
             }
