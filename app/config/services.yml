@@ -64,3 +64,9 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             router: "@router"
+
+    dgfunctions:
+        class: Sie\AppWebBundle\Services\DgesttlaFunction
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"
