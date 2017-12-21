@@ -99,7 +99,7 @@ class DocenteMateriaController extends Controller {
         }
 
         $form = $request->get('form');
-        
+
         $ieducativa_id = $form['idInstitucion'];
         $gestion_id = $form['idGestion'];
         $denominacion_id = $form['idDenominacion'];
@@ -111,7 +111,7 @@ class DocenteMateriaController extends Controller {
         $carrera = $em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneById($carrera_id);
 
         return $this->render($this->session->get('pathSystem') . ':DocenteMateria:new.html.twig', array(
-                    'form' => $this->newParaleloForm($ieducativa_id, $gestion_id, $denominacion_id)->createView(),
+                    'form' => $this->newDocMatForm($ieducativa_id, $gestion_id, $denominacion_id)->createView(),
                     'institucion' => $institucion,
                     'denominacion' => $denominacion,
                     'carrera' => $carrera,
@@ -122,19 +122,20 @@ class DocenteMateriaController extends Controller {
      /*
      * formulario de nueva/o operativo
      */
-    private function newParaleloForm($idInstitucion, $idGestion, $idDenominacion) {
+    private function newDocMatForm($idInstitucion, $idGestion, $idDenominacion) {
         $em = $this->getDoctrine()->getManager();
         
         $query = $em->createQuery(
-            'SELECT a FROM SieAppWebBundle:TurnoTipo a
-            WHERE a.id NOT IN (:id) ORDER BY a.id')
-            ->setParameter('id', array(0));
+            'SELECT a FROM SieAppWebBundle:TtecDocentePersona a
+            INNER JOIN a.persona b
+            WHERE a.institucioneducativa = :idInstitucion ORDER BY a.id')
+            ->setParameter('idInstitucion', $idInstitucion);
 
-        $turno = $query->getResult();
-        
-        $turnoArray = array();
-        foreach ($turno as $value) {
-            $turnoArray[$value->getId()] = $value->getTurno();
+        $docentes = $query->getResult();
+
+        $docentesArray = array();
+        foreach ($docentes as $value) {
+            $docentesArray[$value->getId()] = $value->getPersona()->getCarnet().' - '.$value->getPersona()->getPaterno().' '.$value->getPersona()->getMaterno().' '.$value->getPersona()->getNombre();
         }
 
         $query = $em->createQuery(
@@ -148,7 +149,7 @@ class DocenteMateriaController extends Controller {
         foreach ($periodo as $value) {
             $periodoArray[$value->getId()] = $value->getPeriodo();
         }
-
+        
         $query = $em->createQuery(
             'SELECT a FROM SieAppWebBundle:TtecParaleloTipo a
             WHERE a.id IN (:id) ORDER BY a.id')
@@ -175,7 +176,7 @@ class DocenteMateriaController extends Controller {
         $query->bindValue(':idDenominacion', $idDenominacion);
         $query->execute();
         $materia = $query->fetchAll();
-
+        
         $materiaArray = array();
         foreach ($materia as $value) {
             $materiaArray[$value['id']] = $value['codigo_materia'].' / '.$value['asignatura'];
@@ -186,11 +187,9 @@ class DocenteMateriaController extends Controller {
             ->add('idInstitucion', 'hidden', array('data' => $idInstitucion))
             ->add('idGestion', 'hidden', array('data' => $idGestion))
             ->add('idDenominacion', 'hidden', array('data' => $idDenominacion))
-            ->add('periodo', 'choice', array('label' => 'Periodo:', 'required' => true, 'choices' => $periodoArray, 'attr' => array('class' => 'form-control')))
-            ->add('turno', 'choice', array('label' => 'Turno:', 'required' => true, 'choices' => $turnoArray, 'attr' => array('class' => 'form-control')))
-            ->add('materia', 'choice', array('label' => 'Materia:', 'required' => true, 'choices' => $materiaArray, 'attr' => array('class' => 'form-control')))
-            ->add('paralelo', 'choice', array('label' => 'Paralelo:', 'required' => true, 'choices' => $paraleloArray, 'attr' => array('class' => 'form-control')))
-            ->add('cupo', 'text', array('label' => 'Cupo:', 'required' => true, 'data' => '0', 'attr' => array('class' => 'form-control')))
+            ->add('periodo', 'choice', array('label' => 'Periodo:', 'required' => true, 'choices' => $periodoArray, 'empty_value'=>'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarParalelos(this.value)')))
+            ->add('materia', 'choice', array('label' => 'Turno/Materia/Paralelo:', 'required' => true, 'choices' => $materiaArray, 'empty_value'=>'Seleccionar...', 'attr' => array('class' => 'form-control')))
+            ->add('docente', 'choice', array('label' => 'Docente:', 'required' => true, 'choices' => $docentesArray, 'empty_value'=>'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
             
@@ -347,10 +346,8 @@ class DocenteMateriaController extends Controller {
             ->add('idDenominacion', 'hidden', array('data' => $idDenominacion))
             ->add('idParalelo', 'hidden', array('data' => $paraleloMateria->getId()))
             ->add('periodo', 'choice', array('label' => 'Periodo:', 'required' => true, 'choices' => $periodoArray, 'data' => $paraleloMateria->getTtecPeriodoTipo()->getId(), 'attr' => array('class' => 'form-control')))
-            ->add('turno', 'choice', array('label' => 'Turno:', 'required' => true, 'choices' => $turnoArray, 'data' => $paraleloMateria->getTurnoTipo()->getId(), 'attr' => array('class' => 'form-control')))
             ->add('materia', 'choice', array('label' => 'Materia:', 'required' => true, 'choices' => $materiaArray, 'data' => $paraleloMateria->getTtecMateriaTipo()->getId(), 'attr' => array('class' => 'form-control')))
-            ->add('paralelo', 'choice', array('label' => 'Paralelo:', 'required' => true, 'choices' => $paraleloArray, 'data' => $paraleloMateria->getTtecParaleloTipo()->getId(), 'attr' => array('class' => 'form-control')))
-            ->add('cupo', 'text', array('label' => 'Cupo:', 'required' => true, 'data' => $paraleloMateria->getCupo(), 'attr' => array('class' => 'form-control')))
+            ->add('docente', 'choice', array('label' => 'Docente:', 'required' => true, 'choices' => $docentesArray, 'data' => $paraleloMateria->getTtecParaleloTipo()->getId(), 'attr' => array('class' => 'form-control')))
             ->add('guardar', 'submit', array('label' => 'Guardar cambios', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
 
@@ -436,6 +433,40 @@ class DocenteMateriaController extends Controller {
             $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificación de datos.');
             return $this->redirect($this->generateUrl('dgesttla_carrera_docente_materia'));
         }
+    }
+
+     /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarparalelosAction(Request $request, $idPeriodo){
+        
+        $em = $this->getDoctrine()->getManager();
+        $idDenominacion = $request->getSession()->get('idDenominacion');
+
+        $query = $em->getConnection()->prepare('select f.id,f.codigo as codigo_materia,f.materia as asignatura,h.id,h.ttec_paralelo_tipo_id
+        from ttec_institucioneducativa_carrera_autorizada a
+            inner join ttec_carrera_tipo b on b.id=a.ttec_carrera_tipo_id
+                inner join institucioneducativa c on a.institucioneducativa_id=c.id
+                    inner join ttec_denominacion_titulo_profesional_tipo d on a.ttec_carrera_tipo_id=d.ttec_carrera_tipo_id
+                        inner join ttec_pensum e on e.ttec_denominacion_titulo_profesional_tipo_id=d.id
+                            inner join ttec_materia_tipo f on e.id=f.ttec_pensum_id
+                                inner join ttec_periodo_tipo g on f.ttec_periodo_tipo_id=g.id
+                                    inner join ttec_paralelo_materia h on h.ttec_materia_tipo_id=f.id
+        where d.id = :idDenominacion and g.id = :idPeriodo
+        order by f.id;');
+
+        $query->bindValue(':idDenominacion', $idDenominacion);
+        $query->bindValue(':idPeriodo', $idPeriodo);
+        $query->execute();
+        $paralelos = $query->fetchAll();
+
+        $paralelosArray = array();
+        foreach ($paralelos as $value) {
+            $paralelosArray[$value['id']] = $value['codigo_materia'].' / '.$value['asignatura'];
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('listaparalelos' => $paralelosArray));
     }
 
 }
