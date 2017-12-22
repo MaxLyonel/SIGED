@@ -31,3 +31,9 @@ dgesttla_carrera_paralelo_vigente:
     path:   /paralelovigente
     defaults:   { _controller: "SieDgesttlaBundle:Paralelo:esVigente" }
     methods:  [POST, PUT]
+
+dgesttla_listarmaterias:
+    path:     /listmaterias/{idPeriodo}
+    defaults: { _controller: "SieDgesttlaBundle:Paralelo:listarmaterias" }
+    options:
+        expose: true

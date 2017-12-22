@@ -91,6 +91,7 @@
                                     <th>Asignatura</th>
                                     <th>Paralelo</th>
                                     <th>Cupo</th>
+                                    <th>Gestión</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -104,6 +105,7 @@
                                         <td>{{ entity.asignatura }}</td>
                                         <td>{{ entity.paralelo }}</td>
                                         <td>{{ entity.cupo }}</td>
+                                        <td>{{ entity.gestion }}</td>
                                         <td>
                                             <form name="formE" action="{{path('dgesttla_carrera_paralelo_edit')}}" method="post" style="display:inline-block">
                                                 <input type="hidden" id="formE_idInstitucion" name="formE[idInstitucion]" value="{{institucion.id}}">

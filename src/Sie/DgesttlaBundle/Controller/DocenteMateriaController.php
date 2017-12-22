@@ -60,11 +60,12 @@ class DocenteMateriaController extends Controller {
                                                 inner join ttec_docente_materia k on k.ttec_paralelo_materia_id=h.id
                                                     inner join ttec_docente_persona n on k.ttec_docente_persona_id=n.id
                                                         inner join persona o on n.persona_id=o.id
-        where a.institucioneducativa_id= :idInstitucion and b.id = :idCarrera
+        where a.institucioneducativa_id= :idInstitucion and b.id = :idCarrera and h.gestion_tipo_id = :idGestion
         order by pensum, turno, periodo, codigo_materia, paralelo;');
 
         $query->bindValue(':idInstitucion', $ieducativa_id);
         $query->bindValue(':idCarrera', $carrera_id);
+        $query->bindValue(':idGestion', $gestion_id);
         $query->execute();
         $docentemateria = $query->fetchAll();
         
@@ -99,7 +100,7 @@ class DocenteMateriaController extends Controller {
         }
 
         $form = $request->get('form');
-        
+
         $ieducativa_id = $form['idInstitucion'];
         $gestion_id = $form['idGestion'];
         $denominacion_id = $form['idDenominacion'];
@@ -111,7 +112,7 @@ class DocenteMateriaController extends Controller {
         $carrera = $em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneById($carrera_id);
 
         return $this->render($this->session->get('pathSystem') . ':DocenteMateria:new.html.twig', array(
-                    'form' => $this->newParaleloForm($ieducativa_id, $gestion_id, $denominacion_id)->createView(),
+                    'form' => $this->newDocMatForm($ieducativa_id, $gestion_id, $denominacion_id)->createView(),
                     'institucion' => $institucion,
                     'denominacion' => $denominacion,
                     'carrera' => $carrera,
@@ -122,19 +123,21 @@ class DocenteMateriaController extends Controller {
      /*
      * formulario de nueva/o operativo
      */
-    private function newParaleloForm($idInstitucion, $idGestion, $idDenominacion) {
+    private function newDocMatForm($idInstitucion, $idGestion, $idDenominacion) {
         $em = $this->getDoctrine()->getManager();
         
         $query = $em->createQuery(
-            'SELECT a FROM SieAppWebBundle:TurnoTipo a
-            WHERE a.id NOT IN (:id) ORDER BY a.id')
-            ->setParameter('id', array(0));
+            'SELECT a FROM SieAppWebBundle:TtecDocentePersona a
+            INNER JOIN a.persona b
+            WHERE a.institucioneducativa = :idInstitucion AND a.esVigente = :esvigente ORDER BY a.id')
+            ->setParameter('idInstitucion', $idInstitucion)
+            ->setParameter('esvigente', true);
 
-        $turno = $query->getResult();
-        
-        $turnoArray = array();
-        foreach ($turno as $value) {
-            $turnoArray[$value->getId()] = $value->getTurno();
+        $docentes = $query->getResult();
+
+        $docentesArray = array();
+        foreach ($docentes as $value) {
+            $docentesArray[$value->getId()] = $value->getPersona()->getCarnet().' - '.$value->getPersona()->getPaterno().' '.$value->getPersona()->getMaterno().' '.$value->getPersona()->getNombre();
         }
 
         $query = $em->createQuery(
@@ -148,7 +151,7 @@ class DocenteMateriaController extends Controller {
         foreach ($periodo as $value) {
             $periodoArray[$value->getId()] = $value->getPeriodo();
         }
-
+        
         $query = $em->createQuery(
             'SELECT a FROM SieAppWebBundle:TtecParaleloTipo a
             WHERE a.id IN (:id) ORDER BY a.id')
@@ -175,7 +178,7 @@ class DocenteMateriaController extends Controller {
         $query->bindValue(':idDenominacion', $idDenominacion);
         $query->execute();
         $materia = $query->fetchAll();
-
+        
         $materiaArray = array();
         foreach ($materia as $value) {
             $materiaArray[$value['id']] = $value['codigo_materia'].' / '.$value['asignatura'];
@@ -186,11 +189,9 @@ class DocenteMateriaController extends Controller {
             ->add('idInstitucion', 'hidden', array('data' => $idInstitucion))
             ->add('idGestion', 'hidden', array('data' => $idGestion))
             ->add('idDenominacion', 'hidden', array('data' => $idDenominacion))
-            ->add('periodo', 'choice', array('label' => 'Periodo:', 'required' => true, 'choices' => $periodoArray, 'attr' => array('class' => 'form-control')))
-            ->add('turno', 'choice', array('label' => 'Turno:', 'required' => true, 'choices' => $turnoArray, 'attr' => array('class' => 'form-control')))
-            ->add('materia', 'choice', array('label' => 'Materia:', 'required' => true, 'choices' => $materiaArray, 'attr' => array('class' => 'form-control')))
-            ->add('paralelo', 'choice', array('label' => 'Paralelo:', 'required' => true, 'choices' => $paraleloArray, 'attr' => array('class' => 'form-control')))
-            ->add('cupo', 'text', array('label' => 'Cupo:', 'required' => true, 'data' => '0', 'attr' => array('class' => 'form-control')))
+            ->add('periodo', 'choice', array('label' => 'Periodo:', 'required' => true, 'choices' => $periodoArray, 'empty_value'=>'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarParalelos(this.value)')))
+            ->add('materia', 'choice', array('label' => 'Turno/Materia/Paralelo:', 'required' => true, 'choices' => $materiaArray, 'empty_value'=>'Seleccionar...', 'attr' => array('class' => 'form-control')))
+            ->add('docente', 'choice', array('label' => 'Docente:', 'required' => true, 'choices' => $docentesArray, 'empty_value'=>'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
             
@@ -205,26 +206,24 @@ class DocenteMateriaController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
-                                        
-            $paralelo = $em->getRepository('SieAppWebBundle:TtecParaleloMateria')->findBy(array('ttecPeriodoTipo' => $form['periodo'], 'turnoTipo' => $form['turno'], 'ttecMateriaTipo' => $form['materia'], 'ttecParaleloTipo' => $form['paralelo']));
+
+            $docMat = $em->getRepository('SieAppWebBundle:TtecDocenteMateria')->findBy(array('ttecDocentePersona' => $form['docente'], 'ttecParaleloMateria' => $form['materia'], 'esVigente' => 'true'));
             
-            if ($paralelo) {
-                $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, el paralelo ya se encuentra registrado.');
+            if ($docMat) {
+                $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, ya se encuentra registrada la asignación del docente con el paralelo.');
                 return $this->redirect($this->generateUrl('dgesttla_carrera_docente_materia'));
             }
 
-            // Registro paralelo
-            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_paralelo_materia');")->execute();
-            $paraleloNew = new TtecParaleloMateria();
-            $paraleloNew->setTtecMateriaTipo($em->getRepository('SieAppWebBundle:TtecMateriaTipo')->findOneById($form['materia']));
-            $paraleloNew->setTtecParaleloTipo($em->getRepository('SieAppWebBundle:TtecParaleloTipo')->findOneById($form['paralelo']));
-            $paraleloNew->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['turno']));
-            $paraleloNew->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['periodo']));
-            $paraleloNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['idGestion']));            
-            $paraleloNew->setCupo(intval($form['cupo']));
-            $paraleloNew->setFechaRegistro(new \DateTime('now'));
-            $em->persist($paraleloNew);
+            // Registro materia docente
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('ttec_docente_materia');")->execute();
+            $docMatNew = new TtecDocenteMateria();
+            $docMatNew->setTtecDocentePersona($em->getRepository('SieAppWebBundle:TtecDocentePersona')->findOneById($form['docente']));
+            $docMatNew->setTtecParaleloMateria($em->getRepository('SieAppWebBundle:TtecParaleloMateria')->findOneById($form['materia']));
+            $docMatNew->setEsVigente(1);
+            $docMatNew->setFechaRegistro(new \DateTime('now'));
+            $em->persist($docMatNew);
             $em->flush();
+            //dump($docMatNew);die;
             
             $em->getConnection()->commit();
 
@@ -259,7 +258,7 @@ class DocenteMateriaController extends Controller {
         $ieducativa_id = $form['idInstitucion'];
         $gestion_id = $form['idGestion'];
         $denominacion_id = $form['idDenominacion'];
-        $paralelo_id = $form['idParalelo'];
+        $docmat_id = $form['idDocMat'];
         $carrera_id = $request->getSession()->get('idCarrera');
 
         $em = $this->getDoctrine()->getManager();
@@ -268,7 +267,7 @@ class DocenteMateriaController extends Controller {
         $carrera = $em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneById($carrera_id);
 
         return $this->render($this->session->get('pathSystem') . ':DocenteMateria:edit.html.twig', array(
-                    'form' => $this->editPensumForm($ieducativa_id, $gestion_id, $paralelo_id, $denominacion_id)->createView(),
+                    'form' => $this->editDocMatForm($ieducativa_id, $gestion_id, $docmat_id, $denominacion_id)->createView(),
                     'institucion' => $institucion,
                     'denominacion' => $denominacion,
                     'carrera' => $carrera,
@@ -279,19 +278,21 @@ class DocenteMateriaController extends Controller {
     /*
     * formulario de edicion
     */
-    private function editPensumForm($idInstitucion, $idGestion, $idParalelo, $idDenominacion) {
+    private function editDocMatForm($idInstitucion, $idGestion, $idDocMat, $idDenominacion) {
         $em = $this->getDoctrine()->getManager();
         
         $query = $em->createQuery(
-            'SELECT a FROM SieAppWebBundle:TurnoTipo a
-            WHERE a.id NOT IN (:id) ORDER BY a.id')
-            ->setParameter('id', array(0));
+            'SELECT a FROM SieAppWebBundle:TtecDocentePersona a
+            INNER JOIN a.persona b
+            WHERE a.institucioneducativa = :idInstitucion AND a.esVigente = :esvigente ORDER BY a.id')
+            ->setParameter('idInstitucion', $idInstitucion)
+            ->setParameter('esvigente', true);
 
-        $turno = $query->getResult();
-        
-        $turnoArray = array();
-        foreach ($turno as $value) {
-            $turnoArray[$value->getId()] = $value->getTurno();
+        $docentes = $query->getResult();
+
+        $docentesArray = array();
+        foreach ($docentes as $value) {
+            $docentesArray[$value->getId()] = $value->getPersona()->getCarnet().' - '.$value->getPersona()->getPaterno().' '.$value->getPersona()->getMaterno().' '.$value->getPersona()->getNombre();
         }
 
         $query = $em->createQuery(
@@ -338,19 +339,17 @@ class DocenteMateriaController extends Controller {
             $materiaArray[$value['id']] = $value['codigo_materia'].' / '.$value['asignatura'];
         }
 
-        $paraleloMateria = $em->getRepository('SieAppWebBundle:TtecParaleloMateria')->findOneById($idParalelo);
-
+        $docenteMateria = $em->getRepository('SieAppWebBundle:TtecDocenteMateria')->findOneById($idDocMat);
+        
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('dgesttla_carrera_docente_materia_update'))
             ->add('idInstitucion', 'hidden', array('data' => $idInstitucion))
             ->add('idGestion', 'hidden', array('data' => $idGestion))
             ->add('idDenominacion', 'hidden', array('data' => $idDenominacion))
-            ->add('idParalelo', 'hidden', array('data' => $paraleloMateria->getId()))
-            ->add('periodo', 'choice', array('label' => 'Periodo:', 'required' => true, 'choices' => $periodoArray, 'data' => $paraleloMateria->getTtecPeriodoTipo()->getId(), 'attr' => array('class' => 'form-control')))
-            ->add('turno', 'choice', array('label' => 'Turno:', 'required' => true, 'choices' => $turnoArray, 'data' => $paraleloMateria->getTurnoTipo()->getId(), 'attr' => array('class' => 'form-control')))
-            ->add('materia', 'choice', array('label' => 'Materia:', 'required' => true, 'choices' => $materiaArray, 'data' => $paraleloMateria->getTtecMateriaTipo()->getId(), 'attr' => array('class' => 'form-control')))
-            ->add('paralelo', 'choice', array('label' => 'Paralelo:', 'required' => true, 'choices' => $paraleloArray, 'data' => $paraleloMateria->getTtecParaleloTipo()->getId(), 'attr' => array('class' => 'form-control')))
-            ->add('cupo', 'text', array('label' => 'Cupo:', 'required' => true, 'data' => $paraleloMateria->getCupo(), 'attr' => array('class' => 'form-control')))
+            ->add('idDocMat', 'hidden', array('data' => $docenteMateria->getId()))
+            ->add('periodo', 'choice', array('label' => 'Periodo:', 'required' => true, 'choices' => $periodoArray, 'empty_value'=>'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarParalelos(this.value)')))
+            ->add('materia', 'choice', array('label' => 'Turno/Materia/Paralelo:', 'required' => true, 'choices' => $materiaArray, 'data' => $docenteMateria->getTtecParaleloMateria()->getId(), 'empty_value'=>'Seleccionar...', 'attr' => array('class' => 'form-control')))
+            ->add('docente', 'choice', array('label' => 'Docente:', 'required' => true, 'choices' => $docentesArray, 'data' => $docenteMateria->getTtecDocentePersona()->getId(), 'empty_value'=>'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('guardar', 'submit', array('label' => 'Guardar cambios', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
 
@@ -367,15 +366,12 @@ class DocenteMateriaController extends Controller {
             $form = $request->get('form');
             
             // Actiualización pensum
-            $paraleloEdit = $em->getRepository('SieAppWebBundle:TtecParaleloMateria')->findOneById($form['idParalelo']);
-            $paraleloEdit->setTtecMateriaTipo($em->getRepository('SieAppWebBundle:TtecMateriaTipo')->findOneById($form['materia']));
-            $paraleloEdit->setTtecParaleloTipo($em->getRepository('SieAppWebBundle:TtecParaleloTipo')->findOneById($form['paralelo']));
-            $paraleloEdit->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['turno']));
-            $paraleloEdit->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['periodo']));
-            $paraleloEdit->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['idGestion']));
-            $paraleloEdit->setCupo(intval($form['cupo']));
-            $paraleloEdit->setFechaModificacion(new \DateTime('now'));
-            $em->persist($paraleloEdit);
+            $docMatEdit = $em->getRepository('SieAppWebBundle:TtecDocenteMateria')->findOneById($form['idDocMat']);
+            $docMatEdit->setTtecDocentePersona($em->getRepository('SieAppWebBundle:TtecDocentePersona')->findOneById($form['docente']));
+            $docMatEdit->setTtecParaleloMateria($em->getRepository('SieAppWebBundle:TtecParaleloMateria')->findOneById($form['materia']));
+            $docMatEdit->setEsVigente(0);
+            $docMatEdit->setFechaModificacion(new \DateTime('now'));
+            $em->persist($docMatEdit);
             $em->flush();
             $em->getConnection()->commit();
 
@@ -436,6 +432,46 @@ class DocenteMateriaController extends Controller {
             $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificación de datos.');
             return $this->redirect($this->generateUrl('dgesttla_carrera_docente_materia'));
         }
+    }
+
+     /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarparalelosAction(Request $request, $idPeriodo){
+        
+        $em = $this->getDoctrine()->getManager();
+        $idDenominacion = $request->getSession()->get('idDenominacion');
+        $idGestion = $request->getSession()->get('idGestion');
+        $idInstitucion = $request->getSession()->get('idInstitucion');
+
+        $query = $em->getConnection()->prepare('select h.id,f.codigo as codigo_materia,f.materia as asignatura,i.paralelo,j.turno
+        from ttec_institucioneducativa_carrera_autorizada a
+            inner join ttec_carrera_tipo b on b.id=a.ttec_carrera_tipo_id
+                inner join institucioneducativa c on a.institucioneducativa_id=c.id
+                    inner join ttec_denominacion_titulo_profesional_tipo d on a.ttec_carrera_tipo_id=d.ttec_carrera_tipo_id
+                        inner join ttec_pensum e on e.ttec_denominacion_titulo_profesional_tipo_id=d.id
+                            inner join ttec_materia_tipo f on e.id=f.ttec_pensum_id
+                                inner join ttec_periodo_tipo g on f.ttec_periodo_tipo_id=g.id
+                                    inner join ttec_paralelo_materia h on h.ttec_materia_tipo_id=f.id
+                                        inner join ttec_paralelo_tipo i on h.ttec_paralelo_tipo_id=i.id
+                                            inner join turno_tipo j on h.turno_tipo_id=j.id
+        where d.id = :idDenominacion and g.id = :idPeriodo and h.gestion_tipo_id = :idGestion and c.id = :idInstitucion
+        order by j.id,f.id,i.id;');
+
+        $query->bindValue(':idDenominacion', $idDenominacion);
+        $query->bindValue(':idPeriodo', $idPeriodo);
+        $query->bindValue(':idGestion', $idGestion);
+        $query->bindValue(':idInstitucion', $idInstitucion);
+        $query->execute();
+        $paralelos = $query->fetchAll();
+
+        $paralelosArray = array();
+        foreach ($paralelos as $value) {
+            $paralelosArray[$value['id']] = $value['turno'].' / '.$value['codigo_materia'].' '.$value['asignatura'].' / '.$value['paralelo'];
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('listaparalelos' => $paralelosArray));
     }
 
 }
