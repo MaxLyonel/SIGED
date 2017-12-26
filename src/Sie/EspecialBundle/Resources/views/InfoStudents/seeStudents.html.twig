@@ -97,6 +97,13 @@
                                             <i class="fa fa-list"></i>
                                         </button>
                                     </div>
+                                    {% if gestion == 2017 and  arrDataLibreta.areaEspecialId==3 and  arrDataLibreta.nivelId!=405 %}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Libreta">
+                                        <a type="button" class="btn btn-circle btn-warning " data-toggle="" data-target=""  href="{{path('donwload_especial_libreta', {'infoUe': infoUe, 'gestion': gestion, 'estInsEspId':data.estInsEspId,'estInsId':data.estInsId } )}}" >
+                                            <i class="fa fa-file-text-o"></i>
+                                        </a>
+                                    </div>
+                                    {% endif %}
                                     {% if gestion != 2017 %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                         <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >

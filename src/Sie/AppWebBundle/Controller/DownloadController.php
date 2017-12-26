@@ -753,4 +753,45 @@ class DownloadController extends Controller {
         return $response;
     }
 
+
+
+    /**
+     * get the list of students per UE
+     * @param Request $request
+     * @param type $ue
+     * @param type $gestion
+     * @return Response a pdf list students per UE
+     * by krlos
+     */
+    public function especialLibretaAction(Request $request, $infoUe, $gestion, $estInsEspId, $estInsId) {
+
+
+      $arrInfoUe = unserialize($infoUe);
+
+        // $aDataUe = explode(',', $itemsUe);
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_especial_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . trim($arrInfoUe['ueducativaInfoId']['cicloId']) . '_' . trim($arrInfoUe['ueducativaInfoId']['gradoId']) . '_' . $gestion . '.pdf'));
+        //get the data to do the report
+        $user= $this->session->get('userName');//strtolower(str_replace(' ','_', $this->session->get('name').' '.$this->session->get('lastname').' '.$this->session->get('lastname2')));
+        $sie = $arrInfoUe['requestUser']['sie'];
+        $data = $user.'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['cicloId'].'|'.$arrInfoUe['ueducativaInfoId']['gradoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'];
+
+        $link = 'http://'.$_SERVER['SERVER_NAME'].'/cen/'.$this->getLinkEncript($data);
+
+        $report = $this->container->getParameter('urlreportweb') .  'esp_est_LibretaEscolar_intelectual_v1_jaq.rptdesign&inscripid=' . $estInsId . '&codue=' . $sie .'&lk='. $link . '&&__format=pdf&';
+// dump($report);die;
+        $response->setContent(file_get_contents($report));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+
+
+
+
+
 }
