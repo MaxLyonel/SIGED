@@ -440,7 +440,7 @@
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
                             </ul>
                         </li>
-                        <li class="submenu">
+                        {#<li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -449,7 +449,7 @@
                             <ul>
                                 <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                             </ul>
-                        </li>
+                        </li>#}
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -489,9 +489,9 @@
                             <ul>
                               <!-- <li><a href="#">Operativo Concluido</a></li> -->
 
-                              <li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>
+                              {#<li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}
                               <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
-                              <li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
+                              {#<li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
                               <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
                             
 

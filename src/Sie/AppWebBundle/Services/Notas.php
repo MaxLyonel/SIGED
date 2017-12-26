@@ -889,6 +889,7 @@ class Notas{
                 $promedio = round(($PB->getNotaCuantitativa() + $SB->getNotaCuantitativa() + $TB->getNotaCuantitativa() + $CB->getNotaCuantitativa())/4);
                 if($P){
                     $P->setNotaCuantitativa($promedio);
+                    $this->em->flush();
                 }else{
                     $P = $this->registrarNota(5,$idEstudianteAsignatura,$promedio,'');
                 }

@@ -390,11 +390,13 @@ class SolicitudModificacionCalificacionesController extends Controller {
                             break;
             }
 
+            vuelta:
+
             /*
              * Listamos las asignaturas del estudiante
              */
             $asignaturas = $em->createQueryBuilder()
-                                        ->select('at.id, at.asignatura, ei.id as idEstudianteInscripcion, ea.id as idEstudianteAsignatura')
+                                        ->select('at.id, at.asignatura, ei.id as idEstudianteInscripcion, ea.id as idEstudianteAsignatura, ieco.id as idCursoOferta')
                                         ->from('SieAppWebBundle:EstudianteAsignatura','ea')
                                         ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
                                         ->innerJoin('SieAppWebBundle:Estudiante','e','WITH','ei.estudiante = e.id')
@@ -407,7 +409,46 @@ class SolicitudModificacionCalificacionesController extends Controller {
                                         ->getQuery()
                                         ->getResult();
 
-            //dump($asignaturas);die;
+            /* Verificamos si la cantidad de materias del estudiante es igual al del curso */
+            $asignaturasCurso = $em->createQuery(
+                    'SELECT DISTINCT at.id, ieco.id as idCursoOferta
+                    FROM SieAppWebBundle:InstitucioneducativaCursoOferta ieco
+                    INNER JOIN ieco.insitucioneducativaCurso iec
+                    INNER JOIN ieco.asignaturaTipo at
+                    WHERE iec.id = :idCurso')
+                    ->setParameter('idCurso', $curso[0]['id'])
+                    ->getResult();
+
+            $arrayAsignaturasEstudiante = array();
+
+            if(count($asignaturas) != count($asignaturasCurso)){
+                foreach ($asignaturasCurso as $a) {
+                    $arrayAsignaturasEstudiante[] = $a['id'];
+                }
+
+                // Reiniciar el primary key de las tabla estudiante_asignatura
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');");
+                $query->execute();
+                // Registramos las areas del estudiante
+                foreach ($asignaturasCurso as $ac) {
+                    // Preguntamos si la materia del curso ya la tiene el estudiante
+                    if(!in_array($ac['id'], $arrayAsignaturasEstudiante)){
+                        $newAsignatura = new EstudianteAsignatura();
+                        $newAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+                        $newAsignatura->setFechaRegistro(new \DateTime('now'));
+                        $newAsignatura->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
+                        $newAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ac['idCursoOferta']));
+                        $em->persist($newAsignatura);
+                        $em->flush();
+                    }
+
+                }
+                goto vuelta;
+
+            }else if(count($asignaturasCurso) == 0){
+                $arrayAsignaturasEstudiante = array(1);
+            }
+
             $notasArray = array();
             $cont = 0;
             foreach ($asignaturas as $a) {
