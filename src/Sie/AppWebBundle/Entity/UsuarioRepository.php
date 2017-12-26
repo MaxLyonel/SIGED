@@ -63,6 +63,26 @@ class UsuarioRepository extends EntityRepository
         
         return $qb->getQuery()->getResult();
     }
+
+    public function getFindByUserPersolAndRol($userid,$rolid) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+                        ->select('e.id as rolid, a.id as usuarioid, b.id as personaid, d.id as usuariorolid, e.rol, d.esactivo as rolesactivo, a.fechaRegistro, h.lugar as lugarnivelsup, f.id as lugar_tipoid, f.lugar, f.codigo as discod, g.id as lugarNivelId, g.nivel, e.diminutivo, d.subSistema ')
+        //                ->select(' a.id as usuarioid, b.id as personaid, a.fechaRegistro')
+                        ->from('SieAppWebBundle:Usuario', 'a')
+                        ->innerJoin('SieAppWebBundle:Persona', 'b', 'WITH', 'b.id = a.persona')
+                        ->innerJoin('SieAppWebBundle:UsuarioRol', 'd', 'WITH', 'd.usuario = a.id')
+                        ->innerJoin('SieAppWebBundle:RolTipo', 'e', 'WITH', 'e.id = d.rolTipo')
+                        ->innerJoin('SieAppWebBundle:LugarTipo', 'f', 'WITH', 'f.id = d.lugarTipo')
+                        ->innerJoin('SieAppWebBundle:LugarNivelTipo', 'g', 'WITH', 'g.id = f.lugarNivel')
+                        ->innerJoin('SieAppWebBundle:LugarTipo', 'h', 'WITH', 'h.id = f.lugarTipo')                
+                        ->where("a.id = '".$userid."'")
+                        ->andwhere("d.esactivo = true")
+                        ->andwhere("e.id = '".$rolid."'")
+                        ->orderBy('g.id');
+        
+        return $qb->getQuery()->getResult();
+    }
     
     public function getFindByUserPerson($userid) {
         $qb = $this->getEntityManager()->createQueryBuilder();

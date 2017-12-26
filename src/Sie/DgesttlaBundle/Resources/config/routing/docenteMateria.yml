@@ -1,0 +1,39 @@
+dgesttla_carrera_docente_materia:
+    path:   /docmatindex
+    defaults:   { _controller: "SieDgesttlaBundle:DocenteMateria:index" }
+
+dgesttla_carrera_docente_materia_new:
+    path:   /docmatnew
+    defaults:   { _controller: "SieDgesttlaBundle:DocenteMateria:new" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_docente_materia_create:
+    path:     /docmatcreate/
+    defaults:   { _controller: "SieDgesttlaBundle:DocenteMateria:create" }
+    methods:  POST
+
+dgesttla_carrera_docente_materia_edit:
+    path:   /docmatedit
+    defaults:   { _controller: "SieDgesttlaBundle:DocenteMateria:edit" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_docente_materia_update:
+    path:   /docmatupdate
+    defaults:   { _controller: "SieDgesttlaBundle:DocenteMateria:update" }
+    methods:  [POST, PUT]
+
+dgesttla_carrera_docente_materia_delete:
+    path:   /docmatdelete
+    defaults:   { _controller: "SieDgesttlaBundle:DocenteMateria:delete" }
+    methods:  [POST, DELETE]
+
+dgesttla_carrera_docente_materia_vigente:
+    path:   /docmatvigente
+    defaults:   { _controller: "SieDgesttlaBundle:DocenteMateria:esVigente" }
+    methods:  [POST, PUT]
+
+dgesttla_listarparalelos:
+    path:     /listarparalelos/{idPeriodo}
+    defaults: { _controller: "SieDgesttlaBundle:DocenteMateria:listarparalelos" }
+    options:
+        expose: true

@@ -35,23 +35,37 @@
                         
                     </table>
                     <form action="{{path('dgesttla_calificaciones_create_update')}}" method="post">
-                        <table class="table">
+                        <table class="table table-hover table-striped table-primary">
                             <thead>
                                 <tr>
+                                    <th>#</th>
+                                    <th>C.I.</th>
                                     <th>Paterno</th>
                                     <th>Materno</th>
                                     <th>Nombre</th>
                                     <th>Estado Matricula</th>
-                                    <th align="center">Calificaciones</th>
+                                    <th>Competencias</th>
+                                    <th class="text-center">Calificaciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for i in inscritos %}
                                     <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{i.carnet}}</td>
                                         <td>{{i.paterno}}</td>
                                         <td>{{i.materno}}</td>
                                         <td>{{i.nombre}}</td>
                                         <td>{{i.estadoMatricula}}</td>
+                                        <td class="text-primary">
+                                            <table class="table">
+                                                {% for contador in 1..3 %}
+                                                    <tr>
+                                                        <td>Competencia {{contador}}</td><td align="center"><input type="checkbox"></td>
+                                                    </tr>                                                    
+                                                {% endfor %}
+                                            </table>
+                                        </td>    
                                         <td align="center">
                                             {% for n in i.notas %}
                                                 <input type="hidden" name="estudianteInscripcionId[]" value="{{i.estudianteInscripcionId}}">

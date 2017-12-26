@@ -40,6 +40,16 @@ class TtecInstitucioneducativaHistorico
     private $fechaModificacion;
 
     /**
+     * @var string
+     */
+    private $datoAdicional;
+
+    /**
+     * @var string
+     */
+    private $archivo;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\Institucioneducativa
      */
     private $institucioneducativa;
@@ -171,39 +181,6 @@ class TtecInstitucioneducativaHistorico
     }
 
     /**
-     * Set institucioneducativa
-     *
-     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
-     * @return TtecInstitucioneducativaHistorico
-     */
-    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
-    {
-        $this->institucioneducativa = $institucioneducativa;
-    
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativa
-     *
-     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
-     */
-    public function getInstitucioneducativa()
-    {
-        return $this->institucioneducativa;
-    }
-    /**
-     * @var string
-     */
-    private $datoAdicional;
-
-    /**
-     * @var string
-     */
-    private $archivo;
-
-
-    /**
      * Set datoAdicional
      *
      * @param string $datoAdicional
@@ -247,5 +224,28 @@ class TtecInstitucioneducativaHistorico
     public function getArchivo()
     {
         return $this->archivo;
+    }
+
+    /**
+     * Set institucioneducativa
+     *
+     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
+     * @return TtecInstitucioneducativaHistorico
+     */
+    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
+    {
+        $this->institucioneducativa = $institucioneducativa;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativa
+     *
+     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
+     */
+    public function getInstitucioneducativa()
+    {
+        return $this->institucioneducativa;
     }
 }

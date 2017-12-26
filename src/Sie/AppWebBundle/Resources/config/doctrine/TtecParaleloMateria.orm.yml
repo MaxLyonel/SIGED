@@ -17,6 +17,14 @@ Sie\AppWebBundle\Entity\TtecParaleloMateria:
         IDX_EA4642B5179FF95:
             columns:
                 - gestion_tipo_id
+    uniqueConstraints:
+        uniq_paralelo_materia:
+            columns:
+                - ttec_materia_tipo_id
+                - ttec_paralelo_tipo_id
+                - turno_tipo_id
+                - gestion_tipo_id
+                - ttec_periodo_tipo_id
     id:
         id:
             type: integer

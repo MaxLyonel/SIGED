@@ -22,6 +22,12 @@ InscriptionDg_get_denominacion:
     options:
         expose: true
 
+InscriptionDg_get_doRegistration:
+    path:     /doRegistration
+    defaults: { _controller: SieDgesttlaBundle:InscriptionDg:doRegistration }
+    options:
+        expose: true
+
 InscriptionDg_do_inscription_dg:
     path:     /doInscriptionDg
     defaults: { _controller: SieDgesttlaBundle:InscriptionDg:doInscriptionDg }

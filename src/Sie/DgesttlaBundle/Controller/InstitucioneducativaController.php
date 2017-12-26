@@ -1182,8 +1182,8 @@ class InstitucioneducativaController extends Controller {
             $operativoNew->setTtecOperativoTipo($em->getRepository('SieAppWebBundle:TtecOperativoTipo')->findOneById($form['operativo']));
             $operativoNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['idGestion']));
             $operativoNew->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['periodo']));
-            $operativoNew->setFechaInicio(new \DateTime('now'));
-            $operativoNew->setFechaFin(new \DateTime('now'));
+            $operativoNew->setFechaInicio(new \DateTime($form['fechaInicio']));
+            $operativoNew->setFechaFin(new \DateTime($form['fechaFin']));
             $operativoNew->setFechaRegistro(new \DateTime('now'));
             $em->persist($operativoNew);
             $em->flush();
@@ -1250,8 +1250,8 @@ class InstitucioneducativaController extends Controller {
             ->add('idGestion', 'hidden', array('data' => $idGestion))
             ->add('operativo', 'choice', array('label' => 'Operativo:', 'required' => true, 'choices' => $operativosArray, 'data' => $operativo->getTtecOperativoTipo()->getId(), 'attr' => array('class' => 'form-control')))
             ->add('periodo', 'choice', array('label' => 'Periodo:', 'required' => true, 'choices' => $periodosArray, 'data' => $operativo->getTtecPeriodoTipo()->getId(), 'attr' => array('class' => 'form-control')))
-            ->add('fechaInicio','text',array('label'=>'Fecha Inicio', 'data' => '20-12-2017', 'attr'=>array('class'=>'form-control','autocomplete'=>'off')))
-            ->add('fechaFin','text',array('label'=>'Fecha Fin', 'data' => '20-05-2017', 'attr'=>array('class'=>'form-control','autocomplete'=>'off')))
+            ->add('fechaInicio','text',array('label'=>'Fecha Inicio', 'data' => $operativo->getFechaInicio()->format('d-m-Y'), 'attr'=>array('class'=>'form-control calendario','autocomplete'=>'off')))
+            ->add('fechaFin','text',array('label'=>'Fecha Fin', 'data' => $operativo->getFechaFin()->format('d-m-Y'), 'attr'=>array('class'=>'form-control calendario','autocomplete'=>'off')))
             ->add('guardar', 'submit', array('label' => 'Guardar cambios', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
 
@@ -1273,8 +1273,8 @@ class InstitucioneducativaController extends Controller {
             $operativoEdit->setTtecOperativoTipo($em->getRepository('SieAppWebBundle:TtecOperativoTipo')->findOneById($form['operativo']));
             $operativoEdit->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['idGestion']));
             $operativoEdit->setTtecPeriodoTipo($em->getRepository('SieAppWebBundle:TtecPeriodoTipo')->findOneById($form['periodo']));
-            $operativoEdit->setFechaInicio(new \DateTime('now'));
-            $operativoEdit->setFechaFin(new \DateTime('now'));
+            $operativoEdit->setFechaInicio(new \DateTime($form['fechaInicio']));
+            $operativoEdit->setFechaFin(new \DateTime($form['fechaFin']));
             $operativoEdit->setFechaModificacion(new \DateTime('now'));
             $em->persist($operativoEdit);
             $em->flush();

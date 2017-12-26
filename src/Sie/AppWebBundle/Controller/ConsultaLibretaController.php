@@ -81,14 +81,14 @@ class ConsultaLibretaController extends Controller {
 
         //$form['codigoRude'] = ($sesion->get('rude')) ? $sesion->get('rude') : $estudiante[0]['codigoRude'];
         //$form['codigoRude'] = $estudiante[0]['codigoRude'];
-        $form['gestion'] = isset($form['gestion']) ? $form['gestion'] : 2017;
+        $form['gestion'] = isset($form['gestion']) ? $form['gestion'] : $this->session->get('currentyear');
 
         //get the students inscription
         $objInscriptionStudent = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentInscriptionData($objStudent[0]['id'], $form['gestion']);
 
         if (!($objInscriptionStudent)) {
             //return al misma opcion de busqueda con el mensaje indicado q no existe el estdiante
-            $session->getFlashBag()->add('notice', 'Estudiante no presenta Historial con estado EFECTIVO/PROMOVIDO en la gestión 2016');
+            $session->getFlashBag()->add('notice', 'Estudiante no presenta Historial con estado EFECTIVO/PROMOVIDO en la gestión '.$this->session->get('currentyear'));
             return $this->redirect($this->generateUrl('consultalibreta'));
         }
         $objNota = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getNotasStudentNew( $objInscriptionStudent[0]['inscripcionid'],$objStudent[0]['id'], $objInscriptionStudent[0]['nivel'], $objInscriptionStudent[0]['grado'], $objInscriptionStudent[0]['paralelo'], $objInscriptionStudent[0]['turno'], $objInscriptionStudent[0]['gestion'], $objInscriptionStudent[0]['sie']);

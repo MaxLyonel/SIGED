@@ -25,14 +25,14 @@ class TtecAdministrativoInstituto
     private $fechaModificacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
-     */
-    private $institucioneducativa;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\TtecCargoTipo
      */
     private $ttecCargoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
+     */
+    private $institucioneducativa;
 
 
     /**
@@ -92,29 +92,6 @@ class TtecAdministrativoInstituto
     }
 
     /**
-     * Set institucioneducativa
-     *
-     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
-     * @return TtecAdministrativoInstituto
-     */
-    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
-    {
-        $this->institucioneducativa = $institucioneducativa;
-    
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativa
-     *
-     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
-     */
-    public function getInstitucioneducativa()
-    {
-        return $this->institucioneducativa;
-    }
-
-    /**
      * Set ttecCargoTipo
      *
      * @param \Sie\AppWebBundle\Entity\TtecCargoTipo $ttecCargoTipo
@@ -135,5 +112,28 @@ class TtecAdministrativoInstituto
     public function getTtecCargoTipo()
     {
         return $this->ttecCargoTipo;
+    }
+
+    /**
+     * Set institucioneducativa
+     *
+     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
+     * @return TtecAdministrativoInstituto
+     */
+    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
+    {
+        $this->institucioneducativa = $institucioneducativa;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativa
+     *
+     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
+     */
+    public function getInstitucioneducativa()
+    {
+        return $this->institucioneducativa;
     }
 }

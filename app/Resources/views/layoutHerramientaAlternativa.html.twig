@@ -223,11 +223,11 @@
 
                             <li class="dropdown navbar-notification">
                                 <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell-o"></i>
-                                    {#<span class="rounded count label label-danger">Aviso</span>#}
+                                    <span class="rounded count label label-danger">Aviso</span>
                                 </a>
                                 <div class="dropdown-menu animated flipInX">
                                     <div class="dropdown-header">
-                                        <span class="title">Notificaciones <strong>(0)</strong></span>
+                                        <span class="title">Notificaciones <strong>(1)</strong></span>
                                         {#<span class="option text-right"><a href="form-element.html#"><i class="fa fa-cog"></i> Configuración</a></span>#}
                                     </div>
                                     <div class="dropdown-body niceScroll">
@@ -243,100 +243,23 @@
                                                     </a>
                                                 {% endfor %}
                                             {%endif%}                                            #}
-                                            {#{% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) %}
-                                            <a href="form-element.html#" class="media">
-                                                <div class="media-object pull-left"><i class="fa fa-filter fg-info"></i></div>
+                                            {#{% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) %}#}
+
+
+                                            <a href="page-messages.html" class="media">
+                                                <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
                                                 <div class="media-body">
-                                                    <span class="media-text">Se ha habilitado para los Tec. Nacionales y Departamentales el módulo de selección de CEA en el menu Gestión.</span>
-                                                    <span class="media-meta">04/07/2016</span>
+                                                    <span class="media-heading">Victor Jimenez</span>
+                                                    <span class="media-text">
+                                                    A todos los usuarios del sistema de Alternativa:
+                                                    Se les informa que se acerca el plazo final para el cierre definitivo de gestiones pasadas, para tal propósito se ha publicado en la opción de “Panel de Control de Operativos” información de centros y periodos pendientes de finalización, con el cual se espera con urgencia el seguimiento y conclusión del operativo de regularización de gestiones pasadas.
+                                                    También se ha actualizado la lista de Centros pendientes de finalización gestión 2017 para su seguimiento y conclusión.
+                                                    ¡Agradeciéndoles los esfuerzos para concluir la presente gestión, el equipo del SIGED les desea felices fiestas!
+                                                    Atte. Administrador
+                                                    </span>
+                                                    <span class="media-meta pull-right">14/12/2017</span>
                                                 </div>
                                             </a>
-                                            {% endif %}#}
-                                            {#<a href="form-element.html#" class="media">
-                                                <div class="media-object pull-left"><i class="fa fa-plus-circle"></i></div>
-                                                <div class="media-body">
-                                                    <span class="media-text">Se ha habilitado los botones de creación de curso, paralelo, especialidad, acreditación e impresión de libretas.</span>
-                                                    <span class="media-meta">27/07/2016</span>
-                                                </div>
-                                            </a>
-                                            <a href="form-element.html#" class="media">
-                                                <div class="media-object pull-left"><i class="fa fa-times-circle-o"></i></div>
-                                                <div class="media-body">
-                                                    <span class="media-text">Se ha habilitado el boton de cerrar operativo.</span>
-                                                    <span class="media-meta">20/07/2016</span>
-                                                </div>
-                                            </a>#}
-                                            {#<a href="form-element.html#" class="media">
-                                                <div class="media-object pull-left"><i class="fa fa-male"></i></div>
-                                                <div class="media-body">
-                                                    <span class="media-text">La generación de nuevos rudes esta habilitado para su técnico distrital por el sistema: Gestion de Usuarios</span>
-                                                    <span class="media-meta">16/08/2016</span>
-                                                </div>
-                                            </a>#}
-                                            {#<a href="form-element.html#" class="media">
-                                                <div class="media-object pull-left"><i class="fa fa-history"></i></div>
-                                                <div class="media-body">
-                                                    <span class="media-text">Se ha habilitado la modificación de gestiones pasadas a través de su técnico distrital.</span>
-                                                    <span class="media-meta">24/08/2016</span>
-                                                </div>
-                                            </a>
-                                            <a href="form-element.html#" class="media">
-                                                <div class="media-object pull-left"><i class="fa fa-history"></i></div>
-                                                <div class="media-body">
-                                                    <span class="media-text">Se ha habilitado la modificación de gestiones pasadas a directores por un periodo.</span>
-                                                    <span class="media-meta">25/08/2016</span>
-                                                </div>
-                                            </a>#}
-                                            {#<a href="form-element.html#" class="media">
-                                                <div class="media-object pull-left"><i class="fa fa-opencart"></i></div>
-                                                <div class="media-body">
-                                                    <span class="media-text">Se ha habilitado la apertura de inicio de segundo semestre a través de su técnico de distrito.</span>
-                                                    <span class="media-meta">31/08/2016</span>
-                                                </div>
-                                            </a>#}
-                                            {#<a href="form-element.html#" class="media">
-                                                <div class="media-object pull-left"><i class="fa fa-calendar"></i></div>
-                                                <div class="media-body">
-                                                    <span class="media-text">¡Aviso! Para la regularización de gestiones pasadas se ampliara el plazo hasta el siguiente mes, y se habilitaran las opciones desde la siguiente semana una ves concluido trabajos de corrección de datos (Centralizadores, Inscripciones faltantes, Otros).</span>
-                                                    <span class="media-meta">14/10/2016</span>
-                                                </div>
-                                            </a>#}
-
-                                            {#<a href="page-messages.html" class="media">
-                                                <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
-                                                <div class="media-body">
-                                                    <span class="media-heading">Victor Jimenez</span>
-                                                    <span class="media-text">Se ha habilitado la modificación de la carga horaria en la malla curricular. En caso con "0" el director o en caso de modificación con su técnico distrital o departamental.</span>
-                                                    <span class="media-meta pull-right">14/10/2016</span>
-                                                </div>
-                                            </a>#}
-
-                                            {#<a href="page-messages.html" class="media">
-                                                <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
-                                                <div class="media-body">
-                                                    <span class="media-heading">Victor Jimenez</span>
-                                                    <span class="media-text">Se ha habilitado el boton de cerrar operativo 2do semestre 2016.</span>
-                                                    <span class="media-meta pull-right">14/10/2016</span>
-                                                </div>
-                                            </a>#}
-
-                                            {#<a href="page-messages.html" class="media">
-                                                <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
-                                                <div class="media-body">
-                                                    <span class="media-heading">Victor Jimenez</span>
-                                                    <span class="media-text">El equipo del SIGED les desea una exitosa gestión 2017 y les agradece enormemente el apoyo de todos para que la transición del antiguo sistema al nuevo haya concluido. Además les informamos que ya se encuentra habilitado todas las opciones para Inicio del primer semestre 2017.</span>
-                                                    <span class="media-meta pull-right">16/01/2017</span>
-                                                </div>
-                                            </a> #}
-
-                                            {#<a href="page-messages.html" class="media">
-                                                <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
-                                                <div class="media-body">
-                                                    <span class="media-heading">Victor Jimenez</span>
-                                                    <span class="media-text">El equipo del SIGED les informa que se procederá a cerrar el sistema para inscripciones por vencimiento de plazo para la presentación de este reporte, y se ha habilitado en el menú la lista de CEAS pendientes.</span>
-                                                    <span class="media-meta pull-right">19/04/2017</span>
-                                                </div>
-                                            </a>#}
 
                                             {#<a href="form-element.html#" class="media indicator inline">
                                                 <span class="spinner">Leyendo mas notificaciones...</span>
@@ -517,7 +440,7 @@
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
                             </ul>
                         </li>
-                        <li class="submenu">
+                        {#<li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -526,7 +449,7 @@
                             <ul>
                                 <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                             </ul>
-                        </li>
+                        </li>#}
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -564,13 +487,13 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                              <li><a href="#">Operativo Concluido</a></li>
-                            {#
-                              <li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>
+                              <!-- <li><a href="#">Operativo Concluido</a></li> -->
+
+                              {#<li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}
                               <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
-                              <li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
+                              {#<li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
                               <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
-                            #}
+                            
 
                             </ul>
                         </li>

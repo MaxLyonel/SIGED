@@ -15,11 +15,6 @@ class TtecAdministrativoCarreraPersona
     private $id;
 
     /**
-     * @var integer
-     */
-    private $personaId;
-
-    /**
      * @var boolean
      */
     private $esVigente;
@@ -35,14 +30,29 @@ class TtecAdministrativoCarreraPersona
     private $fechaModificacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\TtecAdministrativoCarrera
+     * @var \Sie\AppWebBundle\Entity\TtecCarreraTipo
      */
-    private $ttecAdministrativoCarrera;
+    private $ttecCarreraTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecCargoTipo
+     */
+    private $ttecCargoTipo;
 
     /**
      * @var \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo
      */
     private $ttecCargoDesignacionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Persona
+     */
+    private $persona;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\GestionTipo
+     */
+    private $gestionTipo;
 
 
     /**
@@ -53,29 +63,6 @@ class TtecAdministrativoCarreraPersona
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set personaId
-     *
-     * @param integer $personaId
-     * @return TtecAdministrativoCarreraPersona
-     */
-    public function setPersonaId($personaId)
-    {
-        $this->personaId = $personaId;
-    
-        return $this;
-    }
-
-    /**
-     * Get personaId
-     *
-     * @return integer 
-     */
-    public function getPersonaId()
-    {
-        return $this->personaId;
     }
 
     /**
@@ -148,72 +135,6 @@ class TtecAdministrativoCarreraPersona
     }
 
     /**
-     * Set ttecAdministrativoCarrera
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecAdministrativoCarrera $ttecAdministrativoCarrera
-     * @return TtecAdministrativoCarreraPersona
-     */
-    public function setTtecAdministrativoCarrera(\Sie\AppWebBundle\Entity\TtecAdministrativoCarrera $ttecAdministrativoCarrera = null)
-    {
-        $this->ttecAdministrativoCarrera = $ttecAdministrativoCarrera;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecAdministrativoCarrera
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecAdministrativoCarrera 
-     */
-    public function getTtecAdministrativoCarrera()
-    {
-        return $this->ttecAdministrativoCarrera;
-    }
-
-    /**
-     * Set ttecCargoDesignacionTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo $ttecCargoDesignacionTipo
-     * @return TtecAdministrativoCarreraPersona
-     */
-    public function setTtecCargoDesignacionTipo(\Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo $ttecCargoDesignacionTipo = null)
-    {
-        $this->ttecCargoDesignacionTipo = $ttecCargoDesignacionTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecCargoDesignacionTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo 
-     */
-    public function getTtecCargoDesignacionTipo()
-    {
-        return $this->ttecCargoDesignacionTipo;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecCarreraTipo
-     */
-    private $ttecCarreraTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\TtecCargoTipo
-     */
-    private $ttecCargoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\Persona
-     */
-    private $persona;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\GestionTipo
-     */
-    private $gestionTipo;
-
-
-    /**
      * Set ttecCarreraTipo
      *
      * @param \Sie\AppWebBundle\Entity\TtecCarreraTipo $ttecCarreraTipo
@@ -257,6 +178,29 @@ class TtecAdministrativoCarreraPersona
     public function getTtecCargoTipo()
     {
         return $this->ttecCargoTipo;
+    }
+
+    /**
+     * Set ttecCargoDesignacionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo $ttecCargoDesignacionTipo
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setTtecCargoDesignacionTipo(\Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo $ttecCargoDesignacionTipo = null)
+    {
+        $this->ttecCargoDesignacionTipo = $ttecCargoDesignacionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecCargoDesignacionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo 
+     */
+    public function getTtecCargoDesignacionTipo()
+    {
+        return $this->ttecCargoDesignacionTipo;
     }
 
     /**

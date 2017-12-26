@@ -3,7 +3,7 @@
 {% block headercontent %}
 <!-- Start header content -->
 <div class="header-content">
-    <h2><i class="fa fa-file-o"></i>Formación Técnica Tecnológica <span>Turnos y Paralelos</span></h2>
+    <h2><i class="fa fa-file-o"></i>Formación Técnica Tecnológica <span>Docentes y Materias</span></h2>
     <div class="breadcrumb-wrapper hidden-xs">
         <span class="label">Estás aquí:</span>
         <ol class="breadcrumb">
@@ -12,7 +12,7 @@
                 <a href="{{path('principal_web')}}">Inicio</a>
                 <i class="fa fa-angle-right"></i>
             </li>
-            <li class="active">Turnos y Paralelos</li>
+            <li class="active">Docentes y Materias</li>
         </ol>
     </div>
 </div><!-- /.header-content -->
@@ -21,7 +21,7 @@
 
 {% block bodycontent %}
 
-    {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Turnos y Paralelos', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+    {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Docentes y Materias', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
 
     {% for flashMessage in app.session.flashbag.get('newOk') %}
     <div class="alert alert-success" role="alert">
@@ -64,15 +64,15 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="panel rounded shadow">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Turnos y Paralelos</h3>
+                    <h3 class="panel-title">Docente/Materia</h3>
                 </div><!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="pull-right">
-                        <form action="{{path('dgesttla_carrera_paralelo_new')}}" name="form" method="post" style="display:inline-block">
+                        <form action="{{path('dgesttla_carrera_docente_materia_new')}}" name="form" method="post" style="display:inline-block">
                             <input type="hidden" id="form_idInstitucion" name="form[idInstitucion]" value="{{institucion.id}}">
                             <input type="hidden" id="form_idGestion" name="form[idGestion]" value="{{gestion}}">
                             <input type="hidden" id="form_idDenominacion" name="form[idDenominacion]" value="{{denominacion}}">
-                            <button type="submit" name="form_btnNew" name="form[btnNew]" class="btn btn-primary btn-md"><i class="fa fa-edit"></i> Nuevo Paralelo</button>
+                            <button type="submit" name="form_btnNew" name="form[btnNew]" class="btn btn-primary btn-md"><i class="fa fa-edit"></i> Nuevo Docente/Materia</button>
                         </form>
                     </div>
                     <div class="callout callout-warning">
@@ -90,13 +90,16 @@
                                     <th>Código de Asignatura</th>
                                     <th>Asignatura</th>
                                     <th>Paralelo</th>
-                                    <th>Cupo</th>
-                                    <th>Gestión</th>
+                                    <th>Carnet</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>Nombre(s)</th>
                                     <th>Acciones</th>
+                                    <th>¿Vigente?</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for entity in paralelos %}
+                                {% for entity in docentes %}
                                     <tr>
                                         <td>{{ loop.index }}</td>
                                         <td>{{ entity.turno }}</td>
@@ -104,21 +107,35 @@
                                         <td>{{ entity.codigo_materia }}</td>
                                         <td>{{ entity.asignatura }}</td>
                                         <td>{{ entity.paralelo }}</td>
-                                        <td>{{ entity.cupo }}</td>
-                                        <td>{{ entity.gestion }}</td>
+                                        <td>{{ entity.carnet }}</td>
+                                        <td>{{ entity.paterno }}</td>
+                                        <td>{{ entity.materno }}</td>
+                                        <td>{{ entity.nombre }}</td>
                                         <td>
-                                            <form name="formE" action="{{path('dgesttla_carrera_paralelo_edit')}}" method="post" style="display:inline-block">
+                                            <form name="formE" action="{{path('dgesttla_carrera_docente_materia_edit')}}" method="post" style="display:inline-block">
                                                 <input type="hidden" id="formE_idInstitucion" name="formE[idInstitucion]" value="{{institucion.id}}">
                                                 <input type="hidden" id="formE_idGestion" name="formE[idGestion]" value="{{gestion}}">
-                                                <input type="hidden" id="formE_idParalelo" name="formE[idParalelo]" value="{{entity.codigo_paralelo}}">
+                                                <input type="hidden" id="formE_idDocMat" name="formE[idDocMat]" value="{{entity.codigo_doc_mat}}">
                                                 <input type="hidden" id="formE_idDenominacion" name="formE[idDenominacion]" value="{{denominacion}}">
                                                 <button type="submit" name="formE[editar]" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
                                             </form>
-                                            <form name="formD" action="{{path('dgesttla_carrera_paralelo_delete')}}" method="post" style="display:inline-block">
+                                            <form name="formD" action="{{path('dgesttla_carrera_docente_materia_delete')}}" method="post" style="display:inline-block">
                                                 <input type="hidden" id="formD_idInstitucion" name="formD[idInstitucion]" value="{{institucion.id}}">
                                                 <input type="hidden" id="formD_idGestion" name="formD[idGestion]" value="{{gestion}}">
-                                                <input type="hidden" id="formD_idParalelo" name="formD[idParalelo]" value="{{entity.codigo_paralelo}}">
+                                                <input type="hidden" id="formD_idDocMat" name="formD[idDocMat]" value="{{entity.codigo_doc_mat}}">
                                                 <button type="submit" name="formD[editar]" class="btn-link" onclick="return confirm('¡Se eliminará el registro! ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="{{path('dgesttla_carrera_docente_materia_vigente')}}" method="post" style="display: inline-block">
+                                                <input type="hidden" id="formV_idInstitucion" name="formV[idInstitucion]" value="{{institucion.id}}">
+                                                <input type="hidden" id="formV_idGestion" name="formV[idGestion]" value="{{gestion}}">
+                                                <input type="hidden" id="formV_idDocMat" name="formV[idDocMat]" value="{{entity.codigo_doc_mat}}">
+                                                {% if entity.es_vigente %}
+                                                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Está segura/o de continuar?');">Vigente</button>
+                                                {% else %}
+                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está segura/o de continuar?');">Definir como Vigente</button>
+                                                {% endif %}
                                             </form>
                                         </td>
                                     </tr>

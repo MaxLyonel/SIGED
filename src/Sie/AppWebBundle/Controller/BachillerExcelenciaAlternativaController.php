@@ -40,7 +40,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        // return $this->redirect($this->generateUrl('principal_web'));
+        return $this->redirect($this->generateUrl('principal_web'));
 
         $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
 
@@ -98,7 +98,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        // return $this->redirect($this->generateUrl('principal_web'));
+        return $this->redirect($this->generateUrl('principal_web'));
 
         $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
 

@@ -20,19 +20,9 @@ class TtecCarreraTipo
     private $nombre;
 
     /**
-     * @var integer
-     */
-    private $tiempoEstudio;
-
-    /**
      * @var string
      */
     private $codigo;
-
-    /**
-     * @var integer
-     */
-    private $cargaHoraria;
 
     /**
      * @var \DateTime
@@ -45,24 +35,14 @@ class TtecCarreraTipo
     private $fechaModificacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\TtecAreaFormacionTipo
-     */
-    private $ttecAreaFormacionTipo;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\TtecEstadoCarreraTipo
      */
     private $ttecEstadoCarreraTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo
+     * @var \Sie\AppWebBundle\Entity\TtecAreaFormacionTipo
      */
-    private $ttecRegimenEstudioTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\NivelTipo
-     */
-    private $nivelTipo;
+    private $ttecAreaFormacionTipo;
 
 
     /**
@@ -99,29 +79,6 @@ class TtecCarreraTipo
     }
 
     /**
-     * Set tiempoEstudio
-     *
-     * @param integer $tiempoEstudio
-     * @return TtecCarreraTipo
-     */
-    public function setTiempoEstudio($tiempoEstudio)
-    {
-        $this->tiempoEstudio = $tiempoEstudio;
-    
-        return $this;
-    }
-
-    /**
-     * Get tiempoEstudio
-     *
-     * @return integer 
-     */
-    public function getTiempoEstudio()
-    {
-        return $this->tiempoEstudio;
-    }
-
-    /**
      * Set codigo
      *
      * @param string $codigo
@@ -142,29 +99,6 @@ class TtecCarreraTipo
     public function getCodigo()
     {
         return $this->codigo;
-    }
-
-    /**
-     * Set cargaHoraria
-     *
-     * @param integer $cargaHoraria
-     * @return TtecCarreraTipo
-     */
-    public function setCargaHoraria($cargaHoraria)
-    {
-        $this->cargaHoraria = $cargaHoraria;
-    
-        return $this;
-    }
-
-    /**
-     * Get cargaHoraria
-     *
-     * @return integer 
-     */
-    public function getCargaHoraria()
-    {
-        return $this->cargaHoraria;
     }
 
     /**
@@ -214,29 +148,6 @@ class TtecCarreraTipo
     }
 
     /**
-     * Set ttecAreaFormacionTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecAreaFormacionTipo $ttecAreaFormacionTipo
-     * @return TtecCarreraTipo
-     */
-    public function setTtecAreaFormacionTipo(\Sie\AppWebBundle\Entity\TtecAreaFormacionTipo $ttecAreaFormacionTipo = null)
-    {
-        $this->ttecAreaFormacionTipo = $ttecAreaFormacionTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecAreaFormacionTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecAreaFormacionTipo 
-     */
-    public function getTtecAreaFormacionTipo()
-    {
-        return $this->ttecAreaFormacionTipo;
-    }
-
-    /**
      * Set ttecEstadoCarreraTipo
      *
      * @param \Sie\AppWebBundle\Entity\TtecEstadoCarreraTipo $ttecEstadoCarreraTipo
@@ -260,48 +171,25 @@ class TtecCarreraTipo
     }
 
     /**
-     * Set ttecRegimenEstudioTipo
+     * Set ttecAreaFormacionTipo
      *
-     * @param \Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo $ttecRegimenEstudioTipo
+     * @param \Sie\AppWebBundle\Entity\TtecAreaFormacionTipo $ttecAreaFormacionTipo
      * @return TtecCarreraTipo
      */
-    public function setTtecRegimenEstudioTipo(\Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo $ttecRegimenEstudioTipo = null)
+    public function setTtecAreaFormacionTipo(\Sie\AppWebBundle\Entity\TtecAreaFormacionTipo $ttecAreaFormacionTipo = null)
     {
-        $this->ttecRegimenEstudioTipo = $ttecRegimenEstudioTipo;
+        $this->ttecAreaFormacionTipo = $ttecAreaFormacionTipo;
     
         return $this;
     }
 
     /**
-     * Get ttecRegimenEstudioTipo
+     * Get ttecAreaFormacionTipo
      *
-     * @return \Sie\AppWebBundle\Entity\TtecRegimenEstudioTipo 
+     * @return \Sie\AppWebBundle\Entity\TtecAreaFormacionTipo 
      */
-    public function getTtecRegimenEstudioTipo()
+    public function getTtecAreaFormacionTipo()
     {
-        return $this->ttecRegimenEstudioTipo;
-    }
-
-    /**
-     * Set nivelTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\NivelTipo $nivelTipo
-     * @return TtecCarreraTipo
-     */
-    public function setNivelTipo(\Sie\AppWebBundle\Entity\NivelTipo $nivelTipo = null)
-    {
-        $this->nivelTipo = $nivelTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get nivelTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\NivelTipo 
-     */
-    public function getNivelTipo()
-    {
-        return $this->nivelTipo;
+        return $this->ttecAreaFormacionTipo;
     }
 }

@@ -574,7 +574,7 @@ class DefaultController extends Controller {
                         }
                         $carnetban = 'true';
                     }
-                    //dump($carnetban);die;
+                    //dump($carnet);dump($this->session->get('userName'));die;
 
                     //*******************
                     //MENSAJE DE RESETEO DE CONTRASEÑA CANTIDAD DE DIAS DESDE EL ULTIMO CAMBIO DE CONTRASEÑA
@@ -594,7 +594,7 @@ class DefaultController extends Controller {
                     //*******************
                     //MENSAJE DIRIGIDO AL USUARIO
                     $mendir = 'null';
-                    $mensajedirecto = $em->getRepository('SieAppWebBundle:NotificacionUsuario')->findOneBy(array('usuario' => $personausuarios[0]->getId(), 'notif' => '5713980' ) );
+                    $mensajedirecto = $em->getRepository('SieAppWebBundle:NotificacionUsuario')->findOneBy(array('usuario' => $this->session->get('userId'), 'notif' => '5713980' ) );
 
                     if (sizeof($mensajedirecto) > 0) {
                         //CORRECCCION DE MENSAJE

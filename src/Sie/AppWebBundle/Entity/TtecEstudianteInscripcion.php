@@ -15,16 +15,6 @@ class TtecEstudianteInscripcion
     private $id;
 
     /**
-     * @var integer
-     */
-    private $estadomatriculaTipoInicioId;
-
-    /**
-     * @var integer
-     */
-    private $estadomatriculaTipoFinId;
-
-    /**
      * @var \DateTime
      */
     private $fechaInscripcion;
@@ -33,6 +23,16 @@ class TtecEstudianteInscripcion
      * @var \DateTime
      */
     private $fechaRegistro;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstadomatriculaTipo
+     */
+    private $estadomatriculaTipoFin;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstadomatriculaTipo
+     */
+    private $estadomatriculaTipoInicio;
 
     /**
      * @var \Sie\AppWebBundle\Entity\TtecParaleloMateria
@@ -53,52 +53,6 @@ class TtecEstudianteInscripcion
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set estadomatriculaTipoInicioId
-     *
-     * @param integer $estadomatriculaTipoInicioId
-     * @return TtecEstudianteInscripcion
-     */
-    public function setEstadomatriculaTipoInicioId($estadomatriculaTipoInicioId)
-    {
-        $this->estadomatriculaTipoInicioId = $estadomatriculaTipoInicioId;
-    
-        return $this;
-    }
-
-    /**
-     * Get estadomatriculaTipoInicioId
-     *
-     * @return integer 
-     */
-    public function getEstadomatriculaTipoInicioId()
-    {
-        return $this->estadomatriculaTipoInicioId;
-    }
-
-    /**
-     * Set estadomatriculaTipoFinId
-     *
-     * @param integer $estadomatriculaTipoFinId
-     * @return TtecEstudianteInscripcion
-     */
-    public function setEstadomatriculaTipoFinId($estadomatriculaTipoFinId)
-    {
-        $this->estadomatriculaTipoFinId = $estadomatriculaTipoFinId;
-    
-        return $this;
-    }
-
-    /**
-     * Get estadomatriculaTipoFinId
-     *
-     * @return integer 
-     */
-    public function getEstadomatriculaTipoFinId()
-    {
-        return $this->estadomatriculaTipoFinId;
     }
 
     /**
@@ -148,62 +102,6 @@ class TtecEstudianteInscripcion
     }
 
     /**
-     * Set ttecParaleloMateria
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecParaleloMateria $ttecParaleloMateria
-     * @return TtecEstudianteInscripcion
-     */
-    public function setTtecParaleloMateria(\Sie\AppWebBundle\Entity\TtecParaleloMateria $ttecParaleloMateria = null)
-    {
-        $this->ttecParaleloMateria = $ttecParaleloMateria;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecParaleloMateria
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecParaleloMateria 
-     */
-    public function getTtecParaleloMateria()
-    {
-        return $this->ttecParaleloMateria;
-    }
-
-    /**
-     * Set persona
-     *
-     * @param \Sie\AppWebBundle\Entity\Persona $persona
-     * @return TtecEstudianteInscripcion
-     */
-    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
-    {
-        $this->persona = $persona;
-    
-        return $this;
-    }
-
-    /**
-     * Get persona
-     *
-     * @return \Sie\AppWebBundle\Entity\Persona 
-     */
-    public function getPersona()
-    {
-        return $this->persona;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\EstadomatriculaTipo
-     */
-    private $estadomatriculaTipoFin;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\EstadomatriculaTipo
-     */
-    private $estadomatriculaTipoInicio;
-
-
-    /**
      * Set estadomatriculaTipoFin
      *
      * @param \Sie\AppWebBundle\Entity\EstadomatriculaTipo $estadomatriculaTipoFin
@@ -247,5 +145,51 @@ class TtecEstudianteInscripcion
     public function getEstadomatriculaTipoInicio()
     {
         return $this->estadomatriculaTipoInicio;
+    }
+
+    /**
+     * Set ttecParaleloMateria
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecParaleloMateria $ttecParaleloMateria
+     * @return TtecEstudianteInscripcion
+     */
+    public function setTtecParaleloMateria(\Sie\AppWebBundle\Entity\TtecParaleloMateria $ttecParaleloMateria = null)
+    {
+        $this->ttecParaleloMateria = $ttecParaleloMateria;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecParaleloMateria
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecParaleloMateria 
+     */
+    public function getTtecParaleloMateria()
+    {
+        return $this->ttecParaleloMateria;
+    }
+
+    /**
+     * Set persona
+     *
+     * @param \Sie\AppWebBundle\Entity\Persona $persona
+     * @return TtecEstudianteInscripcion
+     */
+    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
+    {
+        $this->persona = $persona;
+    
+        return $this;
+    }
+
+    /**
+     * Get persona
+     *
+     * @return \Sie\AppWebBundle\Entity\Persona 
+     */
+    public function getPersona()
+    {
+        return $this->persona;
     }
 }

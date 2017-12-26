@@ -14,6 +14,11 @@ Sie\AppWebBundle\Entity\TtecEstudianteInscripcion:
         IDX_5AC88493F5F88DB9:
             columns:
                 - persona_id
+    uniqueConstraints:
+        uniq_estudiante_inscripcion:
+            columns:
+                - persona_id
+                - ttec_paralelo_materia_id
     id:
         id:
             type: integer

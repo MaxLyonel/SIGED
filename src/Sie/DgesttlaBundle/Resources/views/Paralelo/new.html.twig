@@ -32,13 +32,13 @@
                 <div class="panel-body">
                     {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
                     <div class="row">
-                        <div class="form-group col-lg3 col-md-3">
-                            {{ form_label(form.periodo) }}
-                            {{ form_widget(form.periodo) }}
-                        </div>
                         <div class="form-group col-lg-3 col-md-3">
                             {{ form_label(form.turno) }}
                             {{ form_widget(form.turno) }}
+                        </div>
+                        <div class="form-group col-lg3 col-md-3">
+                            {{ form_label(form.periodo) }}
+                            {{ form_widget(form.periodo) }}
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             {{ form_label(form.materia) }}
@@ -70,4 +70,31 @@
         </div>
     </div>
 
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script>
+    var peticion1;
+    //$('#form_turno').on('change',function(){
+    function listarMaterias(idPeriodo){
+        
+        if(peticion1 && peticion1.readyState != 4) { 
+            peticion1.abort();
+        }
+        peticion1 = $.ajax({
+            type: 'get',
+            url: Routing.generate('dgesttla_listarmaterias',{'idPeriodo': idPeriodo}),
+            beforeSend: function(){
+                
+            },
+            success: function(data){
+                $('#form_materia').empty();
+                $("#form_materia").append('<option value="">Seleccionar...</option>');
+                $.each(data.listamaterias, function (i, value) {
+                    $("#form_materia").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+</script>
 {% endblock %}

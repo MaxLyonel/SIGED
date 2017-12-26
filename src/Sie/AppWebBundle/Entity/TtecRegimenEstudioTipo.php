@@ -19,6 +19,11 @@ class TtecRegimenEstudioTipo
      */
     private $regimenEstudio;
 
+    /**
+     * @var string
+     */
+    private $descripcion;
+
 
     /**
      * Get id
@@ -52,11 +57,6 @@ class TtecRegimenEstudioTipo
     {
         return $this->regimenEstudio;
     }
-    /**
-     * @var string
-     */
-    private $descripcion;
-
 
     /**
      * Set descripcion

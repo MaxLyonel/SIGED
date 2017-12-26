@@ -83,7 +83,7 @@
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                         <strong>¡Su nombre de usuario es distinto a su número de carnet!</strong> {{ flashMessage }} <strong>DESACTIVACIÓN DE SU CUENTA.</strong>
                                         <form action="{{path('sie_usuarios_update_username_login', {'usuarioid': app.session.get('userId')})}}" method="post">
-                                            <button type="submit" class="btn btn-primary" onclick="return confirm('Está por actualizar su nombre del usuario :{{ user }} por el numero de carnet :{{ carnet }}.  Nota: recuerde que a partir de la fecha el usuario de esta cuenta sera el numero de carnet.\n\n ¿Esta seguro de continuar? ');"><i class="fa fa-gear"></i> Solucionar</button>
+                                            <button type="submit" class="btn btn-primary" onclick="return confirm('Está por actualizar su nombre del usuario :{{ user }} por :{{ carnet }}.  Nota: recuerde que a partir de la fecha el usuario de esta cuenta sera el número de carnet y complemento.\n\n ¿Esta seguro de continuar? ');"><i class="fa fa-gear"></i> Solucionar</button>
                                         </form>
                                     </div>
                                 {% endfor %}

@@ -47,6 +47,8 @@ class InfoEstudianteBjpController extends Controller {
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
 
+        return $this->redirect($this->generateUrl('principal_web'));
+
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
@@ -914,7 +916,7 @@ class InfoEstudianteBjpController extends Controller {
             'gestionTipoId' => $this->session->get('currentyear'),
             'esactivo' => 'f'
         ));
-         $dateFinVal = $bjp->getFechaFinVal()->format('Y-m-d');
+         // $dateFinVal = $bjp->getFechaFinVal()->format('Y-m-d');
 
         //check if the date is set the first time
         if($bjp->getObs()>0){

@@ -22,12 +22,12 @@ class TtecMateriaPrerrequisito
     /**
      * @var \Sie\AppWebBundle\Entity\TtecMateriaTipo
      */
-    private $ttecMateriaTipo;
+    private $ttecMateriaTipoPre;
 
     /**
      * @var \Sie\AppWebBundle\Entity\TtecMateriaTipo
      */
-    private $ttecMateriaTipoPre;
+    private $ttecMateriaTipo;
 
 
     /**
@@ -64,29 +64,6 @@ class TtecMateriaPrerrequisito
     }
 
     /**
-     * Set ttecMateriaTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\TtecMateriaTipo $ttecMateriaTipo
-     * @return TtecMateriaPrerrequisito
-     */
-    public function setTtecMateriaTipo(\Sie\AppWebBundle\Entity\TtecMateriaTipo $ttecMateriaTipo = null)
-    {
-        $this->ttecMateriaTipo = $ttecMateriaTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get ttecMateriaTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\TtecMateriaTipo 
-     */
-    public function getTtecMateriaTipo()
-    {
-        return $this->ttecMateriaTipo;
-    }
-
-    /**
      * Set ttecMateriaTipoPre
      *
      * @param \Sie\AppWebBundle\Entity\TtecMateriaTipo $ttecMateriaTipoPre
@@ -107,5 +84,28 @@ class TtecMateriaPrerrequisito
     public function getTtecMateriaTipoPre()
     {
         return $this->ttecMateriaTipoPre;
+    }
+
+    /**
+     * Set ttecMateriaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecMateriaTipo $ttecMateriaTipo
+     * @return TtecMateriaPrerrequisito
+     */
+    public function setTtecMateriaTipo(\Sie\AppWebBundle\Entity\TtecMateriaTipo $ttecMateriaTipo = null)
+    {
+        $this->ttecMateriaTipo = $ttecMateriaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecMateriaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecMateriaTipo 
+     */
+    public function getTtecMateriaTipo()
+    {
+        return $this->ttecMateriaTipo;
     }
 }
