@@ -101,5 +101,5 @@ download_reporte_gis:
         expose: true
 
 donwload_especial_libreta:
-    path: /especialLibreta/{infoUe}/{gestion}/{estInsEspId}/{estInsId}
+    path: /especialLibreta/{infoUe}/{gestion}/{estInsEspId}/{estInsId}/{codigoRude}
     defaults: { _controller: SieAppWebBundle:Download:especialLibreta }

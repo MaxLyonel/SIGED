@@ -99,7 +99,7 @@
                                     </div>
                                     {% if gestion == 2017 and  arrDataLibreta.areaEspecialId==3 and  arrDataLibreta.nivelId!=405 %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Libreta">
-                                        <a type="button" class="btn btn-circle btn-warning " data-toggle="" data-target=""  href="{{path('donwload_especial_libreta', {'infoUe': infoUe, 'gestion': gestion, 'estInsEspId':data.estInsEspId,'estInsId':data.estInsId } )}}" >
+                                        <a type="button" class="btn btn-circle btn-warning " data-toggle="" data-target=""  href="{{path('donwload_especial_libreta', {'infoUe': infoUe, 'gestion': gestion, 'estInsEspId':data.estInsEspId,'estInsId':data.estInsId, 'codigoRude':data.codigoRude } )}}" >
                                             <i class="fa fa-file-text-o"></i>
                                         </a>
                                     </div>
