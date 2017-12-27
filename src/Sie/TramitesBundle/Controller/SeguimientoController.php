@@ -53,7 +53,7 @@ class SeguimientoController extends Controller {
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
 
-        $rolPermitido = array(8,12,13,14,15,16,17);
+        $rolPermitido = array(8,12,13,14,15,16,17,20,32,33);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -213,7 +213,7 @@ class SeguimientoController extends Controller {
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,12,13,14,15,16,17);
+        $rolPermitido = array(8,12,13,14,15,16,17,20,32,33);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
@@ -372,7 +372,7 @@ class SeguimientoController extends Controller {
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
-        $rolPermitido = array(8,12,13,14,15,16,17);
+        $rolPermitido = array(8,12,13,14,15,16,17,20,32,33);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 

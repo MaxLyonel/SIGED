@@ -46,11 +46,71 @@ class DefaultController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+
         //get the roles info
         $aRoles = $this->getUserRoles($id_usuario);
         $this->session->set('roluser', $aRoles);
+        
+        $sistemaTipoId = array(10); // ID DEL SISTEMA TRAMITE
+
 
         $em = $this->getDoctrine()->getManager();
+
+        $sesion->set('aMenu', null);
+        //****************
+        //****SE GENERAN LOS MENUS PARA EL SIGEN EN BASE AL ID DEL ROL DEL USUARIO
+        $query = $em->getConnection()->prepare('SELECT get_objeto_menu_usuario (:usuario_id::INT)');
+        $query->bindValue(':usuario_id', $id_usuario);
+        //$query->bindValue(':sistema_tipo_id', '{3,10}');
+        $query->execute();
+        $aMenuUser = $query->fetchAll();      
+
+
+        if (sizeof($aMenuUser) > 0) {            
+                foreach ($aMenuUser as $m) {
+                    $menu = $m['get_objeto_menu_usuario'];
+                    $menu = str_replace(array('(', ')', '"'), '', $menu);
+                    $element = explode(',', $menu);
+
+                    $aBuildMenu[] = array(
+                        'sistema_tipo_id'=>$element[0],
+                        'sistema'=>$element[1],
+                        'objeto_tipo_id' => $element[2],
+                        'objeto_tipo_icono'=>$element[3],
+                        'icono' => $element[4],
+                        'menu_tipo_id' => $element[5],
+                        'nombre' => $element[6],
+                        'menu_tipo_icono'=>$element[7],
+                        'ruta' => $element[8],
+                        'obs' => $element[9],
+                        'menu_objeto_id' => $element[10],
+                        'menu_objeto_esactivo'=>$element[11],
+                        'permiso_id' => $element[12],
+                        'permiso' => $element[13],
+                        '_create' => $element[14],
+                        '_read' => $element[15],
+                        '_delete' => $element[16],
+                        '_update' => $element[17],
+                        'rol_permiso_id' => $element[18],
+                        'rol_tipo_id' => $element[19],
+                        'rol' => $element[20],
+                        'objeto_tipo_activo' => $element[21],
+                    );
+                }
+            $i = 0;
+            $limit = count($aBuildMenu);
+            $optionMenu = array();
+            while ($i < $limit) {
+                $optionMenu[$aBuildMenu[$i]['objeto_tipo_icono']][] = array('label' => $aBuildMenu[$i]['nombre'], 'status' => $aBuildMenu[$i]['menu_objeto_esactivo'], 'ruta' => $aBuildMenu[$i]['ruta'],'icono'=>$aBuildMenu[$i]['menu_tipo_icono']);
+                $i++;
+            }
+            //set some values fot the view template
+            //$sesion->set('aMenuOption', $aBuildMenu);
+            $sesion->set('aMenu', $optionMenu);
+        }        
+        //****FIN SE GENERAN LOS MENUS PARA EL SIGED EN BASE AL ID DEL ROL DEL USUARIO
+        //****************
+
         $usuarioEntity = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $id_usuario));
         $personaNombre = $usuarioEntity->getPersona()->getNombre()." ".$usuarioEntity->getPersona()->getPaterno()." ".$usuarioEntity->getPersona()->getMaterno();
         $personaCedula = $usuarioEntity->getPersona()->getCarnet();

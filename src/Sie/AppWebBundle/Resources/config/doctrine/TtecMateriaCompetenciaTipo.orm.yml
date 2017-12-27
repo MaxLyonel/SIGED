@@ -1,0 +1,44 @@
+Sie\AppWebBundle\Entity\TtecMateriaCompetenciaTipo:
+    type: entity
+    table: ttec_materia_competencia_tipo
+    indexes:
+        IDX_342EF6B16716D8F6:
+            columns:
+                - ttec_materia_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        competencia:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        ttecMateriaTipo:
+            targetEntity: TtecMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
