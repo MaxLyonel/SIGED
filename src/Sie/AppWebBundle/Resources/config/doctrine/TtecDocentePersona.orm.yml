@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\TtecDocentePersona:
     type: entity
     table: ttec_docente_persona
     indexes:
+        IDX_C019EF34179FF95:
+            columns:
+                - gestion_tipo_id
         IDX_C019EF343AB163FE:
             columns:
                 - institucioneducativa_id
@@ -43,7 +46,21 @@ Sie\AppWebBundle\Entity\TtecDocentePersona:
             nullable: true
             comment: ''
             column: es_vigente
+        item:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         institucioneducativa:
             targetEntity: Institucioneducativa
             cascade: {  }

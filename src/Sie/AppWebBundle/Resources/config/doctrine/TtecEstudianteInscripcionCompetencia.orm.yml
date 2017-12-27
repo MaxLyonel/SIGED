@@ -1,0 +1,54 @@
+Sie\AppWebBundle\Entity\TtecEstudianteInscripcionCompetencia:
+    type: entity
+    table: ttec_estudiante_inscripcion_competencia
+    indexes:
+        IDX_8AFC68385344D40E:
+            columns:
+                - ttec_estudiante_inscripcion_id
+        IDX_8AFC6838DBD72BBF:
+            columns:
+                - ttec_materia_competencia_detalle_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cumple:
+            type: boolean
+            nullable: true
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        ttecEstudianteInscripcion:
+            targetEntity: TtecEstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecMateriaCompetenciaDetalleTipo:
+            targetEntity: TtecMateriaCompetenciaDetalleTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_materia_competencia_detalle_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

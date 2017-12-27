@@ -137,7 +137,8 @@ class InfoStudentsController extends Controller {
 
       $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($sie,$gestion);
 
-
+      $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
+      $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
 
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
 
@@ -159,6 +160,7 @@ class InfoStudentsController extends Controller {
                   'itemsUe'=>$itemsUe,
                   'ciclo'=>$ciclo,
                   'operativo'=>$operativo,
+                  'arrDataLibreta'=> $arrDataLibreta
                   // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
   }

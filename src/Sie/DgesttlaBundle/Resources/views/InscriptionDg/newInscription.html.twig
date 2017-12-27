@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col-md-12">
+        DATOS PERSONA:
+        <div class="row show-grid">
+            <div class="col-md-3">
+                Paterno: {{objPerson.paterno}}
+            </div>
+            <div class="col-md-3">
+                Materno: {{objPerson.materno}}
+            </div>
+            <div class="col-md-3">
+                Nombre: {{objPerson.nombre}}
+            </div>
+            <div class="col-md-3">
+                Nombre: {{objPerson.fechaNacimiento | date('d-m-Y')}}
+            </div>
+        </div>
+    </div>
+</div>
+
+</br>
+</br>
+<div class="row">
+  <div class="col-md-12">
+
+
+    {{form_start(formNewInscription, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form', 'id':'formNewInscriptionId', 'method':'POST' } } )}}
+
+    <div class="row">
+        <div class="col-md-4">
+            {{form_label(formNewInscription.institucionEducativa)}}
+            {{form_widget(formNewInscription.institucionEducativa, {'attr':{'onkeyUp':'institucionEducativa(this.value)'}  } )}}
+            <div class="help-block without-errors"></div>
+        </div>
+        <div class="col-md-8">
+            {{form_label(formNewInscription.institucionEducativaName)}}
+            {{form_widget(formNewInscription.institucionEducativaName)}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            {{form_label(formNewInscription.carreras)}}
+            {{form_widget(formNewInscription.carreras,{'attr':{'onchange':'getDenominacion(this.value)'} })}}
+        </div>
+        <div class="col-md-6">
+            {{form_label(formNewInscription.denominacionId)}}
+            {{form_widget(formNewInscription.denominacionId )}}
+        </div>
+      </div>
+
+    </br>
+
+    {{form_widget(formNewInscription.Regitrar, {'attr':{'class':'btn btn-success'} }) }}
+    {{form_end(formNewInscription)}}
+
+  </div>
+
+</div>
+
+
+<div class="table-responsive mb-20">
+
+
+
+</div>
+
+<br>
+<br>
+<br>

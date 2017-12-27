@@ -1,0 +1,63 @@
+<div class="row">
+    <div class="col-md-12">
+        DATOS PERSONA:
+        <div class="row show-grid">
+            <div class="col-md-3">
+                Paterno: {{objPerson.paterno}}
+            </div>
+            <div class="col-md-3">
+                Materno: {{objPerson.materno}}
+            </div>
+            <div class="col-md-3">
+                Nombre: {{objPerson.nombre}}
+            </div>
+            <div class="col-md-3">
+                Nombre: {{objPerson.fechaNacimiento | date('d-m-Y')}}
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+<br/>
+
+
+<form method="POST" action="{{path('InscriptionDg_do_inscription_dg')}}" name="formInsc" id="formInsc">
+<div class="table-responsive mb-20">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-center">GESTIÓN</th>
+                <th>PERIODO</th>
+                <th>CÓDIGO</th>
+                <th>MATERIA/ASIGNATURA</th>
+                <th >TURNO</th>
+                <th>PARALELO</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <input type="hidden" id="verificarReg_data" name="verificarReg[data]" value="{{data}}">
+          {% for materias in objNextMaterias %}
+
+            <tr class="success">
+
+                <td>{{materias.gestion_tipo_id}}</td>
+                <td>{{materias.periodo}}</td>
+                <td>{{materias.codigo}}</td>
+                <td>{{materias.materia}}</td>
+                <td>{{materias.turno}}</td>
+                <td>{{materias.paralelo}}</td>
+                <td align="center">
+                  <input type="checkbox" id="verificarReg_{{materias.ttec_paralelo_materia_id}}" name="verificarReg[parmat][{{materias.ttec_paralelo_materia_id}}]" >
+                </td>
+
+            </tr>
+          {% endfor %}
+
+          <tr><td colspan="7"><div class="span4 pull-right"><input type="submit" class="btn btn-md btn-success" value="Registrar Inscripción"></div></td></tr>
+
+        </tbody>
+    </table>
+</div>
+</form>

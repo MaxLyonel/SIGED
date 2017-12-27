@@ -21,7 +21,7 @@
 
 {% block bodycontent %}
         
-    {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Docente/Materia', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Edición'} %}
+    {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Docente/Materia', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Editar'} %}
 
     <div class="row">
         <div class="col-lg-12">
@@ -36,25 +36,13 @@
                             {{ form_label(form.periodo) }}
                             {{ form_widget(form.periodo) }}
                         </div>
-                        <div class="form-group col-lg-3 col-md-3">
-                            {{ form_label(form.turno) }}
-                            {{ form_widget(form.turno) }}
-                        </div>
                         <div class="form-group col-lg-6 col-md-6">
                             {{ form_label(form.materia) }}
                             {{ form_widget(form.materia) }}
-                            <div class="help-block with-errors"></div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-1 col-md-1">
-                            {{ form_label(form.paralelo) }}
-                            {{ form_widget(form.paralelo) }}
-                            <div class="help-block with-errors"></div>
-                        </div>
-                        <div class="form-group col-lg-1 col-md-1">
-                            {{ form_label(form.cupo) }}
-                            {{ form_widget(form.cupo) }}
+                        <div class="form-group col-lg-3 col-md-3">
+                            {{ form_label(form.docente) }}
+                            {{ form_widget(form.docente) }}
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -70,4 +58,31 @@
         </div>
     </div>
 
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script>
+    var peticion1;
+    //$('#form_turno').on('change',function(){
+    function listarParalelos(idPeriodo){
+        
+        if(peticion1 && peticion1.readyState != 4) { 
+            peticion1.abort();
+        }
+        peticion1 = $.ajax({
+            type: 'get',
+            url: Routing.generate('dgesttla_listarparalelos',{'idPeriodo': idPeriodo}),
+            beforeSend: function(){
+                
+            },
+            success: function(data){
+                $('#form_materia').empty();
+                $("#form_materia").append('<option value="">Seleccionar...</option>');
+                $.each(data.listaparalelos, function (i, value) {
+                    $("#form_materia").append('<option value="' + i + '">' + value + '</option>');
+                });
+            }
+        });
+    }
+</script>
 {% endblock %}

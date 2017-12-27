@@ -1,0 +1,199 @@
+{% extends 'layoutDgesttla.html.twig' %}
+
+{% block headercontent %}
+<!-- Start header content -->
+<div class="header-content">
+    <h2><i class="fa fa-file-o"></i>Formación Técnica Tecnológica <span>Buscar Instituto</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Estás aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('principal_web')}}">Inicio</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Buscar Instituto</li>
+        </ol>
+    </div>
+</div><!-- /.header-content -->
+<!--/ End header content -->
+{% endblock %}
+
+{% block bodycontent %}
+
+    {% for flashMessage in app.session.flashbag.get('inscriptinoDgOk') %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>¡Bien!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    {% for flashMessage in app.session.flashbag.get('searchWarn') %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>¡Advertencia!</strong> {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('searchErr') %}
+        <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 col-sm-12 col-xs-12">
+            <div class="panel panel-primary rounded shadow">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Registro de Inscripcion</h3>
+                </div><!-- /.panel-heading -->
+                <div class="panel-body no-padding rounded-bottom">
+                    {{ form_start(formSearch,{ 'attr':{'class': 'form-horizontal form-bordered', 'id': 'formInscriptionID'} }) }}
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">{{ form_label(formSearch.ciStudent) }}</label>
+                                <div class="col-sm-4">
+                                    {{ form_widget(formSearch.ciStudent,{ 'attr':{'class': 'form-control rounded','placeholder':'Ingresar CI','pattern':'[0-9]{8,17}'}  }) }}
+                                </div>
+                                <div class="col-sm-3">
+                                    {{ form_widget(formSearch.lookAsignatures ) }}
+                                </div>
+                            </div><!-- /.form-group -->
+                        </div><!-- /.form-body -->
+                    {{ form_end(formSearch) }}
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div id="idasignaturas">
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var lookDataAsignaturas = function () {
+        var formInsc = $('#formInscriptionID').serialize();
+        $.ajax({
+                    type: 'get',
+                    data: formInsc,
+                    url: Routing.generate('InscriptionDg_look_asignatures'),
+                    beforeSend: function () {
+                        $("#idasignaturas").empty();
+                        $("#idasignaturas").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                    },
+                    success: function (data) {
+                        $("#idasignaturas").empty();
+                        $("#idasignaturas").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+
+      };
+
+
+      function institucionEducativa(id) {
+          gestionselected = $('#form_gestionIns').val();
+
+          if (id.length > 7) {
+
+              $.ajax({
+                  type: 'post',
+                  url: Routing.generate('InscriptionDg_get_carreras', {'id': id, 'gestionselected': gestionselected}),
+                  beforeSend: function () {
+                  },
+                  success: function (data) {
+                      $("#form_institucionEducativaName").val(data.nombre);
+
+                      $("#form_carreras").empty();
+                      $("#form_carreras").append('<option value="">Seleccionar</option>');
+                      $.each(data.aCarreras, function (i, value) {
+                          $("#form_carreras").append('<option value="' + i + '">' + value + '</option>');
+                      });
+                      $("#form_grado").empty();
+                      $("#form_paralelo").empty();
+                      $("#form_turno").empty();
+                  }
+              });
+          } else {
+
+              //$("#form_institucionEducativaName").val(data.nombre);
+              $("#form_carreras").empty();
+              $("#form_denominacion").empty();
+              // $("#form_paralelo").empty();
+              // $("#form_turno").empty();
+          }
+
+      }
+
+      function getDenominacion(id) {
+          gestionselected = $('#form_gestionIns').val();
+          institucionId = $('#form_institucionEducativa').val();
+
+              $.ajax({
+                  type: 'post',
+                  url: Routing.generate('InscriptionDg_get_denominacion', {'id': id, 'gestionselected': gestionselected, 'institucionId':institucionId}),
+                  beforeSend: function () {
+                  },
+                  success: function (data) {
+
+                      $("#form_denominacionId").empty();
+                      $("#form_denominacionId").append('<option value="">Seleccionar</option>');
+                      $.each(data.aDenomination, function (i, value) {
+                          $("#form_denominacionId").append('<option value="' + i + '">' + value + '</option>');
+                      });
+
+                  }
+              });
+
+
+      }
+      function doRegistration(){
+
+              var formIns = $('#formNewInscriptionId').serialize();
+               $.ajax({
+                   type: 'post',
+                   data: formIns,
+                   url: Routing.generate('InscriptionDg_get_doRegistration'),
+                   beforeSend: function () {
+                       $("#idasignaturas").empty();
+                       $("#idasignaturas").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                   },
+                   success: function (data) {
+                       $("#idasignaturas").empty();
+                       $("#idasignaturas").append(data);
+                   },
+                   statusCode: {
+                       500: function () {
+
+                       },
+                       404: function () {
+
+                       }
+                   }
+               });
+
+
+
+      }
+
+    </script>
+
+{% endblock %}
+{% block javascripts %}
+
+ {{parent()}}
+
+
+
+{% endblock %}

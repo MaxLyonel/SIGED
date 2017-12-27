@@ -44,7 +44,8 @@
                                     <th>Materno</th>
                                     <th>Nombre</th>
                                     <th>Estado Matricula</th>
-                                    <th align="center">Calificaciones</th>
+                                    <th>Competencias</th>
+                                    <th class="text-center">Calificaciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -56,6 +57,15 @@
                                         <td>{{i.materno}}</td>
                                         <td>{{i.nombre}}</td>
                                         <td>{{i.estadoMatricula}}</td>
+                                        <td class="text-primary">
+                                            <table class="table">
+                                                {% for contador in 1..3 %}
+                                                    <tr>
+                                                        <td>Competencia {{contador}}</td><td align="center"><input type="checkbox"></td>
+                                                    </tr>                                                    
+                                                {% endfor %}
+                                            </table>
+                                        </td>    
                                         <td align="center">
                                             {% for n in i.notas %}
                                                 <input type="hidden" name="estudianteInscripcionId[]" value="{{i.estudianteInscripcionId}}">

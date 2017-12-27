@@ -31,3 +31,9 @@ dgesttla_carrera_docente_materia_vigente:
     path:   /docmatvigente
     defaults:   { _controller: "SieDgesttlaBundle:DocenteMateria:esVigente" }
     methods:  [POST, PUT]
+
+dgesttla_listarparalelos:
+    path:     /listarparalelos/{idPeriodo}
+    defaults: { _controller: "SieDgesttlaBundle:DocenteMateria:listarparalelos" }
+    options:
+        expose: true
