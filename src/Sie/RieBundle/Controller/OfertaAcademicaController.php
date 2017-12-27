@@ -33,7 +33,7 @@ class OfertaAcademicaController extends Controller {
       /**
        * the class constructor
        */
-      public function __construct() {
+      public function __construct(){
           //init the session values
           $this->session = new Session();
       }
@@ -41,7 +41,7 @@ class OfertaAcademicaController extends Controller {
     /**
      * Muestra formulario de Busqueda de la institución educativa
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request){
         return $this->render('SieRieBundle:RegistroInstitucionEducativa:prueba.html.twig');
     }
 
@@ -71,7 +71,7 @@ class OfertaAcademicaController extends Controller {
     /**
      * Muestra el listado de oferta académica
      */
-     public function listAction(Request $request) {
+     public function listAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $listado = $this->listadoOfertaAcademica($request->get('idRie'));
@@ -101,7 +101,7 @@ class OfertaAcademicaController extends Controller {
             ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
             ->add('nivelTipo', 'choice', array('label' => 'Nivel de Formación', 'required' => true,'choices'=>$nivelesArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper'))) 
             ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
-            ->add('resolucion', 'text', array('label' => 'Resolución','required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
+            ->add('resolucion', 'text', array('label' => 'Resolución','required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY','class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
             ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución','required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
             ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))            
             ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
@@ -118,8 +118,8 @@ class OfertaAcademicaController extends Controller {
     /**
      * Guarda datos del formulario de oferta educativa, datos de carrera
      */
-     public function createAction(Request $request) {
-    	try {
+     public function createAction(Request $request){
+    	try{
             $em = $this->getDoctrine()->getManager();
             $form = $request->get('form');
             $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
@@ -162,7 +162,7 @@ class OfertaAcademicaController extends Controller {
                 $em->persist($resolucion);
                 $em->flush();            
             }
-        } catch (Exception $ex) {
+        }catch(Exception $ex){
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar la carrera.');
         }
@@ -180,16 +180,13 @@ class OfertaAcademicaController extends Controller {
                                                 ->findOneById($datResolucion->getTtecInstitucioneducativaCarreraAutorizada()->getId());
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($datAutorizado->getInstitucioneducativa()->getId());
         
-        if(!$datAutorizado) {
+        if(!$datAutorizado){
             throw $this->createNotFoundException('No se puede encontrar la Oferta Académica');
-        }
-        else
-        {
+        }else{
             $areasArray = $this->obtieneInstitucionAreaFormArray($institucion->getId());
             $nivelesArray = $this->obtieneInstitucionNivelesFormArray($institucion->getId());
             $regimenEstudioArray = $this->obtieneRegimenEstudio();
             $tiempoEstArray = $this->obtieneTiempoEstudio($datResolucion->getNivelTipo()->getId(), $datResolucion->getTtecRegimenEstudioTipo()->getId());
-            //$tipoOperacionArray = array('APERTURA'=>'APERTURA', 'AMPLIACION' =>'AMPLIACION', 'RATIFICACION' => 'RATIFICACIÓN');
             $tipoOperacionArray = $this->obtieneTipoTramite();
 
             $form = $this->createFormBuilder()
@@ -203,10 +200,9 @@ class OfertaAcademicaController extends Controller {
             ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'data'=>$datResolucion->getCargaHoraria(), 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
             ->add('nivelTipo', 'choice', array('label' => 'Nivel de Formación', 'data'=>$datResolucion->getNivelTipo()->getId(), 'required' => true,'choices'=>$nivelesArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper'))) 
             ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'data'=>$datResolucion->getTtecRegimenEstudioTipo()->getId(), 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
-            ->add('resolucion', 'text', array('label' => 'Resolución', 'data'=>$datResolucion->getNumero(), 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
+            ->add('resolucion', 'text', array('label' => 'Resolución', 'data'=>$datResolucion->getNumero(), 'required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
             ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución', 'data' => $datResolucion->getFecha()->format('d-m-Y') ,'required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
             ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'data' => $datResolucion->getOperacion(), 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))                        
-            
             ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
             return $this->render('SieRieBundle:OfertaAcademica:edit.html.twig', array('form' => $form->getForm()->createView(), 'institucion'=> $institucion, 'datAutorizado' => $datAutorizado, 'datResolucion'=>$datResolucion));
         }        
@@ -215,8 +211,8 @@ class OfertaAcademicaController extends Controller {
     /**
      * Guarda datos de las modificaciones 
      */
-    public function updateAction(Request $request) {
-    	try {
+    public function updateAction(Request $request){
+    	try{
             $em = $this->getDoctrine()->getManager();
             $form = $request->get('form');
 
@@ -236,7 +232,7 @@ class OfertaAcademicaController extends Controller {
             $em->flush();   
                         
             //Validando los datos
-        } catch (Exception $ex) {
+        }catch(Exception $ex){
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('mensaje', 'Error al modificar los datos');
         }  
@@ -247,7 +243,7 @@ class OfertaAcademicaController extends Controller {
     /**
      * Elimina el registro de carrera
      */
-    public function deleteAction(Request $request) {
+    public function deleteAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')->findOneById($request->get('idAutorizado'));
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($datAutorizado->getInstitucioneducativa()->getId());
@@ -258,8 +254,7 @@ class OfertaAcademicaController extends Controller {
         $query->setParameter('idCaAutorizada', $datAutorizado->getId());
         $resoluciones = $query->getResult();           
 
-        foreach($resoluciones as $resolucion)
-        {
+        foreach($resoluciones as $resolucion){
             $em->remove($resolucion);
             $em->flush();
         }
@@ -270,8 +265,7 @@ class OfertaAcademicaController extends Controller {
         return $this->redirect($this->generateUrl('oac_list', array('idRie' => $institucion->getId())));
     }
 
-
-/**
+    /**
      * Listado de resoluciones 
      */
     public function listresolucionesAction(Request $request){
@@ -312,12 +306,11 @@ class OfertaAcademicaController extends Controller {
         ->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio', 'required' => true, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
         ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
         ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
-        ->add('resolucion', 'text', array('label' => 'Resolución','required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '69')))
+        ->add('resolucion', 'text', array('label' => 'Resolución','required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69')))
         ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución','required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
         ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))            
         ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
         return $this->render('SieRieBundle:OfertaAcademica:newresolucion.html.twig', array('form' => $form->getForm()->createView(), 'institucion'=> $institucion, 'idAutorizado' => $datAutorizado->getId()));
-
     }
 
     /** 
@@ -354,7 +347,7 @@ class OfertaAcademicaController extends Controller {
             }
 
             //Validando los datos
-        } catch (Exception $ex) {
+        }catch(Exception $ex){
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar los datos');
         }  
@@ -388,7 +381,7 @@ class OfertaAcademicaController extends Controller {
         ->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio', 'data' => $datResolucion->getTiempoEstudio(), 'required' => true,'choices'=>$tiempoEstArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
         ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'data' => $datResolucion->getCargaHoraria(), 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
         ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'data' => $datResolucion->getTtecRegimenEstudioTipo()->getId(), 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
-        ->add('resolucion', 'text', array('label' => 'Resolución', 'data' => $datResolucion->getNumero(), 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '69')))
+        ->add('resolucion', 'text', array('label' => 'Resolución', 'data' => $datResolucion->getNumero(), 'required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'maxlength' => '69')))
         ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución', 'data' => $datResolucion->getFecha()->format('d-m-Y'),'required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
         ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'data' => $datResolucion->getOperacion(), 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))            
         ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
@@ -399,7 +392,7 @@ class OfertaAcademicaController extends Controller {
      * Guardar Modificacion de Registro de Resolucion ministerial
      */ 
     public function updateresolucionAction(Request $request){    
-        try {
+        try{
             $em = $this->getDoctrine()->getManager();
             $form = $request->get('form');
             $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
@@ -426,7 +419,7 @@ class OfertaAcademicaController extends Controller {
             }
             
             //Validando los datos
-        } catch (Exception $ex) {
+        }catch(Exception $ex){
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar los datos');
         }  
@@ -449,213 +442,11 @@ class OfertaAcademicaController extends Controller {
         return $this->redirect($this->generateUrl('oac_list_resolucion', array('idRie' => $institucion->getId(), 'idAutorizado' => $datAutorizado->getId())));
     }
 
-
-
-    /***
-     * Muestra elXXXX
-     */
-    /*
-    public function listtramiteAction(Request $request){
-        $em = $this->getDoctrine()->getManager(); 
-        $resol = $em->getRepository('SieAppWebBundle:TtecResolucionCarrera')->findOneById($request->get('idresolucion'));
-
-        $idRie = $resol->getTtecInstitucioneducativaCarreraAutorizada()->getInstitucioneducativa()->getId();
-        $idCarrera = $resol->getTtecInstitucioneducativaCarreraAutorizada()->getTtecCarreraTipo()->getId();
-        $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($idRie);
-        $carrera = $em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneById($idCarrera);
-        $query = $em->createQuery('SELECT a
-                                     FROM SieAppWebBundle:TtecResolucionCarrera a 
-                                     JOIN a.ttecInstitucioneducativaCarreraAutorizada b
-                                     JOIN b.ttecCarreraTipo c
-                                    WHERE c.id = :idCarrera
-                                 ORDER BY a.fecha DESC');                       
-        $query->setParameter('idCarrera', $idCarrera);
-        $resoluciones = $query->getResult();   
-
-        return $this->render('SieRieBundle:OfertaAcademica:listtramite.html.twig', array('entity' => $entity, 'resoluciones' => $resoluciones, 'carrera' => $carrera, 'idresol' => $resol->getId()));        
-        
-    }
-
-
-    /***
-     * Realiza la operación de trámite RATIFICACIÓN y CIERRE DE CARRERA
-     */ 
-    /*
-    public function edittramiteAction(Request $request){
-        $em = $this->getDoctrine()->getManager();
-        $datResolucion = $em->getRepository('SieAppWebBundle:TtecResolucionCarrera')->findOneById($request->get('idresolucion'));
-        $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')
-                                                ->findOneById($datResolucion->getTtecInstitucioneducativaCarreraAutorizada()->getId());
-        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($datAutorizado->getInstitucioneducativa()->getId());
-        
-        if(!$datAutorizado) {
-            throw $this->createNotFoundException('No se puede encontrar la Oferta Académica');
-        }
-        else
-        {
-            $areasArray = $this->obtieneInstitucionAreaFormArray($institucion->getId());
-            $nivelesArray = $this->obtieneInstitucionNivelesFormArray($institucion->getId());
-            $regimenEstudioArray = $this->obtieneRegimenEstudio();
-            
-            if($institucion->getDependenciaTipo()->getId() == 3)
-                $tipoOperacionArray = array('ADECUACION' => 'ADECUACIÓN', 'RATIFICACION'=>'RATIFICACIÓN', 'CIERRE' =>'CIERRE');
-            else
-            $tipoOperacionArray = array('ADECUACION' => 'ADECUACIÓN', 'CIERRE' =>'CIERRE');         
-
-            $tiempoEstArray = $this->obtieneTiempoEstudio($datResolucion->getNivelTipo()->getId(), $datResolucion->getTtecRegimenEstudioTipo()->getId());
-
-            $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('oac_update_tramite'))
-            ->add('idRie', 'hidden', array('data' => $institucion->getId()))
-            ->add('id', 'hidden', array('data' => $datAutorizado->getId()))
-            ->add('idresolucion', 'hidden', array('data' => $request->get('idresolucion')))
-            ->add('ttecAreaFormacion', 'text', array('label' => 'Area de Formación', 'data' => $datAutorizado->getTtecCarreraTipo()->getTtecAreaFormacionTipo()->getAreaFormacion(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))
-            ->add('ttecCarreraTipo', 'text', array('label' => 'Carrera', 'data' => $datAutorizado->getTtecCarreraTipo()->getNombre(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))
-            ->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio', 'data'=> $datResolucion->getTiempoEstudio(), 'required' => true,'choices'=>$tiempoEstArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
-            ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'data'=>$datResolucion->getCargaHoraria(), 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
-            ->add('nivelTipo', 'choice', array('label' => 'Nivel de Formación', 'data'=>$datResolucion->getNivelTipo()->getId(), 'required' => true,'choices'=>$nivelesArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper'))) 
-            ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'data'=>$datResolucion->getTtecRegimenEstudioTipo()->getId(), 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
-            ->add('resolucion', 'text', array('label' => 'Resolución', 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
-            ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución', 'required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
-            ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
-            ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
-            return $this->render('SieRieBundle:OfertaAcademica:edittramite.html.twig', array('form' => $form->getForm()->createView(), 'institucion'=> $institucion, 'datAutorizado' => $datAutorizado, 'datResolucion'=>$datResolucion));
-            
-        }        
-    }
-
-    /***
-     * Crea una nueva resolución, dependiendo del tipo de trámite: RATIFICACION - CIERRE
-     */
-    /*
-    public function updatetramiteAction(Request $request){
-    	try {
-            $em = $this->getDoctrine()->getManager();
-            $form = $request->get('form');
-
-            $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
-            $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')->findOneById($form['id']);
-            $datResolucion = $em->getRepository('SieAppWebBundle:TtecResolucionCarrera')->findOneById($form['idresolucion']);
-
-            //Registrando una resolucion de carrera, según trámite
-            $resolucion = new TtecResolucionCarrera();
-            $resolucion->setNumero($form['resolucion']);
-            $resolucion->setFecha(new \DateTime($form['fechaResolucion']));
-            $resolucion->setTtecResolucionTipo($em->getRepository('SieAppWebBundle:TtecResolucionTipo')->findOneById(1)); //Por defecto guardando tipo de Resolucion = R.M.
-            $resolucion->setTtecInstitucioneducativaCarreraAutorizada($datAutorizado);
-            $resolucion->setFechaRegistro(new \DateTime('now'));
-            $resolucion->setTiempoEstudio($form['tiempoEstudio']);
-            $resolucion->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($form['nivelTipo']));
-            $resolucion->setCargaHoraria($form['cargaHoraria']);
-            $resolucion->setTtecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById($form['regimenEstudio']));
-            $resolucion->setOperacion($form['operacion']);
-            $em->persist($resolucion);
-            $em->flush(); 
-            
-            if($form['operacion'] == 'CIERRE'){
-                $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')->findOneById($form['id']);
-                $datAutorizado->setEsVigente(FALSE);
-                $datAutorizado->setFechaModificacion(new \DateTime('now'));
-                $em->persist($datAutorizado);
-                $em->flush();   
-            }
-
-            //Validando los datos
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar los datos');
-        }  
-        
-        return $this->redirect($this->generateUrl('oac_list_tramite', array('idresolucion' => $form['idresolucion'])));          
-    }
-
-    /**
-     * Modifica datos de la resolucion
-     */
-    /*
-    public function editresolucionAction(Request $request){
-        $em = $this->getDoctrine()->getManager();
-        $datResolucion = $em->getRepository('SieAppWebBundle:TtecResolucionCarrera')->findOneById($request->get('idresolucion'));
-        $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')
-                                                ->findOneById($datResolucion->getTtecInstitucioneducativaCarreraAutorizada()->getId());
-
-        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
-        if(!$datAutorizado) {
-            throw $this->createNotFoundException('No se puede encontrar datos...');
-        }
-        else
-        {
-            $areasArray = $this->obtieneInstitucionAreaFormArray($institucion->getId());
-            $nivelesArray = $this->obtieneInstitucionNivelesFormArray($institucion->getId());
-            $regimenEstudioArray = $this->obtieneRegimenEstudio();
-            
-            if($institucion->getDependenciaTipo()->getId() == 3)
-                $tipoOperacionArray = array('ADECUACION' => 'ADECUACIÓN', 'RATIFICACION'=>'RATIFICACIÓN', 'CIERRE' =>'CIERRE');
-            else
-            $tipoOperacionArray = array('ADECUACION' => 'ADECUACIÓN', 'CIERRE' =>'CIERRE');         
-
-            $tiempoEstArray = $this->obtieneTiempoEstudio($datResolucion->getNivelTipo()->getId(), $datResolucion->getTtecRegimenEstudioTipo()->getId());
-
-            $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('oac_edit_tramite_update'))
-            ->add('idRie', 'hidden', array('data' => $institucion->getId()))
-            ->add('id', 'hidden', array('data' => $datAutorizado->getId()))
-            ->add('idresolucion', 'hidden', array('data' => $request->get('idresolucion')))
-            ->add('ttecAreaFormacion', 'text', array('label' => 'Area de Formación', 'data' => $datAutorizado->getTtecCarreraTipo()->getTtecAreaFormacionTipo()->getAreaFormacion(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))
-            ->add('ttecCarreraTipo', 'text', array('label' => 'Carrera', 'data' => $datAutorizado->getTtecCarreraTipo()->getNombre(), 'attr' => array('class' => 'form-control jupper', 'readonly'=>true)))
-            ->add('tiempoEstudio', 'choice', array('label' => 'Tiempo de Estudio', 'data'=> $datResolucion->getTiempoEstudio(), 'required' => true,'choices'=>$tiempoEstArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))
-            ->add('cargaHoraria', 'text', array('label' => 'Carga Horaria (Sólo números)', 'data'=>$datResolucion->getCargaHoraria(), 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '4') ))
-            ->add('nivelTipo', 'choice', array('label' => 'Nivel de Formación', 'data'=>$datResolucion->getNivelTipo()->getId(), 'required' => true,'choices'=>$nivelesArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper'))) 
-            ->add('regimenEstudio', 'choice', array('label' => 'Regimen de Estudio', 'data'=>$datResolucion->getTtecRegimenEstudioTipo()->getId(), 'required' => true,'choices'=>$regimenEstudioArray ,'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
-            ->add('resolucion', 'text', array('label' => 'Resolución', 'data'=> $datResolucion->getNumero(), 'required' => true, 'attr' => array('class' => 'form-control', 'maxlength' => '69', 'style' => 'text-transform:uppercase')))
-            ->add('fechaResolucion', 'text', array('label' => 'Fecha de resolución', 'data'=> $datResolucion->getFecha()->format('d-m-Y'), 'required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
-            ->add('operacion', 'choice', array('label' => 'Operación Trámite', 'data'=> $datResolucion->getOperacion(), 'required' => true,'choices'=>$tipoOperacionArray, 'empty_value' => 'Seleccionar..', 'attr' => array('class' => 'form-control jupper')))             
-            ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')));
-            return $this->render('SieRieBundle:OfertaAcademica:editresolucion.html.twig', array('form' => $form->getForm()->createView(), 'institucion'=> $institucion, 'datAutorizado' => $datAutorizado, 'datResolucion'=>$datResolucion));
-        }          
-    }
-
-    /***
-     * Modifica la resolucion, opción para corregir registros erroneos
-     */
-    /*
-    public function updateresolucionAction(Request $request){
-    	try {
-            $em = $this->getDoctrine()->getManager();
-            $form = $request->get('form');
-
-            $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
-            $datAutorizado = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada')->findOneById($form['id']);
-            $datResolucion = $em->getRepository('SieAppWebBundle:TtecResolucionCarrera')->findOneById($form['idresolucion']);
-
-            //Modificando datos de la resolucion
-            $datResolucion->setNumero($form['resolucion']);
-            $datResolucion->setFecha(new \DateTime($form['fechaResolucion']));
-            $datResolucion->setFechaModificacion(new \DateTime('now'));
-            $datResolucion->setTiempoEstudio($form['tiempoEstudio']);
-            $datResolucion->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($form['nivelTipo']));
-            $datResolucion->setCargaHoraria($form['cargaHoraria']);
-            $datResolucion->setTtecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findOneById($form['regimenEstudio']));
-            $datResolucion->setOperacion($form['operacion']);
-            $em->persist($datResolucion);
-            $em->flush(); 
-            
-            //Validando los datos
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar los datos');
-        }  
-        
-        return $this->redirect($this->generateUrl('oac_list_tramite', array('idresolucion' => $form['idresolucion'])));          
-    }
-
     /***
     * Obtiene Array de Niveles autorizados al instituto
     */    
     public function obtieneInstitucionNivelesFormArray($id){
         $em = $this->getDoctrine()->getManager();
-        //$datos = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $em->getRepository('SieAppWebBundle:Institucioneducativa')->findById($id)));
-
         $query = $em->createQuery('SELECT nivaut
                                      FROM SieAppWebBundle:InstitucioneducativaNivelAutorizado nivaut
                                      JOIN nivaut.institucioneducativa instituto  
@@ -667,8 +458,7 @@ class OfertaAcademicaController extends Controller {
         $datos = $query->getResult();
 
         $nuevoArray = array();
-        foreach($datos as $dato)
-        {
+        foreach($datos as $dato){
             $nuevoArray[$dato->getNivelTipo()->getId()] = $dato->getNivelTipo()->getNivel();
         }
         return $nuevoArray; 
@@ -680,9 +470,6 @@ class OfertaAcademicaController extends Controller {
      public function buscarcarreraAction($idArea) {
         $em = $this->getDoctrine()->getManager();
         
-        //$datos = $em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findBy(array('ttecAreaFormacionTipo' => $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findById($idArea)));        
-        //JOIN a.ttecAreaFormacionTipo = :idArea
-
         $query = $em->createQuery('SELECT a
                                     FROM SieAppWebBundle:TtecCarreraTipo a 
                                    WHERE a.ttecAreaFormacionTipo = :idArea
@@ -693,7 +480,6 @@ class OfertaAcademicaController extends Controller {
 
     	$carreraArray = array();
     	foreach($datos as $dato) {
-          //$carreraArray[$dato->getId()] = $dato->getNombre();  
             $carreraArray[] = array('id' => $dato->getId(), 'nombre' => $dato->getNombre());
         }
         
@@ -708,8 +494,7 @@ class OfertaAcademicaController extends Controller {
     $em = $this->getDoctrine()->getManager();
     $datosArray = array();
     $datos = $em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findAll();
-        foreach($datos as $dato)
-        {
+        foreach($datos as $dato){
             $datosArray[$dato->getId()] = $dato->getRegimenEstudio();
         }
         return $datosArray;
@@ -729,8 +514,7 @@ class OfertaAcademicaController extends Controller {
         $query->setParameter('idRie', $idRie);
         $datos = $query->getResult();         
         $nuevoArray = array();
-        foreach($datos as $dato)
-        {
+        foreach($datos as $dato){
             $nuevoArray[$dato->getTtecAreaFormacionTipo()->getId()] = $dato->getTtecAreaFormacionTipo()->getAreaFormacion();
         }
 
@@ -745,15 +529,11 @@ class OfertaAcademicaController extends Controller {
         $datos = $em->getRepository('SieAppWebBundle:TtecDenominacionTituloProfesionalTipo')
                                     ->findBy(array('ttecCarreraTipo' => $em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findById($idCarrera)));
         $denominacionArray = array();
-        if($datos)
-        {
-            foreach($datos as $dato) 
-            {
+        if($datos){
+            foreach($datos as $dato){
                 $denominacionArray[$dato->getId()] = $dato->getDenominacion();  
             }
-        }
-        else
-        {
+        }else{
             $denominacionArray[0] = 'Aun no definido'; 
         }
         return $denominacionArray;
@@ -777,8 +557,7 @@ class OfertaAcademicaController extends Controller {
         $listado = $stmt->fetchAll();
 
         $list = array();                                  
-        foreach($listado as $li)
-        {
+        foreach($listado as $li){
             $query = $em->createQuery('SELECT a
                                          FROM SieAppWebBundle:TtecResolucionCarrera a 
                                         WHERE a.ttecInstitucioneducativaCarreraAutorizada = :idCaAutorizada 
@@ -808,11 +587,9 @@ class OfertaAcademicaController extends Controller {
      * Obtiene tipos de trámites en el registro
      */
     public function obtieneTipoTramite(){
-        $dato = array('ADECUACION' => 'ADECUACIÓN', 'APERTURA'=>'APERTURA', 'AMPLIACION' =>'AMPLIACION', 'RATIFICACION' => 'RATIFICACIÓN');
+        $dato = array('ADECUACION' => 'ADECUACIÓN', 'APERTURA'=>'APERTURA', 'AMPLIACION' =>'AMPLIACIÓN', 'RATIFICACION' => 'RATIFICACIÓN');
         return $dato;
     }   
-    
-  
 
     /***
      * Obtener el array para el tiempo de estudio
@@ -847,8 +624,5 @@ class OfertaAcademicaController extends Controller {
         if($nivel == 502 && $regimen == 3){
             return array('1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', '6' => '6');
         }
-        
     }
-
-
 }

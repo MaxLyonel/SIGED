@@ -1,20 +1,100 @@
 {% extends 'SieRieBundle:Default:rie.html.twig' %}
+{% block contentoption%}
 
-{% block contentoption %}
-	{% embed "SieRieBundle:Reportes:opciones.html.twig" %} 
-		
-		{% block bottom %} 
-            <div class="row clearfix">
-                <!-- Basic Examples -->
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="card">
-                        <div class="body">
-							<center><img src="{{asset('webRie/images/imagen3.jpg')}}" class="js-animating-object img-responsive" width="650"/></center>
-                        </div>
+    <div class="block-header">
+        <h2>REPORTE DE INSTITUTOS TÉCNICOS Y TECNOLÓGICOS A NIVEL NACIONAL</h2>
+    </div>
+
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li class="active">Listado de Departamentos</li>
+    </ol>
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table table-hover dashboard-task-infos">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Departamento</th>
+                                    <th>Nro. Total</th>
+                                    <th>Fiscal/Convenio</th>
+                                    <th>Privados</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><h5><a href="{{path('reporte_rie_general', {'opc':9} )}}">Beni</a></h5></td>
+                                    <td><h5>{{rie.BNI.fiscal + rie.BNI.convenio + rie.BNI.privado}}</h5></td>
+                                    <td><h5>{{rie.BNI.fiscal + rie.BNI.convenio}}</h5></td>
+                                    <td><h5>{{rie.BNI.privado}}</h5></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td><h5><a href="{{path('reporte_rie_general', {'opc':2} )}}">Chuquisaca</a></h5></td>
+                                    <td><h5>{{rie.CHQ.fiscal + rie.CHQ.convenio + rie.CHQ.privado}}</h5></td>
+                                    <td><h5>{{rie.CHQ.fiscal + rie.CHQ.convenio}}</h5></td>
+                                    <td><h5>{{rie.CHQ.privado}}</h5></td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td><h5><a href="{{path('reporte_rie_general', {'opc':4} )}}">Cochabamba</a></h5></td>
+                                    <td><h5>{{rie.CBA.fiscal + rie.CBA.convenio + rie.CBA.privado}}</h5></td>
+                                    <td><h5>{{rie.CBA.fiscal + rie.CBA.convenio}}</h5></td>
+                                    <td><h5>{{rie.CBA.privado}}</h5></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td><h5><a href="{{path('reporte_rie_general', {'opc':3} )}}">La Paz</a></h5></td>
+                                    <td><h5>{{rie.LPZ.fiscal + rie.LPZ.convenio + rie.LPZ.privado}}</h5></td>
+                                    <td><h5>{{rie.LPZ.fiscal + rie.LPZ.convenio}}</h5></td>
+                                    <td><h5>{{rie.LPZ.privado}}</h5></td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td><h5><a href="{{path('reporte_rie_general', {'opc':5} )}}">Oruro</a></h5></td>
+                                    <td><h5>{{rie.ORU.fiscal + rie.ORU.convenio + rie.ORU.privado}}</h5></td>
+                                    <td><h5>{{rie.ORU.fiscal + rie.ORU.convenio}}</h5></td>
+                                    <td><h5>{{rie.ORU.privado}}</h5></td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td><h5><a href="{{path('reporte_rie_general', {'opc':10} )}}">Pando</a></h5></td>
+                                    <td><h5>{{rie.PND.fiscal + rie.PND.convenio + rie.PND.privado}}</h5></td>
+                                    <td><h5>{{rie.PND.fiscal + rie.PND.convenio}}</h5></td>
+                                    <td><h5>{{rie.PND.privado}}</h5></td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td><h5><a href="{{path('reporte_rie_general', {'opc':6} )}}">Potosí</a></h5></td>
+                                    <td><h5>{{rie.PSI.fiscal + rie.PSI.convenio + rie.PSI.privado}}</h5></td>
+                                    <td><h5>{{rie.PSI.fiscal + rie.PSI.convenio}}</h5></td>
+                                    <td><h5>{{rie.PSI.privado}}</h5></td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td><h5><a href="{{path('reporte_rie_general', {'opc':8} )}}">Santa Cruz</a></h5></td>
+                                    <td><h5>{{rie.SCZ.fiscal + rie.SCZ.convenio + rie.SCZ.privado}}</h5></td>
+                                    <td><h5>{{rie.SCZ.fiscal + rie.SCZ.convenio}}</h5></td>
+                                    <td><h5>{{rie.SCZ.privado}}</h5></td>
+                                </tr>                                                                                                
+                                <tr>
+                                    <td>9</td>
+                                    <td><h5><a href="{{path('reporte_rie_general', {'opc':7} )}}">Tarija</a></h5></td>
+                                    <td><h5>{{rie.TJA.fiscal + rie.TJA.convenio + rie.TJA.privado}}</h5></td>
+                                    <td><h5>{{rie.TJA.fiscal + rie.TJA.convenio}}</h5></td>
+                                    <td><h5>{{rie.TJA.privado}}</h5></td>
+                                </tr>                                                                                                
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-		{% endblock %} 
-	{% endembed %} 
+        </div>
+    </div>
+
 {% endblock %}
 

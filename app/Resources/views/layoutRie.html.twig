@@ -74,10 +74,38 @@
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
-                <a class="navbar-brand" href="{{path('principal_web')}}">RITTA - REGISTRO DE INSTITUTOS TÉCNICOS Y TECNOLÓGICOS</a>
+                <a class="navbar-brand" href="{{path('principal_web')}}">REGISTRO DE INSTITUTOS TÉCNICOS Y TECNOLÓGICOS</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">
+                            <i class="material-icons">notifications</i>
+                            <span class="label-count"><!--{{ app.session.get('dato') }}-->0</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="header">NOTIFICACIÓN</li>
+                            <li class="body">
+                                <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 150px;"><ul class="menu" style="overflow: hidden; width: auto; height: 254px;">
+                                    <li class=" waves-effect waves-block" style="left:20px;">
+                                            <div class="icon-circle bg-blue-grey">
+                                                <i class="material-icons">live_help</i>
+                                            </div>
+                                            <div class="menu-info">
+                                                <center><h1>{{ app.session.get('dato') }}</h1></center>
+                                                <p>
+                                                    Institutos por RATIFICAR.
+                                                </p>
+                                            </div>
+                                    </li>
+                                </ul><div class="slimScrollBar" style="background: rgba(0, 0, 0, 0.5) none repeat scroll 0% 0%; width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 0px; z-index: 99; right: 1px; height: 180.212px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 0px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+                            </li>
+                            <li class="footer">
+                                <a href="{{path('rie_list')}}" class=" waves-effect waves-block">Ver Listado de Institutos</a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li><a href="{{path('logout')}}" class="btn btn-danger waves-effect">CERRAR SESIÓN</a></li>
                 </ul>
             </div>
@@ -118,14 +146,14 @@
                             <span>Inicio</span>
                         </a>
                     </li>
-                    <!--
+                    
                     <li>
                         <a href="{{path('certificado_rie')}}">
                             <i class="material-icons">content_copy</i>
                             <span>Certificado RIE</span>
                         </a>
                     </li>
-                    -->
+                    
                     <li>
                         <a href="{{path('lei')}}">
                             <i class="material-icons">account_balance</i>
@@ -167,12 +195,30 @@
                         </a>
                     </li>
 
+                    <!--
                     <li>
                         <a href="{{path('consultains_rie')}}">
                             <i class="material-icons">low_priority</i>
                             <span>Consulta</span>
                         </a>
                     </li>
+                    -->
+
+                    {% if app.session.get('roluser') == 8 %}
+                    <li>
+                        <a href="{{path('area_rie_list')}}">
+                            <i class="material-icons">view_agenda</i>
+                            <span>Admin-Areas</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    <li>
+                        <a href="{{path('reporte_rie_subsede')}}">
+                            <i class="material-icons">view_quilt</i>
+                            <span>Sede-Subsede</span>
+                        </a>
+                    </li>                    
 
                     <li>
                         <a href="{{path('reporte_list')}}">
@@ -180,7 +226,7 @@
                             <span>Reportes</span>
                         </a>
                     </li>
-                 
+
                 </ul>
             </div>
             <!-- #Menu -->
@@ -246,6 +292,21 @@
         <!-- Demo Js -->
         <script src="{{asset('webRue/assets/js/demo.js')}}"></script>
         
+        <!-- Jquery DataTable Plugin Js - OYQ -->
+        <script src="{{asset('js/plugins/datatables/dataTables.buttons.min.js')}}"></script>
+        <script src="{{asset('js/plugins/datatables/buttons.flash.min.js')}}"></script>
+        <script src="{{asset('js/plugins/datatables/jszip.min.js')}}"></script>
+        <script src="{{asset('js/plugins/datatables/buttons.html5.min.js')}}"></script>
+        <script src="{{asset('js/plugins/datatables/buttons.print.min.js')}}"></script>
+
+        <!-- Jquery Mask - OYQ -->
+        <script src="{{asset('js/jquery.mask.js')}}"></script>
+
+        <!-- Autocomplete - OYQ -->
+        <script src="{{asset('js/autocomplete.js')}}"></script>
+        <script src="{{asset('js/bootstrap3-typeahead.js')}}"></script>
+
+
 
         <!-- GLOBAL SCRIPTS -->
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>

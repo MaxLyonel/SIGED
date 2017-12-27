@@ -25,17 +25,17 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
                             <a href="{{path('area_rie_new')}}" class="btn btn-md bg-orange waves-effect">
-                                <i class="material-icons">add_box</i>Nueva Área de Formación
+                                <i class="material-icons">add_box</i>Nuevo
                             </a>
                         </div>
                     </div>                 
                     <div class="table-responsive">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <!-- <table class="table table-bordered table-striped table-hover js-basic-example dataTable"> -->
+                            <table  id="miexample" class="table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Carreras</th>  
-                                        <th>Edita</th>  
+                                        <th>Editar</th>
                                         <th>Eliminar</th>
                                         <th>Sector de Formación</th>
                                         <th>Area de Formación</th>  
@@ -46,19 +46,12 @@
                                     {% for area in areas %}
                                         <tr>
                                             <td>
-                                                <a href="{{path('carrera_rie_list', {'idArea': area.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Carreras">
-                                                    <i class="material-icons">assignment</i>
-                                                </a>    
-                                            </td>
-                                            <td>
                                                 <a href="{{path('area_rie_edit', {'idArea': area.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar">
                                                     <i class="material-icons">mode_edit</i>
                                                 </a>    
                                             </td>
                                             <td>
-                                                <a href="{{path('area_rie_delete', {'idArea': area.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                                    <i class="material-icons">delete</i>
-                                                </a>    
+                                                <a href="{{path('area_rie_delete', {'idArea': area.id} )}}" onclick="return confirmar('{{area.id}}')" class="btn btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a>                                                 
                                             </td>
                                             <td>{{area.institucioneducativaTipo.descripcion}}</td>
                                             <td>{{area.areaFormacion}}</td>
@@ -68,19 +61,12 @@
                                     {% for area in areas1 %}
                                         <tr>
                                             <td>
-                                                <a href="{{path('carrera_rie_list', {'idArea': area.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Carreras">
-                                                    <i class="material-icons">assignment</i>
-                                                </a>    
-                                            </td>
-                                            <td>
                                                 <a href="{{path('area_rie_edit', {'idArea': area.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar">
                                                     <i class="material-icons">mode_edit</i>
                                                 </a>    
                                             </td>
                                             <td>
-                                                <a href="{{path('area_rie_delete', {'idArea': area.id })}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                                    <i class="material-icons">delete</i>
-                                                </a>    
+                                                <a href="{{path('area_rie_delete', {'idArea': area.id} )}}" onclick="return confirmar('{{area.id}}')" class="btn btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a>    
                                             </td>
                                             <td>{{area.institucioneducativaTipo.descripcion}}</td>
                                             <td>{{area.areaFormacion}}</td>
@@ -99,4 +85,38 @@
 
 {% endblock %}
 
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+    // Para configurar tabla 
+    $(document).ready(function() {
+       $('#miexample').DataTable( {
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No se encontraron resultados",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "No existen registros.",
+            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sSearch":         "Buscar:",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla",
+            "sSearch":         "Buscar:",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":     "Último",
+                "sNext":     "Siguiente",
+                "sPrevious": "Anterior"
+            }
+        }
+    });
+    } );
 
+    function confirmar(id_area){
+        if(confirm('¿Estas seguro de eliminar el Área de Formación?'))
+		    return true;
+	    else
+		    return false;
+
+    }
+
+    </script>
+{% endblock %}

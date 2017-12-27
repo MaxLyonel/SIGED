@@ -61,7 +61,6 @@ class OperacionTramiteController extends Controller {
         return $this->render('SieRieBundle:OperacionTramite:list.html.twig', array('entity' => $entity, 'resoluciones' => $resoluciones, 'carrera' => $carrera, 'idresol' => $resol->getId()));        
     }
 
-
     /***
      * Realiza la operación de trámite RATIFICACIÓN y CIERRE DE CARRERA
      */ 
@@ -72,19 +71,18 @@ class OperacionTramiteController extends Controller {
                                                 ->findOneById($datResolucion->getTtecInstitucioneducativaCarreraAutorizada()->getId());
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($datAutorizado->getInstitucioneducativa()->getId());
         
-        if(!$datAutorizado) {
+        if(!$datAutorizado){
             throw $this->createNotFoundException('No se puede encontrar la Oferta Académica');
-        }
-        else
-        {
+        }else{
             $areasArray = $this->obtieneInstitucionAreaFormArray($institucion->getId());
             $nivelesArray = $this->obtieneInstitucionNivelesFormArray($institucion->getId());
             $regimenEstudioArray = $this->obtieneRegimenEstudio();
             
-            if($institucion->getDependenciaTipo()->getId() == 3)
+            if($institucion->getDependenciaTipo()->getId() == 3){
                 $tipoOperacionArray = array('RATIFICACION'=>'RATIFICACIÓN DE CARRERA', 'CIERRE' =>'CIERRE DE CARRERA');
-            else
-            $tipoOperacionArray = array('CIERRE' =>'CIERRE DE CARRERA');         
+            }else{
+                $tipoOperacionArray = array('CIERRE' =>'CIERRE DE CARRERA');
+            }
 
             $tiempoEstArray = $this->obtieneTiempoEstudio($datResolucion->getNivelTipo()->getId(), $datResolucion->getTtecRegimenEstudioTipo()->getId());
 
@@ -112,7 +110,7 @@ class OperacionTramiteController extends Controller {
      * Crea una nueva resolución, dependiendo del tipo de trámite: RATIFICACION - CIERRE
      */
     public function createAction(Request $request){
-    	try {
+    	try{
             $em = $this->getDoctrine()->getManager();
             $form = $request->get('form');
 
@@ -144,13 +142,11 @@ class OperacionTramiteController extends Controller {
             }
 
             //Validando los datos
-        } catch (Exception $ex) {
+        }catch(Exception $ex){
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar los datos');
         }  
         
         return $this->redirect($this->generateUrl('operacion_list', array('idRie' => $institucion->getId())));          
     }
-
-
 }

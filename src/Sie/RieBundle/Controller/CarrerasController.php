@@ -91,17 +91,27 @@ class CarrerasController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $form = $request->get('form');
 
-            $entity = new TtecCarreraTipo();
-            $entity->setNombre(strtoupper($form['carrera']));
-            $entity->setFechaRegistro(new \DateTime('now'));
-            $entity->setTtecAreaFormacionTipo($em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findOneById($form['ttecAreaFormacionTipo']));
-            $entity->setTtecEstadoCarreraTipo($em->getRepository('SieAppWebBundle:TtecEstadoCarreraTipo')->findOneById(1));
-            $em->persist($entity);
-            $em->flush();     
+            //buscando la carrera
+            $query = $em->createQuery('SELECT ca
+                                         FROM SieAppWebBundle:TtecCarreraTipo ca
+                                        WHERE UPPER(ca.nombre) LIKE :nombreCarrera')
+                                    ->setParameter('nombreCarrera', trim(strtoupper($form['carrera'])));        
+            $dato = $query->getResult(); 
 
-        } catch (Exception $ex) {
+            if($dato){
+                $this->get('session')->getFlashBag()->add('mensaje', 'Duplicidad al registrar la carrera.');
+            }else{
+                $entity = new TtecCarreraTipo();
+                $entity->setNombre(strtoupper($form['carrera']));
+                $entity->setFechaRegistro(new \DateTime('now'));
+                $entity->setTtecAreaFormacionTipo($em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findOneById($form['ttecAreaFormacionTipo']));
+                $entity->setTtecEstadoCarreraTipo($em->getRepository('SieAppWebBundle:TtecEstadoCarreraTipo')->findOneById(1));
+                $em->persist($entity);
+                $em->flush();     
+            }
+        } catch (Exception $ex){
             $em->getConnection()->rollback();
-            $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar la carrera.');
+            //$this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar la carrera.');
         }
         return $this->redirect($this->generateUrl('carrera_rie_list'));  
     }            
@@ -136,15 +146,26 @@ class CarrerasController extends Controller {
             $form = $request->get('form');
             $carrera = $em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneById($form['idCarrera']);
 
-            $carrera->setNombre(strtoupper($form['carrera']));
-            $carrera->setFechaModificacion(new \DateTime('now'));
-            $carrera->setTtecAreaFormacionTipo($em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findOneById($form['ttecAreaFormacionTipo']));
-            $em->persist($carrera);
-            $em->flush();   
-                        
+            //buscando la carrera
+            $query = $em->createQuery('SELECT ca
+                                         FROM SieAppWebBundle:TtecCarreraTipo ca
+                                        WHERE UPPER(ca.nombre) LIKE :nombreCarrera')
+                            ->setParameter('nombreCarrera', trim(strtoupper($form['carrera'])));        
+            $dato = $query->getResult(); 
+
+            if($dato){
+                $this->get('session')->getFlashBag()->add('mensaje', 'Duplicidad al modificar la carrera.');
+            }else{
+                $carrera->setNombre(strtoupper($form['carrera']));
+                $carrera->setFechaModificacion(new \DateTime('now'));
+                $carrera->setTtecAreaFormacionTipo($em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findOneById($form['ttecAreaFormacionTipo']));
+                $em->persist($carrera);
+                $em->flush();   
+            }    
+                
             //Validando los datos
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();
+        }catch (Exception $ex){
+            //$em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('mensaje', 'Error al modificar los datos');
         }  
         
@@ -178,29 +199,9 @@ class CarrerasController extends Controller {
         $params = array();
         $stmt->execute($params); 
         $datos = $stmt->fetchAll();
-        foreach($datos as $dato)
-        {
+        foreach($datos as $dato){
             $arrayArea[$dato['id']] = $dato['area_formacion'];
         }   
         return $arrayArea;
     }
-
-    /**
-     * Valida si la carrera puede ser modificada o eliminada
-     */
-    /*
-    public function validaCarreraModificar($idCarrera){
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery('SELECT se
-                                    FROM SieAppWebBundle:TtecInstitucioneducativaCarreraAutorizada se
-                                    JOIN se.ttecCarreraTipo ca 
-                                    WHERE ca.id = :idCarrera')
-        ->setParameter('idCarrera', $idCarrera);        
-        $entities = $query->getResult();     
-        if($entities)
-            return 0;
-        else
-            return 1;
-    }
-    */
 }

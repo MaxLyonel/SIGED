@@ -50,13 +50,13 @@
                                     <tr>
                                         <th>Acciones</th>                                    
                                         <th>Depto.</th>
+                                        <th>Cod. RIE</th>                                        
                                         <th>Denominación</th>
                                         <th>Sede/Subsede</th>
                                         <th>R.M.</th>
                                         <th>Fecha R.M.</th>
                                         <th>Carácter<br>Jurídico</th>
                                         <th>Tipo<br>Institución</th>
-                                        <th>Cod. RIE</th>
                                         <th>Cod. LE</th>
                                         <th>Certificado</th>                                        
                                     </tr>
@@ -66,13 +66,13 @@
                                     <tr>
                                         <th>Acciones</th>                                    
                                         <th>Depto.</th>
+                                        <th>Cod. RIE</th>
                                         <th>Denominación</th>
                                         <th>Sede/Subsede</th>
                                         <th>R.M.</th>
                                         <th>Fecha R.M.</th>
                                         <th>Carácter<br>Jurídico</th>
                                         <th>Tipo<br>Institución</th>
-                                        <th>Cod. RIE</th>
                                         <th>Cod. LE</th>
                                         <th>Certificado</th>
                                     </tr>
@@ -82,9 +82,15 @@
                                     {% for entity in entities %}
                                         <tr>
                                             <td>
+                                                {% if entity.institucioneducativa.id == entity.sede %}
                                                 <a href="{{path('rie_new_subsede', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Registrar Subsede">
                                                     <i class="material-icons">widgets</i>
                                                 </a>
+                                                {% else %}
+                                                    <button class="btn btn-grey btn-circle waves-effect waves-circle waves-float" disabled="disabled">
+                                                        <i class="material-icons">widgets</i></button>
+                                                {% endif %}
+
                                                 <a href="{{path('rie_edit', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar">
                                                     <i class="material-icons">mode_edit</i>
                                                 </a>
@@ -93,7 +99,8 @@
                                                 </a>
                                             </td>
                                             <td>{{ entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>                                            
-                                            <td>{{ entity.institucioneducativa.institucioneducativa }}</td>                                            
+                                            <td>{{ entity.institucioneducativa.id }}</td> 
+                                            <td>{{ entity.institucioneducativa.institucioneducativa }}</td> 
                                             <td>
                                                 {% if entity.institucioneducativa.id == entity.sede %}
                                                     SEDE
@@ -109,7 +116,6 @@
                                             <td>
                                                 {{ entity.institucioneducativa.institucioneducativaTipo.descripcion }}
                                             </td>
-                                            <td>{{ entity.institucioneducativa.id }}</td>
                                             <td>{{ entity.institucioneducativa.leJuridicciongeografica.id }}</td>
                                             <td>
                                                 <form action="{{path('reporte_rie_uno')}}" method="post">

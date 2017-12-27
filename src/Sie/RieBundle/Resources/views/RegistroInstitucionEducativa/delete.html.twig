@@ -209,9 +209,11 @@
         </div>
     </div>
 
+    {% if eliminar == 1 %}
     <div class="col-lg-6 col-md-6">
-        {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-danger btn-lg m-l-15 waves-effect'} }) }}
+        <a href="{{path('rie_delete_itt', {'idRie': entity.id} )}}" onclick="return confirmar('{{entity.id}}')" class="btn btn-danger btn-lg m-l-15 waves-effect">Eliminar</a>
     </div>
+    {% endif %}    
 
 	{{ form_end(form) }}
 
@@ -279,6 +281,13 @@
         }
     });
 
+    function confirmar(idRie){
+        if(confirm('¿Estas seguro de eliminar el REGISTRO DEL INSTITUTO ?'))
+		    return true;
+	    else
+		    return false;
+
+    }
     </script>
 {% endblock %}
 
