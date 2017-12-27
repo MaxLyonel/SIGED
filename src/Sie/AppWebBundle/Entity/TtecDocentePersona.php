@@ -276,4 +276,60 @@ class TtecDocentePersona
     {
         return $this->item;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\FinanciamientoTipo
+     */
+    private $financiamientoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo
+     */
+    private $ttecCargoDesignacionTipo;
+
+
+    /**
+     * Set financiamientoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\FinanciamientoTipo $financiamientoTipo
+     * @return TtecDocentePersona
+     */
+    public function setFinanciamientoTipo(\Sie\AppWebBundle\Entity\FinanciamientoTipo $financiamientoTipo = null)
+    {
+        $this->financiamientoTipo = $financiamientoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get financiamientoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\FinanciamientoTipo 
+     */
+    public function getFinanciamientoTipo()
+    {
+        return $this->financiamientoTipo;
+    }
+
+    /**
+     * Set ttecCargoDesignacionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo $ttecCargoDesignacionTipo
+     * @return TtecDocentePersona
+     */
+    public function setTtecCargoDesignacionTipo(\Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo $ttecCargoDesignacionTipo = null)
+    {
+        $this->ttecCargoDesignacionTipo = $ttecCargoDesignacionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get ttecCargoDesignacionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\TtecCargoDesignacionTipo 
+     */
+    public function getTtecCargoDesignacionTipo()
+    {
+        return $this->ttecCargoDesignacionTipo;
+    }
 }

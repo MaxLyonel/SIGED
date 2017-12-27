@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\TtecAdministrativoInstitutoPersona:
     type: entity
     table: ttec_administrativo_instituto_persona
     indexes:
+        IDX_EDE9D7AFCEDB60B7:
+            columns:
+                - financiamiento_tipo_id
         IDX_EDE9D7AFF5F88DB9:
             columns:
                 - persona_id
@@ -43,6 +46,15 @@ Sie\AppWebBundle\Entity\TtecAdministrativoInstitutoPersona:
             comment: ''
             column: es_vigente
     manyToOne:
+        financiamientoTipo:
+            targetEntity: FinanciamientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                financiamiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         persona:
             targetEntity: Persona
             cascade: {  }
