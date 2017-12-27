@@ -187,6 +187,14 @@
 
       }
 
+      var sureDoInscription = function(){
+          if(confirm('Está a punto de realizar la inscripción...\nPresione OK para continuar...')){
+            return true;
+          }else {
+            return false;
+          }
+      };
+
     </script>
 
 {% endblock %}

@@ -21,7 +21,7 @@
 <br/>
 
 
-<form method="POST" action="{{path('InscriptionDg_do_inscription_dg')}}" name="formInsc" id="formInsc">
+<form method="POST" action="{{path('InscriptionDg_do_inscription_dg')}}" name="formInsc" id="formInsc" onsubmit="javascript:if(confirm('Esta seguro de realizar la inscripción? presione en OK para continuar')){return true;}else{return false;} ">
 <div class="table-responsive mb-20">
     <table class="table">
         <thead>

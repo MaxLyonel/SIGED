@@ -92,6 +92,8 @@ class InscriptionDgController extends Controller {
                   //students status reprobado
                   $arrayCurrentPeriodo[$data['periodoid']] = array('personaId'=>$objPerson->getId(),'periodoid'=>$data['periodoid'],'denominacionId'=>$data['denominacionid'], 'gestionIns'=>$this->session->get('currentyear')  );
                 }
+              }else {
+                $arrayCurrentPeriodo[$data['periodoid']] = array('personaId'=>$objPerson->getId(),'periodoid'=>$data['periodoid'],'denominacionId'=>$data['denominacionid'], 'gestionIns'=>$this->session->get('currentyear')  );
               }
 
               next($objLastInscription);
@@ -152,6 +154,7 @@ class InscriptionDgController extends Controller {
                 ->add('denominacionId', 'choice', array('label'=>'Denominacion','attr' => array('class' => 'form-control')))
                 ->add('personaId', 'hidden', array('data'=>$personaId))
                 ->add('gestionIns', 'hidden', array('data' => $this->session->get('currentyear')))
+                ->add('periodoid', 'choice', array('label'=>'Periodo','choices'=>array('10'=>'ANUAL','1'=>'SEMESTRE'),'attr' => array('class' => 'form-control')))
                 ->add('Regitrar', 'button', array('label' => 'buscar', 'attr' => array('class' => 'btn btn-success btn-block btn-xs', 'onclick' => 'doRegistration()')))
 
                 ->getForm();

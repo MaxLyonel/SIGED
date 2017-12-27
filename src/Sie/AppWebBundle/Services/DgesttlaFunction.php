@@ -146,9 +146,9 @@ class DgesttlaFunction {
    */
   public function getNextMaterias($form, $typeInsc){
 
-    if($typeInsc=='new'){
-        $form['periodoid'] = 10;
-    }
+    // if($typeInsc=='new'){
+    //     $form['periodoid'] = 10;
+    // }
 
 
     //create the query about the roluser
