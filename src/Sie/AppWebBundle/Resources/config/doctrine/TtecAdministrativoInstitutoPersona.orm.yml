@@ -45,6 +45,11 @@ Sie\AppWebBundle\Entity\TtecAdministrativoInstitutoPersona:
             nullable: true
             comment: ''
             column: es_vigente
+        item:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
         financiamientoTipo:
             targetEntity: FinanciamientoTipo

@@ -45,6 +45,11 @@ Sie\AppWebBundle\Entity\TtecAdministrativoCarreraPersona:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        item:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
         financiamientoTipo:
             targetEntity: FinanciamientoTipo

@@ -276,4 +276,32 @@ class TtecAdministrativoInstitutoPersona
     {
         return $this->financiamientoTipo;
     }
+    /**
+     * @var integer
+     */
+    private $item;
+
+
+    /**
+     * Set item
+     *
+     * @param integer $item
+     * @return TtecAdministrativoInstitutoPersona
+     */
+    public function setItem($item)
+    {
+        $this->item = $item;
+    
+        return $this;
+    }
+
+    /**
+     * Get item
+     *
+     * @return integer 
+     */
+    public function getItem()
+    {
+        return $this->item;
+    }
 }
