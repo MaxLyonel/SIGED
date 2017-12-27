@@ -46,6 +46,11 @@ Sie\AppWebBundle\Entity\TtecDocentePersona:
             nullable: true
             comment: ''
             column: es_vigente
+        item:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
         gestionTipo:
             targetEntity: GestionTipo
