@@ -270,7 +270,8 @@
                     {% set rol14 = false %}    <!-- rol recepcion ventanilla departamento -->
                     {% set rol15 = false %}    <!-- rol autorizacion -->
                     {% set rol16 = false %}    <!-- rol impresion -->
-                    {% set rol17 = false %}    <!-- rol legalizacion -->              
+                    {% set rol17 = false %}    <!-- rol legalizacion --> 
+                    {% set rol20 = false %}    <!-- rol consulta nacional -->                
                     {% for item in app.session.get('roluser') %}  
                         {% if item.id == 8 %}
                             {% set rol8 = true %} 
@@ -288,104 +289,110 @@
                             {% set rol16 = true %} 
                         {% elseif item.id == 17 %}
                             {% set rol17 = true %} 
+                        {% elseif item.id == 20 %}
+                            {% set rol20 = true %} 
                         {% else %}
                         {% endif %}                        
                     {% endfor %}   
-                    {% if (rol8 or rol16 or rol13) %}                    
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-gear"></i></span>
-                                <span class="text">Ajustes</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{ path('sie_tramite_certificacion_homologacion') }}">Gestiones anteriores</a></li>
-                                {% if (rol16 or rol8) and 1 == 2%} 
-                                    <li><a href="#">Generar número de serie</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>  
-                    {% endif %}  
-                    {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8) %}
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-pencil"></i></span>
-                                <span class="text">Trámite</span>
-                                <span class="arrow"></span>
-                                <span class="selected"></span>
-                            </a>
-                            <ul>
-                                {% if rol13 or rol8 %}
-                                    <li class=" "><a href="{{path('sie_tramite_certificado_tecnico_registro_busca')}}">Registro</a></li>
-                                {% endif %}
-                                {% if (rol14 or rol8) and 1 == 2 %}
-                                    <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_recepcion_busca')}}">Recepción</a></li>                                    
-                                {% endif %}
-                                {% if rol15 or rol8 %}
-                                    <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_autorizacion_busca')}}">Autorización</a></li>
-                                {% endif %}
-                                {% if rol16 or rol8 %}
-                                    <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_impresion_busca')}}">Impresión</a></li>
-                                {% endif %}
-                                {% if (rol14 or rol8) and 1 == 2 %}
-                                    <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_envio_busca')}}">Envío</a></li>
-                                {% endif %}
-                                {% if rol13 or rol8 %}
-                                    <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_entrega_busca')}}">Entrega</a></li>
-                                {% endif %}
-                                {% if rol16 or rol8 %}
-                                    <li><a href="{{path('sie_tramite_reactiva_busca')}}">Reactivar</a></li>
-                                {% endif %}
-                                {% if rol17 or rol8 %}
-                                    <!--<li><a href="#">Legalización</a></li>-->
-                                {% endif %}
-                            </ul>
-                        </li> 
-                    {% endif %}   
-                    {% if 1 == 1 %}                  
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-user"></i></span>
-                                <span class="text">Estudiante</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{path('declaracion_jurada_index')}}">Declaración jurada</a></li>
-                                {% if rol15 or rol8 %}  
-                                    <li><a href="{{path('estudiante_index')}}">Busqueda de estudiante</a></li>
-                                    <li><a href="{{ path('history_new_inscription_index') }}">Historial de estudiante</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>                                     
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-search"></i></span>
-                                <span class="text">Seguimiento</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="{{path('sie_tramite_seguimiento_busca')}}">Busqueda por trámite</a></li>
-                                <li><a href="{{path('sie_tramite_seguimiento_documento_busca')}}">Busqueda por número serie</a></li>
-                                <li><a href="{{path('sie_tramite_seguimiento_rude_busca')}}">Busqueda por código rude</a></li>
-                            </ul>
-                        </li>  
-                    {% endif %} 
-                    {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8) and 1 == 2%}              
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-line-chart"></i></span>
-                                <span class="text">Reportes</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul>
-                                <li><a href="#">Diplomas</a></li>
-                                <li><a href="#">Participantes</a></li>
-                                <li><a href="#">Trámites</a></li>
-                            </ul>
-                        </li> 
+
+                    {% if rol20 == false %} 
+
+                        {% if (rol8 or rol16 or rol13) %}                    
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-gear"></i></span>
+                                    <span class="text">Ajustes</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="{{ path('sie_tramite_certificacion_homologacion') }}">Gestiones anteriores</a></li>
+                                    {% if (rol16 or rol8) and 1 == 2%} 
+                                        <li><a href="#">Generar número de serie</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>  
+                        {% endif %}  
+                        {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8) %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-pencil"></i></span>
+                                    <span class="text">Trámite</span>
+                                    <span class="arrow"></span>
+                                    <span class="selected"></span>
+                                </a>
+                                <ul>
+                                    {% if rol13 or rol8 %}
+                                        <li class=" "><a href="{{path('sie_tramite_certificado_tecnico_registro_busca')}}">Registro</a></li>
+                                    {% endif %}
+                                    {% if (rol14 or rol8) and 1 == 2 %}
+                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_recepcion_busca')}}">Recepción</a></li>                                    
+                                    {% endif %}
+                                    {% if rol15 or rol8 %}
+                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_autorizacion_busca')}}">Autorización</a></li>
+                                    {% endif %}
+                                    {% if rol16 or rol8 %}
+                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_impresion_busca')}}">Impresión</a></li>
+                                    {% endif %}
+                                    {% if (rol14 or rol8) and 1 == 2 %}
+                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_envio_busca')}}">Envío</a></li>
+                                    {% endif %}
+                                    {% if rol13 or rol8 %}
+                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_entrega_busca')}}">Entrega</a></li>
+                                    {% endif %}
+                                    {% if rol16 or rol8 %}
+                                        <li><a href="{{path('sie_tramite_reactiva_busca')}}">Reactivar</a></li>
+                                    {% endif %}
+                                    {% if rol17 or rol8 %}
+                                        <!--<li><a href="#">Legalización</a></li>-->
+                                    {% endif %}
+                                </ul>
+                            </li> 
+                        {% endif %}   
+                        {% if 1 == 1 %}                  
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-user"></i></span>
+                                    <span class="text">Estudiante</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="{{path('declaracion_jurada_index')}}">Declaración jurada</a></li>
+                                    {% if rol15 or rol8 %}  
+                                        <li><a href="{{path('estudiante_index')}}">Busqueda de estudiante</a></li>
+                                        <li><a href="{{ path('history_new_inscription_index') }}">Historial de estudiante</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>                                     
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-search"></i></span>
+                                    <span class="text">Seguimiento</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="{{path('sie_tramite_seguimiento_busca')}}">Busqueda por trámite</a></li>
+                                    <li><a href="{{path('sie_tramite_seguimiento_documento_busca')}}">Busqueda por número serie</a></li>
+                                    <li><a href="{{path('sie_tramite_seguimiento_rude_busca')}}">Busqueda por código rude</a></li>
+                                </ul>
+                            </li>  
+                        {% endif %} 
+                        {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8) and 1 == 2%}              
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-line-chart"></i></span>
+                                    <span class="text">Reportes</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul>
+                                    <li><a href="#">Diplomas</a></li>
+                                    <li><a href="#">Participantes</a></li>
+                                    <li><a href="#">Trámites</a></li>
+                                </ul>
+                            </li> 
+                        {% endif %}
                     {% endif %}   
 
-                    {% if 1 == 2 %} 
+                    {% if rol20 == true %} 
                         <!-- Start development - sub menu -->
                         {% for key,menu in app.session.get('aMenu') %}
                             <li class="submenu">
