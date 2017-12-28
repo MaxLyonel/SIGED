@@ -87,8 +87,10 @@ class InfoDocenteController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:TtecDocentePersona');
 
         $query = $repository->createQueryBuilder('tdp')
-                ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, tdp.id tdpId, tdp.fechaRegistro, tdp.fechaModificacion, tdp.esVigente')
+                ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, tdp.id tdpId, tdp.item, tdp.fechaRegistro, tdp.fechaModificacion, tdp.esVigente, cd.formaDesignacion, ft.financiamiento')
                 ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'tdp.persona = p.id')
+                ->innerJoin('SieAppWebBundle:TtecCargoDesignacionTipo', 'cd', 'WITH', 'tdp.ttecCargoDesignacionTipo = cd.id')
+                ->innerJoin('SieAppWebBundle:FinanciamientoTipo', 'ft', 'WITH', 'tdp.financiamientoTipo = ft.id')
                 ->where('tdp.institucioneducativa = :idInstitucion')
                 ->andWhere('tdp.gestionTipo = :idGestion')
                 ->setParameter('idInstitucion', $institucion)
