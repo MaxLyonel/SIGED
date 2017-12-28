@@ -22,12 +22,92 @@
 {% block bodycontent %}
 
     {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Turnos y Paralelos', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
-    
+
+        <small>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel">
+                        <BR>
+                            <div class="row">                                                            
+                                <div class="col-md-4">                                    
+                                    <label class="control-label">Elija el Pensum</label>
+                                        <select name="acreditacionid" id="acreditacionid" class="form-control input-sm mb-15">
+                                            <option value="-999">...</option>
+                                                {#{% for data in periodos %}
+                                                    <option value="{{data.saeid}}">{{ data.acreditacion }}</option>
+                                                {% endfor %}#}
+                                        </select>                          
+                                </div>
+                                <div class="col-md-4">
+                                    <h3 class="panel-title text-center"><i class="glyphicon glyphicon-bishop"></i> PENSUM 1</h3>                                                                        
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-sm-offset-5">
+                                        <button onclick="nuevomoduloabrir();" class="btn btn-primary btn-stroke">
+                                            <i class="fa fa-newspaper-o"></i> Nueva Asignatura
+                                        </button>                            
+                                    </div>
+                                </div>                            
+                            </div>                        
+                        <BR>
+                            <div id="nuevomodulo" style="display:none;">
+                                <div class="panel rounded shadow">
+                                    <div class="panel-body no-padding">
+                                        <form id="formnuevomodulotec" onsubmit="enviaformmodulo(); return false;" method="post" style="">                                            
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Periodo</label>
+                                                            <select name="acreditacionid" id="acreditacionid" class="form-control input-sm mb-15">
+                                                                    <option value="-999">Elija un periodo</option>
+                                                                    {#{% for data in periodos %}
+                                                                        <option value="{{data.saeid}}">{{ data.acreditacion }}</option>
+                                                                    {% endfor %}#}
+                                                            </select>
+                                                        </div>
+                                                    </div>          
+                                                    <div class="col-md-4">
+                                                        <div class="form-group has-primary">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Código</label>
+                                                                <input name="codigo" id="codigo" class="form-control" type="text">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group has-primary">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Descripción de la Asignatura</label>
+                                                                <input name="asignatura" id="asignatura" class="form-control" type="text">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>                                                
+                                            </div>
+                                            <div class="form-footer">
+                                                <div class="col-sm-offset-5">
+                                                    <a onclick="nuevomodulocerrar();" class="btn btn-danger btn-stroke"><i class="fa fa-ban" aria-hidden="true"></i> Cancelar</a>
+                                                    <button id="botonguardarmodulo" type="submit" class="btn btn-success btn-stroke">
+                                                        <i class="fa fa-floppy-o"></i> Guardar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>                      
+                    <BR>                                                                    
+                </div>
+            </div>
+        </small>
+
+
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Lista de materias</h3>
+                    <h3 class="panel-title">Lista de Asignaturas</h3>
                 </div><!-- /.panel-heading -->
                 <div class="panel-body">
                     {% if materias is not empty %}
@@ -74,4 +154,17 @@
         </div>
     </div>
 
+<script>
+    function nuevomoduloabrir(){
+            $("#nuevomodulo").show();
+            $("#barradeareas").hide();            
+	    }
+        
+    function nuevomodulocerrar(){
+            $("#nuevomodulo").hide();
+	    }
+</script>
+
+
 {% endblock %}
+
