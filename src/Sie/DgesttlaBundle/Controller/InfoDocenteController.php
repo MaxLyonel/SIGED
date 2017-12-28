@@ -204,6 +204,22 @@ class InfoDocenteController extends Controller {
     private function newForm($idInstitucion, $gestion, $idPersona) {
         $em = $this->getDoctrine()->getManager();
 
+        $query = $em->createQuery('SELECT cdt FROM SieAppWebBundle:TtecCargoDesignacionTipo cdt ORDER BY cdt.formaDesignacion');
+
+        $designacioncargos = $query->getResult();
+        $designacioncargosArray = array();
+        foreach ($designacioncargos as $dc) {
+            $designacioncargosArray[$dc->getId()] = $dc->getFormaDesignacion();
+        }
+
+        $query = $em->createQuery('SELECT a FROM SieAppWebBundle:FinanciamientoTipo a WHERE a.id IN (1,7,8) ORDER BY a.id');
+
+        $financiamiento = $query->getResult();
+        $financiamientoArray = array();
+        foreach ($financiamiento as $value) {
+            $financiamientoArray[$value->getId()] = $value->getFinanciamiento();
+        }
+
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($idPersona);
 
         $form = $this->createFormBuilder()
@@ -215,6 +231,9 @@ class InfoDocenteController extends Controller {
             ->add('celular', 'text', array('label' => 'Nro. de Celular', 'data' => $persona->getCelular(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
             ->add('correo', 'text', array('label' => 'Correo Electrónico', 'data' => $persona->getCorreo(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
             ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'data' => $persona->getDireccion(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
+            ->add('cargoDesignacion', 'choice', array('label' => 'Forma de designación', 'required' => true, 'choices' => $designacioncargosArray, 'attr' => array('class' => 'form-control')))
+            ->add('financiamiento', 'choice', array('label' => 'Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'attr' => array('class' => 'form-control')))
+            ->add('item', 'text', array('label' => 'Item', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control')))
             ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
             
@@ -230,7 +249,7 @@ class InfoDocenteController extends Controller {
         try {
             $form = $request->get('form');
             $personaId = $form['persona'];
-            
+            dump($form);
             // Verificar si la persona ya esta registrada
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['persona']);
             $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));
@@ -251,6 +270,10 @@ class InfoDocenteController extends Controller {
             $docentePersonaNew = new TtecDocentePersona();
             $docentePersonaNew->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucionEducativa']));
             $docentePersonaNew->setPersona($persona);
+            $docentePersonaNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
+            $docentePersonaNew->setTtecCargoDesignacionTipo($em->getRepository('SieAppWebBundle:TtecCargoDesignacionTipo')->findOneById($form['cargoDesignacion']));
+            $docentePersonaNew->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
+            $docentePersonaNew->setItem(intval($form['item']));
             $docentePersonaNew->setFechaRegistro(new \DateTime('now'));
             $docentePersonaNew->setEsVigente(1);
             $em->persist($docentePersonaNew);
@@ -295,6 +318,22 @@ class InfoDocenteController extends Controller {
     private function editForm($idInstitucion, $gestion, $persona, $docentePersona) {
         $em = $this->getDoctrine()->getManager();
 
+        $query = $em->createQuery('SELECT cdt FROM SieAppWebBundle:TtecCargoDesignacionTipo cdt ORDER BY cdt.formaDesignacion');
+
+        $designacioncargos = $query->getResult();
+        $designacioncargosArray = array();
+        foreach ($designacioncargos as $dc) {
+            $designacioncargosArray[$dc->getId()] = $dc->getFormaDesignacion();
+        }
+
+        $query = $em->createQuery('SELECT a FROM SieAppWebBundle:FinanciamientoTipo a WHERE a.id IN (1,7,8) ORDER BY a.id');
+
+        $financiamiento = $query->getResult();
+        $financiamientoArray = array();
+        foreach ($financiamiento as $value) {
+            $financiamientoArray[$value->getId()] = $value->getFinanciamiento();
+        }
+
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('dgesttla_info_docente_update'))
                 ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
@@ -305,6 +344,9 @@ class InfoDocenteController extends Controller {
                 ->add('celular', 'text', array('label' => 'Nro. de Celular', 'required' => true, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
                 ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => true, 'data' => $persona->getCorreo(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
                 ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => true, 'data' => $persona->getDireccion(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
+                ->add('cargoDesignacion', 'choice', array('label' => 'Designación', 'required' => true, 'choices' => $designacioncargosArray, 'data' => $docentePersona->getTtecCargoDesignacionTipo()->getId(), 'attr' => array('class' => 'form-control')))
+                ->add('financiamiento', 'choice', array('label' => 'Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'data' => $docentePersona->getFinanciamientoTipo()->getId(), 'attr' => array('class' => 'form-control')))
+                ->add('item', 'text', array('label' => 'Item', 'required' => true, 'data' => $docentePersona->getItem(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control')))
                 ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
 
@@ -359,6 +401,9 @@ class InfoDocenteController extends Controller {
             //Actualizacion en la tabla TtecDocentePersona
             $docentePersona = $em->getRepository('SieAppWebBundle:TtecDocentePersona')->findOneById($form['idDocentePersona']);
 
+            $docentePersona->setTtecCargoDesignacionTipo($em->getRepository('SieAppWebBundle:TtecCargoDesignacionTipo')->findOneById($form['cargoDesignacion']));
+            $docentePersona->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
+            $docentePersona->setItem(intval($form['item']));
             $docentePersona->setFechaModificacion(new \DateTime('now'));
             $em->persist($docentePersona);
             $em->flush();
