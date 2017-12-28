@@ -37,3 +37,7 @@ sie_dgesttla_docente_materia_carrera:
 sie_dgesttla_InscriptionDg:
     resource:   "@SieDgesttlaBundle/Resources/config/routing/InscriptionDg.yml"
     prefix: /dgesttla/InscriptionDg
+
+sie_dgesttla_MallaCurricular:
+    resource:   "@SieDgesttlaBundle/Resources/config/routing/MallaCurricular.yml"
+    prefix: /dgesttla/MallaCurricular    
