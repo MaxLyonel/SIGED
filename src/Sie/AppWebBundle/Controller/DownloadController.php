@@ -763,7 +763,7 @@ class DownloadController extends Controller {
      * @return Response a pdf list students per UE
      * by krlos
      */
-    public function especialLibretaAction(Request $request, $infoUe, $gestion, $estInsEspId, $estInsId) {
+    public function especialLibretaAction(Request $request, $infoUe, $gestion, $estInsEspId, $estInsId, $codigoRude) {
 
 
       $arrInfoUe = unserialize($infoUe);
@@ -776,9 +776,10 @@ class DownloadController extends Controller {
         //get the data to do the report
         $user= $this->session->get('userName');//strtolower(str_replace(' ','_', $this->session->get('name').' '.$this->session->get('lastname').' '.$this->session->get('lastname2')));
         $sie = $arrInfoUe['requestUser']['sie'];
-        $data = $user.'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['cicloId'].'|'.$arrInfoUe['ueducativaInfoId']['gradoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'];
 
-        $link = 'http://'.$_SERVER['SERVER_NAME'].'/cen/'.$this->getLinkEncript($data);
+        $data = $estInsId .'|'. $codigoRude .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['gradoId'].'|'.$arrInfoUe['ueducativaInfoId']['cicloId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$estInsEspId;
+
+        $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
 
         $report = $this->container->getParameter('urlreportweb') .  'esp_est_LibretaEscolar_intelectual_v1_jaq.rptdesign&inscripid=' . $estInsId . '&codue=' . $sie .'&lk='. $link . '&&__format=pdf&';
 // dump($report);die;

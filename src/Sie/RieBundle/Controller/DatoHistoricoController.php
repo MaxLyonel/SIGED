@@ -50,7 +50,6 @@ class DatoHistoricoController extends Controller {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');        
         $em = $this->getDoctrine()->getManager();
-
         $query = $em->createQuery('SELECT se
                                      FROM SieAppWebBundle:TtecInstitucioneducativaSede se
                                      JOIN se.institucioneducativa ie 
@@ -72,7 +71,6 @@ class DatoHistoricoController extends Controller {
     public function listAction(Request $request){    
         $em = $this->getDoctrine()->getManager(); 
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
-
         $query = $em->createQuery('SELECT a
                                      FROM SieAppWebBundle:TtecInstitucioneducativaHistorico a 
                                      JOIN a.institucioneducativa b
@@ -89,12 +87,11 @@ class DatoHistoricoController extends Controller {
      public function newAction(Request $request){
         $em = $this->getDoctrine()->getManager(); 
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
-
         $form = $this->createFormBuilder()
                     ->setAction($this->generateUrl('historico_create'))
                     ->add('idRie', 'hidden', array('data' => $entity->getId()))
                     ->add('fechaResolucion', 'text', array('label' => 'Fecha de Resolución', 'required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
-                    ->add('nroResolucion', 'text', array('label' => 'Número de Resolución', 'required' => true, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => '30', 'style' => 'text-transform:uppercase')))
+                    ->add('nroResolucion', 'text', array('label' => 'Número de Resolución', 'required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => '30', 'style' => 'text-transform:uppercase')))
                     ->add('descripcion', 'textarea', array('label' => 'Descripción', 'required' => true, 'attr' => array('class' => 'form-control', 'rows' => '4', 'cols' => '50')))                    
                     ->add('datoAdicional', 'text', array('label' => 'Dato Adicional(opcional)', 'required' => false ,'attr' => array('class' => 'form-control','maxlength' => '180')))
                     ->add('archivo', 'file', array('label' => 'Archivo PDF Adjunto (opcional)', 'required' => false, "attr" => array('accept' => 'application/pdf', 'multiple' => false)))
@@ -108,12 +105,9 @@ class DatoHistoricoController extends Controller {
     public function createAction(Request $request){
     	try {
             $form = $request->get('form');
-
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
-
             $nombre_pdf = $this->subirArchivo($request->files->get('form')['archivo']);
-
             $historico = new TtecInstitucioneducativaHistorico();
             $historico->setInstitucioneducativa($entity);
             $historico->setNroResolucion($form['nroResolucion']); 
@@ -126,7 +120,7 @@ class DatoHistoricoController extends Controller {
             $em->flush();
             return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
 
-        } catch (Exception $ex) {
+        }catch (Exception $ex){
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar el dato histórico');
             return $this->redirect($this->generateUrl('historico_new', array('idRie'=>$form['idRie'])));
@@ -145,7 +139,7 @@ class DatoHistoricoController extends Controller {
                     ->setAction($this->generateUrl('historico_update'))
                     ->add('idRie', 'hidden', array('data' => $entity->getId()))
                     ->add('id', 'hidden', array('data' => $request->get('id')))
-                    ->add('nroResolucion', 'text', array('label' => 'Número de Resolución', 'data' => $historial->getNroResolucion(), 'required' => true, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => '30', 'style' => 'text-transform:uppercase')))
+                    ->add('nroResolucion', 'text', array('label' => 'Número de Resolución', 'data' => $historial->getNroResolucion(), 'required' => true, 'attr' => array('data-mask'=>'0000/0000', 'placeholder'=>'0000/YYYY', 'class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => '30', 'style' => 'text-transform:uppercase')))
                     ->add('fechaResolucion', 'text', array('label' => 'Fecha de Resolución', 'data' => $historial->getFechaResolucion()->format('d-m-Y'),  'required' => true, 'attr' => array('class' => 'datepicker form-control', 'placeholder' => 'dd-mm-yyyy')))
                     ->add('descripcion', 'textarea', array('label' => 'Descripción', 'data' => $historial->getDescripcion(),  'required' => true, 'attr' => array('class' => 'form-control', 'rows' => '4', 'cols' => '50')))                    
                     ->add('datoAdicional', 'text', array('label' => 'Dato Adicional(opcional)' , 'data' => $historial->getDatoAdicional(), 'required' => false, 'attr' => array('class' => 'form-control','maxlength' => '180')))
@@ -171,10 +165,8 @@ class DatoHistoricoController extends Controller {
             $historico->setFechaModificacion(new \DateTime('now'));
 
             //Validando el archivo
-            if($request->files->get('form')['archivo']) 
-            {
-                if($historico->getArchivo() != '')
-                {
+            if($request->files->get('form')['archivo']){
+                if($historico->getArchivo() != ''){
                     unlink('%kernel.root_dir%/../uploads/archivos/'.$historico->getArchivo());
                 }  
                 $nombre_pdf = $this->subirArchivo($request->files->get('form')['archivo']);
@@ -185,7 +177,7 @@ class DatoHistoricoController extends Controller {
 
             return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$form['idRie'])));
 
-        } catch (Exception $ex) {
+        } catch (Exception $ex){
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar el dato histórico');
             return $this->redirect($this->generateUrl('historico_new', array('idRie'=>$form['idRie'])));
@@ -197,12 +189,10 @@ class DatoHistoricoController extends Controller {
      * Eliminacion del registro histórico
      */
     public function deleteAction(Request $request){
-        try 
-        {        
+        try{        
             $em = $this->getDoctrine()->getManager();
             $historico = $em->getRepository('SieAppWebBundle:TtecInstitucioneducativaHistorico')->findOneById($request->get('idhistorico'));
-            if($historico->getArchivo() != '')
-            {
+            if($historico->getArchivo() != ''){
                 unlink('%kernel.root_dir%/../uploads/archivos/'.$historico->getArchivo());
             }             
             $idRie = $historico->getInstitucioneducativa()->getId();
@@ -210,7 +200,7 @@ class DatoHistoricoController extends Controller {
             $em->flush(); 
             return $this->redirect($this->generateUrl('historico_list', array('idRie'=>$idRie)));   
 
-        } catch (Exception $ex) {
+        }catch (Exception $ex) {
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('mensaje', 'Error al eliminar el dato histórico');
             return $this->redirect($this->generateUrl('historico_new', array('idRie'=>$idRie)));
@@ -222,16 +212,13 @@ class DatoHistoricoController extends Controller {
      * Copiando archivo al directorio uploads/archivos
      */ 
     public function subirArchivo($archivo){
-
         $nombre_pdf = NULL;
-        if(($archivo instanceof UploadedFile) && ($archivo->getError() == '0'))
-        {
+        if(($archivo instanceof UploadedFile) && ($archivo->getError() == '0')){
             $originalName = $archivo->getClientOriginalName();
             $name_array = explode('.', $originalName);
             $file_type = $name_array[sizeof($name_array) - 1];
             $valid_filetypes = array('pdf');
-            if(in_array(strtolower($file_type), $valid_filetypes))
-            {
+            if(in_array(strtolower($file_type), $valid_filetypes)){
                 $nombre_pdf = $archivo->getFileName();
                 $document = new Document();
                 $document->setFile($archivo);
@@ -241,6 +228,4 @@ class DatoHistoricoController extends Controller {
         }
         return $nombre_pdf;
     }
-
-
 }

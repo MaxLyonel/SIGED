@@ -86,10 +86,10 @@
                                         <th>Paterno</th>
                                         <th>Materno</th>
                                         <th>Nombre(s)</th>
-                                        <th>Cargo</th>
+                                        <th>Item</th>
+                                        <th>Cargo</th>                                        
                                         <th>Designación</th>
-                                        <th>Fecha Registro</th>
-                                        <th>Fecha Modificación</th>
+                                        <th>Financiamiento</th>
                                         {% if app.session.get('roluser') != 20 %}
                                             <th>Acciones</th>
                                             <th>Es vigente</th>
@@ -101,16 +101,17 @@
                                         {% set persona = personal.persona %}
                                         {% set cargo = personal.ttecCargoTipo %}
                                         {% set cargoDesignacion = personal.ttecCargoDesignacionTipo %}
+                                        {% set financiamiento = personal.financiamientoTipo %}
                                         <tr>
-                                            <td data-title="N°">{{ loop.index }}</td>
-                                            <td data-title="Carnet">{{ persona.carnet }}</td>
-                                            <td data-title="Paterno">{{ persona.paterno }}</td>
-                                            <td data-title="Materno">{{ persona.materno }}</td>
-                                            <td data-title="Nombre(s)">{{ persona.nombre }}</td>
-                                            <td data-title="Cargo">{{ cargo.cargo }}</td>
-                                            <td data-title="Designación">{{ cargoDesignacion.formaDesignacion }}</td>
-                                            <td data-title="FechReg">{% if personal.fechaRegistro %}{{ personal.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
-                                            <td data-title="FechMod">{% if personal.fechaModificacion %}{{ personal.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                            <td>{{ loop.index }}</td>
+                                            <td>{{ persona.carnet }}</td>
+                                            <td>{{ persona.paterno }}</td>
+                                            <td>{{ persona.materno }}</td>
+                                            <td>{{ persona.nombre }}</td>
+                                            <td>{{ personal.item }}</td>
+                                            <td>{{ cargo.cargo }}</td>
+                                            <td>{{ cargoDesignacion.formaDesignacion }}</td>
+                                            <td>{{ financiamiento.financiamiento }}</td>
                                             {% if app.session.get('roluser') != 20 %}
                                                 <td data-title="Acciones">
                                                     <form action="{{path('dgesttla_info_personal_adm_carr_edit')}}" method="post" style="display:inline-block">

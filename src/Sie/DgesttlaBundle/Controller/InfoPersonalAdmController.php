@@ -99,10 +99,11 @@ class InfoPersonalAdmController extends Controller {
         }
 
         $query = $em->createQuery(
-                        'SELECT aip, per, ct, cdt FROM SieAppWebBundle:TtecAdministrativoInstitutoPersona aip
+                        'SELECT aip, per, ct, cdt, ft FROM SieAppWebBundle:TtecAdministrativoInstitutoPersona aip
                     INNER JOIN aip.persona per
                     INNER JOIN aip.ttecCargoTipo ct
                     INNER JOIN aip.ttecCargoDesignacionTipo cdt
+                    INNER JOIN aip.financiamientoTipo ft
                     WHERE aip.institucioneducativa = :idInstitucion
                     AND aip.gestionTipo = :gestion
                     AND aip.ttecCargoTipo IN (:cargos)
@@ -176,6 +177,14 @@ class InfoPersonalAdmController extends Controller {
             $designacioncargosArray[$dc->getId()] = $dc->getFormaDesignacion();
         }
 
+        $query = $em->createQuery('SELECT a FROM SieAppWebBundle:FinanciamientoTipo a WHERE a.id IN (1,7,8) ORDER BY a.id');
+
+        $financiamiento = $query->getResult();
+        $financiamientoArray = array();
+        foreach ($financiamiento as $value) {
+            $financiamientoArray[$value->getId()] = $value->getFinanciamiento();
+        }
+
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($idPersona);
 
         $form = $this->createFormBuilder()
@@ -189,6 +198,8 @@ class InfoPersonalAdmController extends Controller {
                 ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'data' => $persona->getDireccion(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('cargo', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'form-control')))
                 ->add('cargoDesignacion', 'choice', array('label' => 'Forma de designación', 'required' => true, 'choices' => $designacioncargosArray, 'attr' => array('class' => 'form-control')))
+                ->add('financiamiento', 'choice', array('label' => 'Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'attr' => array('class' => 'form-control')))
+                ->add('item', 'text', array('label' => 'Item', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control')))
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
 
@@ -229,6 +240,8 @@ class InfoPersonalAdmController extends Controller {
             $admPersonaNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
             $admPersonaNew->setTtecCargoTipo($em->getRepository('SieAppWebBundle:TtecCargoTipo')->findOneById($form['cargo']));
             $admPersonaNew->setTtecCargoDesignacionTipo($em->getRepository('SieAppWebBundle:TtecCargoDesignacionTipo')->findOneById($form['cargoDesignacion']));
+            $admPersonaNew->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
+            $admPersonaNew->setItem(intval($form['item']));
             $admPersonaNew->setFechaRegistro(new \DateTime('now'));
             $admPersonaNew->setEsVigente(1);
             $em->persist($admPersonaNew);
@@ -336,6 +349,14 @@ class InfoPersonalAdmController extends Controller {
             $designacioncargosArray[$dc->getId()] = $dc->getFormaDesignacion();
         }
 
+        $query = $em->createQuery('SELECT a FROM SieAppWebBundle:FinanciamientoTipo a WHERE a.id IN (1,7,8) ORDER BY a.id');
+
+        $financiamiento = $query->getResult();
+        $financiamientoArray = array();
+        foreach ($financiamiento as $value) {
+            $financiamientoArray[$value->getId()] = $value->getFinanciamiento();
+        }
+
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('dgesttla_info_personal_adm_update'))
                 ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
@@ -348,6 +369,8 @@ class InfoPersonalAdmController extends Controller {
                 ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => true, 'data' => $persona->getDireccion(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('cargo', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'data' => $admPersona->getTtecCargoTipo()->getId(), 'attr' => array('class' => 'form-control')))
                 ->add('cargoDesignacion', 'choice', array('label' => 'Designación', 'required' => true, 'choices' => $designacioncargosArray, 'data' => $admPersona->getTtecCargoDesignacionTipo()->getId(), 'attr' => array('class' => 'form-control')))
+                ->add('financiamiento', 'choice', array('label' => 'Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'data' => $admPersona->getFinanciamientoTipo()->getId(), 'attr' => array('class' => 'form-control')))
+                ->add('item', 'text', array('label' => 'Item', 'required' => true, 'data' => $admPersona->getItem(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control')))
                 ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
 
@@ -376,6 +399,8 @@ class InfoPersonalAdmController extends Controller {
             
             $admPersona->setTtecCargoTipo($em->getRepository('SieAppWebBundle:TtecCargoTipo')->findOneById($form['cargo']));
             $admPersona->setTtecCargoDesignacionTipo($em->getRepository('SieAppWebBundle:TtecCargoDesignacionTipo')->findOneById($form['cargoDesignacion']));
+            $admPersona->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
+            $admPersona->setItem(intval($form['item']));
             $admPersona->setFechaModificacion(new \DateTime('now'));
             $em->persist($admPersona);
             $em->flush();

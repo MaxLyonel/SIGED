@@ -248,4 +248,60 @@ class TtecAdministrativoCarreraPersona
     {
         return $this->gestionTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\FinanciamientoTipo
+     */
+    private $financiamientoTipo;
+
+
+    /**
+     * Set financiamientoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\FinanciamientoTipo $financiamientoTipo
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setFinanciamientoTipo(\Sie\AppWebBundle\Entity\FinanciamientoTipo $financiamientoTipo = null)
+    {
+        $this->financiamientoTipo = $financiamientoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get financiamientoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\FinanciamientoTipo 
+     */
+    public function getFinanciamientoTipo()
+    {
+        return $this->financiamientoTipo;
+    }
+    /**
+     * @var integer
+     */
+    private $item;
+
+
+    /**
+     * Set item
+     *
+     * @param integer $item
+     * @return TtecAdministrativoCarreraPersona
+     */
+    public function setItem($item)
+    {
+        $this->item = $item;
+    
+        return $this;
+    }
+
+    /**
+     * Get item
+     *
+     * @return integer 
+     */
+    public function getItem()
+    {
+        return $this->item;
+    }
 }

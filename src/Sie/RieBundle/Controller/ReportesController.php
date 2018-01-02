@@ -45,12 +45,24 @@ class ReportesController extends Controller {
      */
     public function listAction(){
         $datos = $this->obtieneDatosPrincipal();
-        return $this->render('SieRieBundle:Reportes:list.html.twig');
+        return $this->render('SieRieBundle:Reportes:list.html.twig', array('rie' => $datos));
     }
       
     public function reportegeneralAction(Request $request){
         $listados = $this->obtieneListadoDepartamento($request->get('opc'));
-        return $this->render('SieRieBundle:Reportes:listtabla.html.twig',  array('listados' => $listados));        
+        switch($request->get('opc')){
+            case 2:  $depto = 'CHUQUISACA'; break;
+            case 3:  $depto = 'LA PAZ';     break;
+            case 4:  $depto = 'COCHABAMBA'; break;
+            case 5:  $depto = 'ORURO';      break;
+            case 6:  $depto = 'POTOSI';     break;
+            case 7:  $depto = 'TARIJA';     break;
+            case 8:  $depto = 'SANTA CRUZ'; break;
+            case 9:  $depto = 'BENI';       break;
+            case 10: $depto = 'PANDO';      break;
+        }
+
+        return $this->render('SieRieBundle:Reportes:listtabla.html.twig',  array('listados' => $listados, 'depto'=>$depto));        
     }
 
     /***
@@ -242,6 +254,63 @@ class ReportesController extends Controller {
         $stmt->execute($params);
         $po=$stmt->fetchAll();
         return $po[0]['cantidad'];                  
+    }
+
+    /**
+     * Reportes de sedes y subsedes existentes
+     */
+    public function reporteSubsedeAction(){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = "SELECT ie.* 
+                    FROM institucioneducativa AS ie
+                    INNER JOIN ttec_institucioneducativa_sede AS sede ON ie.id = sede.sede
+                    GROUP BY ie.id
+                    ORDER BY ie.institucioneducativa
+                 ";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $sedes=$stmt->fetchAll();   
+        $principal = array();
+        $i = 0;
+
+        foreach($sedes as $sede){
+            $principal[$i]['idRie'] = $sede['id'];
+            $principal[$i]['idLe'] = $sede['le_juridicciongeografica_id'];
+            $principal[$i]['denominacion'] = $sede['institucioneducativa'];
+            $principal[$i]['estado'] = $sede['estadoinstitucion_tipo_id'];
+            $principal[$i]['fecha'] = $sede['fecha_resolucion'];
+            $principal[$i]['resolucion'] = $sede['nro_resolucion'];
+            $principal[$i]['sede'] = 'SEDE';
+
+            $query = "SELECT ie.id, se.sede, ie.institucioneducativa, ie.le_juridicciongeografica_id, ie.estadoinstitucion_tipo_id, ie.fecha_resolucion, ie.nro_resolucion
+                        FROM institucioneducativa AS ie
+                        INNER JOIN ttec_institucioneducativa_sede AS se ON ie.id = se.institucioneducativa_id
+                        WHERE se.sede = ".$sede['id']." 
+                          AND ie.id != ".$sede['id']."
+                        ORDER BY ie.institucioneducativa";
+            $stmt = $db->prepare($query);
+            $params = array();
+            $stmt->execute($params);
+            $datos=$stmt->fetchAll();   
+            $subsedes = array(); 
+            $j = 0;   
+            foreach($datos as $dato){
+                $subsedes[$j]['idRie'] = $dato['id'];
+                $subsedes[$j]['idLe'] = $dato['le_juridicciongeografica_id'];
+                $subsedes[$j]['denominacion'] = $dato['institucioneducativa'];
+                $subsedes[$j]['estado'] = $dato['estadoinstitucion_tipo_id'];
+                $subsedes[$j]['fecha'] = $dato['fecha_resolucion'];
+                $subsedes[$j]['resolucion'] = $dato['nro_resolucion'];
+                $principal[$i]['sede'] = 'SUBSEDE';
+                $j++;
+            }
+            $principal[$i]['subsedes'] = $subsedes;
+            $i++;
+        }
+
+        return $this->render('SieRieBundle:Reportes:listsede.html.twig', array('listado' => $principal));
     }
 
     /***

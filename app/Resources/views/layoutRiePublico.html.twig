@@ -3,7 +3,7 @@
 
 {% block stylesheets %}
     <head>
-        <title>Registro de Institutos TT - RIE</title>
+        <title>Registro de Institutos Técnicos y Tecnológicos</title>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -74,7 +74,7 @@
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
-                <a class="navbar-brand" href="{{path('consulta_rie')}}">Registro de Institutos Técnicos y Tecnológicos - RIE</a>
+                <a class="navbar-brand" href="{{path('consulta_rie')}}">Registro de Institutos Técnicos y Tecnológicos</a>
             </div>
         </div>
     </nav>
@@ -89,9 +89,38 @@
                     <li class="active">
                         <a href="{{path('consulta_rie')}}">
                             <i class="material-icons">home</i>
-                            <span>Inicio / Buscar</span>
+                            <span>Inicio</span>
                         </a>
                     </li>
+
+                    <li>
+                        <a href="{{path('consulta_rie_list')}}">
+                            <i class="material-icons">content_copy</i>
+                            <span>Institutos</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{path('consulta_rie_edificio')}}">
+                            <i class="material-icons">content_copy</i>
+                            <span>Local Educativo</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{path('consulta_rie_ubicaciong')}}">
+                            <i class="material-icons">content_copy</i>
+                            <span>Localización Geográfica</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{path('consulta_rie_nuevaubicacion')}}">
+                            <i class="material-icons">content_copy</i>
+                            <span>Cambio de Localización Geográfica</span>
+                        </a>
+                    </li>
+
                     <!--
                     <li>
                         <a href="{{path('consulta_rue_localizacion')}}">

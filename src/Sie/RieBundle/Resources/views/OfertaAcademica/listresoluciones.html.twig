@@ -35,7 +35,7 @@
                             <form action="{{path('oac_new_resolucion')}}" method="post" style="display:inline-block">
                                 <input type="hidden" name="idRie" value="{{institucion.id}}">
                                 <input type="hidden" name="idAutorizado" value="{{datAutorizado.id}}">
-                                <button type="submit" class="btn btn-md bg-orange waves-effect"><i class="material-icons">add_box</i>Adición de Resolución</button>
+                                <button type="submit" class="btn btn-md bg-orange waves-effect"><i class="material-icons">add_box</i>Nuevo</button>
                             </form>                            
                         </div>
                     </div>                
@@ -45,8 +45,7 @@
                             <table  id="miexample" class="table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Editar</th>
-                                        <th>Eliminar</th>                                    
+                                        <th colspan="2">Acciones</th>
                                         <th>R.M.</th>  
                                         <th>Fecha R.M.</th>  
                                         <th>Nivel de Formación</th>
@@ -69,7 +68,9 @@
                                                 </form>     
                                             </td>
                                             <td>
-                                                <a href="{{path('oac_delete_resolucion', {'idResolucion': dato.id} )}}" onclick="return confirmar('{{dato.id}}')" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a>
+                                                {% if app.session.get('roluser') == 8 %}
+                                                    <a href="{{path('oac_delete_resolucion', {'idResolucion': dato.id} )}}" onclick="return confirmar('{{dato.id}}')" class="btn btn-circle waves-effect waves-circle waves-float"  data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="material-icons">delete_forever</i></a>
+                                                {% endif %}                                                    
                                             </td>
                                             <td>{{dato.numero}}</td>
                                             <td>{{dato.fecha|date('d/m/Y')}}</td>

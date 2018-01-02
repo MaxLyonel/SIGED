@@ -3,91 +3,55 @@
 {% block contentoption %}
 
     <div class="block-header">
-        <h2>DATOS DEL INSTITUTO</h2>
+        <h2>DATOS LOCAL EDUCATIVO DEL INSTITUTO</h2>
     </div>
 
 	<ol class="breadcrumb breadcrumb-bg-cyan">
-        <li><a href="{{path('consultains_rie')}}">Inicio</a></li>
-        <li class="active">Ver Instituto Técnico/Tecnológico</li>
+		<li><a href="{{path('consulta_rie')}}">Inicio</a></li>
+        <li><a href="{{path('consulta_rie_list')}}">Listado de Institutos</a></li>
+        <li class="active">Datos del Instituto</li>
     </ol>
 
-	<div class="row clearfix">
-		<!-- Basic Examples -->
-		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-			<div class="card">
-				<div class="header">
-					<h2 class="col-teal">
-						DATOS GENERALES
-					</h2>
-				</div>
-				<div class="body">
-					<ul class="list-group">
-						<li class="list-group-item">Denominación<span class="pull-right col-blue">
-							<b>{{entity.institucioneducativa}}</b></span></li>
-						<li class="list-group-item">Resolución<span class="pull-right col-blue">
-							<b>{{entity.nroResolucion}}</b></span></li>
-						<li class="list-group-item">Fecha Resolución<span class="pull-right col-blue">
-							<b>{{entity.fechaResolucion|date('d/m/Y')}}</b></span></li>
-						<li class="list-group-item">Carácter Jurídico<span class="pull-right">
-							<b>{{entity.dependenciaTipo.dependencia}}</b></span></li>
-						<li class="list-group-item">Tipo<span class="pull-right">
-							<b>{{entity.institucioneducativaTipo.descripcion}}</b></span></li>
-						<li class="list-group-item">Estado<span class="pull-right">
-							<b>{{entity.estadoinstitucionTipo.estadoinstitucion}}</b></span></li>
-						<li class="list-group-item">Código RIE<span class="pull-right">
-							<b>{{entity.id}}</b></span></li>
-						<li class="list-group-item">Observaciones<span class="pull-right">
-							<b>{{entity.obsRue}}</b></span></li>
-						<li class="list-group-item">Historial
-							<span class="pull-right">
-							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong2">
-								Historial
-							</button>						
-							</span>
-						</li>
-						<li class="list-group-item">Oferta Académica
-							<span class="pull-right">
-							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-								Oferta
-							</button>						
-							</span>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
+  <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="body">
+					<div class="header">
+                        <div class="text-right">
+                            <button type="button" class="btn bg-blue-grey waves-effect" data-toggle="modal" data-target="#exampleModalLong3"><i class="material-icons">add_location</i> Ubicación Geográfica</button>
+							<button type="button" class="btn bg-blue-grey waves-effect" data-toggle="modal" data-target="#exampleModalLong"><i class="material-icons">view_list</i> Oferta de Carreras</button>
+							<button type="button" class="btn bg-blue-grey waves-effect" data-toggle="modal" data-target="#exampleModalLong2"><i class="material-icons">library_books</i> Cursos de Capacitación</button>	
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="header  bg-grey">
+                            <h2>
+                                Instituto
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <ul class="list-group">
+								<li class="list-group-item"><b>CÓDIGO RIE : </b> <font class="col-blue-grey">{{entity.id}}</font></li>
+								<li class="list-group-item"><b>DENOMINACIÓN LOCAL EDUCATIVO :</b> <font class="col-blue-grey">{{entity.institucioneducativa}}</font></li>
+								<li class="list-group-item"><b>RESOLUCIÓN MINISTERIAL VIGENTE : </b> <font class="col-blue-grey">{{entity.nroResolucion}} DE FECHA <b>{{entity.fechaResolucion|date('d/m/Y')}}</b></font></li>
+								<li class="list-group-item"><b>CARÁCTER JURÍDICO : </b> <font class="col-blue-grey">{{entity.dependenciaTipo.dependencia}}</font></li>
+								<li class="list-group-item"><b>TIPO DE EDUCACIÓN : </b> <font class="col-blue-grey">{{entity.institucioneducativaTipo.descripcion}}</font></li>
+								<li class="list-group-item"><b>ESTADO : </b> <font class="col-blue-grey">{{entity.estadoinstitucionTipo.estadoinstitucion}}</font></li>
+								<li class="list-group-item"><b>UBICACIÓN GEOGRÁFICA : </b> <font class="col-blue-grey">{{local[0].departamento}} ➤ {{local[0].provincia}} ➤ {{local[0].municipio}} ➤ {{local[0].canton}} ➤ {{local[0].localidad}}</font></li>
+								<li class="list-group-item"><b>DIRECCIÓN : </b> <font class="col-blue-grey"> {{local[0].direccion}}, {{local[0].zona}}</font></li>
+							</ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-		<!-- Basic Examples -->
-		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-			<div class="card">
-				<div class="header">
-					<h2 class="col-teal">
-						LOCALIZACIÓN DE LOCAL EDUCATIVO
-					</h2>
-				</div>
-				<div class="body">
-					<ul class="list-group">
-						<li class="list-group-item">Departamento<span class="pull-right">
-							<b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar}}</b></span></li>
-						<li class="list-group-item">Provincia<span class="pull-right">
-							<b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugar}}</b></span></li>
-						<li class="list-group-item">Municipio<span class="pull-right">
-							<b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugar}}</b></span></li>
-						<li class="list-group-item">Cantón<span class="pull-right">
-							<b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugar}}</b></span></li>
-						<li class="list-group-item">Localidad<span class="pull-right">
-							<b>{{entity.leJuridicciongeografica.lugarTipoLocalidad.lugar}}</b></span></li>
-						<li class="list-group-item">Zona<span class="pull-right">
-							<b>{{entity.leJuridicciongeografica.zona}}</b></span></li>
-						<li class="list-group-item">Dirección<span class="pull-right">
-							<b>{{entity.leJuridicciongeografica.direccion}}</b></span></li>
-						<li class="list-group-item">Código LE<span class="pull-right">
-							<b>{{entity.leJuridicciongeografica.id}}</b></span></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>	
+
+
+
+
+
 
 
 	<!-- Modal de Oferta Educativa -->
@@ -95,7 +59,7 @@
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLongTitle">OFERTA ACADÉMICA - {{entity.institucioneducativa}}</h5>
+				<h5 class="modal-title" id="exampleModalLongTitle">CARRERAS - {{entity.institucioneducativa}}</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
@@ -135,30 +99,65 @@
 
 	<!-- Modal Historial -->
 	<div class="modal fade" id="exampleModalLong2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLongTitle">HISTORIAL - {{entity.institucioneducativa}}</h5>
+				<h5 class="modal-title" id="exampleModalLongTitle">CURSOS - {{entity.institucioneducativa}}</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
-				<ul class="list-group">
-				{% for historial in historiales %}
-					<li class="list-group-item col-blue">
-						<b>{{historial.nroResolucion}}</b> &nbsp; del &nbsp; <b>{{historial.fechaResolucion|date('d/m/Y')}}</b>
-					</li>
-					<li class="list-group-item">
-						<b>DESCRIPCIÓN:</b> {{historial.descripcion}}
-					</li>
-					<br>
-				{% endfor %}
-				</ul>
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th>Cursos</th> 
+							<th>R.M.</th>  
+							<th>Fecha R.M.</th>  
+							<th>Nivel de Formación</th>
+							<th>Tiempo de Estudios</th>
+							<th>Régimen de Estudios</th>
+							<th>Carga Horaria</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for curso in cursos %}
+						<tr>
+							<td>{{curso.carrera}}</td> 
+							<td>{{curso.resolucion}}</td> 
+							<td>{{curso.fecharesol|date('d/m/Y')}}</td> 
+							<td>{{curso.nivelformacion}}</td> 
+							<td>{{curso.tiempoestudio}}</td> 
+							<td>{{curso.regimen}}</td> 
+							<td>{{curso.cargahoraria}}</td> 
+						</tr>
+						{% endfor %}						
+					</tbody>
+				</table>	
 			</div>
 		</div>
 	</div>
 	</div>
+
+	<!-- Modal Historial -->
+	<div class="modal fade" id="exampleModalLong3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">UBICACIÓN GEOGRÁFICA - {{entity.institucioneducativa}}</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<iframe width="100%" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://www.openstreetmap.org/export/embed.html?bbox=-89.9560546875%2C-28.30438068296277%2C-40.91308593750001%2C-4.039617826768424&amp;layer=mapnik&amp;marker=-16.55196172197251%2C-65.4345703125" style="border: 1px solid black"></iframe><br/><small>
+				<a href="#"><span class="icon-name">location_searching</span> Actualizar Ubicación Geográfica</a></small>
+			</div>
+		</div>
+	</div>
+	</div>
+
+
 
 {% endblock %}
 

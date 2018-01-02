@@ -91,12 +91,12 @@ class ConsultaInstitutoController extends Controller {
         $tiposArray = $this->obtieneTipoInstituto();
 
         $form = $this->createFormBuilder()
-        ->setAction($this->generateUrl('consultains_rie_result'))
-        ->add('tipo_search', 'hidden', array('data' => 'institucioneducativaTipo'))
-        ->add('departamento', 'choice', array('label' => 'Departamento', 'required' => true,'choices'=>$depArray ,'empty_value' => 'Seleccionar departamento...'))
-        ->add('institucioneducativaTipo', 'choice', array('label' => 'Tipo', 'disabled' => false,'choices' => $tiposArray,'empty_value' => 'Seleccionar tipo...', 'attr' => array('class' => 'form-control')))
-        ->add('buscarTipo', 'submit', array('label' => 'Buscar'))
-        ->getForm();
+                        ->setAction($this->generateUrl('consultains_rie_result'))
+                        ->add('tipo_search', 'hidden', array('data' => 'institucioneducativaTipo'))
+                        ->add('departamento', 'choice', array('label' => 'Departamento', 'required' => true,'choices'=>$depArray ,'empty_value' => 'Seleccionar departamento...'))
+                        ->add('institucioneducativaTipo', 'choice', array('label' => 'Tipo', 'disabled' => false,'choices' => $tiposArray,'empty_value' => 'Seleccionar tipo...', 'attr' => array('class' => 'form-control')))
+                        ->add('buscarTipo', 'submit', array('label' => 'Buscar'))
+                        ->getForm();
         return $form;
     }
         
@@ -126,8 +126,7 @@ class ConsultaInstitutoController extends Controller {
 		$form = $request->get('form');		
         $em = $this->getDoctrine()->getManager();
         //opciones de consulta
-        switch($form['tipo_search'])
-        {
+        switch($form['tipo_search']){
             //opcion1: busqueda por nombre de itt
             case 'institucioneducativa':
 
@@ -159,8 +158,7 @@ class ConsultaInstitutoController extends Controller {
             //opcion3: busqueda por tipo de itt                
             case 'institucioneducativaTipo':
                         
-                    switch($form['departamento'])
-                    {
+                    switch($form['departamento']){
                         case 1:  // Es todo el Pais : Bolivia
                                 $query = $em->createQuery(
                                     'SELECT ie
@@ -230,8 +228,7 @@ class ConsultaInstitutoController extends Controller {
 
             case 'institucioneducativaEstado':
                 
-                    switch($form['departamento'])
-                    {
+                    switch($form['departamento']){
                         case 1:  // Es todo el Pais : Bolivia 
                                 $query = $em->createQuery(
                                     'SELECT ie
@@ -281,7 +278,7 @@ class ConsultaInstitutoController extends Controller {
         }
 		$entities = $query->getResult();
 
-        if (!$entities) {
+        if (!$entities){
         	$this->get('session')->getFlashBag()->add('msgSearch', 'No se encontró la información.');
 
         	$formInstitucioneducativa = $this->createSearchFormInstitucioneducativa();
@@ -301,7 +298,7 @@ class ConsultaInstitutoController extends Controller {
     /* 
      * Muestra datos del instituto tecnico/tecnologicos
      */  
-    public function showAction(Request $request) {
+    public function showAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $historiales = $this->obtieneHistorial($entity->getId());
@@ -317,7 +314,7 @@ class ConsultaInstitutoController extends Controller {
         $depArray = array();        
         $dep = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 1, 'paisTipoId' => 1));
         $depArray = array();
-        foreach ($dep as $de) {
+        foreach ($dep as $de){
             $depArray[$de->getId()] = $de->getLugar();
         }
         return $depArray;
@@ -329,16 +326,15 @@ class ConsultaInstitutoController extends Controller {
     public function obtieneTipoInstituto(){
         $em = $this->getDoctrine()->getManager();  
         $tiposArray = array();
-        $query = $em->createQuery(
-            'SELECT DISTINCT iet.id,iet.descripcion
-                FROM SieAppWebBundle:InstitucioneducativaTipo iet
-                WHERE iet.id in (:id)
-                ORDER BY iet.id ASC'
-            )->setParameter('id', array(7,8,9));
-            $tipos = $query->getResult();
-            for($i=0;$i<count($tipos);$i++){
-                $tiposArray[$tipos[$i]['id']] = $tipos[$i]['descripcion'];
-            }
+        $query = $em->createQuery('SELECT DISTINCT iet.id,iet.descripcion
+                                              FROM SieAppWebBundle:InstitucioneducativaTipo iet
+                                             WHERE iet.id in (:id)
+                                          ORDER BY iet.id ASC')
+                    ->setParameter('id', array(7,8,9));
+        $tipos = $query->getResult();
+        for($i=0;$i<count($tipos);$i++){
+            $tiposArray[$tipos[$i]['id']] = $tipos[$i]['descripcion'];
+        }
 
         return $tiposArray;
     }
@@ -351,9 +347,9 @@ class ConsultaInstitutoController extends Controller {
         $estadosArray = array();
         $query = $em->createQuery(
             'SELECT DISTINCT eie.id,eie.estadoinstitucion
-                FROM SieAppWebBundle:EstadoinstitucionTipo eie
-                WHERE eie.id in (:id)
-                ORDER BY eie.id ASC'
+                        FROM SieAppWebBundle:EstadoinstitucionTipo eie
+                       WHERE eie.id in (:id)
+                    ORDER BY eie.id ASC'
             )->setParameter('id', array(10,19));
             $estados = $query->getResult();
             $estadosArray = array();
@@ -395,8 +391,7 @@ class ConsultaInstitutoController extends Controller {
         $datos = $query->getResult(); 
 
         $list = array();                                  
-        foreach($datos as $dato)
-        {
+        foreach($datos as $dato){
             $query = $em->createQuery('SELECT a
                                          FROM SieAppWebBundle:TtecResolucionCarrera a 
                                         WHERE a.ttecInstitucioneducativaCarreraAutorizada = :idCaAutorizada 

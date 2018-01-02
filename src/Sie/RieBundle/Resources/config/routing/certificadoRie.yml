@@ -25,3 +25,9 @@ certificado_rie_update:
     path:     /update/
     defaults: { _controller: "SieRieBundle:CertificadoInstituto:update" }
     methods:  [POST, PUT]
+
+certificado_rie_lista:
+    path:     /certificadolista/{idCertificado}
+    defaults: { _controller: "SieRieBundle:CertificadoInstituto:certificadolista" }
+    methods:  GET
+

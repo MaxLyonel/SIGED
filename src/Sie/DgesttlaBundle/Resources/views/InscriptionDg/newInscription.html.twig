@@ -39,13 +39,17 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             {{form_label(formNewInscription.carreras)}}
             {{form_widget(formNewInscription.carreras,{'attr':{'onchange':'getDenominacion(this.value)'} })}}
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
             {{form_label(formNewInscription.denominacionId)}}
             {{form_widget(formNewInscription.denominacionId )}}
+        </div>
+        <div class="col-md-2">
+            {{form_label(formNewInscription.periodoid)}}
+            {{form_widget(formNewInscription.periodoid )}}
         </div>
       </div>
 

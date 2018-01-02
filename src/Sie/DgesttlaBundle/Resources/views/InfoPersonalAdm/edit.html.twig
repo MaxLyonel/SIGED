@@ -76,7 +76,6 @@
                                 <label class="control-label" for="fechanac">Fecha de Nacimiento</label>
                                 <input value="{{ persona.fechaNacimiento|date('d-m-Y') }}" id="fechanac" class="form-control" readonly="readonly" type="text">
                             </div>
-
                             <div class="form-group col-lg-6 col-md-12">
                                 {{ form_label(form.direccion) }}
                                 {{ form_widget(form.direccion) }}
@@ -87,17 +86,27 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-3 col-md-3">
                                 {{ form_label(form.correo) }}
                                 {{ form_widget(form.correo) }}
                             </div>
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-1 col-md-1">
+                                {{ form_label(form.item) }}
+                                {{ form_widget(form.item) }}
+                            </div>
+                            <div class="form-group col-lg-4 col-md-4">
                                 {{ form_label(form.cargo) }}
                                 {{ form_widget(form.cargo) }}
                             </div>
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-4 col-md-4">
                                 {{ form_label(form.cargoDesignacion) }}
                                 {{ form_widget(form.cargoDesignacion) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-3 col-md-3">
+                                {{ form_label(form.financiamiento) }}
+                                {{ form_widget(form.financiamiento) }}
                             </div>
                         </div>
                         <div class="form-group">

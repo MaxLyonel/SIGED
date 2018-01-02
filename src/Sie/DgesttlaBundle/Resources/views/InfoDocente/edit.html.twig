@@ -38,12 +38,12 @@
                     {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'onsubmit': 'return validaIdioma()'} } )}}
                     <div class="panel-body">
                         <div class="row">
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-3 col-md-3">
                                 <label class="control-label" for="carnet">Carnet</label>
                                 <input value="{{ persona.carnet }}" id="carnet" class="form-control" readonly="readonly" type="text">
                                 <div class="help-block with-errors"></div>
                             </div>
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-3 col-md-3">
                                 <label class="control-label" for="complemento">Complemento</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">-</div>
@@ -53,43 +53,55 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-3 col-md-3">
                                 <label class="control-label" for="paterno">Apellido Paterno</label>
                                 <input value="{{ persona.paterno }}" id="paterno" class="form-control" readonly="readonly" type="text">
                                 <div class="help-block with-errors"></div>
                             </div>
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-3 col-md-3">
                                 <label class="control-label" for="materno">Apellido Materno</label>
                                 <input value="{{ persona.materno }}" id="materno" class="form-control" readonly="readonly" type="text">
                             </div>
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-3 col-md-3">
                                 <label class="control-label" for="nombre">Nombre(s)</label>
                                 <input value="{{ persona.nombre }}" id="nombre" class="form-control" readonly="readonly" type="text">
                             </div>
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-3 col-md-3">
                                 {{ form_label(form.genero) }}
                                 {{ form_widget(form.genero) }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-3 col-md-3">
                                 <label class="control-label" for="fechanac">Fecha de Nacimiento</label>
                                 <input value="{{ persona.fechaNacimiento|date('d-m-Y') }}" id="fechanac" class="form-control" readonly="readonly" type="text">
                             </div>
 
-                            <div class="form-group col-lg-6 col-md-12">
+                            <div class="form-group col-lg-6 col-md-6">
                                 {{ form_label(form.direccion) }}
                                 {{ form_widget(form.direccion) }}
                             </div>
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-3 col-md-3">
                                     {{ form_label(form.celular) }}
                                 {{ form_widget(form.celular) }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-lg-3 col-md-6">
+                            <div class="form-group col-lg-3 col-md-3">
                                 {{ form_label(form.correo) }}
                                 {{ form_widget(form.correo) }}
+                            </div>
+                            <div class="form-group col-lg-1 col-md-1">
+                                {{ form_label(form.item) }}
+                                {{ form_widget(form.item) }}
+                            </div>
+                            <div class="form-group col-lg-4 col-md-4">
+                                {{ form_label(form.cargoDesignacion) }}
+                                {{ form_widget(form.cargoDesignacion) }}
+                            </div>
+                            <div class="form-group col-lg-4 col-md-4">
+                                {{ form_label(form.financiamiento) }}
+                                {{ form_widget(form.financiamiento) }}
                             </div>
                         </div>
                         <div class="form-group">

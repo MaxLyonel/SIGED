@@ -15,3 +15,8 @@ reporte_rie_general:
     path:     /reportegeneral/{opc}
     defaults: { _controller: SieRieBundle:Reportes:reportegeneral } 
     methods:  GET 
+
+reporte_rie_subsede:
+    path:     /reporteSubsede
+    defaults: { _controller: SieRieBundle:Reportes:reporteSubsede }    
+

@@ -70,12 +70,6 @@ oac_delete_resolucion:
     defaults: { _controller: "SieRieBundle:OfertaAcademica:deleteresolucion" }
     methods:  GET  
 
-
-
-
-
-
-
 oac_cierrapertura:
     path:     /cierrapertura
     defaults: { _controller: "SieRieBundle:OfertaAcademica:cierrapertura" }

@@ -86,8 +86,9 @@
                                         <th>Paterno</th>
                                         <th>Materno</th>
                                         <th>Nombre(s)</th>
-                                        <th>Fecha Registro</th>
-                                        <th>Fecha Modificación</th>
+                                        <th>Item</th>
+                                        <th>Designación</th>
+                                        <th>Financiamiento</th>
                                         {% if app.session.get('roluser') != 20 %}
                                             <th>Acciones</th>
                                             <th>Es vigente</th>
@@ -97,13 +98,14 @@
                                 <tbody>
                                     {% for docente in docente %}
                                         <tr>
-                                            <td data-title="N°">{{ loop.index }}</td>
-                                            <td data-title="Carnet">{{ docente.carnet }}</td>
-                                            <td data-title="Paterno">{{ docente.paterno }}</td>
-                                            <td data-title="Materno">{{ docente.materno }}</td>
-                                            <td data-title="Nombre(s)">{{ docente.nombre }}</td>
-                                            <td data-title="FechReg">{% if docente.fechaRegistro %}{{ docente.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
-                                            <td data-title="FechMod">{% if docente.fechaModificacion %}{{ docente.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
+                                            <td>{{ loop.index }}</td>
+                                            <td>{{ docente.carnet }}</td>
+                                            <td>{{ docente.paterno }}</td>
+                                            <td>{{ docente.materno }}</td>
+                                            <td>{{ docente.nombre }}</td>
+                                            <td>{{ docente.item }}</td>
+                                            <td>{{ docente.formaDesignacion }}</td>
+                                            <td>{{ docente.financiamiento }}</td>
                                             {% if app.session.get('roluser') != 20 %}
                                                 <td data-title="Acciones">
                                                     <form action="{{path('dgesttla_info_docente_edit')}}" method="post" style="display:inline-block">

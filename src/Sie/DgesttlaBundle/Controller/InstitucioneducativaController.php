@@ -99,7 +99,7 @@ class InstitucioneducativaController extends Controller {
             and ie.institucioneducativaTipo in (:ieTipo)
             ORDER BY ie.id')
             ->setParameter('id', $ieducativa_id)
-            ->setParameter('ieAcreditacion', 1)
+            ->setParameter('ieAcreditacion', 2)
             ->setParameter('ieTipo', array(7,8,9));
 
         $entities = $query->getResult();

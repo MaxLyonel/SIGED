@@ -11,7 +11,7 @@ class DefaultController extends Controller
         //return $this->render('SieRieBundle:Default:index.html.twig');
         echo '<br><br><br><br><br><br><br><br><br>';
         echo '<center>estamos en controlador</center>';
-        //return $this->render('SieRieBundle:Default:rie.html.twig');
+        return $this->render('SieRieBundle:Default:rie.html.twig');
 
     }
 }

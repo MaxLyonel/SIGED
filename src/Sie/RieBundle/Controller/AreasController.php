@@ -116,7 +116,7 @@ class AreasController extends Controller {
             {
                 $entity = new TtecAreaFormacionTipo();
                 $entity->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['institucioneducativaTipo']));
-                $entity->setAreaFormacion($form['area']);
+                $entity->setAreaFormacion(strtoupper($form['area']));
                 $entity->setFechaRegistro(new \DateTime('now'));
                 $em->persist($entity);
                 $em->flush();     
@@ -167,7 +167,7 @@ class AreasController extends Controller {
 
             $area = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findOneById($form['idArea']);
             $area->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->findOneById($form['institucioneducativaTipo']));
-            $area->setAreaFormacion($form['area']);
+            $area->setAreaFormacion(strtoupper($form['area']));
             $area->setFechaModificacion(new \DateTime('now'));
             $em->persist($area);
             $em->flush();   

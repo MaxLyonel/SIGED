@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\TtecAdministrativoCarreraPersona:
     type: entity
     table: ttec_administrativo_carrera_persona
     indexes:
+        IDX_898761BFCEDB60B7:
+            columns:
+                - financiamiento_tipo_id
         IDX_898761BFA83B07A:
             columns:
                 - ttec_carrera_tipo_id
@@ -42,7 +45,21 @@ Sie\AppWebBundle\Entity\TtecAdministrativoCarreraPersona:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        item:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
+        financiamientoTipo:
+            targetEntity: FinanciamientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                financiamiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         ttecCarreraTipo:
             targetEntity: TtecCarreraTipo
             cascade: {  }

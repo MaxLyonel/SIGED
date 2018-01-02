@@ -1,0 +1,87 @@
+{% extends 'SieRieBundle:Default:rie.html.twig' %}
+{% block contentoption%}
+
+    <div class="block-header">
+        <h2>LISTADO DE SEDES Y SUBSEDES</h2>
+    </div>
+    
+    <ol class="breadcrumb breadcrumb-bg-cyan">
+        <li class="active">Listado de Sedes y Subsedes</li>
+    </ol>
+
+    {% for flashMessage in app.session.flashbag.get('mensaje') %}
+        <div class="alert alert-danger text-center">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ flashMessage }}
+        </div>
+    {% endfor %} 
+
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="body">
+                    <div class="table-responsive">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <!--<table class="table table-bordered table-striped table-hover js-exportable dataTable">-->
+                            <table  id="listado" class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Denominación de Instituto</th>                                    
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    {% for lista in listado %}
+                                    <tr>
+                                        <td><strong>SEDE:</strong> {{lista.idRie}} - {{lista.denominacion}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <ul>
+                                            {% for subsede in lista.subsedes %}
+                                                <li><strong>SUBSEDE:</strong> {{subsede.idRie}} - {{subsede.denominacion}}</li>    
+                                            {% endfor %}
+                                            </ul>
+                                        </td>
+                                    </tr>                                        
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+    // Para configurar tabla 
+    $(document).ready(function() {
+       $('#listado').DataTable( {
+        "order": [],
+        "ordering": false,
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros por página",
+            "zeroRecords": "No se encontraron resultados",
+            "info": "Mostrando página _PAGE_ de _PAGES_",
+            "infoEmpty": "No existen registros.",
+            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sSearch":         "Buscar:",
+            "sEmptyTable":     "Ningún dato disponible en esta tabla",
+            "sSearch":         "Buscar:",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":     "Último",
+                "sNext":     "Siguiente",
+                "sPrevious": "Anterior"
+            }
+        }
+    });
+    } );
+    </script>
+{% endblock %}

@@ -25,7 +25,7 @@ class LocalEducativoController extends Controller {
     public function indexAction(Request $request){
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
-        if (!isset($id_usuario)) {
+        if (!isset($id_usuario)){
             return $this->redirect($this->generateUrl('login'));
         }
         // Creacion de formularios de busqueda por codigo rie o nombre de institucion educativa
@@ -42,11 +42,11 @@ class LocalEducativoController extends Controller {
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createSearchFormLe() {
+    private function createSearchFormLe(){
     	$em = $this->getDoctrine()->getManager();
     	$dep = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 1, 'paisTipoId' => 1));
     	$depArray = array();
-    	foreach ($dep as $de) {
+    	foreach ($dep as $de){
     		$depArray[$de->getId()] = $de->getLugar();
     	}
 
@@ -61,7 +61,7 @@ class LocalEducativoController extends Controller {
         return $form;
     }
 
-    private function createSearchFormLeId() {
+    private function createSearchFormLeId(){
     	$form = $this->createFormBuilder()
     	->setAction($this->generateUrl('lei_result'))
     	->add('tipo_search', 'hidden', array('data' => 'leId'))
@@ -75,7 +75,7 @@ class LocalEducativoController extends Controller {
      * Busca local educativo.
      *
      */
-    public function findleAction(Request $request) {
+    public function findleAction(Request $request){
     	$form = $request->get('form');
         $em = $this->getDoctrine()->getManager();
 
@@ -150,7 +150,7 @@ class LocalEducativoController extends Controller {
             break;
         }
 
-        if (!$entities) {
+        if (!$entities){
         	$this->get('session')->getFlashBag()->add('msgSearch', 'No se encontro la información...');
         	$formLe = $this->createSearchFormLe();
         	$formLeId = $this->createSearchFormLeId();
@@ -171,14 +171,12 @@ class LocalEducativoController extends Controller {
      * Displays a form to create a new Institucioneducativa entity.
      *
      */
-    private function createNewForm() {
-
+    private function createNewForm(){
     	$em = $this->getDoctrine()->getManager();
     	$em = $this->getDoctrine()->getManager();
     	$dep = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 1, 'paisTipoId' => 1));
-
     	$depArray = array();
-    	foreach ($dep as $de) {
+    	foreach ($dep as $de){
     		$depArray[$de->getId()] = $de->getLugar();
     	}
 
@@ -201,7 +199,7 @@ class LocalEducativoController extends Controller {
      *
      */
     public function createAction(Request $request) {
-    	try {
+    	try{
     		$em = $this->getDoctrine()->getManager();
             $form = $request->get('form');
             $sec = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['municipio']);
@@ -244,8 +242,7 @@ class LocalEducativoController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
-
-        if (!$entity) {
+        if (!$entity){
             throw $this->createNotFoundException('Unable to find Institucioneducativa entity.');
         }
 
@@ -275,35 +272,35 @@ class LocalEducativoController extends Controller {
         //ubicacion geografica
         $dep = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 1, 'paisTipoId' => 1));
         $depArray = array();
-        foreach ($dep as $de) {
+        foreach ($dep as $de){
         	$depArray[$de->getId()] = $de->getLugar();
         }
 
         $pro = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 2, 'lugarTipo' => $entity->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getid()));
 
         $proArray = array();
-        foreach ($pro as $p) {
+        foreach ($pro as $p){
         	$proArray[$p->getid()] = $p->getlugar();
         }
 
         $sec = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 3, 'lugarTipo' => $entity->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getid()));
 
         $secArray = array();
-        foreach ($sec as $s) {
+        foreach ($sec as $s){
         	$secArray[$s->getid()] = $s->getlugar();
         }
 
         $can = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 4, 'lugarTipo' => $entity->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getid()));
 
         $canArray = array();
-        foreach ($can as $c) {
+        foreach ($can as $c){
         	$canArray[$c->getid()] = $c->getlugar();
         }
 
         $loc = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 5, 'lugarTipo' => $entity->getLugarTipoLocalidad()->getLugarTipo()->getid()));
 
         $locArray = array();
-        foreach ($loc as $l) {
+        foreach ($loc as $l){
         	$locArray[$l->getid()] = $l->getlugar();
         }
 
@@ -366,7 +363,7 @@ class LocalEducativoController extends Controller {
     	$this->get('session')->getFlashBag()->add('mensaje', 'Los datos de local educativo fueron correctamente modificados' );
     	return $this->redirect($this->generateUrl('lei'));
 
-    	} catch (Exception $ex) {
+    	}catch (Exception $ex){
     		$this->get('session')->getFlashBag()->add('mensaje', 'Error al registrar el local educativo' );
     		return $this->redirect($this->generateUrl('lei'));
     	}
@@ -380,11 +377,11 @@ class LocalEducativoController extends Controller {
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if($form->isValid()){
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
 
-            if (!$entity) {
+            if(!$entity){
                 throw $this->createNotFoundException('Unable to find Institucioneducativa entity.');
             }
 
@@ -411,7 +408,7 @@ class LocalEducativoController extends Controller {
         ;
     }
 
-    public function buscaredificioAction($idLe) {
+    public function buscaredificioAction($idLe){
     	$em = $this->getDoctrine()->getManager();
     	$edificio = $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($idLe);
 
@@ -437,12 +434,12 @@ class LocalEducativoController extends Controller {
     	));
     }
 
-    public function provinciasAction($idDepartamento) {
+    public function provinciasAction($idDepartamento){
     	$em = $this->getDoctrine()->getManager();
     	$prov = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 2, 'lugarTipo' => $idDepartamento));
     	$provincia = array();
-    	foreach ($prov as $p) {
-            if ($p->getLugar() != "NO EXISTE EN CNPV 2001"){
+    	foreach($prov as $p){
+            if($p->getLugar() != "NO EXISTE EN CNPV 2001"){
                 $provincia[$p->getid()] = $p->getlugar();
             }
     	}
@@ -450,12 +447,12 @@ class LocalEducativoController extends Controller {
     	return $response->setData(array('provincia' => $provincia));
     }
 
-    public function municipiosAction($idProvincia) {
+    public function municipiosAction($idProvincia){
     	$em = $this->getDoctrine()->getManager();
     	$mun = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 3, 'lugarTipo' => $idProvincia));
     	$municipio = array();
-    	foreach ($mun as $m) {
-            if ($m->getLugar() != "NO EXISTE EN CNPV 2001"){
+    	foreach($mun as $m){
+            if($m->getLugar() != "NO EXISTE EN CNPV 2001"){
     		    $municipio[$m->getid()] = $m->getlugar();
             }
     	}
@@ -463,12 +460,12 @@ class LocalEducativoController extends Controller {
     	return $response->setData(array('municipio' => $municipio));
     }
 
-    public function cantonesAction($idMunicipio) {
+    public function cantonesAction($idMunicipio){
     	$em = $this->getDoctrine()->getManager();
     	$can = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 4, 'lugarTipo' => $idMunicipio));
     	$canton = array();
-    	foreach ($can as $c) {
-            if ($c->getLugar() != "NO EXISTE EN CNPV 2001"){
+    	foreach($can as $c){
+            if($c->getLugar() != "NO EXISTE EN CNPV 2001"){
     		    $canton[$c->getid()] = $c->getlugar();
             }
     	}
@@ -476,12 +473,12 @@ class LocalEducativoController extends Controller {
     	return $response->setData(array('canton' => $canton));
     }
 
-    public function localidadesAction($idCanton) {
+    public function localidadesAction($idCanton){
     	$em = $this->getDoctrine()->getManager();
     	$loc = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 5, 'lugarTipo' => $idCanton));
     	$localidad = array();
-    	foreach ($loc as $l) {
-            if ($l->getLugar() != "NO EXISTE EN CNPV 2001"){
+    	foreach($loc as $l) {
+            if($l->getLugar() != "NO EXISTE EN CNPV 2001"){
     		    $localidad[$l->getid()] = $l->getlugar();
             }
     	}
@@ -489,20 +486,20 @@ class LocalEducativoController extends Controller {
     	return $response->setData(array('localidad' => $localidad));
     }
 
-    public function distritosAction($idDepartamento) {
+    public function distritosAction($idDepartamento){
         $em = $this->getDoctrine()->getManager();
             $query = $em->createQuery(
-                            'SELECT dt
-                    FROM SieAppWebBundle:DistritoTipo dt
-                    WHERE dt.id NOT IN (:ids)
-                    AND dt.departamentoTipo = :dpto
-                    ORDER BY dt.id')
+                                        'SELECT dt
+                                           FROM SieAppWebBundle:DistritoTipo dt
+                                          WHERE dt.id NOT IN (:ids)
+                                            AND dt.departamentoTipo = :dpto
+                                       ORDER BY dt.id')
                     ->setParameter('ids', array(1000,2000,3000,4000,5000,6000,7000,8000,9000))
                     ->setParameter('dpto', $idDepartamento);
             $distrito = $query->getResult();
 
             $distritoArray = array();
-            foreach ($distrito as $c) {
+            foreach($distrito as $c){
                 $distritoArray[$c->getId()] = $c->getDistrito();
             }
 
@@ -515,7 +512,7 @@ class LocalEducativoController extends Controller {
      * En caso de Verdad no puede realizarse ninguna modificacion 
      */ // REVISAR OJO 
 
-    public function obtieneControlEdicion($idLe) {
+    public function obtieneControlEdicion($idLe){
         $repository = $this->getDoctrine()->getRepository('SieAppWebBundle:Institucioneducativa');
         $query = $repository->createQueryBuilder('ie')
                             ->join('ie.leJuridicciongeografica', 'le')

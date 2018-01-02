@@ -8,5 +8,52 @@ consulta_rie_result:
 
 consulta_rie_show:
     path:     /show/
-    defaults: { _controller: "SieRieBundle:ConsultaPublica:show" }    
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:show" }  
 
+consulta_rie_list:
+    path:     /list
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:list" }      
+
+consulta_rie_itt:
+    path:     /detalleitt/{idRie}
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:detalleitt" }  
+    methods:  GET   
+
+consulta_rie_edificio:
+    path:     /edificio
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:edificio" }     
+
+consulta_rie_edificio_lista:
+    path:     /edificiolist
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:edificiolist" }        
+    methods:  POST
+
+consulta_rie_pdf_edificio_instituto:
+    path:     /pdfEdificioInstituto/{idLe}
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:pdfEdificioInstituto" }  
+    methods:  GET   
+
+
+consulta_rie_ubicaciong:
+    path:     /ubicaciong
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:ubicaciong" }   
+
+consulta_rie_pdf_ubicacion_geo:
+    path:     /pdfUbicacionGeo
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:pdfUbicacionGeo" }  
+    methods:  POST       
+
+
+consulta_rie_nuevaubicacion:
+    path:     /nuevaubicacion
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:nuevaubicacion" }   
+
+consulta_rie_nuevaubicacion_dato:
+    path:     /nuevaubicaciondato
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:nuevaubicaciondato" }        
+    methods:  POST
+
+consulta_rie_pdf_nueva_ubicacion:
+    path:     /pdfNuevaUbicacion
+    defaults: { _controller: "SieRieBundle:ConsultaPublica:pdfNuevaUbicacion" }  
+    methods:  POST       

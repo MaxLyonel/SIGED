@@ -2,6 +2,12 @@ Sie\AppWebBundle\Entity\TtecDocentePersona:
     type: entity
     table: ttec_docente_persona
     indexes:
+        IDX_C019EF34CEDB60B7:
+            columns:
+                - financiamiento_tipo_id
+        IDX_C019EF34518C33DE:
+            columns:
+                - ttec_cargo_designacion_tipo_id
         IDX_C019EF34179FF95:
             columns:
                 - gestion_tipo_id
@@ -52,6 +58,24 @@ Sie\AppWebBundle\Entity\TtecDocentePersona:
             unsigned: false
             comment: ''
     manyToOne:
+        financiamientoTipo:
+            targetEntity: FinanciamientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                financiamiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        ttecCargoDesignacionTipo:
+            targetEntity: TtecCargoDesignacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ttec_cargo_designacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         gestionTipo:
             targetEntity: GestionTipo
             cascade: {  }

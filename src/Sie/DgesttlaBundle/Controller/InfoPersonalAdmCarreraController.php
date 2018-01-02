@@ -100,10 +100,11 @@ class InfoPersonalAdmCarreraController extends Controller {
         }
 
         $query = $em->createQuery(
-                        'SELECT ap, per, ct, cdt FROM SieAppWebBundle:TtecAdministrativoCarreraPersona ap
+                        'SELECT ap, per, ct, cdt, ft FROM SieAppWebBundle:TtecAdministrativoCarreraPersona ap
                     INNER JOIN ap.persona per
                     INNER JOIN ap.ttecCargoTipo ct
                     INNER JOIN ap.ttecCargoDesignacionTipo cdt
+                    INNER JOIN ap.financiamientoTipo ft
                     WHERE ap.ttecCarreraTipo = :idCarrera
                     AND ap.gestionTipo = :gestion
                     AND ap.ttecCargoTipo IN (:cargos)
@@ -182,6 +183,14 @@ class InfoPersonalAdmCarreraController extends Controller {
             $designacioncargosArray[$dc->getId()] = $dc->getFormaDesignacion();
         }
 
+        $query = $em->createQuery('SELECT a FROM SieAppWebBundle:FinanciamientoTipo a WHERE a.id IN (1,7,8) ORDER BY a.id');
+
+        $financiamiento = $query->getResult();
+        $financiamientoArray = array();
+        foreach ($financiamiento as $value) {
+            $financiamientoArray[$value->getId()] = $value->getFinanciamiento();
+        }
+
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($idPersona);
 
         $form = $this->createFormBuilder()
@@ -196,6 +205,8 @@ class InfoPersonalAdmCarreraController extends Controller {
                 ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'data' => $persona->getDireccion(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('cargo', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'form-control')))
                 ->add('cargoDesignacion', 'choice', array('label' => 'Forma de designación', 'required' => true, 'choices' => $designacioncargosArray, 'attr' => array('class' => 'form-control')))
+                ->add('financiamiento', 'choice', array('label' => 'Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'attr' => array('class' => 'form-control')))
+                ->add('item', 'text', array('label' => 'Item', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control')))
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
 
@@ -232,12 +243,13 @@ class InfoPersonalAdmCarreraController extends Controller {
 
             // Registro Administrativo Carrera Persona
             $admPersonaNew = new TtecAdministrativoCarreraPersona();
-            //$admPersonaNew->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucionEducativa']));
             $admPersonaNew->setTtecCarreraTipo($em->getRepository('SieAppWebBundle:TtecCarreraTipo')->findOneById($form['carrera']));
             $admPersonaNew->setPersona($persona);
             $admPersonaNew->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
             $admPersonaNew->setTtecCargoTipo($em->getRepository('SieAppWebBundle:TtecCargoTipo')->findOneById($form['cargo']));
             $admPersonaNew->setTtecCargoDesignacionTipo($em->getRepository('SieAppWebBundle:TtecCargoDesignacionTipo')->findOneById($form['cargoDesignacion']));
+            $admPersonaNew->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
+            $admPersonaNew->setItem(intval($form['item']));
             $admPersonaNew->setFechaRegistro(new \DateTime('now'));
             $admPersonaNew->setEsVigente(1);
             $em->persist($admPersonaNew);
@@ -347,6 +359,14 @@ class InfoPersonalAdmCarreraController extends Controller {
             $designacioncargosArray[$dc->getId()] = $dc->getFormaDesignacion();
         }
 
+        $query = $em->createQuery('SELECT a FROM SieAppWebBundle:FinanciamientoTipo a WHERE a.id IN (1,7,8) ORDER BY a.id');
+
+        $financiamiento = $query->getResult();
+        $financiamientoArray = array();
+        foreach ($financiamiento as $value) {
+            $financiamientoArray[$value->getId()] = $value->getFinanciamiento();
+        }
+
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('dgesttla_info_personal_adm_carr_update'))
                 //->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
@@ -360,6 +380,8 @@ class InfoPersonalAdmCarreraController extends Controller {
                 ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => true, 'data' => $persona->getDireccion(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('cargo', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'data' => $admPersona->getTtecCargoTipo()->getId(), 'attr' => array('class' => 'form-control')))
                 ->add('cargoDesignacion', 'choice', array('label' => 'Designación', 'required' => true, 'choices' => $designacioncargosArray, 'data' => $admPersona->getTtecCargoDesignacionTipo()->getId(), 'attr' => array('class' => 'form-control')))
+                ->add('financiamiento', 'choice', array('label' => 'Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'data' => $admPersona->getFinanciamientoTipo()->getId(), 'attr' => array('class' => 'form-control')))
+                ->add('item', 'text', array('label' => 'Item', 'required' => true, 'data' => $admPersona->getItem(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control')))
                 ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
 
@@ -388,6 +410,8 @@ class InfoPersonalAdmCarreraController extends Controller {
             
             $admPersona->setTtecCargoTipo($em->getRepository('SieAppWebBundle:TtecCargoTipo')->findOneById($form['cargo']));
             $admPersona->setTtecCargoDesignacionTipo($em->getRepository('SieAppWebBundle:TtecCargoDesignacionTipo')->findOneById($form['cargoDesignacion']));
+            $admPersona->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
+            $admPersona->setItem(intval($form['item']));
             $admPersona->setFechaModificacion(new \DateTime('now'));
             $em->persist($admPersona);
             $em->flush();

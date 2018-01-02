@@ -1,0 +1,3 @@
+dgesttla_malla_curricular:
+    path:   /mallaindex
+    defaults:   { _controller: "SieDgesttlaBundle:MallaCurricular:index" }
