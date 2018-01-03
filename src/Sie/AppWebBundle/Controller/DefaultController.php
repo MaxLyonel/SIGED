@@ -601,14 +601,14 @@ class DefaultController extends Controller {
                     //*******************
                     //MENSAJE DIRIGIDO AL USUARIO
                     $mendir = 'null';
-                    $mensajedirecto = $em->getRepository('SieAppWebBundle:NotificacionUsuario')->findOneBy(array('usuario' => $this->session->get('userId'), 'notif' => '5713980' ) );
+                    /*$mensajedirecto = $em->getRepository('SieAppWebBundle:NotificacionUsuario')->findOneBy(array('usuario' => $this->session->get('userId'), 'notif' => '5713980' ) );
 
                     if (sizeof($mensajedirecto) > 0) {
                         //CORRECCCION DE MENSAJE
                         $mensaje = $em->getRepository('SieAppWebBundle:Notificacion')->find($mensajedirecto->getNotif() );
                         $this->session->getFlashBag()->add('mensajedircod4', $mensaje->getMensaje());
                         $mendir = 'true';
-                    }
+                    }*/
                     //dump($mensaje->getMensaje());die;
 
                     if (($exp == 'true') || ($carnetban == 'true') || ($mendir == 'true')){
