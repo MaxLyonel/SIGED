@@ -251,7 +251,7 @@ class InfoDocenteController extends Controller {
         try {
             $form = $request->get('form');
             $personaId = $form['persona'];
-            dump($form);
+
             // Verificar si la persona ya esta registrada
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['persona']);
             $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));

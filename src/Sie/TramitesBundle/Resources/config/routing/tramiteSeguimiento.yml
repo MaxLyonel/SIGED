@@ -33,3 +33,15 @@ sie_tramite_seguimiento_rude_lista:
 sie_tramite_seguimiento_rude_detalle:
     path:     /rude/detalle
     defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoRudeDetalle }
+
+sie_tramite_seguimiento_cedula_busca:
+    path:     /cedula/busca
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoCedulaBusca }
+
+sie_tramite_seguimiento_cedula_lista:
+    path:     /cedula/lista
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoCedulaLista }
+
+sie_tramite_seguimiento_cedula_detalle:
+    path:     /cedula/detalle
+    defaults: { _controller: SieTramitesBundle:Seguimiento:tramiteSeguimientoCedulaDetalle }

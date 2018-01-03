@@ -502,4 +502,164 @@ class SeguimientoController extends Controller {
             return $this->redirect($this->generateUrl('sie_tramite_seguimiento_rude_busca'));
         }    
     }   
+
+        //****************************************************************************************************
+    // DESCRIPCION DEL METODO: 
+    // Controlador que busca un tramite en funcion a la cedula de identidad del bachiller para su seguimiento
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function tramiteSeguimientoCedulaBuscaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $tramiteController = new tramiteController();
+        $tramiteController->setContainer($this->container);
+
+        $rolPermitido = array(8,12,13,14,15,16,17,20,32,33);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$esValidoUsuarioRol){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+        }
+
+        $gestion = $gestionActual->format('Y');
+       
+        return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteCedulaIndex.html.twig', array(
+            'formBusqueda' => $tramiteController->creaFormBuscaTramiteCedula('sie_tramite_seguimiento_cedula_lista','')->createView(),
+            'titulo' => 'Seguimiento',
+            'subtitulo' => 'Número de Cédula de Identidad',
+        ));
+    }  
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO: 
+    // Controlador que lista los tramites buscados en función a la cedula de identidad
+    // PARAMETROS: request, serie
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function tramiteSeguimientoCedulaListaAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+     
+        if ($request->isMethod('POST')) {
+            $form = $request->get('form');
+            if ($form) {
+                $cedula = $form['cedula'];
+        
+                $tramiteController = new tramiteController();
+                $tramiteController->setContainer($this->container);
+
+                try {
+                    $entityTramiteCedula = $tramiteController->getTramiteCedula($cedula); 
+
+                    if(count($entityTramiteCedula)<=0){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la cédula de identidad ingresada'));
+                    }   
+
+                    return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteCedulaIndex.html.twig', array(
+                        'formBusqueda' => $tramiteController->creaFormBuscaTramiteCedula('sie_tramite_seguimiento_cedula_lista',$cedula)->createView(),
+                        'titulo' => 'Seguimiento',
+                        'subtitulo' => 'Número de Cédula de Indentidad',
+                        'listaBusqueda' => $entityTramiteCedula,                  
+                    ));
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                    return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
+                }  
+            }  else {          
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
+            }
+        } else {                 
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
+        }    
+    }  
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO: 
+    // Controlador que lista el detalle del tramite en funcion al cedula de identidad
+    // PARAMETROS: request, tramiteId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function tramiteSeguimientoCedulaDetalleAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+     
+        if ($request->isMethod('POST')) {
+            $codigo = $request->get('codigo');;
+            if($codigo == ""){
+                $codigo = 0;
+            } else {
+                $codigo = base64_decode($codigo);
+            }
+    
+            $tramiteController = new tramiteController();
+            $tramiteController->setContainer($this->container);
+
+            try {
+                $entityTramite = $tramiteController->getTramite($codigo); 
+
+                if(count($entityTramite)<=0){
+                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la cédula de identidad'));
+                }   
+
+                $entityTramite = $entityTramite[0];
+
+                $tramiteProcesoController = new tramiteProcesoController();
+                $tramiteProcesoController->setContainer($this->container);
+
+                $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($entityTramite['tramite']);
+
+                return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
+                    'titulo' => 'Seguimiento',
+                    'subtitulo' => 'Trámite',
+                    'listaDocumento' => $entityTramite, 
+                    'listaTramiteDetalle' => $entityTramiteDetalle,                 
+                ));
+            } catch (\Doctrine\ORM\NoResultException $exc) {
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
+            } 
+        } else {                 
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
+        }    
+    }   
 }

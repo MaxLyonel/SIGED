@@ -88,6 +88,37 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO: 
+    // Funcion que lista un tramite en funcion a la cédula de identidad
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getTramiteCedula($cedula) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Tramite');
+        $query = $entity->createQueryBuilder('t')
+                ->select("t.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo")
+                ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = t.estudianteInscripcion')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')         
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')  
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo') 
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')   
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->leftJoin('SieAppWebBundle:Documento', 'd', 'WITH', 'd.tramite = t.id and d.documentoEstado = 1')
+                ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
+                ->leftJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
+                ->leftJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')      
+                ->leftJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')  
+                ->leftJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo') 
+                ->where('e.carnetIdentidad = :cedula')
+                ->setParameter('cedula', $cedula);
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO: 
     // Controlador que busca una unidad educativa
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
@@ -1452,6 +1483,21 @@ class TramiteController extends Controller {
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl($routing))
             ->add('rude', 'text', array('label' => 'Rude', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $rude, 'style' => 'text-transform:uppercase', 'placeholder' => 'Código Rude' , 'maxlength' => 20, 'required' => true, 'class' => 'form-control')))
+            ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();       
+        return $form;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO: 
+    // Funcion que genera un formulario para la busqueda de tramite por cédula de identidad
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormBuscaTramiteCedula($routing, $cedula) {
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl($routing))
+            ->add('cedula', 'text', array('label' => 'Cedula', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $cedula, 'style' => 'text-transform:uppercase', 'placeholder' => 'Cédula de Identidad' , 'maxlength' => 10, 'required' => true, 'class' => 'form-control')))
             ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();       
         return $form;
