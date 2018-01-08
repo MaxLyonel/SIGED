@@ -268,7 +268,7 @@ class RegularizationMaestroController extends Controller {
 
     private function formSearch($gestionactual) {
         $gestiones = array();
-        for($i=$this->session->get('currentyear');$i>=$this->session->get('currentyear')-2;$i--){
+        for($i=$this->session->get('currentyear')-1;$i>=$this->session->get('currentyear')-2;$i--){
             $gestiones[$i] = $i;
         }
         $form = $this->createFormBuilder()
