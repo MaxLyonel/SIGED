@@ -56,8 +56,8 @@
                                 <div id="newseaerch" class="panel-collapse collapse in">
                                     <div class="portlet-body">
                                         <div class="alert alert-warning alert-dismissible" role="alert">
-                                            <strong><i class='fa fa-lightbulb-o'></i></strong> 
-                                            Aquí usted podrá acceder solamente a las calificaciones del Estudiante. Para poder ver datos necesita acceder con su usario y contraseña a <a href="{{ path('sie_login_homepage') }}" class="btn btn-link"><span class="glyphicon glyphicon-hand-right"></span> siged.sie.gob.bo</a>
+                                            <strong><i class='fa fa-lightbulb-o'></i></strong>
+                                            Aquí usted podrá acceder solamente a las calificaciones del Estudiante. Para poder ver datos necesita acceder con su usuario y contraseña a <a href="{{ path('sie_login_homepage') }}" class="btn btn-link"><span class="glyphicon glyphicon-hand-right"></span> siged.sie.gob.bo</a>
                                         </div>
 
 
@@ -77,7 +77,7 @@
                                             </div>
                                             {{ form_widget(form.buscar, { 'attr': {'class': 'btn btn-default' } }) }}
 
-                                            {{form_end(form)}}  
+                                            {{form_end(form)}}
 
                                         </div>
 
@@ -121,9 +121,9 @@
                                                                         </td>
                                                                         {% for k,nota in notas %}
                                                                             {% if k==5 %}
-                                                                                <td data-title="Promedio" align=''> 
+                                                                                <td data-title="Promedio" align=''>
                                                                                 {% else %}
-                                                                                <td data-title="{{ k }}. Bimestre" align=''> 
+                                                                                <td data-title="{{ k }}. Bimestre" align=''>
                                                                                 {% endif %}
                                                                                 <small>{{nota}}</small>
                                                                             </td>
@@ -173,4 +173,3 @@
     </body>
 
 </html>
-
