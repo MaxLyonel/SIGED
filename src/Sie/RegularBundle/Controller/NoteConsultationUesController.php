@@ -37,12 +37,24 @@ class NoteConsultationUesController extends Controller {
                     'form' => $this->craeteformsearch()->createView()
         ));
     }
-
+    /**
+     * [craeteformsearch description]
+     * @return [type] [description]
+     */
     private function craeteformsearch() {
+
+        //set new gestion to the select year
+        $arrGestion = array();
+        $currentYear = date('Y');
+        for ($i = 0; $i <= 10; $i++) {
+            $arrGestion[$currentYear] = $currentYear;
+            $currentYear--;
+        }
+
         return $this->createFormBuilder()
                         //->setAction($this->generateUrl('remove_inscription_sie_index'))
                         ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{3,8}', 'maxlength' => '8', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                        ->add('gestion', 'choice', array('label' => 'Gestión', 'choices' => array('2017' => '2017','2016' => '2016','2015' => '2015', '2014' => '2014', '2013' => '2013', '2012' => '2012', '2011' => '2011', '2010' => '2010', '2009' => '2009', '2008' => '2008'), 'attr' => array('class' => 'form-control')))
+                        ->add('gestion', 'choice', array('label' => 'Gestión', 'choices' => $arrGestion, 'attr' => array('class' => 'form-control')))
                         ->add('search', 'button', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary', 'onclick' => 'findInscription()')))
                         ->getForm();
     }

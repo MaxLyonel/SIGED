@@ -2159,7 +2159,7 @@ class TramiteController extends Controller {
                     ->getQuery();
                 break;
         }
-                
+
         $lugar = $query->getResult()[0];
 
         $repository = $em->getRepository('SieAppWebBundle:Tramite');
@@ -2310,7 +2310,15 @@ class TramiteController extends Controller {
      */
     private function searchForm($arrSieInfo) {
 
-        $gestiones = array(2016 => 2016, 2015 => 2015, 2014 => 2014, 2013 => 2013, 2012 => 2012, 2011 => 2011, 2010 => 2010, 2009 => 2009, 2008 => 2008);
+        // $gestiones = array(2016 => 2016, 2015 => 2015, 2014 => 2014, 2013 => 2013, 2012 => 2012, 2011 => 2011, 2010 => 2010, 2009 => 2009, 2008 => 2008);
+
+          //set new gestion to the select year added by krlos pacha
+          $gestiones = array();
+          $currentYear = date('Y')-1;
+          for ($i = 1; $i <= 10; $i++) {
+              $gestiones[$currentYear] = $currentYear;
+              $currentYear--;
+          }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -2793,7 +2801,7 @@ class TramiteController extends Controller {
             $periodo = 4;
             $em->getConnection()->commit();
         }
-        
+
         $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
         $query->bindValue(':gestion', $form['gestion']);
         $query->bindValue(':sie', $form['idInstitucion']);
