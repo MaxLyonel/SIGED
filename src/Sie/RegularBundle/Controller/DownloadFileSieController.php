@@ -358,7 +358,7 @@ class DownloadFileSieController extends Controller {
               }
             }
             //validation docente Administrativo director
-            if(sizeof($arrValidacionPersonal)<2){
+         /*   if(sizeof($arrValidacionPersonal)<2){
               //$errorValidation = array();
               $objObservados = array();
               $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
@@ -376,7 +376,7 @@ class DownloadFileSieController extends Controller {
                           'sistemaRegular' => '0'
 
               ));
-            }
+            }*/
           }// end valiation IG
           //set the ctrol menu with true
           // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
