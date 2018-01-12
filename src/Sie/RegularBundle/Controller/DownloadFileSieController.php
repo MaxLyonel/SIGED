@@ -417,8 +417,8 @@ class DownloadFileSieController extends Controller {
             if (1) {
                 //generate to file with thwe sql process
                 $operativo = $form['bimestre'] + 1;
-                switch ($form['gestion']) {
-                    case '2017':
+                // switch ($form['gestion']) {
+                //     case $this->session->get('currentyear'):
                       switch ($operativo) {
                         case '1':
                           # code...
@@ -435,15 +435,15 @@ class DownloadFileSieController extends Controller {
                           break;
                       }
 
-                        break;
-                    case '2015':
-                        $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                        break;
-
-                    default:
-                        $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                        break;
-                }
+                //         break;
+                //     case '2015':
+                //         $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                //         break;
+                //
+                //     default:
+                //         $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                //         break;
+                // }
 
                 $query->execute();
                 //$em->getConnection()->commit();
