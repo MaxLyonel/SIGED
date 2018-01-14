@@ -108,7 +108,7 @@ class DownloadFileSieController extends Controller {
           * *
           \************************************/
           $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
-       /*   if($objUe[0]['tipoUe']!=1){
+          if($objUe[0]['tipoUe']!=1){
             $objObservados = array();
             $errorValidation = array('ueobservation'=>false);
             $objObservados = array();
@@ -127,7 +127,7 @@ class DownloadFileSieController extends Controller {
 
 
             ));
-          }*/
+          }
           //  valiation IG off
           $errorValidation = $this->validateDownload($form);
           //add validation for bim
@@ -147,7 +147,7 @@ class DownloadFileSieController extends Controller {
           * *
           \************************************/
           $objObsQA = $this->getObservationQA($form);
-       /*   if ($objObsQA) {
+          if ($objObsQA) {
             $swCtrlMenu = false;
             // set the ctrol menu with false
             // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
@@ -167,7 +167,7 @@ class DownloadFileSieController extends Controller {
                           'validationRegistroConsolidado' => '0',
                           'sistemaRegular' => '0'
               ));
-          }*/
+          }
           //second type of UE
           /***********************************\
           * *
@@ -179,7 +179,7 @@ class DownloadFileSieController extends Controller {
           $form['reglasUE'] = '1,2,3,4,5';
           $objAllowUE = $this->getObservationAllowUE($form);
 
-      /*    if ($objAllowUE) {
+          if ($objAllowUE) {
             $swCtrlMenu = false;
             // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
             $em->getConnection()->commit();
@@ -200,7 +200,7 @@ class DownloadFileSieController extends Controller {
                           'validationRegistroConsolidado' => '0',
                           'sistemaRegular' => '0'
               ));
-          }*/
+          }
 
           // validation UE data
           /***********************************\
@@ -221,7 +221,7 @@ class DownloadFileSieController extends Controller {
           //get info if the UE is plena
           // $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
           // $errorValidation = $this->validateDownload($form);
-        /*  if ($inconsistencia) {
+          if ($inconsistencia) {
             $swCtrlMenu = false;
             // set the ctrol menu with false
             // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
@@ -243,7 +243,7 @@ class DownloadFileSieController extends Controller {
                           'validationRegistroConsolidado' => '0',
                           'sistemaRegular' => '0'
               ));
-          }*/
+          }
 
             //executa the validation function on db
             // $query = $em->getConnection()->prepare("select * from sp_valida_calidad_curso_oferta_obs1('" . $form['sie'] . "','" . $form['gestion'] ."');");
@@ -358,7 +358,7 @@ class DownloadFileSieController extends Controller {
               }
             }
             //validation docente Administrativo director
-         /*   if(sizeof($arrValidacionPersonal)<2){
+            if(sizeof($arrValidacionPersonal)<2){
               //$errorValidation = array();
               $objObservados = array();
               $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
@@ -376,8 +376,52 @@ class DownloadFileSieController extends Controller {
                           'sistemaRegular' => '0'
 
               ));
-            }*/
-          }// end valiation IG
+            }
+          }else {
+            //validation consolidaction info ue
+            /***********************************\
+            * *
+            * Validacion personal Administrativo de las Unidades Educativas
+            * send array => sie, gestion, reglas *
+            * return type of UE *
+            * *
+            \************************************/
+            $objOperativoValidacionPersonal = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findBy(array(
+              'institucioneducativa' => $form['sie'],
+              'gestionTipo' => $form['gestion'],
+              'notaTipo' => $form['bimestre']
+            ));
+            $arrValidacionPersonal = array();
+            if($objOperativoValidacionPersonal>0){
+              foreach ($objOperativoValidacionPersonal as $key => $value) {
+                # code...
+                if($value->getRolTipo()->getId() == 2 || $value->getRolTipo()->getId() == 5)
+                  $arrValidacionPersonal[] = $value->getRolTipo()->getId();
+              }
+            }
+            //validation docente Administrativo director
+            if(sizeof($arrValidacionPersonal)<2){
+              //$errorValidation = array();
+              $objObservados = array();
+              $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
+              return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
+                          'uEducativa' => $errorValidation,
+                          'objUe' => $objUe[0],
+                          'swvalidation' => '1',
+                          'flagValidation' => '0',
+                          'swObservados' => '0',
+                          'ueModular' => '0',
+                          'swinconsistencia'  => '0',
+                          'observaciones' => $objObservados,
+                          'validationPersonal' => '1',
+                          'validationRegistroConsolidado' => '0',
+                          'sistemaRegular' => '0'
+
+              ));
+            }
+          }
+
+          // end valiation IG
           //set the ctrol menu with true
           // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
 
