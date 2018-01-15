@@ -765,6 +765,32 @@ class DownloadFileSieController extends Controller {
         return $response;
     }
 
+    /**
+ 	 * to download the sie install
+ 	 * by krlos pacha pckrlos.a.gmail.dot.com
+ 	 * @param type
+ 	 * @return void
+	 */
+    public function installDownloadAction(Request $request) {
+
+        //get path of the file
+        $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
+        $file = 'instalador_SIGED_SIE_v126.exe';
+
+        //create response to donwload the file
+        $response = new Response();
+        //then send the headers to foce download the zip file
+        $response->headers->set('Content-Type', 'application/exe');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $file));
+        $response->setContent(file_get_contents($dir) . $file);
+        $response->headers->set('Pragma', "no-cache");
+        $response->headers->set('Expires', "0");
+        $response->headers->set('Content-Transfer-Encoding', "binary");
+        $response->sendHeaders();
+        $response->setContent(readfile($dir . $file));
+        return $response;
+    }
+
     public function getgestionAction($sie) {
         $em = $this->getDoctrine()->getManager();
 
