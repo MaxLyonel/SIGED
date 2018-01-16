@@ -848,27 +848,30 @@ class DownloadFileSieController extends Controller {
 
     public function getbimestreAction($sie, $gestion) {
         $em = $this->getDoctrine()->getManager();
-        $operativo = $this->get('funciones')->obtenerOperativo($sie, $gestion);
+        $operativo = $this->get('funciones')->obtenerOperativoDown($sie, $gestion);
         $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getBimestreBySieAndGestion($sie, $gestion);
         //define the return data values
+        // dump($gestion);
+        // dump($operativo);
         $aBimestre = array();
         $aBimestres = array('IG', '1er', '2do', '3ro', '4to');
         // dump($this->session->get('roluser'));die;
         //if the user is UE decrement the operativo var
-        if( in_array($this->session->get('roluser'), array(9))){
-          // if($operativo == 4){
-          // //do nothing
-          // }else{
-            $operativo = $operativo - 1;
-          // }
-        }
-
+//         if( in_array($this->session->get('roluser'), array(9))){
+//           // if($operativo == 4){
+//           // //do nothing
+//           // }else{
+//             $operativo = $operativo - 1;
+//           // }
+//         }
+// dump($operativo);
+// die;
         //new way to download the sie file througth the consolidation data on DB
-        if($operativo == 4){//if 4 everything is done
+        if($operativo == 5){//if 4 everything is done
           $aBimestre[-1]='Consolidado';
         }else{
           if($operativo >= 0){//mt 0 return plas 1
-            $aBimestre[$operativo+1]=$aBimestres[$operativo+1];
+            $aBimestre[$operativo]=$aBimestres[$operativo];
           }else{ //lt 0 return the same
             $aBimestre[$operativo]=$aBimestres[$operativo];
           }
