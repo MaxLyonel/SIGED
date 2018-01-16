@@ -116,7 +116,7 @@
                 {% if ueModular %}
                     <div class="portlet portlet-basic">
                         <div class="portlet-body">
-                            <h3 id="grid-offsetting">Unidad Educativa Modular - No puede descargar el archivo</h3>
+                            <h3 id="grid-offsetting">Unidad Educativa <b> {{objinconsistencia.institucioneducativa_humanistico_tecnico_tipo}} </b> - No puede descargar el archivo</h3>
                             <h5 class='text-red'><strong>Todo el registro de la información se lo debe hacer a través de la web ACADEMICO - <a href='http://academico.sie.gob.bo/' target='_blank'>academico.sie.gob.bo</a></strong>.</h5>
                             <div class="row show-grid">
                                 <table class="table table-bordered">
@@ -161,8 +161,26 @@
                                         <td class=""> {{objUe.dependencia}}</td>
                                     </tr>
                                 </table>
-
                                 <table class="table table-bordered">
+                                    <!--tr>
+                                        <th colspan="6" class="alert-danger">
+                                            Observados
+                                        </th>
+                                    </tr-->
+                                    <tr>
+                                        <td class="warning"> Observación</td>
+                                    </tr>
+                                    {%  for observation in objinconsistencia %}
+                                        <tr>
+
+                                            <td class="alert-danger"> {{observation.obs}}</td>
+
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+
+
+                                <!-- <table class="table table-bordered">
                                     <tr>
                                         <th colspan="6" class="alert-danger">
                                             Observados
@@ -176,17 +194,17 @@
                                         <td class="warning"> Observación</td>
 
                                     </tr>
-                                    {%  for observation in observaciones %}
+                                    {#  for observation in observaciones #}
                                         <tr>
-                                            <td class=""> {{observation.codigoRude}}</td>
-                                            <td class=""> {{observation.paterno}}</td>
-                                            <td class="">{{observation.materno}}</td>
-                                            <td class=""> {{observation.nombre}}</td>
-                                            <td class="alert-danger"> {{observation.observacion}}</td>
+                                            <td class=""> {#observation.codigoRude#}</td>
+                                            <td class=""> {#observation.paterno#}</td>
+                                            <td class=""> {#observation.materno#}</td>
+                                            <td class=""> {#observation.nombre#}</td>
+                                            <td class="alert-danger"> {#observation.observacion#}</td>
 
                                         </tr>
-                                    {% endfor %}
-                                </table>
+                                    {# endfor #}
+                                </table> -->
 
                             </div>
                         </div>
@@ -220,7 +238,7 @@
                   {% if uEducativa.ueobservation %}
                       <div class="portlet portlet-basic">
                           <div class="portlet-body">
-                              <h3 id="grid-offsetting">Unidad Educativa Observada<br />
+                              <h3 id="grid-offsetting">Unidad Educativa Observada3<br />
                                   Regularice los casos observados para poder bajar el archivo.
                               </h3>
                               <p>
@@ -325,6 +343,31 @@
                   </div>
               {% endif %}
 
+              {% if sistemaRegular %}
+                  <div class="portlet portlet-basic">
+                      <div class="portlet-body">
+                        <h5 class='text-red'><strong> UNIDAD EDUCATIVA NO PERTENECE AL SISTEMA REGULAR, NO PUEDE DESCARGAR EL ARCHIVO.  </strong></h5>
+
+                          <div class="row show-grid">
+                              <table class="table table-bordered">
+                                  <tr>
+                                      <td class="success">Unidad Educativa</td>
+                                      <td class="success">Localidad</td>
+                                      <td class="success">Dependencia</td>
+                                  </tr>
+                                  <tr>
+                                      <td class=""> {{objUe.institucioneducativa}} - {{objUe.ueId}} </td>
+                                      <td class="">{{objUe.lugar}}</td>
+                                      <td class=""> {{objUe.dependencia}}</td>
+                                  </tr>
+                              </table>
+
+                          </div>
+
+                      </div>
+                  </div>
+              {% endif %}
+
           </div>
       </small>
       <!-- /.row -->
@@ -376,7 +419,7 @@
                                           </table>
 
                                           <center>
-                                              <a class="btn btn-success  btn-pinterest" href="{{ path('download_file_sie_download', { 'file':file } )}}">
+                                              <a class="btn btn-success  btn-pinterest" href="{{ path('download_file_sie_download', { 'file':file,'datadownload':datadownload } )}}" onclick="return confirm('¡NOTA IMPORTANTE!\nAntes de continuar debe estar seguro que ha verificado que todos los datos de: administrativos, inscripciones y la declaración jurada para la validación de maestros estén correctos y completos.\nSi presiona ACEPTAR se iniciara el proceso de descargar de archivos y no podrá hacer ninguna modificación posteriormente.\nSi no está seguro de este mensaje presione CANCELAR.')">
                                                   <i class="fa fa-download"></i> Descargar Archivo Generado
                                               </a>
                                           </center>
