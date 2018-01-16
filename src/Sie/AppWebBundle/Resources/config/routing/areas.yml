@@ -1,0 +1,5 @@
+areas_eliminar_asignacion_maestro:
+    path:     /eliminar_maestro_asignacion/{idCursoOfertaMaestro}
+    defaults: { _controller: "SieAppWebBundle:Areas:eliminarMaestroAsignado" }
+    options:
+        expose: true

@@ -336,4 +336,42 @@ class AreasController extends Controller {
             return $ex;
         }
     }
+
+    /**
+     * Funcion para eliminar maestro asignado a un area
+     */
+    public function eliminarMaestroAsignadoAction($idCursoOfertaMaestro){
+        $em = $this->getDoctrine()->getManager();
+        $cursoOfertaMaestro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->find($idCursoOfertaMaestro);
+
+        if($cursoOfertaMaestro){
+            /**
+             * Verificamos si hay otro maestro registrado para el mismo bimestre
+             */
+            $maestrosMismoBimestre = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array(
+                'institucioneducativaCursoOferta'=>$cursoOfertaMaestro->getInstitucioneducativaCursoOferta()->getId(),
+                'notaTipo'=>$cursoOfertaMaestro->getNotaTipo()->getId()
+            ));
+            // Si existe solo un maestro para el bimestre, el sistema no permite la eliminacion
+            if(count($maestrosMismoBimestre) == 1){
+                $response = new JsonResponse();
+                return $response->setData(array(
+                    'status'=>'error',
+                    'message'=>'No se puede eliminar el registro, debe haber al menos un maestro asignado por bimestre.'
+                ));
+            }
+
+            /**
+             * Eliminamos el registro del maestro
+             */
+            $em->remove($cursoOfertaMaestro);
+            $em->flush();
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array(
+            'status'=>'success',
+            'message'=>'Registro eliminado correctamente.'
+        ));
+    }
 }

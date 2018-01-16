@@ -27,6 +27,7 @@ class MaestroAsignacion{
     }
 
 	public function listar($idCursoOferta){
+
         $cursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta);
         $curso = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($cursoOferta->getInsitucioneducativaCurso()->getId());
 
@@ -97,11 +98,13 @@ class MaestroAsignacion{
                         ->where('ie.id = :sie')
                         ->andWhere('gt.id = :gestion')
                         ->andWhere('rt.id = 2')
+                        ->andWhere('mi.esVigenteAdministrativo = :estado')
                         ->orderBy('p.paterno','ASC')
                         ->addOrderBy('p.materno','ASC')
                         ->addOrderBy('p.nombre','ASC')
                         ->setParameter('sie',$sie)
                         ->setParameter('gestion',$gestion)
+                        ->setParameter('estado',true)
                         ->getQuery()
                         ->getResult();
 
@@ -111,7 +114,8 @@ class MaestroAsignacion{
         }
 
         // MAterias que tendran mas de un maestro
-        $materiasMasMaestros = array(1040,1045,1031,1036,1043,1044,1011,1015,1019);
+        $materiasMasMaestros = null;//array(1040,1045,1031,1036,1043,1044,1011,1015,1019);
+        $vista = ($this->session->get('roluser') == 8)?2:1;
         
         return array(
             'maestrosCursoOferta'=>$arrayMaestros, 
@@ -124,7 +128,7 @@ class MaestroAsignacion{
             'fin'=>$fin,
             'idAsignatura'=>$idAsignatura,
             'materiasMasMaestros'=>$materiasMasMaestros,
-            'vista'=>1 // 0 : todo bloqueado, 1 : Completar faltantes , 2 : Todo abierto
+            'vista'=>$vista // 0 : todo bloqueado, 1 : Completar faltantes , 2 : Todo abierto
         );
 	}
 
