@@ -339,3 +339,7 @@ sie_regular_restartbjp:
 sie_regular_update_student:
     resource: "@SieRegularBundle/Resources/config/routing/updateestudent.yml"
     prefix:   /sie/udpatestudent
+
+sie_app_web_info_bono:
+    resource: "@SieRegularBundle/Resources/config/routing/infobono.yml"
+    prefix:   /acceso/infoRequestStudent

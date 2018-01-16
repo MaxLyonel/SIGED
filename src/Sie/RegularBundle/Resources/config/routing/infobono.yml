@@ -1,0 +1,7 @@
+info_bono_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:InfoBono:index }
+
+info_bono_quest:
+    path:    /{rude}/quest
+    defaults: { _controller: SieRegularBundle:InfoBono:quest }
