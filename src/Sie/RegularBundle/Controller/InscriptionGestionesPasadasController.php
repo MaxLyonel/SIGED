@@ -57,12 +57,20 @@ class InscriptionGestionesPasadasController extends Controller {
      * @return \Symfony\Component\Form\Form The form
      */
     private function createSearchForm() {
+
+        //set new gestion to the select year added by krlos pacha
+        $gestiones = array();
+        $currentYear = date('Y')-1;
+        for ($i = 1; $i <= 10; $i++) {
+          $gestiones[$currentYear] = $currentYear;
+          $currentYear--;
+        }
         $estudiante = new Estudiante();
 
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('inscription_gestiones_pasadas_result'))
                 ->add('codigoRude', 'text', array('mapped' => false, 'label' => 'Rude', 'required' => true, 'invalid_message' => 'campo obligatorio', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9a-zA-Z\sñÑ]{12,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array('2016' => '2016','2015' => '2015', '2014' => '2014', '2013' => '2013', '2012' => '2012', '2011' => '2011', '2010' => '2010', '2009' => '2009', '2008' => '2008'), 'attr' => array('class' => 'form-control')))
+                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => $gestiones, 'attr' => array('class' => 'form-control')))
                 ->add('buscar', 'submit', array('label' => 'Buscar'))
                 ->getForm();
         return $form;
