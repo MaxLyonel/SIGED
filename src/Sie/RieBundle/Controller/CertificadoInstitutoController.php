@@ -152,7 +152,8 @@ class CertificadoInstitutoController extends Controller {
     }
 
     public function certificadolistaAction(Request $request){
-        $listar = $this->obtieneListaCertificados($request->get('idCertificado'));
+		$listar = $this->obtieneListaCertificados($request->get('idCertificado'));
+
 		/*		
 		echo '<pre>';
 			print_r($listar);
