@@ -3,6 +3,10 @@ reporte_rie_uno:
     path:     /repRieUno
     defaults: { _controller: SieRieBundle:Reportes:repUno }
 
+reporte_rie_certificados:
+    path:     /repRieCertificados
+    defaults: { _controller: SieRieBundle:Reportes:repRieCertificados }
+
 reporte_list:
     path:     /list
     defaults: { _controller: SieRieBundle:Reportes:list }     
