@@ -377,7 +377,51 @@ class DownloadFileSieController extends Controller {
 
               ));
             }
-          }// end valiation IG
+          }else {
+            //validation consolidaction info ue
+            /***********************************\
+            * *
+            * Validacion personal Administrativo de las Unidades Educativas
+            * send array => sie, gestion, reglas *
+            * return type of UE *
+            * *
+            \************************************/
+            $objOperativoValidacionPersonal = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findBy(array(
+              'institucioneducativa' => $form['sie'],
+              'gestionTipo' => $form['gestion'],
+              'notaTipo' => $form['bimestre']
+            ));
+            $arrValidacionPersonal = array();
+            if($objOperativoValidacionPersonal>0){
+              foreach ($objOperativoValidacionPersonal as $key => $value) {
+                # code...
+                if($value->getRolTipo()->getId() == 2 || $value->getRolTipo()->getId() == 5)
+                  $arrValidacionPersonal[] = $value->getRolTipo()->getId();
+              }
+            }
+            //validation docente Administrativo director
+            if(sizeof($arrValidacionPersonal)<2){
+              //$errorValidation = array();
+              $objObservados = array();
+              $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
+              return $this->render($this->session->get('pathSystem') . ':DownloadFileSie:fileDownload.html.twig', array(
+                          'uEducativa' => $errorValidation,
+                          'objUe' => $objUe[0],
+                          'swvalidation' => '1',
+                          'flagValidation' => '0',
+                          'swObservados' => '0',
+                          'ueModular' => '0',
+                          'swinconsistencia'  => '0',
+                          'observaciones' => $objObservados,
+                          'validationPersonal' => '1',
+                          'validationRegistroConsolidado' => '0',
+                          'sistemaRegular' => '0'
+
+              ));
+            }
+          }
+
+          // end valiation IG
           //set the ctrol menu with true
           // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
 
@@ -417,8 +461,8 @@ class DownloadFileSieController extends Controller {
             if (1) {
                 //generate to file with thwe sql process
                 $operativo = $form['bimestre'] + 1;
-                switch ($form['gestion']) {
-                    case '2017':
+                // switch ($form['gestion']) {
+                //     case $this->session->get('currentyear'):
                       switch ($operativo) {
                         case '1':
                           # code...
@@ -435,15 +479,15 @@ class DownloadFileSieController extends Controller {
                           break;
                       }
 
-                        break;
-                    case '2015':
-                        $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                        break;
-
-                    default:
-                        $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
-                        break;
-                }
+                //         break;
+                //     case '2015':
+                //         $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                //         break;
+                //
+                //     default:
+                //         $query = $em->getConnection()->prepare("select * from sp_genera_arch_regular_txt('" . $form['sie'] . "','" . $form['gestion'] . "','" . $operativo . "','" . $form['bimestre'] . "');");
+                //         break;
+                // }
 
                 $query->execute();
                 //$em->getConnection()->commit();
@@ -721,6 +765,32 @@ class DownloadFileSieController extends Controller {
         return $response;
     }
 
+    /**
+ 	 * to download the sie install
+ 	 * by krlos pacha pckrlos.a.gmail.dot.com
+ 	 * @param type
+ 	 * @return void
+	 */
+    public function installDownloadAction(Request $request) {
+
+        //get path of the file
+        $dir = $this->get('kernel')->getRootDir() . '/../web/uploads/instaladores/';
+        $file = 'instalador_SIGED_SIE_v126.exe';
+
+        //create response to donwload the file
+        $response = new Response();
+        //then send the headers to foce download the zip file
+        $response->headers->set('Content-Type', 'application/exe');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $file));
+        $response->setContent(file_get_contents($dir) . $file);
+        $response->headers->set('Pragma', "no-cache");
+        $response->headers->set('Expires', "0");
+        $response->headers->set('Content-Transfer-Encoding', "binary");
+        $response->sendHeaders();
+        $response->setContent(readfile($dir . $file));
+        return $response;
+    }
+
     public function getgestionAction($sie) {
         $em = $this->getDoctrine()->getManager();
 
@@ -778,27 +848,30 @@ class DownloadFileSieController extends Controller {
 
     public function getbimestreAction($sie, $gestion) {
         $em = $this->getDoctrine()->getManager();
-        $operativo = $this->get('funciones')->obtenerOperativo($sie, $gestion);
+        $operativo = $this->get('funciones')->obtenerOperativoDown($sie, $gestion);
         $objSie = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->getBimestreBySieAndGestion($sie, $gestion);
         //define the return data values
+        // dump($gestion);
+        // dump($operativo);
         $aBimestre = array();
         $aBimestres = array('IG', '1er', '2do', '3ro', '4to');
         // dump($this->session->get('roluser'));die;
         //if the user is UE decrement the operativo var
-        if( in_array($this->session->get('roluser'), array(9))){
-          // if($operativo == 4){
-          // //do nothing
-          // }else{
-            $operativo = $operativo - 1;
-          // }
-        }
-
+//         if( in_array($this->session->get('roluser'), array(9))){
+//           // if($operativo == 4){
+//           // //do nothing
+//           // }else{
+//             $operativo = $operativo - 1;
+//           // }
+//         }
+// dump($operativo);
+// die;
         //new way to download the sie file througth the consolidation data on DB
-        if($operativo == 4){//if 4 everything is done
+        if($operativo == 5){//if 4 everything is done
           $aBimestre[-1]='Consolidado';
         }else{
           if($operativo >= 0){//mt 0 return plas 1
-            $aBimestre[$operativo+1]=$aBimestres[$operativo+1];
+            $aBimestre[$operativo]=$aBimestres[$operativo];
           }else{ //lt 0 return the same
             $aBimestre[$operativo]=$aBimestres[$operativo];
           }

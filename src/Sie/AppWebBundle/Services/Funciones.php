@@ -48,7 +48,7 @@ class Funciones {
                 ->setParameter('gestion',$gestion)
                 ->getQuery()
                 ->getResult();
-                
+
         $operativo = 5;
         if(!$objRegistroConsolidado){
             // Si no existe es operativo inicio de gestion
@@ -74,6 +74,43 @@ class Funciones {
 
         if( in_array($this->session->get('roluser'), array(7,8,10)) or $gestion < $this->session->get('currentyear')){
             $operativo = $operativo - 1;
+        }
+
+        return $operativo;
+
+    }
+	public function obtenerOperativoDown($sie,$gestion){
+        $objRegistroConsolidado = $this->em->createQueryBuilder()
+                ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+                ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
+                ->where('rc.unidadEducativa = :ue')
+                ->andWhere('rc.gestion = :gestion')
+                ->setParameter('ue',$sie)
+                ->setParameter('gestion',$gestion)
+                ->getQuery()
+                ->getResult();
+
+        $operativo = 5;
+        if(!$objRegistroConsolidado){
+            // Si no existe es operativo inicio de gestion
+            $operativo = 0;
+        }else{
+            //dump($objRegistroConsolidado);die;
+            if($objRegistroConsolidado[0]['bim1'] == 0 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                $operativo = 1; // Primer Bimestre
+            }
+            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                $operativo = 2; // segundo Bimestre
+            }
+            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                $operativo = 3; // tercero Bimestre
+            }
+            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] == 0){
+                $operativo = 4; // cuarto Bimestre
+            }
+            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] >= 1){
+                $operativo = 5; // Fin de gestion o cerrado
+            }
         }
 
         return $operativo;
@@ -105,7 +142,7 @@ class Funciones {
             return $newLogTransaccion;
 
        /* } catch (Exception $e) {
-            
+
         }*/
     }
 

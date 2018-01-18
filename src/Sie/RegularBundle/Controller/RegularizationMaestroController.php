@@ -69,7 +69,7 @@ class RegularizationMaestroController extends Controller {
                 /**
                  * VErificamos si la gestion es 2015
                  */
-                if ($form['gestion'] < 2008 or $form['gestion'] > 2016) {
+                if ($form['gestion'] < 2008 or $form['gestion'] > $this->session->get('currentyear')) {
                     $this->get('session')->getFlashBag()->add('noSearch', 'La gestión ingresada no es válida.');
                     return $this->render('SieRegularBundle:RegularizationMaestro:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                 }
@@ -268,7 +268,7 @@ class RegularizationMaestroController extends Controller {
 
     private function formSearch($gestionactual) {
         $gestiones = array();
-        for($i=2016;$i>=2016;$i--){
+        for($i=$this->session->get('currentyear')-1;$i>=$this->session->get('currentyear')-2;$i--){
             $gestiones[$i] = $i;
         }
         $form = $this->createFormBuilder()

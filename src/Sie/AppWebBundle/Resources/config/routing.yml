@@ -168,6 +168,10 @@ sie_app_web_areaTipo:
     resource: "@SieAppWebBundle/Resources/config/routing/areatipo.yml"
     prefix:   /sie/areatipo
 
+sie_app_web_areas:
+    resource: "@SieAppWebBundle/Resources/config/routing/areas.yml"
+    prefix:   /sie/areasmaestro
+
 sie_app_web_close_modules:
     resource: "@SieAppWebBundle/Resources/config/routing/closemodules.yml"
     prefix:   /sie/closemodules

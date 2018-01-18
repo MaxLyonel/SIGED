@@ -333,11 +333,11 @@ class ConsolidationSieController extends Controller {
                   return $this->redirect($this->generateUrl('consolidation_sie_web'));
                 }
 
-                //validate the correct sie send with the correct version in 2016
-                if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', '2017'))) == 0) {
+                //validate the correct sie send with the correct version in current year
+                if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', $this->session->get('currentyear')))) == 0) {
                     if (
-                            (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.5'))) !== 0
-                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED4'))) !== 0
+                            (strcmp(preg_replace('/\s+/', '', $aFileInfoSie[10]), preg_replace('/\s+/', '', '1.2.6'))) !== 0
+                            and ( strcmp(preg_replace('/\s+/', '', $aFileInfoSie[12]), preg_replace('/\s+/', '', 'SIGED5'))) !== 0
                     ) {
                         $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' presenta versión incorrecta para subir el archivo ');
                         system('rm -fr ' . $dirtmp);

@@ -33,3 +33,7 @@ download_file_sie_buildAgain:
     defaults: { _controller: SieRegularBundle:DownloadFileSie:buildAgain }
     options:
          expose: true
+
+download_file_install_download:
+    path:     /installDownload
+    defaults: { _controller: SieRegularBundle:DownloadFileSie:installDownload }

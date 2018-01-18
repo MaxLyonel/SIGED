@@ -80,18 +80,19 @@
                         </div>
                         {{form_end(form)}}
                     </div>
+                      <div class="row">
+                          <div class="col-md-12">
+                              <div id="geneFile"></div>
+                          </div>
+                      </div>
                 </div>
+
 
             </div>
         </div>
     </div>
   </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div id="geneFile"></div>
-        </div>
-    </div>
 
 
 
@@ -215,7 +216,7 @@
                 url: Routing.generate('download_file_aca_sie_build'),
                 beforeSend: function () {
                     $("#geneFile").empty();
-                    $("#geneFile").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                    $("#geneFile").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
                 },
                 success: function (data) {
                     $("#geneFile").empty();
