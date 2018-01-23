@@ -247,7 +247,7 @@ class DefaultController extends Controller
               INNER JOIN idioma_tipo c ON c.id = persona.idioma_materno_id
             WHERE
               (institucioneducativa.id = '".$ie_id."') and 
-              (maestro_inscripcion.gestion_tipo_id = '2017') and
+              (maestro_inscripcion.gestion_tipo_id = '2018') and
               (maestro_inscripcion.es_vigente_administrativo = '1') and
               ((cargo_tipo.id = '1') or (cargo_tipo.id = '12'))
 
