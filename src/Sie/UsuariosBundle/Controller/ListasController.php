@@ -376,7 +376,7 @@ class ListasController extends Controller
         $query = $em->createQuery("SELECT b.turno as turnoTipo, c.nivel as nivelTipo, d.grado as gradoTipo, e.paralelo as paraleloTipo,
                                     c.id as nivelId, d.id as gradoId, b.id as turnoId, e.id as paraleloId
                                     FROM SieAppWebBundle:InstitucioneducativaCurso a join a.turnoTipo b join a.nivelTipo c join a.gradoTipo d join a.paraleloTipo e
-                                    WHERE a.institucioneducativa = '".$this->session->get('ie_id')."' and a.gestionTipo = '2017'
+                                    WHERE a.institucioneducativa = '".$this->session->get('ie_id')."' and a.gestionTipo = '2018'
                                     GROUP BY b.id, c.id, d.id, e.id ORDER BY b.id, c.id, d.id, e.id");
         $cursos = $query->getResult();
         if (!$cursos) {
@@ -384,18 +384,18 @@ class ListasController extends Controller
             
             return $this->render('SieUsuariosBundle:Listas:iecursos.html.twig', array(
                 'cursos'   => $cursos,
-                'gestion'   => '2017',
+                'gestion'   => '2018',
                 'apoderados' => array(),
             ));
         }
         
-        $apoderados = $this->apoderadosienivelresult($this->session->get('ie_id'),'2017',$cursos[0]['nivelId'],$cursos[0]['gradoId'],$cursos[0]['turnoId'],$cursos[0]['paraleloId']);
+        $apoderados = $this->apoderadosienivelresult($this->session->get('ie_id'),'2018',$cursos[0]['nivelId'],$cursos[0]['gradoId'],$cursos[0]['turnoId'],$cursos[0]['paraleloId']);
         if (!$apoderados) {
             //$this->session->getFlashBag()->add('error', 'No se encontro apoderados asociados al curso seleccionado. Verifique que se haya hecho la asignación de hijos correspondiente.');
             $sw = 'false';                        
             return $this->render('SieUsuariosBundle:Listas:iecursos.html.twig', array(
                 'cursos'   => $cursos,
-                'gestion'   => '2017',
+                'gestion'   => '2018',
                 'apoderados' => $apoderados,
                 'sw' => $sw,
             ));
@@ -403,7 +403,7 @@ class ListasController extends Controller
         $sw = 'true';                        
         return $this->render('SieUsuariosBundle:Listas:iecursos.html.twig', array(
             'cursos'   => $cursos,
-            'gestion'   => '2017',
+            'gestion'   => '2018',
             'personas' => $apoderados,
             'sw' => $sw,
         ));
@@ -434,7 +434,7 @@ class ListasController extends Controller
                     ON usuario.persona_id = persona.id  
             WHERE    
               (maestro_inscripcion.institucioneducativa_id = '".$this->session->get('ie_id')."') and 
-              (maestro_inscripcion.gestion_tipo_id = '2017') and
+              (maestro_inscripcion.gestion_tipo_id = '2018') and
               ((maestro_inscripcion.cargo_tipo_id = 1) or (maestro_inscripcion.cargo_tipo_id = 12) or (maestro_inscripcion.cargo_tipo_id = 0))
             GROUP BY
 	      usuario.id, 
@@ -515,7 +515,7 @@ class ListasController extends Controller
                 SELECT DISTINCT institucioneducativa_id
                 FROM institucioneducativa_operativo_log
                 WHERE institucioneducativa_operativo_log_tipo_id = 4
-                AND gestion_tipo_id = 2017
+                AND gestion_tipo_id = 2018
                 AND institucioneducativa_id = '".$this->session->get('ie_id')."' ";
 
         $stmt = $db->prepare($query);
@@ -541,7 +541,7 @@ class ListasController extends Controller
                         LEFT JOIN usuario z ON z.persona_id = k.id 
 
                         WHERE (institucioneducativa_curso.institucioneducativa_id = '".$this->session->get('ie_id')."') 
-                        and (institucioneducativa_curso.gestion_tipo_id = '2017') 
+                        and (institucioneducativa_curso.gestion_tipo_id = '2018') 
                         and k.segip_id in (1,2,3,4,5,6,7,8)
                         and z.username is null
                         
@@ -559,7 +559,7 @@ class ListasController extends Controller
             if ($countapo > 0) {
                 $query = $em->getConnection()->prepare('SELECT * from sp_genera_usuarios_apoderados_sie(:ie::VARCHAR, :gestion ::VARCHAR)');
                 $query->bindValue(':ie', $this->session->get('ie_id'));
-                $query->bindValue(':gestion', '2017');       
+                $query->bindValue(':gestion', '2018');       
                 $query->execute();
             }
             $this->session->getFlashBag()->add('apoderadosgeneracion',$countapo);
