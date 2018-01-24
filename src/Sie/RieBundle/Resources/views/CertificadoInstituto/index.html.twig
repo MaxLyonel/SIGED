@@ -51,24 +51,19 @@
                                 <tbody>
                                     {% for entity in entities %}
                                         <tr>
-                                            <td>
+                                            <td><!--
                                                 <a href="{{path('certificado_rie_lista', {'idCertificado': entity.id } )}}">
                                                     <i class="material-icons">picture_as_pdf</i>
                                                 </a>
-                                                <!--
-                                                <a href="" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Certificado">
-                                                    <i class="material-icons">content_copy</i>
-                                                </a>                                            
-                                                <a href="{{path('certificado_rie_edit', {'idCertificado': entity.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Editar">
-                                                    <i class="material-icons">mode_edit</i>
-                                                </a>                                            
-                                                <a href="{{path('rie_new_subsede', {'idRie': entity.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Archivo EXCEL">
-                                                    <i class="material-icons">explicit</i>
-                                                </a>                                            
-                                                <a href="{{path('rie_new_subsede', {'idRie': entity.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Archivo PDF">
-                                                    <i class="material-icons">picture_as_pdf</i>
-                                                </a>    
-                                                -->                                        
+                                                <form action="{{path('reporte_rie_certificados')}}" method="post">
+                                                    <input type="hidden" name="idInstitucion" value="30660001">
+                                                    <button type="submit" class="btn btn-xs bg-blue waves-effect"><i class="fa fa-save"></i> Certificado</button>
+                                                </form>                                                                                       
+                                                -->
+                                                <form action="{{path('reporte_rie_certificados')}}" method="post">
+                                                    <input type="hidden" name="idCertificados" value="{{entity.id}}">
+                                                    <button type="submit" class="material-icons"><i class="fa fa-save">picture_as_pdf</i></button>
+                                                </form>                                                                                       
                                             </td>    
                                             <td>{{ loop.index }}</td>
                                             <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('Y-m-d') }}{% endif %}</td>

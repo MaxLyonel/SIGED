@@ -317,18 +317,16 @@
               {% endif %}
 
               {% if validationPersonal %}
-                  <div class="portlet portlet-basic">
-                      <div class="portlet-body">
-                          <h3 id="grid-offsetting">Unidad Educativa - No puede descargar el archivo</h3>
-                          <h5 class='text-red'><strong>La Unidad Educativa tiene que realizar la validacion de Docentes/Administrativos/Director por el
-                                                ACADEMICO - <a href='http://academico.sie.gob.bo/' target='_blank'>academico.sie.gob.bo</a>
-                          </strong>.</h5>
-                          <div class="row show-grid">
+               <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <h3 id="grid-offsetting">Unidad Educativa - No puede descargar el archivo</h3>
+                          <h5 class='text-red'><strong>La Unidad Educativa tiene que realizar la validacion de Docentes/Administrativos/Director</strong>.</h5>
+                         
                               <table class="table table-bordered">
                                   <tr>
-                                      <td class="success">Unidad Educativa</td>
-                                      <td class="success">Localidad</td>
-                                      <td class="success">Dependencia</td>
+                                      <td class="warning">Unidad Educativa</td>
+                                      <td class="warning">Localidad</td>
+                                      <td class="warning">Dependencia</td>
                                   </tr>
                                   <tr>
                                       <td class=""> {{objUe.institucioneducativa}} - {{objUe.ueId}} </td>
@@ -337,10 +335,13 @@
                                   </tr>
                               </table>
 
-                          </div>
+                         
+                </div>
+                 
+               </div>
+                          
 
-                      </div>
-                  </div>
+                     
               {% endif %}
 
               {% if sistemaRegular %}
@@ -390,23 +391,19 @@
 
                               </p-->
                           </div>
-
-                          <div class="col-lg-12">
-
-                              <div class="portlet portlet-basic">
-                                  <div class="portlet-body">
+                          <div class="row">
+                             <div class="col-md-10 col-md-offset-1">
                                       <h3 id="grid-offsetting">Datos Unidad Educativa</h3>
 
-                                      <div class="row show-grid">
-
+                                    
                                           <table class="table table-bordered">
 
                                               <!-- On cells (`td` or `th`) -->
                                               <tr>
 
-                                                  <td class="success">Unidad Educativa</td>
-                                                  <td class="success">Localidad</td>
-                                                  <td class="success">Dependencia</td>
+                                                  <td class="info">Unidad Educativa</td>
+                                                  <td class="info">Localidad</td>
+                                                  <td class="info">Dependencia</td>
 
                                               </tr>
                                               <tr>
@@ -423,15 +420,12 @@
                                                   <i class="fa fa-download"></i> Descargar Archivo Generado
                                               </a>
                                           </center>
-                                      </div>
+                                      
 
                                   </div>
-                              </div>
-
-
                           </div>
-
-
+                         
+                             
 
                       </div>
 

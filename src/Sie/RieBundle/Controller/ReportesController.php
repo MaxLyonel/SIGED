@@ -40,6 +40,22 @@ class ReportesController extends Controller {
         return $response;
     }
 
+    /**
+     * Reportes para mostrar datos de certificados
+     */
+    public function repRieCertificadosAction(Request $request) {
+        $arch = 'CERTIFICADOS_'.'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rie_certificados_itt_v1_oyq.rptdesign&idCertificados='.$request->get('idCertificados').'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }    
+
     /***
      *  Reporte de Institutos Vigentes
      */

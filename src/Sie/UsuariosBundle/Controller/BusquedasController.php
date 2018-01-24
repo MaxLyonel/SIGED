@@ -443,7 +443,7 @@ class BusquedasController extends Controller
                     ON usuario.persona_id = persona.id  
             WHERE    
               (usuario.id = '".$usuarioid."') and              
-              (maestro_inscripcion.gestion_tipo_id = '2017') and
+              (maestro_inscripcion.gestion_tipo_id = '2018') and
               (maestro_inscripcion.es_vigente_administrativo = true) and
               ((cargo_tipo.id = '1') or (cargo_tipo.id = '12'))
             GROUP BY
@@ -502,7 +502,7 @@ class BusquedasController extends Controller
                             LEFT JOIN usuario z ON z.persona_id = k.id 
 
                     WHERE (institucioneducativa_curso.institucioneducativa_id = '".$this->session->get('ie_id')."') 
-                            and (institucioneducativa_curso.gestion_tipo_id = '2017') 
+                            and (institucioneducativa_curso.gestion_tipo_id = '2018') 
                             and k.segip_id <> 0
 
                     GROUP BY 

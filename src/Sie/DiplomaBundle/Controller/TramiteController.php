@@ -165,7 +165,7 @@ class TramiteController extends Controller {
                     , 'subtitulo' => 'Diplomas de Bachiller'
         ));
     }
-    
+
     /**
      * Despliega formulario de busqueda para la impresion de listados
      * @return type
@@ -185,8 +185,8 @@ class TramiteController extends Controller {
                     , 'subtitulo' => 'Diplomas de Bachiller'
         ));
     }
-    
-    
+
+
     /**
      * Despliega formulario de registro para una legalizacion de diploma
      * @return type
@@ -250,7 +250,7 @@ class TramiteController extends Controller {
         $sie = $form['sie'];
         $ges = $form['gestion'];
         $identificador = $form['identificador'];
-       
+
         ///////return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
         $arch = $sie.'_'.$ges.'_legalizacion'.date('YmdHis').'.pdf';
         $response = new Response();
@@ -263,7 +263,7 @@ class TramiteController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
-    
+
     /**
      * Registro de la legalizacion de diploma
      * @return type
@@ -274,7 +274,7 @@ class TramiteController extends Controller {
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
-        
+
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
@@ -282,7 +282,7 @@ class TramiteController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        
+
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
@@ -315,12 +315,12 @@ class TramiteController extends Controller {
                 return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
             }
 
-            
+
             $departamentoUsuario = 0;
             if (count($entityUsuario) > 0){
                 $departamentoUsuario = $entityUsuario[0]["lugar_tipo_id"];
-            } 
-            
+            }
+
             if ($ges > 2014) {
                 $query = $em->getConnection()->prepare("
                     select d.tramite_id as tramite_id, case d.documento_tipo_id when 9 then cast(left(d.documento_serie_id,(char_length(d.documento_serie_id)-(2))) as integer) else cast(left(d.documento_serie_id,(char_length(d.documento_serie_id)-(case ds.gestion_id when 2010 then 2 when 2013 then 2 else 1 end))) as integer) end as numero_serie
@@ -330,8 +330,8 @@ class TramiteController extends Controller {
                     , case pt.id when 7 then true else false end as estadofintramite
                     , case d.documento_estado_id when 1 then true else false end as estadodocumento
                     , e.codigo_rude as rude, e.observacion
-                    from documento as d 
-                    inner join documento_serie as ds on ds.id = d.documento_serie_id 
+                    from documento as d
+                    inner join documento_serie as ds on ds.id = d.documento_serie_id
                     inner join tramite as t on t.id = d.tramite_id
                     inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                     inner join estudiante as e on e.id = ei.estudiante_id
@@ -340,7 +340,7 @@ class TramiteController extends Controller {
                     left join flujo_proceso as fp on fp.id = td.flujo_proceso_id
                     left join proceso_tipo as pt on pt.id = fp.proceso_id
                     where d.documento_tipo_id in (1,3,4,5,9) and d.documento_serie_id in ('".str_pad(strtoupper($serie), 7, "0", STR_PAD_LEFT)."') and ds.gestion_id = ".$ges." and ds.departamento_tipo_id = ".$departamentoUsuario."
-                ");  
+                ");
             } else {
                 $query = $em->getConnection()->prepare("
                     select d.tramite_id as tramite_id, case d.documento_tipo_id when 9 then cast(left(d.documento_serie_id,(char_length(d.documento_serie_id)-(2))) as integer) else cast(left(d.documento_serie_id,(char_length(d.documento_serie_id)-(case ds.gestion_id when 2010 then 2 when 2013 then 2 else 1 end))) as integer) end as numero_serie
@@ -350,8 +350,8 @@ class TramiteController extends Controller {
                     , case pt.id when 7 then true else false end as estadofintramite
                     , case d.documento_estado_id when 1 then true else false end as estadodocumento
                     , e.codigo_rude as rude, e.observacion
-                    from documento as d 
-                    inner join documento_serie as ds on ds.id = d.documento_serie_id 
+                    from documento as d
+                    inner join documento_serie as ds on ds.id = d.documento_serie_id
                     inner join tramite as t on t.id = d.tramite_id
                     inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                     inner join estudiante as e on e.id = ei.estudiante_id
@@ -399,7 +399,7 @@ class TramiteController extends Controller {
                         try {
                             $idDocumento = $this->generaDocumento($entity[0]["tramite_id"], $id_usuario, 2, $entity[0]["numero_serie"], $entity[0]["tipo_serie"], $ges, $fechaActual);
                             $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El documento con numero de serie "'.$entity[0]["numero_serie"].$entity[0]["tipo_serie"].'" fue legalizado'));
-                            $em->getConnection()->commit();     
+                            $em->getConnection()->commit();
                             ///////return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
                             $arch = $serie.'_'.$ges.'_legalizacion'.date('YmdHis').'.pdf';
                             $response = new Response();
@@ -419,12 +419,12 @@ class TramiteController extends Controller {
                             $em->getConnection()->rollback();
                             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
                             return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
-                        }                   
+                        }
                     }
                 } else {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, inconsistencia de datos con el documento "'. $serie .'" , intente nuevamente'));
                     return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
-                }                
+                }
             } else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, el documento con número de serie "'. $serie .'" no existe o no tiene tuición sobre el mismo, intente nuevamente'));
                 return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
@@ -432,8 +432,8 @@ class TramiteController extends Controller {
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
             return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
-        }   
-    }    
+        }
+    }
 
     private function creaFormularioBuscador($routing, $value1, $value2, $value3, $identificador) {
         if ($identificador == 0){
@@ -447,17 +447,17 @@ class TramiteController extends Controller {
                                     ->orderBy('gt.id', 'DESC');
                         },
                     ))
-                    ->add('lista','choice',  
+                    ->add('lista','choice',
                       array('label' => 'Lista',
                             'choices' => array( '2' => 'Recepción Distrito'
                                                 ,'3' => 'Recepción Departamento'
                                                 ,'4' => 'Autorización'
-                                                ,'5' => 'Impresión'      
-                                                ,'6' => 'Entrega Departamento' 
-                                                ,'7' => 'Entrega Distrito'  
-                                                ,'1' => 'Trámite Observado' 
-                                                ,'100' => 'Diplomas Impresos' 
-                                                ,'101' => 'Diplomas Anulados'                                                  
+                                                ,'5' => 'Impresión'
+                                                ,'6' => 'Entrega Departamento'
+                                                ,'7' => 'Entrega Distrito'
+                                                ,'1' => 'Trámite Observado'
+                                                ,'100' => 'Diplomas Impresos'
+                                                ,'101' => 'Diplomas Anulados'
                                                 ),
                             'data' => $value3))
                     ->add('identificador', 'hidden', array('attr' => array('value' => $identificador)))
@@ -505,7 +505,7 @@ class TramiteController extends Controller {
                                 ->where('pt.id in (2,3)')
                                 ->orderBy('pt.id', 'ASC');
                     },
-                ))                
+                ))
                 ->add('identificador', 'hidden', array('attr' => array('value' => $identificador)))
                 ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue')))
                 ->getForm();
@@ -534,11 +534,11 @@ class TramiteController extends Controller {
             //asljhdjksahdkjhsajkdhsjkahdjkshajkdhsjakhdjkjjjjjjjjjjjjjjjjjjjjj
             $em = $this->getDoctrine()->getManager();
             $query = $em->getConnection()->prepare("
-                    select distinct ds.gestion_id as id, cast(right (ds.id,((case ds.gestion_id when 2013 then 2 when 2010 then 2 else 1 end))) as varchar) as gestion_tipo 
-                    from documento_serie as ds 
+                    select distinct ds.gestion_id as id, cast(right (ds.id,((case ds.gestion_id when 2013 then 2 when 2010 then 2 else 1 end))) as varchar) as gestion_tipo
+                    from documento_serie as ds
                     ");
             $query->execute();
-            $entity = $query->fetchAll();  
+            $entity = $query->fetchAll();
             $aGestion = array();
             foreach ($entity as $ges) {
 
@@ -549,7 +549,7 @@ class TramiteController extends Controller {
             $form = $this->createFormBuilder()
                     ->setAction($this->generateUrl($routing))
                     ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('value' => $value1, 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
-                    ->add('gestion','choice',  
+                    ->add('gestion','choice',
                       array('label' => 'Lista',
                             'choices' => $aGestion,
                             'data' => $value2))
@@ -560,7 +560,7 @@ class TramiteController extends Controller {
 
         return $form;
     }
-    
+
     private function creaFormularioLegalizador($routing, $value1, $value2, $identificador, $boton) {
         if($boton == "Reactivar"){
             $form = $this->createFormBuilder()
@@ -580,7 +580,7 @@ class TramiteController extends Controller {
         } else {
             $form = $this->createFormBuilder()
                     ->setAction($this->generateUrl($routing))
-                    ->add('texto', 'text', array('label' => 'SERIE', 'attr' => array('value' => $value1, 'class' => 'form-control', 'pattern' => '^@?(\w){1,8}$', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))                    
+                    ->add('texto', 'text', array('label' => 'SERIE', 'attr' => array('value' => $value1, 'class' => 'form-control', 'pattern' => '^@?(\w){1,8}$', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                     //->add('gestion', 'entity', array('data' => $value2, 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     //    'query_builder' => function(EntityRepository $er) {
                     //        return $er->createQueryBuilder('gt')
@@ -591,7 +591,7 @@ class TramiteController extends Controller {
                     ->add('identificador', 'hidden', array('attr' => array('value' => $identificador)))
                     ->add('search', 'submit', array('label' => $boton, 'attr' => array('class' => 'btn btn-blue')))
                     ->getForm();
-        }          
+        }
         return $form;
     }
 
@@ -640,7 +640,7 @@ class TramiteController extends Controller {
                 $form['lista'] = $this->session->get('datosBusqueda')['lista'];
             }
         }
-        
+
         if ($form) {
             $sie = $form['sie'];
             $ges = $form['gestion'];
@@ -683,13 +683,13 @@ class TramiteController extends Controller {
             //                $this->session->getFlashBag()->set('danger',array('title' => 'Error','message' => 'No tiene tuición sobre la Unidad Educativa'));
             //                return $this->redirectToRoute('sie_diploma_tramite_recepcion_distrito');
             //            }
-            
+
             $bachilleres = $this->buscaEstudiantesUnidadEducativa($sie, $ges, $identificador, $lista);
-            
+
             $query = $em->getConnection()->prepare('SELECT * FROM flujo_tipo order by id');
             $query->execute();
             $flujos = $query->fetchAll();
-            
+
             if ($identificador == 13) {
                 $subtitulo = "Recepcion de Trámite - Distrito";
             } elseif ($identificador == 14) {
@@ -705,7 +705,7 @@ class TramiteController extends Controller {
             } elseif ($identificador == 0) {
                 $subtitulo = "Impresión Listados";
             }
-            
+
             if($identificador == 0){
                 return $this->render('SieDiplomaBundle:Tramite:ListaTramitesImpresion.html.twig', array(
                         'form' => $this->creaFormularioBuscador('sie_diploma_tramite_busca_ue', $sie, $ges, $lista, $identificador)->createView()
@@ -736,12 +736,12 @@ class TramiteController extends Controller {
                     $em = $this->getDoctrine()->getManager();
                     $query = $em->getConnection()->prepare("select distinct case gestion_id when 2013 then RIGHT(id,2) when 2010 then RIGHT(id,2) else RIGHT(id,1) end as serie from documento_serie order by serie");
                     $query->execute();
-                    $entitySerie = $query->fetchAll();                    
-                    
+                    $entitySerie = $query->fetchAll();
+
                     $query = $em->getConnection()->prepare("select * from gestion_tipo order by id desc");
                     $query->execute();
                     $entityGestion = $query->fetchAll();
-                    
+
                     return $this->render('SieDiplomaBundle:Tramite:ListaTramitesUnidadEducativa.html.twig', array(
                                 'form' => $this->creaFormularioBuscador('sie_diploma_tramite_busca_ue', $sie, $ges, '', $identificador)->createView()
                                 , 'bachilleres' => $bachilleres
@@ -803,7 +803,7 @@ class TramiteController extends Controller {
             }
         }
         //die("ghj");
-        
+
         if ($form) {
             $sie = $form['sie'];
             $ges = $form['gestion'];
@@ -848,13 +848,13 @@ class TramiteController extends Controller {
             //                $this->session->getFlashBag()->set('danger',array('title' => 'Error','message' => 'No tiene tuición sobre la Unidad Educativa'));
             //                return $this->redirectToRoute('sie_diploma_tramite_recepcion_distrito');
             //            }
-            
+
             //die($sie." - ".$ges." - ".$suc." - ".$per." - ".$identificador." - ".$lista);
             $bachilleres = $this->buscaEstudiantesCentroEducacionAlternativa($sie, $ges, $suc, $per, $identificador, $lista);
             $query = $em->getConnection()->prepare('SELECT * FROM flujo_tipo order by id');
             $query->execute();
             $flujos = $query->fetchAll();
-            
+
             if ($identificador == 13) {
                 $subtitulo = "Recepcion de Trámite - Distrito";
             } elseif ($identificador == 14) {
@@ -870,7 +870,7 @@ class TramiteController extends Controller {
             } elseif ($identificador == 0) {
                 $subtitulo = "Impresión Listados";
             }
-            
+
             if($identificador == 0){
                 return $this->render('SieDiplomaBundle:Tramite:ListaTramitesImpresion.html.twig', array(
                         'form' => $this->creaFormularioBuscador('sie_diploma_tramite_busca_ue', $sie, $ges, $lista, $identificador)->createView()
@@ -900,7 +900,7 @@ class TramiteController extends Controller {
                         , 'sucursal' => $suc
                         , 'periodo' => $per
                     ));
-            } 
+            }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar la busqueda, intente nuevamente'));
             return $this->redirectToRoute('sie_diploma_tramite_busca_cea');
@@ -952,10 +952,10 @@ class TramiteController extends Controller {
             } else {
                 $retorna = 'sie_diploma_homepage';
             }
-            
+
             /*
              * Verifica si el estudiante figura como promovido
-             */                        
+             */
             $habilitado = $this->verificaNivelUnidadEducativa($ue);
             if ($habilitado == 0){
                  $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La unidad educativa '.$ue.' no puede extender diplomas de bachiller'));
@@ -985,7 +985,7 @@ class TramiteController extends Controller {
             if (isset($_POST['botonEntregar'])) {
                 $flujoSeleccionado = 'Finalizar';
             }
-            
+
             try {
                 /*
                  * Denine el tipo de tramite y flujo que se aplicara al trámite
@@ -999,41 +999,41 @@ class TramiteController extends Controller {
                 $mensajeerror = '';
                 $mensaje = '';
                 foreach ($estudiantes as $estudiante) {
-                    $estudianteInscripcionId = (Int) $estudiante;                        
+                    $estudianteInscripcionId = (Int) $estudiante;
                     $em = $this->getDoctrine()->getManager();
-                    
+
 
                     $entityEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
                     /*
                      * Verifica si el estudiante ya cuenta con un tramite o documento en funcion a su codigo rude
-                     */                        
-                    //$verificaEstudianteRude = $this->verificaEstudianteConDobleTramite($estudianteInscripcionId,1);  
-                    $verificaEstudianteDiploma = "";                  
+                     */
+                    //$verificaEstudianteRude = $this->verificaEstudianteConDobleTramite($estudianteInscripcionId,1);
+                    $verificaEstudianteDiploma = "";
                     $verificaEstudianteDiploma = $this->verificaEstudianteConDiplomaActivo($entityEstudianteInscripcion->getEstudiante()->getId(),1);
 //                    if ($verificaEstudianteRude == 1){
 //                        $em->getConnection()->rollback();
 //                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con código '.$rude.' ya cuenta con un trámite en diplomas de bachiller'));
 //                        return $this->redirectToRoute($retorna);
-//                    }     
+//                    }
 
                     if ($verificaEstudianteDiploma != ""){
                         /*
-                         * Verifica si el estudiante ya tiene un diploma impreso 
-                         */   
+                         * Verifica si el estudiante ya tiene un diploma impreso
+                         */
                         //$mensaje = '';
-                        //$mensaje = $this->verificaEstudianteConDiplomaActivo($estudianteInscripcionId,1);   
+                        //$mensaje = $this->verificaEstudianteConDiplomaActivo($estudianteInscripcionId,1);
                         if ($mensajeerror == ""){
                             $mensajeerror = $verificaEstudianteDiploma;
-                        } else {                            
+                        } else {
                             $mensajeerror = $mensajeerror.", ".$verificaEstudianteDiploma;
-                        }                      
-                    } 
-                    
+                        }
+                    }
+
 //                    if ($verificaEstudianteRude == 3){
 //                        $em->getConnection()->rollback();
 //                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con código '.$rude.' no se encuentra registrado en el sistema'));
 //                        return $this->redirectToRoute($retorna);
-//                    } 
+//                    }
 
 
                     if ($verificaEstudianteDiploma == ""){
@@ -1064,7 +1064,7 @@ class TramiteController extends Controller {
                         $em->flush();
 
                         /*
-                         * Extra el id del registro ingresado de la tabla tramite 
+                         * Extra el id del registro ingresado de la tabla tramite
                          */
                         $tramiteId = $entityTramite->getId();
 
@@ -1075,7 +1075,7 @@ class TramiteController extends Controller {
                  * Genera alfanumerico y número aleatorio
                  */
                 // $generator = substr(str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',1)),0.5);
-                // $generator = rand();   
+                // $generator = rand();
                 // Confirmar la transacción
                 $em->getConnection()->commit();
                 $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Trámite registrado'));
@@ -1112,8 +1112,8 @@ class TramiteController extends Controller {
         $fechaActual = new \DateTime(date('Y-m-d'));
 
         $sesion = $request->getSession();
-        $id_usuario = $sesion->get('userId');       
-                
+        $id_usuario = $sesion->get('userId');
+
         //valida si el usuario ha iniciado sesión
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -1121,8 +1121,8 @@ class TramiteController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
-                
-        
+
+
         try {
             /*
              * Recupera datos del formulario
@@ -1133,7 +1133,7 @@ class TramiteController extends Controller {
                 $ue = $request->get('sie');
                 $identificador = $request->get('identificador');
                 $obs = '';
-                
+
                 /*
                  * Extrae en codigo de departamento del usuario
                  */
@@ -1146,8 +1146,8 @@ class TramiteController extends Controller {
                 $departamentoUsuario = 0;
                 if (count($entityUsuario) > 0){
                     $departamentoUsuario = $entityUsuario[0]["lugar_tipo_id"];
-                } 
-                
+                }
+
 
                 if ($identificador == 13) {
                     $retorna = 'sie_diploma_tramite_recepcion_distrito';
@@ -1164,15 +1164,15 @@ class TramiteController extends Controller {
                 } else {
                     $retorna = 'sie_diploma_homepage';
                 }
-                
+
                 /*
                  * Verifica si la Unidad Educativa esta habilitada para la entrega de diplomas
-                 */                        
+                 */
                 $habilitado = $this->verificaNivelUnidadEducativa($ue);
                 if ($habilitado == 0){
                      $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'La unidad educativa '.$ue.' no puede extender diplomas de bachiller'));
                     return $this->redirectToRoute($retorna);
-                }   
+                }
 
                 /*
                  * Verifica si preciono en boton adelante o atras
@@ -1181,25 +1181,25 @@ class TramiteController extends Controller {
                     $flujoSeleccionado = 'Adelante';
                 }
                 if (isset($_POST['botonDevolver'])) {
-                    $flujoSeleccionado = 'Atras';                    
+                    $flujoSeleccionado = 'Atras';
                     $obs = $request->get('obs');
                 }
                 if (isset($_POST['botonAnular'])) {
-                    $flujoSeleccionado = 'Anular'; 
+                    $flujoSeleccionado = 'Anular';
                 }
                 if (isset($_POST['botonEntregar'])) {
-                    $flujoSeleccionado = 'Finalizar'; 
+                    $flujoSeleccionado = 'Finalizar';
                 }
-                
+
                 /*
                  * Halla cantidad de registros a procesar
                  */
                 $cantidadEstudiantes = sizeof($estudiantes);
-                
+
                 /*
-                 * Verifica si el rango de serie esta disponible para la impresion de diplomas 
+                 * Verifica si el rango de serie esta disponible para la impresion de diplomas
                  */
-                if ($identificador == 16 and $flujoSeleccionado == 'Adelante') {                    
+                if ($identificador == 16 and $flujoSeleccionado == 'Adelante') {
                     $numeroSerie = $request->get('numeroSerie');
                     $numSerieIni = $numeroSerie;
                     $numSerieFin = $numeroSerie+$cantidadEstudiantes;
@@ -1228,45 +1228,45 @@ class TramiteController extends Controller {
                 foreach ($estudiantes as $estudiante) {
                     $tramiteId = (Int) $estudiante;
                     //$verificaEstudianteRude = $this->verificaEstudianteConDobleTramite($tramiteId,2);
-                    $verificaEstudianteDiploma = "";   
-                    
-                    if ($flujoSeleccionado == 'Adelante' and $identificador < 17) { 
+                    $verificaEstudianteDiploma = "";
+
+                    if ($flujoSeleccionado == 'Adelante' and $identificador < 17) {
 
                         $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
-               
+
                         $verificaEstudianteDiploma = $this->verificaEstudianteConDiplomaActivo($entityTramite->getEstudianteInscripcion()->getEstudiante()->getId(),1);
 //                        /*
 //                         * Verifica si el estudiante ya cuenta con un tramite o documento en funcion a su codigo rude
-//                         */                        
+//                         */
 //    //                    if ($verificaEstudianteRude == 1){
 //    //                        $em->getConnection()->rollback();
 //    //                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con código '.$rude.' ya cuenta con un trámite en diplomas de bachiller'));
 //    //                        return $this->redirectToRoute($retorna);
-//    //                    }   
-                        
+//    //                    }
+
                         if ($verificaEstudianteDiploma != ""){
                             /*
-                             * Verifica si el estudiante ya tiene un diploma impreso 
-                             */   
+                             * Verifica si el estudiante ya tiene un diploma impreso
+                             */
                             //$mensaje = '';
-                            //$mensaje = $this->verificaEstudianteConDiplomaActivo($tramiteId,2);   
+                            //$mensaje = $this->verificaEstudianteConDiplomaActivo($tramiteId,2);
                             if ($mensajeerror == ""){
                                 $mensajeerror = $verificaEstudianteDiploma;
-                            } else {                            
+                            } else {
                                 $mensajeerror = $mensajeerror.", ".$verificaEstudianteDiploma;
-                            }                      
-                        } 
+                            }
+                        }
 //
 //                        if ($verificaEstudianteRude == 3){
 //                            $em->getConnection()->rollback();
 //                            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con código '.$rude.' no se encuentra registrado en el sistema'));
 //                            return $this->redirectToRoute($retorna);
-//                        } 
+//                        }
                     }
 
                     if ($verificaEstudianteDiploma == ""){
-                        $error = $this->procesaTramite($tramiteId, $id_usuario, $flujoSeleccionado,$obs);                    
-                        
+                        $error = $this->procesaTramite($tramiteId, $id_usuario, $flujoSeleccionado,$obs);
+
                         /*
                          * Genera documento diploma
                          */
@@ -1275,24 +1275,24 @@ class TramiteController extends Controller {
                             $countSerieArray = $countSerieArray + 1;
                         }
                     }
-                    
+
                     /*
                      * Anula documento diploma
                      */
                     if ($identificador == 17 and $flujoSeleccionado == 'Atras') {
                         $error = $this->anulaDocumento($tramiteId,$obs);
                     }
-                }    
-                                  
-                
+                }
+
+
                 $em->getConnection()->commit();
                 $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => sizeof($estudiantes).' Trámite(s) procesado(s)'));
                 if($mensajeerror != ""){
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => "Los estudiantes ".$mensajeerror." ya cuentan con Diploma de Bachiller Humanístico." ));
                 }
                 $this->session->set('save', true);
-                $this->session->set('datosBusqueda', array('sie' => $ue, 'gestion' => $gestion, 'identificador' => $identificador));                
-                
+                $this->session->set('datosBusqueda', array('sie' => $ue, 'gestion' => $gestion, 'identificador' => $identificador));
+
 //                if ($identificador == 16 and $flujoSeleccionado == 'Adelante') {
 //                    $resp = $this->forward('SieDiplomaBundle:Tramite:printDocumento',array('numSerieIni' => $numSerieIni,'numSerieFin' => $numSerieFin,'tipoSerie' => $tipoSerie));
 //                } else {
@@ -1313,14 +1313,14 @@ class TramiteController extends Controller {
 //                    $response->setStatusCode(200);
 //                    $response->headers->set('Pragma', 'no-cache');
 //                    $response->headers->set('Expires', '0');
-//                    $response->send(); 
+//                    $response->send();
 //                }
 
                 /*
                  * Genera alfanumerico y número aleatorio
                  */
                 // $generator = substr(str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',1)),0.5);
-                // $generator = rand();   
+                // $generator = rand();
                 // Confirmar la transacción
             } else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Formulario enviado'));
@@ -1352,8 +1352,8 @@ class TramiteController extends Controller {
                 }
             }
         }
-        
-        if ($cantidadEstudiantes>0){            
+
+        if ($cantidadEstudiantes>0){
             /*
              * Verifica si todos los series estan disponibles
              */
@@ -1366,7 +1366,7 @@ class TramiteController extends Controller {
                 if(count($entity) === sizeof($numerosSerie)){
                     $return = "";
                 } else {
-                    $seriesNoDisponibles = "";                    
+                    $seriesNoDisponibles = "";
                     foreach ($numerosSerie as $numSer)
                     {
                         $disponible = "";
@@ -1382,11 +1382,11 @@ class TramiteController extends Controller {
                             } else {
                                 $seriesNoDisponibles = $seriesNoDisponibles.",'".$numSer.$tipoSerie."'";
                             }
-                        }  
+                        }
                     }
-                    $this->session->set('save', false);                  
+                    $this->session->set('save', false);
                     $return = "De los número de serie solicitados (".$series."), no se ecuentra disponible el número de serie (".$seriesNoDisponibles.")" ;
-                }                
+                }
             } else {
                 $this->session->set('save', false);
                 $return = "No tiene asignado los Números de Serie (".$series.") en la gestión ".$gestion." o el numero de serie ya fue utilizada";
@@ -1396,8 +1396,8 @@ class TramiteController extends Controller {
             $return = "No seleccionaron bachilleres, favor de intentar nuevamente";
         }
         return $return;
-    } 
-            
+    }
+
     private function generaDocumento($tramiteId, $usuarioId, $documentoTipo, $numeroSerie, $tipoSerie, $gestion, $fecha) {
         /*
          * Define la zona horaria y halla la fecha actual
@@ -1434,7 +1434,7 @@ class TramiteController extends Controller {
 $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => str_pad(strtoupper($numeroSerie), 6, "0", STR_PAD_LEFT).$tipoSerie));
             } else {
                 $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $numeroSerie.$tipoSerie));
-            }            
+            }
             $entityDocumentoEstado = $em->getRepository('SieAppWebBundle:DocumentoEstado')->findOneBy(array('id' => 1));
             $entityDocumento = new Documento();
             $entityDocumento->setDocumento('');
@@ -1447,13 +1447,13 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
             $entityDocumento->setTramite($entityTramite[0]);
             $entityDocumento->setDocumentoEstado($entityDocumentoEstado);
             $em->persist($entityDocumento);
-            $em->flush();   
+            $em->flush();
             return $entityDocumento->getId();
         } else {
             throw new Exception('Se ha producido un error muy grave.');
         }
     }
-            
+
     private function anulaDocumento($tramiteId, $obs) {
         /*
          * Define la zona horaria y halla la fecha actual
@@ -1484,7 +1484,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
             $entityDocumento[0]->setDocumentoEstado($entityDocumentoEstado);
             $entityDocumento[0]->setObs($obsEntity);
             $em->persist($entityDocumento[0]);
-            $em->flush();   
+            $em->flush();
             $return = "";
         } else {
             $return = "Trámite no encontrado, intente nuevamente";
@@ -1508,12 +1508,12 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         $query = $em->getConnection()->prepare("
                 select ot.id as codigo, ot.orgcurricula as tipo from institucioneducativa as ie
                 inner join orgcurricular_tipo as ot on ot.id = ie.orgcurricular_tipo_id
-                where ie.id = :sie::INT       
+                where ie.id = :sie::INT
                 ");
         $query->bindValue(':sie', $sie);
         $query->execute();
         $entitySistema = $query->fetchAll();
-        
+
         if (count($entitySistema)>0){
             if ($entitySistema[0]["codigo"] == 2){
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'dpl_lst_EstudiantesTramiteDistritoAlternativa_UnidadEducativa_v1.rptdesign&p_codUE='.$sie.'&p_gestion='.$gestion.'&&__format=pdf&'));
@@ -1534,7 +1534,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         return $response;
         //return $response;
     }
-    
+
     /**
      * Imprime el listado en pdf segun el tipo de listado seleccionado impresion de listados
      * @return type
@@ -1566,12 +1566,12 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         $query = $em->getConnection()->prepare("
                 select ot.id as codigo, ot.orgcurricula as tipo from institucioneducativa as ie
                 inner join orgcurricular_tipo as ot on ot.id = ie.orgcurricular_tipo_id
-                where ie.id = :sie::INT       
+                where ie.id = :sie::INT
                 ");
         $query->bindValue(':sie', $sie);
         $query->execute();
         $entitySistema = $query->fetchAll();
-        if (count($entitySistema)>0){     
+        if (count($entitySistema)>0){
             if ($lista == 100){
                 if ($estudiantes != ''){
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'dpl_lst_EstudiantesDiplomaImpreso_Seleccionado_v1.rptdesign&p_codUE='.$sie.'&p_gestion='.$gestion.'&p_ids='.$listaEstudiantes.'&&__format=pdf&'));
@@ -1583,7 +1583,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'dpl_lst_EstudiantesDiplomaAnulado_Seleccionado_v1.rptdesign&p_codUE='.$sie.'&p_gestion='.$gestion.'&p_ids='.$listaEstudiantes.'&&__format=pdf&'));
                 } else {
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'dpl_lst_EstudiantesDiplomaAnulado_Todo_v1.rptdesign&p_codUE='.$sie.'&p_gestion='.$gestion.'&&__format=pdf&'));
-                }    
+                }
             } else {
                 if ($entitySistema[0]["codigo"] == 2){
                     //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'dpl_lst_EstudiantesTramiteDistritoAlternativa_UnidadEducativa_v1.rptdesign&p_codUE='.$sie.'&p_gestion='.$gestion.'&&__format=pdf&'));
@@ -1591,13 +1591,13 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'dpl_lst_EstudiantesTramiteBandejaAlternativa_Seleccionado_v1.rptdesign&p_codUE='.$sie.'&p_gestion='.$gestion.'&p_ids='.$listaEstudiantes.'&p_tipoLista='.$lista.'&&__format=pdf&'));
                     } else {
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'dpl_lst_EstudiantesTramiteBandejaAlternativa_Todo_v1.rptdesign&p_codUE='.$sie.'&p_gestion='.$gestion.'&p_tipoLista='.$lista.'&&__format=pdf&'));
-                    } 
-                } else {                    
+                    }
+                } else {
                     if ($estudiantes != ''){
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'dpl_lst_EstudiantesTramiteBandeja_Seleccionado_v1.rptdesign&p_codUE='.$sie.'&p_gestion='.$gestion.'&p_ids='.$listaEstudiantes.'&p_tipoLista='.$lista.'&&__format=pdf&'));
-                    } else {                        
+                    } else {
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'dpl_lst_EstudiantesTramiteBandeja_Todo_v1.rptdesign&p_codUE='.$sie.'&p_gestion='.$gestion.'&p_tipoLista='.$lista.'&&__format=pdf&'));
-                    }             
+                    }
                 }
             }
         } else {
@@ -1610,7 +1610,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         return $response;
         //return $response;
     }
-    
+
     public function printReportesDepartamentalPdfAction(Request $request) {
         $sie = $request->get('sie');
         $gestion = $request->get('gestion');
@@ -1625,8 +1625,8 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         $response->headers->set('Expires', '0');
         return $response;
         //return $response;
-    }   
-    
+    }
+
     public function printDiplomaPdfAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         /*
@@ -1636,24 +1636,24 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         $gestion = $request->get('gestion');
         $ue = $request->get('sie');
         $identificador = $request->get('identificador');
-        
+
         /*
          * Verifica si tiene diplomas por imprimir
          */
-        $query = $em->getConnection()->prepare("                
-                select * from documento as d 
+        $query = $em->getConnection()->prepare("
+                select * from documento as d
                 left join documento_serie as ds on ds.id = d.documento_serie_id
                 left join tramite as t on t.id = d.tramite_id
                 left join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
-                left join estudiante as e on e.id = ei.estudiante_id         
+                left join estudiante as e on e.id = ei.estudiante_id
                 left join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
-                where d.documento_estado_id = 1 and d.documento_tipo_id = 1 and iec.institucioneducativa_id = :sie::INT and ds.gestion_id = :gestion::INT  
+                where d.documento_estado_id = 1 and d.documento_tipo_id = 1 and iec.institucioneducativa_id = :sie::INT and ds.gestion_id = :gestion::INT
                 ");
         $query->bindValue(':sie', $ue);
         $query->bindValue(':gestion', $gestion);
         $query->execute();
         $entity = $query->fetchAll();
-        
+
         /*
          * Halla el departamento de la Unidad Educativa
          */
@@ -1661,23 +1661,23 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 select dt.departamento_tipo_id as codigo from institucioneducativa as ie
                 inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                 inner join distrito_tipo as dt on dt.id = jg.distrito_tipo_id
-                where ie.id = :sie::INT       
+                where ie.id = :sie::INT
                 ");
         $query->bindValue(':sie', $ue);
         $query->execute();
         $entityDepto = $query->fetchAll();
-        
+
         if (count($entityDepto)>0){
             $depto = $entityDepto[0]['codigo'];
         } else {
             $depto = 1;
-        }        
-                
+        }
+
             $arch = $ue.'_'.$gestion.'_DIPLOMA_'.date('YmdHis').'.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-                        
+
             if ($depto == 1) {
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion));
             } elseif ($depto == 2) {
@@ -1699,16 +1699,16 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
             } else {
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion));
             }
-            
+
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
             $response->headers->set('Expires', '0');
             //die($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion);
             //$response->send();
-            return $response;    
+            return $response;
     }
-    
+
     public function impresionDiplomaPdfAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         /*
@@ -1731,24 +1731,24 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         } else {
             $tipoImpresion = 1;
         }
-        
+
         /*
          * Verifica si tiene diplomas por imprimir
          */
         $query = $em->getConnection()->prepare("
-                select * from documento as d 
+                select * from documento as d
                 left join documento_serie as ds on ds.id = d.documento_serie_id
                 left join tramite as t on t.id = d.tramite_id
                 left join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
-                left join estudiante as e on e.id = ei.estudiante_id         
+                left join estudiante as e on e.id = ei.estudiante_id
                 left join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
-                where d.documento_estado_id = 1 and d.documento_tipo_id = 1 and iec.institucioneducativa_id = :sie::INT and ds.gestion_id = :gestion::INT        
+                where d.documento_estado_id = 1 and d.documento_tipo_id = 1 and iec.institucioneducativa_id = :sie::INT and ds.gestion_id = :gestion::INT
                 ");
         $query->bindValue(':sie', $ue);
         $query->bindValue(':gestion', $gestion);
         $query->execute();
         $entity = $query->fetchAll();
-        
+
         /*
          * Halla el departamento de la Unidad Educativa
          */
@@ -1756,18 +1756,18 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 select dt.departamento_tipo_id as codigo from institucioneducativa as ie
                 inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                 inner join distrito_tipo as dt on dt.id = jg.distrito_tipo_id
-                where ie.id = :sie::INT       
+                where ie.id = :sie::INT
                 ");
         $query->bindValue(':sie', $ue);
         $query->execute();
         $entityDepto = $query->fetchAll();
-        
+
         if (count($entityDepto)>0){
             $depto = $entityDepto[0]['codigo'];
         } else {
             $depto = 1;
-        }        
-                
+        }
+
         //if (count($entity)>0){
             $arch = $ue.'_'.$gestion.'_DIPLOMA_'.date('YmdHis').'.pdf';
             $response = new Response();
@@ -1911,7 +1911,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_v3_pn.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo='.$tipoImpresion));
                     } else {
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo='.$tipoImpresion));
-                    }  
+                    }
                     break;
                 case 2016:
                     if ($depto == 1) {
@@ -1934,7 +1934,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_2016_v3_pn.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo='.$tipoImpresion));
                     } else {
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_2016_v3_ch.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo='.$tipoImpresion));
-                    }  
+                    }
                     break;
                 case 2017:
                     if ($depto == 1) {
@@ -1957,7 +1957,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_2017_v3_pn.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo='.$tipoImpresion));
                     } else {
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_2017_v3_ch.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo='.$tipoImpresion));
-                    }  
+                    }
                     break;
                 default :
                     if ($depto == 1) {
@@ -1983,8 +1983,8 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     }
                     break;
             }
-            
-                     
+
+
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -1992,15 +1992,15 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
             //die($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion);
             //$response->send();
             return $response;
-        
+
         //} else {
         //    $this->session->getFlashBag()->set('danger', array('title' => 'Alerta!', 'message' => 'La Unidad Educativa '.$ue.' no cuenta con diplomas de bachiller por imprimir'));
         //    $this->session->set('save', true);
         //    $this->session->set('datosBusqueda', array('sie' => $ue, 'gestion' => $gestion, 'identificador' => $identificador));
         //    return $this->redirectToRoute('sie_diploma_tramite_busca_ue');
-        //}       
+        //}
     }
-    
+
     public function printDiplomaListaPdfAction(Request $request) {
         /*
          * Recupera datos del formulario
@@ -2009,7 +2009,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         $gestion = $request->get('gestion');
         $ue = $request->get('sie');
         $identificador = $request->get('identificador');
-        
+
         $arch = $ue.'_'.$gestion.'_DIPLOMA_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
@@ -2021,44 +2021,44 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         $response->headers->set('Expires', '0');
         //die($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaEstudiante_unidadeducativa_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion);
         //$response->send();
-        return $response;       
+        return $response;
     }
-    
+
     private function verificaNivelUnidadEducativa($ue){
         $em = $this->getDoctrine()->getManager();
         /*
          * Verifica si la Unidad Educativa puede otorgar diplomas de bachiller o registrar para titulos tecnico medio alternativa
          */
         $query = $em->getConnection()->prepare("
-                select * from institucioneducativa as ie 
+                select * from institucioneducativa as ie
                 inner join (select * from institucioneducativa_nivel_autorizado where nivel_tipo_id in (13,15) or nivel_tipo_id > 17) as iena on iena.institucioneducativa_id = ie.id
-                where ie.id = :sie::INT       
+                where ie.id = :sie::INT
                 ");
         $query->bindValue(':sie', $ue);
         $query->execute();
         $entity = $query->fetchAll();
-        
+
         if (count($entity)>0){
             return 1;
         } else {
             return 0;
-        }   
+        }
     }
-    
+
     private function verificaEstudianteConDobleTramite($id,$tipo){
         $em = $this->getDoctrine()->getManager();
-        
+
         if($tipo == 1){
             /*
              * Verifica si el estudiante ya tiene un registro o diploma por su inscripcion en siged
              */
             $query = $em->getConnection()->prepare("
-                    select e.codigo_rude as rude from estudiante_inscripcion as ei 
+                    select e.codigo_rude as rude from estudiante_inscripcion as ei
                     inner join estudiante as e on e.id = ei.estudiante_id
                     where ei.id = ".$id."
                     ");
             $query->execute();
-            $entityEst = $query->fetchAll();  
+            $entityEst = $query->fetchAll();
         } elseif($tipo == 2) {
             /*
              * Verifica si el estudiante ya tiene un registro o diploma por su inscripcion en diplomas
@@ -2071,26 +2071,26 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     where t.id = ".$id."
                     ");
             $query->execute();
-            $entityEst = $query->fetchAll();  
+            $entityEst = $query->fetchAll();
         } else {
             /*
              * Verifica si el estudiante ya tiene un registro o diploma  por su inscripcion en siged
              */
             $query = $em->getConnection()->prepare("
-                    select e.codigo_rude as rude from estudiante_inscripcion as ei 
+                    select e.codigo_rude as rude from estudiante_inscripcion as ei
                     inner join estudiante as e on e.id = ei.estudiante_id
                     where ei.id = ".$id."
                     ");
             $query->execute();
-            $entityEst = $query->fetchAll();  
+            $entityEst = $query->fetchAll();
         }
-        
-        
-        
-        if (count($entityEst)>0){ 
+
+
+
+        if (count($entityEst)>0){
             $rude = $entityEst[0]["rude"];
             /*
-             * Verifica si el estudiante ya tiene un registro o diploma 
+             * Verifica si el estudiante ya tiene un registro o diploma
              */
             $query = $em->getConnection()->prepare("
                     select t.id as tramite_id, e.codigo_rude, t.esactivo as estado_tramite, d.id as documento_id, d.documento_serie_id as serie_id,
@@ -2104,12 +2104,12 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     inner join estudiante as e on e.id = ei.estudiante_id
                     inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                     left join (select * from documento where documento_estado_id = 1 and documento_tipo_id = 1) as d on d.tramite_id = t.id
-                    where e.codigo_rude = '".$rude."' --and iec.nivel_tipo_id in (13,15)   
+                    where e.codigo_rude = '".$rude."' --and iec.nivel_tipo_id in (13,15)
                     ");
             $query->execute();
-            $entity = $query->fetchAll();              
+            $entity = $query->fetchAll();
 
-            if (count($entity)>0){            
+            if (count($entity)>0){
                 for($i = 0; $i < count($entity); $i++) {
                     if (($entity[$i]["serie_id"]) != ""){
                         return 2;
@@ -2118,17 +2118,17 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 return 1;
             } else {
                 return 0;
-            }  
+            }
         } else {
             return 3;
-        }           
+        }
     }
 
     private function verificaEstudianteConDiplomaActivo($id,$tipo){
         $em = $this->getDoctrine()->getManager();
-        
+
         /*
-         * Verifica si el estudiante ya tiene un registro o diploma 
+         * Verifica si el estudiante ya tiene un registro o diploma
          */
         if ($tipo == 1) {
             $query = $em->getConnection()->prepare("
@@ -2138,7 +2138,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     inner join estudiante as e on e.id = ei.estudiante_id
                     inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                     inner join (select * from documento where documento_estado_id = 1 and documento_tipo_id = 1) as d on d.tramite_id = t.id
-                    where e.id = ".$id."  
+                    where e.id = ".$id."
                     ");
         } else {
             $query = $em->getConnection()->prepare("
@@ -2148,17 +2148,17 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     inner join estudiante as e on e.id = ei.estudiante_id
                     inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                     inner join (select * from documento where documento_estado_id = 1 and documento_tipo_id = 1) as d on d.tramite_id = t.id
-                    where t.id = ".$id."  
+                    where t.id = ".$id."
                     ");
         }
         $query->execute();
-        $entity = $query->fetchAll();          
-        
-        if (count($entity)>0){ 
+        $entity = $query->fetchAll();
+
+        if (count($entity)>0){
             return $entity[0]['codigo_rude']." (".$entity[0]['serie_id'].")";
         } else {
             return "";
-        }           
+        }
     }
 
 
@@ -2195,7 +2195,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     ->setParameter('codFlujoProceso', $entityTramiteDetalle[0]->getFlujoProceso()->getId())
                     ->setMaxResults('1');
             $entityFlujoProcesoDetalle = $query2->getQuery()->getResult();
-            
+
             /*
              * Extrae la posicion inicial del flujo actual
              */
@@ -2206,7 +2206,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     ->setParameter('codFlujo', $entityTramite->getFlujoTipo()->getId())
                     ->setMaxResults('1');
             $entityFlujoInicio = $query3->getQuery()->getResult();
-            
+
             if ($flujoSeleccionado == 'Adelante') {
                 $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 3));
                 $query = $entityFlujoProceso->createQueryBuilder('fp')
@@ -2216,15 +2216,15 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                         ->setMaxResults('1');
             } else {
                 if ($flujoSeleccionado == 'Anular') {
-                    $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 2));                
+                    $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 2));
                     $query = $entityFlujoProceso->createQueryBuilder('fp')
                             ->where('fp.id = :codFlujoProceso')
                             ->orderBy('fp.obs', 'ASC')
                             ->setParameter('codFlujoProceso', $entityFlujoInicio[0]->getId())
                             ->setMaxResults('1');
-                } else {                                  
+                } else {
                     if ($flujoSeleccionado == 'Finalizar') {
-                        $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 3));  
+                        $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 3));
                         /*
                          * Extrae la posicion final del flujo actual
                          */
@@ -2234,7 +2234,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                                 ->setParameter('codFlujo', $entityTramite->getFlujoTipo()->getId())
                                 ->setMaxResults('1');
                     } else {
-                        $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 4));  
+                        $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 4));
                         $query = $entityFlujoProceso->createQueryBuilder('fp')
                                 ->where('fp.id = :codFlujoProceso')
                                 ->orderBy('fp.obs', 'ASC')
@@ -2278,7 +2278,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         $entityTramiteDetalleNew->setFechaEnvio($fechaActual);
         $entityTramiteDetalleNew->setFechaModificacion($fechaActual);
         $entityTramiteDetalleNew->setFlujoProceso($entityFlujoProceso[0]);
-        
+
         /*
          * Define el conjunto de valores a ingresar - Tramite Detalle Anterior
          */
@@ -2292,8 +2292,8 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
 
         $em->persist($entityTramiteDetalleNew);
         $em->flush();
-        
-        
+
+
         if ($entityFlujoProceso[0]->getOrden() == 0){
             $entityTramite->setEsactivo('0');
             $em->persist($entityTramite);
@@ -2303,13 +2303,13 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
 
     public function buscaEstudiantesUnidadEducativa($sie, $gestion, $identificador, $lista) {
         $em = $this->getDoctrine()->getManager();
-        
+
         /*
          * Ingresa si es para ver listados para la impresion
          */
         if ($identificador == 0 and $lista < 100){
             $query = $em->getConnection()->prepare("
-                select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id, 
+                select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id,
                 CASE
                     WHEN iec.nivel_tipo_id = 13 THEN 'REGULAR HUMANISTICA'
                     WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
@@ -2319,26 +2319,26 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 inner join (select * from tramite_detalle where id in (select max(td2.id) as id from tramite_detalle as td2 inner join tramite as t2 on t2.id = td2.tramite_id where td2.tramite_estado_id <> 4 and td2.flujo_proceso_id = :flujo::INT and t2.gestion_id = :gestion group by td2.tramite_id)) as td on td.tramite_id = t.id
                 inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                 inner join estudiante as e on e.id = ei.estudiante_id
-                inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id                        
+                inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
                 inner join (select * from institucioneducativa_curso where institucioneducativa_id = :sie) as iec on iec.id = ei.institucioneducativa_curso_id
                 inner join periodo_tipo as pet on pet.id = iec.periodo_tipo_id
                 left join (select * from documento where id in (select max(id) from documento where documento_estado_id = 1 and documento_tipo_id in (1,3,4,5) group by tramite_id)) as d on d.tramite_id = t.id
                 left join lugar_tipo as lt on lt.id = e.lugar_prov_nac_tipo_id
                 left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
                 left join pais_tipo as pt on pt.id = e.pais_tipo_id
-                where iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie ::INT 
+                where iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie ::INT
                 order by e.paterno, e.materno, e.nombre
 
             ");
         }
-        
-        
+
+
         /*
          * Ingresa si es para ver listados para los diplomas impresos
          */
         if ($identificador == 0 and $lista == 100){
             $query = $em->getConnection()->prepare("
-                select t.id as tramite_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento,  
+                select t.id as tramite_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento,
                 CASE
                     WHEN iec.nivel_tipo_id = 13 THEN 'REGULAR HUMANISTICA'
                     WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
@@ -2348,7 +2348,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 INNER JOIN estudiante_inscripcion ei ON ei.id = t.estudiante_inscripcion_id
                 INNER JOIN estudiante e ON e.id = ei.estudiante_id
                 INNER JOIN genero_tipo gt ON gt.id = e.genero_tipo_id
-                INNER JOIN estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id   
+                INNER JOIN estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
                 INNER JOIN institucioneducativa_curso iec ON iec.id = ei.institucioneducativa_curso_id
                 INNER JOIN institucioneducativa ie ON ie.id = iec.institucioneducativa_id
                 INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
@@ -2359,17 +2359,17 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 INNER JOIN (select * from documento where documento_estado_id = 1 and documento_tipo_id in (1,3,4,5)) as d on d.tramite_id = t.id
                 LEFT JOIN lugar_tipo lt ON lt.id = e.lugar_prov_nac_tipo_id
                 LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
-                WHERE t.esactivo = true AND iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT 
+                WHERE t.esactivo = true AND iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT
                 ORDER BY e.paterno, e.materno, e.nombre
             ");
         }
-        
+
         /*
          * Ingresa si es para ver listados para los diplomas anulados
          */
         if ($identificador == 0 and $lista == 101){
             $query = $em->getConnection()->prepare("
-                select t.id as tramite_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento,  
+                select t.id as tramite_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento,
                 CASE
                     WHEN iec.nivel_tipo_id = 13 THEN 'REGULAR HUMANISTICA'
                     WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
@@ -2379,7 +2379,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 INNER JOIN estudiante_inscripcion ei ON ei.id = t.estudiante_inscripcion_id
                 INNER JOIN estudiante e ON e.id = ei.estudiante_id
                 INNER JOIN genero_tipo gt ON gt.id = e.genero_tipo_id
-                INNER JOIN estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id   
+                INNER JOIN estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
                 INNER JOIN institucioneducativa_curso iec ON iec.id = ei.institucioneducativa_curso_id
                 INNER JOIN institucioneducativa ie ON ie.id = iec.institucioneducativa_id
                 INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
@@ -2390,11 +2390,11 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 INNER JOIN (select * from documento where documento_estado_id = 2 and documento_tipo_id  in (1,3,4,5)) as d on d.tramite_id = t.id
                 LEFT JOIN lugar_tipo lt ON lt.id = e.lugar_prov_nac_tipo_id
                 LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
-                WHERE t.esactivo = true AND iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT 
+                WHERE t.esactivo = true AND iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT
                 ORDER BY e.paterno, e.materno, e.nombre
             ");
         }
-        
+
         /*
          * Ingresa si es para recepcionar distrito
          */
@@ -2402,7 +2402,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
             $query = $em->getConnection()->prepare('
                         select v.*, lt2.codigo as depto_nacimiento_id, lt2.lugar as depto_nacimiento from get_estudiante_candidatos_bachiller(:sie::INT,:gestion::INT) as v
                         left join lugar_tipo as lt1 on lt1.id = v.lugar_nacimiento_id
-                        left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id                
+                        left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
                     ');
         }
         /*
@@ -2410,7 +2410,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
          */
         if ($identificador == 14) {
             $query = $em->getConnection()->prepare("
-                        select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id, 
+                        select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id,
                         CASE
                             WHEN iec.nivel_tipo_id = 13 THEN 'REGULAR HUMANISTICA'
                             WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
@@ -2423,18 +2423,18 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                                 INNER JOIN tramite as tram on tram.id = trad.tramite_id
                                 INNER JOIN estudiante_inscripcion as esti on esti.id = tram.estudiante_inscripcion_id
                                 INNER JOIN institucioneducativa_curso as insc on insc.id = esti.institucioneducativa_curso_id
-                                where tramite_estado_id <> 4 and insc.institucioneducativa_id = :sie::INT and tram.gestion_id = :gestion::INT group by trad.tramite_id
+                                where tramite_estado_id <> 4 and insc.institucioneducativa_id = :sie::INT and insc.gestion_tipo_id  = :gestion::INT group by trad.tramite_id
                             ) and flujo_proceso_id = 2
-                        ) as td on td.tramite_id = t.id  
+                        ) as td on td.tramite_id = t.id
                         inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                         inner join estudiante as e on e.id = ei.estudiante_id
-                        inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id                        
+                        inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
                         inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                         inner join periodo_tipo as pet on pet.id = iec.periodo_tipo_id
                         left join lugar_tipo as lt on lt.id = e.lugar_prov_nac_tipo_id
                         left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
                         left join pais_tipo as pt on pt.id = e.pais_tipo_id
-                        where td.flujo_proceso_id = 2 and iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT 
+                        where td.flujo_proceso_id = 2 and iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT
                         order by e.paterno, e.materno, e.nombre
                     ");
         }
@@ -2443,7 +2443,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
          */
         if ($identificador == 15) {
             $query = $em->getConnection()->prepare("
-                        select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id, 
+                        select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id,
                         CASE
                             WHEN iec.nivel_tipo_id = 13 THEN 'REGULAR HUMANISTICA'
                             WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
@@ -2456,18 +2456,18 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                                 INNER JOIN tramite as tram on tram.id = trad.tramite_id
                                 INNER JOIN estudiante_inscripcion as esti on esti.id = tram.estudiante_inscripcion_id
                                 INNER JOIN institucioneducativa_curso as insc on insc.id = esti.institucioneducativa_curso_id
-                                where tramite_estado_id <> 4 and insc.institucioneducativa_id = :sie::INT and tram.gestion_id = :gestion::INT group by trad.tramite_id
+                                where tramite_estado_id <> 4 and insc.institucioneducativa_id = :sie::INT and insc.gestion_tipo_id  = :gestion::INT group by trad.tramite_id
                             ) and flujo_proceso_id = 3
-                        ) as td on td.tramite_id = t.id  
+                        ) as td on td.tramite_id = t.id
                         inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                         inner join estudiante as e on e.id = ei.estudiante_id
-                        inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id                        
+                        inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
                         inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                         inner join periodo_tipo as pet on pet.id = iec.periodo_tipo_id
                         left join lugar_tipo as lt on lt.id = e.lugar_prov_nac_tipo_id
                         left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
                         left join pais_tipo as pt on pt.id = e.pais_tipo_id
-                        where td.flujo_proceso_id = 3 and iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT 
+                        where td.flujo_proceso_id = 3 and iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT
                         order by e.paterno, e.materno, e.nombre
                     ");
         }
@@ -2476,7 +2476,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
          */
         if ($identificador == 16) {
             $query = $em->getConnection()->prepare("
-                        select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id, 
+                        select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id,
                         CASE
                             WHEN iec.nivel_tipo_id = 13 THEN 'REGULAR HUMANISTICA'
                             WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
@@ -2489,18 +2489,18 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                                 INNER JOIN tramite as tram on tram.id = trad.tramite_id
                                 INNER JOIN estudiante_inscripcion as esti on esti.id = tram.estudiante_inscripcion_id
                                 INNER JOIN institucioneducativa_curso as insc on insc.id = esti.institucioneducativa_curso_id
-                                where tramite_estado_id <> 4 and insc.institucioneducativa_id = :sie::INT and tram.gestion_id = :gestion::INT group by trad.tramite_id
+                                where tramite_estado_id <> 4 and insc.institucioneducativa_id = :sie::INT and insc.gestion_tipo_id  = :gestion::INT group by trad.tramite_id
                             ) and flujo_proceso_id = 4
-                        ) as td on td.tramite_id = t.id  
+                        ) as td on td.tramite_id = t.id
                         inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                         inner join estudiante as e on e.id = ei.estudiante_id
-                        inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id                        
+                        inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
                         inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                         inner join periodo_tipo as pet on pet.id = iec.periodo_tipo_id
                         left join lugar_tipo as lt on lt.id = e.lugar_prov_nac_tipo_id
                         left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
                         left join pais_tipo as pt on pt.id = e.pais_tipo_id
-                        where td.flujo_proceso_id = 4 and iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT 
+                        where td.flujo_proceso_id = 4 and iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT
                         order by e.paterno, e.materno, e.nombre
                     ");
         }
@@ -2509,7 +2509,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
          */
         if ($identificador == 17) {
             $query = $em->getConnection()->prepare("
-                        select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id, 
+                        select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id,
                         CASE
                             WHEN iec.nivel_tipo_id = 13 THEN 'REGULAR HUMANISTICA'
                             WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
@@ -2522,18 +2522,18 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                                 INNER JOIN tramite as tram on tram.id = trad.tramite_id
                                 INNER JOIN estudiante_inscripcion as esti on esti.id = tram.estudiante_inscripcion_id
                                 INNER JOIN institucioneducativa_curso as insc on insc.id = esti.institucioneducativa_curso_id
-                                where tramite_estado_id <> 4 and insc.institucioneducativa_id = :sie::INT and tram.gestion_id = :gestion::INT group by trad.tramite_id
+                                where tramite_estado_id <> 4 and insc.institucioneducativa_id = :sie::INT and insc.gestion_tipo_id  = :gestion::INT group by trad.tramite_id
                             ) and flujo_proceso_id = 5
-                        ) as td on td.tramite_id = t.id  
+                        ) as td on td.tramite_id = t.id
                         inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                         inner join estudiante as e on e.id = ei.estudiante_id
-                        inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id                        
+                        inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
                         inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                         inner join periodo_tipo as pet on pet.id = iec.periodo_tipo_id
                         left join lugar_tipo as lt on lt.id = e.lugar_prov_nac_tipo_id
                         left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
                         left join pais_tipo as pt on pt.id = e.pais_tipo_id
-                        where td.flujo_proceso_id = 5 and iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT 
+                        where td.flujo_proceso_id = 5 and iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT
                         order by e.paterno, e.materno, e.nombre
                     ");
         }
@@ -2542,7 +2542,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
          */
         if ($identificador == 18) {
             $query = $em->getConnection()->prepare("
-                        select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id, 
+                        select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id,
                         CASE
                             WHEN iec.nivel_tipo_id = 13 THEN 'REGULAR HUMANISTICA'
                             WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
@@ -2555,18 +2555,18 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                                 INNER JOIN tramite as tram on tram.id = trad.tramite_id
                                 INNER JOIN estudiante_inscripcion as esti on esti.id = tram.estudiante_inscripcion_id
                                 INNER JOIN institucioneducativa_curso as insc on insc.id = esti.institucioneducativa_curso_id
-                                where tramite_estado_id <> 4 and insc.institucioneducativa_id = :sie::INT and tram.gestion_id = :gestion::INT group by trad.tramite_id
+                                where tramite_estado_id <> 4 and insc.institucioneducativa_id = :sie::INT and insc.gestion_tipo_id = :gestion::INT group by trad.tramite_id
                             ) and flujo_proceso_id = 6
-                        ) as td on td.tramite_id = t.id  
+                        ) as td on td.tramite_id = t.id
                         inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                         inner join estudiante as e on e.id = ei.estudiante_id
-                        inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id                        
+                        inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
                         inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                         inner join periodo_tipo as pet on pet.id = iec.periodo_tipo_id
                         left join lugar_tipo as lt on lt.id = e.lugar_prov_nac_tipo_id
                         left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
                         left join pais_tipo as pt on pt.id = e.pais_tipo_id
-                        where td.flujo_proceso_id = 6 and iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT 
+                        where td.flujo_proceso_id = 6 and iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT
                         order by e.paterno, e.materno, e.nombre
                     ");
         }
@@ -2578,10 +2578,10 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         $query->execute();
         $entity = $query->fetchAll();
         return $entity;
-    } 
+    }
 
     public function buscaEstudiantesCentroEducacionAlternativa($sie, $gestion, $sucursal, $periodo, $identificador, $lista) {
-        
+
         $em = $this->getDoctrine()->getManager();
 
         /*
@@ -2589,7 +2589,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
          */
         if ($identificador == 0 and $lista < 100){
             $query = $em->getConnection()->prepare("
-                select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id, 
+                select t.id as tramite_id, td.id as tramite_detalle_id, t.flujo_tipo_id as flujo_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento, td.flujo_proceso_id,
                 CASE
                     WHEN iec.nivel_tipo_id = 13 THEN 'REGULAR HUMANISTICA'
                     WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
@@ -2599,25 +2599,25 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 inner join (select * from tramite_detalle where id in (select max(id) from tramite_detalle where tramite_estado_id <> 4 and flujo_proceso_id = :flujo::INT group by tramite_id)) as td on td.tramite_id = t.id
                 inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                 inner join estudiante as e on e.id = ei.estudiante_id
-                inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id                        
+                inner join estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                 inner join periodo_tipo as pet on pet.id = iec.periodo_tipo_id
                 left join (select * from documento where id in (select max(id) from documento where documento_estado_id = 1 group by tramite_id)) as d on d.tramite_id = t.id
                 left join lugar_tipo as lt on lt.id = e.lugar_prov_nac_tipo_id
                 left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
                 left join pais_tipo as pt on pt.id = e.pais_tipo_id
-                where iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT 
+                where iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT
                 order by e.paterno, e.materno, e.nombre
             ");
         }
-        
-        
+
+
         /*
          * Ingresa si es para ver listados para los diplomas impresos
          */
         if ($identificador == 0 and $lista == 100){
             $query = $em->getConnection()->prepare("
-                select t.id as tramite_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento,  
+                select t.id as tramite_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento,
                 CASE
                     WHEN iec.nivel_tipo_id = 13 THEN 'REGULAR HUMANISTICA'
                     WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
@@ -2627,7 +2627,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 INNER JOIN estudiante_inscripcion ei ON ei.id = t.estudiante_inscripcion_id
                 INNER JOIN estudiante e ON e.id = ei.estudiante_id
                 INNER JOIN genero_tipo gt ON gt.id = e.genero_tipo_id
-                INNER JOIN estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id   
+                INNER JOIN estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
                 INNER JOIN institucioneducativa_curso iec ON iec.id = ei.institucioneducativa_curso_id
                 INNER JOIN institucioneducativa ie ON ie.id = iec.institucioneducativa_id
                 INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
@@ -2638,17 +2638,17 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 INNER JOIN (select * from documento where documento_estado_id = 1 and documento_tipo_id = 1) as d on d.tramite_id = t.id
                 LEFT JOIN lugar_tipo lt ON lt.id = e.lugar_prov_nac_tipo_id
                 LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
-                WHERE t.esactivo = true AND iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT 
+                WHERE t.esactivo = true AND iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT
                 ORDER BY e.paterno, e.materno, e.nombre
             ");
         }
-        
+
         /*
          * Ingresa si es para ver listados para los diplomas anulados
          */
         if ($identificador == 0 and $lista == 101){
             $query = $em->getConnection()->prepare("
-                select t.id as tramite_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento,  
+                select t.id as tramite_id, e.codigo_rude, e.carnet_identidad, e.complemento, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, mt.estadomatricula as desc_estado_matricula, t.tramite as numero_tramite, case pt.id when 1 then lt1.lugar else pt.pais end as depto_nacimiento, pt.pais as pais_nacimiento,
                 CASE
                     WHEN iec.nivel_tipo_id = 13 THEN 'REGULAR HUMANISTICA'
                     WHEN iec.nivel_tipo_id = 15 THEN 'ALTERNATIVA HUMANISTICA'
@@ -2658,7 +2658,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 INNER JOIN estudiante_inscripcion ei ON ei.id = t.estudiante_inscripcion_id
                 INNER JOIN estudiante e ON e.id = ei.estudiante_id
                 INNER JOIN genero_tipo gt ON gt.id = e.genero_tipo_id
-                INNER JOIN estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id   
+                INNER JOIN estadomatricula_tipo as mt on mt.id = ei.estadomatricula_tipo_id
                 INNER JOIN institucioneducativa_curso iec ON iec.id = ei.institucioneducativa_curso_id
                 INNER JOIN institucioneducativa ie ON ie.id = iec.institucioneducativa_id
                 INNER JOIN jurisdiccion_geografica jg ON jg.id = ie.le_juridicciongeografica_id
@@ -2669,27 +2669,27 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 INNER JOIN (select * from documento where documento_estado_id = 2 and documento_tipo_id = 1) as d on d.tramite_id = t.id
                 LEFT JOIN lugar_tipo lt ON lt.id = e.lugar_prov_nac_tipo_id
                 LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
-                WHERE t.esactivo = true AND iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT 
+                WHERE t.esactivo = true AND iec.gestion_tipo_id = :gestion::INT and iec.institucioneducativa_id = :sie::INT
                 ORDER BY e.paterno, e.materno, e.nombre
             ");
         }
-        
+
         /*
          * Ingresa si es para recepcionar distrito
          */
-       
+
         if ($identificador == 13) {
             if ($gestion > 2011){
-                $query = $em->getConnection()->prepare("                    
+                $query = $em->getConnection()->prepare("
                     select distinct
-                      dt.id as dependencia_tipo_id, 
-                      dt.dependencia, 
-                      oct.id as orgcurricular_tipo_id, 
+                      dt.id as dependencia_tipo_id,
+                      dt.dependencia,
+                      oct.id as orgcurricular_tipo_id,
                       oct.orgcurricula,
-                      ie.le_juridicciongeografica_id, 
-                      ie.id as institucioneducativa_id, 
-                      ie.institucioneducativa, 
-                      f.gestion_tipo_id, 
+                      ie.le_juridicciongeografica_id,
+                      ie.id as institucioneducativa_id,
+                      ie.institucioneducativa,
+                      f.gestion_tipo_id,
                       a.codigo as nivel_tipo_id,
                       a.facultad_area as nivel,
                       b.codigo as ciclo_tipo_id,
@@ -2702,56 +2702,56 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                       q.turno,
                       f.periodo_tipo_id,
                       case f.periodo_tipo_id when 3 then 'SEGUNDO SEMESTRE' when 2 then 'PRIMER SEMESTRE' end as periodo,
-                      j.id as estudiante_id, 
-                      j.codigo_rude, 
-                      j.carnet_identidad, 
-                      j.pasaporte, 
-                      j.paterno, 
-                      j.materno, 
-                      j.nombre, 
+                      j.id as estudiante_id,
+                      j.codigo_rude,
+                      j.carnet_identidad,
+                      j.pasaporte,
+                      j.paterno,
+                      j.materno,
+                      j.nombre,
                       j.genero_tipo_id,
                       case j.genero_tipo_id when 1 then 'Masculino' when 2 then 'Femenino' end as genero,
                       j.fecha_nacimiento,
-                      j.localidad_nac, 
-                      emt.id as estadomatricula_tipo_id, 
+                      j.localidad_nac,
+                      emt.id as estadomatricula_tipo_id,
                       emt.estadomatricula,
-                      j.complemento,  
+                      j.complemento,
                       i.id as estudiante_inscripcion_id,
                       CASE
-                        WHEN a.codigo = 13 THEN 
+                        WHEN a.codigo = 13 THEN
                         'Regular Humanística'
-                        WHEN a.codigo = 15 THEN 
+                        WHEN a.codigo = 15 THEN
                         'Alternativa Humanística'
-                        WHEN a.codigo > 17 THEN 
+                        WHEN a.codigo > 17 THEN
                         'Alternativa Técnica'
                       END AS subsistema,
                       j.lugar_prov_nac_tipo_id as lugar_nacimiento_id,
-                      lt2.codigo as depto_nacimiento_id, 
+                      lt2.codigo as depto_nacimiento_id,
                       lt2.lugar as depto_nacimiento
-                      
+
                     /*f.gestion_tipo_id,e.institucioneducativa_id,f.sucursal_tipo_id,f.periodo_tipo_id,a.codigo as nivel_id,a.facultad_area as nivel,b.codigo as ciclo_id,b.especialidad as ciclo,d.codigo as grado_id,d.acreditacion as grado
                     ,case f.periodo_tipo_id when 3 then 'SEGUNDO SEMESTRE' when 2 then 'PRIMER SEMESTRE' end as periodo
                     ,q.turno,p.paralelo,j.codigo_rude,j.paterno,j.materno,j.nombre,case j.genero_tipo_id when 1 then 'Masculino' when 2 then 'Femenino' end as genero,j.fecha_nacimiento,j.carnet_identidad
                     ,case j.lugar_nac_tipo_id when 1 then 'CH' when 2 then 'LPZ' when 3 then 'CBB' when 4 then 'OR' when 5 then 'PTS' when 6 then 'TAR' when 7 then 'STZ' when 8 then 'BEN' when 9 then 'PND' end as lugar_nac
                     ,l.modulo,r.nota_tipo,o.nota_cuantitativa,o.nota_cualitativa*/
-                     from superior_facultad_area_tipo a  
-                        inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
-                        inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
-                            inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
-                            inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
-                                inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
-                                inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
-                                    inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id 
+                     from superior_facultad_area_tipo a
+                        inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id
+                        inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id
+                            inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id
+                            inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id
+                                inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id
+                                inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id
+                                    inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id
                             inner join institucioneducativa as ie on ie.id = h.institucioneducativa_id
-                                inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id 
-                                inner join estudiante j on i.estudiante_id=j.id 
-                                left join superior_modulo_periodo k on g.id=k.institucioneducativa_periodo_id 
-                                    left join superior_modulo_tipo l on l.id=k.superior_modulo_tipo_id 
-                                    left join institucioneducativa_curso_oferta m on m.superior_modulo_periodo_id=k.id  
-                                    and m.insitucioneducativa_curso_id=h.id 
-                                    left join estudiante_asignatura n on n.institucioneducativa_curso_oferta_id=m.id 
-                                    and n.estudiante_inscripcion_id=i.id 
-                                    left join estudiante_nota o on o.estudiante_asignatura_id=n.id 
+                                inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id
+                                inner join estudiante j on i.estudiante_id=j.id
+                                left join superior_modulo_periodo k on g.id=k.institucioneducativa_periodo_id
+                                    left join superior_modulo_tipo l on l.id=k.superior_modulo_tipo_id
+                                    left join institucioneducativa_curso_oferta m on m.superior_modulo_periodo_id=k.id
+                                    and m.insitucioneducativa_curso_id=h.id
+                                    left join estudiante_asignatura n on n.institucioneducativa_curso_oferta_id=m.id
+                                    and n.estudiante_inscripcion_id=i.id
+                                    left join estudiante_nota o on o.estudiante_asignatura_id=n.id
                     inner join paralelo_tipo p on h.paralelo_tipo_id=p.id
                     inner join turno_tipo q on h.turno_tipo_id=q.id
                     left join nota_tipo r on o.nota_tipo_id=r.id
@@ -2759,23 +2759,23 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
                     inner join orgcurricular_tipo as oct on oct.id = ie.orgcurricular_tipo_id
                     LEFT JOIN lugar_tipo as lt1 on lt1.id = j.lugar_prov_nac_tipo_id
-                    LEFT JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id   
-                    where emt.id in (4,5,55) and f.gestion_tipo_id = :gestion::INT and f.institucioneducativa_id = :sie::INT   
+                    LEFT JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+                    where emt.id in (4,5,55) and f.gestion_tipo_id = :gestion::INT and f.institucioneducativa_id = :sie::INT
                     and f.sucursal_tipo_id = :sucursal::INT and f.periodo_tipo_id = :periodo::INT
                     and a.codigo = 15 and b.codigo = 2 and d.codigo = 3
                     order by  paterno, materno, nombre
                 ");
             } else {
-                $query = $em->getConnection()->prepare("  
+                $query = $em->getConnection()->prepare("
                     select distinct
-                      dt.id as dependencia_tipo_id, 
-                      dt.dependencia, 
-                      oct.id as orgcurricular_tipo_id, 
+                      dt.id as dependencia_tipo_id,
+                      dt.dependencia,
+                      oct.id as orgcurricular_tipo_id,
                       oct.orgcurricula,
-                      ie.le_juridicciongeografica_id, 
-                      ie.id as institucioneducativa_id, 
-                      ie.institucioneducativa, 
-                      f.gestion_tipo_id, 
+                      ie.le_juridicciongeografica_id,
+                      ie.id as institucioneducativa_id,
+                      ie.institucioneducativa,
+                      f.gestion_tipo_id,
                       a.codigo as nivel_tipo_id,
                       a.facultad_area as nivel,
                       b.codigo as ciclo_tipo_id,
@@ -2788,56 +2788,56 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                       q.turno,
                       f.periodo_tipo_id,
                       case f.periodo_tipo_id when 3 then 'SEGUNDO SEMESTRE' when 2 then 'PRIMER SEMESTRE' end as periodo,
-                      j.id as estudiante_id, 
-                      j.codigo_rude, 
-                      j.carnet_identidad, 
-                      j.pasaporte, 
-                      j.paterno, 
-                      j.materno, 
-                      j.nombre, 
+                      j.id as estudiante_id,
+                      j.codigo_rude,
+                      j.carnet_identidad,
+                      j.pasaporte,
+                      j.paterno,
+                      j.materno,
+                      j.nombre,
                       j.genero_tipo_id,
                       case j.genero_tipo_id when 1 then 'Masculino' when 2 then 'Femenino' end as genero,
                       j.fecha_nacimiento,
-                      j.localidad_nac, 
-                      emt.id as estadomatricula_tipo_id, 
+                      j.localidad_nac,
+                      emt.id as estadomatricula_tipo_id,
                       emt.estadomatricula,
-                      j.complemento,  
+                      j.complemento,
                       i.id as estudiante_inscripcion_id,
                       CASE
-                        WHEN a.codigo = 13 THEN 
+                        WHEN a.codigo = 13 THEN
                         'Regular Humanística'
-                        WHEN a.codigo = 15 THEN 
+                        WHEN a.codigo = 15 THEN
                         'Alternativa Humanística'
-                        WHEN a.codigo > 17 THEN 
+                        WHEN a.codigo > 17 THEN
                         'Alternativa Técnica'
                       END AS subsistema,
                       j.lugar_prov_nac_tipo_id as lugar_nacimiento_id,
-                      lt2.codigo as depto_nacimiento_id, 
+                      lt2.codigo as depto_nacimiento_id,
                       lt2.lugar as depto_nacimiento
-                      
+
                     /*f.gestion_tipo_id,e.institucioneducativa_id,f.sucursal_tipo_id,f.periodo_tipo_id,a.codigo as nivel_id,a.facultad_area as nivel,b.codigo as ciclo_id,b.especialidad as ciclo,d.codigo as grado_id,d.acreditacion as grado
                     ,case f.periodo_tipo_id when 3 then 'SEGUNDO SEMESTRE' when 2 then 'PRIMER SEMESTRE' end as periodo
                     ,q.turno,p.paralelo,j.codigo_rude,j.paterno,j.materno,j.nombre,case j.genero_tipo_id when 1 then 'Masculino' when 2 then 'Femenino' end as genero,j.fecha_nacimiento,j.carnet_identidad
                     ,case j.lugar_nac_tipo_id when 1 then 'CH' when 2 then 'LPZ' when 3 then 'CBB' when 4 then 'OR' when 5 then 'PTS' when 6 then 'TAR' when 7 then 'STZ' when 8 then 'BEN' when 9 then 'PND' end as lugar_nac
                     ,l.modulo,r.nota_tipo,o.nota_cuantitativa,o.nota_cualitativa*/
-                     from superior_facultad_area_tipo a  
-                        inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
-                        inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
-                            inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
-                            inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
-                                inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
-                                inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
-                                    inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id 
+                     from superior_facultad_area_tipo a
+                        inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id
+                        inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id
+                            inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id
+                            inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id
+                                inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id
+                                inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id
+                                    inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id
                             inner join institucioneducativa as ie on ie.id = h.institucioneducativa_id
-                                inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id 
-                                inner join estudiante j on i.estudiante_id=j.id 
-                                left join superior_modulo_periodo k on g.id=k.institucioneducativa_periodo_id 
-                                    left join superior_modulo_tipo l on l.id=k.superior_modulo_tipo_id 
-                                    left join institucioneducativa_curso_oferta m on m.superior_modulo_periodo_id=k.id  
-                                    and m.insitucioneducativa_curso_id=h.id 
-                                    left join estudiante_asignatura n on n.institucioneducativa_curso_oferta_id=m.id 
-                                    and n.estudiante_inscripcion_id=i.id 
-                                    left join estudiante_nota o on o.estudiante_asignatura_id=n.id 
+                                inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id
+                                inner join estudiante j on i.estudiante_id=j.id
+                                left join superior_modulo_periodo k on g.id=k.institucioneducativa_periodo_id
+                                    left join superior_modulo_tipo l on l.id=k.superior_modulo_tipo_id
+                                    left join institucioneducativa_curso_oferta m on m.superior_modulo_periodo_id=k.id
+                                    and m.insitucioneducativa_curso_id=h.id
+                                    left join estudiante_asignatura n on n.institucioneducativa_curso_oferta_id=m.id
+                                    and n.estudiante_inscripcion_id=i.id
+                                    left join estudiante_nota o on o.estudiante_asignatura_id=n.id
                     inner join paralelo_tipo p on h.paralelo_tipo_id=p.id
                     inner join turno_tipo q on h.turno_tipo_id=q.id
                     left join nota_tipo r on o.nota_tipo_id=r.id
@@ -2845,8 +2845,8 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
                     inner join orgcurricular_tipo as oct on oct.id = ie.orgcurricular_tipo_id
                     LEFT JOIN lugar_tipo as lt1 on lt1.id = j.lugar_prov_nac_tipo_id
-                    LEFT JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id   
-                    where emt.id in (4,5,55) and f.gestion_tipo_id = :gestion::INT and f.institucioneducativa_id = :sie::INT   
+                    LEFT JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+                    where emt.id in (4,5,55) and f.gestion_tipo_id = :gestion::INT and f.institucioneducativa_id = :sie::INT
                     and f.sucursal_tipo_id = :sucursal::INT and f.periodo_tipo_id = :periodo::INT
                     --and a.codigo = 5 and b.codigo = 2 and d.codigo = 2
                     and a.codigo = 15 and b.codigo = 2 and d.codigo = 3
@@ -2854,7 +2854,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 ");
             }
         }
-        
+
         $query->bindValue(':sie', $sie);
         $query->bindValue(':gestion', $gestion);
         $query->bindValue(':sucursal', $sucursal);
@@ -2865,8 +2865,8 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         $query->execute();
         $entity = $query->fetchAll();
         return $entity;
-    } 
-    
+    }
+
     /*
      * Reactiva el tramite devolviendolo a la bandeja que se desee
      */
@@ -2897,17 +2897,17 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
             //$entityTramiteDetalle[0]->setObs($entityTramiteDetalle[0]->getObs().' - REACTIVADO');
             $entityTramiteDetalle[0]->setUsuarioDestinatarioId($usuarioId);
             $em->persist($entityTramiteDetalle[0]);
-            $em->flush();   
-            
+            $em->flush();
+
             /*
              * Se registra el proceso para llevar el tramite a la badeja de impresion
              */
-            
+
             $entityUsuarioRemitente = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $usuarioId));
             $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $entityTramiteDetalle[0]->getTramite()->getId()));
             $entityTramiteDetalleEstado = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 1));
             $entityFlujoProceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('id' => $procesoId));
-            
+
             $entityTramiteDetalleNew = new TramiteDetalle();
             $entityTramiteDetalleNew->setUsuarioRemitente($entityUsuarioRemitente);
             $entityTramiteDetalleNew->setTramiteDetalle($entityTramiteDetalle[0]);
@@ -2920,14 +2920,14 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
             $entityTramiteDetalleNew->setFlujoProceso($entityFlujoProceso);
             $em->persist($entityTramiteDetalleNew);
             $em->flush();
-        
+
             $return = "";
         } else {
             $return = "Trámite no encontrado, intente nuevamente";
         }
-        return $return;  
+        return $return;
     }
-    
+
     /**
      * Despliega formulario de registro para una reactivacion de tramite
      * @return type
@@ -2948,7 +2948,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     , 'obs' => 1
         ));
     }
-    
+
     /**
      * Reactiva y anula diploma de bachiller de la legalizacion de diploma
      * @return type
@@ -2959,16 +2959,16 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
-        
+
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
-        
+
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        
+
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
@@ -2989,7 +2989,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
             $departamentoUsuario = 0;
             if (count($entityUsuario) > 0){
                 $departamentoUsuario = $entityUsuario[0]["lugar_tipo_id"];
-            } 
+            }
 
             /*
              * Extrae la gestion del numero de serie
@@ -3019,8 +3019,8 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, el documento con número de serie "'. $serie .'" cuenta con Certificados Supletorios emitidos, intente nuevamente'));
                 return $this->redirectToRoute('sie_diploma_tramite_reactivacion');
             }
-            
-            
+
+
             if ($ges > 2014) {
                 $query = $em->getConnection()->prepare("
                     select d.tramite_id as tramite_id, cast(left(d.documento_serie_id,(char_length(d.documento_serie_id)-(case ds.gestion_id when 2010 then 2 when 2013 then 2 else 1 end))) as integer) as numero_serie, right(d.documento_serie_id,1) as tipo_serie
@@ -3029,8 +3029,8 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     , case pt.id when 7 then true else false end as estadofintramite
                     , case d.documento_estado_id when 1 then true else false end as estadodocumento
                     , e.codigo_rude as rude
-                    from documento as d 
-                    inner join documento_serie as ds on ds.id = d.documento_serie_id 
+                    from documento as d
+                    inner join documento_serie as ds on ds.id = d.documento_serie_id
                     inner join tramite as t on t.id = d.tramite_id
                     inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                     inner join estudiante as e on e.id = ei.estudiante_id
@@ -3039,7 +3039,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     left join flujo_proceso as fp on fp.id = td.flujo_proceso_id
                     left join proceso_tipo as pt on pt.id = fp.proceso_id
                     where d.documento_tipo_id = 1 and d.documento_serie_id in ('".str_pad(strtoupper($serie), 7, "0", STR_PAD_LEFT)."') and ds.gestion_id = ".$ges." and ds.departamento_tipo_id = ".$departamentoUsuario."
-                ");  
+                ");
             } else {
                 $query = $em->getConnection()->prepare("
                     select d.tramite_id as tramite_id, cast(left(d.documento_serie_id,(char_length(d.documento_serie_id)-(case ds.gestion_id when 2010 then 2 when 2013 then 2 else 1 end))) as integer) as numero_serie, right(d.documento_serie_id,(case ds.gestion_id when 2010 then 2 when 2013 then 2 else 1 end)) as tipo_serie
@@ -3048,8 +3048,8 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     , case pt.id when 7 then true else false end as estadofintramite
                     , case d.documento_estado_id when 1 then true else false end as estadodocumento
                     , e.codigo_rude as rude
-                    from documento as d 
-                    inner join documento_serie as ds on ds.id = d.documento_serie_id 
+                    from documento as d
+                    inner join documento_serie as ds on ds.id = d.documento_serie_id
                     inner join tramite as t on t.id = d.tramite_id
                     inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
                     inner join estudiante as e on e.id = ei.estudiante_id
@@ -3058,7 +3058,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                     left join flujo_proceso as fp on fp.id = td.flujo_proceso_id
                     left join proceso_tipo as pt on pt.id = fp.proceso_id
                     where d.documento_tipo_id = 1 and d.documento_serie_id in ('".strtoupper($serie)."') and ds.gestion_id = ".$ges." and ds.departamento_tipo_id = ".$departamentoUsuario."
-                "); 
+                ");
             }
             $query->execute();
             $entity = $query->fetchAll();
@@ -3090,18 +3090,18 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
                                 return $this->redirectToRoute('sie_diploma_tramite_reactivacion');
                             }
                             $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El documento con numero de serie "'.$entity[0]["numero_serie"].$entity[0]["tipo_serie"].'" fue reactivado'));
-                            $em->getConnection()->commit();     
+                            $em->getConnection()->commit();
                             return $this->redirectToRoute('sie_diploma_tramite_reactivacion');
                         } catch (Exception $ex) {
                             $em->getConnection()->rollback();
                             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
                             return $this->redirectToRoute('sie_diploma_tramite_reactivacion');
-                        }                   
+                        }
                     }
                 } else {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, inconsistencia de datos con el documento "'. $serie .'" , intente nuevamente'));
                     return $this->redirectToRoute('sie_diploma_tramite_reactivacion');
-                }                
+                }
             } else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, el documento con número de serie "'. $serie .'" no existe o no tiene tuición sobre el mismo, intente nuevamente'));
                 return $this->redirectToRoute('sie_diploma_tramite_reactivacion');
@@ -3109,6 +3109,6 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
             return $this->redirectToRoute('sie_diploma_tramite_reactivacion');
-        }   
-    }    
+        }
+    }
 }

@@ -22,7 +22,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que muestra la información del usuario
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
@@ -50,7 +50,7 @@ class DefaultController extends Controller {
         //get the roles info
         $aRoles = $this->getUserRoles($id_usuario);
         $this->session->set('roluser', $aRoles);
-        
+
         $sistemaTipoId = array(10); // ID DEL SISTEMA TRAMITE
 
 
@@ -63,10 +63,10 @@ class DefaultController extends Controller {
         $query->bindValue(':usuario_id', $id_usuario);
         //$query->bindValue(':sistema_tipo_id', '{3,10}');
         $query->execute();
-        $aMenuUser = $query->fetchAll();      
+        $aMenuUser = $query->fetchAll();
 
 
-        if (sizeof($aMenuUser) > 0) {            
+        if (sizeof($aMenuUser) > 0) {
                 foreach ($aMenuUser as $m) {
                     $menu = $m['get_objeto_menu_usuario'];
                     $menu = str_replace(array('(', ')', '"'), '', $menu);
@@ -107,7 +107,7 @@ class DefaultController extends Controller {
             //set some values fot the view template
             //$sesion->set('aMenuOption', $aBuildMenu);
             $sesion->set('aMenu', $optionMenu);
-        }        
+        }
         //****FIN SE GENERAN LOS MENUS PARA EL SIGED EN BASE AL ID DEL ROL DEL USUARIO
         //****************
 
@@ -140,7 +140,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Funcion que muestra los roles del usuario
     // PARAMETROS: gestionId (gestion cuando se inicio el sistema)
     // AUTOR: RCANAVIRI
@@ -161,8 +161,8 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Funcion que muestra las gestiones 
+    // DESCRIPCION DEL METODO:
+    // Funcion que muestra las gestiones
     // PARAMETROS: usuarioId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
@@ -186,10 +186,10 @@ class DefaultController extends Controller {
             return array();
         }
     }
-    
+
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Funcion que valida si cuenta con un rol determina
     // PARAMETROS: usuarioId, rolId
     // AUTOR: RCANAVIRI
@@ -217,7 +217,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que muestra la vista de acuerdo al rol de usuario logueado
     // PARAMETROS: POR POST, roluser
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -242,7 +242,7 @@ class DefaultController extends Controller {
 //        print_r($request->getMethod());die;
         if ($request->getMethod() == 'POST') {
             /*
-             * 
+             *
              */
             if ($request->get('form')) {
                 $post = $request->get('form');
@@ -406,10 +406,10 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que crea los formularios deacuerdo deacuerdo al identificador enviado
-    // PARAMETROS: identificador =1(gestiones anteriores), identificador =0(formularios de listado), 
-    // identificador <> 0 o 1 para buscador de formularios 
+    // PARAMETROS: identificador =1(gestiones anteriores), identificador =0(formularios de listado),
+    // identificador <> 0 o 1 para buscador de formularios
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
     //****************************************************************************************************
@@ -510,7 +510,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que lista las especialidades deacuerdo a un determinado centro de educacion alternativa
     // PARAMETROS: por POST sie_listar y gestion_listar
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -535,7 +535,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que lista los niveles deacuerdo a una determinada especialidad
     // PARAMETROS: por POST sie_listar, gestion_listar y especialidad
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -546,8 +546,8 @@ class DefaultController extends Controller {
         try {
             $em = $this->getDoctrine()->getManager();
             $queryEntidad = $em->getConnection()->prepare(
-                    'SELECT distinct(grado), grado_id FROM vm_estudiantes_tecnica_alternativa WHERE 
-                            institucioneducativa_id = ' . $_POST['sie_listar'] . ' 
+                    'SELECT distinct(grado), grado_id FROM vm_estudiantes_tecnica_alternativa WHERE
+                            institucioneducativa_id = ' . $_POST['sie_listar'] . '
                             AND gestion_tipo_id = ' . $_POST['gestion_listar'] . ' AND especialidad_id = ' . $_POST['especialidad'] . ' ORDER BY grado_id ASC');
 
             $queryEntidad->execute();
@@ -560,7 +560,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que verifica si la especialidad esta acreditada por el rue
     // PARAMETROS: por POST sie
     // RESULTADO: retornado por json
@@ -575,14 +575,14 @@ class DefaultController extends Controller {
             select institucioneducativa_id, b.institucioneducativa, cod_org_curr_id, b.dependencia_tipo_id, desc_departamento
             , desc_provincia, desc_seccion, desc_canton, desc_localidad, tipo_area, distrito, dependencia,
              tb, ta, tm
-            from vw_alternativa_rue a 
+            from vw_alternativa_rue a
             inner join (
                     select *
-                    from institucioneducativa 
-                    where institucioneducativa_acreditacion_tipo_id=1 ) b on a.cod_ue_id=b.id 
+                    from institucioneducativa
+                    where institucioneducativa_acreditacion_tipo_id=1 ) b on a.cod_ue_id=b.id
                             inner join dependencia_tipo d on a.cod_dependencia_id=d.id
                             inner join orgcurricular_tipo e on e.id=a.cod_org_curr_id
-                            inner join convenio_tipo f on f.id=a.cod_convenio_id 
+                            inner join convenio_tipo f on f.id=a.cod_convenio_id
                             inner join (
                                         select institucioneducativa_id
                                         ,sum(case when nivel_tipo_id = 203 then 1 end) as tb
@@ -590,7 +590,7 @@ class DefaultController extends Controller {
                                         ,sum(case when nivel_tipo_id = 205 then 3 end) as tm
                                         from institucioneducativa_nivel_autorizado
                                         group by institucioneducativa_id
-                                        ) c on a.cod_ue_id=c. institucioneducativa_id 
+                                        ) c on a.cod_ue_id=c. institucioneducativa_id
 
                     WHERE b.orgcurricular_tipo_id = 2 and b.id = :sie::int
                 ');
@@ -605,7 +605,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que obtiene los datos de todos los módulos de un estudiante/participante
     // PARAMETROS: por POST sie, estudiante_id, gestion, nivel, especialidad.
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -616,20 +616,20 @@ class DefaultController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $queryEntidad = $em->getConnection()->prepare(
                     'SELECT   codigo_rude, especialidad, especialidad_id, carnet_identidad, paterno, materno, nombre, fecha_nacimiento, depto_nacimiento, grado,  grado_id, estudiante_id, ciclo,
-                    ( select sum(s.carga_horaria) from 
+                    ( select sum(s.carga_horaria) from
                     (select sum(DISTINCT horas_modulo) carga_horaria, modulo
-                        from vm_estudiantes_tecnica_alternativa 
+                        from vm_estudiantes_tecnica_alternativa
                         where especialidad_id = :esp::INT
                             AND estudiante_id = :estudiante::INT
                             AND
-                                CASE 
+                                CASE
                                     WHEN gestion_tipo_id <= 2015
                                     THEN nota_cuantitativa >=36
                                     ELSE nota_cuantitativa >=51
                                 END
                         group by  estudiante_id, modulo  ORDER BY modulo)s) carga_horaria
-                    FROM vm_estudiantes_tecnica_alternativa 
-                    WHERE 
+                    FROM vm_estudiantes_tecnica_alternativa
+                    WHERE
                     institucioneducativa_id=:sie  and
                     grado_id<= :nivel::INT AND especialidad_id = :esp::INT  AND estudiante_id = :estudiante::INT AND gestion_tipo_id <= :gestion::INT
 
@@ -653,12 +653,12 @@ class DefaultController extends Controller {
 
             return $response->setData(array('resultadoDatos' => $datosTabla));
         } catch (Exception $ex) {
-            
+
         }
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que crea el formulario de seguimiento por rude y tramite de acuerdo al identificador
     // PARAMETROS: identificador= 1(busqueda por número trámite, identificador = 0 (Busqueda por código RUDEAL))
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -712,8 +712,8 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Controlador que busca los datos de los estudiante/participantes de acuerdo al sie, 
+    // DESCRIPCION DEL METODO:
+    // Controlador que busca los datos de los estudiante/participantes de acuerdo al sie,
     // la especialidad y el nivel
     // PARAMETROS: por post $request (sie, especialidad, gestiones, nivel, identificador, lista)
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -945,8 +945,8 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Metodo que nos permite imprimir en formato pdf el listado de los estudiantes/participantes, de acuerdo 
+    // DESCRIPCION DEL METODO:
+    // Metodo que nos permite imprimir en formato pdf el listado de los estudiantes/participantes, de acuerdo
     // al tipo de flujo que se elija
     // PARAMETROS: por post $request (sie, gestion  y lista)
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -969,8 +969,8 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // funcion que ejecuta consultas de busqueda de datos de los estudiante/participantes de acuerdo 
+    // DESCRIPCION DEL METODO:
+    // funcion que ejecuta consultas de busqueda de datos de los estudiante/participantes de acuerdo
     // al identificador.
     // PARAMETROS: sie, gestion, nivel, especialidad, identificador, lista
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -985,29 +985,29 @@ class DefaultController extends Controller {
                         WHEN e.complemento = '' THEN e.carnet_identidad ELSE e.carnet_identidad || '-' || e.complemento
                 END carnet_identidad, e.fecha_nacimiento, lt1.lugar depto_nacimiento,
 
-                CASE 
+                CASE
                         WHEN ta.nivel = 1 THEN 'Técnico Básico'
                         WHEN ta.nivel = 2 THEN 'Técnico Auxiliar'
                         WHEN ta.nivel = 3 THEN 'Técnico Medio'
                 END grado,
                 se.id especialidad_id, se.especialidad
 
-                FROM tramite t 
+                FROM tramite t
                 inner join  tramite_alternativa ta on ta.tramite_id = t.id
-                inner join tramite_detalle td on td.tramite_id = t.id 
+                inner join tramite_detalle td on td.tramite_id = t.id
                 inner join estudiante e on e.id = ta.estudiante
                 inner join superior_especialidad_tipo se On se.id = ta.esp
                 inner join institucioneducativa ie on ie.id = ta.institucioneducativa
                 inner join jurisdiccion_geografica jg on jg.id = ie.le_juridicciongeografica_id
                 inner join lugar_tipo lt1 on lt1.id = e.lugar_nac_tipo_id
                 inner join lugar_tipo lt2 on lt2.id = lt1.lugar_tipo_id
-                where 
+                where
                         td.tramite_estado_id = 1 and
-                        td.flujo_proceso_id = :flujo and 
-                        ta.institucioneducativa = :sie and 
+                        td.flujo_proceso_id = :flujo and
+                        ta.institucioneducativa = :sie and
                         t.gestion_id = :gestion
 
-                order by e.paterno, e.materno, e.nombre ASC 
+                order by e.paterno, e.materno, e.nombre ASC
             ");
             $query->bindValue(':sie', $sie);
             $query->bindValue(':gestion', $gestion);
@@ -1022,7 +1022,7 @@ class DefaultController extends Controller {
 
             $query = $em->getConnection()->prepare(
                     '
-                    SELECT DISTINCT 
+                    SELECT DISTINCT
 			j.id estudiante_id,
 			h.gestion_tipo_id,
 			e.institucioneducativa_id,
@@ -1071,7 +1071,7 @@ class DefaultController extends Controller {
                             and j.id  not in (select DISTINCT e.id
                                             from estudiante e
                                                     inner join tramite_alternativa tv on tv.estudiante = e.id
-                                                    inner join tramite_detalle td on td.tramite_id = tv.tramite_id 
+                                                    inner join tramite_detalle td on td.tramite_id = tv.tramite_id
                                             where td.flujo_proceso_id in (16,17,18,19) and td.tramite_estado_id = 1 and tv.esp = :esp and tv.nivel = :nivel)
                             ORDER BY j.paterno, j.materno, j.nombre');
             $query->bindValue(':sie', $sie);
@@ -1085,8 +1085,8 @@ class DefaultController extends Controller {
         }
         if ($identificador == 14) {
             $query = $em->getConnection()->prepare("
-                        SELECT td.tramite_id, alt.estudiante_id, alt.codigo_rude, alt.institucioneducativa_id, alt.gestion_tipo_id, 
-                        alt.paterno, alt.materno, alt.nombre, alt.carnet_identidad, alt.fecha_nacimiento, alt.depto_nacimiento, alt.especialidad_id, 
+                        SELECT td.tramite_id, alt.estudiante_id, alt.codigo_rude, alt.institucioneducativa_id, alt.gestion_tipo_id,
+                        alt.paterno, alt.materno, alt.nombre, alt.carnet_identidad, alt.fecha_nacimiento, alt.depto_nacimiento, alt.especialidad_id,
                         alt.especialidad, alt.grado, alt.grado_id, t.id, td.flujo_proceso_id,td.tramite_estado_id,t.tramite_tipo, flujo_tipo_id
                         FROM tramite t
                         INNER JOIN tramite_detalle td ON t.id = td.tramite_id
@@ -1110,14 +1110,14 @@ class DefaultController extends Controller {
             $query = $em->getConnection()->prepare("
                             select distinct t.id tramite_id, e.paterno, e.materno, e.nombre, e.codigo_rude, e.carnet_identidad,
                     e.fecha_nacimiento, lt1.lugar depto_nacimiento, ie.id institucioneducativa_id, ie.institucioneducativa centros,
-                    case 
+                    case
                                             when tv.nivel = 1 then 'Técnico Básico'
                                             when tv.nivel = 2 then 'Técnico Auxiliar'
                                             when tv.nivel = 3 then 'Técnico Medio'
-                    end grado, tv.nivel grado_id, e.id estudiante_id, se.id especialidad_id, se.especialidad especialidad, 
+                    end grado, tv.nivel grado_id, e.id estudiante_id, se.id especialidad_id, se.especialidad especialidad,
                     td.flujo_proceso_id, td.tramite_estado_id
                     FROM
-                    estudiante e 
+                    estudiante e
                     inner join tramite_alternativa tv on tv.estudiante = e.id
                     inner join institucioneducativa ie on ie.id = tv.institucioneducativa
                     inner join tramite t on t.id = tv.tramite_id
@@ -1125,9 +1125,9 @@ class DefaultController extends Controller {
                     inner join superior_especialidad_tipo se on se.id =tv.esp
                     inner join lugar_tipo lt1 on lt1.id = e.lugar_nac_tipo_id
                     inner join lugar_tipo lt2 on lt2.id = lt1.lugar_tipo_id
-                    where 
+                    where
                     td.flujo_proceso_id = 17
-                    and td.tramite_estado_id = 1 and 
+                    and td.tramite_estado_id = 1 and
                     tv.institucioneducativa = :sie
                     and tv.esp = :esp
                     and tv.nivel = :nivel
@@ -1135,7 +1135,7 @@ class DefaultController extends Controller {
                     group BY
                     t.id, e.paterno, e.materno, e.nombre, e.codigo_rude, e.carnet_identidad,
                     e.fecha_nacimiento, lt1.lugar,ie.id, ie.institucioneducativa,
-                    tv.nivel, tv.nivel, e.id, se.id, se.especialidad, 
+                    tv.nivel, tv.nivel, e.id, se.id, se.especialidad,
                     td.flujo_proceso_id, td.tramite_estado_id
                     order by e.paterno, e.materno, e.nombre
                     ");
@@ -1153,17 +1153,17 @@ class DefaultController extends Controller {
         if ($identificador == 16) {
             $query = $em->getConnection()->prepare("
                     select distinct  ta.estudiante estudiante_id, td.flujo_proceso_id, initcap(e.paterno) paterno, initcap(e.materno) materno, initcap(e.nombre) nombre,
-                    e.codigo_rude, e.carnet_identidad,  e.fecha_nacimiento, 
+                    e.codigo_rude, e.carnet_identidad,  e.fecha_nacimiento,
                     CASE
                             WHEN lt4.lugar = 'NINGUNO' THEN '' ELSE lt4.lugar
                     END depto_nacimiento ,
                     t.tramite_tipo,
-                    ta.tramite_id, nivel as GRADO,  se.especialidad, 
+                    ta.tramite_id, nivel as GRADO,  se.especialidad,
                     initcap(ie.institucioneducativa) centro, ta.institucioneducativa, lt2.lugar,  lt1.lugar distrito
-                    from tramite_alternativa ta 
+                    from tramite_alternativa ta
                     INNER JOIN tramite t ON t.id = ta.tramite_id
                     inner join tramite_detalle td ON td.tramite_id = ta.tramite_id
-                    inner join estudiante e on ta.estudiante  = e.id 
+                    inner join estudiante e on ta.estudiante  = e.id
                     INNER JOIN institucioneducativa ie ON ie.id = ta.institucioneducativa
                     inner join superior_especialidad_tipo se ON se.id = ta.esp
                     inner join jurisdiccion_geografica jg on jg.id = ie.le_juridicciongeografica_id
@@ -1171,7 +1171,7 @@ class DefaultController extends Controller {
                     inner join lugar_tipo lt2 on lt2.id = lt1.lugar_tipo_id
                     inner join lugar_tipo lt3 on lt3.id = e.lugar_prov_nac_tipo_id
                     inner join lugar_tipo lt4 on lt4.id = lt3.lugar_tipo_id
-                    WHERE 
+                    WHERE
                     ta.institucioneducativa = :sie
                     and ta.esp = :esp
                     and ta.nivel not in  (3)
@@ -1197,14 +1197,14 @@ class DefaultController extends Controller {
             $query = $em->getConnection()->prepare("
                         SELECT DISTINCT t.id tramite_id, e.paterno, e.materno, e.nombre, e.codigo_rude, e.carnet_identidad,
                         e.fecha_nacimiento, lt1.lugar depto_nacimiento, ie.id institucioneducativa_id, ie.institucioneducativa centro,
-                        case 
+                        case
                                 when tv.nivel = 1 then 'Técnico Básico'
                                 when tv.nivel = 2 then 'Técnico Auxiliar'
                                 when tv.nivel = 3 then 'Técnico Medio'
-                        end grado, tv.nivel grado_id, e.id estudiante_id, se.id especialidad_id, se.especialidad especialidad, 
+                        end grado, tv.nivel grado_id, e.id estudiante_id, se.id especialidad_id, se.especialidad especialidad,
                         td.flujo_proceso_id, td.tramite_estado_id, iec.gestion_tipo_id
                          FROM
-                        estudiante e 
+                        estudiante e
                         inner join estudiante_inscripcion ei on ei.estudiante_id = e.id
                         inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
                         inner join institucioneducativa ie on ie.id = iec.institucioneducativa_id
@@ -1214,9 +1214,9 @@ class DefaultController extends Controller {
                         inner join superior_especialidad_tipo se on se.id =tv.esp
                         inner join lugar_tipo lt1 on lt1.id = e.lugar_nac_tipo_id
                         inner join lugar_tipo lt2 on lt2.id = lt1.lugar_tipo_id
-                        WHERE 
+                        WHERE
                         td.flujo_proceso_id = 19
-                        and td.tramite_estado_id = 1 and 
+                        and td.tramite_estado_id = 1 and
                         ie.id = :sie
                         and tv.esp = :esp
                         and tv.nivel = :nivel
@@ -1226,7 +1226,7 @@ class DefaultController extends Controller {
                         GROUP BY
                         t.id, e.paterno, e.materno, e.nombre, e.codigo_rude, e.carnet_identidad,
                         e.fecha_nacimiento, lt1.lugar, ie.id, ie.institucioneducativa,
-                        tv.nivel, tv.nivel, e.id, se.id, se.especialidad, 
+                        tv.nivel, tv.nivel, e.id, se.id, se.especialidad,
                         td.flujo_proceso_id, td.tramite_estado_id, iec.gestion_tipo_id
                         order by e.paterno, e.materno, e.nombre
                     ");
@@ -1244,8 +1244,8 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Controlador que registra el tramite en las tablas Tramite_alternativa, y en la tabla Tramite, 
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra el tramite en las tablas Tramite_alternativa, y en la tabla Tramite,
     // en caso de que exista un registro en la tabla tramite_alternativa con los mismos datos de la busqueda,
     // no se creara un registro duplicado, una vez creado el registro se enviaran datos a la funcion procesaTramite
     // en la cual, en primera instancia creara un registro con el flujo_proceso_id =16 en la tabla tramite_detalle
@@ -1345,7 +1345,7 @@ class DefaultController extends Controller {
                             ->setParameter('codEsp', $especialidad)
                             ->setParameter('codNivel', $nivel);
                     $entityTramAlternativa = $query4->getQuery()->getResult();
-                    $queryPeriodo = $em->getConnection()->prepare('SELECT  
+                    $queryPeriodo = $em->getConnection()->prepare('SELECT
                                         MAX(f.periodo_tipo_id)
                                         FROM (((((((((((((((superior_facultad_area_tipo a
                                           JOIN superior_especialidad_tipo b ON ((a.id = b.superior_facultad_area_tipo_id)))
@@ -1433,8 +1433,8 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // esta funcion registra el tramite en la tabla tramite_detalle, en la cual se recorrera el flujo que se muestra 
+    // DESCRIPCION DEL METODO:
+    // esta funcion registra el tramite en la tabla tramite_detalle, en la cual se recorrera el flujo que se muestra
     // en al tabla flujo_tipo a partir del item 15, dentro esta funcion se podra pasar de una instancia a otra o anular
     // el tramite, la cual su flujo del tramite cambiara a 15.
     // PARAMETROS: Request (estudiantes"estudiantes seleccionados", gestion, especialidad, sie, nivel)
@@ -1597,7 +1597,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Esta funcion registra el tramite en la tabla tramite_alternativa
     // PARAMETROS: Request (estudiantes"estudiantes seleccionados", gestion, especialidad, sie, nivel)
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -1633,9 +1633,9 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Este controller genera un archivo en formato pdf de los datos que fueron enviados al a bandeja de 
-    // ventanilla departamento, se imprimira todos los estudiantes/participantes que esten con el flujo_proceso_id 
+    // DESCRIPCION DEL METODO:
+    // Este controller genera un archivo en formato pdf de los datos que fueron enviados al a bandeja de
+    // ventanilla departamento, se imprimira todos los estudiantes/participantes que esten con el flujo_proceso_id
     // 16 y el tramite_estado_id = 1
     // PARAMETROS: Request (sie, especialidad, gestion)
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -1661,9 +1661,9 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Este controller genera un archivo en formato pdf de los datos que fueron enviados al a bandeja de 
-    // ventanilla departamento, se imprimira todos los estudiantes/participantes que esten con el flujo_proceso_id 
+    // DESCRIPCION DEL METODO:
+    // Este controller genera un archivo en formato pdf de los datos que fueron enviados al a bandeja de
+    // ventanilla departamento, se imprimira todos los estudiantes/participantes que esten con el flujo_proceso_id
     // 16 y el tramite_estado_id = 1
     // PARAMETROS: Request (sie, especialidad, gestion)
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -1686,21 +1686,21 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Este controller Verifica si la Unidad Educativa esta habilitada para la entrega de diplomas
     // PARAMETROS: Request (sie, especialidad, gestion)
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************    
+    //****************************************************************************************************
     private function verificaNivelUnidadEducativa($ue) {
         $em = $this->getDoctrine()->getManager();
         /*
          * Verifica si la Unidad Educativa puede otorgar diplomas de bachiller o registrar para titulos tecnico medio alternativa
          */
         $query = $em->getConnection()->prepare("
-                select * from institucioneducativa as ie 
+                select * from institucioneducativa as ie
                 inner join (select * from institucioneducativa_nivel_autorizado where nivel_tipo_id in (13,15) or nivel_tipo_id > 17) as iena on iena.institucioneducativa_id = ie.id
-                where ie.id = :sie::INT       
+                where ie.id = :sie::INT
                 ");
         $query->bindValue(':sie', $ue);
         $query->execute();
@@ -1714,13 +1714,13 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Este controller Verifica si la Unidad Educativa esta habilitada para la entrega de certificados, y 
+    // DESCRIPCION DEL METODO:
+    // Este controller Verifica si la Unidad Educativa esta habilitada para la entrega de certificados, y
     // el registro del cambio de instancia.
     // PARAMETROS: Request (sie, especialidad, gestion)
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************    
+    //****************************************************************************************************
 
     public function procesaTramiteCertificadoAction(Request $request) {
         /*
@@ -1774,7 +1774,7 @@ class DefaultController extends Controller {
                     select lt1.lugar_tipo_id, lt1.lugar, lt1.codigo
                     from usuario_rol u
                     inner join lugar_tipo lt1 on lt1.id = u.lugar_tipo_id
-                    where u.usuario_id = " . $id_usuario . " 
+                    where u.usuario_id = " . $id_usuario . "
                     limit 1");
                 }
                 $query->execute();
@@ -1846,7 +1846,7 @@ class DefaultController extends Controller {
                 $cantidadEstudiantes = sizeof($estudiantes);
 
                 /*
-                 * Verifica si el rango de serie esta disponible para la impresion de certificados 
+                 * Verifica si el rango de serie esta disponible para la impresion de certificados
                  */
                 if ($identificador == 16 and $flujoSeleccionado == 'Adelante') {
                     $numeroSerie = $request->get('numeroSerie');
@@ -1926,13 +1926,13 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Asigna los números de serie a los estudiantes/participantes que son seleccionados, una vez seleccionados
     // se obtiene los datos del tramite, y se los registra en la tabla "DOCUMENTO".
     // PARAMETROS: Request (sie, especialidad, gestion)
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************    
+    //****************************************************************************************************
     private function generaDocumento($tramiteId, $usuarioId, $documentoTipo, $numeroSerie, $tipoSerie, $gestion, $fecha) {
         /*
          * Define la zona horaria y halla la fecha actual
@@ -1990,14 +1990,14 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Funcion que nos permite ver si los numeros de serie estan disponibles, esta funcion verifica en primera
-    // instancia, de que no este el rango de numeros asignados en la tabla "DOCUMENTO" y que esten creados 
+    // instancia, de que no este el rango de numeros asignados en la tabla "DOCUMENTO" y que esten creados
     // en la tabla "DOCUMENTO_SERIE"
     // PARAMETROS: $cantidadEstudiantes, $numerosSerie, $tipoSerie, $gestion, $departamentoUsuario
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************        
+    //****************************************************************************************************
     private function serieRangoDisponible($cantidadEstudiantes, $numerosSerie, $tipoSerie, $gestion, $departamentoUsuario) {
         $em = $this->getDoctrine()->getManager();
 
@@ -2029,11 +2029,11 @@ class DefaultController extends Controller {
              * se encuentren registrados en la tabla "DOCUMENTO_SERIE"
              */
             $query = $em->getConnection()->prepare("
-                select ds.id as id from documento_serie as ds where ds.esanulado = 'false' 
-                and ds.departamento_tipo_id = " . $departamentoUsuario . " 
-                and gestion_id = " . $gestion . " 
-                and not exists 
-                (select * from documento as d where d.documento_serie_id = ds.id) 
+                select ds.id as id from documento_serie as ds where ds.esanulado = 'false'
+                and ds.departamento_tipo_id = " . $departamentoUsuario . "
+                and gestion_id = " . $gestion . "
+                and not exists
+                (select * from documento as d where d.documento_serie_id = ds.id)
                 and ds.id in (" . $series . ")
             ");
             $query->execute();
@@ -2075,12 +2075,12 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Funcion que nos permite ANULAR un tramite que se le genero un documento de serie, 
+    // DESCRIPCION DEL METODO:
+    // Funcion que nos permite ANULAR un tramite que se le genero un documento de serie,
     // PARAMETROS: $cantidadEstudiantes, $numerosSerie, $tipoSerie, $gestion, $departamentoUsuario
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************    
+    //****************************************************************************************************
     private function anulaDocumento($tramiteId, $obs) {
         /*
          * Define la zona horaria y halla la fecha actual
@@ -2119,14 +2119,14 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Funcion que nos permite Generar el certificado Técnico Básico y Técnico Auxiliar en formato PDF, en 
+    // DESCRIPCION DEL METODO:
+    // Funcion que nos permite Generar el certificado Técnico Básico y Técnico Auxiliar en formato PDF, en
     // este metodo obtiene el departamento del centro de educacion alternativa, y es enviado como variable
     // para generacion del pdf
     // PARAMETROS: gestion, sie, nivel, especialidad, identificador
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************      
+    //****************************************************************************************************
     public function impresionCertificadoPdfAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         /*
@@ -2159,19 +2159,19 @@ class DefaultController extends Controller {
                 inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                 inner join lugar_tipo lt1 ON lt1.id = jg.lugar_tipo_id_distrito
                 inner join lugar_tipo lt2 on lt2.id = lt1.lugar_tipo_id
-                where ie.id=  :sie::INT       
+                where ie.id=  :sie::INT
                 ");
         $query->bindValue(':sie', $ue);
         $query->execute();
         $entityDepto = $query->fetchAll();
         $query = $em->getConnection()->prepare("
-                select id, lugar 
-                from lugar_tipo 
+                select id, lugar
+                from lugar_tipo
                 where lugar = '" . $entityDepto[0]['departamento'] . "' and "
                 . "id = (select min(id) "
                 . "from lugar_tipo "
-                . "where lugar = '" . $entityDepto[0]['departamento'] . "'  ) 
-                    group by id, lugar 
+                . "where lugar = '" . $entityDepto[0]['departamento'] . "'  )
+                    group by id, lugar
                 ");
         $query->execute();
         $entityD = $query->fetchAll();
@@ -2201,14 +2201,14 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Funcion que nos permite Generar el certificado Técnico Básico y Técnico Auxiliar en formato PDF, en 
+    // DESCRIPCION DEL METODO:
+    // Funcion que nos permite Generar el certificado Técnico Básico y Técnico Auxiliar en formato PDF, en
     // este metodo se obtiene el departamento del centro de educacion alternativa, en este reporte se generará
     // con el carnet de identidad.
     // PARAMETROS: gestion, sie, nivel, especialidad, identificador
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************    
+    //****************************************************************************************************
     public function impresionCertificadoPdfCIAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         /*
@@ -2239,13 +2239,13 @@ class DefaultController extends Controller {
                 inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                 inner join lugar_tipo lt1 ON lt1.id = jg.lugar_tipo_id_distrito
                 inner join lugar_tipo lt2 on lt2.id = lt1.lugar_tipo_id
-                where ie.id=  :sie::INT       
+                where ie.id=  :sie::INT
                 ");
         $query->bindValue(':sie', $ue);
         $query->execute();
         $entityDepto = $query->fetchAll();
         $query = $em->getConnection()->prepare("
-                select id, lugar from lugar_tipo where lugar = '" . $entityDepto[0]['departamento'] . "' and id = (select min(id) from lugar_tipo where lugar = '" . $entityDepto[0]['departamento'] . "'  ) group by id, lugar 
+                select id, lugar from lugar_tipo where lugar = '" . $entityDepto[0]['departamento'] . "' and id = (select min(id) from lugar_tipo where lugar = '" . $entityDepto[0]['departamento'] . "'  ) group by id, lugar
                 ");
         $query->execute();
         $entityD = $query->fetchAll();
@@ -2276,7 +2276,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Metodo que nos enviara a la vista "generarSeries.html.twig", enviando el formulario creado, el titulo
     // y el subtitulo de la vista.
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -2301,7 +2301,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Metodo que crea el formulario para la generacion de numeros de serie
     // PARAMETROS: routing (ruta del formulario)
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -2351,7 +2351,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Metodo que nos permite verificar si los numeros de serie estan creados en la tabla "Documento_serie"
     // en caso de que no se los creara
     // PARAMETROS: identificador= 1(busqueda por número trámite, identificador = 0 (Busqueda por código RUDEAL))
@@ -2517,8 +2517,8 @@ class DefaultController extends Controller {
         $arraySer = array();
         foreach ($sArray as $numeroSerie) {
             $query = $em->getConnection()->prepare("
-                select * from 
-                documento_serie 
+                select * from
+                documento_serie
                 where
                 id like " . $numeroSerie . "
                 and gestion_id = :gestion
@@ -2572,8 +2572,8 @@ class DefaultController extends Controller {
         $arraySer = array();
         foreach ($sArray as $numeroSerie) {
             $query = $em->getConnection()->prepare("
-                select * from 
-                documento_serie 
+                select * from
+                documento_serie
                 where
                 id like " . $numeroSerie . "
                 and gestion_id = :gestion
@@ -2600,10 +2600,10 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Metodo que obtiene las especialidades del sub sistema de Educacion Alternativa
     // PARAMETROS: por post "id"
-    // returna objeto json 
+    // returna objeto json
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
     //****************************************************************************************************
@@ -2622,7 +2622,7 @@ class DefaultController extends Controller {
                     b.id = :id and a.especialidad IS NOT NULL
                     GROUP BY
                     a.id, a.especialidad
-                    ORDER BY 
+                    ORDER BY
                     a.especialidad
                     ');
             $queryEntidad->bindValue(':id', $_POST['id']);
@@ -2640,7 +2640,7 @@ class DefaultController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $queryEntidad = $em->getConnection()->prepare(
                     '
-                        SELECT * 
+                        SELECT *
                         FROM institucioneducativa a
                         WHERE a.id = :sie
                     ');
@@ -2659,7 +2659,7 @@ class DefaultController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare(
                 '
-                        SELECT * 
+                        SELECT *
                         FROM estudiante a
                         WHERE a.codigo_rude = :rudeal
                     ');
@@ -2671,9 +2671,9 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Metodo que nos permite insertar datos de estudiantes/participantes que culminaron un nivel completo
-    // 
+    //
     // PARAMETROS: identificador= 1(busqueda por número trámite, identificador = 0 (Busqueda por código RUDEAL))
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
@@ -2703,7 +2703,7 @@ class DefaultController extends Controller {
          */
         $queryEntidad = $em->getConnection()->prepare(
                 '
-                        SELECT * 
+                        SELECT *
                         FROM estudiante a
                         WHERE a.codigo_rude = :rudeal
                     ');
@@ -2763,7 +2763,7 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Metodo que redirecciona a la vista que nos mostrara el formulario para registrar las gestiones anteriores
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
@@ -2784,8 +2784,8 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Metodo que nos permite obtener los datos a detalle del trámite que se busca, mostrandonos la instancia 
+    // DESCRIPCION DEL METODO:
+    // Metodo que nos permite obtener los datos a detalle del trámite que se busca, mostrandonos la instancia
     // en la que se encuentra, mediante el id del tramite
     // PARAMETROS: identificador= 1(busqueda por número trámite, identificador = 0 (Busqueda por código RUDEAL))
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -2808,14 +2808,14 @@ class DefaultController extends Controller {
                                 CASE
                                         WHEN e.complemento = '' THEN e.carnet_identidad ELSE e.carnet_identidad || '-' || e.complemento
                                 END carnet_identidad, e.fecha_nacimiento, depto_tipo.departamento depto_nacimiento,
-                                CASE 
+                                CASE
                                         WHEN ta.nivel = 1 THEN 'Técnico Básico'
                                         WHEN ta.nivel = 2 THEN 'Técnico Auxiliar'
                                         WHEN ta.nivel = 3 THEN 'Técnico Medio'
                                 END grado,
                                 se.id especialidad_id, se.especialidad, ie.institucioneducativa centro, ie.id sie,
                                 p.nombre || ' ' || p.paterno || ' ' || p.materno usuario_remitente, ft.flujo flujo_tramite,
-                                CASE 
+                                CASE
                                         WHEN td.flujo_proceso_id = 15  THEN 'Bandeja Distrito'
                                         WHEN td.flujo_proceso_id = 16  THEN 'Bandeja Recepción Departamento'
                                         WHEN td.flujo_proceso_id = 17  THEN 'Bandeja Autorización'
@@ -2823,9 +2823,9 @@ class DefaultController extends Controller {
                                         WHEN td.flujo_proceso_id = 19  THEN 'Certificado Impreso'
                                         WHEN td.flujo_proceso_id = 21  THEN 'Bandeja Entrega Distrito'
                                 END proceso, td.flujo_proceso_id, td.tramite_estado_id, td.obs comentario, td.fecha_modificacion fecha_envio
-                                FROM tramite t 
+                                FROM tramite t
                                 inner join  tramite_alternativa ta on ta.tramite_id = t.id
-                                inner join tramite_detalle td on td.tramite_id = t.id 
+                                inner join tramite_detalle td on td.tramite_id = t.id
                                 inner join estudiante e on e.id = ta.estudiante
                                 inner join superior_especialidad_tipo se On se.id = ta.esp
                                 inner join institucioneducativa ie on ie.id = ta.institucioneducativa
@@ -2835,7 +2835,7 @@ class DefaultController extends Controller {
                                 inner join usuario u on u.id = td.usuario_remitente_id
                                 inner join persona p on u.persona_id = p.id
                                 inner join flujo_tipo ft on ft.id = t.flujo_tipo_id
-                                where 
+                                where
                                         t.id = :tramiteId
                                 order by td.flujo_proceso_id, e.paterno, e.materno, e.nombre ASC");
             $query->bindValue(':tramiteId', $tramite);
@@ -2854,8 +2854,8 @@ class DefaultController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Metodo que nos permite obtener los datos a detalle del trámite que se busca, mostrandonos la instancia 
+    // DESCRIPCION DEL METODO:
+    // Metodo que nos permite obtener los datos a detalle del trámite que se busca, mostrandonos la instancia
     // en la que se encuentra mediante el código RUDEAL
     // PARAMETROS: identificador= 1(busqueda por número trámite, identificador = 0 (Busqueda por código RUDEAL))
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -2878,14 +2878,14 @@ class DefaultController extends Controller {
                                 CASE
                                         WHEN e.complemento = '' THEN e.carnet_identidad ELSE e.carnet_identidad || '-' || e.complemento
                                 END carnet_identidad, e.fecha_nacimiento, depto_tipo.departamento depto_nacimiento,
-                                CASE 
+                                CASE
                                         WHEN ta.nivel = 1 THEN 'Técnico Básico'
                                         WHEN ta.nivel = 2 THEN 'Técnico Auxiliar'
                                         WHEN ta.nivel = 3 THEN 'Técnico Medio'
                                 END grado,
                                 se.id especialidad_id, se.especialidad, ie.institucioneducativa centro, ie.id sie,
                                 p.nombre || ' ' || p.paterno || ' ' || p.materno usuario_remitente, ft.flujo flujo_tramite,
-                                CASE 
+                                CASE
                                         WHEN td.flujo_proceso_id = 15  THEN 'Bandeja Distrito'
                                         WHEN td.flujo_proceso_id = 16  THEN 'Bandeja Recepción Departamento'
                                         WHEN td.flujo_proceso_id = 17  THEN 'Bandeja Autorización'
@@ -2893,9 +2893,9 @@ class DefaultController extends Controller {
                                         WHEN td.flujo_proceso_id = 19  THEN 'Certificado Impreso'
                                         WHEN td.flujo_proceso_id = 21  THEN 'Bandeja Entrega Distrito'
                                 END proceso, td.flujo_proceso_id, td.tramite_estado_id, td.obs comentario, td.fecha_modificacion fecha_envio
-                                FROM tramite t 
+                                FROM tramite t
                                 inner join  tramite_alternativa ta on ta.tramite_id = t.id
-                                inner join tramite_detalle td on td.tramite_id = t.id 
+                                inner join tramite_detalle td on td.tramite_id = t.id
                                 inner join estudiante e on e.id = ta.estudiante
                                 inner join superior_especialidad_tipo se On se.id = ta.esp
                                 inner join institucioneducativa ie on ie.id = ta.institucioneducativa
@@ -2905,7 +2905,7 @@ class DefaultController extends Controller {
                                 inner join usuario u on u.id = td.usuario_remitente_id
                                 inner join persona p on u.persona_id = p.id
                                 inner join flujo_tipo ft on ft.id = t.flujo_tipo_id
-                                where 
+                                where
                                         e.codigo_rude = '" . $rude . "'
                                 order by td.flujo_proceso_id, e.paterno, e.materno, e.nombre ASC");
             $query->execute();
@@ -2921,9 +2921,9 @@ class DefaultController extends Controller {
                     , 'subtitulo' => 'Certificación Técnica'
         ));
     }
-    
+
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Metodo que redirecciona a la vista que nos mostrara el formulario para la busqueda del trámite mediante
     // el código RUDEAL
     // FECHA DE ACTUALIZACION:  31-01-2017
@@ -3106,15 +3106,15 @@ class DefaultController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
                         select initcap(e.nombre) nombre, initcap(e.paterno)paterno, initcap(e.materno) materno, e.codigo_rude,
-                        CASE 
+                        CASE
                                         WHEN e.complemento = '' or e.complemento = null THEN e.carnet_identidad ELSE e.carnet_identidad||'-'||e.complemento
                         END carnet_identidad, e.fecha_nacimiento, t.id tramite, d.id serie, se.especialidad,
-                        CASE 
+                        CASE
                                         WHEN ta.nivel = 1 THEN 'Técnico Básico'
                                         WHEN ta.nivel = 2 THEN 'Técnico Auxiliar'
                                         WHEN ta.nivel = 3 THEN 'Técnico Medio'
                         END nivel, ie.id sie, upper(ie.institucioneducativa) centro, t.gestion_id
-                        from tramite t 
+                        from tramite t
                         inner join tramite_alternativa ta on ta.tramite_id = t.id
                         inner join tramite_detalle td on td.tramite_id = t.id
                         inner join documento d on d.tramite_id = t.id
