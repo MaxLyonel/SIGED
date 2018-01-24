@@ -73,7 +73,7 @@
         <!--/ END IE SUPPORT -->
         {% block stylesheets %}
         {% endblock %}
-    </head>    
+    </head>
     <!--/ END HEAD -->
 
     <!--
@@ -137,11 +137,11 @@
                     <!--/ End offcanvas left -->
 
                     <!-- Start navbar header -->
-                    <div class="navbar-header">                        
+                    <div class="navbar-header">
                         <!-- Start brand -->
                         <a class="navbar-brand" href="{{path('sie_tramites_homepage')}}">
                             Certificaciones
-                        </a> 
+                        </a>
                         <!--/ End brand -->
 
                     </div><!-- /.navbar-header -->
@@ -172,7 +172,7 @@
                                 </a>
                             </li>
 
-                            
+
                             <!--/ End sidebar shrink -->
 
                             <!-- Start form search -->
@@ -263,41 +263,41 @@
 
                 <!-- Start left navigation - menu -->
                 <ul class="sidebar-menu">
-                    {% set rol8 = false %}    <!-- rol distrito -->          
-                    {% set rol10 = false %}    <!-- rol distrito -->          
+                    {% set rol8 = false %}    <!-- rol distrito -->
+                    {% set rol10 = false %}    <!-- rol distrito -->
                     {% set rol12 = false %}    <!-- rol recepcion unidad educativa -->
                     {% set rol13 = false %}    <!-- rol recepcion distrito -->
                     {% set rol14 = false %}    <!-- rol recepcion ventanilla departamento -->
                     {% set rol15 = false %}    <!-- rol autorizacion -->
                     {% set rol16 = false %}    <!-- rol impresion -->
-                    {% set rol17 = false %}    <!-- rol legalizacion --> 
-                    {% set rol20 = false %}    <!-- rol consulta nacional -->                
-                    {% for item in app.session.get('roluser') %}  
+                    {% set rol17 = false %}    <!-- rol legalizacion -->
+                    {% set rol20 = false %}    <!-- rol consulta nacional -->
+                    {% for item in app.session.get('roluser') %}
                         {% if item.id == 8 %}
-                            {% set rol8 = true %} 
+                            {% set rol8 = true %}
                         {% elseif item.id == 10 %}
-                            {% set rol10 = true %} 
+                            {% set rol10 = true %}
                         {% elseif item.id == 12 %}
-                            {% set rol12 = true %} 
+                            {% set rol12 = true %}
                         {% elseif item.id == 13 %}
-                            {% set rol13 = true %} 
+                            {% set rol13 = true %}
                         {% elseif item.id == 14 %}
-                            {% set rol14 = true %} 
+                            {% set rol14 = true %}
                         {% elseif item.id == 15 %}
-                            {% set rol15 = true %} 
+                            {% set rol15 = true %}
                         {% elseif item.id == 16 %}
-                            {% set rol16 = true %} 
+                            {% set rol16 = true %}
                         {% elseif item.id == 17 %}
-                            {% set rol17 = true %} 
+                            {% set rol17 = true %}
                         {% elseif item.id == 20 %}
-                            {% set rol20 = true %} 
+                            {% set rol20 = true %}
                         {% else %}
-                        {% endif %}                        
-                    {% endfor %}   
+                        {% endif %}
+                    {% endfor %}
 
-                    {% if rol20 == false %} 
+                    {% if rol20 == false and rol8 == false %}
 
-                        {% if (rol8 or rol16 or rol13) %}                    
+                        {% if (rol8 or rol16 or rol13) %}
                             <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-gear"></i></span>
@@ -306,12 +306,12 @@
                                 </a>
                                 <ul>
                                     <li><a href="{{ path('sie_tramite_certificacion_homologacion') }}">Gestiones anteriores</a></li>
-                                    {% if (rol16 or rol8) and 1 == 2%} 
+                                    {% if (rol16 or rol8) and 1 == 2%}
                                         <li><a href="#">Generar número de serie</a></li>
                                     {% endif %}
                                 </ul>
-                            </li>  
-                        {% endif %}  
+                            </li>
+                        {% endif %}
                         {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8) %}
                             <li class="submenu">
                                 <a href="javascript:void(0);">
@@ -325,7 +325,7 @@
                                         <li class=" "><a href="{{path('sie_tramite_certificado_tecnico_registro_busca')}}">Registro</a></li>
                                     {% endif %}
                                     {% if (rol14 or rol8) and 1 == 2 %}
-                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_recepcion_busca')}}">Recepción</a></li>                                    
+                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_recepcion_busca')}}">Recepción</a></li>
                                     {% endif %}
                                     {% if rol15 or rol8 %}
                                         <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_autorizacion_busca')}}">Autorización</a></li>
@@ -346,9 +346,9 @@
                                         <!--<li><a href="#">Legalización</a></li>-->
                                     {% endif %}
                                 </ul>
-                            </li> 
-                        {% endif %}   
-                        {% if 1 == 1 %}                  
+                            </li>
+                        {% endif %}
+                        {% if 1 == 1 %}
                             <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-user"></i></span>
@@ -357,12 +357,12 @@
                                 </a>
                                 <ul>
                                     <li><a href="{{path('declaracion_jurada_index')}}">Declaración jurada</a></li>
-                                    {% if rol15 or rol8 %}  
+                                    {% if rol15 or rol8 %}
                                         <li><a href="{{path('estudiante_index')}}">Busqueda de estudiante</a></li>
                                         <li><a href="{{ path('history_new_inscription_index') }}">Historial de estudiante</a></li>
                                     {% endif %}
                                 </ul>
-                            </li>                                     
+                            </li>
                             <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-search"></i></span>
@@ -374,9 +374,9 @@
                                     <li><a href="{{path('sie_tramite_seguimiento_documento_busca')}}">Busqueda por número serie</a></li>
                                     <li><a href="{{path('sie_tramite_seguimiento_rude_busca')}}">Busqueda por código rude</a></li>
                                 </ul>
-                            </li>  
-                        {% endif %} 
-                        {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8) and 1 == 2%}              
+                            </li>
+                        {% endif %}
+                        {% if (rol13 or rol14 or rol15 or rol16 or rol17 or rol8) and 1 == 2%}
                             <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-line-chart"></i></span>
@@ -388,11 +388,11 @@
                                     <li><a href="#">Participantes</a></li>
                                     <li><a href="#">Trámites</a></li>
                                 </ul>
-                            </li> 
+                            </li>
                         {% endif %}
-                    {% endif %}   
+                    {% endif %}
 
-                    {% if rol20 == true %} 
+                    {% if rol20 == true or rol8 == true %}
                         <!-- Start development - sub menu -->
                         {% for key,menu in app.session.get('aMenu') %}
                             <li class="submenu">
@@ -410,7 +410,7 @@
                             </li>
                         {% endfor %}
                     {% endif %}
-                    <!--/ End development - sub menu -->                     
+                    <!--/ End development - sub menu -->
                 </ul><!-- /.sidebar-menu -->
 
 
@@ -430,21 +430,21 @@
 
             </aside><!-- /#sidebar-left -->
             <!--/ END SIDEBAR LEFT -->
-          
+
 
             <!-- START @PAGE CONTENT -->
-            <section id="page-content">   
+            <section id="page-content">
                 <!-- Start page header -->
                 <div class="header-content">
                     <h2>
-                        <i class="fa fa-male"></i> 
+                        <i class="fa fa-male"></i>
                         {% if titulo is defined  %}  {{ titulo }} {% endif %}
                         <span>{% if subtitulo is defined  %}{{ subtitulo }} {% endif %}</span>
                     </h2>
                     <div class="breadcrumb-wrapper hidden-xs">
                         <span class="label">Usted esta aquí:</span>
                         {% block contentBread %}
-                        {% endblock %}                        
+                        {% endblock %}
                     </div><!-- /.breadcrumb-wrapper -->
                 </div><!-- /.header-content -->
                 <!--/ End page header -->
@@ -465,13 +465,13 @@
                                     </div>
                                 {% endfor %}
                             </div>
-                        </div>        
+                        </div>
                     </div>
                     {% block contentoption %}
                         <!-- here the iptions content -->
                     {% endblock %}
                 </div>
-                <!--/ End body content -->  
+                <!--/ End body content -->
                 <!-- Start footer content -->
                 <footer class="footer-content">
                     <span id="copyright-year"></span> &copy;Administrador Creado por <a href="http://www.minedu.gob.bo" target="_blank">Ministerio de Educación</a>, Bolivia
@@ -491,7 +491,7 @@
         <!--/ END BACK TOP -->
 
 
-        
+
 
         <!-- START JAVASCRIPT SECTION (Load javascripts at bottom to reduce load time) -->
         <!-- START @CORE PLUGINS -->

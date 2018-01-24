@@ -1,3 +1,5 @@
+# CERTIFICACION ALTERNATIVA
+
 sie_tramite_certificado_tecnico_registro_busca:
     path:     /certificado/tecnico/registro/busca
     defaults: { _controller: SieTramitesBundle:Tramite:certTecRegistroBusca }
@@ -16,18 +18,64 @@ sie_tramite_certificado_tecnico_registro_guarda:
 
 sie_tramite_certificado_tecnico_busca_listar_especialidad:
     path:     /certificado/tecnico/busca/lista/especialidad
-    defaults: { _controller: SieTramitesBundle:Tramite:certTecBuscaListaEspecialidad }  
-    methods:  [POST]   
+    defaults: { _controller: SieTramitesBundle:Tramite:certTecBuscaListaEspecialidad }
+    methods:  [POST]
 
 sie_tramite_certificado_tecnico_busca_listar_nivel:
     path:     /certificado/tecnico/busca/lista/nivel
-    defaults: { _controller: SieTramitesBundle:Tramite:certTecBuscaListaNivel }  
-    methods:  [POST]  
+    defaults: { _controller: SieTramitesBundle:Tramite:certTecBuscaListaNivel }
+    methods:  [POST]
 
 sie_tramite_certificado_tecnico_registro_inscripcion_historial:
     path:     /certificado/tecnico/registro/inscripcion/historial
-    defaults: { _controller: SieTramitesBundle:Tramite:certTecRegistroInscripcionHistorial }  
-    methods:  [POST]  
+    defaults: { _controller: SieTramitesBundle:Tramite:certTecRegistroInscripcionHistorial }
+    methods:  [POST]
+
+# DIPLOMA HUMANISTICO
+
+sie_tramite_diploma_humanistico_regular_registro_busca:
+    path:     /diploma/humanistico/regular/registro/busca
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegularRegistroBusca }
+
+sie_tramite_diploma_humanistico_regular_registro_lista:
+    path:     /diploma/humanistico/regular/registro/lista
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegularRegistroLista }
+
+sie_tramite_diploma_humanistico_regular_registro_lista_pdf:
+    path:     /diploma/humanistico/regular/registro/lista/pdf
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegularRegistroListaPdf }
+
+sie_tramite_diploma_humanistico_regular_registro_guarda:
+    path:     /diploma/humanistico/regular/registro/guarda
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegularRegistroGuarda }
+
+sie_tramite_diploma_humanistico_regular_registro_inscripcion_historial:
+    path:     /diploma/humanistico/regular/registro/inscripcion/historial
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegularRegistroInscripcionHistorial }
+    methods:  [POST]
+
+sie_tramite_diploma_humanistico_alternativa_registro_busca:
+    path:     /diploma/humanistico/alternativa/registro/busca
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumAlternativaRegistroBusca }
+
+sie_tramite_diploma_humanistico_alternativa_registro_lista:
+    path:     /diploma/humanistico/alternativa/registro/lista
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumAlternativaRegistroLista }
+
+sie_tramite_diploma_humanistico_alternativa_registro_lista_pdf:
+    path:     /diploma/humanistico/alternativa/registro/lista/pdf
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumAlternativaRegistroListaPdf }
+
+sie_tramite_diploma_humanistico_alternativa_registro_guarda:
+    path:     /diploma/humanistico/alternativa/registro/guarda
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumAlternativaRegistroGuarda }
+
+sie_tramite_diploma_humanistico_alternativa_registro_inscripcion_historial:
+    path:     /diploma/humanistico/alternativa/registro/inscripcion/historial
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumAlternativaRegistroInscripcionHistorial }
+    methods:  [POST]
+
+# TRAMITES EN GENERAL
 
 sie_tramite_reactiva_busca:
     path:     /reactiva/busca
