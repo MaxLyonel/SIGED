@@ -47,7 +47,7 @@ class InfoEstudianteBjpController extends Controller {
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
 
-        return $this->redirect($this->generateUrl('principal_web'));
+        //return $this->redirect($this->generateUrl('principal_web'));
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
