@@ -590,6 +590,110 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Controlador que registra el trámite de los bachilleres humanisticos regular selecionados
+    // PARAMETROS: estudiantes[], boton
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumRegularRegistroGuardaAction(Request $request) {
+      date_default_timezone_set('America/La_Paz');
+      $fechaActual = new \DateTime(date('Y-m-d'));
+      $gestionActual = new \DateTime();
+
+      $sesion = $request->getSession();
+      $id_usuario = $sesion->get('userId');
+
+      //validation if the user is logged
+      if (!isset($id_usuario)) {
+          return $this->redirect($this->generateUrl('login'));
+      }
+
+      $institucioneducativaId = 0;
+      $gestionId = $gestionActual->format('Y');
+      $flujoTipoId = 1;
+      $tramiteTipoId = 1;
+      $flujoSeleccionado = '';
+
+      if ($request->isMethod('POST')) {
+          $em = $this->getDoctrine()->getManager();
+          $em->getConnection()->beginTransaction();
+          try {
+              $participantes = $request->get('participantes');
+              if (isset($_POST['botonAceptar'])) {
+                  $flujoSeleccionado = 'Adelante';
+              }
+              $token = $request->get('_token');
+              if (!$this->isCsrfTokenValid('registrar', $token)) {
+                  $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                  return $this->redirectToRoute('sie_tramite_diploma_humanistico_regular_registro_busca');
+              }
+
+              $messageCorrecto = "";
+              $messageError = "";
+
+              foreach ($participantes as $participante) {
+                  $estudianteInscripcionId = (Int) base64_decode($participante);
+
+                  $entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+                  $participanteNombre = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
+                  $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
+                  $msgContenido = "";
+                  if(count($entidadEstudianteInscripcion)>0){
+                      $institucionEducativaId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                      $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+
+                      $msg = array('0'=>true, '1'=>$participanteNombre);
+                      $msgContenido = $this->getDipHumRegularValidacion($participanteId, $estudianteInscripcionId, $gestionId);
+
+                      // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
+                      $valCertTecTramiteEspNivel = $this->getCertTecTramiteEspecialidadNivelEstudiante($participanteId, $especialidadId, $nivelId);
+                      if(count($valCertTecTramiteEspNivel) > 0){
+                          $msgContenido = ($msgContenido=="") ? 'ya cuenta con el trámite '.$valCertTecTramiteEspNivel[0]['tramite_id'] : $msgContenido.', ya cuenta con el trámite '.$valCertTecTramiteEspNivel[0]['tramite_id'];
+                      }
+
+                      if($msgContenido != ""){
+                          $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.')');
+                      }
+
+                  } else {
+                      $msg = array('0'=>false, '1'=>'estudiante no encontrado');
+                  }
+
+                  if ($msg[0]) {
+
+                      $tramiteId = $this->setTramiteEstudiante($estudianteInscripcionId, $gestionId, $tramiteTipoId, $flujoTipoId, $em);
+
+                      $tramiteProcesoController = new tramiteProcesoController();
+                      $tramiteProcesoController->setContainer($this->container);
+
+                      $tramiteDetalleId = $tramiteProcesoController->setProcesaTramiteInicio($tramiteId, $id_usuario, 'REGISTRO DEL TRÁMITE', $em);
+
+                      $messageCorrecto = ($messageCorrecto == "") ? $msg[1] : $messageCorrecto.'; '.$msg[1];
+                  } else {
+                      $messageError = ($messageError == "") ? $msg[1] : $messageError.'; '.$msg[1];
+                  }
+              }
+              if($messageCorrecto!=""){
+                  $em->getConnection()->commit();
+                  $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => $messageCorrecto));
+              }
+              if($messageError!=""){
+                  $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $messageError));
+              }
+          } catch (\Doctrine\ORM\NoResultException $exc) {
+              $em->getConnection()->rollback();
+              $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+          }
+
+          $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
+          return $this->redirectToRoute('sie_tramite_certificado_tecnico_registro_lista', ['form' => $formBusqueda], 307);
+      } else {
+          $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+          return $this->redirect($this->generateUrl('sie_tramite_certificado_tecnico_registro_busca'));
+      }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Controlador que lista los trámites recepcionados por la direccion distrital en formato pdf
     // PARAMETROS: sie, gestion, especialidad, nivel
     // AUTOR: RCANAVIRI
@@ -1119,26 +1223,74 @@ class TramiteController extends Controller {
     public function getDipHumRegularHistorial($participanteId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-            select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
-            , smp.horas_modulo, smt.modulo, en.nota_cuantitativa, ies.gestion_tipo_id as gestion, pt.periodo as periodo
-            from superior_facultad_area_tipo as sfat
-            inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
-            inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
-            inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
-            inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
-            inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
-            inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
-            inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
-            inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
-            inner join (select * from estudiante where id = ".$participanteId.") as e on ei.estudiante_id=e.id
-            inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
-            inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
-            inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
-            inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
-            inner join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
-            inner join periodo_tipo as pt on pt.id = ies.periodo_tipo_id
-            where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and en.nota_tipo_id::integer = 22
-            order by smt.id
+          SELECT
+          estudiante.codigo_rude,
+          estudiante.paterno,
+          estudiante.materno,
+          estudiante.nombre,
+          institucioneducativa_curso.institucioneducativa_id,
+		      institucioneducativa.institucioneducativa,
+          institucioneducativa_curso.grado_tipo_id,
+          grado_tipo.grado,
+          paralelo_tipo.paralelo,
+          institucioneducativa_curso.gestion_tipo_id,
+          estudiante_inscripcion.estadomatricula_tipo_id,
+          institucioneducativa_curso_oferta.asignatura_tipo_id,
+          -- asignatura_tipo.asignatura,
+          (case WHEN institucioneducativa_curso_oferta.asignatura_tipo_id = 1039 then upper(asignatura_tipo.asignatura ||' '||especialidad_tecnico_humanistico_tipo.especialidad) else asignatura_tipo.asignatura end) as asignatura,
+          asignatura_tipo.area_tipo_id,
+          UPPER(area_tipo.area) as area,
+          turno_tipo.turno,
+          Sum(case when estudiante_nota.nota_tipo_id = 1 then estudiante_nota.nota_cuantitativa end) AS b1,
+          Sum(case when estudiante_nota.nota_tipo_id = 2 then estudiante_nota.nota_cuantitativa end) AS b2,
+          Sum(case when estudiante_nota.nota_tipo_id = 3 then estudiante_nota.nota_cuantitativa end) AS b3,
+          Sum(case when estudiante_nota.nota_tipo_id = 4 then estudiante_nota.nota_cuantitativa end) AS b4,
+          Sum(case when estudiante_nota.nota_tipo_id = 5 then estudiante_nota.nota_cuantitativa end) AS b5,
+          Sum(case when estudiante_nota.nota_tipo_id = 6 then estudiante_nota.nota_cuantitativa end) AS t1,
+          Sum(case when estudiante_nota.nota_tipo_id = 7 then estudiante_nota.nota_cuantitativa end) AS t2,
+          Sum(case when estudiante_nota.nota_tipo_id = 8 then estudiante_nota.nota_cuantitativa end) AS t3,
+          Sum(case when estudiante_nota.nota_tipo_id = 9 then estudiante_nota.nota_cuantitativa end) AS t4,
+          Sum(case when estudiante_nota.nota_tipo_id = 10 then estudiante_nota.nota_cuantitativa end) AS t5,
+          Sum(case when estudiante_nota.nota_tipo_id = 11 then estudiante_nota.nota_cuantitativa end) AS t6
+          FROM
+          estudiante
+          INNER JOIN  estudiante_inscripcion ON  estudiante_inscripcion.estudiante_id =  estudiante.id
+          INNER JOIN  institucioneducativa_curso ON  estudiante_inscripcion.institucioneducativa_curso_id =  institucioneducativa_curso.id
+          INNER JOIN  estudiante_asignatura ON  estudiante_asignatura.estudiante_inscripcion_id =  estudiante_inscripcion.id
+          INNER JOIN  estudiante_nota ON  estudiante_nota.estudiante_asignatura_id =  estudiante_asignatura.id
+          INNER JOIN  institucioneducativa_curso_oferta ON  institucioneducativa_curso_oferta.insitucioneducativa_curso_id =  institucioneducativa_curso.id AND  estudiante_asignatura.institucioneducativa_curso_oferta_id =  institucioneducativa_curso_oferta.id
+          INNER JOIN  asignatura_tipo ON  institucioneducativa_curso_oferta.asignatura_tipo_id =  asignatura_tipo.id
+          INNER JOIN  area_tipo ON  asignatura_tipo.area_tipo_id =  area_tipo.id
+          INNER JOIN  grado_tipo ON  institucioneducativa_curso.grado_tipo_id =  grado_tipo.id
+          INNER JOIN  paralelo_tipo ON  institucioneducativa_curso.paralelo_tipo_id =  paralelo_tipo.id
+          INNER JOIN  turno_tipo ON turno_tipo.id = institucioneducativa_curso.turno_tipo_id
+          INNER JOIN  institucioneducativa ON  institucioneducativa_curso.institucioneducativa_id =  institucioneducativa.id
+          LEFT JOIN  estudiante_inscripcion_humnistico_tecnico ON estudiante_inscripcion_humnistico_tecnico.estudiante_inscripcion_id = estudiante_inscripcion.id
+          LEFT JOIN  especialidad_tecnico_humanistico_tipo ON estudiante_inscripcion_humnistico_tecnico.especialidad_tecnico_humanistico_tipo_id = especialidad_tecnico_humanistico_tipo.id
+          WHERE
+          estudiante.id = ".$participanteId." and estudiante_inscripcion.estadomatricula_tipo_id in (4,5,55) and institucioneducativa_curso.nivel_tipo_id in (3,13)
+          --AND institucioneducativa_curso.nivel_tipo_id = (case when (2017 <= 2010) then 3 else 13 end)
+          --AND (case when (2017 <= 2010) then (institucioneducativa_curso.grado_tipo_id in (1,2,3,4)) else (institucioneducativa_curso.grado_tipo_id in (3,4,5,6)) end)
+          GROUP BY
+          estudiante.codigo_rude,
+          estudiante.paterno,
+          estudiante.materno,
+          estudiante.nombre,
+          institucioneducativa_curso.institucioneducativa_id,
+		      institucioneducativa.institucioneducativa,
+          institucioneducativa_curso.grado_tipo_id,
+          grado_tipo.grado,
+          paralelo_tipo.paralelo,
+          institucioneducativa_curso.gestion_tipo_id,
+          estudiante_inscripcion.estadomatricula_tipo_id,
+          institucioneducativa_curso_oferta.asignatura_tipo_id,
+          turno_tipo.turno,
+          asignatura_tipo.area_tipo_id,
+          area_tipo.area,
+          asignatura_tipo.asignatura,
+          especialidad_tecnico_humanistico_tipo.especialidad
+          ORDER BY
+          institucioneducativa_curso.grado_tipo_id desc,asignatura_tipo.area_tipo_id, institucioneducativa_curso_oferta.asignatura_tipo_id
         ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -1326,7 +1478,7 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Funcion que valida el proceso de registro de un trámite segun el participante, especialidad y nivel
+    // Funcion que valida el proceso de registro de un trámite certificado tecnico alternativa segun el participante, especialidad y nivel
     // PARAMETROS: estudianteId, gestionId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
@@ -1426,6 +1578,111 @@ class TramiteController extends Controller {
         return $msgContenido;
     }
 
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que valida el proceso de registro de un trámite diploma humanistico regular segun el participante y gestion
+    // PARAMETROS: estudianteId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDipHumRegularValidacion($participanteId, $estudianteInscripcionId, $gestionId) {
+        $msgContenido = "";
+        $cargaHorariaTotal = 0;
+        $gestionServidor= new \DateTime();
+        $gestionActual = $gestionServidor->format('Y');
+
+        // VALIDACION DE GRADOS ESCOLARES (3,4,5) APROBADOS SEGÚN EL AÑO DE PROMOCIÓN
+        if($gestionId <= 2010){
+          $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, $nivelId);
+          if(count($objModulosObservados)>0){
+              $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en ".$nivel.": ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+          }
+        } else {
+
+        }
+
+        if($gestionId==$gestionActual){
+        }
+
+        $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, $nivelId);
+        if(count($objModulosObservados)>0){
+            $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en ".$nivel.": ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+        }
+
+        // VALIDACION DE CARGA HORARIA POR ESTUDIANTE SEGUN MODULOS APROBADOS (MAYORES A 36 O 51)
+        $valCertTecCargaHoraria = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId);
+        $cargaHoraria = 0;
+        if(!$valCertTecCargaHoraria[0]){
+            $msgContenido = ($msgContenido=="") ? $valCertTecCargaHoraria[1] : $msgContenido.', '.$valCertTecCargaHoraria[1];
+        } else {
+            $cargaHoraria = $valCertTecCargaHoraria[1];
+        }
+
+        // VALIDACION DE UNA CERTIFICACION ANTERIOR PARA CONTINUAR CON EL SIGUIENTE NIVEL
+        // TECNICO MEDIO
+        if($nivelId == 3){
+            $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 2);
+            // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
+            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 2);
+            if(count($objModulosObservados)>0){
+                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel auxiliar: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            }
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
+            // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
+            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
+            if(count($objModulosObservados)>0){
+                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            }
+            $cargaHorariaAuxiliar = 0;
+            $cargaHorariaBasico = 0;
+            if(!$valCertTecCargaHorariaAuxiliar[0]){
+                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaAuxiliar[1] : $msgContenido.', '.$valCertTecCargaHorariaAuxiliar[1];
+            } else {
+                $cargaHorariaAuxiliar = $valCertTecCargaHorariaAuxiliar[1];
+            }
+            if(!$valCertTecCargaHorariaBasico[0]){
+                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaBasico[1] : $msgContenido.', '.$valCertTecCargaHorariaBasico[1];
+            }  else {
+                $cargaHorariaBasico = $valCertTecCargaHorariaBasico[1];
+            }
+
+            $cargaHorariaTotal = $cargaHoraria + $cargaHorariaAuxiliar + $cargaHorariaBasico;
+            $valCertTecCargaHorarianivel = $this->certTecCargaHorariaNivel($nivelId,$cargaHorariaTotal);
+            if ($valCertTecCargaHorarianivel == ''){
+                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorarianivel : $msgContenido.', '.$valCertTecCargaHorarianivel;
+            }
+        }
+
+        // TECNICO AUXILIAR
+        if($nivelId == 2){
+            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
+            // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
+            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
+            if(count($objModulosObservados)>0){
+                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            }
+            $cargaHorariaBasico = 0;
+            if(!$valCertTecCargaHorariaBasico[0]){
+                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaBasico[1] : $msgContenido.', '.$valCertTecCargaHorariaBasico[1];
+            }  else {
+                $cargaHorariaBasico = $valCertTecCargaHorariaBasico[1];
+            }
+
+            $cargaHorariaTotal = $cargaHoraria + $cargaHorariaBasico;
+
+            $valCertTecCargaHorarianivel = $this->certTecCargaHorariaNivel($nivelId,$cargaHorariaTotal);
+            if ($valCertTecCargaHorarianivel == ''){
+                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorarianivel : $msgContenido.', '.$valCertTecCargaHorarianivel;
+            }
+        }
+
+        // VALIDACION DE SOLO UN TIPO DE CERTIFICACION POR ESTUDIANTE (RUDE)
+        $valCertTecDocumentoEspNivel = $this->getCertTecDocumentoEspecialidadNivelEstudiante($participanteId, $especialidadId, $nivelId, $gestionId);
+        if(count($valCertTecDocumentoEspNivel) > 0){
+            $msgContenido = ($msgContenido=="") ? 'ya cuenta con la '.$valCertTecDocumentoEspNivel[0]['documento_tipo'] : $msgContenido.', ya cuenta con la '.$valCertTecDocumentoEspNivel[0]['documento_tipo'];
+        }
+
+        return $msgContenido;
+    }
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
@@ -1831,14 +2088,87 @@ class TramiteController extends Controller {
         $especialidadId = $request->get('especialidad');
         $nivelId = $request->get('nivel');
 
-        $entityInscripcion = $this->getDipHumRegularHistorial(base64_decode($estudianteId));
+        $entityInscripcion = $this->getDipHumRegularHistorial(base64_decode($estudianteId ));
+
+        $gradoId = 0;
+        $i = 0;
+        $j = 0;
+        foreach ($entityInscripcion as $registro)
+        {
+          if ($gradoId != $registro['grado_tipo_id']) {
+            $gradoId = $registro['grado_tipo_id'];
+            $i = 0;
+          }
+          if(($registro['gestion_tipo_id'] > 2013) or ($registro['gestion_tipo_id'] == 2013 and $registro['grado_tipo_id'] == 1)){
+            $listaHistorial[$registro['grado_tipo_id']][$i] = array(
+                                                                      'codigo_rude'=>$registro['codigo_rude'],
+                                                                      'paterno'=>$registro['paterno'],
+                                                                      'materno'=>$registro['materno'],
+                                                                      'nombre'=>$registro['nombre'],
+                                                                      'institucioneducativa_id'=>$registro['institucioneducativa_id'],
+                                                                      'institucioneducativa'=>$registro['institucioneducativa'],
+                                                                      'turno'=>$registro['turno'],
+                                                                      'grado_tipo_id'=>$registro['grado_tipo_id'],
+                                                                      'grado'=>$registro['grado'],
+                                                                      'paralelo'=>$registro['paralelo'],
+                                                                      'gestion_tipo_id'=>$registro['gestion_tipo_id'],
+                                                                      'estadomatricula_tipo_id'=>$registro['estadomatricula_tipo_id'],
+                                                                      'asignatura_tipo_id'=>$registro['asignatura_tipo_id'],
+                                                                      'asignatura'=>$registro['asignatura'],
+                                                                      'area_tipo_id'=>$registro['area_tipo_id'],
+                                                                      'area'=>$registro['area'],
+                                                                      'calendarioId'=>1,
+                                                                      'calendario'=>'Bimestral',
+                                                                      'n1'=>$registro['b1'],
+                                                                      'n2'=>$registro['b2'],
+                                                                      'n3'=>$registro['b3'],
+                                                                      'n4'=>$registro['b4'],
+                                                                      'n5'=>$registro['b5'],
+                                                                      'n6'=>null
+                                                                    );
+          } else {
+            $listaHistorial[$registro['grado_tipo_id']][$i] = array(
+                                                                      'codigo_rude'=>$registro['codigo_rude'],
+                                                                      'paterno'=>$registro['paterno'],
+                                                                      'materno'=>$registro['materno'],
+                                                                      'nombre'=>$registro['nombre'],
+                                                                      'institucioneducativa_id'=>$registro['institucioneducativa_id'],
+                                                                      'institucioneducativa'=>$registro['institucioneducativa'],
+                                                                      'turno'=>$registro['turno'],
+                                                                      'grado_tipo_id'=>$registro['grado_tipo_id'],
+                                                                      'grado'=>$registro['grado'],
+                                                                      'paralelo'=>$registro['paralelo'],
+                                                                      'gestion_tipo_id'=>$registro['gestion_tipo_id'],
+                                                                      'estadomatricula_tipo_id'=>$registro['estadomatricula_tipo_id'],
+                                                                      'asignatura_tipo_id'=>$registro['asignatura_tipo_id'],
+                                                                      'asignatura'=>$registro['asignatura'],
+                                                                      'area_tipo_id'=>$registro['area_tipo_id'],
+                                                                      'area'=>$registro['area'],
+                                                                      'calendarioId'=>2,
+                                                                      'calendario'=>'Trimestral',
+                                                                      'n1'=>$registro['t1'],
+                                                                      'n2'=>$registro['t2'],
+                                                                      'n3'=>$registro['t3'],
+                                                                      'n4'=>$registro['t4'],
+                                                                      'n5'=>$registro['t5'],
+                                                                      'n6'=>$registro['t6']
+                                                                    );
+          }
+
+          $i++;
+          // $listaHistorial[$i] = $entidadEspecialidadTipo['grado_tipo_id'];
+        }
+        //dump($listaHistorial);
+        //die;
+
+
 
         $gestion = $gestionActual->format('Y');
 
         return $this->render($this->session->get('pathSystem') . ':Tramite:estudianteRegularHistorial.html.twig', array(
             'titulo' => 'Registro',
             'subtitulo' => 'Trámite',
-            'listaModuloHistorial' => $entityInscripcion,
+            'listaHistorial' => $listaHistorial,
             ));
     }
 

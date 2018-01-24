@@ -2,6 +2,8 @@ sie_tramite_detalle:
     path:     /detalle
     defaults: { _controller: SieTramitesBundle:Default:Generar }
 
+# CERTIFICACION TÉCNICA
+
 sie_tramite_detalle_certificado_tecnico_recepcion_busca:
     path:     /certificado/tecnico/recepcion/busca
     defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecRecepcionBusca }
@@ -89,3 +91,57 @@ sie_tramite_detalle_certificado_tecnico_entrega_lista_pdf:
 sie_tramite_detalle_certificado_tecnico_entrega_guarda:
     path:     /certificado/tecnico/entrega/guarda
     defaults: { _controller: SieTramitesBundle:TramiteDetalle:certTecEntregaGuarda }
+
+# DIPLOMA HUMANISTICO
+
+sie_tramite_detalle_diploma_humanistico_autorizacion_busca:
+    path:     /diploma/humanistico/autorizacion/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumAutorizacionBusca }
+
+sie_tramite_detalle_diploma_humanistico_autorizacion_lista:
+    path:     /diploma/humanistico/autorizacion/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumAutorizacionLista }
+
+sie_tramite_detalle_diploma_humanistico_autorizacion_lista_pdf:
+    path:     /diploma/humanistico/autorizacion/lista/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumAutorizacionListaPdf }
+
+sie_tramite_detalle_diploma_humanistico_autorizacion_guarda:
+    path:     /diploma/humanistico/autorizacion/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumAutorizacionGuarda }
+
+sie_tramite_detalle_diploma_humanistico_impresion_busca:
+    path:     /diploma/humanistico/impresion/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionBusca }
+
+sie_tramite_detalle_diploma_humanistico_impresion_lista:
+    path:     /diploma/humanistico/impresion/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionLista }
+
+sie_tramite_detalle_diploma_humanistico_impresion_lista_pdf:
+    path:     /diploma/humanistico/impresion/lista/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionListaPdf }
+
+sie_tramite_detalle_diploma_humanistico_impresion_certificado_pdf:
+    path:     /diploma/humanistico/impresion/certificado/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionCertificadoPdf }
+
+sie_tramite_detalle_diploma_humanistico_impresion_guarda:
+    path:     /diploma/humanistico/impresion/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionGuarda }
+
+sie_tramite_detalle_diploma_humanistico_entrega_busca:
+    path:     /diploma/humanistico/entrega/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumEntregaBusca }
+
+sie_tramite_detalle_diploma_humanistico_entrega_lista:
+    path:     /diploma/humanistico/entrega/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumEntregaLista }
+
+sie_tramite_detalle_diploma_humanistico_entrega_lista_pdf:
+    path:     /diploma/humanistico/entrega/lista/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumEntregaListaPdf }
+
+sie_tramite_detalle_diploma_humanistico_entrega_guarda:
+    path:     /diploma/humanistico/entrega/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumEntregaGuarda }
