@@ -48,7 +48,7 @@ class TreeOptionController extends Controller{
 
             //look for the carrera and materias
             $objAsignaturas = $this->get('dgfunctions')->getTreeAsignaturas($form);
-
+            $aInfoUnidadEductiva= array();
 // dump($objAsignaturas);die;
             foreach ($objAsignaturas as $uEducativa) {
 
@@ -60,7 +60,7 @@ class TreeOptionController extends Controller{
                 // ));
 
                 //send the values to the next steps
-                $aInfoUnidadEductiva[$uEducativa['periodo']][$uEducativa['asignatura']][$uEducativa['turno']][$uEducativa['paralelo']] = array('infoUe' => $uEducativa);
+                $aInfoUnidadEductiva[$uEducativa['periodo']][$uEducativa['asignatura']][$uEducativa['turno']][$uEducativa['paralelo']] = array('infoUe' => json_encode($uEducativa));
             }
 
         } else {
@@ -99,10 +99,60 @@ class TreeOptionController extends Controller{
     
     }
 
-    public function seeStudentsAction(){
+    public function seeStudentsNewAction(){
         return $this->render('SieDgesttlaBundle:TreeOption:seeStudents.html.twig', array(
                 // ...
             ));    
     }
+
+
+    public function seeStudentsAction(Request $request) {
+
+    
+        //get the info ue
+        $infoUe = $request->get('infoUe');
+        $aInfoUeducativa = json_decode($infoUe, true);
+
+        // dump($aInfoUeducativa);
+        // die;
+        // dump($aInfoUeducativa);die;
+        //get the values throght the infoUe
+        $form = array(
+            'sie'               => $aInfoUeducativa['institucioneducativa_id'],
+            'ttecCarreraTipoId' => $aInfoUeducativa['ttec_carrera_tipo_id'],
+            'periodoId'         => $aInfoUeducativa['periodoid'],
+            'materiaId'         => $aInfoUeducativa['materiaid'],
+            'paraleloId'        => $aInfoUeducativa['paraleloid'],
+            'turnoId'           => $aInfoUeducativa['turnoid']
+        );
+
+        $objStudents = $this->get('dgfunctions')->getStudents($form);
+        $exist = false;
+        if($objStudents)$exist = true;
+// dump($objStudents);die;
+        return $this->render($this->session->get('pathSystem') . ':TreeOption:seeStudents.html.twig', array(
+                    'objStudents' => $objStudents,
+                    // 'sie' => $sie,
+                    // 'turno' => $turno,
+                    // 'nivel' => $nivel,
+                    // 'grado' => $grado,
+                    // 'paralelo' => $paralelo,
+                    // 'gestion' => $gestion,
+                     // 'aData' => array(),
+                    // 'gradoname' => $gradoname,
+                    // 'paraleloname' => $paraleloname,
+                    // // 'nivelname' => $nivelname,
+                    // 'form' => $this->createFormStudentInscription($infoUe)->createView(),
+                    'infoUe' => $infoUe,
+                    'exist' => $exist,
+                    // 'itemsUe'=>$itemsUe,
+                    // 'ciclo'=>$ciclo,
+                    // 'operativo'=>$operativo,
+                    // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality,
+                    // 'imprimirLibreta'=>$imprimirLibreta,
+                    // 'estadosPermitidosImprimir'=>$estadosPermitidosImprimir
+        ));
+    }
+
 
 }

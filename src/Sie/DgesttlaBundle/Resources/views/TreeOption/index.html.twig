@@ -1,10 +1,25 @@
-{% extends 'layoutHerramienta.html.twig' %}
+{% extends 'layoutDgesttla.html.twig' %}
 
-{% block contentoption %}
+{% block headercontent %}
+<!-- Start header content -->
+<div class="header-content">
+    <h2><i class="fa fa-file-o"></i>Formación Técnica Tecnológica <span>tree option</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Estás aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="#">Inicio</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Buscar Instituto</li>
+        </ol>
+    </div>
+</div><!-- /.header-content -->
+<!--/ End header content -->
+{% endblock %}
 
-    <!-- Start page header -->
-      {% include 'SieHerramientaBundle:Principal:breadcrumbstrail.html.twig' with {'sie': odataUedu.id, 'gestion':gestion , 'opcion': 'Estudiante'} %}
-    <!--/ End page header -->
+{% block bodycontent %}
 
     <div class="body-content animated fadeIn">
 
@@ -39,7 +54,8 @@
                                                             <ul>
                                                                 {% for paraleloKey, dataParalelo in dataGrado %}
                                                                     <li>
-                                                                      <a href="#" onclick="#">
+
+                                                                      <a href="#" onclick="seeStudents('{{dataParalelo.infoUe}}');">
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
                                                                             <span ><i class="icon-leaf"></i>
                                                                                 {{paraleloKey}}
@@ -165,9 +181,9 @@
         var seeStudents = function (infoUe) {
 
             $.ajax({
-                type: 'get',
+                type: 'post',
                 data: ({infoUe: infoUe}),
-                url: Routing.generate('herramienta_info_estudiante_see_students'),
+                url: Routing.generate('tree_option_see_students'),
                 beforeSend: function () {
                     $("#idstudents").empty();
                     $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
