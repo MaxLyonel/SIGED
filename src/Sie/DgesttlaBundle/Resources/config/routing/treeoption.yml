@@ -1,0 +1,20 @@
+
+tree_option_index:
+    path:     /
+    defaults: { _controller: SieDgesttlaBundle:TreeOption:index }
+
+tree_option_see_students:
+    path:     /seeStudents
+    defaults: { _controller: SieDgesttlaBundle:TreeOption:seeStudents }
+
+InscriptionDg_index:
+    path:     /
+    defaults: { _controller: SieDgesttlaBundle:InscriptionDg:index }
+
+
+InscriptionDg_look_asignatures:
+    path:     /lookAsignatures
+    defaults: { _controller: SieDgesttlaBundle:InscriptionDg:lookAsignatures }
+    options:
+        expose: true
+

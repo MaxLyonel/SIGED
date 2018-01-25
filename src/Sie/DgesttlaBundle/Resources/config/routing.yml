@@ -26,7 +26,7 @@ sie_dgesttla_horario_carrera:
     resource:   "@SieDgesttlaBundle/Resources/config/routing/horario.yml"
     prefix: /dgesttla/horariocarrera
 
-sie_dgesttla_paralelo_materia_carrera:
+sied_gesttla_paralelo_materia_carrera:
     resource:   "@SieDgesttlaBundle/Resources/config/routing/paralelo.yml"
     prefix: /dgesttla/paralelomateria
 
@@ -41,3 +41,8 @@ sie_dgesttla_InscriptionDg:
 sie_dgesttla_MallaCurricular:
     resource:   "@SieDgesttlaBundle/Resources/config/routing/MallaCurricular.yml"
     prefix: /dgesttla/MallaCurricular    
+
+sie_dgesttla_tree_option:
+    resource:   "@SieDgesttlaBundle/Resources/config/routing/treeoption.yml"
+    prefix: /dgesttla/treeoption   
+
