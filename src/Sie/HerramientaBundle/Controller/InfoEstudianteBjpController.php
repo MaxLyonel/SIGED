@@ -945,11 +945,12 @@ class InfoEstudianteBjpController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
+        $gestion = $this->session->get('currentyear') - 1;
         $arch = 'DECLARACION_JURADA_'.$arrSieInfo['id'].'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_bonojuancitopinto_estadistica_pagados_v1.rptdesign&ue='.$arrSieInfo['id'].'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_bonojuancitopinto_estadistica_pagados_v1.rptdesign&ue='.$arrSieInfo['id'].'&gestion='.$gestion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
