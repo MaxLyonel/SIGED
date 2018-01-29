@@ -1,0 +1,335 @@
+Sie\AppWebBundle\Entity\InfraestructuraH3RiesgosDelitos:
+    type: entity
+    table: infraestructura_h3_riesgos_delitos
+    indexes:
+        IDX_E6BBE1CE57D72186:
+            columns:
+                - n15_infraestructura_h3_senaletica_evac_tipo_id
+        IDX_E6BBE1CEBDE2E782:
+            columns:
+                - n13_infraestructura_h3_suspencion_clases_tiempo_tipo_id
+        IDX_E6BBE1CE53BED532:
+            columns:
+                - infraestructura_juridiccion_geografica_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n21RoboCantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n21_robo_cantidad
+        n21EsHuboAsalto:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n21_es_hubo_asalto
+        n11EsInundacion:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n11_es_inundacion
+        n11InundacionFechainicial:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_inundacion_fechainicial
+        n11InundacionFechafinal:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_inundacion_fechafinal
+        n11EsIncendio:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n11_es_incendio
+        n11IncendioFechainicial:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_incendio_fechainicial
+        n11IncendioFechafinal:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_incendio_fechafinal
+        n11EsSequia:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n11_es_sequia
+        n11SequiaFechainicial:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_sequia_fechainicial
+        n11SequiaFechafinal:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_sequia_fechafinal
+        n11EsDeslizamiento:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n11_es_deslizamiento
+        n11DeslizamientoFechainicial:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_deslizamiento_fechainicial
+        n11DeslizamientoFechafinal:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_deslizamiento_fechafinal
+        n11EsRiada:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n11_es_riada
+        n11RiadaFechainicial:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_riada_fechainicial
+        n11RiadaFechafinal:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_riada_fechafinal
+        n11EsSismo:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n11_es_sismo
+        n11SismoFechainicial:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_sismo_fechainicial
+        n11SismoFechafinal:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_sismo_fechafinal
+        n11EsViento:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n11_es_viento
+        n11VientoFechainicial:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_viento_fechainicial
+        n11VientoFechafinal:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_viento_fechafinal
+        n11EsGranizada:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n11_es_granizada
+        n11GranizadaFechainicial:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_granizada_fechainicial
+        n11GranizadaFechafinal:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_granizada_fechafinal
+        n11EsHelada:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n11_es_helada
+        n11HeladaFechainicial:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_helada_fechainicial
+        n11HeladaFechafinal:
+            type: date
+            nullable: true
+            comment: ''
+            column: n11_helada_fechafinal
+        n11EsHundimiento:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n11_es_hundimiento
+        n12EsBarranco:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n12_es_barranco
+        n12EsBosque:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n12_es_bosque
+        n12EsRio:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n12_es_rio
+        n12EsCerro:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n12_es_cerro
+        n12EsCentrominero:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n12_es_centrominero
+        n12EsBotadero:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n12_es_botadero
+        n12EsFabrica:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n12_es_fabrica
+        n12EsPasofrontera:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n12_es_pasofrontera
+        n12EsBar:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n12_es_bar
+        n12EsEstacionelectrica:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n12_es_estacionelectrica
+        n12EsZonariezgo:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n12_es_zonariezgo
+        n13SiSuspendieronclases:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n13_si_suspendieronclases
+        n14SiAlbergue:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n14_si_albergue
+        n15EsTimbrepanico:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n15_es_timbrepanico
+        n15EsExtintor:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n15_es_extintor
+        n15EsSalidaemergencia:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n15_es_salidaemergencia
+        n15EsCamaraseguridad:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n15_es_camaraseguridad
+        n15SiFuncionaCamaraseguridad:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n15_si_funciona_camaraseguridad
+        n15EsSenaleticaevac:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n15_es_senaleticaevac
+        n15EsDepositoagua:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n15_es_depositoagua
+    manyToOne:
+        n15InfraestructuraH3SenaleticaEvacTipo:
+            targetEntity: InfraestructuraH3SenaleticaEvacTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n15_infraestructura_h3_senaletica_evac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n13InfraestructuraH3SuspencionClasesTiempoTipo:
+            targetEntity: InfraestructuraH3SuspencionClasesTiempoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n13_infraestructura_h3_suspencion_clases_tiempo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraJuridiccionGeografica:
+            targetEntity: InfraestructuraJuridiccionGeografica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_juridiccion_geografica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

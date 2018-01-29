@@ -48,9 +48,10 @@ Sie\AppWebBundle\Entity\InfraestructuraH5AmbienteadministrativoCancha:
             default: '0'
             column: n21_capacidad_graderias
         n21AreaCanchaMt2:
-            type: integer
+            type: decimal
             nullable: true
-            unsigned: false
+            precision: 8
+            scale: 2
             comment: ''
             default: '0'
             column: n21_area_cancha_mt2
@@ -79,7 +80,7 @@ Sie\AppWebBundle\Entity\InfraestructuraH5AmbienteadministrativoCancha:
                     referencedColumnName: id
             orphanRemoval: false
         infraestructuraH5Ambienteadministrativo:
-            targetEntity: InfraestructuraH5Ambienteadministrativo
+            targetEntity: InfraestructuraH6Ambienteadministrativo
             cascade: {  }
             mappedBy: null
             inversedBy: null

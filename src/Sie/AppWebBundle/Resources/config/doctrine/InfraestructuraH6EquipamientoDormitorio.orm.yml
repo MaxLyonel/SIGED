@@ -62,9 +62,10 @@ Sie\AppWebBundle\Entity\InfraestructuraH6EquipamientoDormitorio:
             default: '0'
             column: n2_camaotro
         n1Aream2:
-            type: integer
+            type: decimal
             nullable: true
-            unsigned: false
+            precision: 8
+            scale: 2
             comment: ''
             default: '0'
             column: n1_aream2

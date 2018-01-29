@@ -1,0 +1,108 @@
+Sie\AppWebBundle\Entity\InfraestructuraH3DelitosEdificioDetalle:
+    type: entity
+    table: infraestructura_h3_delitos_edificio_detalle
+    indexes:
+        IDX_9194E9DAE6A6D635:
+            columns:
+                - infraestructura_h3_riesgos_delitos_id
+        IDX_9194E9DA7F358002:
+            columns:
+                - n22_equipamiento_tipo_id
+        IDX_9194E9DA33BB2B3B:
+            columns:
+                - n22_mobiliario_tipo_id
+        IDX_9194E9DA34A7AFB1:
+            columns:
+                - n22_ambientes_tipo_id
+        IDX_9194E9DA763FDFE6:
+            columns:
+                - n22_horario_tipo_id
+        IDX_9194E9DA2E1FA202:
+            columns:
+                - n22_gestion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n22CantVeces:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n22_cant_veces
+        n22ObsAcciones:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: n22_obs_acciones
+        n22EsRoboEdificio:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n22_es_robo_edificio
+    manyToOne:
+        infraestructuraH3RiesgosDelitos:
+            targetEntity: InfraestructuraH3RiesgosDelitos
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h3_riesgos_delitos_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n22EquipamientoTipo:
+            targetEntity: InfraestructuraGenEquipamientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n22_equipamiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n22MobiliarioTipo:
+            targetEntity: InfraestructuraGenMobiliarioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n22_mobiliario_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n22AmbientesTipo:
+            targetEntity: InfraestructuraGenAmbientesTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n22_ambientes_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n22HorarioTipo:
+            targetEntity: InfraestructuraGenHorarioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n22_horario_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n22GestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n22_gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,63 @@
+Sie\AppWebBundle\Entity\InfraestructuraH2CaracteristicaEdificacionSenalesTipo:
+    type: entity
+    table: infraestructura_h2_caracteristica_edificacion_senales_tipo
+    indexes:
+        IDX_274CCA8BC30AD455:
+            columns:
+                - n213_tipo_senales_idioma2_id
+        IDX_274CCA8BD1BF7BBB:
+            columns:
+                - n213_tipo_senales_idioma1_id
+        IDX_274CCA8B40AC24D1:
+            columns:
+                - n213_tipo_senales_id
+        IDX_274CCA8BCC5A783:
+            columns:
+                - infraestructura_h2_caracteristica_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        n213TipoSenalesioma2:
+            targetEntity: InfraestructuraH2SenalesIdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n213_tipo_senales_idioma2_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n213TipoSenalesioma1:
+            targetEntity: InfraestructuraH2SenalesIdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n213_tipo_senales_idioma1_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n213TipoSenales:
+            targetEntity: InfraestructuraH2SenalesTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n213_tipo_senales_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH2Caracteristica:
+            targetEntity: InfraestructuraH2Caracteristica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h2_caracteristica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

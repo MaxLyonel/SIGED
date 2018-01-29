@@ -83,4 +83,32 @@ class InfraestructuraH3EnlugarTipo
     {
         return $this->obs;
     }
+    /**
+     * @var integer
+     */
+    private $gestionTipoId;
+
+
+    /**
+     * Set gestionTipoId
+     *
+     * @param integer $gestionTipoId
+     * @return InfraestructuraH3EnlugarTipo
+     */
+    public function setGestionTipoId($gestionTipoId)
+    {
+        $this->gestionTipoId = $gestionTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipoId
+     *
+     * @return integer 
+     */
+    public function getGestionTipoId()
+    {
+        return $this->gestionTipoId;
+    }
 }

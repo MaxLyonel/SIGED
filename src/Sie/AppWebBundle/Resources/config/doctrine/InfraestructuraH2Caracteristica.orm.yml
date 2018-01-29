@@ -2,6 +2,21 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
     type: entity
     table: infraestructura_h2_caracteristica
     indexes:
+        IDX_4173E2BE2871A373:
+            columns:
+                - n2_13_senales_tipo_id
+        IDX_4173E2BE9887416:
+            columns:
+                - n212_senales_idioma_tipo2_id
+        IDX_4173E2BE1B3DDBF8:
+            columns:
+                - n212_senales_idioma_tipo1_id
+        IDX_4173E2BEE9FE1E8:
+            columns:
+                - n215_tipo_rampas_id
+        IDX_4173E2BEA0EAC13F:
+            columns:
+                - n21_infraestructura_h2_construida_educativo_tipo_id
         IDX_4173E2BEFDB23B44:
             columns:
                 - n29_documento_tipo_id
@@ -20,15 +35,15 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
         IDX_4173E2BE985B7B57:
             columns:
                 - n27_estadogeneral_tipo_id
-        IDX_4173E2BE8B699FC2:
+        IDX_4173E2BEC422832C:
             columns:
-                - n25_propiedad_tipo
-        IDX_4173E2BE9E398D42:
+                - n25_infraestructura_h2_propiedad_tipo_id
+        IDX_4173E2BE7BC8AB6E:
             columns:
-                - n13_muroperimetral_avance_tipo_id
-        IDX_4173E2BE17636C6D:
+                - n13_edificacion_amurallada
+        IDX_4173E2BE65B6A084:
             columns:
-                - n12_topografia_tipo_id
+                - n12_infraestructura_h2_topografia_tipo_id
         IDX_4173E2BE53BED532:
             columns:
                 - infraestructura_juridiccion_geografica_id
@@ -45,7 +60,7 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
         n11Areaconstruida:
             type: decimal
             nullable: false
-            precision: 6
+            precision: 17
             scale: 2
             comment: ''
             default: '0'
@@ -53,7 +68,7 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
         n11Arearecreacion:
             type: decimal
             nullable: false
-            precision: 6
+            precision: 17
             scale: 2
             comment: ''
             default: '0'
@@ -61,7 +76,7 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
         n11Areanoconstruida:
             type: decimal
             nullable: false
-            precision: 6
+            precision: 17
             scale: 2
             comment: ''
             default: '0'
@@ -69,7 +84,7 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
         n11Areacultivo:
             type: decimal
             nullable: false
-            precision: 6
+            precision: 17
             scale: 2
             comment: ''
             default: '0'
@@ -77,54 +92,55 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
         n11Areacriaanimales:
             type: decimal
             nullable: false
-            precision: 6
+            precision: 17
             scale: 2
             comment: ''
             default: '0'
             column: n11_areacriaanimales
-        n13MuroperimetralArea:
-            type: integer
+        n13Muroperimetral:
+            type: decimal
             nullable: false
-            unsigned: false
+            precision: 17
+            scale: 2
             comment: ''
-            column: n13_muroperimetral_area
+            column: n13_muroperimetral
         n13MuroperimetralActual:
             type: decimal
             nullable: false
-            precision: 6
+            precision: 17
             scale: 2
             comment: ''
             column: n13_muroperimetral_actual
-        n14ConEsRiesgoInundacion:
+        n311ConEsRiesgoInundacion:
             type: boolean
             nullable: false
             comment: ''
             default: false
-            column: n14_con_es_riesgo_inundacion
-        n14ConEsRiesgoRiada:
+            column: n3_11_con_es_riesgo_inundacion
+        n317ConEsRiesgoRiada:
             type: boolean
             nullable: false
             comment: ''
             default: false
-            column: n14_con_es_riesgo_riada
-        n14ConEsRiesgoTormenta:
+            column: n3_17_con_es_riesgo_riada
+        n318ConEsRiesgoTormenta:
             type: boolean
             nullable: false
             comment: ''
             default: false
-            column: n14_con_es_riesgo_tormenta
-        n14ConEsRiesgoIncendio:
+            column: n3_18_con_es_riesgo_tormenta
+        n312ConEsRiesgoIncendio:
             type: boolean
             nullable: false
             comment: ''
             default: false
-            column: n14_con_es_riesgo_incendio
-        n14ConEsRiesgoGranizo:
+            column: n3_12_con_es_riesgo_incendio
+        n319ConEsRiesgoGranizo:
             type: boolean
             nullable: false
             comment: ''
             default: false
-            column: n14_con_es_riesgo_granizo
+            column: n3_19_con_es_riesgo_granizo
         n14ConEsRiesgoHumedad:
             type: boolean
             nullable: false
@@ -143,24 +159,24 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
             comment: ''
             default: false
             column: n14_con_es_riesgo_contaminacion
-        n14ConEsRiesgoDeslizamiento:
+        n314ConEsRiesgoDeslizamiento:
             type: boolean
             nullable: false
             comment: ''
             default: false
-            column: n14_con_es_riesgo_deslizamiento
-        n14ConEsRiesgoSifonamiento:
+            column: n3_14_con_es_riesgo_deslizamiento
+        n315ConEsRiesgoSifonamiento:
             type: boolean
             nullable: false
             comment: ''
             default: false
-            column: n14_con_es_riesgo_sifonamiento
-        n14ConEsRiesgoTerremoto:
+            column: n3_15_con_es_riesgo_sifonamiento
+        n316ConEsRiesgoTerremoto:
             type: boolean
             nullable: false
             comment: ''
             default: false
-            column: n14_con_es_riesgo_terremoto
+            column: n3_16_con_es_riesgo_terremoto
         n14ConEsRiesgoNoexiste:
             type: boolean
             nullable: false
@@ -277,7 +293,7 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
         n29DocumentoObs:
             type: string
             nullable: true
-            length: 100
+            length: 220
             fixed: false
             comment: ''
             column: n29_documento_obs
@@ -288,11 +304,11 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
             fixed: false
             comment: ''
             column: n29_documento_nro_partida
-        n29EsPlanoAprobado:
+        n210EsPlanoAprobado:
             type: boolean
             nullable: true
             comment: ''
-            column: n29_es_plano_aprobado
+            column: n210_es_plano_aprobado
         obs:
             type: string
             nullable: true
@@ -307,11 +323,408 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
         n11Areatotal:
             type: decimal
             nullable: true
-            precision: 8
+            precision: 17
             scale: 2
             comment: ''
             column: n11_areatotal
+        n11AreaHuerto:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: n11_area_huerto
+        n11AreaInvernadero:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: n11_area_invernadero
+        n11AreaGranjaEscolar:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: n11_area_granja_escolar
+        n22AnioConstruccionEsDiscap:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n22_anio_construccion_es_discap
+        n23AnioRefaccionEsDiscap:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n23_anio_refaccion_es_discap
+        n24AnioAmpliacionEsDiscap:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n24_anio_ampliacion_es_discap
+        n27TipoDocumentacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: n27_tipo_documentacion
+        n28FolioRealTarjetaObs:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: n28_folio_real_tarjeta_obs
+        n211AdjDocumentacionFolio:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: n211_adj_documentacion_folio
+        n212SiRampas:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n212_si_rampas
+        n212SiTieneRampa:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n212_si_tiene_rampa
+        n313ConEsRiesgoSequia:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_13_con_es_riesgo_sequia
+        n313ConEsRiesgoSequiaMesi:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_13_con_es_riesgo_sequia_mesi
+        n313ConEsRiesgoSequiaMesf:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_13_con_es_riesgo_sequia_mesf
+        n311ConEsRiesgoInundacionMesi:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_11_con_es_riesgo_inundacion_mesi
+        n311ConEsRiesgoInundacionMesf:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_11_con_es_riesgo_inundacion_mesf
+        n312ConEsRiesgoIncendioMesi:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_12_con_es_riesgo_incendio_mesi
+        n312ConEsRiesgoIncendioMesf:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_12_con_es_riesgo_incendio_mesf
+        n314ConEsRiesgoDeslizamientoMesi:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_14_con_es_riesgo_deslizamiento_mesi
+        n314ConEsRiesgoDeslizamientoMesf:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_14_con_es_riesgo_deslizamiento_mesf
+        n315ConEsRiesgoSifonamientoMesi:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_15_con_es_riesgo_sifonamiento_mesi
+        n315ConEsRiesgoSifonamientoMesf:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_15_con_es_riesgo_sifonamiento_mesf
+        n316ConEsRiesgoTerremotoMesi:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_16_con_es_riesgo_terremoto_mesi
+        n316ConEsRiesgoTerremotoMesf:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_16_con_es_riesgo_terremoto_mesf
+        n317ConEsRiesgoRiadaMesi:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_17_con_es_riesgo_riada_mesi
+        n317ConEsRiesgoRiadaMesf:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_17_con_es_riesgo_riada_mesf
+        n318ConEsRiesgoTormentaMesi:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_18_con_es_riesgo_tormenta_mesi
+        n318ConEsRiesgoTormentaMesf:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_18_con_es_riesgo_tormenta_mesf
+        n319ConEsRiesgoGranizoMesi:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_19_con_es_riesgo_granizo_mesi
+        n319ConEsRiesgoGranizoMesf:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_19_con_es_riesgo_granizo_mesf
+        n3120ConEsRiesgoHelada:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_120_con_es_riesgo_helada
+        n3120ConEsRiesgoHeladaMesi:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_120_con_es_riesgo_helada_mesi
+        n3120ConEsRiesgoHeladaMesf:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: n3_120_con_es_riesgo_helada_mesf
+        n321EsEdifProxBarrancos:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_barrancos
+        n321EsEdifProxRiosLagQue:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_rios_lag_que
+        n321EsEdifProxEstaElectricas:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_esta_electricas
+        n321EsEdifProxEstaGasolineras:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_esta_gasolineras
+        n321EsEdifProxFabrMatContami:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_fabr_mat_contami
+        n321EsEdifProxBotaderosMuni:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_botaderos_muni
+        n321EsEdifProxCentroMinero:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_centro_minero
+        n321EsEdifProxPasoFrontera:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_paso_frontera
+        n321EsEdifProxBares:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_bares
+        n321EsEdifProxBosques:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_bosques
+        n331EsSuspencionClases:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_31_es_suspencion_clases
+        n341EsAlbergue:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_41_es_albergue
+        n354EsSenaleticaEvac:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_54_es_senaletica_evac
+        n355EsDepositoAgua:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_55_es_deposito_agua
+        n321EsEdifProxCerroLadera:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_cerro_ladera
+        n321EsEdifProxRiesgoDelito:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_21_es_edif_prox_riesgo_delito
+        n351EsTimbrePanico:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_51_es_timbre_panico
+        n351EsTimbrePanicoCant:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_51_es_timbre_panico_cant
+        n352EsExtintores:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_52_es_extintores
+        n352ExtintoresCant:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_52_extintores_cant
+        n353EsCamSeg:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_53_es_cam_seg
+        n353CamSegCant:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n3_53_cam_seg_cant
+        n353EsCamSegFuncionamiento:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n3_53_es_cam_seg_funcionamiento
+        n212SiSenaletica:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n212_si_senaletica
+        n31NroBloque:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n31_nro_bloque
     manyToOne:
+        n213SenalesTipo:
+            targetEntity: InfraestructuraH2SenalesTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n2_13_senales_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n212SenalesiomaTipo2:
+            targetEntity: InfraestructuraH2SenalesIdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n212_senales_idioma_tipo2_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n212SenalesiomaTipo1:
+            targetEntity: InfraestructuraH2SenalesIdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n212_senales_idioma_tipo1_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n215TipoRampas:
+            targetEntity: InfraestructuraH2RampaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n215_tipo_rampas_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n21InfraestructuraH2ConstruidaEducativoTipo:
+            targetEntity: InfraestructuraH2ConstruidaEducativoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n21_infraestructura_h2_construida_educativo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         n29DocumentoTipo:
             targetEntity: InfraestructuraH2DocumentoTipo
             cascade: {  }
@@ -366,31 +779,31 @@ Sie\AppWebBundle\Entity\InfraestructuraH2Caracteristica:
                 n27_estadogeneral_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        n25PropiedadTipo:
+        n25InfraestructuraH2PropiedadTipo:
             targetEntity: InfraestructuraH2PropiedadTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                n25_propiedad_tipo:
+                n25_infraestructura_h2_propiedad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        n13MuroperimetralAvanceTipo:
+        n13EdificacionAmurallada:
             targetEntity: InfraestructuraGenAvanceTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                n13_muroperimetral_avance_tipo_id:
+                n13_edificacion_amurallada:
                     referencedColumnName: id
             orphanRemoval: false
-        n12TopografiaTipo:
+        n12InfraestructuraH2TopografiaTipo:
             targetEntity: InfraestructuraH2TopografiaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                n12_topografia_tipo_id:
+                n12_infraestructura_h2_topografia_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         infraestructuraJuridiccionGeografica:

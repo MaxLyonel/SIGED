@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\InfraestructuraH2CaracteristicaEdificacionRampasTipo:
+    type: entity
+    table: infraestructura_h2_caracteristica_edificacion_rampas_tipo
+    indexes:
+        IDX_C5B4DD40E9FE1E8:
+            columns:
+                - n215_tipo_rampas_id
+        IDX_C5B4DD40CC5A783:
+            columns:
+                - infraestructura_h2_caracteristica_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        n215TipoRampas:
+            targetEntity: InfraestructuraH2RampaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n215_tipo_rampas_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH2Caracteristica:
+            targetEntity: InfraestructuraH2Caracteristica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h2_caracteristica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

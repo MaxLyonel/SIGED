@@ -61,7 +61,7 @@ Sie\AppWebBundle\Entity\InfraestructuraH5AmbienteadministrativoInmobiliario:
                     referencedColumnName: id
             orphanRemoval: false
         infraestructuraH5Ambienteadministrativo:
-            targetEntity: InfraestructuraH5Ambienteadministrativo
+            targetEntity: InfraestructuraH6Ambienteadministrativo
             cascade: {  }
             mappedBy: null
             inversedBy: null

@@ -1,0 +1,58 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:
+    type: entity
+    table: infraestructura_h5_ambientepedagogico_deportivo_equipamiento
+    indexes:
+        IDX_82080836EA2629:
+            columns:
+                - n53_1_estado_equipamiento_tipo_id
+        IDX_8208083622B7920F:
+            columns:
+                - n53_1_equipamiento_tipo_id
+        IDX_82080836457A0F1F:
+            columns:
+                - infraestructura_h5_ambientepedagogico_deportivo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n531Cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n53_1_cantidad
+    manyToOne:
+        n531EstadoEquipamientoTipo:
+            targetEntity: InfraestructuraGenEstadoMobEquipTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_1_estado_equipamiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n531EquipamientoTipo:
+            targetEntity: InfraestructuraH4AmbientepedagogicoDeportivoEquimientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_1_equipamiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH5AmbientepedagogicoDeportivo:
+            targetEntity: InfraestructuraH5AmbientepedagogicoDeportivo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h5_ambientepedagogico_deportivo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

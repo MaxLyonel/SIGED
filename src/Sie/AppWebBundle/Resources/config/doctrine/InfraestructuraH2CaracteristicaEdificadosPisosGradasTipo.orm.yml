@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\InfraestructuraH2CaracteristicaEdificadosPisosGradasTipo:
+    type: entity
+    table: infraestructura_h2_caracteristica_edificados_pisos_gradas_tipo
+    indexes:
+        IDX_22014C4818DEE68F:
+            columns:
+                - infraestructura_h2_caracteristica_edificados_pisos_id
+        IDX_22014C4870384B65:
+            columns:
+                - n32_gradas_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        infraestructuraH2CaracteristicaEdificadosPisos:
+            targetEntity: InfraestructuraH2CaracteristicaEdificadosPisos
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h2_caracteristica_edificados_pisos_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n32GradasTipo:
+            targetEntity: InfraestructuraH2PisosGradasTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n32_gradas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

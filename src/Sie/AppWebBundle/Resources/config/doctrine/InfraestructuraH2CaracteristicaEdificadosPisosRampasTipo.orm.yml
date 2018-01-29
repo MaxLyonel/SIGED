@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\InfraestructuraH2CaracteristicaEdificadosPisosRampasTipo:
+    type: entity
+    table: infraestructura_h2_caracteristica_edificados_pisos_rampas_tipo
+    indexes:
+        IDX_2FFCD2EFD350405C:
+            columns:
+                - n34_rampas_tipo_id
+        IDX_2FFCD2EF18DEE68F:
+            columns:
+                - infraestructura_h2_caracteristica_edificados_pisos_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        n34RampasTipo:
+            targetEntity: InfraestructuraH2RampaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_rampas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH2CaracteristicaEdificadosPisos:
+            targetEntity: InfraestructuraH2CaracteristicaEdificadosPisosGradasTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h2_caracteristica_edificados_pisos_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
