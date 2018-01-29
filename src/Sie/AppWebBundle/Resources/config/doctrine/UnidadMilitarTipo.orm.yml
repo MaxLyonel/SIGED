@@ -1,6 +1,10 @@
 Sie\AppWebBundle\Entity\UnidadMilitarTipo:
     type: entity
     table: unidad_militar_tipo
+    indexes:
+        IDX_D3A3A97EF7C1C53B:
+            columns:
+                - fuerza_militar_tipo_id
     id:
         id:
             type: integer
@@ -11,11 +15,21 @@ Sie\AppWebBundle\Entity\UnidadMilitarTipo:
             generator:
                 strategy: SEQUENCE
     fields:
-        unidadMilitarTipo:
+        unidadMilitar:
             type: string
             nullable: true
             length: 255
             fixed: false
             comment: ''
-            column: unidad_militar_tipo
+            column: unidad_militar
+    manyToOne:
+        fuerzaMilitarTipo:
+            targetEntity: FuerzaMilitarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                fuerza_militar_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
     lifecycleCallbacks: {  }

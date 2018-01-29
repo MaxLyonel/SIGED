@@ -1,0 +1,371 @@
+Sie\AppWebBundle\Entity\InfraestructuraH4ServicioBateriaBanos:
+    type: entity
+    table: infraestructura_h4_servicio_bateria_banos
+    indexes:
+        IDX_F7F93E6F8B76C1BD:
+            columns:
+                - estado_tipo_id
+        IDX_F7F93E6F7B00B945:
+            columns:
+                - n52_2_abre_tipo_id
+        IDX_F7F93E6F5281E772:
+            columns:
+                - n52_tiene_piso_mater_tipo_id
+        IDX_F7F93E6F7955F673:
+            columns:
+                - n52_tiene_revest_mater_tipo_id
+        IDX_F7F93E6F4630B13E:
+            columns:
+                - n52_tiene_muros_carac_tipo_id
+        IDX_F7F93E6FE6338185:
+            columns:
+                - n52_tiene_muros_mater_tipo_id
+        IDX_F7F93E6F547F7BC6:
+            columns:
+                - n52_tiene_ventana_carac_tipo_id
+        IDX_F7F93E6FD2E69C34:
+            columns:
+                - n52_1_seguro_tipo_id
+        IDX_F7F93E6FF282D7C9:
+            columns:
+                - n52_tiene_piso_carac_tipo_id
+        IDX_F7F93E6FD956C6C8:
+            columns:
+                - n52_tiene_revest_carac_tipo_id
+        IDX_F7F93E6F9280D0D9:
+            columns:
+                - n52_tiene_cielo_falso_carac_tipo_id
+        IDX_F7F93E6F50FFA89C:
+            columns:
+                - n5_cielo_estadogeneral_tipo_id
+        IDX_F7F93E6FAFDB5F86:
+            columns:
+                - n5_piso_estadogeneral_tipo_id
+        IDX_F7F93E6FA13E0CD4:
+            columns:
+                - n5_techo_estadogeneral_tipo_id
+        IDX_F7F93E6F5B05FBF2:
+            columns:
+                - n5_pared_estadogeneral_tipo_id
+        IDX_F7F93E6FCE90ACE3:
+            columns:
+                - n5_ambiente_bano_tipo_id
+        IDX_F7F93E6F2CB3E1BC:
+            columns:
+                - infraestructura_h4_servicio_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n5Areatotalm2:
+            type: decimal
+            nullable: false
+            precision: 8
+            scale: 2
+            comment: ''
+            default: '0'
+            column: n5_areatotalm2
+        n5BanioConagua:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_banio_conagua
+        n5BanioSinagua:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_banio_sinagua
+        n5LetrinaFunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_letrina_funciona
+        n5LetrinaNofunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_letrina_nofunciona
+        n5InodoroFunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_inodoro_funciona
+        n5InodoroNofunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_inodoro_nofunciona
+        n5UrinarioFunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_urinario_funciona
+        n5UrinarioNofunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_urinario_nofunciona
+        n5LavamanoFunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_lavamano_funciona
+        n5LavamanoNofunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_lavamano_nofunciona
+        n5DuchaFunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_ducha_funciona
+        n5DuchaNofunciona:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n5_ducha_nofunciona
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+        n5EsFuncionaAmbiente:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n5_es_funciona_ambiente
+        n52EsTieneTecho:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n52_es_tiene_techo
+        n52EsTieneCieloFalso:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n52_es_tiene_cielo_falso
+        n52EsTienePuerta:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n52_es_tiene_puerta
+        n52EsTieneVentana:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n52_es_tiene_ventana
+        n52EsTieneMuros:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n52_es_tiene_muros
+        n52EsTieneRevest:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n52_es_tiene_revest
+        n52EsTienePiso:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n52_es_tiene_piso
+    manyToOne:
+        estadoTipo:
+            targetEntity: InfraestructuraGenEstadoGeneral
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n522AbreTipo:
+            targetEntity: InfraestructuraGenPuertasAbreTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_2_abre_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n52TienePisoMaterTipo:
+            targetEntity: InfraestructuraGenPisosMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_tiene_piso_mater_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n52TieneRevestMaterTipo:
+            targetEntity: InfraestructuraGenRevestimientoMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_tiene_revest_mater_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n52TieneMurosCaracTipo:
+            targetEntity: InfraestructuraGenMurosCaracTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_tiene_muros_carac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n52TieneMurosMaterTipo:
+            targetEntity: InfraestructuraGenMurosMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_tiene_muros_mater_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n52TieneVentanaCaracTipo:
+            targetEntity: InfraestructuraGenVentanasCaracTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_tiene_ventana_carac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n521SeguroTipo:
+            targetEntity: InfraestructuraGenPuertasSeguroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_1_seguro_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n52TienePisoCaracTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_tiene_piso_carac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n52TieneRevestCaracTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_tiene_revest_carac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n52TieneCieloFalsoCaracTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_tiene_cielo_falso_carac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n5CieloEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n5_cielo_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n5PisoEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n5_piso_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n5TechoEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n5_techo_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n5ParedEstadogeneralTipo:
+            targetEntity: InfraestructuraGenEstadogeneralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n5_pared_estadogeneral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n5AmbienteBanoTipo:
+            targetEntity: InfraestructuraH4BanoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n5_ambiente_bano_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH4Servicio:
+            targetEntity: InfraestructuraH4Servicio
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h4_servicio_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

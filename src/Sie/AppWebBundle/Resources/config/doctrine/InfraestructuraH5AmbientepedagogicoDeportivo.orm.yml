@@ -1,0 +1,281 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5AmbientepedagogicoDeportivo:
+    type: entity
+    table: infraestructura_h5_ambientepedagogico_deportivo
+    indexes:
+        IDX_30CE805D8B76C1BD:
+            columns:
+                - estado_tipo_id
+        IDX_30CE805D52C80DB7:
+            columns:
+                - n51_2_abre_tipo_id
+        IDX_30CE805D2A25D546:
+            columns:
+                - n53_ambiente_piso_mat_tipo_id
+        IDX_30CE805DC7D3B8EB:
+            columns:
+                - n53_ambiente_revest_mat_tipo_id
+        IDX_30CE805D9D325BAF:
+            columns:
+                - n53_ambiente_muro_carac_tipo_id
+        IDX_30CE805D59D07E5C:
+            columns:
+                - n53_ambiente_muro_mat_tipo_id
+        IDX_30CE805D32B30B68:
+            columns:
+                - n53_ambiente_ventana_tipo_id
+        IDX_30CE805D38604156:
+            columns:
+                - n51_1_seguro_tipo_id
+        IDX_30CE805D6C1BA8E1:
+            columns:
+                - n53_ambiente_piso_carac_tipo_id
+        IDX_30CE805D44B19A56:
+            columns:
+                - n53_ambiente_revest_carac_tipo_id
+        IDX_30CE805D580E0E6F:
+            columns:
+                - n53_ambiente_cielo_fal_tipo_id
+        IDX_30CE805DFDE8C4DC:
+            columns:
+                - n53_ambiente_graderia_tipo_id
+        IDX_30CE805DE4599A9F:
+            columns:
+                - n53_ambiente_tipo
+        IDX_30CE805D53BED532:
+            columns:
+                - infraestructura_juridiccion_geografica_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n53EsRecreativo:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_recreativo
+        n53EsDeportivo:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_deportivo
+        n53EsCultural:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_cultural
+        n53EsUsoUniversal:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_uso_universal
+        n53AmbienteAreaMts:
+            type: decimal
+            nullable: true
+            precision: 8
+            scale: 2
+            comment: ''
+            column: n53_ambiente_area_mts
+        n53AmbienteCapacidad:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: n53_ambiente_capacidad
+        n53EsTechado:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_techado
+        n53EsIluminacionElectrica:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_iluminacion_electrica
+        n53EsIluminacionNatural:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_iluminacion_natural
+        n53EsGraderia:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_graderia
+        n53EsAmbienteCieloFal:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_ambiente_cielo_fal
+        n53EsAmbientePuerta:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_ambiente_puerta
+        n53EsAmbienteVentana:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_ambiente_ventana
+        n53EsAmbienteMuros:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_ambiente_muros
+        n53EsAmbienteRevestimiento:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_ambiente_revestimiento
+        n53EsAmbientePiso:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n53_es_ambiente_piso
+    manyToOne:
+        estadoTipo:
+            targetEntity: InfraestructuraGenEstadoGeneral
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n512AbreTipo:
+            targetEntity: InfraestructuraGenPuertasAbreTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n51_2_abre_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53AmbientePisoMatTipo:
+            targetEntity: InfraestructuraGenPisosMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_ambiente_piso_mat_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53AmbienteRevestMatTipo:
+            targetEntity: InfraestructuraGenRevestimientoMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_ambiente_revest_mat_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53AmbienteMuroCaracTipo:
+            targetEntity: InfraestructuraGenMurosCaracTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_ambiente_muro_carac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53AmbienteMuroMatTipo:
+            targetEntity: InfraestructuraGenMurosMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_ambiente_muro_mat_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53AmbienteVentanaTipo:
+            targetEntity: InfraestructuraGenVentanasCaracTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_ambiente_ventana_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n511SeguroTipo:
+            targetEntity: InfraestructuraGenPuertasSeguroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n51_1_seguro_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53AmbientePisoCaracTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_ambiente_piso_carac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53AmbienteRevestCaracTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_ambiente_revest_carac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53AmbienteCieloFalTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_ambiente_cielo_fal_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53AmbienteGraderiaTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_ambiente_graderia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53AmbienteTipo:
+            targetEntity: InfraestructuraH5AmbientepedagogicoDeportivoAmbienteTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_ambiente_tipo:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraJuridiccionGeografica:
+            targetEntity: InfraestructuraJuridiccionGeografica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_juridiccion_geografica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

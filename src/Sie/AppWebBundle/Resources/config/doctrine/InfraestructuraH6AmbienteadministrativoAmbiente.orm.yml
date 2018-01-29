@@ -1,0 +1,247 @@
+Sie\AppWebBundle\Entity\InfraestructuraH6AmbienteadministrativoAmbiente:
+    type: entity
+    table: infraestructura_h6_ambienteadministrativo_ambiente
+    indexes:
+        IDX_965C79CB8B76C1BD:
+            columns:
+                - estado_tipo_id
+        IDX_965C79CBF5E3E4E3:
+            columns:
+                - n61_ambiente_piso_mat_tipo_id
+        IDX_965C79CB457D2FBB:
+            columns:
+                - n61_ambiente_revest_mat_tipo_id
+        IDX_965C79CB1F9CCCFF:
+            columns:
+                - n61_ambiente_muro_carac_tipo_id
+        IDX_965C79CB86164FF9:
+            columns:
+                - n61_ambiente_muro_mat_tipo_id
+        IDX_965C79CB946D6DC4:
+            columns:
+                - n61_ambiente_ventana_tipo_id
+        IDX_965C79CB9B36C7FF:
+            columns:
+                - n61_1_seguro_tipo_id
+        IDX_965C79CBEEB53FB1:
+            columns:
+                - n61_ambiente_piso_carac_tipo_id
+        IDX_965C79CB9061434B:
+            columns:
+                - n61_ambiente_revest_carac_tipo_id
+        IDX_965C79CBFE6D9F39:
+            columns:
+                - n61_ambiente_cielo_fal_tipo_id
+        IDX_965C79CB5013004E:
+            columns:
+                - n11_ambienteadministrativo_tipo_id
+        IDX_965C79CBAE29A101:
+            columns:
+                - infraestructura_h6_ambienteadministrativo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n11NumeroBueno:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n11_numero_bueno
+        n11NumeroRegular:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n11_numero_regular
+        n11NumeroMalo:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n11_numero_malo
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+        n61AmbienteAreaAdm:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n61_ambiente_area_adm
+        n61EsAmbienteTecho:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n61_es_ambiente_techo
+        n61EsAmbienteCieloFal:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n61_es_ambiente_cielo_fal
+        n61EsAmbientePuerta:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n61_es_ambiente_puerta
+        n61EsAmbienteVentana:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n61_es_ambiente_ventana
+        n61EsAmbienteMuros:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n61_es_ambiente_muros
+        n61EsAmbienteRevestimiento:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n61_es_ambiente_revestimiento
+        n61EsAmbientePiso:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n61_es_ambiente_piso
+        n612AbreTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n61_2_abre_tipo_id
+    manyToOne:
+        estadoTipo:
+            targetEntity: InfraestructuraGenEstadoGeneral
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n61AmbientePisoMatTipo:
+            targetEntity: InfraestructuraGenPisosMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n61_ambiente_piso_mat_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n61AmbienteRevestMatTipo:
+            targetEntity: InfraestructuraGenRevestimientoMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n61_ambiente_revest_mat_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n61AmbienteMuroCaracTipo:
+            targetEntity: InfraestructuraGenMurosCaracTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n61_ambiente_muro_carac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n61AmbienteMuroMatTipo:
+            targetEntity: InfraestructuraGenMurosMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n61_ambiente_muro_mat_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n61AmbienteVentanaTipo:
+            targetEntity: InfraestructuraGenVentanasCaracTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n61_ambiente_ventana_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n611SeguroTipo:
+            targetEntity: InfraestructuraGenPuertasSeguroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n61_1_seguro_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n61AmbientePisoCaracTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n61_ambiente_piso_carac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n61AmbienteRevestCaracTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n61_ambiente_revest_carac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n61AmbienteCieloFalTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n61_ambiente_cielo_fal_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n11AmbienteadministrativoTipo:
+            targetEntity: InfraestructuraH6AmbienteadministrativoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n11_ambienteadministrativo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH6Ambienteadministrativo:
+            targetEntity: InfraestructuraH6Ambienteadministrativo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h6_ambienteadministrativo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

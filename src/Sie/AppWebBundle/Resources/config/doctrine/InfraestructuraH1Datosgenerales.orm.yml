@@ -2,6 +2,45 @@ Sie\AppWebBundle\Entity\InfraestructuraH1Datosgenerales:
     type: entity
     table: infraestructura_h1_datosgenerales
     indexes:
+        IDX_2CED21CF2EBCD426:
+            columns:
+                - n34_infraestructura_h1_acceso_aereo_tipo_mun_id
+        IDX_2CED21CFBFEE7C11:
+            columns:
+                - n34_infraestructura_h1_acceso_fluvial_tipo_mun2_id
+        IDX_2CED21CFAD5BD3FF:
+            columns:
+                - n34_infraestructura_h1_acceso_fluvial_tipo_mun1_id
+        IDX_2CED21CF884F1630:
+            columns:
+                - n34_infraestructura_h1_acceso_vehicular_tipo_mun3_id
+        IDX_2CED21CF30F37155:
+            columns:
+                - n34_infraestructura_h1_acceso_vehicular_tipo_mun2_id
+        IDX_2CED21CF2246DEBB:
+            columns:
+                - n34_infraestructura_h1_acceso_vehicular_tipo_mun1_id
+        IDX_2CED21CFD17968B5:
+            columns:
+                - n34_infraestructura_h1_acceso_aereo_tipo_dist_id
+        IDX_2CED21CF791C1DCE:
+            columns:
+                - n34_infraestructura_h1_acceso_fluvial_tipo_dist2_id
+        IDX_2CED21CF6BA9B220:
+            columns:
+                - n34_infraestructura_h1_acceso_fluvial_tipo_dist1_id
+        IDX_2CED21CFB09EE22F:
+            columns:
+                - n34_infraestructura_h1_acceso_vehicular_tipo_dist3_id
+        IDX_2CED21CF822854A:
+            columns:
+                - n34_infraestructura_h1_acceso_vehicular_tipo_dist2_id
+        IDX_2CED21CF1A972AA4:
+            columns:
+                - n34_infraestructura_h1_acceso_vehicular_tipo_dist1_id
+        IDX_2CED21CFD66595C7:
+            columns:
+                - n110_infraestructura_h1_direccion_tipo_id
         IDX_2CED21CF53BED532:
             columns:
                 - infraestructura_juridiccion_geografica_id
@@ -15,13 +54,13 @@ Sie\AppWebBundle\Entity\InfraestructuraH1Datosgenerales:
             generator:
                 strategy: SEQUENCE
     fields:
-        n110Zonabarrio:
+        n19Zonabarrio:
             type: string
             nullable: true
             length: 150
             fixed: false
             comment: ''
-            column: n110_zonabarrio
+            column: n19_zonabarrio
         n111Macrodistrito:
             type: string
             nullable: true
@@ -36,13 +75,13 @@ Sie\AppWebBundle\Entity\InfraestructuraH1Datosgenerales:
             fixed: false
             comment: ''
             column: n112_distritomun
-        n21Calleavenida:
+        n110Direccion:
             type: string
             nullable: true
             length: 150
             fixed: false
             comment: ''
-            column: n21_calleavenida
+            column: n110_direccion
         n22Descripcionacceso:
             type: string
             nullable: true
@@ -71,30 +110,31 @@ Sie\AppWebBundle\Entity\InfraestructuraH1Datosgenerales:
             fixed: false
             comment: ''
             column: n33_tramovecinal
-        n34TerrestreDias:
+        n34VehicularDistDias:
             type: smallint
             nullable: true
             unsigned: false
             comment: ''
-            column: n34_terrestre_dias
-        n34TerrestreHrs:
+            column: n34_vehicular_dist_dias
+        n34VehicularDistHrs:
             type: smallint
             nullable: true
             unsigned: false
             comment: ''
-            column: n34_terrestre_hrs
-        n34TerrestreMin:
+            column: n34_vehicular_dist_hrs
+        n34VehicularDistMin:
             type: smallint
             nullable: true
             unsigned: false
             comment: ''
-            column: n34_terrestre_min
-        n34TerrestreCosto:
-            type: smallint
+            column: n34_vehicular_dist_min
+        n34VehicularDistCosto:
+            type: float
             nullable: true
-            unsigned: false
+            precision: 10
+            scale: 0
             comment: ''
-            column: n34_terrestre_costo
+            column: n34_vehicular_dist_costo
         n34TerrestreDescripcion:
             type: string
             nullable: true
@@ -102,30 +142,31 @@ Sie\AppWebBundle\Entity\InfraestructuraH1Datosgenerales:
             fixed: false
             comment: ''
             column: n34_terrestre_descripcion
-        n34FluvialDias:
+        n34FluvialDistDias:
             type: smallint
             nullable: true
             unsigned: false
             comment: ''
-            column: n34_fluvial_dias
-        n34FluvialHrs:
+            column: n34_fluvial_dist_dias
+        n34FluvialDistHrs:
             type: smallint
             nullable: true
             unsigned: false
             comment: ''
-            column: n34_fluvial_hrs
-        n34FluvialMin:
+            column: n34_fluvial_dist_hrs
+        n34FluvialDistMin:
             type: smallint
             nullable: true
             unsigned: false
             comment: ''
-            column: n34_fluvial_min
-        n34FluvialCosto:
-            type: smallint
+            column: n34_fluvial_dist_min
+        n34FluvialDistCosto:
+            type: float
             nullable: true
-            unsigned: false
+            precision: 10
+            scale: 0
             comment: ''
-            column: n34_fluvial_costo
+            column: n34_fluvial_dist_costo
         n34FluvialDescripcion:
             type: string
             nullable: true
@@ -133,30 +174,31 @@ Sie\AppWebBundle\Entity\InfraestructuraH1Datosgenerales:
             fixed: false
             comment: ''
             column: n34_fluvial_descripcion
-        n34AereoDias:
+        n34AereoDistDias:
             type: smallint
             nullable: true
             unsigned: false
             comment: ''
-            column: n34_aereo_dias
-        n34AereoHrs:
+            column: n34_aereo_dist_dias
+        n34AereoDistHrs:
             type: smallint
             nullable: true
             unsigned: false
             comment: ''
-            column: n34_aereo_hrs
-        n34AereoMin:
+            column: n34_aereo_dist_hrs
+        n34AereoDistMin:
             type: smallint
             nullable: true
             unsigned: false
             comment: ''
-            column: n34_aereo_min
-        n34AereoCosto:
-            type: smallint
+            column: n34_aereo_dist_min
+        n34AereoDistCosto:
+            type: float
             nullable: true
-            unsigned: false
+            precision: 10
+            scale: 0
             comment: ''
-            column: n34_aereo_costo
+            column: n34_aereo_dist_costo
         n34AereoDescripcion:
             type: string
             nullable: true
@@ -177,15 +219,16 @@ Sie\AppWebBundle\Entity\InfraestructuraH1Datosgenerales:
             comment: ''
             column: n34_combinacion_hrs
         n34CombinacionMin:
-            type: smallint
+            type: integer
             nullable: true
             unsigned: false
             comment: ''
             column: n34_combinacion_min
         n34CombinacionCosto:
-            type: smallint
+            type: float
             nullable: true
-            unsigned: false
+            precision: 10
+            scale: 0
             comment: ''
             column: n34_combinacion_costo
         n34CombinacionDescripcion:
@@ -207,7 +250,325 @@ Sie\AppWebBundle\Entity\InfraestructuraH1Datosgenerales:
             nullable: true
             comment: ''
             default: now()
+        n34PeatonalDistDias:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_peatonal_dist_dias
+        n34PeatonalDistHrs:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_peatonal_dist_hrs
+        n34PeatonalDistMin:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_peatonal_dist_min
+        n34PeatonalDistCosto:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: n34_peatonal_dist_costo
+        n34PeatonalMunDias:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_peatonal_mun_dias
+        n34PeatonalMunHrs:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_peatonal_mun_hrs
+        n34PeatonalMunMin:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_peatonal_mun_min
+        n34PeatonalMunCosto:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: n34_peatonal_mun_costo
+        n34VehicularMunDias:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_vehicular_mun_dias
+        n34VehicularMunHrs:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_vehicular_mun_hrs
+        n34VehicularMunMin:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_vehicular_mun_min
+        n34VehicularMunCosto:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: n34_vehicular_mun_costo
+        n34FluvialMunDias:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_fluvial_mun_dias
+        n34FluvialMunHrs:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_fluvial_mun_hrs
+        n34FluvialMunMin:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_fluvial_mun_min
+        n34FluvialMunCosto:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: n34_fluvial_mun_costo
+        n34AereoMunDias:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_aereo_mun_dias
+        n34AereoMunHrs:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_aereo_mun_hrs
+        n34AereoMunMin:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_aereo_mun_min
+        n34AereoMunCosto:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: n34_aereo_mun_costo
+        n21FotografiaPrincipal:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n21_fotografia_principal
+        n21FotografiaFrontal:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n21_fotografia_frontal
+        n21FotografiaLateral:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n21_fotografia_lateral
+        n21FotografiaPanoramica:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+            column: n21_fotografia_panoramica
+        n34PeatonalEsDist:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n34_peatonal_es_dist
+        n34VehicularEsDist:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n34_vehicular_es_dist
+        n34FluvialEsDist:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n34_fluvial_es_dist
+        n34AereoEsDist:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n34_aereo_es_dist
+        n34PeatonalEsMun:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n34_peatonal_es_mun
+        n34VehicularEsMun:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n34_vehicular_es_mun
+        n34FluvialEsMun:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n34_fluvial_es_mun
+        n34AereoEsMun:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n34_aereo_es_mun
     manyToOne:
+        n34InfraestructuraH1AccesoAereoTipoMun:
+            targetEntity: InfraestructuraH1AccesoAereoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_aereo_tipo_mun_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34InfraestructuraH1AccesoFluvialTipoMun2:
+            targetEntity: InfraestructuraH1AccesoFluvialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_fluvial_tipo_mun2_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34InfraestructuraH1AccesoFluvialTipoMun1:
+            targetEntity: InfraestructuraH1AccesoFluvialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_fluvial_tipo_mun1_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34InfraestructuraH1AccesoVehicularTipoMun3:
+            targetEntity: InfraestructuraH1AccesoVehicularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_vehicular_tipo_mun3_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34InfraestructuraH1AccesoVehicularTipoMun2:
+            targetEntity: InfraestructuraH1AccesoVehicularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_vehicular_tipo_mun2_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34InfraestructuraH1AccesoVehicularTipoMun1:
+            targetEntity: InfraestructuraH1AccesoVehicularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_vehicular_tipo_mun1_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34InfraestructuraH1AccesoAereoTipoDist:
+            targetEntity: InfraestructuraH1AccesoAereoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_aereo_tipo_dist_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34InfraestructuraH1AccesoFluvialTipoDist2:
+            targetEntity: InfraestructuraH1AccesoFluvialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_fluvial_tipo_dist2_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34InfraestructuraH1AccesoFluvialTipoDist1:
+            targetEntity: InfraestructuraH1AccesoFluvialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_fluvial_tipo_dist1_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34InfraestructuraH1AccesoVehicularTipoDist3:
+            targetEntity: InfraestructuraH1AccesoVehicularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_vehicular_tipo_dist3_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34InfraestructuraH1AccesoVehicularTipoDist2:
+            targetEntity: InfraestructuraH1AccesoVehicularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_vehicular_tipo_dist2_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34InfraestructuraH1AccesoVehicularTipoDist1:
+            targetEntity: InfraestructuraH1AccesoVehicularTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_infraestructura_h1_acceso_vehicular_tipo_dist1_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n110InfraestructuraH1DireccionTipo:
+            targetEntity: InfraestructuraH1DireccionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n110_infraestructura_h1_direccion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         infraestructuraJuridiccionGeografica:
             targetEntity: InfraestructuraJuridiccionGeografica
             cascade: {  }

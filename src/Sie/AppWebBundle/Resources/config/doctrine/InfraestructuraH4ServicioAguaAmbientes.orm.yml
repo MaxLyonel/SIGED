@@ -1,0 +1,39 @@
+Sie\AppWebBundle\Entity\InfraestructuraH4ServicioAguaAmbientes:
+    type: entity
+    table: infraestructura_h4_servicio_agua_ambientes
+    indexes:
+        IDX_3DC0DBF742A5A63A:
+            columns:
+                - n29_ambientes_agua_tipo_id
+        IDX_3DC0DBF72CB3E1BC:
+            columns:
+                - infraestructura_h4_servicio_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        n29AmbientesAguaTipo:
+            targetEntity: InfraestructuraH4ServicioAguaAmbientesTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n29_ambientes_agua_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH4Servicio:
+            targetEntity: InfraestructuraH4Servicio
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h4_servicio_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

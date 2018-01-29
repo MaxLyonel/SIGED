@@ -14,6 +14,8 @@ class SheetFourController extends Controller
     }
     public function indexAction(Request $request){
 
+        // dump($request);die;
+
         return $this->render('SieInfraBundle:SheetFour:index.html.twig', array(
                 // ...
             ));
@@ -24,5 +26,9 @@ class SheetFourController extends Controller
         return $this->render('SieInfraBundle:SheetFour:access.html.twig', array(
                 // ...
             ));    }
+
+    public function saveAction(Request $request){
+        dump($request);die;
+    }
 
 }

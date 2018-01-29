@@ -1,0 +1,33 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5AmbientepedagogicoDeportivoAmbienteTipo:
+    type: entity
+    table: infraestructura_h5_ambientepedagogico_deportivo_ambiente_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraAmbiente:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_ambiente
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+    lifecycleCallbacks: {  }

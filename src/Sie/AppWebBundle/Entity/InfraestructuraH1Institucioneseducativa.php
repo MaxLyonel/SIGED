@@ -220,4 +220,32 @@ class InfraestructuraH1Institucioneseducativa
     {
         return $this->infraestructuraH1Datosgenerales;
     }
+    /**
+     * @var boolean
+     */
+    private $bthEspecialidad;
+
+
+    /**
+     * Set bthEspecialidad
+     *
+     * @param boolean $bthEspecialidad
+     * @return InfraestructuraH1Institucioneseducativa
+     */
+    public function setBthEspecialidad($bthEspecialidad)
+    {
+        $this->bthEspecialidad = $bthEspecialidad;
+    
+        return $this;
+    }
+
+    /**
+     * Get bthEspecialidad
+     *
+     * @return boolean 
+     */
+    public function getBthEspecialidad()
+    {
+        return $this->bthEspecialidad;
+    }
 }

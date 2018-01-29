@@ -1032,4 +1032,172 @@ class MaestroInscripcion
     {
         return $this->rolTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\EducacionDiversa
+     */
+    private $educacionDiversa;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\UnidadMilitar
+     */
+    private $unidadMilitar;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Penal
+     */
+    private $penal;
+
+
+    /**
+     * Set educacionDiversa
+     *
+     * @param \Sie\AppWebBundle\Entity\EducacionDiversa $educacionDiversa
+     * @return MaestroInscripcion
+     */
+    public function setEducacionDiversa(\Sie\AppWebBundle\Entity\EducacionDiversa $educacionDiversa = null)
+    {
+        $this->educacionDiversa = $educacionDiversa;
+    
+        return $this;
+    }
+
+    /**
+     * Get educacionDiversa
+     *
+     * @return \Sie\AppWebBundle\Entity\EducacionDiversa 
+     */
+    public function getEducacionDiversa()
+    {
+        return $this->educacionDiversa;
+    }
+
+    /**
+     * Set unidadMilitar
+     *
+     * @param \Sie\AppWebBundle\Entity\UnidadMilitar $unidadMilitar
+     * @return MaestroInscripcion
+     */
+    public function setUnidadMilitar(\Sie\AppWebBundle\Entity\UnidadMilitar $unidadMilitar = null)
+    {
+        $this->unidadMilitar = $unidadMilitar;
+    
+        return $this;
+    }
+
+    /**
+     * Get unidadMilitar
+     *
+     * @return \Sie\AppWebBundle\Entity\UnidadMilitar 
+     */
+    public function getUnidadMilitar()
+    {
+        return $this->unidadMilitar;
+    }
+
+    /**
+     * Set penal
+     *
+     * @param \Sie\AppWebBundle\Entity\Penal $penal
+     * @return MaestroInscripcion
+     */
+    public function setPenal(\Sie\AppWebBundle\Entity\Penal $penal = null)
+    {
+        $this->penal = $penal;
+    
+        return $this;
+    }
+
+    /**
+     * Get penal
+     *
+     * @return \Sie\AppWebBundle\Entity\Penal 
+     */
+    public function getPenal()
+    {
+        return $this->penal;
+    }
+    /**
+     * @var \Sie\AppWebBundle\Entity\EducacionDiversaTipo
+     */
+    private $educacionDiversaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\UnidadMilitarTipo
+     */
+    private $unidadMilitarTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo
+     */
+    private $recintoPenitenciarioTipo;
+
+
+    /**
+     * Set educacionDiversaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EducacionDiversaTipo $educacionDiversaTipo
+     * @return MaestroInscripcion
+     */
+    public function setEducacionDiversaTipo(\Sie\AppWebBundle\Entity\EducacionDiversaTipo $educacionDiversaTipo = null)
+    {
+        $this->educacionDiversaTipo = $educacionDiversaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get educacionDiversaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EducacionDiversaTipo 
+     */
+    public function getEducacionDiversaTipo()
+    {
+        return $this->educacionDiversaTipo;
+    }
+
+    /**
+     * Set unidadMilitarTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\UnidadMilitarTipo $unidadMilitarTipo
+     * @return MaestroInscripcion
+     */
+    public function setUnidadMilitarTipo(\Sie\AppWebBundle\Entity\UnidadMilitarTipo $unidadMilitarTipo = null)
+    {
+        $this->unidadMilitarTipo = $unidadMilitarTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get unidadMilitarTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\UnidadMilitarTipo 
+     */
+    public function getUnidadMilitarTipo()
+    {
+        return $this->unidadMilitarTipo;
+    }
+
+    /**
+     * Set recintoPenitenciarioTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo $recintoPenitenciarioTipo
+     * @return MaestroInscripcion
+     */
+    public function setRecintoPenitenciarioTipo(\Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo $recintoPenitenciarioTipo = null)
+    {
+        $this->recintoPenitenciarioTipo = $recintoPenitenciarioTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get recintoPenitenciarioTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo 
+     */
+    public function getRecintoPenitenciarioTipo()
+    {
+        return $this->recintoPenitenciarioTipo;
+    }
 }
