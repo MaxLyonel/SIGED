@@ -1,6 +1,6 @@
-Sie\AppWebBundle\Entity\InfraestructuraGenAvanceTipo:
+Sie\AppWebBundle\Entity\InfraestructuraGenPuertasSeguroTipo:
     type: entity
-    table: infraestructura_gen_avance_tipo
+    table: infraestructura_gen_puertas_seguro_tipo
     id:
         id:
             type: integer
@@ -11,16 +11,15 @@ Sie\AppWebBundle\Entity\InfraestructuraGenAvanceTipo:
             generator:
                 strategy: SEQUENCE
     fields:
-        infraestructuraAvance:
+        descripcion:
             type: string
-            nullable: false
-            length: 100
+            nullable: true
+            length: 60
             fixed: false
             comment: ''
-            column: infraestructura_avance
         obs:
             type: string
-            nullable: false
+            nullable: true
             length: 255
             fixed: false
             comment: ''

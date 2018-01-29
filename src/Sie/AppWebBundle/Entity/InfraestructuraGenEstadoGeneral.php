@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * InfraestructuraGenAvanceTipo
+ * InfraestructuraGenEstadoGeneral
  */
-class InfraestructuraGenAvanceTipo
+class InfraestructuraGenEstadoGeneral
 {
     /**
      * @var integer
@@ -17,16 +17,17 @@ class InfraestructuraGenAvanceTipo
     /**
      * @var string
      */
-    private $infraestructuraAvance;
+    private $estado;
 
     /**
      * @var string
      */
     private $obs;
 
-    public function __toString(){
-        return $this->infraestructuraAvance;
-    }
+    /**
+     * @var integer
+     */
+    private $gestionTipoId;
 
 
     /**
@@ -40,33 +41,33 @@ class InfraestructuraGenAvanceTipo
     }
 
     /**
-     * Set infraestructuraAvance
+     * Set estado
      *
-     * @param string $infraestructuraAvance
-     * @return InfraestructuraGenAvanceTipo
+     * @param string $estado
+     * @return InfraestructuraGenEstadoGeneral
      */
-    public function setInfraestructuraAvance($infraestructuraAvance)
+    public function setEstado($estado)
     {
-        $this->infraestructuraAvance = $infraestructuraAvance;
+        $this->estado = $estado;
     
         return $this;
     }
 
     /**
-     * Get infraestructuraAvance
+     * Get estado
      *
      * @return string 
      */
-    public function getInfraestructuraAvance()
+    public function getEstado()
     {
-        return $this->infraestructuraAvance;
+        return $this->estado;
     }
 
     /**
      * Set obs
      *
      * @param string $obs
-     * @return InfraestructuraGenAvanceTipo
+     * @return InfraestructuraGenEstadoGeneral
      */
     public function setObs($obs)
     {
@@ -84,17 +85,12 @@ class InfraestructuraGenAvanceTipo
     {
         return $this->obs;
     }
-    /**
-     * @var integer
-     */
-    private $gestionTipoId;
-
 
     /**
      * Set gestionTipoId
      *
      * @param integer $gestionTipoId
-     * @return InfraestructuraGenAvanceTipo
+     * @return InfraestructuraGenEstadoGeneral
      */
     public function setGestionTipoId($gestionTipoId)
     {

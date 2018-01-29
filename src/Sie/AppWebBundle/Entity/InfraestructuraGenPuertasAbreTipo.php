@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * InfraestructuraGenAvanceTipo
+ * InfraestructuraGenPuertasAbreTipo
  */
-class InfraestructuraGenAvanceTipo
+class InfraestructuraGenPuertasAbreTipo
 {
     /**
      * @var integer
@@ -17,16 +17,17 @@ class InfraestructuraGenAvanceTipo
     /**
      * @var string
      */
-    private $infraestructuraAvance;
+    private $descripcion;
 
     /**
      * @var string
      */
     private $obs;
 
-    public function __toString(){
-        return $this->infraestructuraAvance;
-    }
+    /**
+     * @var integer
+     */
+    private $gestionTipoId;
 
 
     /**
@@ -40,33 +41,33 @@ class InfraestructuraGenAvanceTipo
     }
 
     /**
-     * Set infraestructuraAvance
+     * Set descripcion
      *
-     * @param string $infraestructuraAvance
-     * @return InfraestructuraGenAvanceTipo
+     * @param string $descripcion
+     * @return InfraestructuraGenPuertasAbreTipo
      */
-    public function setInfraestructuraAvance($infraestructuraAvance)
+    public function setDescripcion($descripcion)
     {
-        $this->infraestructuraAvance = $infraestructuraAvance;
+        $this->descripcion = $descripcion;
     
         return $this;
     }
 
     /**
-     * Get infraestructuraAvance
+     * Get descripcion
      *
      * @return string 
      */
-    public function getInfraestructuraAvance()
+    public function getDescripcion()
     {
-        return $this->infraestructuraAvance;
+        return $this->descripcion;
     }
 
     /**
      * Set obs
      *
      * @param string $obs
-     * @return InfraestructuraGenAvanceTipo
+     * @return InfraestructuraGenPuertasAbreTipo
      */
     public function setObs($obs)
     {
@@ -84,17 +85,12 @@ class InfraestructuraGenAvanceTipo
     {
         return $this->obs;
     }
-    /**
-     * @var integer
-     */
-    private $gestionTipoId;
-
 
     /**
      * Set gestionTipoId
      *
      * @param integer $gestionTipoId
-     * @return InfraestructuraGenAvanceTipo
+     * @return InfraestructuraGenPuertasAbreTipo
      */
     public function setGestionTipoId($gestionTipoId)
     {
