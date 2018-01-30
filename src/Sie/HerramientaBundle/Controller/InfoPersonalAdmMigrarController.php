@@ -79,8 +79,17 @@ class InfoPersonalAdmMigrarController extends Controller {
         $notaTipo = $em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($operativo);
         $rolTipo = $em->getRepository('SieAppWebBundle:RolTipo')->findOneById(9);
 
-        $validacion_personal_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findOneBy(array('gestionTipo' => $gestionTipo, 'institucioneducativa' => $institucioneducativa, 'notaTipo' => $notaTipo, 'rolTipo' => $rolTipo));
+        $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '1'));
+        
+        if(!$consol_gest_pasada){
+            $gestion = $request->getSession()->get('currentyear') - 1;
+            $request->getSession()->set('idGestion', $gestion);
+            $activar_acciones = true;
+            return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+        }
 
+        $validacion_personal_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findOneBy(array('gestionTipo' => $gestionTipo, 'institucioneducativa' => $institucioneducativa, 'notaTipo' => $notaTipo, 'rolTipo' => $rolTipo));
+        
         $activar_acciones = true;
         if($validacion_personal_aux){
             $gestion = $request->getSession()->get('currentyear');

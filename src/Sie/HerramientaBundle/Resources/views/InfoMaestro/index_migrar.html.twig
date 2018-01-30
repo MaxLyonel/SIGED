@@ -21,7 +21,7 @@
     <!--/ End page header -->
     <div class="body-content animated fadeIn">
         
-        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Ratificar Personal Docente', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Ratificar Personal Docente', 'gestion': gestion_aux,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
 
         <div class="row">
             <div class="col-md-12">
@@ -137,7 +137,7 @@
                 <div class="panel rounded shadow panel-primary">
                     <div class="panel-heading">
                         <div class="pull-left">
-                            <h3 class="panel-title">Maestros a ratificar (vigentes durante la gestión 2016)</h3>
+                            <h3 class="panel-title">Maestros a ratificar (vigentes durante la gestión {{gestion_aux - 1}})</h3>
                         </div>
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->

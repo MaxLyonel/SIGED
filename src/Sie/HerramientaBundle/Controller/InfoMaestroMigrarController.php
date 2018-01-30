@@ -79,6 +79,15 @@ class InfoMaestroMigrarController extends Controller {
         $notaTipo = $em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($operativo);
         $rolTipo = $em->getRepository('SieAppWebBundle:RolTipo')->findOneById(2);
 
+        $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '1'));
+        
+        if(!$consol_gest_pasada){
+            $gestion = $request->getSession()->get('currentyear') - 1;
+            $request->getSession()->set('idGestion', $gestion);
+            $activar_acciones = true;
+            return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
+        }
+
         $validacion_personal_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findOneBy(array('gestionTipo' => $gestionTipo, 'institucioneducativa' => $institucioneducativa, 'notaTipo' => $notaTipo, 'rolTipo' => $rolTipo));
 
         $activar_acciones = true;
