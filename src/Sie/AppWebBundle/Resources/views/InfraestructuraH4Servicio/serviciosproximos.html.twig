@@ -1,0 +1,204 @@
+<div class="row">
+  <div class="col-md-12">
+     <div class="form-body">
+
+       <div class="form-group">
+            <label class="control-label">4.1 Señala la distancia en metros a los servicios que se encuentran próximos al edificio. Se considera "próximo", al servicio que se encuentra a un radio de 1000 metros aproximadamente respecto al edificio educativo.</label>
+        </div><!-- /.form-group -->
+
+        <div class="form-group">
+
+        </div>
+<!-- start first row -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="col-md-4 control-label">Existe un cento de salud próximo?</label>
+      <div class="col-md-4">
+          <div class="radio">
+            <label class="radio-inline">
+                {{form_widget(form.n41EsCentroSalud)}}
+                Si
+            </label>
+            
+          </div>
+      </div>
+      <div class="col-md-4">
+        {{form_widget(form.n41MetrosCentroSalud, {'attr': {'class': 'form-control'} })}}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="col-md-4 control-label">Existe una estación de bomberos próximo?</label>
+      <div class="col-md-4">
+          <div class="radio">
+            <label class="radio-inline">
+                {{form_widget(form.n43EsEstBomberos)}}
+                Si
+            </label>
+          </div>
+      </div>
+      <div class="col-md-4">
+        {{form_widget(form.n43MetrosEstBomberos, {'attr': {'class': 'form-control'} })}}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end first row -->
+<!-- start second row -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="col-md-4 control-label">Existe un centro policial próximo?</label>
+      <div class="col-md-4">
+          <div class="radio">
+            <label class="radio-inline">
+                {{form_widget(form.n42EsCentroPolicial)}}
+                Si
+            </label>
+            
+          </div>
+      </div>
+      <div class="col-md-4">
+        {{form_widget(form.n42MetrosCentroPolicial, {'attr': {'class': 'form-control'} })}}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="col-md-4 control-label">Existe un mercado próximo?</label>
+      <div class="col-md-4">
+          <div class="radio">
+            <label class="radio-inline">
+                {{form_widget(form.n43EsMercadoProxim)}}
+                Si
+            </label>
+            
+          </div>
+      </div>
+      <div class="col-md-4">
+        {{form_widget(form.n43MetrosMercadoProxim, {'attr': {'class': 'form-control'} })}}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end second row -->
+<!-- start third row -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="col-md-4 control-label">Existe un telecentro próximo?</label>
+      <div class="col-md-4">
+          <div class="radio">
+            <label class="radio-inline">
+                {{form_widget(form.n43EsServicioTelecentro)}}
+                Si
+            </label>
+            
+          </div>
+      </div>
+      <div class="col-md-4">
+        {{form_widget(form.n43MetrosServicioTelecentro, {'attr': {'class': 'form-control'} })}}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="col-md-4 control-label">Existe una organización comunitaria próximo?</label>
+      <div class="col-md-4">
+          <div class="radio">
+            <label class="radio-inline">
+                {{form_widget(form.n43EsComunitariaProxim)}}
+                Si
+            </label>
+          </div>
+      </div>
+      <div class="col-md-4">
+        {{form_widget(form.n43MetrosComunitariaProxim, {'attr': {'class': 'form-control'} })}}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end third row -->
+<!-- start fourth row -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="col-md-4 control-label">Existe un DNA o SLIM próximo?</label>
+      <div class="col-md-4">
+          <div class="radio">
+            <label class="radio-inline">
+                {{form_widget(form.n43EsDnaSlim)}}
+                Si
+            </label>
+          </div>
+      </div>
+      <div class="col-md-4">
+        {{form_widget(form.n43MetrosDnaSlim, {'attr': {'class': 'form-control'} })}}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="col-md-4 control-label">Existe una universidad próxima?</label>
+      <div class="col-md-4">
+          <div class="radio">
+            <label class="radio-inline">
+                {{form_widget(form.n43EsUniversidadProxim)}}
+                Si
+            </label>
+          </div>
+      </div>
+      <div class="col-md-4">
+        {{form_widget(form.n43MetrosUniversidadProxim, {'attr': {'class': 'form-control'} })}}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end fourth row -->
+<!-- start fiveth row -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="col-md-4 control-label">Existe unidad(es) educativa(s) próxima(s)?</label>
+      <div class="col-md-4">
+          <div class="radio">
+            <label class="radio-inline">
+                {{form_widget(form.n43EsUesProx)}}
+                Si
+            </label>
+          </div>
+      </div>
+      <div class="col-md-4">
+        {{form_widget(form.n43MetrosUesProx, {'attr': {'class': 'form-control'} })}}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="form-group">
+      <label class="col-md-4 control-label">Existe un instituto técnico-tecnológico próximo?</label>
+      <div class="col-md-4">
+          <div class="radio">
+            <label class="radio-inline">
+                {{form_widget(form.n43EsTecnologicoProxim)}}
+                Si
+            </label>
+          </div>
+      </div>
+      <div class="col-md-4">
+        {{form_widget(form.n43MetrosTecnologicoProxim, {'attr': {'class': 'form-control'} })}}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end fiveth row -->
+
+
+
+     </div>
+  </div> <!-- end firt column -->
+
+
+
+</div>

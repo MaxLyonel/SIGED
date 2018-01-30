@@ -1,0 +1,109 @@
+
+
+       <div class="form-group">
+
+        <div class="row">
+          <div class="col-md-12">
+            <label class="control-label">3.1 El edificio educativo cuenta con instalaciones de saneamiento (baños)?</label>
+
+            SI: {{form_widget(form.n31EsInstalacionSaneamiento)}}
+          </div><!-- /.form-group -->
+        </div>
+        <!-- /.form-group -->
+
+        <div class="form-group">
+            <label class="control-label">3.2 Cual es el medio para la eliminacion de excretas?</label>
+        </div>
+
+        <div class="form-group">
+              <div class="col-md-6">
+                  <div class="">
+                    {{form_widget(form.n32ExcretasEsAlcantarillado)}}
+                      <label for="">Red de alcantarillado</label>
+                  </div>
+                  <div class=" ">
+                      {{form_widget(form.n32ExcretasEsSeptica)}}
+                      <label for="">Cámara séptica</label>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <div class="">
+                      {{form_widget(form.n32ExcretasEsPozo)}}
+                      <label for="checkbox-type-default9">Pozo de absorción</label>
+                  </div>
+                  <div class=" ">
+                      {{form_widget(form.n32ExcretasEsCieloAbierto)}}
+                      <label for="checkbox-type-rounded10">A cielo abierto</label>
+                  </div>
+              </div>
+              <label class="control-label">Otro</label>
+              {{form_widget(form.n32ExcretasEsOtro)}}
+              <input class="form-control" type="text">
+        </div>
+
+  <!-- </div> end firt column -->
+
+  
+       <div class="form-group">
+        <div class="row">
+          <div class="col-md-6">
+            <label class="control-label">3.3 Como se realiza la eliminación de basura?</label><br>
+            {{form_widget(form.n33ElminacionBasuraTipo, {'attr': {'class': 'form-control'} })}}
+          </div>
+           <div class="col-md-6">
+            <label class="control-label">3.4 Periodicidad de la eliminación de basura?</label><br>
+            {{form_widget(form.n34PeriodicidadTipo, {'attr': {'class': 'form-control'} })}}
+          </div>
+          
+        </div>
+            
+      </div><!-- /.form-group -->
+
+
+  <div class="form-group">
+       <label class="control-label">3.4 la instalación de saneamiento estan generalmente en buen estado y accesibles apra los estudiantes?</label>
+
+       <div class="row">
+         <div class="col-md-4">
+                <label class="control-label">Hay buena ventilación?</label>
+
+                <div class="">
+                    {{form_widget(form.n34EsBuenasventilacion)}}
+                    <label for="radio-type-ventilacionyes">Si</label>
+                </div>
+                
+         </div>
+         <div class="col-md-4">
+                <label class="control-label">Hay buenas condiciones de luz natural?</label>
+
+                <div class="">
+                    {{form_widget(form.n34EsBuenascondiciones)}}
+                    <label for="radio-type-luzyes">Si</label>
+                </div>
+                
+         </div>
+         <div class="col-md-4">
+                <label class="control-label">Se tiene privacidad?</label>
+
+                <div class="">
+                    {{form_widget(form.n34EsPrivacidad)}}
+                    <label for="radio-type-privacidadyes">Si</label>
+                </div>
+                
+         </div>
+
+       </div>
+  </div><!-- /.form-group -->
+
+  <div class="panel rounded shadow">
+    <div class="panel-body">
+      <button type="button" class="btn btn-inverse btn-stroke">Adicionar Bateria de Banhos</button>
+    </div>
+  </div>
+  <div class="panel rounded shadow">
+    <div class="panel-body">
+      <button type="button" class="btn btn-inverse btn-stroke">Adicionar Vestuarios</button>
+    </div>
+  </div>
+
+</div>

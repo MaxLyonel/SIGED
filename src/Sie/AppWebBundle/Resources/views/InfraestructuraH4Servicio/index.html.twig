@@ -1,0 +1,105 @@
+{% extends 'layoutInfra.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Servicios del Edificio <span>Hoja 4</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('infra_list_index')}}">
+                       Operativos
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">
+                  <form action="{{path('infra_list_open')}}" method="post" style="display: inline-block">
+                      <input type="hidden" id="form_gestion" name="form[gestion]" value="{{app.session.get('currentyear')}}">
+                      <input type="hidden" id="form_data" name="form[sie]" required="required" value="{{app.session.get('ie_id')}}">
+                      <button class='btn btn-link'>Menu de Opciones</button>
+                  </form>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+    <div class="row">
+          <div class="col-md-12">
+
+              <!-- Start color horizontal tabs -->
+              <div class="panel panel-tab panel-tab-double shadow">
+                  <!-- Start tabs heading -->
+                  <div class="panel-heading no-padding">
+                      <ul class="nav nav-tabs">
+                          <li class="nav-border nav-border-top-danger active">
+                              <a href="component-tabsaccordion.html#tab1-1" data-toggle="tab" class="text-center" aria-expanded="true">
+                                  1. Disponibilidad de energia electrica
+                              </a>
+                          </li>
+                          <li class="nav-border nav-border-top-primary">
+                              <a href="component-tabsaccordion.html#tab1-2" data-toggle="tab" class="text-center" aria-expanded="false">
+                                  2. Disponibilidad de servicio de agua
+                              </a>
+                          </li>
+                          <li class="nav-border nav-border-top-success">
+                              <a href="component-tabsaccordion.html#tab1-3" data-toggle="tab" class="text-center" aria-expanded="false">
+                                  3. Saneamiento basico
+                              </a>
+                          </li>
+                          <li class="nav-border nav-border-top-success">
+                              <a href="component-tabsaccordion.html#tab1-4" data-toggle="tab" class="text-center" aria-expanded="false">
+                                  4. Servicios proximos al edificio educativo
+                              </a>
+                          </li>
+
+                      </ul>
+                  </div><!-- /.panel-heading -->
+                  <!--/ End tabs heading -->
+
+                  <!-- Start tabs content -->
+                  <div class="panel-body">
+                    <form action="{{path('infra_sheet_four_save')}}" method="post" class="form-horizontal form-bordered">
+                      <div class="form-footer">
+                          <div class="pull-right">
+                            <button class="btn btn-success" type="submit">Guardar Cambios</button>
+                              <button class="btn btn-danger mr-5">Cancel</button>
+                              
+                          </div>
+                      </div>
+                      <div class="tab-content">
+                        <!-- start tab1 -->
+                          <div class="tab-pane fade active in" id="tab1-1">
+                            {% include 'SieInfraBundle:SheetFour:energiaelectrica.html.twig' with { 'data': 'data'} %}
+                          </div>
+                          <!-- end tab1 -->
+                          <div class="tab-pane fade" id="tab1-2">
+                            {% include 'SieInfraBundle:SheetFour:servicioagua.html.twig' with { 'data': 'data'} %}
+                          </div>  <!-- end tab2 -->
+                          <div class="tab-pane fade" id="tab1-3">
+                              {% include 'SieInfraBundle:SheetFour:saneamientobasico.html.twig' with { 'data': 'data'} %}
+                          </div>  <!-- end tab3 -->
+                          <div class="tab-pane fade" id="tab1-4">
+                              {% include 'SieInfraBundle:SheetFour:serviciosproximos.html.twig' with { 'data': 'data'} %}
+                          </div>  <!-- end tab4 -->
+                      </div>
+                    </form>
+                  </div><!-- /.panel-body -->
+                  <!--/ End tabs content -->
+              </div><!-- /.panel -->
+              <!--/ End color horizontal tabs -->
+
+          </div>
+      </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+
+{% endblock %}

@@ -1,0 +1,30 @@
+infraestructurah4servicio:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Servicio:index" }
+
+infraestructurah4servicio_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Servicio:show" }
+
+infraestructurah4servicio_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Servicio:new" }
+
+infraestructurah4servicio_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Servicio:create" }
+    methods:  POST
+
+infraestructurah4servicio_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Servicio:edit" }
+
+infraestructurah4servicio_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Servicio:update" }
+    methods:  [POST, PUT]
+
+infraestructurah4servicio_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4Servicio:delete" }
+    methods:  [POST, DELETE]

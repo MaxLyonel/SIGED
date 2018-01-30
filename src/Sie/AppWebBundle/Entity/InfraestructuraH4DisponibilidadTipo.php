@@ -29,7 +29,9 @@ class InfraestructuraH4DisponibilidadTipo
      */
     private $gestionTipoId;
 
-
+    public function __toString(){
+        return $this->infraestructuraDisponibilidad;
+    }
     /**
      * Get id
      *

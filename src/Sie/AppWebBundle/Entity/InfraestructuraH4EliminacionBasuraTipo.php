@@ -29,6 +29,9 @@ class InfraestructuraH4EliminacionBasuraTipo
      */
     private $gestionTipoId;
 
+    public function __toString(){
+        return $this->infraestructuraEliminacionBasura;
+    }
 
     /**
      * Get id

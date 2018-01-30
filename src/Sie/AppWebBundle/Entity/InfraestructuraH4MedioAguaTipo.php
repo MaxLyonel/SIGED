@@ -29,7 +29,9 @@ class InfraestructuraH4MedioAguaTipo
      */
     private $gestionTipoId;
 
-
+    public function __toString(){
+        return $this->infraestructuraMedioAgua;
+    }
     /**
      * Get id
      *

@@ -29,7 +29,9 @@ class InfraestructuraH4FuenteElectricaTipo
      */
     private $gestionTipoId;
 
-
+    public function __toString(){
+        return $this->infraestructuraFuenteelectrica;
+    }
     /**
      * Get id
      *
