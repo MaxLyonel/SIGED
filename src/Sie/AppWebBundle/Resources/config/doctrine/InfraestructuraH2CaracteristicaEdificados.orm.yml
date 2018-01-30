@@ -27,17 +27,18 @@ Sie\AppWebBundle\Entity\InfraestructuraH2CaracteristicaEdificados:
             generator:
                 strategy: SEQUENCE
     fields:
-        n3NombreBloque:
+        n31NombreBloque:
             type: string
             nullable: true
             length: 55
             fixed: false
             comment: ''
-            column: n3_nombre_bloque
+            column: n31_nombre_bloque
         n3AreaM2:
-            type: integer
+            type: decimal
             nullable: false
-            unsigned: false
+            precision: 8
+            scale: 2
             comment: ''
             default: '0'
             column: n3_area_m2
@@ -74,6 +75,18 @@ Sie\AppWebBundle\Entity\InfraestructuraH2CaracteristicaEdificados:
             nullable: true
             comment: ''
             default: now()
+        n32SiTieneAscensores:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n32_si_tiene_ascensores
+        n33AdjuntarFotoBloque:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: n33_adjuntar_foto_bloque
     manyToOne:
         n3TechoMaterialTipo:
             targetEntity: InfraestructuraH2TechoMaterialTipo

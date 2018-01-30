@@ -1,0 +1,33 @@
+Sie\AppWebBundle\Entity\InfraestructuraH4EliminacionBasuraTipo:
+    type: entity
+    table: infraestructura_h4_eliminacion_basura_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        infraestructuraEliminacionBasura:
+            type: string
+            nullable: false
+            length: 100
+            fixed: false
+            comment: ''
+            column: infraestructura_eliminacion_basura
+        obs:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+    lifecycleCallbacks: {  }

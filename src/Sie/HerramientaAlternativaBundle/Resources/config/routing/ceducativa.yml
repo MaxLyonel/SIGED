@@ -106,4 +106,8 @@ herramientalt_ceducativa_estadistiscas_departamento:
     path:     /deptoestadsiticas/
     defaults: { _controller: SieHerramientaAlternativaBundle:Estadisticas:ceasstdcierre}
     options:
-         expose: true         
+         expose: true
+
+sie_alt_reportes_diversa:
+    path:     /sie/reportesDiversa
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:reporteDiversa}

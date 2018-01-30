@@ -1,0 +1,14 @@
+
+tree_option_index:
+    path:     /
+    defaults: { _controller: SieDgesttlaBundle:TreeOption:index }
+
+# tree_option_see_students:
+#     path:     /seeStudents
+#     defaults: { _controller: SieDgesttlaBundle:TreeOption:seeStudents }
+
+tree_option_see_students:
+    path:     /seestudents
+    defaults: { _controller: SieDgesttlaBundle:TreeOption:seeStudents }
+    options:
+         expose: true    

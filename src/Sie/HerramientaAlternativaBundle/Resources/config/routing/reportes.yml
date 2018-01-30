@@ -48,4 +48,70 @@ herramienta_alter_reporte_ddjj_tec:
     
 herramienta_alter_reporte_socioeconomico:
     path:     /socioeconomico
-    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:socioeconomico }     
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:socioeconomico }
+
+herramienta_alter_reporte_edudiv_som_esp:
+    path:     /reportEsp/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEsp }
+
+herramienta_alter_reporte_edudiv_som_est:
+    path:     /reportEst/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEst }
+
+herramienta_alter_reporte_edudiv_som_espex:
+    path:     /reportEspEX/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEspEX }
+
+herramienta_alter_reporte_edudiv_som_estex:
+    path:     /reportEstEX/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEstEX }
+
+herramienta_alter_reporte_edudiv_pece_esp:
+    path:     /reportEspPece/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEspPece }
+
+herramienta_alter_reporte_edudiv_pece_est:
+    path:     /reportEstPece/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEstPece }
+
+herramienta_alter_reporte_edudiv_pece_espex:
+    path:     /reportEspEXPece/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEspEXPece }
+
+herramienta_alter_reporte_edudiv_pece_estex:
+    path:     /reportEstEXPece/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEstEXPece }
+
+herramienta_alter_reporte_edudiv_th_esp:
+    path:     /reportEspTh/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEspTh }
+
+herramienta_alter_reporte_edudiv_th_est:
+    path:     /reportEstTh/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEstTh }
+
+herramienta_alter_reporte_edudiv_th_espex:
+    path:     /reportEspEXTh/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEspEXTh }
+
+herramienta_alter_reporte_edudiv_th_estex:
+    path:     /reportEstEXTh/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEstEXTh }
+
+herramienta_alter_reporte_edudiv_maestros_instructores_list:
+    path:     /reportListMaestroIns/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportListMaestroIns }
+
+herramienta_alter_reporte_edudiv_maestros_instructores_listex:
+    path:     /reportListMaestroInsEX/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportListMaestroInsEX }
+
+herramienta_alter_reporte_edudiv_maestros_penitenciario_list:
+    path:     /reportListMaestroRecP/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportListMaestroRecP }
+
+herramienta_alter_reporte_edudiv_maestros_penitenciario_listex:
+    path:     /reportListMaestroRecPEX/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportListMaestroRecPEX }
+
+

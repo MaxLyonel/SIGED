@@ -1,0 +1,364 @@
+
+{% if exist == true %}
+    <small>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                  <div class="alert alert-warning alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                  <div class="alert alert-success alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>
+        <div class="row">
+          <div class="col-md-4">
+               
+          </div>
+          <div class="col-md-4">
+
+                <a class="btn btn-block btn-linkedin" href="#">
+                  <i class="fa fa-download"></i> Boletin Centralizador
+                </a>
+          </div>
+          <div class="col-md-4">
+            {# if gestion == 2017 %}
+              <button type="button" class="btn btn-inverse btn-stroke" disabled="disabled">
+                  <i class="fa fa-user"></i> Inscrip. con Rude
+              </button>
+            { else #}
+              {% if app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('allowInscription') or app.session.get('ie_id')=='80900081' %}
+                  {% if app.session.get('lastOperativo') == 5%}
+                  {% else %}
+                    <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
+                        <i class="fa fa-user"></i> Inscrip. con Rude
+                    </button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick=" getCargaHorariaPlenaFinalizarRegistro('{{infoUe}}');" >
+                        <i class="fa fa-check"></i> Finalizar Registro de Horas
+                    </button>
+                  {% endif %}
+              {% endif %}
+            {# endif #}
+
+          </div>
+          <!--div class="col-md-3" >
+            {% if app.session.get('ue_modular') and nivel >= 13 %}
+            {% else %}
+            <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{{infoUe}}');" >
+              <i class="fa fa-user-plus"></i> Inscrip. sin Rude
+            </button>
+            {% endif %}
+          </div-->
+      </div>
+    <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="no-more-tables">
+                    <div class="row">
+
+                    </div>
+
+                    <table class="table table-bordered table-hover cf">
+                        <tr>
+
+                        <input type="hidden" id="formdata_data" name="formdata[data]" value="">
+                        <td align="center" class="warning" colspan="5">Estudiantes Inscritos</br>
+                            
+                        </td>
+                        
+                        <tr>
+                           <td>#</td>
+                          <td  align="">CI</td>
+                          <td  align="">Datos Estudiante</td>
+                          <td  align="">Matricula</td>
+                          <td  align="">Opciones</td>
+                        </tr>
+                        {#init the array info student #}
+                        {% set objInfoStudent = [] %}
+                        {% for data in objStudents %}
+                        
+                            <tr >
+                                <td>{{loop.index}}</td>
+                                <td  align="">{{data.carnet}}</td>
+                                <td  align="">{{data.paterno}} {{data.materno}} {{data.nombre}} </td>
+                                <td  align="">
+
+                                </td>
+                                <td  align="">
+                                  
+                                   </td>
+                                  </td>
+                                </td>
+
+                            </tr>
+                        {%endfor%}
+
+                    </table>
+
+                </div>
+                <!-- /.portlet -->
+            </div>
+        </div>
+    </small>
+    <!-- /.row -->
+{% else %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warninsueall') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    var getNotas = function (infoUe, infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('herramienta_infoEstudianteNotas_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var getCargaHorariaPlena = function (infoUe, infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('herramienta_infoEstudianteCargaHorariaPlena_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+
+    var getCargaHorariaPlenaFinalizarRegistro = function (infoUe) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe}),
+            url: "{{ path('herramienta_infoEstudianteCargaHorariaPlena_finalizeCreateUpdate') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+
+    var socioeconomico = function (infoUe, infoStudent, editar) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent, editar: editar}),
+            url: "{{ path('estudianteSocioeconomico_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="panel panel-tab panel-tab-double"><div class="panel-heading no-padding"><div style="height:50px; background:#64CBE2; color:#FFFFFF; margin-top:-10px;"><h4 style="padding:10px 0px 0px 10px; text-align:center">RUDE</h4></div></div><div class="panel-body no-padding" id="modal-body"><div style="text-align:center; color:#69A7E2; font-size:17px; padding:20px"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var registerEspecialidad = function (infoUe, infoStudent) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('herramienta_info_register_speciality_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+    var saveSpeciality = function (infoUe, infoStudent) {
+        var  specialityForm = $('#specialityFormId').serialize();
+        var specialityId = $('#form_especialidad').val();
+        var horas = $('#form_horas').val();
+        var eInsId = $('#form_eInsId').val();
+        var infoStudent = $('#form_infoStudent').val();
+
+           $('#modal').modal('hide');
+             $.ajax({
+                 type: 'post',
+                 url: Routing.generate('herramienta_info_register_speciality_save'),
+                 data: ({specialityId: specialityId, horas: horas, eInsId: eInsId, infoStudent:infoStudent}),
+                 beforeSend: function () {
+                   $('#modal').empty();
+                 },
+                 success: function (data) {
+                   // seeStudents(infoStudent);
+                   $('#modal').empty();
+                   //$('#modal').append(data);
+                   //location.reload(true);
+                 },
+                 statusCode: {
+                     500: function () {
+
+                     },
+                     404: function () {
+
+                     }
+                 }
+             });
+         }
+
+
+    var onlyNumber = function (event) {
+
+        var key = window.event ? event.keyCode : event.which;
+
+        if (key > 31 && (key < 48 || key > 57) && key != 47) {
+            $('#noNumber').text(" Campo permitido solo para números ");
+            $("#form_registrar").attr("disabled", true);
+            return false;
+        }
+        else {
+            $('#noNumber').text(" ");
+            $("#form_registrar").removeAttr("disabled");
+            return true;
+        }
+    }
+    ;
+
+
+    var changeMatricula = function (infoUe, infoStudent) {
+
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: Routing.generate('herramienta_changeMatricula_index'),
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+
+    var removeInscriptionAca = function (infoUe, infoStudent) {
+      if(confirm('¿Esta completamente seguro de eliminar la Inscripción? \nPresione en Ok para continuar')){
+
+          $.ajax({
+              type: 'get',
+              data: ({infoUe: infoUe, infoStudent: infoStudent}),
+              url: Routing.generate('herramienta_info_estudiante_remove_inscription_aca'),
+              beforeSend: function () {
+                  $("#idstudents").empty();
+                  $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+              },
+              success: function (data) {
+                  $("#idstudents").empty();
+                  $("#idstudents").append(data);
+                  $('.tooltips').tooltip();
+              },
+              statusCode: {
+                  500: function () {
+
+                  },
+                  404: function () {
+
+                  }
+              }
+          });
+
+      } else {
+        return false;
+      }
+    };
+
+</script>

@@ -96,14 +96,14 @@
                                                             'tipo'   : 'krlos'
                                             } %}
                                             {% set jsnFullUeInfo = items|json_encode() %}
-                                            {% if( infoConsolidation.gestion == app.session.get('currentyear')-1 )  and (app.session.get('ue_modular') or app.session.get('ue_plena') or app.session.get('ue_tecteg')) %}
+                                            {# if( infoConsolidation.gestion == app.session.get('currentyear')-1 )  and (app.session.get('ue_modular') or app.session.get('ue_plena') or app.session.get('ue_tecteg')) #}
                                                 <form action="{{path('herramienta_inbox_open')}}" method="post" style="display: inline-block">
                                                     <!-- this is the new start-->
                                                     <input type="hidden" id="form_data" name="form[data]" required="required" value="{{jsnFullUeInfo}}">
                                                     <!-- this is the new end-->
                                                     <button type="submit" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Ver Información {{infoConsolidation.gestion}}"><i class="fa fa-pencil"> Ver Información</i></button>
                                                 </form>
-                                            {% endif %}
+                                            {# endif #}
                                             </td>
                                         </tr>
 

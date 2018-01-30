@@ -1,0 +1,58 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5AmbientepedagogicoMobiliario:
+    type: entity
+    table: infraestructura_h5_ambientepedagogico_mobiliario
+    indexes:
+        IDX_1BDBC5D8A2C5ADCA:
+            columns:
+                - n52_estado_tipo_id
+        IDX_1BDBC5D85A5CAD63:
+            columns:
+                - n52_mobiliario_tipo_id
+        IDX_1BDBC5D845A3DDFE:
+            columns:
+                - infraestructura_h5_ambientepedagogico_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n52Cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n52_cantidad
+    manyToOne:
+        n52EstadoTipo:
+            targetEntity: InfraestructuraGenEstadoMobEquipTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_estado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n52MobiliarioTipo:
+            targetEntity: InfraestructuraH5AmbientepedagogicoMobiliarioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n52_mobiliario_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH5Ambientepedagogico:
+            targetEntity: InfraestructuraH5Ambientepedagogico
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h5_ambientepedagogico_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

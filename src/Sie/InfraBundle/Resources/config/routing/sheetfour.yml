@@ -5,3 +5,7 @@ infra_sheet_four_index:
 infra_sheet_four_access:
     path:     /access
     defaults: { _controller: SieInfraBundle:SheetFour:access }
+
+infra_sheet_four_save:
+    path:     /save
+    defaults: { _controller: SieInfraBundle:SheetFour:save }

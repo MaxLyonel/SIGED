@@ -62,7 +62,7 @@ class ListaController extends Controller
       $form = $this->createFormBuilder()
         ->setAction($this->generateUrl($urlTheSheet))
         ->add('gestion', 'hidden', array('data'=>$data['gestion']))
-        ->add('gestion', 'hidden', array('data'=>$data['sie']))
+        ->add('sie', 'hidden', array('data'=>$data['sie']))
         ->add('opensheet', 'submit',array('label'=>"$option", 'attr'=>array('class'=>'cbp-singlePage cbp-l-caption-buttonLeft')))
         ->add('labelsheet', 'hidden',array('label'=>$option))
         ;

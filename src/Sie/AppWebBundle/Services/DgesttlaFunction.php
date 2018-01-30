@@ -167,6 +167,62 @@ class DgesttlaFunction {
     return $objNextMaterias;
   }
 
+  public function getTreeAsignaturas($form){
+
+     //create the query about the roluser
+    $query = $this->em->getConnection()->prepare("
+                                              
+                                           select a.institucioneducativa_id,c.institucioneducativa,a.ttec_carrera_tipo_id,b.id as carreraid,b.nombre as nombre_carrera,d.denominacion,e.pensum,e.resolucion_administrativa,e.nro_resolucion
+,g.id as periodoid,g.periodo,f.codigo as codigo_materia,f.id as materiaid,f.materia as asignatura,i.id as paraleloid,i.paralelo,j.id as turnoid,j.turno 
+                                              from ttec_institucioneducativa_carrera_autorizada a
+                                                inner join ttec_carrera_tipo b on b.id=a.ttec_carrera_tipo_id
+                                                  inner join institucioneducativa c on a.institucioneducativa_id=c.id
+                                                    inner join ttec_denominacion_titulo_profesional_tipo d on a.ttec_carrera_tipo_id=d.ttec_carrera_tipo_id
+                                                      inner join ttec_pensum e on e.ttec_denominacion_titulo_profesional_tipo_id=d.id
+                                                        inner join ttec_materia_tipo f on e.id=f.ttec_pensum_id
+                                                          inner join ttec_periodo_tipo g on f.ttec_periodo_tipo_id=g.id
+                                                            inner join ttec_paralelo_materia h on h.ttec_materia_tipo_id=f.id
+                                                              inner join ttec_paralelo_tipo i on h.ttec_paralelo_tipo_id=i.id
+                                                                inner join turno_tipo j on h.turno_tipo_id=j.id
+                                            where a.institucioneducativa_id=".$form['sie']." and a.ttec_carrera_tipo_id = ".$form['tipoCarrera']."
+
+                                              ");
+
+    $query->execute();
+    $objCarreras = $query->fetchAll();
+    return $objCarreras;
+
+  }
+
+  public function getStudents($form){
+
+    $query = $this->em->getConnection()->prepare(
+      "              
+        select a.institucioneducativa_id,c.institucioneducativa,a.ttec_carrera_tipo_id,b.id as carreraid,b.nombre as nombre_carrera,d.denominacion,e.pensum,e.resolucion_administrativa,e.nro_resolucion
+        ,g.id as periodoid,g.periodo,f.codigo as codigo_materia,f.id as materiaid,f.materia as asignatura,i.id as paraleloid,i.paralelo,j.id as turnoid,j.turno ,k.estadomatricula_tipo_inicio_id,k.estadomatricula_tipo_fin_id
+        ,l.paterno,l.materno,l.nombre,l.carnet
+        from ttec_institucioneducativa_carrera_autorizada a
+          inner join ttec_carrera_tipo b on b.id=a.ttec_carrera_tipo_id
+            inner join institucioneducativa c on a.institucioneducativa_id=c.id
+              inner join ttec_denominacion_titulo_profesional_tipo d on a.ttec_carrera_tipo_id=d.ttec_carrera_tipo_id
+                inner join ttec_pensum e on e.ttec_denominacion_titulo_profesional_tipo_id=d.id
+                  inner join ttec_materia_tipo f on e.id=f.ttec_pensum_id
+                    inner join ttec_periodo_tipo g on f.ttec_periodo_tipo_id=g.id
+                      inner join ttec_paralelo_materia h on h.ttec_materia_tipo_id=f.id
+                        inner join ttec_paralelo_tipo i on h.ttec_paralelo_tipo_id=i.id
+                          inner join turno_tipo j on h.turno_tipo_id=j.id
+                            inner join ttec_estudiante_inscripcion k on k.ttec_paralelo_materia_id=h.id
+                              inner join persona l on k.persona_id=l.id
+        where a.institucioneducativa_id=".$form['sie']." and a.ttec_carrera_tipo_id = ".$form['ttecCarreraTipoId']." and g.id = ".$form['periodoId']."  and f.id = ".$form['materiaId']." and i.id = ".$form['paraleloId']." and j.id = ".$form['turnoId']."
+      "
+    );
+
+    $query->execute();
+    $objStudentes = $query->fetchAll();
+    return $objStudentes;
+
+  }
+
 }
 
  ?>

@@ -52,4 +52,60 @@ class UnidadMilitarTipo
     {
         return $this->unidadMilitarTipo;
     }
+    /**
+     * @var string
+     */
+    private $unidadMilitar;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\FuerzaMilitarTipo
+     */
+    private $fuerzaMilitarTipo;
+
+
+    /**
+     * Set unidadMilitar
+     *
+     * @param string $unidadMilitar
+     * @return UnidadMilitarTipo
+     */
+    public function setUnidadMilitar($unidadMilitar)
+    {
+        $this->unidadMilitar = $unidadMilitar;
+    
+        return $this;
+    }
+
+    /**
+     * Get unidadMilitar
+     *
+     * @return string 
+     */
+    public function getUnidadMilitar()
+    {
+        return $this->unidadMilitar;
+    }
+
+    /**
+     * Set fuerzaMilitarTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\FuerzaMilitarTipo $fuerzaMilitarTipo
+     * @return UnidadMilitarTipo
+     */
+    public function setFuerzaMilitarTipo(\Sie\AppWebBundle\Entity\FuerzaMilitarTipo $fuerzaMilitarTipo = null)
+    {
+        $this->fuerzaMilitarTipo = $fuerzaMilitarTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get fuerzaMilitarTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\FuerzaMilitarTipo 
+     */
+    public function getFuerzaMilitarTipo()
+    {
+        return $this->fuerzaMilitarTipo;
+    }
 }

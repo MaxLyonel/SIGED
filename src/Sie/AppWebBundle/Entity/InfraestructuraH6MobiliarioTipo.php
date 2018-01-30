@@ -80,4 +80,32 @@ class InfraestructuraH6MobiliarioTipo
     {
         return $this->obs;
     }
+    /**
+     * @var integer
+     */
+    private $gestionTipoId;
+
+
+    /**
+     * Set gestionTipoId
+     *
+     * @param integer $gestionTipoId
+     * @return InfraestructuraH6MobiliarioTipo
+     */
+    public function setGestionTipoId($gestionTipoId)
+    {
+        $this->gestionTipoId = $gestionTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipoId
+     *
+     * @return integer 
+     */
+    public function getGestionTipoId()
+    {
+        return $this->gestionTipoId;
+    }
 }

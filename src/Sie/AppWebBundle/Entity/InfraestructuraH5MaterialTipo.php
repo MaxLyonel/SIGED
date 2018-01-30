@@ -80,4 +80,32 @@ class InfraestructuraH5MaterialTipo
     {
         return $this->obs;
     }
+    /**
+     * @var integer
+     */
+    private $gestionTipoId;
+
+
+    /**
+     * Set gestionTipoId
+     *
+     * @param integer $gestionTipoId
+     * @return InfraestructuraH5MaterialTipo
+     */
+    public function setGestionTipoId($gestionTipoId)
+    {
+        $this->gestionTipoId = $gestionTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipoId
+     *
+     * @return integer 
+     */
+    public function getGestionTipoId()
+    {
+        return $this->gestionTipoId;
+    }
 }

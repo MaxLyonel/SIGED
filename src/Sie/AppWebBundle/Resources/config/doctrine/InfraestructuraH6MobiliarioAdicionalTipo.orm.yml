@@ -24,4 +24,10 @@ Sie\AppWebBundle\Entity\InfraestructuraH6MobiliarioAdicionalTipo:
             length: 100
             fixed: false
             comment: ''
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
     lifecycleCallbacks: {  }

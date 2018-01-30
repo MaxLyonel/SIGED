@@ -1480,4 +1480,2132 @@ class InfraestructuraH2Caracteristica
     {
         return $this->infraestructuraJuridiccionGeografica;
     }
+    /**
+     * @var string
+     */
+    private $n13Muroperimetral;
+
+    /**
+     * @var boolean
+     */
+    private $n311ConEsRiesgoInundacion;
+
+    /**
+     * @var boolean
+     */
+    private $n317ConEsRiesgoRiada;
+
+    /**
+     * @var boolean
+     */
+    private $n318ConEsRiesgoTormenta;
+
+    /**
+     * @var boolean
+     */
+    private $n312ConEsRiesgoIncendio;
+
+    /**
+     * @var boolean
+     */
+    private $n319ConEsRiesgoGranizo;
+
+    /**
+     * @var boolean
+     */
+    private $n314ConEsRiesgoDeslizamiento;
+
+    /**
+     * @var boolean
+     */
+    private $n315ConEsRiesgoSifonamiento;
+
+    /**
+     * @var boolean
+     */
+    private $n316ConEsRiesgoTerremoto;
+
+    /**
+     * @var boolean
+     */
+    private $n210EsPlanoAprobado;
+
+    /**
+     * @var float
+     */
+    private $n11AreaHuerto;
+
+    /**
+     * @var float
+     */
+    private $n11AreaInvernadero;
+
+    /**
+     * @var float
+     */
+    private $n11AreaGranjaEscolar;
+
+    /**
+     * @var boolean
+     */
+    private $n22AnioConstruccionEsDiscap;
+
+    /**
+     * @var boolean
+     */
+    private $n23AnioRefaccionEsDiscap;
+
+    /**
+     * @var boolean
+     */
+    private $n24AnioAmpliacionEsDiscap;
+
+    /**
+     * @var string
+     */
+    private $n27TipoDocumentacion;
+
+    /**
+     * @var string
+     */
+    private $n28FolioRealTarjetaObs;
+
+    /**
+     * @var string
+     */
+    private $n211AdjDocumentacionFolio;
+
+    /**
+     * @var boolean
+     */
+    private $n212SiRampas;
+
+    /**
+     * @var boolean
+     */
+    private $n212SiTieneRampa;
+
+    /**
+     * @var boolean
+     */
+    private $n313ConEsRiesgoSequia;
+
+    /**
+     * @var \DateTime
+     */
+    private $n313ConEsRiesgoSequiaMesi;
+
+    /**
+     * @var \DateTime
+     */
+    private $n313ConEsRiesgoSequiaMesf;
+
+    /**
+     * @var \DateTime
+     */
+    private $n311ConEsRiesgoInundacionMesi;
+
+    /**
+     * @var \DateTime
+     */
+    private $n311ConEsRiesgoInundacionMesf;
+
+    /**
+     * @var \DateTime
+     */
+    private $n312ConEsRiesgoIncendioMesi;
+
+    /**
+     * @var \DateTime
+     */
+    private $n312ConEsRiesgoIncendioMesf;
+
+    /**
+     * @var \DateTime
+     */
+    private $n314ConEsRiesgoDeslizamientoMesi;
+
+    /**
+     * @var \DateTime
+     */
+    private $n314ConEsRiesgoDeslizamientoMesf;
+
+    /**
+     * @var \DateTime
+     */
+    private $n315ConEsRiesgoSifonamientoMesi;
+
+    /**
+     * @var \DateTime
+     */
+    private $n315ConEsRiesgoSifonamientoMesf;
+
+    /**
+     * @var \DateTime
+     */
+    private $n316ConEsRiesgoTerremotoMesi;
+
+    /**
+     * @var \DateTime
+     */
+    private $n316ConEsRiesgoTerremotoMesf;
+
+    /**
+     * @var \DateTime
+     */
+    private $n317ConEsRiesgoRiadaMesi;
+
+    /**
+     * @var \DateTime
+     */
+    private $n317ConEsRiesgoRiadaMesf;
+
+    /**
+     * @var \DateTime
+     */
+    private $n318ConEsRiesgoTormentaMesi;
+
+    /**
+     * @var \DateTime
+     */
+    private $n318ConEsRiesgoTormentaMesf;
+
+    /**
+     * @var \DateTime
+     */
+    private $n319ConEsRiesgoGranizoMesi;
+
+    /**
+     * @var \DateTime
+     */
+    private $n319ConEsRiesgoGranizoMesf;
+
+    /**
+     * @var boolean
+     */
+    private $n3120ConEsRiesgoHelada;
+
+    /**
+     * @var \DateTime
+     */
+    private $n3120ConEsRiesgoHeladaMesi;
+
+    /**
+     * @var \DateTime
+     */
+    private $n3120ConEsRiesgoHeladaMesf;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxBarrancos;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxRiosLagQue;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxEstaElectricas;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxEstaGasolineras;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxFabrMatContami;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxBotaderosMuni;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxCentroMinero;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxPasoFrontera;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxBares;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxBosques;
+
+    /**
+     * @var boolean
+     */
+    private $n331EsSuspencionClases;
+
+    /**
+     * @var boolean
+     */
+    private $n341EsAlbergue;
+
+    /**
+     * @var boolean
+     */
+    private $n354EsSenaleticaEvac;
+
+    /**
+     * @var boolean
+     */
+    private $n355EsDepositoAgua;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxCerroLadera;
+
+    /**
+     * @var boolean
+     */
+    private $n321EsEdifProxRiesgoDelito;
+
+    /**
+     * @var boolean
+     */
+    private $n351EsTimbrePanico;
+
+    /**
+     * @var integer
+     */
+    private $n351EsTimbrePanicoCant;
+
+    /**
+     * @var boolean
+     */
+    private $n352EsExtintores;
+
+    /**
+     * @var integer
+     */
+    private $n352ExtintoresCant;
+
+    /**
+     * @var boolean
+     */
+    private $n353EsCamSeg;
+
+    /**
+     * @var integer
+     */
+    private $n353CamSegCant;
+
+    /**
+     * @var boolean
+     */
+    private $n353EsCamSegFuncionamiento;
+
+    /**
+     * @var boolean
+     */
+    private $n212SiSenaletica;
+
+    /**
+     * @var integer
+     */
+    private $n31NroBloque;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InfraestructuraH2SenalesTipo
+     */
+    private $n213SenalesTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InfraestructuraH2SenalesIdiomaTipo
+     */
+    private $n212SenalesiomaTipo2;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InfraestructuraH2SenalesIdiomaTipo
+     */
+    private $n212SenalesiomaTipo1;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InfraestructuraH2RampaTipo
+     */
+    private $n215TipoRampas;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InfraestructuraH2ConstruidaEducativoTipo
+     */
+    private $n21InfraestructuraH2ConstruidaEducativoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InfraestructuraH2PropiedadTipo
+     */
+    private $n25InfraestructuraH2PropiedadTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InfraestructuraGenAvanceTipo
+     */
+    private $n13EdificacionAmurallada;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InfraestructuraH2TopografiaTipo
+     */
+    private $n12InfraestructuraH2TopografiaTipo;
+
+
+    /**
+     * Set n13Muroperimetral
+     *
+     * @param string $n13Muroperimetral
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN13Muroperimetral($n13Muroperimetral)
+    {
+        $this->n13Muroperimetral = $n13Muroperimetral;
+    
+        return $this;
+    }
+
+    /**
+     * Get n13Muroperimetral
+     *
+     * @return string 
+     */
+    public function getN13Muroperimetral()
+    {
+        return $this->n13Muroperimetral;
+    }
+
+    /**
+     * Set n311ConEsRiesgoInundacion
+     *
+     * @param boolean $n311ConEsRiesgoInundacion
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN311ConEsRiesgoInundacion($n311ConEsRiesgoInundacion)
+    {
+        $this->n311ConEsRiesgoInundacion = $n311ConEsRiesgoInundacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get n311ConEsRiesgoInundacion
+     *
+     * @return boolean 
+     */
+    public function getN311ConEsRiesgoInundacion()
+    {
+        return $this->n311ConEsRiesgoInundacion;
+    }
+
+    /**
+     * Set n317ConEsRiesgoRiada
+     *
+     * @param boolean $n317ConEsRiesgoRiada
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN317ConEsRiesgoRiada($n317ConEsRiesgoRiada)
+    {
+        $this->n317ConEsRiesgoRiada = $n317ConEsRiesgoRiada;
+    
+        return $this;
+    }
+
+    /**
+     * Get n317ConEsRiesgoRiada
+     *
+     * @return boolean 
+     */
+    public function getN317ConEsRiesgoRiada()
+    {
+        return $this->n317ConEsRiesgoRiada;
+    }
+
+    /**
+     * Set n318ConEsRiesgoTormenta
+     *
+     * @param boolean $n318ConEsRiesgoTormenta
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN318ConEsRiesgoTormenta($n318ConEsRiesgoTormenta)
+    {
+        $this->n318ConEsRiesgoTormenta = $n318ConEsRiesgoTormenta;
+    
+        return $this;
+    }
+
+    /**
+     * Get n318ConEsRiesgoTormenta
+     *
+     * @return boolean 
+     */
+    public function getN318ConEsRiesgoTormenta()
+    {
+        return $this->n318ConEsRiesgoTormenta;
+    }
+
+    /**
+     * Set n312ConEsRiesgoIncendio
+     *
+     * @param boolean $n312ConEsRiesgoIncendio
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN312ConEsRiesgoIncendio($n312ConEsRiesgoIncendio)
+    {
+        $this->n312ConEsRiesgoIncendio = $n312ConEsRiesgoIncendio;
+    
+        return $this;
+    }
+
+    /**
+     * Get n312ConEsRiesgoIncendio
+     *
+     * @return boolean 
+     */
+    public function getN312ConEsRiesgoIncendio()
+    {
+        return $this->n312ConEsRiesgoIncendio;
+    }
+
+    /**
+     * Set n319ConEsRiesgoGranizo
+     *
+     * @param boolean $n319ConEsRiesgoGranizo
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN319ConEsRiesgoGranizo($n319ConEsRiesgoGranizo)
+    {
+        $this->n319ConEsRiesgoGranizo = $n319ConEsRiesgoGranizo;
+    
+        return $this;
+    }
+
+    /**
+     * Get n319ConEsRiesgoGranizo
+     *
+     * @return boolean 
+     */
+    public function getN319ConEsRiesgoGranizo()
+    {
+        return $this->n319ConEsRiesgoGranizo;
+    }
+
+    /**
+     * Set n314ConEsRiesgoDeslizamiento
+     *
+     * @param boolean $n314ConEsRiesgoDeslizamiento
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN314ConEsRiesgoDeslizamiento($n314ConEsRiesgoDeslizamiento)
+    {
+        $this->n314ConEsRiesgoDeslizamiento = $n314ConEsRiesgoDeslizamiento;
+    
+        return $this;
+    }
+
+    /**
+     * Get n314ConEsRiesgoDeslizamiento
+     *
+     * @return boolean 
+     */
+    public function getN314ConEsRiesgoDeslizamiento()
+    {
+        return $this->n314ConEsRiesgoDeslizamiento;
+    }
+
+    /**
+     * Set n315ConEsRiesgoSifonamiento
+     *
+     * @param boolean $n315ConEsRiesgoSifonamiento
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN315ConEsRiesgoSifonamiento($n315ConEsRiesgoSifonamiento)
+    {
+        $this->n315ConEsRiesgoSifonamiento = $n315ConEsRiesgoSifonamiento;
+    
+        return $this;
+    }
+
+    /**
+     * Get n315ConEsRiesgoSifonamiento
+     *
+     * @return boolean 
+     */
+    public function getN315ConEsRiesgoSifonamiento()
+    {
+        return $this->n315ConEsRiesgoSifonamiento;
+    }
+
+    /**
+     * Set n316ConEsRiesgoTerremoto
+     *
+     * @param boolean $n316ConEsRiesgoTerremoto
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN316ConEsRiesgoTerremoto($n316ConEsRiesgoTerremoto)
+    {
+        $this->n316ConEsRiesgoTerremoto = $n316ConEsRiesgoTerremoto;
+    
+        return $this;
+    }
+
+    /**
+     * Get n316ConEsRiesgoTerremoto
+     *
+     * @return boolean 
+     */
+    public function getN316ConEsRiesgoTerremoto()
+    {
+        return $this->n316ConEsRiesgoTerremoto;
+    }
+
+    /**
+     * Set n210EsPlanoAprobado
+     *
+     * @param boolean $n210EsPlanoAprobado
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN210EsPlanoAprobado($n210EsPlanoAprobado)
+    {
+        $this->n210EsPlanoAprobado = $n210EsPlanoAprobado;
+    
+        return $this;
+    }
+
+    /**
+     * Get n210EsPlanoAprobado
+     *
+     * @return boolean 
+     */
+    public function getN210EsPlanoAprobado()
+    {
+        return $this->n210EsPlanoAprobado;
+    }
+
+    /**
+     * Set n11AreaHuerto
+     *
+     * @param float $n11AreaHuerto
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN11AreaHuerto($n11AreaHuerto)
+    {
+        $this->n11AreaHuerto = $n11AreaHuerto;
+    
+        return $this;
+    }
+
+    /**
+     * Get n11AreaHuerto
+     *
+     * @return float 
+     */
+    public function getN11AreaHuerto()
+    {
+        return $this->n11AreaHuerto;
+    }
+
+    /**
+     * Set n11AreaInvernadero
+     *
+     * @param float $n11AreaInvernadero
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN11AreaInvernadero($n11AreaInvernadero)
+    {
+        $this->n11AreaInvernadero = $n11AreaInvernadero;
+    
+        return $this;
+    }
+
+    /**
+     * Get n11AreaInvernadero
+     *
+     * @return float 
+     */
+    public function getN11AreaInvernadero()
+    {
+        return $this->n11AreaInvernadero;
+    }
+
+    /**
+     * Set n11AreaGranjaEscolar
+     *
+     * @param float $n11AreaGranjaEscolar
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN11AreaGranjaEscolar($n11AreaGranjaEscolar)
+    {
+        $this->n11AreaGranjaEscolar = $n11AreaGranjaEscolar;
+    
+        return $this;
+    }
+
+    /**
+     * Get n11AreaGranjaEscolar
+     *
+     * @return float 
+     */
+    public function getN11AreaGranjaEscolar()
+    {
+        return $this->n11AreaGranjaEscolar;
+    }
+
+    /**
+     * Set n22AnioConstruccionEsDiscap
+     *
+     * @param boolean $n22AnioConstruccionEsDiscap
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN22AnioConstruccionEsDiscap($n22AnioConstruccionEsDiscap)
+    {
+        $this->n22AnioConstruccionEsDiscap = $n22AnioConstruccionEsDiscap;
+    
+        return $this;
+    }
+
+    /**
+     * Get n22AnioConstruccionEsDiscap
+     *
+     * @return boolean 
+     */
+    public function getN22AnioConstruccionEsDiscap()
+    {
+        return $this->n22AnioConstruccionEsDiscap;
+    }
+
+    /**
+     * Set n23AnioRefaccionEsDiscap
+     *
+     * @param boolean $n23AnioRefaccionEsDiscap
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN23AnioRefaccionEsDiscap($n23AnioRefaccionEsDiscap)
+    {
+        $this->n23AnioRefaccionEsDiscap = $n23AnioRefaccionEsDiscap;
+    
+        return $this;
+    }
+
+    /**
+     * Get n23AnioRefaccionEsDiscap
+     *
+     * @return boolean 
+     */
+    public function getN23AnioRefaccionEsDiscap()
+    {
+        return $this->n23AnioRefaccionEsDiscap;
+    }
+
+    /**
+     * Set n24AnioAmpliacionEsDiscap
+     *
+     * @param boolean $n24AnioAmpliacionEsDiscap
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN24AnioAmpliacionEsDiscap($n24AnioAmpliacionEsDiscap)
+    {
+        $this->n24AnioAmpliacionEsDiscap = $n24AnioAmpliacionEsDiscap;
+    
+        return $this;
+    }
+
+    /**
+     * Get n24AnioAmpliacionEsDiscap
+     *
+     * @return boolean 
+     */
+    public function getN24AnioAmpliacionEsDiscap()
+    {
+        return $this->n24AnioAmpliacionEsDiscap;
+    }
+
+    /**
+     * Set n27TipoDocumentacion
+     *
+     * @param string $n27TipoDocumentacion
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN27TipoDocumentacion($n27TipoDocumentacion)
+    {
+        $this->n27TipoDocumentacion = $n27TipoDocumentacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get n27TipoDocumentacion
+     *
+     * @return string 
+     */
+    public function getN27TipoDocumentacion()
+    {
+        return $this->n27TipoDocumentacion;
+    }
+
+    /**
+     * Set n28FolioRealTarjetaObs
+     *
+     * @param string $n28FolioRealTarjetaObs
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN28FolioRealTarjetaObs($n28FolioRealTarjetaObs)
+    {
+        $this->n28FolioRealTarjetaObs = $n28FolioRealTarjetaObs;
+    
+        return $this;
+    }
+
+    /**
+     * Get n28FolioRealTarjetaObs
+     *
+     * @return string 
+     */
+    public function getN28FolioRealTarjetaObs()
+    {
+        return $this->n28FolioRealTarjetaObs;
+    }
+
+    /**
+     * Set n211AdjDocumentacionFolio
+     *
+     * @param string $n211AdjDocumentacionFolio
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN211AdjDocumentacionFolio($n211AdjDocumentacionFolio)
+    {
+        $this->n211AdjDocumentacionFolio = $n211AdjDocumentacionFolio;
+    
+        return $this;
+    }
+
+    /**
+     * Get n211AdjDocumentacionFolio
+     *
+     * @return string 
+     */
+    public function getN211AdjDocumentacionFolio()
+    {
+        return $this->n211AdjDocumentacionFolio;
+    }
+
+    /**
+     * Set n212SiRampas
+     *
+     * @param boolean $n212SiRampas
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN212SiRampas($n212SiRampas)
+    {
+        $this->n212SiRampas = $n212SiRampas;
+    
+        return $this;
+    }
+
+    /**
+     * Get n212SiRampas
+     *
+     * @return boolean 
+     */
+    public function getN212SiRampas()
+    {
+        return $this->n212SiRampas;
+    }
+
+    /**
+     * Set n212SiTieneRampa
+     *
+     * @param boolean $n212SiTieneRampa
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN212SiTieneRampa($n212SiTieneRampa)
+    {
+        $this->n212SiTieneRampa = $n212SiTieneRampa;
+    
+        return $this;
+    }
+
+    /**
+     * Get n212SiTieneRampa
+     *
+     * @return boolean 
+     */
+    public function getN212SiTieneRampa()
+    {
+        return $this->n212SiTieneRampa;
+    }
+
+    /**
+     * Set n313ConEsRiesgoSequia
+     *
+     * @param boolean $n313ConEsRiesgoSequia
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN313ConEsRiesgoSequia($n313ConEsRiesgoSequia)
+    {
+        $this->n313ConEsRiesgoSequia = $n313ConEsRiesgoSequia;
+    
+        return $this;
+    }
+
+    /**
+     * Get n313ConEsRiesgoSequia
+     *
+     * @return boolean 
+     */
+    public function getN313ConEsRiesgoSequia()
+    {
+        return $this->n313ConEsRiesgoSequia;
+    }
+
+    /**
+     * Set n313ConEsRiesgoSequiaMesi
+     *
+     * @param \DateTime $n313ConEsRiesgoSequiaMesi
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN313ConEsRiesgoSequiaMesi($n313ConEsRiesgoSequiaMesi)
+    {
+        $this->n313ConEsRiesgoSequiaMesi = $n313ConEsRiesgoSequiaMesi;
+    
+        return $this;
+    }
+
+    /**
+     * Get n313ConEsRiesgoSequiaMesi
+     *
+     * @return \DateTime 
+     */
+    public function getN313ConEsRiesgoSequiaMesi()
+    {
+        return $this->n313ConEsRiesgoSequiaMesi;
+    }
+
+    /**
+     * Set n313ConEsRiesgoSequiaMesf
+     *
+     * @param \DateTime $n313ConEsRiesgoSequiaMesf
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN313ConEsRiesgoSequiaMesf($n313ConEsRiesgoSequiaMesf)
+    {
+        $this->n313ConEsRiesgoSequiaMesf = $n313ConEsRiesgoSequiaMesf;
+    
+        return $this;
+    }
+
+    /**
+     * Get n313ConEsRiesgoSequiaMesf
+     *
+     * @return \DateTime 
+     */
+    public function getN313ConEsRiesgoSequiaMesf()
+    {
+        return $this->n313ConEsRiesgoSequiaMesf;
+    }
+
+    /**
+     * Set n311ConEsRiesgoInundacionMesi
+     *
+     * @param \DateTime $n311ConEsRiesgoInundacionMesi
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN311ConEsRiesgoInundacionMesi($n311ConEsRiesgoInundacionMesi)
+    {
+        $this->n311ConEsRiesgoInundacionMesi = $n311ConEsRiesgoInundacionMesi;
+    
+        return $this;
+    }
+
+    /**
+     * Get n311ConEsRiesgoInundacionMesi
+     *
+     * @return \DateTime 
+     */
+    public function getN311ConEsRiesgoInundacionMesi()
+    {
+        return $this->n311ConEsRiesgoInundacionMesi;
+    }
+
+    /**
+     * Set n311ConEsRiesgoInundacionMesf
+     *
+     * @param \DateTime $n311ConEsRiesgoInundacionMesf
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN311ConEsRiesgoInundacionMesf($n311ConEsRiesgoInundacionMesf)
+    {
+        $this->n311ConEsRiesgoInundacionMesf = $n311ConEsRiesgoInundacionMesf;
+    
+        return $this;
+    }
+
+    /**
+     * Get n311ConEsRiesgoInundacionMesf
+     *
+     * @return \DateTime 
+     */
+    public function getN311ConEsRiesgoInundacionMesf()
+    {
+        return $this->n311ConEsRiesgoInundacionMesf;
+    }
+
+    /**
+     * Set n312ConEsRiesgoIncendioMesi
+     *
+     * @param \DateTime $n312ConEsRiesgoIncendioMesi
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN312ConEsRiesgoIncendioMesi($n312ConEsRiesgoIncendioMesi)
+    {
+        $this->n312ConEsRiesgoIncendioMesi = $n312ConEsRiesgoIncendioMesi;
+    
+        return $this;
+    }
+
+    /**
+     * Get n312ConEsRiesgoIncendioMesi
+     *
+     * @return \DateTime 
+     */
+    public function getN312ConEsRiesgoIncendioMesi()
+    {
+        return $this->n312ConEsRiesgoIncendioMesi;
+    }
+
+    /**
+     * Set n312ConEsRiesgoIncendioMesf
+     *
+     * @param \DateTime $n312ConEsRiesgoIncendioMesf
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN312ConEsRiesgoIncendioMesf($n312ConEsRiesgoIncendioMesf)
+    {
+        $this->n312ConEsRiesgoIncendioMesf = $n312ConEsRiesgoIncendioMesf;
+    
+        return $this;
+    }
+
+    /**
+     * Get n312ConEsRiesgoIncendioMesf
+     *
+     * @return \DateTime 
+     */
+    public function getN312ConEsRiesgoIncendioMesf()
+    {
+        return $this->n312ConEsRiesgoIncendioMesf;
+    }
+
+    /**
+     * Set n314ConEsRiesgoDeslizamientoMesi
+     *
+     * @param \DateTime $n314ConEsRiesgoDeslizamientoMesi
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN314ConEsRiesgoDeslizamientoMesi($n314ConEsRiesgoDeslizamientoMesi)
+    {
+        $this->n314ConEsRiesgoDeslizamientoMesi = $n314ConEsRiesgoDeslizamientoMesi;
+    
+        return $this;
+    }
+
+    /**
+     * Get n314ConEsRiesgoDeslizamientoMesi
+     *
+     * @return \DateTime 
+     */
+    public function getN314ConEsRiesgoDeslizamientoMesi()
+    {
+        return $this->n314ConEsRiesgoDeslizamientoMesi;
+    }
+
+    /**
+     * Set n314ConEsRiesgoDeslizamientoMesf
+     *
+     * @param \DateTime $n314ConEsRiesgoDeslizamientoMesf
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN314ConEsRiesgoDeslizamientoMesf($n314ConEsRiesgoDeslizamientoMesf)
+    {
+        $this->n314ConEsRiesgoDeslizamientoMesf = $n314ConEsRiesgoDeslizamientoMesf;
+    
+        return $this;
+    }
+
+    /**
+     * Get n314ConEsRiesgoDeslizamientoMesf
+     *
+     * @return \DateTime 
+     */
+    public function getN314ConEsRiesgoDeslizamientoMesf()
+    {
+        return $this->n314ConEsRiesgoDeslizamientoMesf;
+    }
+
+    /**
+     * Set n315ConEsRiesgoSifonamientoMesi
+     *
+     * @param \DateTime $n315ConEsRiesgoSifonamientoMesi
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN315ConEsRiesgoSifonamientoMesi($n315ConEsRiesgoSifonamientoMesi)
+    {
+        $this->n315ConEsRiesgoSifonamientoMesi = $n315ConEsRiesgoSifonamientoMesi;
+    
+        return $this;
+    }
+
+    /**
+     * Get n315ConEsRiesgoSifonamientoMesi
+     *
+     * @return \DateTime 
+     */
+    public function getN315ConEsRiesgoSifonamientoMesi()
+    {
+        return $this->n315ConEsRiesgoSifonamientoMesi;
+    }
+
+    /**
+     * Set n315ConEsRiesgoSifonamientoMesf
+     *
+     * @param \DateTime $n315ConEsRiesgoSifonamientoMesf
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN315ConEsRiesgoSifonamientoMesf($n315ConEsRiesgoSifonamientoMesf)
+    {
+        $this->n315ConEsRiesgoSifonamientoMesf = $n315ConEsRiesgoSifonamientoMesf;
+    
+        return $this;
+    }
+
+    /**
+     * Get n315ConEsRiesgoSifonamientoMesf
+     *
+     * @return \DateTime 
+     */
+    public function getN315ConEsRiesgoSifonamientoMesf()
+    {
+        return $this->n315ConEsRiesgoSifonamientoMesf;
+    }
+
+    /**
+     * Set n316ConEsRiesgoTerremotoMesi
+     *
+     * @param \DateTime $n316ConEsRiesgoTerremotoMesi
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN316ConEsRiesgoTerremotoMesi($n316ConEsRiesgoTerremotoMesi)
+    {
+        $this->n316ConEsRiesgoTerremotoMesi = $n316ConEsRiesgoTerremotoMesi;
+    
+        return $this;
+    }
+
+    /**
+     * Get n316ConEsRiesgoTerremotoMesi
+     *
+     * @return \DateTime 
+     */
+    public function getN316ConEsRiesgoTerremotoMesi()
+    {
+        return $this->n316ConEsRiesgoTerremotoMesi;
+    }
+
+    /**
+     * Set n316ConEsRiesgoTerremotoMesf
+     *
+     * @param \DateTime $n316ConEsRiesgoTerremotoMesf
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN316ConEsRiesgoTerremotoMesf($n316ConEsRiesgoTerremotoMesf)
+    {
+        $this->n316ConEsRiesgoTerremotoMesf = $n316ConEsRiesgoTerremotoMesf;
+    
+        return $this;
+    }
+
+    /**
+     * Get n316ConEsRiesgoTerremotoMesf
+     *
+     * @return \DateTime 
+     */
+    public function getN316ConEsRiesgoTerremotoMesf()
+    {
+        return $this->n316ConEsRiesgoTerremotoMesf;
+    }
+
+    /**
+     * Set n317ConEsRiesgoRiadaMesi
+     *
+     * @param \DateTime $n317ConEsRiesgoRiadaMesi
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN317ConEsRiesgoRiadaMesi($n317ConEsRiesgoRiadaMesi)
+    {
+        $this->n317ConEsRiesgoRiadaMesi = $n317ConEsRiesgoRiadaMesi;
+    
+        return $this;
+    }
+
+    /**
+     * Get n317ConEsRiesgoRiadaMesi
+     *
+     * @return \DateTime 
+     */
+    public function getN317ConEsRiesgoRiadaMesi()
+    {
+        return $this->n317ConEsRiesgoRiadaMesi;
+    }
+
+    /**
+     * Set n317ConEsRiesgoRiadaMesf
+     *
+     * @param \DateTime $n317ConEsRiesgoRiadaMesf
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN317ConEsRiesgoRiadaMesf($n317ConEsRiesgoRiadaMesf)
+    {
+        $this->n317ConEsRiesgoRiadaMesf = $n317ConEsRiesgoRiadaMesf;
+    
+        return $this;
+    }
+
+    /**
+     * Get n317ConEsRiesgoRiadaMesf
+     *
+     * @return \DateTime 
+     */
+    public function getN317ConEsRiesgoRiadaMesf()
+    {
+        return $this->n317ConEsRiesgoRiadaMesf;
+    }
+
+    /**
+     * Set n318ConEsRiesgoTormentaMesi
+     *
+     * @param \DateTime $n318ConEsRiesgoTormentaMesi
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN318ConEsRiesgoTormentaMesi($n318ConEsRiesgoTormentaMesi)
+    {
+        $this->n318ConEsRiesgoTormentaMesi = $n318ConEsRiesgoTormentaMesi;
+    
+        return $this;
+    }
+
+    /**
+     * Get n318ConEsRiesgoTormentaMesi
+     *
+     * @return \DateTime 
+     */
+    public function getN318ConEsRiesgoTormentaMesi()
+    {
+        return $this->n318ConEsRiesgoTormentaMesi;
+    }
+
+    /**
+     * Set n318ConEsRiesgoTormentaMesf
+     *
+     * @param \DateTime $n318ConEsRiesgoTormentaMesf
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN318ConEsRiesgoTormentaMesf($n318ConEsRiesgoTormentaMesf)
+    {
+        $this->n318ConEsRiesgoTormentaMesf = $n318ConEsRiesgoTormentaMesf;
+    
+        return $this;
+    }
+
+    /**
+     * Get n318ConEsRiesgoTormentaMesf
+     *
+     * @return \DateTime 
+     */
+    public function getN318ConEsRiesgoTormentaMesf()
+    {
+        return $this->n318ConEsRiesgoTormentaMesf;
+    }
+
+    /**
+     * Set n319ConEsRiesgoGranizoMesi
+     *
+     * @param \DateTime $n319ConEsRiesgoGranizoMesi
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN319ConEsRiesgoGranizoMesi($n319ConEsRiesgoGranizoMesi)
+    {
+        $this->n319ConEsRiesgoGranizoMesi = $n319ConEsRiesgoGranizoMesi;
+    
+        return $this;
+    }
+
+    /**
+     * Get n319ConEsRiesgoGranizoMesi
+     *
+     * @return \DateTime 
+     */
+    public function getN319ConEsRiesgoGranizoMesi()
+    {
+        return $this->n319ConEsRiesgoGranizoMesi;
+    }
+
+    /**
+     * Set n319ConEsRiesgoGranizoMesf
+     *
+     * @param \DateTime $n319ConEsRiesgoGranizoMesf
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN319ConEsRiesgoGranizoMesf($n319ConEsRiesgoGranizoMesf)
+    {
+        $this->n319ConEsRiesgoGranizoMesf = $n319ConEsRiesgoGranizoMesf;
+    
+        return $this;
+    }
+
+    /**
+     * Get n319ConEsRiesgoGranizoMesf
+     *
+     * @return \DateTime 
+     */
+    public function getN319ConEsRiesgoGranizoMesf()
+    {
+        return $this->n319ConEsRiesgoGranizoMesf;
+    }
+
+    /**
+     * Set n3120ConEsRiesgoHelada
+     *
+     * @param boolean $n3120ConEsRiesgoHelada
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN3120ConEsRiesgoHelada($n3120ConEsRiesgoHelada)
+    {
+        $this->n3120ConEsRiesgoHelada = $n3120ConEsRiesgoHelada;
+    
+        return $this;
+    }
+
+    /**
+     * Get n3120ConEsRiesgoHelada
+     *
+     * @return boolean 
+     */
+    public function getN3120ConEsRiesgoHelada()
+    {
+        return $this->n3120ConEsRiesgoHelada;
+    }
+
+    /**
+     * Set n3120ConEsRiesgoHeladaMesi
+     *
+     * @param \DateTime $n3120ConEsRiesgoHeladaMesi
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN3120ConEsRiesgoHeladaMesi($n3120ConEsRiesgoHeladaMesi)
+    {
+        $this->n3120ConEsRiesgoHeladaMesi = $n3120ConEsRiesgoHeladaMesi;
+    
+        return $this;
+    }
+
+    /**
+     * Get n3120ConEsRiesgoHeladaMesi
+     *
+     * @return \DateTime 
+     */
+    public function getN3120ConEsRiesgoHeladaMesi()
+    {
+        return $this->n3120ConEsRiesgoHeladaMesi;
+    }
+
+    /**
+     * Set n3120ConEsRiesgoHeladaMesf
+     *
+     * @param \DateTime $n3120ConEsRiesgoHeladaMesf
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN3120ConEsRiesgoHeladaMesf($n3120ConEsRiesgoHeladaMesf)
+    {
+        $this->n3120ConEsRiesgoHeladaMesf = $n3120ConEsRiesgoHeladaMesf;
+    
+        return $this;
+    }
+
+    /**
+     * Get n3120ConEsRiesgoHeladaMesf
+     *
+     * @return \DateTime 
+     */
+    public function getN3120ConEsRiesgoHeladaMesf()
+    {
+        return $this->n3120ConEsRiesgoHeladaMesf;
+    }
+
+    /**
+     * Set n321EsEdifProxBarrancos
+     *
+     * @param boolean $n321EsEdifProxBarrancos
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxBarrancos($n321EsEdifProxBarrancos)
+    {
+        $this->n321EsEdifProxBarrancos = $n321EsEdifProxBarrancos;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxBarrancos
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxBarrancos()
+    {
+        return $this->n321EsEdifProxBarrancos;
+    }
+
+    /**
+     * Set n321EsEdifProxRiosLagQue
+     *
+     * @param boolean $n321EsEdifProxRiosLagQue
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxRiosLagQue($n321EsEdifProxRiosLagQue)
+    {
+        $this->n321EsEdifProxRiosLagQue = $n321EsEdifProxRiosLagQue;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxRiosLagQue
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxRiosLagQue()
+    {
+        return $this->n321EsEdifProxRiosLagQue;
+    }
+
+    /**
+     * Set n321EsEdifProxEstaElectricas
+     *
+     * @param boolean $n321EsEdifProxEstaElectricas
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxEstaElectricas($n321EsEdifProxEstaElectricas)
+    {
+        $this->n321EsEdifProxEstaElectricas = $n321EsEdifProxEstaElectricas;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxEstaElectricas
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxEstaElectricas()
+    {
+        return $this->n321EsEdifProxEstaElectricas;
+    }
+
+    /**
+     * Set n321EsEdifProxEstaGasolineras
+     *
+     * @param boolean $n321EsEdifProxEstaGasolineras
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxEstaGasolineras($n321EsEdifProxEstaGasolineras)
+    {
+        $this->n321EsEdifProxEstaGasolineras = $n321EsEdifProxEstaGasolineras;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxEstaGasolineras
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxEstaGasolineras()
+    {
+        return $this->n321EsEdifProxEstaGasolineras;
+    }
+
+    /**
+     * Set n321EsEdifProxFabrMatContami
+     *
+     * @param boolean $n321EsEdifProxFabrMatContami
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxFabrMatContami($n321EsEdifProxFabrMatContami)
+    {
+        $this->n321EsEdifProxFabrMatContami = $n321EsEdifProxFabrMatContami;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxFabrMatContami
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxFabrMatContami()
+    {
+        return $this->n321EsEdifProxFabrMatContami;
+    }
+
+    /**
+     * Set n321EsEdifProxBotaderosMuni
+     *
+     * @param boolean $n321EsEdifProxBotaderosMuni
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxBotaderosMuni($n321EsEdifProxBotaderosMuni)
+    {
+        $this->n321EsEdifProxBotaderosMuni = $n321EsEdifProxBotaderosMuni;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxBotaderosMuni
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxBotaderosMuni()
+    {
+        return $this->n321EsEdifProxBotaderosMuni;
+    }
+
+    /**
+     * Set n321EsEdifProxCentroMinero
+     *
+     * @param boolean $n321EsEdifProxCentroMinero
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxCentroMinero($n321EsEdifProxCentroMinero)
+    {
+        $this->n321EsEdifProxCentroMinero = $n321EsEdifProxCentroMinero;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxCentroMinero
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxCentroMinero()
+    {
+        return $this->n321EsEdifProxCentroMinero;
+    }
+
+    /**
+     * Set n321EsEdifProxPasoFrontera
+     *
+     * @param boolean $n321EsEdifProxPasoFrontera
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxPasoFrontera($n321EsEdifProxPasoFrontera)
+    {
+        $this->n321EsEdifProxPasoFrontera = $n321EsEdifProxPasoFrontera;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxPasoFrontera
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxPasoFrontera()
+    {
+        return $this->n321EsEdifProxPasoFrontera;
+    }
+
+    /**
+     * Set n321EsEdifProxBares
+     *
+     * @param boolean $n321EsEdifProxBares
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxBares($n321EsEdifProxBares)
+    {
+        $this->n321EsEdifProxBares = $n321EsEdifProxBares;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxBares
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxBares()
+    {
+        return $this->n321EsEdifProxBares;
+    }
+
+    /**
+     * Set n321EsEdifProxBosques
+     *
+     * @param boolean $n321EsEdifProxBosques
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxBosques($n321EsEdifProxBosques)
+    {
+        $this->n321EsEdifProxBosques = $n321EsEdifProxBosques;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxBosques
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxBosques()
+    {
+        return $this->n321EsEdifProxBosques;
+    }
+
+    /**
+     * Set n331EsSuspencionClases
+     *
+     * @param boolean $n331EsSuspencionClases
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN331EsSuspencionClases($n331EsSuspencionClases)
+    {
+        $this->n331EsSuspencionClases = $n331EsSuspencionClases;
+    
+        return $this;
+    }
+
+    /**
+     * Get n331EsSuspencionClases
+     *
+     * @return boolean 
+     */
+    public function getN331EsSuspencionClases()
+    {
+        return $this->n331EsSuspencionClases;
+    }
+
+    /**
+     * Set n341EsAlbergue
+     *
+     * @param boolean $n341EsAlbergue
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN341EsAlbergue($n341EsAlbergue)
+    {
+        $this->n341EsAlbergue = $n341EsAlbergue;
+    
+        return $this;
+    }
+
+    /**
+     * Get n341EsAlbergue
+     *
+     * @return boolean 
+     */
+    public function getN341EsAlbergue()
+    {
+        return $this->n341EsAlbergue;
+    }
+
+    /**
+     * Set n354EsSenaleticaEvac
+     *
+     * @param boolean $n354EsSenaleticaEvac
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN354EsSenaleticaEvac($n354EsSenaleticaEvac)
+    {
+        $this->n354EsSenaleticaEvac = $n354EsSenaleticaEvac;
+    
+        return $this;
+    }
+
+    /**
+     * Get n354EsSenaleticaEvac
+     *
+     * @return boolean 
+     */
+    public function getN354EsSenaleticaEvac()
+    {
+        return $this->n354EsSenaleticaEvac;
+    }
+
+    /**
+     * Set n355EsDepositoAgua
+     *
+     * @param boolean $n355EsDepositoAgua
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN355EsDepositoAgua($n355EsDepositoAgua)
+    {
+        $this->n355EsDepositoAgua = $n355EsDepositoAgua;
+    
+        return $this;
+    }
+
+    /**
+     * Get n355EsDepositoAgua
+     *
+     * @return boolean 
+     */
+    public function getN355EsDepositoAgua()
+    {
+        return $this->n355EsDepositoAgua;
+    }
+
+    /**
+     * Set n321EsEdifProxCerroLadera
+     *
+     * @param boolean $n321EsEdifProxCerroLadera
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxCerroLadera($n321EsEdifProxCerroLadera)
+    {
+        $this->n321EsEdifProxCerroLadera = $n321EsEdifProxCerroLadera;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxCerroLadera
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxCerroLadera()
+    {
+        return $this->n321EsEdifProxCerroLadera;
+    }
+
+    /**
+     * Set n321EsEdifProxRiesgoDelito
+     *
+     * @param boolean $n321EsEdifProxRiesgoDelito
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN321EsEdifProxRiesgoDelito($n321EsEdifProxRiesgoDelito)
+    {
+        $this->n321EsEdifProxRiesgoDelito = $n321EsEdifProxRiesgoDelito;
+    
+        return $this;
+    }
+
+    /**
+     * Get n321EsEdifProxRiesgoDelito
+     *
+     * @return boolean 
+     */
+    public function getN321EsEdifProxRiesgoDelito()
+    {
+        return $this->n321EsEdifProxRiesgoDelito;
+    }
+
+    /**
+     * Set n351EsTimbrePanico
+     *
+     * @param boolean $n351EsTimbrePanico
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN351EsTimbrePanico($n351EsTimbrePanico)
+    {
+        $this->n351EsTimbrePanico = $n351EsTimbrePanico;
+    
+        return $this;
+    }
+
+    /**
+     * Get n351EsTimbrePanico
+     *
+     * @return boolean 
+     */
+    public function getN351EsTimbrePanico()
+    {
+        return $this->n351EsTimbrePanico;
+    }
+
+    /**
+     * Set n351EsTimbrePanicoCant
+     *
+     * @param integer $n351EsTimbrePanicoCant
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN351EsTimbrePanicoCant($n351EsTimbrePanicoCant)
+    {
+        $this->n351EsTimbrePanicoCant = $n351EsTimbrePanicoCant;
+    
+        return $this;
+    }
+
+    /**
+     * Get n351EsTimbrePanicoCant
+     *
+     * @return integer 
+     */
+    public function getN351EsTimbrePanicoCant()
+    {
+        return $this->n351EsTimbrePanicoCant;
+    }
+
+    /**
+     * Set n352EsExtintores
+     *
+     * @param boolean $n352EsExtintores
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN352EsExtintores($n352EsExtintores)
+    {
+        $this->n352EsExtintores = $n352EsExtintores;
+    
+        return $this;
+    }
+
+    /**
+     * Get n352EsExtintores
+     *
+     * @return boolean 
+     */
+    public function getN352EsExtintores()
+    {
+        return $this->n352EsExtintores;
+    }
+
+    /**
+     * Set n352ExtintoresCant
+     *
+     * @param integer $n352ExtintoresCant
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN352ExtintoresCant($n352ExtintoresCant)
+    {
+        $this->n352ExtintoresCant = $n352ExtintoresCant;
+    
+        return $this;
+    }
+
+    /**
+     * Get n352ExtintoresCant
+     *
+     * @return integer 
+     */
+    public function getN352ExtintoresCant()
+    {
+        return $this->n352ExtintoresCant;
+    }
+
+    /**
+     * Set n353EsCamSeg
+     *
+     * @param boolean $n353EsCamSeg
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN353EsCamSeg($n353EsCamSeg)
+    {
+        $this->n353EsCamSeg = $n353EsCamSeg;
+    
+        return $this;
+    }
+
+    /**
+     * Get n353EsCamSeg
+     *
+     * @return boolean 
+     */
+    public function getN353EsCamSeg()
+    {
+        return $this->n353EsCamSeg;
+    }
+
+    /**
+     * Set n353CamSegCant
+     *
+     * @param integer $n353CamSegCant
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN353CamSegCant($n353CamSegCant)
+    {
+        $this->n353CamSegCant = $n353CamSegCant;
+    
+        return $this;
+    }
+
+    /**
+     * Get n353CamSegCant
+     *
+     * @return integer 
+     */
+    public function getN353CamSegCant()
+    {
+        return $this->n353CamSegCant;
+    }
+
+    /**
+     * Set n353EsCamSegFuncionamiento
+     *
+     * @param boolean $n353EsCamSegFuncionamiento
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN353EsCamSegFuncionamiento($n353EsCamSegFuncionamiento)
+    {
+        $this->n353EsCamSegFuncionamiento = $n353EsCamSegFuncionamiento;
+    
+        return $this;
+    }
+
+    /**
+     * Get n353EsCamSegFuncionamiento
+     *
+     * @return boolean 
+     */
+    public function getN353EsCamSegFuncionamiento()
+    {
+        return $this->n353EsCamSegFuncionamiento;
+    }
+
+    /**
+     * Set n212SiSenaletica
+     *
+     * @param boolean $n212SiSenaletica
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN212SiSenaletica($n212SiSenaletica)
+    {
+        $this->n212SiSenaletica = $n212SiSenaletica;
+    
+        return $this;
+    }
+
+    /**
+     * Get n212SiSenaletica
+     *
+     * @return boolean 
+     */
+    public function getN212SiSenaletica()
+    {
+        return $this->n212SiSenaletica;
+    }
+
+    /**
+     * Set n31NroBloque
+     *
+     * @param integer $n31NroBloque
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN31NroBloque($n31NroBloque)
+    {
+        $this->n31NroBloque = $n31NroBloque;
+    
+        return $this;
+    }
+
+    /**
+     * Get n31NroBloque
+     *
+     * @return integer 
+     */
+    public function getN31NroBloque()
+    {
+        return $this->n31NroBloque;
+    }
+
+    /**
+     * Set n213SenalesTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\InfraestructuraH2SenalesTipo $n213SenalesTipo
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN213SenalesTipo(\Sie\AppWebBundle\Entity\InfraestructuraH2SenalesTipo $n213SenalesTipo = null)
+    {
+        $this->n213SenalesTipo = $n213SenalesTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get n213SenalesTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\InfraestructuraH2SenalesTipo 
+     */
+    public function getN213SenalesTipo()
+    {
+        return $this->n213SenalesTipo;
+    }
+
+    /**
+     * Set n212SenalesiomaTipo2
+     *
+     * @param \Sie\AppWebBundle\Entity\InfraestructuraH2SenalesIdiomaTipo $n212SenalesiomaTipo2
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN212SenalesiomaTipo2(\Sie\AppWebBundle\Entity\InfraestructuraH2SenalesIdiomaTipo $n212SenalesiomaTipo2 = null)
+    {
+        $this->n212SenalesiomaTipo2 = $n212SenalesiomaTipo2;
+    
+        return $this;
+    }
+
+    /**
+     * Get n212SenalesiomaTipo2
+     *
+     * @return \Sie\AppWebBundle\Entity\InfraestructuraH2SenalesIdiomaTipo 
+     */
+    public function getN212SenalesiomaTipo2()
+    {
+        return $this->n212SenalesiomaTipo2;
+    }
+
+    /**
+     * Set n212SenalesiomaTipo1
+     *
+     * @param \Sie\AppWebBundle\Entity\InfraestructuraH2SenalesIdiomaTipo $n212SenalesiomaTipo1
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN212SenalesiomaTipo1(\Sie\AppWebBundle\Entity\InfraestructuraH2SenalesIdiomaTipo $n212SenalesiomaTipo1 = null)
+    {
+        $this->n212SenalesiomaTipo1 = $n212SenalesiomaTipo1;
+    
+        return $this;
+    }
+
+    /**
+     * Get n212SenalesiomaTipo1
+     *
+     * @return \Sie\AppWebBundle\Entity\InfraestructuraH2SenalesIdiomaTipo 
+     */
+    public function getN212SenalesiomaTipo1()
+    {
+        return $this->n212SenalesiomaTipo1;
+    }
+
+    /**
+     * Set n215TipoRampas
+     *
+     * @param \Sie\AppWebBundle\Entity\InfraestructuraH2RampaTipo $n215TipoRampas
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN215TipoRampas(\Sie\AppWebBundle\Entity\InfraestructuraH2RampaTipo $n215TipoRampas = null)
+    {
+        $this->n215TipoRampas = $n215TipoRampas;
+    
+        return $this;
+    }
+
+    /**
+     * Get n215TipoRampas
+     *
+     * @return \Sie\AppWebBundle\Entity\InfraestructuraH2RampaTipo 
+     */
+    public function getN215TipoRampas()
+    {
+        return $this->n215TipoRampas;
+    }
+
+    /**
+     * Set n21InfraestructuraH2ConstruidaEducativoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\InfraestructuraH2ConstruidaEducativoTipo $n21InfraestructuraH2ConstruidaEducativoTipo
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN21InfraestructuraH2ConstruidaEducativoTipo(\Sie\AppWebBundle\Entity\InfraestructuraH2ConstruidaEducativoTipo $n21InfraestructuraH2ConstruidaEducativoTipo = null)
+    {
+        $this->n21InfraestructuraH2ConstruidaEducativoTipo = $n21InfraestructuraH2ConstruidaEducativoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get n21InfraestructuraH2ConstruidaEducativoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\InfraestructuraH2ConstruidaEducativoTipo 
+     */
+    public function getN21InfraestructuraH2ConstruidaEducativoTipo()
+    {
+        return $this->n21InfraestructuraH2ConstruidaEducativoTipo;
+    }
+
+    /**
+     * Set n25InfraestructuraH2PropiedadTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\InfraestructuraH2PropiedadTipo $n25InfraestructuraH2PropiedadTipo
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN25InfraestructuraH2PropiedadTipo(\Sie\AppWebBundle\Entity\InfraestructuraH2PropiedadTipo $n25InfraestructuraH2PropiedadTipo = null)
+    {
+        $this->n25InfraestructuraH2PropiedadTipo = $n25InfraestructuraH2PropiedadTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get n25InfraestructuraH2PropiedadTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\InfraestructuraH2PropiedadTipo 
+     */
+    public function getN25InfraestructuraH2PropiedadTipo()
+    {
+        return $this->n25InfraestructuraH2PropiedadTipo;
+    }
+
+    /**
+     * Set n13EdificacionAmurallada
+     *
+     * @param \Sie\AppWebBundle\Entity\InfraestructuraGenAvanceTipo $n13EdificacionAmurallada
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN13EdificacionAmurallada(\Sie\AppWebBundle\Entity\InfraestructuraGenAvanceTipo $n13EdificacionAmurallada = null)
+    {
+        $this->n13EdificacionAmurallada = $n13EdificacionAmurallada;
+    
+        return $this;
+    }
+
+    /**
+     * Get n13EdificacionAmurallada
+     *
+     * @return \Sie\AppWebBundle\Entity\InfraestructuraGenAvanceTipo 
+     */
+    public function getN13EdificacionAmurallada()
+    {
+        return $this->n13EdificacionAmurallada;
+    }
+
+    /**
+     * Set n12InfraestructuraH2TopografiaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\InfraestructuraH2TopografiaTipo $n12InfraestructuraH2TopografiaTipo
+     * @return InfraestructuraH2Caracteristica
+     */
+    public function setN12InfraestructuraH2TopografiaTipo(\Sie\AppWebBundle\Entity\InfraestructuraH2TopografiaTipo $n12InfraestructuraH2TopografiaTipo = null)
+    {
+        $this->n12InfraestructuraH2TopografiaTipo = $n12InfraestructuraH2TopografiaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get n12InfraestructuraH2TopografiaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\InfraestructuraH2TopografiaTipo 
+     */
+    public function getN12InfraestructuraH2TopografiaTipo()
+    {
+        return $this->n12InfraestructuraH2TopografiaTipo;
+    }
 }

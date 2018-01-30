@@ -1,0 +1,63 @@
+Sie\AppWebBundle\Entity\InfraestructuraH2CaracteristicaEdificadosPisosSenales:
+    type: entity
+    table: infraestructura_h2_caracteristica_edificados_pisos_senales
+    indexes:
+        IDX_3EAD8A9681858E93:
+            columns:
+                - n36_senales_idioma2_tipo_id
+        IDX_3EAD8A96B808B256:
+            columns:
+                - n36_senales_idioma1_tipo_id
+        IDX_3EAD8A9620310CE5:
+            columns:
+                - n36_senales_tipo_id
+        IDX_3EAD8A9618DEE68F:
+            columns:
+                - infraestructura_h2_caracteristica_edificados_pisos_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    manyToOne:
+        n36Senalesioma2Tipo:
+            targetEntity: InfraestructuraH2SenalesIdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n36_senales_idioma2_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n36Senalesioma1Tipo:
+            targetEntity: InfraestructuraH2SenalesIdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n36_senales_idioma1_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n36SenalesTipo:
+            targetEntity: InfraestructuraH2SenalesTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n36_senales_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH2CaracteristicaEdificadosPisos:
+            targetEntity: InfraestructuraH2CaracteristicaEdificadosPisos
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h2_caracteristica_edificados_pisos_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

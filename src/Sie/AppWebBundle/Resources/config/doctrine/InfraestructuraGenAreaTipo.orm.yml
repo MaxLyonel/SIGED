@@ -1,0 +1,32 @@
+Sie\AppWebBundle\Entity\InfraestructuraGenAreaTipo:
+    type: entity
+    table: infraestructura_gen_area_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcion:
+            type: string
+            nullable: true
+            length: 60
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+    lifecycleCallbacks: {  }

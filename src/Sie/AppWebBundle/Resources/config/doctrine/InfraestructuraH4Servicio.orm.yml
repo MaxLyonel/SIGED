@@ -1,0 +1,619 @@
+Sie\AppWebBundle\Entity\InfraestructuraH4Servicio:
+    type: entity
+    table: infraestructura_h4_servicio
+    indexes:
+        IDX_F16C3817AB7BC161:
+            columns:
+                - n28_purificador_agua_tipo_id
+        IDX_F16C381798565D6:
+            columns:
+                - n27_uso_agua_tipo_id
+        IDX_F16C38178BCD52F7:
+            columns:
+                - n518_guias_discapicidad_enlugar_tipo_id
+        IDX_F16C38173C28B3BE:
+            columns:
+                - n517_rampasacceso_enlugar_tipo_id
+        IDX_F16C38177B6AD04C:
+            columns:
+                - n515_es_senal_idioma_tipo_id
+        IDX_F16C38179A31B886:
+            columns:
+                - n34_periodicidad_tipo_id
+        IDX_F16C3817776654BA:
+            columns:
+                - n33_elminacion_basura_tipo_id
+        IDX_F16C3817C8F4ACE:
+            columns:
+                - n26_acceso_agua_tipo_id
+        IDX_F16C3817A30A58D2:
+            columns:
+                - n22_medio_agua_tipo_id
+        IDX_F16C3817CF55B706:
+            columns:
+                - n14_disponibilidad_tipo_id
+        IDX_F16C38175C900CD6:
+            columns:
+                - n12_fuente_electrica_tipo_id
+        IDX_F16C381753BED532:
+            columns:
+                - infraestructura_juridiccion_geografica_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n11EsEnergiaelectrica:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n11_es_energiaelectrica
+        n12FuenteElectricaOtro:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: n12_fuente_electrica_otro
+        n15NumeroAmbientesPedagogicos:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n15_numero_ambientes_pedagogicos
+        n15NumeroAmbientesNoPedagogicos:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n15_numero_ambientes_no_pedagogicos
+        n15NumeroBanios:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n15_numero_banios
+        n15NumeroMedidores:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n15_numero_medidores
+        n16NumeroMedidoresFuncionan:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n16_numero_medidores_funcionan
+        n16NumeroMedidoresNoFuncionan:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n16_numero_medidores_no_funcionan
+        n21EsDiponeAgua:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n21_es_dipone_agua
+        n22MedioAguaOtro:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: n22_medio_agua_otro
+        n23EsCuentaTanqueAgua:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n23_es_cuenta_tanque_agua
+        n24EsCuentaBombaAgua:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n24_es_cuenta_bomba_agua
+        n25EsCuentaRedAgua:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n25_es_cuenta_red_agua
+        n25NumeroAmbientesAgua:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: n25_numero_ambientes_agua
+        n31EsInstalacionSaneamiento:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n31_es_instalacion_saneamiento
+        n32ExcretasEsAlcantarillado:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n32_excretas_es_alcantarillado
+        n32ExcretasEsSeptica:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n32_excretas_es_septica
+        n32ExcretasEsPozo:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n32_excretas_es_pozo
+        n32ExcretasEsCieloAbierto:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n32_excretas_es_cielo_abierto
+        n32ExcretasEsOtro:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n32_excretas_es_otro
+        n33ExcretasEsNosabe:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n33_excretas_es_nosabe
+        n34EsBuenascondiciones:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n34_es_buenascondiciones
+        n34EsBuenasventilacion:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n34_es_buenasventilacion
+        n34EsPrivacidad:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n34_es_privacidad
+        n41EliminacionBasuraOtro:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: n41_eliminacion_basura_otro
+        n41EsCentroSalud:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n41_es_centro_salud
+        n41MetrosCentroSalud:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n41_metros_centro_salud
+        n42EsCentroPolicial:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n42_es_centro_policial
+        n42MetrosCentroPolicial:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n42_metros_centro_policial
+        n53EsCentroEsparcimiento:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n53_es_centro_esparcimiento
+        n53MetrosCentroEsparcimiento:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n53_metros_centro_esparcimiento
+        n54EsCentroCultural:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n54_es_centro_cultural
+        n54MetrosCentroCultural:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n54_metros_centro_cultural
+        n55EsCentroIglesia:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n55_es_centro_iglesia
+        n55MetrosCentroIglesia:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n55_metros_centro_iglesia
+        n56EsCentroInternet:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n56_es_centro_internet
+        n56MetrosCentroInternet:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n56_metros_centro_internet
+        n57EsCentroCorreo:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n57_es_centro_correo
+        n57MetrosCentroCorreo:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n57_metros_centro_correo
+        n58EsCentroTelefono:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n58_es_centro_telefono
+        n58MetrosCentroTelefono:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n58_metros_centro_telefono
+        n59EsCentroNucleoEducativo:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n59_es_centro_nucleo_educativo
+        n59MetrosCentroNucleoEducativo:
+            type: decimal
+            nullable: true
+            precision: 8
+            scale: 2
+            comment: ''
+            column: n59_metros_centro_nucleo_educativo
+        n510EsCentroRadiocomunicacion:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n510_es_centro_radiocomunicacion
+        n510MetrosCentroRadiocomunicacion:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n510_metros_centro_radiocomunicacion
+        n511EsServicioEnfermeria:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n511_es_servicio_enfermeria
+        n512EsServicioInternet:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n512_es_servicio_internet
+        n43EsServicioTelecentro:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n43_es_servicio_telecentro
+        n514EsServicioGas:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n514_es_servicio_gas
+        n515EsSenalDiscapacidad:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n515_es_senal_discapacidad
+        n516EsFuncionaCee:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n516_es_funciona_cee
+        n517EsRampasacceso:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n517_es_rampasacceso
+        n518EsGuiasDiscapicidadVisual:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n518_es_guias_discapicidad_visual
+        n519EsAmbientesPedagogicosDiscapacidad:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: n519_es_ambientes_pedagogicos_discapacidad
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+        n13EsTipoInstalacion:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n13_es_tipo_instalacion
+        n43MetrosServicioTelecentro:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n43_metros_servicio_telecentro
+        n43EsDnaSlim:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n43_es_dna_slim
+        n43MetrosDnaSlim:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n43_metros_dna_slim
+        n43EsUesProx:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n43_es_ues_prox
+        n43MetrosUesProx:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n43_metros_ues_prox
+        n43EsEstBomberos:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n43_es_est_bomberos
+        n43MetrosEstBomberos:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n43_metros_est_bomberos
+        n43EsMercadoProxim:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n43_es_mercado_proxim
+        n43MetrosMercadoProxim:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n43_metros_mercado_proxim
+        n43EsComunitariaProxim:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n43_es_comunitaria_proxim
+        n43MetrosComunitariaProxim:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n43_metros_comunitaria_proxim
+        n43EsUniversidadProxim:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n43_es_universidad_proxim
+        n43MetrosUniversidadProxim:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n43_metros_universidad_proxim
+        n43EsTecnologicoProxim:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n43_es_tecnologico_proxim
+        n43MetrosTecnologicoProxim:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n43_metros_tecnologico_proxim
+        n29AmbientesConAgua:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n29_ambientes_con_agua
+    manyToOne:
+        n28PurificadorAguaTipo:
+            targetEntity: InfraestructuraH4PurificadorAguaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n28_purificador_agua_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n27UsoAguaTipo:
+            targetEntity: InfraestructuraH4UsoAguaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n27_uso_agua_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n518GuiasDiscapicidadEnlugarTipo:
+            targetEntity: InfraestructuraH3EnlugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n518_guias_discapicidad_enlugar_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n517RampasaccesoEnlugarTipo:
+            targetEntity: InfraestructuraH3EnlugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n517_rampasacceso_enlugar_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n515EsSenaliomaTipo:
+            targetEntity: InfraestructuraH3IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n515_es_senal_idioma_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n34PeriodicidadTipo:
+            targetEntity: InfraestructuraH3PeriodicidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n34_periodicidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n33ElminacionBasuraTipo:
+            targetEntity: InfraestructuraH4EliminacionBasuraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n33_elminacion_basura_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n26AccesoAguaTipo:
+            targetEntity: InfraestructuraH4AccesoAguaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n26_acceso_agua_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n22MedioAguaTipo:
+            targetEntity: InfraestructuraH4MedioAguaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n22_medio_agua_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n14DisponibilidadTipo:
+            targetEntity: InfraestructuraH4DisponibilidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n14_disponibilidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n12FuenteElectricaTipo:
+            targetEntity: InfraestructuraH4FuenteElectricaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n12_fuente_electrica_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraJuridiccionGeografica:
+            targetEntity: InfraestructuraJuridiccionGeografica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_juridiccion_geografica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

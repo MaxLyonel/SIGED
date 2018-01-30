@@ -654,6 +654,7 @@ class Notas{
                                 $updateCualitativa->setFechaModificacion(new \DateTime('now'));
                             }
                             $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
+                            $this->em->persist($updateCualitativa);
                             $this->em->flush();
                         }
                     }
@@ -696,6 +697,7 @@ class Notas{
                                 }
                                 $updateNota->setUsuarioId($this->session->get('userId'));
                                 $updateNota->setFechaModificacion(new \DateTime('now'));
+                                $this->em->persist($updateNota);
                                 $this->em->flush();
                             }else{
                                 // Eliminar la nota de reforzamiento o promedio final si es cero
@@ -715,6 +717,7 @@ class Notas{
                                 $existeNotaCuantitativa->setNotaCualitativa(mb_strtoupper($notasC[$j],'utf-8'));
                                 $existeNotaCuantitativa->setUsuarioId($this->session->get('userId'));
                                 $existeNotaCuantitativa->setFechaModificacion(new \DateTime('now'));
+                                $this->em->persist($existeNotaCuantitativa);
                                 $this->em->flush();
                             }
 
@@ -724,6 +727,7 @@ class Notas{
                                 $updateNota->setNotaCualitativa(mb_strtoupper($notasC[$j],'utf-8'));
                                 $updateNota->setUsuarioId($this->session->get('userId'));
                                 $updateNota->setFechaModificacion(new \DateTime('now'));
+                                $this->em->persist($updateNota);
                                 $this->em->flush();
                             }
                         }
@@ -750,6 +754,7 @@ class Notas{
                                 $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                                 $updateCualitativa->setUsuarioId($this->session->get('userId'));
                                 $updateCualitativa->setFechaModificacion(new \DateTime('now'));
+                                $this->em->persist($updateCualitativa);
                                 $this->em->flush();
                             }
                         }
@@ -792,6 +797,7 @@ class Notas{
                 if($operativo >= 4){
                     $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
                     $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                    $this->em->persist($inscripcion);
                     $this->em->flush();
                 }
             }else{
@@ -849,6 +855,7 @@ class Notas{
                     if($tipoUE['id'] != 3 or ($tipoUE['id'] == 3 and $nivel<13) or ($tipoUE['id'] == 3 and $nivel == 13 and $operativo >= 4 )){
                         if(in_array($estadoAnterior,$this->estadosActualizables)){
                             $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
+                            $this->em->persist($inscripcion);
                             $this->em->flush();
                         }
                     }
@@ -885,10 +892,11 @@ class Notas{
                 if($n->getNotaTipo()->getId() == 5){ $P = $n; }
             }
 
-            if($PB and $SB and $TB and $CB){
+            if($PB != null and $SB != null and $TB != null and $CB != null){
                 $promedio = round(($PB->getNotaCuantitativa() + $SB->getNotaCuantitativa() + $TB->getNotaCuantitativa() + $CB->getNotaCuantitativa())/4);
                 if($P){
                     $P->setNotaCuantitativa($promedio);
+                    $this->em->persist($P);
                     $this->em->flush();
                 }else{
                     $P = $this->registrarNota(5,$idEstudianteAsignatura,$promedio,'');
@@ -1014,6 +1022,7 @@ class Notas{
             $datosNota->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
             $datosNota->setUsuarioId($this->session->get('userId'));
             $datosNota->setFechaModificacion(new \DateTime('now'));
+            $this->em->persist($datosNota);
             $this->em->flush();
         }
 
@@ -1047,6 +1056,7 @@ class Notas{
             $datosNotaCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa, 'utf-8'));
             $datosNotaCualitativa->setUsuarioId($this->session->get('userId'));
             $datosNotaCualitativa->setFechaModificacion(new \DateTime('now'));
+            $this->em->persist($datosNotaCualitativa);
             $this->em->flush();
         }
 
@@ -1398,6 +1408,7 @@ class Notas{
                             }
                             $updateNota->setUsuarioId($this->session->get('userId'));
                             $updateNota->setFechaModificacion(new \DateTime('now'));
+                            $this->persist($updateNota);
                             $this->em->flush();
 
                             // Registro log
@@ -1440,6 +1451,7 @@ class Notas{
                             $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                             $updateCualitativa->setUsuarioId($this->session->get('userId'));
                             $updateCualitativa->setFechaModificacion(new \DateTime('now'));
+                            $this->persist($updateCualitativa);
                             $this->em->flush();
                         }
                     }
@@ -1478,6 +1490,7 @@ class Notas{
                                 }
                                 $updateNota->setUsuarioId($this->session->get('userId'));
                                 $updateNota->setFechaModificacion(new \DateTime('now'));
+                                $this->em->persist($updateNota);
                                 $this->em->flush();
                             }else{
                                 // Eliminar la nota de reforzamiento o promedio final si es cero
@@ -1497,6 +1510,7 @@ class Notas{
                                 $existeNotaCuantitativa->setNotaCualitativa(mb_strtoupper($notasC[$j],'utf-8'));
                                 $existeNotaCuantitativa->setUsuarioId($this->session->get('userId'));
                                 $existeNotaCuantitativa->setFechaModificacion(new \DateTime('now'));
+                                $this->em->persist($existeNotaCuantitativa);
                                 $this->em->flush();
                             }
 
@@ -1506,6 +1520,7 @@ class Notas{
                                 $updateNota->setNotaCualitativa(mb_strtoupper($notasC[$j],'utf-8'));
                                 $updateNota->setUsuarioId($this->session->get('userId'));
                                 $updateNota->setFechaModificacion(new \DateTime('now'));
+                                $this->em->persist($updateNota);
                                 $this->em->flush();
                             }
                         }
@@ -1532,6 +1547,7 @@ class Notas{
                                 $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                                 $updateCualitativa->setUsuarioId($this->session->get('userId'));
                                 $updateCualitativa->setFechaModificacion(new \DateTime('now'));
+                                $this->em->persist($updateCualitativa);
                                 $this->em->flush();
                             }
                         }

@@ -84,4 +84,32 @@ class InfraestructuraH1TenenciaTipo
     {
         return $this->obs;
     }
+    /**
+     * @var integer
+     */
+    private $gestionTipoId;
+
+
+    /**
+     * Set gestionTipoId
+     *
+     * @param integer $gestionTipoId
+     * @return InfraestructuraH1TenenciaTipo
+     */
+    public function setGestionTipoId($gestionTipoId)
+    {
+        $this->gestionTipoId = $gestionTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipoId
+     *
+     * @return integer 
+     */
+    public function getGestionTipoId()
+    {
+        return $this->gestionTipoId;
+    }
 }

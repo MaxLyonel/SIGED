@@ -1,0 +1,58 @@
+Sie\AppWebBundle\Entity\InfraestructuraH6AmbienteadministrativoEquipamiento:
+    type: entity
+    table: infraestructura_h6_ambienteadministrativo_equipamiento
+    indexes:
+        IDX_4D07E6DB679B6367:
+            columns:
+                - infraestructura_h6_ambienteadministrativo_ambiente_id
+        IDX_4D07E6DB5F3767DF:
+            columns:
+                - n63_estado_tipo_id
+        IDX_4D07E6DB68414551:
+            columns:
+                - n63_equipamiento_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n63Cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n63_cantidad
+    manyToOne:
+        infraestructuraH6AmbienteadministrativoAmbiente:
+            targetEntity: InfraestructuraH6AmbienteadministrativoAmbiente
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h6_ambienteadministrativo_ambiente_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n63EstadoTipo:
+            targetEntity: InfraestructuraGenEstadoMobEquipTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n63_estado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n63EquipamientoTipo:
+            targetEntity: InfraestructuraH6AmbienteadministrativoEquipamientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n63_equipamiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
