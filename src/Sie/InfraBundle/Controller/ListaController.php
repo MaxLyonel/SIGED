@@ -49,7 +49,7 @@ class ListaController extends Controller
                   'sheetOneform'   => $this->openSheetAction('infra_sheet_one_index',   'Datos Generales', $data)->createView(),
                   'sheetTwoform'   => $this->openSheetAction('infra_sheet_two_index',   'Caracteristicas del Edificio',$data)->createView(),
                   'sheetThreeform' => $this->openSheetAction('infra_sheet_three_index', 'Riesgos y Delitos',$data)->createView(),
-                  'sheetFourform'  => $this->openSheetAction('infra_sheet_four_index',  'Servicios del Edificio',$data)->createView(),
+                  'sheetFourform'  => $this->openSheetAction('infraestructurah4servicio',  'Servicios del Edificio',$data)->createView(),
                   'sheetFiveform'  => $this->openSheetAction('infra_sheet_five_index',  'Ambientes Pedagogicos',$data)->createView(),
                   'sheetSixform'   => $this->openSheetAction('infra_sheet_six_index',   'Ambientes No Pedagogicos',$data)->createView(),
                   'data'           => $data
@@ -63,6 +63,7 @@ class ListaController extends Controller
         ->setAction($this->generateUrl($urlTheSheet))
         ->add('gestion', 'hidden', array('data'=>$data['gestion']))
         ->add('sie', 'hidden', array('data'=>$data['sie']))
+        ->add('infraestructuraJuridiccionGeografica', 'hidden', array('data'=>$data['infraestructuraJuridiccionGeograficaId']))
         ->add('opensheet', 'submit',array('label'=>"$option", 'attr'=>array('class'=>'cbp-singlePage cbp-l-caption-buttonLeft')))
         ->add('labelsheet', 'hidden',array('label'=>$option))
         ;
