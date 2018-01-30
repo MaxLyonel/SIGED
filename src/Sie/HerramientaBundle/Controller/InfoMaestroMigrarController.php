@@ -80,8 +80,9 @@ class InfoMaestroMigrarController extends Controller {
         $rolTipo = $em->getRepository('SieAppWebBundle:RolTipo')->findOneById(2);
 
         $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '1'));
+        $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '2'));
         
-        if(!$consol_gest_pasada){
+        if(!($consol_gest_pasada and $consol_gest_pasada2)){
             $gestion = $request->getSession()->get('currentyear') - 1;
             $request->getSession()->set('idGestion', $gestion);
             $activar_acciones = true;
