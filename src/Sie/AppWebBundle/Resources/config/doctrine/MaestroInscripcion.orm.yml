@@ -2,54 +2,45 @@ Sie\AppWebBundle\Entity\MaestroInscripcion:
     type: entity
     table: maestro_inscripcion
     indexes:
-        fk_dat_sie_docenteadministrati4:
-            columns:
-                - formacion_tipo_id
         fk_dat_sie_docenteadministrati2:
             columns:
                 - especialidad_tipo_id
+        fk_maestroinscripcion_periodo_t:
+            columns:
+                - periodo_tipo_id
         fk_dat_sie_docenteadministrati3:
             columns:
                 - financiamiento_tipo_id
-        fk_dat_sie_docenteadministrati1:
+        fk_dat_sie_docenteadministrati4:
             columns:
-                - cargo_tipo_id
-        fk_maestroinscripcion_gestion_t:
-            columns:
-                - gestion_tipo_id
+                - formacion_tipo_id
         fk_dat_sie_docenteadministrati5:
             columns:
                 - rda_planillas_id
         fk_dat_sie_docenteadministrati6:
             columns:
                 - persona_id
-        fk_maestroinscripcion_periodo_t:
+        fk_dat_sie_docenteadministrati1:
             columns:
-                - periodo_tipo_id
+                - cargo_tipo_id
+        fk_maestroinscripcion_gestion_t:
+            columns:
+                - gestion_tipo_id
         fk_maestroinscripcion_instituc1:
             columns:
                 - institucioneducativa_id
-        IDX_E7472B99990CBEC3:
-            columns:
-                - estudia_idioma_materno_id
         IDX_E7472B997A322B24:
             columns:
                 - institucioneducativa_sucursal_id
+        IDX_E7472B99990CBEC3:
+            columns:
+                - estudia_idioma_materno_id
         IDX_E7472B99B332D85C:
             columns:
                 - estadomaestro_id
         IDX_E7472B99EF3F27EB:
             columns:
                 - rol_tipo_id
-        IDX_E7472B994F369AC9:
-            columns:
-                - educacion_diversa_tipo_id
-        IDX_E7472B99834754B:
-            columns:
-                - unidad_militar_tipo_id
-        IDX_E7472B99E2A8AB09:
-            columns:
-                - recinto_penitenciario_tipo_id
     id:
         id:
             type: integer
@@ -134,13 +125,13 @@ Sie\AppWebBundle\Entity\MaestroInscripcion:
             default: false
             column: es_vigente_administrativo
     manyToOne:
-        estudiaiomaMaterno:
-            targetEntity: IdiomaMaterno
+        persona:
+            targetEntity: Persona
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                estudia_idioma_materno_id:
+                persona_id:
                     referencedColumnName: id
             orphanRemoval: false
         institucioneducativaSucursal:
@@ -150,6 +141,15 @@ Sie\AppWebBundle\Entity\MaestroInscripcion:
             inversedBy: null
             joinColumns:
                 institucioneducativa_sucursal_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiaiomaMaterno:
+            targetEntity: IdiomaMaterno
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudia_idioma_materno_id:
                     referencedColumnName: id
             orphanRemoval: false
         cargoTipo:
@@ -186,15 +186,6 @@ Sie\AppWebBundle\Entity\MaestroInscripcion:
             inversedBy: null
             joinColumns:
                 formacion_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        persona:
-            targetEntity: Persona
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                persona_id:
                     referencedColumnName: id
             orphanRemoval: false
         estadomaestro:
@@ -240,33 +231,6 @@ Sie\AppWebBundle\Entity\MaestroInscripcion:
             inversedBy: null
             joinColumns:
                 rol_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        educacionDiversaTipo:
-            targetEntity: EducacionDiversaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                educacion_diversa_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        unidadMilitarTipo:
-            targetEntity: UnidadMilitarTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                unidad_militar_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        recintoPenitenciarioTipo:
-            targetEntity: RecintoPenitenciarioTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                recinto_penitenciario_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

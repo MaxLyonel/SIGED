@@ -15,69 +15,14 @@ class MaestroInscripcion
     private $id;
 
     /**
-     * @var integer
-     */
-    private $cargoTipoId;
-
-    /**
-     * @var integer
-     */
-    private $formacionTipoId;
-
-    /**
-     * @var integer
-     */
-    private $institucioneducativaId;
-
-    /**
      * @var string
      */
     private $rdaPlanillasId;
 
     /**
-     * @var integer
-     */
-    private $personaId;
-
-    /**
-     * @var integer
-     */
-    private $gestionTipoId;
-
-    /**
-     * @var integer
-     */
-    private $especialidadTipoId;
-
-    /**
-     * @var integer
-     */
-    private $financiamientoTipoId;
-
-    /**
-     * @var integer
-     */
-    private $periodoTipoId;
-
-    /**
      * @var string
      */
     private $ref;
-
-    /**
-     * @var integer
-     */
-    private $estadomaestroId;
-
-    /**
-     * @var integer
-     */
-    private $rolTipoId;
-
-    /**
-     * @var integer
-     */
-    private $institucioneducativaSucursalId;
 
     /**
      * @var boolean
@@ -135,9 +80,64 @@ class MaestroInscripcion
     private $esVigenteAdministrativo;
 
     /**
+     * @var \Sie\AppWebBundle\Entity\Persona
+     */
+    private $persona;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaSucursal
+     */
+    private $institucioneducativaSucursal;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\IdiomaMaterno
      */
     private $estudiaiomaMaterno;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\CargoTipo
+     */
+    private $cargoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EspecialidadMaestroTipo
+     */
+    private $especialidadTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\FinanciamientoTipo
+     */
+    private $financiamientoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\FormacionTipo
+     */
+    private $formacionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstadomaestroTipo
+     */
+    private $estadomaestro;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\GestionTipo
+     */
+    private $gestionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
+     */
+    private $institucioneducativa;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\PeriodoTipo
+     */
+    private $periodoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\RolTipo
+     */
+    private $rolTipo;
 
 
     /**
@@ -148,75 +148,6 @@ class MaestroInscripcion
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set cargoTipoId
-     *
-     * @param integer $cargoTipoId
-     * @return MaestroInscripcion
-     */
-    public function setCargoTipoId($cargoTipoId)
-    {
-        $this->cargoTipoId = $cargoTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get cargoTipoId
-     *
-     * @return integer 
-     */
-    public function getCargoTipoId()
-    {
-        return $this->cargoTipoId;
-    }
-
-    /**
-     * Set formacionTipoId
-     *
-     * @param integer $formacionTipoId
-     * @return MaestroInscripcion
-     */
-    public function setFormacionTipoId($formacionTipoId)
-    {
-        $this->formacionTipoId = $formacionTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get formacionTipoId
-     *
-     * @return integer 
-     */
-    public function getFormacionTipoId()
-    {
-        return $this->formacionTipoId;
-    }
-
-    /**
-     * Set institucioneducativaId
-     *
-     * @param integer $institucioneducativaId
-     * @return MaestroInscripcion
-     */
-    public function setInstitucioneducativaId($institucioneducativaId)
-    {
-        $this->institucioneducativaId = $institucioneducativaId;
-    
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativaId
-     *
-     * @return integer 
-     */
-    public function getInstitucioneducativaId()
-    {
-        return $this->institucioneducativaId;
     }
 
     /**
@@ -243,121 +174,6 @@ class MaestroInscripcion
     }
 
     /**
-     * Set personaId
-     *
-     * @param integer $personaId
-     * @return MaestroInscripcion
-     */
-    public function setPersonaId($personaId)
-    {
-        $this->personaId = $personaId;
-    
-        return $this;
-    }
-
-    /**
-     * Get personaId
-     *
-     * @return integer 
-     */
-    public function getPersonaId()
-    {
-        return $this->personaId;
-    }
-
-    /**
-     * Set gestionTipoId
-     *
-     * @param integer $gestionTipoId
-     * @return MaestroInscripcion
-     */
-    public function setGestionTipoId($gestionTipoId)
-    {
-        $this->gestionTipoId = $gestionTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get gestionTipoId
-     *
-     * @return integer 
-     */
-    public function getGestionTipoId()
-    {
-        return $this->gestionTipoId;
-    }
-
-    /**
-     * Set especialidadTipoId
-     *
-     * @param integer $especialidadTipoId
-     * @return MaestroInscripcion
-     */
-    public function setEspecialidadTipoId($especialidadTipoId)
-    {
-        $this->especialidadTipoId = $especialidadTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get especialidadTipoId
-     *
-     * @return integer 
-     */
-    public function getEspecialidadTipoId()
-    {
-        return $this->especialidadTipoId;
-    }
-
-    /**
-     * Set financiamientoTipoId
-     *
-     * @param integer $financiamientoTipoId
-     * @return MaestroInscripcion
-     */
-    public function setFinanciamientoTipoId($financiamientoTipoId)
-    {
-        $this->financiamientoTipoId = $financiamientoTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get financiamientoTipoId
-     *
-     * @return integer 
-     */
-    public function getFinanciamientoTipoId()
-    {
-        return $this->financiamientoTipoId;
-    }
-
-    /**
-     * Set periodoTipoId
-     *
-     * @param integer $periodoTipoId
-     * @return MaestroInscripcion
-     */
-    public function setPeriodoTipoId($periodoTipoId)
-    {
-        $this->periodoTipoId = $periodoTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get periodoTipoId
-     *
-     * @return integer 
-     */
-    public function getPeriodoTipoId()
-    {
-        return $this->periodoTipoId;
-    }
-
-    /**
      * Set ref
      *
      * @param string $ref
@@ -378,75 +194,6 @@ class MaestroInscripcion
     public function getRef()
     {
         return $this->ref;
-    }
-
-    /**
-     * Set estadomaestroId
-     *
-     * @param integer $estadomaestroId
-     * @return MaestroInscripcion
-     */
-    public function setEstadomaestroId($estadomaestroId)
-    {
-        $this->estadomaestroId = $estadomaestroId;
-    
-        return $this;
-    }
-
-    /**
-     * Get estadomaestroId
-     *
-     * @return integer 
-     */
-    public function getEstadomaestroId()
-    {
-        return $this->estadomaestroId;
-    }
-
-    /**
-     * Set rolTipoId
-     *
-     * @param integer $rolTipoId
-     * @return MaestroInscripcion
-     */
-    public function setRolTipoId($rolTipoId)
-    {
-        $this->rolTipoId = $rolTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get rolTipoId
-     *
-     * @return integer 
-     */
-    public function getRolTipoId()
-    {
-        return $this->rolTipoId;
-    }
-
-    /**
-     * Set institucioneducativaSucursalId
-     *
-     * @param integer $institucioneducativaSucursalId
-     * @return MaestroInscripcion
-     */
-    public function setInstitucioneducativaSucursalId($institucioneducativaSucursalId)
-    {
-        $this->institucioneducativaSucursalId = $institucioneducativaSucursalId;
-    
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativaSucursalId
-     *
-     * @return integer 
-     */
-    public function getInstitucioneducativaSucursalId()
-    {
-        return $this->institucioneducativaSucursalId;
     }
 
     /**
@@ -703,82 +450,27 @@ class MaestroInscripcion
     }
 
     /**
-     * Set estudiaiomaMaterno
+     * Set persona
      *
-     * @param \Sie\AppWebBundle\Entity\IdiomaMaterno $estudiaiomaMaterno
+     * @param \Sie\AppWebBundle\Entity\Persona $persona
      * @return MaestroInscripcion
      */
-    public function setEstudiaiomaMaterno(\Sie\AppWebBundle\Entity\IdiomaMaterno $estudiaiomaMaterno = null)
+    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
     {
-        $this->estudiaiomaMaterno = $estudiaiomaMaterno;
+        $this->persona = $persona;
     
         return $this;
     }
 
     /**
-     * Get estudiaiomaMaterno
+     * Get persona
      *
-     * @return \Sie\AppWebBundle\Entity\IdiomaMaterno 
+     * @return \Sie\AppWebBundle\Entity\Persona 
      */
-    public function getEstudiaiomaMaterno()
+    public function getPersona()
     {
-        return $this->estudiaiomaMaterno;
+        return $this->persona;
     }
-    /**
-     * @var \Sie\AppWebBundle\Entity\InstitucioneducativaSucursal
-     */
-    private $institucioneducativaSucursal;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\CargoTipo
-     */
-    private $cargoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\EspecialidadMaestroTipo
-     */
-    private $especialidadTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\FinanciamientoTipo
-     */
-    private $financiamientoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\FormacionTipo
-     */
-    private $formacionTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\Persona
-     */
-    private $persona;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\EstadomaestroTipo
-     */
-    private $estadomaestro;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\GestionTipo
-     */
-    private $gestionTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
-     */
-    private $institucioneducativa;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\PeriodoTipo
-     */
-    private $periodoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\RolTipo
-     */
-    private $rolTipo;
-
 
     /**
      * Set institucioneducativaSucursal
@@ -801,6 +493,29 @@ class MaestroInscripcion
     public function getInstitucioneducativaSucursal()
     {
         return $this->institucioneducativaSucursal;
+    }
+
+    /**
+     * Set estudiaiomaMaterno
+     *
+     * @param \Sie\AppWebBundle\Entity\IdiomaMaterno $estudiaiomaMaterno
+     * @return MaestroInscripcion
+     */
+    public function setEstudiaiomaMaterno(\Sie\AppWebBundle\Entity\IdiomaMaterno $estudiaiomaMaterno = null)
+    {
+        $this->estudiaiomaMaterno = $estudiaiomaMaterno;
+    
+        return $this;
+    }
+
+    /**
+     * Get estudiaiomaMaterno
+     *
+     * @return \Sie\AppWebBundle\Entity\IdiomaMaterno 
+     */
+    public function getEstudiaiomaMaterno()
+    {
+        return $this->estudiaiomaMaterno;
     }
 
     /**
@@ -893,29 +608,6 @@ class MaestroInscripcion
     public function getFormacionTipo()
     {
         return $this->formacionTipo;
-    }
-
-    /**
-     * Set persona
-     *
-     * @param \Sie\AppWebBundle\Entity\Persona $persona
-     * @return MaestroInscripcion
-     */
-    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
-    {
-        $this->persona = $persona;
-    
-        return $this;
-    }
-
-    /**
-     * Get persona
-     *
-     * @return \Sie\AppWebBundle\Entity\Persona 
-     */
-    public function getPersona()
-    {
-        return $this->persona;
     }
 
     /**
@@ -1031,173 +723,5 @@ class MaestroInscripcion
     public function getRolTipo()
     {
         return $this->rolTipo;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\EducacionDiversa
-     */
-    private $educacionDiversa;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\UnidadMilitar
-     */
-    private $unidadMilitar;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\Penal
-     */
-    private $penal;
-
-
-    /**
-     * Set educacionDiversa
-     *
-     * @param \Sie\AppWebBundle\Entity\EducacionDiversa $educacionDiversa
-     * @return MaestroInscripcion
-     */
-    public function setEducacionDiversa(\Sie\AppWebBundle\Entity\EducacionDiversa $educacionDiversa = null)
-    {
-        $this->educacionDiversa = $educacionDiversa;
-    
-        return $this;
-    }
-
-    /**
-     * Get educacionDiversa
-     *
-     * @return \Sie\AppWebBundle\Entity\EducacionDiversa 
-     */
-    public function getEducacionDiversa()
-    {
-        return $this->educacionDiversa;
-    }
-
-    /**
-     * Set unidadMilitar
-     *
-     * @param \Sie\AppWebBundle\Entity\UnidadMilitar $unidadMilitar
-     * @return MaestroInscripcion
-     */
-    public function setUnidadMilitar(\Sie\AppWebBundle\Entity\UnidadMilitar $unidadMilitar = null)
-    {
-        $this->unidadMilitar = $unidadMilitar;
-    
-        return $this;
-    }
-
-    /**
-     * Get unidadMilitar
-     *
-     * @return \Sie\AppWebBundle\Entity\UnidadMilitar 
-     */
-    public function getUnidadMilitar()
-    {
-        return $this->unidadMilitar;
-    }
-
-    /**
-     * Set penal
-     *
-     * @param \Sie\AppWebBundle\Entity\Penal $penal
-     * @return MaestroInscripcion
-     */
-    public function setPenal(\Sie\AppWebBundle\Entity\Penal $penal = null)
-    {
-        $this->penal = $penal;
-    
-        return $this;
-    }
-
-    /**
-     * Get penal
-     *
-     * @return \Sie\AppWebBundle\Entity\Penal 
-     */
-    public function getPenal()
-    {
-        return $this->penal;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\EducacionDiversaTipo
-     */
-    private $educacionDiversaTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\UnidadMilitarTipo
-     */
-    private $unidadMilitarTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo
-     */
-    private $recintoPenitenciarioTipo;
-
-
-    /**
-     * Set educacionDiversaTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\EducacionDiversaTipo $educacionDiversaTipo
-     * @return MaestroInscripcion
-     */
-    public function setEducacionDiversaTipo(\Sie\AppWebBundle\Entity\EducacionDiversaTipo $educacionDiversaTipo = null)
-    {
-        $this->educacionDiversaTipo = $educacionDiversaTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get educacionDiversaTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\EducacionDiversaTipo 
-     */
-    public function getEducacionDiversaTipo()
-    {
-        return $this->educacionDiversaTipo;
-    }
-
-    /**
-     * Set unidadMilitarTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\UnidadMilitarTipo $unidadMilitarTipo
-     * @return MaestroInscripcion
-     */
-    public function setUnidadMilitarTipo(\Sie\AppWebBundle\Entity\UnidadMilitarTipo $unidadMilitarTipo = null)
-    {
-        $this->unidadMilitarTipo = $unidadMilitarTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get unidadMilitarTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\UnidadMilitarTipo 
-     */
-    public function getUnidadMilitarTipo()
-    {
-        return $this->unidadMilitarTipo;
-    }
-
-    /**
-     * Set recintoPenitenciarioTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo $recintoPenitenciarioTipo
-     * @return MaestroInscripcion
-     */
-    public function setRecintoPenitenciarioTipo(\Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo $recintoPenitenciarioTipo = null)
-    {
-        $this->recintoPenitenciarioTipo = $recintoPenitenciarioTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get recintoPenitenciarioTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo 
-     */
-    public function getRecintoPenitenciarioTipo()
-    {
-        return $this->recintoPenitenciarioTipo;
     }
 }
