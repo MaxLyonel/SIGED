@@ -29,7 +29,9 @@ class InfraestructuraGenEstadoGeneral
      */
     private $gestionTipoId;
 
-
+    public function __toString(){
+        return $this->estado;
+    }
     /**
      * Get id
      *
