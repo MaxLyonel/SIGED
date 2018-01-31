@@ -27,7 +27,7 @@ class InfraestructuraH4ServicioController extends Controller
     public function indexAction(){
 
         //get values to send to create o edit
-        $infraestructuraJuridiccionGeograficaId = 11392;
+        $infraestructuraJuridiccionGeograficaId = 10303;
         // 26753
         // create the db conexion
         $em = $this->getDoctrine()->getManager();
