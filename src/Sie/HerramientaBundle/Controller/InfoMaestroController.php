@@ -89,6 +89,16 @@ class InfoMaestroController extends Controller {
             $gestion = $request->getSession()->get('idGestion');
         }
 
+        $institucionregular = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $institucion, 'institucioneducativaTipo' => 1));
+
+        if(!$institucionregular){
+            $this->get('session')->getFlashBag()->add('noTuicion', 'La Unidad Educativa no corresponde al Subsistema de Educación Regular');
+                if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
+                    return $this->redirect($this->generateUrl('herramienta_info_maestro_tsie_index'));
+                }
+                return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
+        }
+
         /*
          * lista de maestros registrados en la unidad educativa
          */
@@ -200,6 +210,13 @@ class InfoMaestroController extends Controller {
         $rolTipo = $em->getRepository('SieAppWebBundle:RolTipo')->findOneById(2);
         $ueplena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('gestionTipoId' => $gestion, 'institucioneducativaId' => $institucion->getId(), 'institucioneducativaHumanisticoTecnicoTipo' => 1));
 
+        $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '1'));
+        $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '2'));
+        
+        if(!($consol_gest_pasada or $consol_gest_pasada2)){
+            $activar_acciones = true;
+        }
+
         $validacion_personal_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findOneBy(array('gestionTipo' => $gestionTipo, 'institucioneducativa' => $institucion, 'notaTipo' => $notaTipo, 'rolTipo' => $rolTipo));
         $activar_acciones = true;
         if($validacion_personal_aux){
@@ -224,12 +241,6 @@ class InfoMaestroController extends Controller {
                     )));
                 }
             }
-        }
-
-        $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '1'));
-        
-        if(!$consol_gest_pasada){
-            $activar_acciones = true;
         }
 
         return $this->render($this->session->get('pathSystem') . ':InfoMaestro:index.html.twig', array(
