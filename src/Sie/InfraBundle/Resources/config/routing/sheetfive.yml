@@ -5,3 +5,15 @@ infra_sheet_five_index:
 infra_sheet_five_access:
     path:     /access
     defaults: { _controller: SieInfraBundle:SheetFive:access }
+
+infra_sheet_five_ambiente_pedagogico:
+    path:     /pedagogico
+    defaults: { _controller: SieInfraBundle:SheetFive:pedagogico }
+    options:
+        expose: true
+
+infra_sheet_five_ambiente_pedagogico_deportivo:
+    path:     /pedagogicoDeportivo
+    defaults: { _controller: SieInfraBundle:SheetFive:pedagogicoDeportivo }
+    options:
+        expose: true

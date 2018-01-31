@@ -1,18 +1,26 @@
-{% extends '::base.html.twig' %}
 
-{% block body -%}
-    <h1>InfraestructuraH5Ambientepedagogico list</h1>
+    <h1></h1>
 
-    <table class="records_list">
+<div class="table-responsive mb-20">
+ <ul>
+        <li>
+            <a class="btn btn-success" href="{{ path('infraestructurah5ambientepedagogico_new') }}">
+                Agregar Ambiente
+            </a>
+        </li>
+    </ul>
+    <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>N51ambienteanchomts</th>
-                <th>N51ambientelargomts</th>
-                <th>N51ambientealtomts</th>
-                <th>N51capacidadambiente</th>
+                <!-- <th>Id</th> -->
+                <th>Ambiente</th>
+                <th>Ancho</th>
+                <th>Largo</th>
+                <th>Alto</th>
+                <th>Capacidad</th>
                 <th>Fecharegistro</th>
-                <th>N51esusoambiente</th>
+                <th>Uso Ambiente</th>
+                <!-- 
                 <th>N51especialidadtipoid</th>
                 <th>N51talleresespotro</th>
                 <th>N51esusouniversal</th>
@@ -28,19 +36,21 @@
                 <th>N51nrobloque</th>
                 <th>N51nropiso</th>
                 <th>N51esusobth</th>
-                <th>Actions</th>
+                <th>Actions</th> -->
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('infraestructurah5ambientepedagogico_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                {#<td><a href="{{ path('infraestructurah5ambientepedagogico_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
+                <td>{{ entity.n51AmbienteTipo }}</td>
                 <td>{{ entity.n51AmbienteAnchoMts }}</td>
                 <td>{{ entity.n51AmbienteLargoMts }}</td>
                 <td>{{ entity.n51AmbienteAltoMts }}</td>
                 <td>{{ entity.n51CapacidadAmbiente }}</td>
                 <td>{% if entity.fecharegistro %}{{ entity.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ entity.n51EsUsoAmbiente }}</td>
+                {#}
                 <td>{{ entity.n51EspecialidadTipoId }}</td>
                 <td>{{ entity.n51TalleresEspOtro }}</td>
                 <td>{{ entity.n51EsUsoUniversal }}</td>
@@ -55,27 +65,19 @@
                 <td>{{ entity.n51EsAmbienteTecho }}</td>
                 <td>{{ entity.n51NroBloque }}</td>
                 <td>{{ entity.n51NroPiso }}</td>
-                <td>{{ entity.n51EsUsoBth }}</td>
+                <td>{{ entity.n51EsUsoBth }}</td>#}
                 <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('infraestructurah5ambientepedagogico_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('infraestructurah5ambientepedagogico_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
+                
+                        <a class="btn btn-success" href="{{ path('infraestructurah5ambientepedagogico_show', { 'id': entity.id }) }}">Mobiliario</a>
+                
+                        <a class="btn btn-success" href="{{ path('infraestructurah5ambientepedagogico_edit', { 'id': entity.id }) }}">Equipamiento</a>
+                    
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-        <ul>
-        <li>
-            <a href="{{ path('infraestructurah5ambientepedagogico_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+</div>
+       
+    
