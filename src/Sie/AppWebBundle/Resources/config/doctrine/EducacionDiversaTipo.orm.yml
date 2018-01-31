@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\EducacionDiversaTipo:
+    type: entity
+    table: educacion_diversa_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        educacionDiversa:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            column: educacion_diversa
+    lifecycleCallbacks: {  }
