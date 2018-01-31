@@ -182,7 +182,6 @@ class InfoMaestroController extends Controller {
 
     public function editAction(Request $request) {
 
-
         $em = $this->getDoctrine()->getManager();
 
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($request->get('idPersona'));
@@ -203,38 +202,7 @@ class InfoMaestroController extends Controller {
      */
 
     private function newForm($idInstitucion, $gestion, $idPersona) {
-
-        $pertUM="0";
-        $nombreA="NINGUNO";
-
-        $pertP="0";
-        $nombreP="NINGUNO";
-
-        $umt="0";
-        $pt="0";
-
         $em = $this->getDoctrine()->getManager();
-        $educacionDiversa =$em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->findBy(array(),array('id' => 'ASC'));
-        $educacionDiversaArray=array();
-        $EDMaestroArray=array();
-        foreach($educacionDiversa as $value){
-
-            $educacionDiversaArray[$value->getId()] = $value->getEducacionDiversa();
-            //dump($value->getId());die;
-
-            if( $value->getId()==1 || $value->getId()==3)
-            {
-                $EDMaestroArray[$value->getId()]= $value->getEducacionDiversa();
-            }elseif($value->getId()==2)
-            {
-                $EDMaestroArray[2]='INSTRUCTOR MILITAR';
-            }elseif($value->getId()==5)
-            {
-                $EDMaestroArray[$value->getId()]= $value->getEducacionDiversa();
-            }
-
-
-        }
 
         $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
@@ -281,15 +249,7 @@ class InfoMaestroController extends Controller {
                 ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => $em->getReference('SieAppWebBundle:IdiomaMaterno', 97), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille', 'attr' => array('class' => 'checkbox')))
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
-                ->add('educacionDiversaTipo', 'choice', array('required' => false, 'choices' => $EDMaestroArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarmenu(this.value)')))
-                ->add('pertUM', 'hidden', array('data'=>$pertUM ) )
-                ->add('pertP', 'hidden', array('data'=>$pertP ) )
-                ->add('nombreA', 'hidden', array('data'=>$nombreA ) )
-                ->add('nombreP', 'hidden', array('data'=>$nombreP ) )
-                ->add('umt', 'hidden', array('data'=>$umt ) )
-                ->add('pt', 'hidden', array('data'=>$pt ) )
-
-            ->getForm();
+                ->getForm();
 
         return $form;
     }
@@ -301,7 +261,6 @@ class InfoMaestroController extends Controller {
     private function editForm($idInstitucion, $gestion, $persona, $maestroInscripcion, $idiomas) {
         $em = $this->getDoctrine()->getManager();
 
-
         $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
                         WHERE ct.id = :id ORDER BY ct.cargo')
@@ -312,85 +271,6 @@ class InfoMaestroController extends Controller {
         foreach ($cargos as $c) {
             $cargosArray[$c->getId()] = $c->getCargo();
         }
-        //obtiene informacion para editar la unidad militar si existe(si es nulo manda un identificador como 0)
-        if((  $unidad = $maestroInscripcion->getUnidadMilitarTipo())!= null)
-        {
-            $pertUM = $maestroInscripcion->getUnidadMilitarTipo()->getId();
-
-            $em = $this->getDoctrine()->getManager();
-            $unidadMilitarA =$em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->findOneBy(array('id'=>$pertUM));
-            $unidadMilitarTipo =$unidadMilitarA ->getFuerzaMilitarTipo();
-            $nombreA=$unidadMilitarTipo->getFuerzaMilitar();
-            $umt=$unidadMilitarTipo->getId();
-        }
-        else
-        {
-            $pertUM="0";
-            $nombreA="NINGUNO";
-            $umt="0";
-        }
-        if((  $educadiv = $maestroInscripcion->getEducacionDiversaTipo())!= null)
-        {
-
-            $pertED = $maestroInscripcion->getEducacionDiversaTipo()->getId();
-
-        }
-        else
-        {
-            $pertED="0";
-        }
-
-
-        //obtiene informacion para editar el penal si existe(si es nulo manda un identificador como 0)
-        if((  $penal = $maestroInscripcion->getRecintoPenitenciarioTipo())!= null)
-        {
-            $pertP = $maestroInscripcion->getRecintoPenitenciarioTipo()->getId();
-
-            $em = $this->getDoctrine()->getManager();
-            $penalA =$em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->findOneBy(array('id'=>$pertP));
-            $penalTipo =$penalA ->getLugarReclusionTipo();
-            $nombreP=$penalTipo->getLugarReclusion();
-            $pt=$penalTipo->getId();
-
-        }
-        else
-        {
-            $pertP="0";
-            $nombreP="NINGUNO";
-            $pt="0";
-        }
-
-       // dump($penalTipo);die;
-
-
-    //obetener datos especificos para tipificar al maestro segun educacion diversa
-        $educacionDiversa =$em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->findBy(array(),array('id' => 'ASC'));
-
-
-        $educacionDiversaArray=array();
-        $EDMaestroArray=array();
-        foreach($educacionDiversa as $value){
-
-            $educacionDiversaArray[$value->getId()] = $value->getEducacionDiversa();
-         //dump($value->getId());die;
-
-            if( $value->getId()==1 || $value->getId()==3)
-            {
-                $EDMaestroArray[$value->getId()]= $value->getEducacionDiversa();
-            }elseif($value->getId()==2)
-            {
-                $EDMaestroArray[2]='INSTRUCTOR MILITAR';
-            }elseif($value->getId()==5)
-            {
-            $EDMaestroArray[$value->getId()]= $value->getEducacionDiversa();
-            }
-
-
-
-        }
-        //$this->listarmenuAction($pertED,$pertUM,$pertP);
-       //    dump($EDMaestroArray);die;
-
 
         $financiamiento = $em->createQuery(
                         'SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
@@ -427,16 +307,7 @@ class InfoMaestroController extends Controller {
                 ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => ($maestroInscripcion->getEstudiaiomaMaterno()), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille', 'attr' => array('class' => 'form-control', 'checked' => $maestroInscripcion->getLeeescribebraile())))
                 ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary')))
-                ->add('educacionDiversaTipo', 'choice', array('data' => $pertED, 'required' => false, 'choices' => $EDMaestroArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarmenu(this.value)')))
-                ->add('pertUM', 'hidden', array('data'=>$pertUM ) )
-                ->add('pertP', 'hidden', array('data'=>$pertP ) )
-                ->add('nombreA', 'hidden', array('data'=>$nombreA ) )
-                ->add('nombreP', 'hidden', array('data'=>$nombreP ) )
-                ->add('umt', 'hidden', array('data'=>$umt ) )
-                ->add('pt', 'hidden', array('data'=>$pt ) )
-            ->getForm();
-
-
+                ->getForm();
 
         return $form;
     }
@@ -459,9 +330,6 @@ class InfoMaestroController extends Controller {
             } else {
                 $estudiaioma = 0;
             }
-
-
-
 
             // verificamos si el maestro esta registrado ya en tabla maestro inscripcion
             $institucion = $this->session->get('ie_id');
@@ -486,53 +354,21 @@ class InfoMaestroController extends Controller {
 
             $maestroInscripcion = $queryIns->getResult();
 
-
             if ($maestroInscripcion) { // Si  el personalAdministrativo ya esta inscrito
                 $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
                 return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
             }
 
-            $edidm=$form['educacionDiversaTipo'];
-
-
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
 
             // Registro Maestro inscripcion
             $maestroinscripcion = new MaestroInscripcion();
-
-            if($edidm==2)
-            {
-                $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find(7));
-                $maestroinscripcion->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->findOneById($form['educacionDiversaTipo']));
-                $maestroinscripcion->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find($form['seccioniiUnidadMilitarTipo']));
-                $maestroinscripcion->setRecintoPenitenciarioTipo($em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->find(0));
-                //   dump($socioinscripcion);die;
-
-            }elseif ($edidm==3||$edidm==5)
-            {
-                $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find(7));
-                $maestroinscripcion->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->findOneById($form['educacionDiversaTipo']));
-                $maestroinscripcion->setRecintoPenitenciarioTipo($em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->find($form['seccioniiRecintoPenitenciarioTipo']));
-                $maestroinscripcion->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find(0));
-
-            }elseif($edidm==1 || $edidm==4 )
-            {
-                $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
-                $maestroinscripcion->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->findOneById($form['educacionDiversaTipo']));
-                $maestroinscripcion->setRecintoPenitenciarioTipo($em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->find(0));
-                $maestroinscripcion->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find(0));
-            }else{
-                $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificacion de datos');
-                return $this->redirect($this->generateUrl('herramientalt_info_maestro_index', array('op' => 'result')));
-            }
-
             $maestroinscripcion->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($form['funcion']));
             $maestroinscripcion->setEspecialidadTipo($em->getRepository('SieAppWebBundle:EspecialidadMaestroTipo')->findOneById(0));
             $maestroinscripcion->setEstadomaestro($em->getRepository('SieAppWebBundle:EstadomaestroTipo')->findOneById(1));
             $maestroinscripcion->setEstudiaiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById($estudiaioma));
-           // $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
+            $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
             $maestroinscripcion->setFormacionTipo($em->getRepository('SieAppWebBundle:FormacionTipo')->findOneById($form['formacion']));
             $maestroinscripcion->setFormaciondescripcion(mb_strtoupper($form['formacionDescripcion'], 'utf-8'));
             $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
@@ -662,55 +498,19 @@ class InfoMaestroController extends Controller {
             } else {
                 $estudiaioma = 0;
             }
-            $edidm=$form['educacionDiversaTipo'];
-           // dump($edidm);die;
-
 
             $maestroinscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneById($form['idMaestroInscripcion']);
-
-            if($edidm==2)
-            {
-                $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find(7));
-
-                $maestroinscripcion->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->findOneById($form['educacionDiversaTipo']));
-                $maestroinscripcion->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find($form['seccioniiUnidadMilitarTipo']));
-                $maestroinscripcion->setRecintoPenitenciarioTipo($em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->find(0));
-                //   dump($socioinscripcion);die;
-
-            }elseif ($edidm==3||$edidm==5)
-            {
-                $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find(7));
-
-                $maestroinscripcion->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->findOneById($form['educacionDiversaTipo']));
-                $maestroinscripcion->setRecintoPenitenciarioTipo($em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->find($form['seccioniiRecintoPenitenciarioTipo']));
-                $maestroinscripcion->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find(0));
-
-            }elseif($edidm==1 || $edidm==4 )
-            {
-                $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
-
-                $maestroinscripcion->setEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->findOneById($form['educacionDiversaTipo']));
-                $maestroinscripcion->setRecintoPenitenciarioTipo($em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->find(0));
-                $maestroinscripcion->setUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find(0));
-            }else{
-                $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificacion de datos');
-                return $this->redirect($this->generateUrl('herramientalt_info_maestro_index', array('op' => 'result')));
-            }
-
             $maestroinscripcion->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($form['funcion']));
             $maestroinscripcion->setEstudiaiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById($estudiaioma));
-        //    $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
+            $maestroinscripcion->setFinanciamientoTipo($em->getRepository('SieAppWebBundle:FinanciamientoTipo')->findOneById($form['financiamiento']));
             $maestroinscripcion->setFormacionTipo($em->getRepository('SieAppWebBundle:FormacionTipo')->findOneById($form['formacion']));
             $maestroinscripcion->setFormaciondescripcion(mb_strtoupper($form['formacionDescripcion'], 'utf-8'));
             $maestroinscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucionEducativa']));
             $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($this->session->get('ie_suc_id')));
             $maestroinscripcion->setLeeescribebraile((isset($form['leeEscribeBraile'])) ? 1 : 0);
-
             $maestroinscripcion->setNormalista((isset($form['normalista'])) ? 1 : 0);
             $maestroinscripcion->setItem($form['item']);
             $maestroinscripcion->setFechaModificacion(new \DateTime('now'));
-
             $em->persist($maestroinscripcion);
             $em->flush();
 
@@ -861,155 +661,4 @@ class InfoMaestroController extends Controller {
             
         }
     }
-
-
-    public function listarmenuAction($idM, $pertUM, $pertP,$umt,$pt) {
-        try {
-
-              // dump($idM);die;
-            // $krlosArray = array('id'=>'34','name'=>'marcelo' );
-            $idMArray = array ('id'=>$idM);
-            $em = $this->getDoctrine()->getManager();
-
-
-            // dump($idM);die;
-            // $krlosArray = array('id'=>'34','name'=>'marcelo' );
-
-            $unidadMilitar =$em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->findBy(array(),array('unidadMilitar' => 'ASC'));
-            $unidadMilitarArray=array();
-            foreach($unidadMilitar as $value){
-                $unidadMilitarArray[$value->getId()] = $value->getUnidadMilitar();
-            }
-            $penal =$em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->findBy(array(),array('recintoPenitenciario' => 'ASC'));
-            $penalArray=array();
-            foreach($penal as $value){
-                $penalArray[$value->getId()] = $value->getRecintoPenitenciario();
-            }
-
-            $em = $this->getDoctrine()->getManager();
-
-            $penalTipo =$em->getRepository('SieAppWebBundle:LugarReclusionTipo')->findAll();
-            $penalTipoArray=array();
-            foreach($penalTipo as $value){
-
-                $penalTipoArray[$value->getId()] = $value->getLugarReclusion();
-                if( $value->getId()==0)
-                {
-
-                }else            {
-                    $listaPenalArray[$value->getId()]= $value->getLugarReclusion();
-                }
-
-            }
-
-            $unidadMilitarTipo =$em->getRepository('SieAppWebBundle:FuerzaMilitarTipo')->findAll();
-            $unidadMilitarTipoArray=array();
-            foreach($unidadMilitarTipo as $value){
-                $unidadMilitarTipoArray[$value->getId()] = $value->getFuerzaMilitar();
-                if( $value->getId()==0)
-                {
-
-                }else            {
-                    $listaUMArray[$value->getId()]= $value->getFuerzaMilitar();
-                }
-            }
-
-            $form = $this->createFormBuilder()
-
-                ->setAction($this->generateUrl('socioeconomicoalt_update'))
-                ->add('seccioniiUnidadMilitarTipo', 'choice', array( 'data'=> $pertUM ,'required' => false, 'choices' => $unidadMilitarArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-                ->add('seccioniiRecintoPenitenciarioTipo', 'choice', array('data'=> $pertP , 'required' => false, 'choices' => $penalArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-                ->add('seccioniiFuerzaMilitarTipo', 'choice', array( 'data'=> $umt ,'required' => false, 'choices' => $listaUMArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'tipomili(this.value)')))
-                ->add('seccioniiLugarReclusion', 'choice', array('data'=> $pt , 'required' => false, 'choices' => $listaPenalArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'tipopenal(this.value)')))
-                //->add('seccioniiEsserviciomilitarCea', 'choice', array('data' => $cea,'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(true => 'El CEA', false => 'El Cuartel')))
-                ->getForm();
-
-
-            return $this->render('SieHerramientaAlternativaBundle:InfoMaestro:listarmenu.html.twig', array(
-                // 'datakrlos' => $krlosArray,
-                'dataidM' => $idMArray,
-                'formlista' => $form->createView(),
-                // 'form' => $form,
-
-            ));
-
-        } catch (Exception $ex) {
-
-        }
-    }
-
-
-
-    public function tipomiliAction($idUM)
-    {
-        try {
-
-            $idUMArray = array ('id'=>$idUM);
-
-            $unidadMilitar =$em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->findBy(array('fuerzaMilitarTipo'=>$idUM),array('unidadMilitar' => 'ASC'));
-            $unidadMilitarArray=array();
-            foreach($unidadMilitar as $value){
-                $unidadMilitarArray[$value->getId()] = $value->getUnidadMilitar();
-            }
-
-            $response = new JsonResponse();
-            return $response->setData(array('listarunidadmilitar' => $unidadMilitarArray));
-
-        } catch (Exception $ex) {
-
-        }
-    }
-
-
-
-    public function tipopenalAction($idP)
-    {
-        try {
-
-            $idPArray = array ('id'=>$idP);
-            $em = $this->getDoctrine()->getManager();
-
-            $penal =$em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->findBy(array('lugarReclusionTipo'=>$idP),array('recintoPenitenciario' => 'ASC'));
-
-            $penalArray=array();
-            foreach($penal as $value){
-                $penalArray[$value->getId()] = $value->getRecintoPenitenciario();
-            }
-            /*
-            $entity = $em->getRepository('SieAppWebBundle:Penal');
-            $query = $entity->createQueryBuilder('p')
-                ->select('p')
-                ->where('p.penalTipo = :penaltipo')
-                ->setParameter('penaltipo', $idP)
-                ->orderBy('p.penal', 'ASC')
-                ->getQuery();
-            $penal = $query->getResult();
-
-            $penalArray=array();
-            foreach($penal as $value){
-                $penalArray[$value->getId()] = $value->getPenal();
-            }
-//            dump($penalArray);die;
-
-            */
-
-
-            $response = new JsonResponse();
-            return $response->setData(array('listarpenal' => $penalArray));
-
-        } catch (Exception $ex) {
-
-        }
-
-
-
-
-
-    }
-
-
-
-
-
-
 }

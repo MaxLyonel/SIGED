@@ -44,7 +44,7 @@
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
-                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'onsubmit': 'return (validaIdioma() && validaLista()&& validaSeleccion())'} } )}}
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'onsubmit': 'return validaIdioma()'} } )}}
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="form-group col-lg-3 col-md-6">
@@ -115,18 +115,6 @@
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group">
-                                       <div> <label class="control-label" for="correo">Tipo de Maestro</label></div>
-                                        <div class="col-md-6">{{ form_widget(form.educacionDiversaTipo) }}</div>
-                                        <div class="col-md-10 form-group" id="answerID"></div>
-                                    </div>
-
-                                </div>
-
-
-
-
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
                                         {{ form_label(form.funcion)}}
@@ -214,9 +202,7 @@
     <script>
         var cantidad = 0;
         var cont = 0;
-        var conta=0;
-        var contb=0;
-        var contc=0;
+
         $(function () {
             var idMaestro = document.getElementById('form_idMaestroInscripcion').value;
 
@@ -289,19 +275,8 @@
                     $("#loading").css('display', 'none');
                 }
             });
+        })
 
-            reloadmyform();
-        });
-
-        function reloadmyform(){
-           /*
-            $('#answerID').change(function () {
-                listarmenu($('#form_educacionDiversa').val());
-            });*/
-            $("#answerID").trigger(onchange(listarmenu($('#form_educacionDiversaTipo').val())));
-            $("#form_unidadMilitarTipo").trigger(onchange(tipomili($('#form_fuerzaMilitarTipo').val())));
-            $("#form_penalTipo").trigger(onchange(tipopenal($('#form_lugarReclusion').val())));
-        }
         function agregarHijo()
         {
             cont++;
@@ -365,129 +340,5 @@
             }
             return true;
         }
-        function validaLista(){
-            if(conta == 0 || conta == ""){
-                alert('Debe seleccionar el tipo de Maestro');
-                return false;
-            }
-            return true;
-        }
-
-        function validaSeleccion(){
-            if(conta ==2)
-            {
-                if((contb == 0 || contb == "")){
-                    alert('Debe seleccionar la Unidad Militar a la que pertenece');
-                    return false;
-                }
-
-            } else if(conta ==3)
-            {
-                if((contc == 0 || contc == "")){
-                    alert('Debe seleccionar el Penal al que pertenece');
-                    return false;
-                }
-
-            }
-        return true;
-        }
-
-
-        function listarmenu(idM){
-
-
-            var pertUM = $('#form_pertUM').val();
-            var pertP= $('#form_pertP').val();
-            var umt = $('#form_umt').val();
-            var pt= $('#form_pt').val();
-
-            if(idM ==null || idM=="")
-            {
-                idM ='0';
-            }
-
-            conta=idM;
-            contb=umt;
-            contc=pt;
-
-         //  alert(contc+' Debe seleccionar el tipo de Maestro');
-
-
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('herramienta_info_maestro_mlistarmenu', {'idM': idM, 'pertUM': pertUM, 'pertP': pertP,'umt':umt,'pt':pt} ),
-                beforeSend: function () {
-                    $('#answerID').empty();
-                    $("#answerID").append('<div c lass="text-center"><img src="{{asset('img/loading.gif')}} /></div>');
-                },
-                success: function (data) {
-                    $('#answerID').empty();
-                    $('#answerID').append(data);
-
-
-
-                }
-            });
-        }
-
-        function tipomili(idUM){
-            var pertUM = $('#form_pertUM').val();
-            if(idUM ==null || idUM=="")
-            {
-                idUM ='0';
-            }
-
-            contb=idUM;
-            //alert(contb+' Debe seleccionar el tipo de Maestro');
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('bjp_rue_tipomili', {'idUM': idUM,'pertUM': pertUM} ),
-                beforeSend: function (data) {
-                    $('#form_seccioniiUnidadMilitarTipo').empty();
-                    $('#form_seccioniiUnidadMilitarTipo').append('<div c lass="text-center"><img src="{{asset('img/loading.gif')}} /></div>');
-                },
-                success: function (data) {
-                    $('#form_seccioniiUnidadMilitarTIpo').empty();
-                    /*$('#form_seccioniiUnidadMilitar').append(('<option value="">Seleccionar...</option>');*/
-                    $.each(data.listarunidadmilitar, function (i, value) {
-                        $('#form_seccioniiUnidadMilitarTipo').append('<option value="' + i + '">' + value + '</option>');
-                    });
-
-                }
-            });
-        }
-
-
-        function tipopenal(idP){
-
-            var pertP= $('#form_pertP').val();
-            if(idP ==null || idP=="")
-            {
-                idP ='0';
-            }
-
-            contc=idP;
-
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('bjp_rue_tipopenal', {'idP': idP, 'pertP': pertP} ),
-                beforeSend: function (data) {
-                    $('#form_seccioniiRecintoPenitenciarioTipo').empty();
-                    $('#form_seccioniiRecintoPenitenciarioTipo').append('<div c lass="text-center"><img src="{{asset('img/loading.gif')}} /></div>');
-                },
-                success: function (data) {
-                    $('#form_seccioniiRecintoPenitenciarioTipo').empty();
-                    /*$('#form_seccioniiPenal').append(('<option value="">Seleccionar...</option>');*/
-                    $.each(data.listarpenal, function (i,value) {
-                        $('#form_seccioniiRecintoPenitenciarioTipo').append('<option value="' + i + '">' + value + '</option>');
-                    });
-
-                }
-            });
-        }
-
-
-
-
     </script>
 {% endblock %}
