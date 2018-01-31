@@ -1,0 +1,163 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH1Datosgenerales list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>N19zonabarrio</th>
+                <th>N111macrodistrito</th>
+                <th>N112distritomun</th>
+                <th>N110direccion</th>
+                <th>N22descripcionacceso</th>
+                <th>N31tramotroncal</th>
+                <th>N32tramocomplementaria</th>
+                <th>N33tramovecinal</th>
+                <th>N34vehiculardistdias</th>
+                <th>N34vehiculardisthrs</th>
+                <th>N34vehiculardistmin</th>
+                <th>N34vehiculardistcosto</th>
+                <th>N34terrestredescripcion</th>
+                <th>N34fluvialdistdias</th>
+                <th>N34fluvialdisthrs</th>
+                <th>N34fluvialdistmin</th>
+                <th>N34fluvialdistcosto</th>
+                <th>N34fluvialdescripcion</th>
+                <th>N34aereodistdias</th>
+                <th>N34aereodisthrs</th>
+                <th>N34aereodistmin</th>
+                <th>N34aereodistcosto</th>
+                <th>N34aereodescripcion</th>
+                <th>N34combinaciondias</th>
+                <th>N34combinacionhrs</th>
+                <th>N34combinacionmin</th>
+                <th>N34combinacioncosto</th>
+                <th>N34combinaciondescripcion</th>
+                <th>N5obs</th>
+                <th>Fecharegistro</th>
+                <th>N34peatonaldistdias</th>
+                <th>N34peatonaldisthrs</th>
+                <th>N34peatonaldistmin</th>
+                <th>N34peatonaldistcosto</th>
+                <th>N34peatonalmundias</th>
+                <th>N34peatonalmunhrs</th>
+                <th>N34peatonalmunmin</th>
+                <th>N34peatonalmuncosto</th>
+                <th>N34vehicularmundias</th>
+                <th>N34vehicularmunhrs</th>
+                <th>N34vehicularmunmin</th>
+                <th>N34vehicularmuncosto</th>
+                <th>N34fluvialmundias</th>
+                <th>N34fluvialmunhrs</th>
+                <th>N34fluvialmunmin</th>
+                <th>N34fluvialmuncosto</th>
+                <th>N34aereomundias</th>
+                <th>N34aereomunhrs</th>
+                <th>N34aereomunmin</th>
+                <th>N34aereomuncosto</th>
+                <th>N21fotografiaprincipal</th>
+                <th>N21fotografiafrontal</th>
+                <th>N21fotografialateral</th>
+                <th>N21fotografiapanoramica</th>
+                <th>N34peatonalesdist</th>
+                <th>N34vehicularesdist</th>
+                <th>N34fluvialesdist</th>
+                <th>N34aereoesdist</th>
+                <th>N34peatonalesmun</th>
+                <th>N34vehicularesmun</th>
+                <th>N34fluvialesmun</th>
+                <th>N34aereoesmun</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('infraestructurah1datosgenerales_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.n19Zonabarrio }}</td>
+                <td>{{ entity.n111Macrodistrito }}</td>
+                <td>{{ entity.n112Distritomun }}</td>
+                <td>{{ entity.n110Direccion }}</td>
+                <td>{{ entity.n22Descripcionacceso }}</td>
+                <td>{{ entity.n31Tramotroncal }}</td>
+                <td>{{ entity.n32Tramocomplementaria }}</td>
+                <td>{{ entity.n33Tramovecinal }}</td>
+                <td>{{ entity.n34VehicularDistDias }}</td>
+                <td>{{ entity.n34VehicularDistHrs }}</td>
+                <td>{{ entity.n34VehicularDistMin }}</td>
+                <td>{{ entity.n34VehicularDistCosto }}</td>
+                <td>{{ entity.n34TerrestreDescripcion }}</td>
+                <td>{{ entity.n34FluvialDistDias }}</td>
+                <td>{{ entity.n34FluvialDistHrs }}</td>
+                <td>{{ entity.n34FluvialDistMin }}</td>
+                <td>{{ entity.n34FluvialDistCosto }}</td>
+                <td>{{ entity.n34FluvialDescripcion }}</td>
+                <td>{{ entity.n34AereoDistDias }}</td>
+                <td>{{ entity.n34AereoDistHrs }}</td>
+                <td>{{ entity.n34AereoDistMin }}</td>
+                <td>{{ entity.n34AereoDistCosto }}</td>
+                <td>{{ entity.n34AereoDescripcion }}</td>
+                <td>{{ entity.n34CombinacionDias }}</td>
+                <td>{{ entity.n34CombinacionHrs }}</td>
+                <td>{{ entity.n34CombinacionMin }}</td>
+                <td>{{ entity.n34CombinacionCosto }}</td>
+                <td>{{ entity.n34CombinacionDescripcion }}</td>
+                <td>{{ entity.n5Obs }}</td>
+                <td>{% if entity.fecharegistro %}{{ entity.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.n34PeatonalDistDias }}</td>
+                <td>{{ entity.n34PeatonalDistHrs }}</td>
+                <td>{{ entity.n34PeatonalDistMin }}</td>
+                <td>{{ entity.n34PeatonalDistCosto }}</td>
+                <td>{{ entity.n34PeatonalMunDias }}</td>
+                <td>{{ entity.n34PeatonalMunHrs }}</td>
+                <td>{{ entity.n34PeatonalMunMin }}</td>
+                <td>{{ entity.n34PeatonalMunCosto }}</td>
+                <td>{{ entity.n34VehicularMunDias }}</td>
+                <td>{{ entity.n34VehicularMunHrs }}</td>
+                <td>{{ entity.n34VehicularMunMin }}</td>
+                <td>{{ entity.n34VehicularMunCosto }}</td>
+                <td>{{ entity.n34FluvialMunDias }}</td>
+                <td>{{ entity.n34FluvialMunHrs }}</td>
+                <td>{{ entity.n34FluvialMunMin }}</td>
+                <td>{{ entity.n34FluvialMunCosto }}</td>
+                <td>{{ entity.n34AereoMunDias }}</td>
+                <td>{{ entity.n34AereoMunHrs }}</td>
+                <td>{{ entity.n34AereoMunMin }}</td>
+                <td>{{ entity.n34AereoMunCosto }}</td>
+                <td>{{ entity.n21FotografiaPrincipal }}</td>
+                <td>{{ entity.n21FotografiaFrontal }}</td>
+                <td>{{ entity.n21FotografiaLateral }}</td>
+                <td>{{ entity.n21FotografiaPanoramica }}</td>
+                <td>{{ entity.n34PeatonalEsDist }}</td>
+                <td>{{ entity.n34VehicularEsDist }}</td>
+                <td>{{ entity.n34FluvialEsDist }}</td>
+                <td>{{ entity.n34AereoEsDist }}</td>
+                <td>{{ entity.n34PeatonalEsMun }}</td>
+                <td>{{ entity.n34VehicularEsMun }}</td>
+                <td>{{ entity.n34FluvialEsMun }}</td>
+                <td>{{ entity.n34AereoEsMun }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('infraestructurah1datosgenerales_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('infraestructurah1datosgenerales_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('infraestructurah1datosgenerales_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

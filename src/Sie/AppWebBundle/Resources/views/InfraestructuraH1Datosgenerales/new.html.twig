@@ -1,0 +1,480 @@
+{% extends 'layoutInfra.html.twig' %}
+
+{% block contentoption %}
+	<style>
+		.fotografia{
+			background:#EEEEEE;
+			width: 200px;
+			height: 200px; 
+		}
+	</style>
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Datos generales <span>Hoja 1</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('infra_list_index')}}">
+                       Operativos
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">
+                  <form action="{{path('infra_list_open')}}" method="post" style="display: inline-block">
+                      <input type="hidden" id="form_gestion" name="form[gestion]" value="{{app.session.get('currentyear')}}">
+                      <input type="hidden" id="form_data" name="form[sie]" required="required" value="{{app.session.get('ie_id')}}">
+                      <button class='btn btn-link'>Menu de Opciones</button>
+                  </form>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+    <div class="row">
+          <div class="col-md-12">
+
+              <!-- Start color horizontal tabs -->
+              <div class="panel panel-tab panel-tab-double shadow">
+                  <!-- Start tabs heading -->
+                  <div class="panel-heading no-padding">
+                      <ul class="nav nav-tabs">
+							<li class="nav-border nav-border-top-danger active">
+							  <a href="component-tabsaccordion.html#tab1-1" data-toggle="tab" class="text-center" aria-expanded="true">
+							      1. Datos de ubicación del edificio educativo (EE)
+							  </a>
+							</li>
+							<li class="nav-border nav-border-top-primary">
+							  <a href="component-tabsaccordion.html#tab1-2" data-toggle="tab" class="text-center" aria-expanded="false">
+							      2. Registro Fotográfico
+							  </a>
+							</li>
+							<li class="nav-border nav-border-top-success">
+							  <a href="component-tabsaccordion.html#tab1-3" data-toggle="tab" class="text-center" aria-expanded="false">
+							      3. Vias de acceso
+							  </a>
+							</li>
+							<li class="nav-border nav-border-top-success">
+							  <a href="component-tabsaccordion.html#tab1-4" data-toggle="tab" class="text-center" aria-expanded="false">
+							      4. Unidades educativas que operan en este edificio educativo
+							  </a>
+							</li><li class="nav-border nav-border-top-success">
+							  <a href="component-tabsaccordion.html#tab1-5" data-toggle="tab" class="text-center" aria-expanded="false">
+							      5. Observaciones
+							  </a>
+							</li>
+                      </ul>
+                  </div><!-- /.panel-heading -->
+                  <!--/ End tabs heading -->
+
+                  <!-- Start tabs content -->
+                  <div class="panel-body">
+                    <form action="{{path('infra_sheet_four_save')}}" method="post" class="form-horizontal form-bordered">
+                      <div class="form-footer">
+                          <div class="pull-right">
+                            <button class="btn btn-success" type="submit">Guardar Cambios</button>
+                              <button class="btn btn-danger mr-5">Cancel</button>
+                              
+                          </div>
+                          <div class="clear-fix"></div>
+                      </div>
+                      <hr>
+                      <div class="tab-content">
+                        <!-- start tab1 -->
+                          <div class="tab-pane fade active in" id="tab1-1">
+                        	<div class="row">
+                        		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        			<label>1.1 Código del Edificio Educativo</label>
+                        			<input type="text" name="" id="" class="form-control" value="">
+
+                        			<label>1.2 Departamento</label>
+                        			<div class="row">
+                        				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        					<input type="text" name="" id="" class="form-control" value="{{entity.id}}">
+                        				</div>
+                        				<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        					<input type="text" name="" id="" class="form-control" value="">
+                        				</div>
+                        			</div>
+
+                        			<label>1.3 Provincia</label>
+                        			<div class="row">
+                        				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        					<input type="text" name="" id="" class="form-control" value="">
+                        				</div>
+                        				<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        					<input type="text" name="" id="" class="form-control" value="">
+                        				</div>
+                        			</div>
+
+                        			<label>1.4 Municipio</label>
+                        			<div class="row">
+                        				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        					<input type="text" name="" id="" class="form-control" value="">
+                        				</div>
+                        				<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        					<input type="text" name="" id="" class="form-control" value="">
+                        				</div>
+                        			</div>
+
+                        			<label>1.5 Cantón</label>
+                        			<div class="row">
+                        				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        					<input type="text" name="" id="" class="form-control" value="">
+                        				</div>
+                        				<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        					<input type="text" name="" id="" class="form-control" value="">
+                        				</div>
+                        			</div>
+
+                        			<label>1.6 Ciudad o localidad</label>
+                        			<div class="row">
+                        				<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        					<input type="text" name="" id="" class="form-control" value="">
+                        				</div>
+                        				<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                        					<input type="text" name="" id="" class="form-control" value="">
+                        				</div>
+                        			</div>
+                        		</div>
+                        		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+									<label>1.7 Distrito Educativo</label>
+									<input type="text" class="form-control" name="">
+									<label>1.8 Área geográfica</label>
+									<input type="text" class="form-control" name="">
+									<label>1.9 Zona o Barrio</label>
+									{{ form_widget(form.n19Zonabarrio, {'attr': {'class':'form-control'} }) }}
+									<label>1.10 Dirección, Número</label>
+									{{ form_widget(form.n110InfraestructuraH1DireccionTipo, {'attr': {'class':'form-control'} }) }}
+									<br>
+									{{ form_widget(form.n110Direccion, {'attr': {'class':'form-control'} }) }}
+                        		</div>
+                        	</div>
+                          </div>
+                          <!-- end tab1 -->
+                          <div class="tab-pane fade" id="tab1-2">
+                         	<div class="row">
+                         		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                         			<label>2.1 Registro fotográfico del Edificio Educativo</label>
+                         			<hr>
+                         		</div>
+                         		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                         			<div class="fotografia"></div>
+                         			<label>Adjuntar fotografía del ingreso principal</label>
+                         			<input type="file" name="">
+									<br>
+									<div class="fotografia"></div>
+                         			<label>Adjuntar fotografía con vista frontal</label>
+                         			<input type="file" name="">
+                         		</div>
+                         		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                         			<div class="fotografia"></div>
+                         			<label>Adjuntar fotografía con vista lateral</label>
+                         			<input type="file" name="">
+									<br>
+									<div class="fotografia"></div>
+                         			<label>Adjuntar fotografía con vista panoramica</label>
+                         			<input type="file" name="">
+                         		</div>
+                         	</div>
+                          </div>  <!-- end tab2 -->
+                          <div class="tab-pane fade" id="tab1-3">
+                        	
+                        	<div class="row">
+                        		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        			<label>3.1 Tramo de red troncal</label>
+                        			{{ form_widget(form.n31Tramotroncal, {'attr':{'class':'form-control'} }) }}
+                        			<label>3.2 Tramo de red complementaria</label>
+                        			{{ form_widget(form.n32Tramocomplementaria, {'attr':{'class':'form-control'} }) }}
+                        			<label>3.2 Tramo de red vecinal</label>
+                        			{{ form_widget(form.n33Tramovecinal, {'attr':{'class':'form-control'} }) }}
+                        		</div>
+                        	</div>
+                        	<div class="row">
+                        		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        			<label>3.4 Medio de transporte, tiempo y costo desde la Dirección Distrital</label>
+									<table class="table">
+									    <tr>
+									        <td></td>
+									        <td>Dias</td>
+									        <td>Horas</td>
+									        <td>Minutos</td>
+									        <td>Costo</td>
+									        <td colspan="4">Descripcion del medio de acceso</td>
+									    </tr>
+									    <tr>
+									        <td>
+									        	<div class="checkbox">
+									        		<label>
+									        			{{ form_widget(form.n34PeatonalEsDist, {'attr':{'class':''} }) }}
+									        			Peatonal
+									        		</label>
+									        	</div>
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34PeatonalDistDias, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34PeatonalDistHrs, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34PeatonalDistMin, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34PeatonalDistCosto, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td></td>
+									        <td></td>
+									        <td></td>
+									    </tr>
+									    <tr>
+									        <td>
+									        	<div class="checkbox">
+									        		<label>
+									        			{{ form_widget(form.n34VehicularEsDist, {'attr':{'class':''} }) }}
+									        			Vehicular
+									        		</label>
+									        	</div>
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34VehicularDistDias, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34VehicularDistHrs, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34VehicularDistMin, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34VehicularDistCosto, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoVehicularTipoDist1, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoVehicularTipoDist2, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoVehicularTipoDist3, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									    </tr>
+									    <tr>
+									        <td>
+									        	<div class="checkbox">
+									        		<label>
+									        			{{ form_widget(form.n34FluvialEsDist, {'attr':{'class':''} }) }}
+									        			Fluvial
+									        		</label>
+									        	</div>
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34FluvialDistDias, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34FluvialDistHrs, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34FluvialDistMin, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34FluvialDistCosto, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoFluvialTipoDist1, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoFluvialTipoDist2, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td></td>
+									    </tr>
+									    <tr>
+									        <td>
+									        	<div class="checkbox">
+									        		<label>
+									        			{{ form_widget(form.n34AereoEsDist, {'attr':{'class':''} }) }}
+									        			Aéreo
+									        		</label>
+									        	</div>
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34AereoDistDias, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34AereoDistHrs, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34AereoDistMin, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34AereoDistCosto, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoAereoTipoDist, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td></td>
+									        <td></td>
+									    </tr>
+									</table>
+                        		</div>
+                        	</div>
+                        	<div class="row">
+                        		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        			<label>3.4 Medio de transporte, tiempo y costo desde el municipio</label>
+									<table class="table">
+									    <tr>
+									        <td></td>
+									        <td>Dias</td>
+									        <td>Horas</td>
+									        <td>Minutos</td>
+									        <td>Costo</td>
+									        <td colspan="4">Descripcion del medio de acceso</td>
+									    </tr>
+									    <tr>
+									        <td>
+									        	<div class="checkbox">
+									        		<label>
+									        			{{ form_widget(form.n34PeatonalEsMun, {'attr':{'class':''} }) }}
+									        			Peatonal
+									        		</label>
+									        	</div>
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34PeatonalMunDias, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34PeatonalMunHrs, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34PeatonalMunMin, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34PeatonalMunCosto, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td></td>
+									        <td></td>
+									        <td></td>
+									    </tr>
+									    <tr>
+									        <td>
+									        	<div class="checkbox">
+									        		<label>
+									        			{{ form_widget(form.n34VehicularEsMun, {'attr':{'class':''} }) }}
+									        			Vehicular
+									        		</label>
+									        	</div>
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34VehicularMunDias, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34VehicularMunHrs, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34VehicularMunMin, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34VehicularMunCosto, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoVehicularTipoMun1, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoVehicularTipoMun2, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoVehicularTipoMun3, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									    </tr>
+									    <tr>
+									        <td>
+									        	<div class="checkbox">
+									        		<label>
+									        			{{ form_widget(form.n34FluvialEsMun, {'attr':{'class':''} }) }}
+									        			Fluvial
+									        		</label>
+									        	</div>
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34FluvialMunDias, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34FluvialMunHrs, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34FluvialMunMin, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34FluvialDistCosto, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoFluvialTipoMun1, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoFluvialTipoMun2, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td></td>
+									    </tr>
+									    <tr>
+									        <td>
+									        	<div class="checkbox">
+									        		<label>
+									        			{{ form_widget(form.n34AereoEsMun, {'attr':{'class':''} }) }}
+									        			Aéreo
+									        		</label>
+									        	</div>
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34AereoMunDias, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34AereoMunHrs, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34AereoMunMin, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34AereoMunCosto, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td>
+									        	{{ form_widget(form.n34InfraestructuraH1AccesoAereoTipoMun, {'attr':{'class':'form-control'} }) }}
+									        </td>
+									        <td></td>
+									        <td></td>
+									    </tr>
+									</table>
+                        		</div>
+                        	</div>
+
+                          </div>  <!-- end tab3 -->
+                          <div class="tab-pane fade" id="tab1-4">
+                              
+                          </div>  <!-- end tab4 -->
+                          <div class="tab-pane fade" id="tab1-5">
+                              <div class="row">
+                              	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                              		<label>5.1 Observaciones</label>
+                              		{{ form_widget(form.n5Obs, {'attr':{'class':'form-control'} }) }}
+                              	</div>
+                              </div>
+                          </div>  <!-- end tab5 -->
+                      </div>
+                    </form>
+                  </div><!-- /.panel-body -->
+                  <!--/ End tabs content -->
+              </div><!-- /.panel -->
+              <!--/ End color horizontal tabs -->
+				{{ form_start(form)}}
+          </div>
+      </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}

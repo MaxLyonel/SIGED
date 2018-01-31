@@ -1,3 +1,7 @@
+sie_app_web_infraestructurah1datosgenerales:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah1datosgenerales.yml"
+    prefix:   /infraestructurah1datosgenerales
+
 sie_app_web_infraestructurah4ambientepedagogico:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah4ambientepedagogico.yml"
     prefix:   /infraestructurah4ambientepedagogico
