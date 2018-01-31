@@ -1,0 +1,85 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH4ServicioBateriaBanos list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>N5areatotalm2</th>
+                <th>N5banioconagua</th>
+                <th>N5baniosinagua</th>
+                <th>N5letrinafunciona</th>
+                <th>N5letrinanofunciona</th>
+                <th>N5inodorofunciona</th>
+                <th>N5inodoronofunciona</th>
+                <th>N5urinariofunciona</th>
+                <th>N5urinarionofunciona</th>
+                <th>N5lavamanofunciona</th>
+                <th>N5lavamanonofunciona</th>
+                <th>N5duchafunciona</th>
+                <th>N5duchanofunciona</th>
+                <th>Obs</th>
+                <th>Fecharegistro</th>
+                <th>N5esfuncionaambiente</th>
+                <th>N52estienetecho</th>
+                <th>N52estienecielofalso</th>
+                <th>N52estienepuerta</th>
+                <th>N52estieneventana</th>
+                <th>N52estienemuros</th>
+                <th>N52estienerevest</th>
+                <th>N52estienepiso</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('infraestructurah4serviciobateriabanos_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.n5Areatotalm2 }}</td>
+                <td>{{ entity.n5BanioConagua }}</td>
+                <td>{{ entity.n5BanioSinagua }}</td>
+                <td>{{ entity.n5LetrinaFunciona }}</td>
+                <td>{{ entity.n5LetrinaNofunciona }}</td>
+                <td>{{ entity.n5InodoroFunciona }}</td>
+                <td>{{ entity.n5InodoroNofunciona }}</td>
+                <td>{{ entity.n5UrinarioFunciona }}</td>
+                <td>{{ entity.n5UrinarioNofunciona }}</td>
+                <td>{{ entity.n5LavamanoFunciona }}</td>
+                <td>{{ entity.n5LavamanoNofunciona }}</td>
+                <td>{{ entity.n5DuchaFunciona }}</td>
+                <td>{{ entity.n5DuchaNofunciona }}</td>
+                <td>{{ entity.obs }}</td>
+                <td>{% if entity.fecharegistro %}{{ entity.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.n5EsFuncionaAmbiente }}</td>
+                <td>{{ entity.n52EsTieneTecho }}</td>
+                <td>{{ entity.n52EsTieneCieloFalso }}</td>
+                <td>{{ entity.n52EsTienePuerta }}</td>
+                <td>{{ entity.n52EsTieneVentana }}</td>
+                <td>{{ entity.n52EsTieneMuros }}</td>
+                <td>{{ entity.n52EsTieneRevest }}</td>
+                <td>{{ entity.n52EsTienePiso }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('infraestructurah4serviciobateriabanos_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('infraestructurah4serviciobateriabanos_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('infraestructurah4serviciobateriabanos_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

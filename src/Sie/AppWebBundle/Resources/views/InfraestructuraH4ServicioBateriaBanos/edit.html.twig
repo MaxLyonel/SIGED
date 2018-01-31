@@ -1,0 +1,85 @@
+
+
+<small>
+	
+
+{{form_start(edit_form)}}
+    <div class="form-body"> 
+
+        <div class="form-group">
+        	<label>5.1 Baterias de Banos</label>
+            <div class="row">
+                <div class="col-md-4">
+                	<label>Ambiente</label>
+                    {{form_widget(edit_form.n5AmbienteBanoTipo, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-4">
+                	<label>Área</label>
+                	{{form_widget(edit_form.n5Areatotalm2, {'attr': {'class':'form-control'} } )}}
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="form-group no-margin">
+        	<label>5.2 Regitra la cantidad de artefactos q funcionan(F.) y no funcionan(N.F.)</label>
+            <div class="row">
+                <div class="col-md-1">
+                	<label>Letrinas F.</label>
+                    {{form_widget(edit_form.n5LetrinaFunciona, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-1">
+                	<label>Letrinas N.F.</label>
+                    {{form_widget(edit_form.n5LetrinaNofunciona, {'attr': {'class':'form-control'} } )}}
+                </div>
+
+                <div class="col-md-1">
+                    <label>Inodoros F.</label>
+                    {{form_widget(edit_form.n5InodoroFunciona, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-1">
+                    <label>Inodoros N.F.</label>
+                    {{form_widget(edit_form.n5InodoroNofunciona, {'attr': {'class':'form-control'} } )}}
+                </div>
+
+                <div class="col-md-1">
+                    <label>Urinarios F.</label>
+                    {{form_widget(edit_form.n5UrinarioFunciona, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-1">
+                    <label>Urinarios N.F.</label>
+                    {{form_widget(edit_form.n5UrinarioNofunciona, {'attr': {'class':'form-control'} } )}}
+                </div>
+
+                <div class="col-md-1">
+                    <label>Lavamanos F.</label>
+                    {{form_widget(edit_form.n5LavamanoFunciona, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-1">
+                    <label>Lavamanos N.F.</label>
+                    {{form_widget(edit_form.n5LavamanoNofunciona, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-1">
+                    <label>Duchas  FF.</label>
+                    {{form_widget(edit_form.n5DuchaFunciona, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-1">
+                    <label>Duchas N.F.</label>
+                    {{form_widget(edit_form.n5DuchaNofunciona, {'attr': {'class':'form-control'} } )}}
+                </div>
+                
+            </div>
+        </div>
+    </div><!-- /.form-body -->
+    <!-- <div class="form-footer">
+        <div class="pull-right">
+            <button class="btn btn-danger mr-5">Cancel</button>
+            <button class="btn btn-success" type="submit">Submit</button>
+        </div>
+        <div class="clearfix"></div>
+    </div><!-- /.form-footer --> 
+{{form_end(edit_form)}}
+
+
+
+</small>

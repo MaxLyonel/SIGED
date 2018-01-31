@@ -1,3 +1,15 @@
+sie_app_web_infraestructurah4serviciobateriabanos:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah4serviciobateriabanos.yml"
+    prefix:   /infraestructurah4serviciobateriabanos
+
+sie_app_web_infraestructurah5ambientepedagogico:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah5ambientepedagogico.yml"
+    prefix:   /infraestructurah5ambientepedagogico
+
+sie_app_web_infraestructurah4servicio:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah4servicio.yml"
+    prefix:   /infraestructurah4servicio
+    
 sie_app_web_infraestructurah1datosgenerales:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah1datosgenerales.yml"
     prefix:   /infraestructurah1datosgenerales
