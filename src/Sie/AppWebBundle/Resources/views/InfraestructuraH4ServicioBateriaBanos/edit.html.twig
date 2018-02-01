@@ -22,7 +22,7 @@
         </div>
 
         <div class="form-group no-margin">
-        	<label>5.2 Regitra la cantidad de artefactos q funcionan(F.) y no funcionan(N.F.)</label>
+        	<label>5.2 Regitra la cantidad de artefactos que funcionan(F.) y no funcionan(N.F.)</label>
             <div class="row">
                 <div class="col-md-1">
                 	<label>Letrinas F.</label>
@@ -70,7 +70,111 @@
                 
             </div>
         </div>
-    </div><!-- /.form-body -->
+
+        <br>
+
+
+        <div class="form-group">
+        	<label>5.3 Estado de la bateria de Banos</label>
+            <div class="row">
+                
+                <div class="col-md-2">
+                	<label>Cielo Falso</label>
+                    {{form_widget(edit_form.n52EsTieneCieloFalso, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-2">
+                	<label>Caracteristicas</label>
+                	{{form_widget(edit_form.n52TieneCieloFalsoCaracTipo, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-2">
+                	<label>Muro</label>
+                	{{form_widget(edit_form.n52EsTieneMuros, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-2">
+                	<label>Material Muro</label>
+                	{{form_widget(edit_form.n52TieneMurosMaterTipo, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-3">
+                	<label>Caracteristicas</label>
+                	{{form_widget(edit_form.n52TieneMurosCaracTipo, {'attr': {'class':'form-control'} } )}}
+                </div>  
+                
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2">
+                	<label>Puerta</label>
+                    {{form_widget(edit_form.n52EsTienePuerta, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-2">
+                	<label>Seguro</label>
+                	{{form_widget(edit_form.n521SeguroTipo, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-2">
+                	<label>Abre</label>
+                	{{form_widget(edit_form.n522AbreTipo, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-2">
+                	<label>Revestimiento</label>
+                	{{form_widget(edit_form.n52EsTieneRevest, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-3">
+                	<label>Caracteristicas</label>
+                	{{form_widget(edit_form.n52TieneRevestCaracTipo, {'attr': {'class':'form-control'} } )}}
+                </div>  
+                
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                
+                <div class="col-md-2">
+                	<label>Ventana</label>
+                    {{form_widget(edit_form.n52EsTieneVentana, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-2">
+                	<label>Caracteristicas</label>
+                	{{form_widget(edit_form.n52TieneVentanaCaracTipo, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-2">
+                	<label>Piso</label>
+                	{{form_widget(edit_form.n52EsTienePiso, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-2">
+                	<label>Material Piso</label>
+                	{{form_widget(edit_form.n52TienePisoMaterTipo, {'attr': {'class':'form-control'} } )}}
+                </div>
+                <div class="col-md-3">
+                	<label>Caracteristicas</label>
+                	{{form_widget(edit_form.n52TienePisoCaracTipo, {'attr': {'class':'form-control'} } )}}
+                </div>  
+                
+            </div>
+        </div>
+
+        <div class="form-group">
+        	
+            <div class="row">
+                
+                <div class="col-md-2">
+                	<label>Techo</label>
+                    {{form_widget(edit_form.n52EsTieneTecho, {'attr': {'class':'form-control'} } )}}
+                </div>
+                
+            </div>
+        </div>
+
+		
+
+
+
+    </div>
+
+
+    <!-- /.form-body -->
     <!-- <div class="form-footer">
         <div class="pull-right">
             <button class="btn btn-danger mr-5">Cancel</button>
@@ -78,6 +182,9 @@
         </div>
         <div class="clearfix"></div>
     </div><!-- /.form-footer --> 
+
+
+       
 {{form_end(edit_form)}}
 
 

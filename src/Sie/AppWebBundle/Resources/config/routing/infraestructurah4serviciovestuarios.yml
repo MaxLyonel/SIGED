@@ -1,0 +1,30 @@
+infraestructurah4serviciovestuarios:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioVestuarios:index" }
+
+infraestructurah4serviciovestuarios_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioVestuarios:show" }
+
+infraestructurah4serviciovestuarios_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioVestuarios:new" }
+
+infraestructurah4serviciovestuarios_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioVestuarios:create" }
+    methods:  POST
+
+infraestructurah4serviciovestuarios_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioVestuarios:edit" }
+
+infraestructurah4serviciovestuarios_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioVestuarios:update" }
+    methods:  [POST, PUT]
+
+infraestructurah4serviciovestuarios_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioVestuarios:delete" }
+    methods:  [POST, DELETE]

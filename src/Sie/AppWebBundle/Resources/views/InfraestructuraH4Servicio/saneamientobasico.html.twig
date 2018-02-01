@@ -98,14 +98,16 @@
   <div class="panel rounded shadow">
     <div class="panel-body">
       <!-- <button type="button" onclick="javascript:alert('agregar registro?')" class="btn btn-inverse btn-stroke">Adicionar Bateria de Baños</button> -->
-      
       <input  class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-form" value="Adicionar Bateria de Baños">
-
+      {% include 'SieAppWebBundle:InfraestructuraH4Servicio:bateriabanos.html.twig' with { 'data': 'data'} %}
     </div>
   </div>
   <div class="panel rounded shadow">
     <div class="panel-body">
-      <button type="button" onclick="javascript:alert('agregar registro vestuario?')" class="btn btn-inverse btn-stroke">Adicionar Vestuarios</button>
+
+      <!-- <button type="button" onclick="javascript:alert('agregar registro vestuario?')" class="btn btn-inverse btn-stroke">Adicionar Vestuarios</button> -->
+      <input  class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-formVestuarios" value="Adicionar Vestuarios">
+      {% include 'SieAppWebBundle:InfraestructuraH4Servicio:vestuarios.html.twig' with { 'data': 'data'} %}
     </div>
   </div>
 
