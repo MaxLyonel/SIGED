@@ -272,10 +272,11 @@ class UnificacionRudeController extends Controller {
 //                    }
 //                }
 
-            //ELIMINANDO ESTUDIANTE INCORRECTO          
-            if ($studentinc) {
-                //$em->remove($studentinc);
-                //$em->flush();
+            //AÑADIENDO CON 9- Y REGISTRO DE LOG DE RUDE INCORRECTO          
+            if ($studentinc) {                
+                $studentinc->setCodigoRude("9-".$rudeinc);
+                $em->persist($studentinc);
+                $em->flush();
 
                 //REGISTRANDO CAMBIO DE ESTADO EN CONTROL DE CALIDAD
                 $antes = $studentinc->getId(); 
