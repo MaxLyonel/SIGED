@@ -1,0 +1,34 @@
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading"></div>
+  <div class="panel-body">
+  </div>
+
+  <!-- Table -->
+  <table class="table">
+         <thead>
+            <tr>
+                <th>Ambiente</th>
+                <th>Área</th>
+                <th>Funciona</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entityVestuarios %}
+            <tr>
+                <td>{{ entity.n6ServicioAmbienteTipo }}</td>
+                <td>{{ entity.n6Areatotalm2 }}</td>
+                <td>{{ entity.n6EsFuncionaAmbiente }}</td>
+                <td>{{ entity.estadoTipo }}</td>
+                
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+    
+
+    
+
+    

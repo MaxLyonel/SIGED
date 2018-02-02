@@ -7,10 +7,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sie\AppWebBundle\Entity\InfraestructuraH4Servicio;
 use Sie\AppWebBundle\Form\InfraestructuraH4ServicioType;
-
-
+use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\InfraestructuraH4ServicioBateriaBanos;
 use Sie\AppWebBundle\Form\InfraestructuraH4ServicioBateriaBanosType;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Sie\AppWebBundle\Entity\InfraestructuraH4ServicioVestuarios;
+use Sie\AppWebBundle\Form\InfraestructuraH4ServicioVestuariosType;
 
 
 /**
@@ -39,6 +42,7 @@ class InfraestructuraH4ServicioController extends Controller
         if ($entity) {
             // if exist then, edit the values
             return $this->redirect($this->generateUrl('infraestructurah4servicio_edit', array('id' => $entity->getId())));
+
         } else {
             // no exist so create the new data
              return $this->redirect($this->generateUrl('infraestructurah4servicio_new'));
@@ -141,8 +145,7 @@ class InfraestructuraH4ServicioController extends Controller
      * Displays a form to edit an existing InfraestructuraH4Servicio entity.
      *
      */
-    public function editAction($id)
-    {
+    public function editAction($id){
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH4Servicio')->find($id);
@@ -153,21 +156,51 @@ class InfraestructuraH4ServicioController extends Controller
 
         $editForm = $this->createEditForm($entity);
         // $deleteForm = $this->createDeleteForm($id);
-        $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH4ServicioBateriaBanos')->find(4);
-
-        if (!$entity) {
+        // look for the bateras de bano data to draw in the view
+        $entityBateriaBanos = $em->getRepository('SieAppWebBundle:InfraestructuraH4ServicioBateriaBanos')->findBy(array(
+            // 'infraestructuraH4Servicio' => $id
+            'infraestructuraH4Servicio' => 18
+        ));
+        // look for the vestuario data to draw in the view
+        $entityVestuarios = $em->getRepository('SieAppWebBundle:InfraestructuraH4ServicioVestuarios')->findBy(array(
+            // 'infraestructuraH4Servicio' => $id
+            'infraestructuraH4Servicio' => 18
+        ));
+        
+        if (!$entityBateriaBanos) {
             throw $this->createNotFoundException('Unable to find InfraestructuraH4ServicioBateriaBanos entity.');
         }
-
-        $editFormBateriaBano = $this->createEditFormBateriaBano($entity);
+        // create new enttity about bateria bano
+        $entityNewBateriaBanos = new InfraestructuraH4ServicioBateriaBanos();
+        $editFormBateriaBano = $this->createCreateFormBateriaBano($entityNewBateriaBanos);
 
 
         return $this->render('SieAppWebBundle:InfraestructuraH4Servicio:edit.html.twig', array(
             'entity'      => $entity,
+            'entityBateriaBanos'      => $entityBateriaBanos,
+            'entityVestuarios'      => $entityVestuarios,
             'form'   => $editForm->createView(),
             'edit_form'   => $editFormBateriaBano->createView(),
             // 'delete_form' => $deleteForm->createView(),
         ));
+    }
+        /**
+     * Creates a form to create a InfraestructuraH4ServicioBateriaBanos entity.
+     *
+     * @param InfraestructuraH4ServicioBateriaBanos $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateFormBateriaBano(InfraestructuraH4ServicioBateriaBanos $entity)
+    {
+        $form = $this->createForm(new InfraestructuraH4ServicioBateriaBanosType(), $entity, array(
+            'action' => $this->generateUrl('infraestructurah4serviciobateriabanos_create'),
+            'method' => 'POST',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Create'));
+
+        return $form;
     }
 
       /**
