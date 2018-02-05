@@ -961,11 +961,12 @@ class InfoEstudianteBjpController extends Controller {
     public function repBjpDptoAction(Request $request) {
         $form = $request->get('form');
 
+        $gestion = $this->session->get('currentyear') - 1;
         $arch = 'REPORTE_BJP_DPTO_'.$form['dpto'].'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bonojuancitopinto_estadistica_distrito_v1.rptdesign&dpto='.$form['dpto'].'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_bonojuancitopinto_estadistica_distrito_v1.rptdesign&dpto='.$form['dpto'].'&gestion='.$gestion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
