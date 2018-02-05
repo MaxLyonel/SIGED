@@ -1,3 +1,7 @@
+sie_app_web_infraestructurah4serviciovestuarios:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah4serviciovestuarios.yml"
+    prefix:   /infraestructurah4serviciovestuarios
+
 sie_app_web_infraestructurah4serviciobateriabanos:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah4serviciobateriabanos.yml"
     prefix:   /infraestructurah4serviciobateriabanos
