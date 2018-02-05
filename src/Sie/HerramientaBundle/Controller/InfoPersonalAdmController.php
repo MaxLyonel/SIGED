@@ -187,7 +187,7 @@ class InfoPersonalAdmController extends Controller {
         /*
          * obtenemos datos de la unidad educativa
          */
-        $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($institucion, $request->getSession()->get('currentyear'));
+        $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($institucion, $gestion);
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
         $gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion);
         $notaTipo = $em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($operativo);
@@ -202,7 +202,7 @@ class InfoPersonalAdmController extends Controller {
         }
 
         $validacion_personal_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findOneBy(array('gestionTipo' => $gestionTipo, 'institucioneducativa' => $institucion, 'notaTipo' => $notaTipo, 'rolTipo' => $rolTipo));
-
+        
         $activar_acciones = true;
         if($validacion_personal_aux){
             $activar_acciones = false;
