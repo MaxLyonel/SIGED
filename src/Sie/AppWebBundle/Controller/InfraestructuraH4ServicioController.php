@@ -164,7 +164,7 @@ class InfraestructuraH4ServicioController extends Controller
         // look for the vestuario data to draw in the view
         $entityVestuarios = $em->getRepository('SieAppWebBundle:InfraestructuraH4ServicioVestuarios')->findBy(array(
             // 'infraestructuraH4Servicio' => $id
-            'infraestructuraH4Servicio' => 18
+            'infraestructuraH4Servicio' => $id
         ));
         
         if (!$entityBateriaBanos) {
@@ -405,7 +405,7 @@ class InfraestructuraH4ServicioController extends Controller
             $em->flush();
 
 
-            $entityVestuarios = $em->getRepository('SieAppWebBundle:InfraestructuraH4ServicioBateriaBanos')->findBy(array(
+            $entityVestuarios = $em->getRepository('SieAppWebBundle:InfraestructuraH4ServicioVestuarios')->findBy(array(
             // 'infraestructuraH4Servicio' => $id
             'infraestructuraH4Servicio' => $form['idInfraestructuraH4Servicio']
             ));
