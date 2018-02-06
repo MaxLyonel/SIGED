@@ -1,429 +1,1202 @@
 <!DOCTYPE html>
-<html lang="en">
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
 
+    <!-- START @HEAD -->
     {% block stylesheets %}
         <head>
-
+            <!-- START @META SECTION -->
             <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta name="description" content="">
-            <meta name="author" content="">
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+            <meta name="description" content="Blankon is a theme fullpack admin template powered by Twitter bootstrap 3 front-end framework. Included are multiple example pages, elements styles, and javascript widgets to get your project started.">
+            <meta name="keywords" content="admin, admin template, bootstrap3, clean, fontawesome4, good documentation, lightweight admin, responsive dashboard, webapp">
+            <meta name="author" content="Djava UI">
+            <title>SIGED | Herramienta Acadamica Alternativa</title>
+            <!--/ END META SECTION -->
 
-            <title>SIE - Libretas</title>
+            <!-- START @FAVICONS -->
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-144x144-precomposed.png" rel="apple-touch-icon-precomposed" sizes="144x144">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-114x114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-72x72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72">
+            <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-57x57-precomposed.png" rel="apple-touch-icon-precomposed">
+            <link href="{{asset('webherramienta/img/ico/html/apple-touch-icon.png')}}" rel="shortcut icon">
+            <!--/ END FAVICONS -->
 
-            <!-- PACE LOAD BAR PLUGIN - This creates the subtle load bar effect at the top of the page. -->
-            <link href="{{ asset('css/plugins/pace/pace.css')}}" rel="stylesheet">
-            <script src="{{ asset('js/plugins/pace/pace.js')}}"></script>
+            <!-- START @FONT STYLES -->
+            <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet">
+            <link href="http://fonts.googleapis.com/css?family=Oswald:700,400" rel="stylesheet">
+            <!--/ END FONT STYLES -->
 
-            <!-- GLOBAL STYLES - Include these on every page. -->
-            <link href="{{ asset('css/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-            <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic' rel="stylesheet" type="text/css">
-            <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel="stylesheet" type="text/css">
-            <link href="{{ asset('css/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+            <!-- START @GLOBAL MANDATORY STYLES -->
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+            <!--/ END GLOBAL MANDATORY STYLES -->
 
-            <!-- PAGE LEVEL PLUGIN STYLES -->
-            <link href="{{ asset('css/plugins/messenger/messenger-theme-flat.css') }}" rel="stylesheet">
-            <link href="{{ asset('css/plugins/messenger/messenger.css') }}" rel="stylesheet">
-            <link href="{{ asset('css/plugins/daterangepicker/daterangepicker-bs3.css') }}" rel="stylesheet">
-            <link href="{{ asset('css/plugins/morris/morris.css') }}" rel="stylesheet">
-            <link href="{{ asset('css/plugins/jvectormap/jquery-jvectormap-1.2.2.css') }}" rel="stylesheet">
-            <link href="{{ asset('css/plugins/datatables/datatables.css') }}" rel="stylesheet">
-            <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
-            <!-- THEME STYLES - Include these on every page. -->
-            <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-            <link href="{{ asset('css/plugins.css') }}" rel="stylesheet">
+            <!-- START @PAGE LEVEL STYLES -->
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/animate.css/animate.min.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/ion.rangeSlider/css/ion.rangeSlider.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.min.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/typeaheadjs/lib/typeahead.js-bootstrap.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/address/address.css')}}" rel="stylesheet">
+            {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/morrisjs/morris.css')}}" rel="stylesheet">#}
+            {#NO EXSTE ESTE ARCHIVO#}
+            {#<link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet"> #}
 
-            <!-- THEME DEMO STYLES - Use these styles for reference if needed. Otherwise they can be deleted. -->
-            <link href="{{ asset('css/demo.css') }}" rel="stylesheet">
+            {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/dropzone/downloads/css/dropzone.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jvectormap/jquery-jvectormap.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/horizontal-chart/build/css/horizBarChart.css')}}" rel="stylesheet">#}
 
+            <!--/ END PAGE LEVEL STYLES -->
+
+            <!-- START @THEME STYLES -->
+            <link href="{{asset('webherramienta/assets/admin/css/reset.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/layout.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/components.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/plugins.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/themes/default.theme.css')}}" rel="stylesheet" id="theme">
+            {#<link href="{{asset('webherramienta/assets/admin/css/pages/dashboard-retail.css')}}" rel="stylesheet">#}
+            <link href="{{asset('webherramienta/assets/admin/css/custom.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/menuTree.css')}}" rel="stylesheet">
+            <!--/ END THEME STYLES -->
+
+            <!-- START @IE SUPPORT -->
+            <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
             <!--[if lt IE 9]>
-              <script src="{{ asset('js/html5shiv.js') }}"></script>
-              <script src="{{ asset('js/respond.min.js') }}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/html5shiv/dist/html5shiv.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/respond-minmax/dest/respond.min.js')}}"></script>
             <![endif]-->
-            <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
-            <link href="{{asset('css/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css')}}" rel="stylesheet">
+            <!--/ END IE SUPPORT -->
+            <link rel="stylesheet" type="text/css" href="CSS.css">
+            <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+        </head>
+    {%endblock%}
+    <!--/ END HEAD -->
 
-            <link href="{{asset('css/jquery.typeahead.min.css')}}" rel="stylesheet">
-            <link href="{{asset('css/initialize.css')}}" rel="stylesheet">
-            <link rel="stylesheet" href="{{asset('bower_components/select2/dist/css/select2.css')}}">
+    <!--
 
-        {% endblock %}
+    |=========================================================================================================================|
+    |  TABLE OF CONTENTS (Use search to find needed section)                                                                  |
+    |=========================================================================================================================|
+    |  01. @HEAD                        |  Container for all the head elements                                                |
+    |  02. @META SECTION                |  The meta tag provides metadata about the HTML document                             |
+    |  03. @FAVICONS                    |  Short for favorite icon, shortcut icon, website icon, tab icon or bookmark icon    |
+    |  04. @FONT STYLES                 |  Font from google fonts                                                             |
+    |  05. @GLOBAL MANDATORY STYLES     |  The main 3rd party plugins css file                                                |
+    |  06. @PAGE LEVEL STYLES           |  Specific 3rd party plugins css file                                                |
+    |  07. @THEME STYLES                |  The main theme css file                                                            |
+    |  08. @IE SUPPORT                  |  IE support of HTML5 elements and media queries                                     |
+    |=========================================================================================================================|
+    |  09. @BODY                        |  Contains all the contents of an HTML document                                      |
+    |  10. @WRAPPER                     |  Wrapping page section                                                              |
+    |  11. @HEADER                      |  Header page section contains about logo, top navigation, notification menu         |
+    |  12. @SIDEBAR LEFT                |  Sidebar page section contains all sidebar menu left                                |
+    |  13. @PAGE CONTENT                |  Contents page section contains breadcrumb, content page, footer page               |
+    |  14. @SIDEBAR RIGHT               |  Sidebar page section contains all sidebar menu right                               |
+    |  15. @BACK TOP                    |  Element back to top and action                                                     |
+    |========================================================================================================================|
+    |  16. @CORE PLUGINS                |  The main 3rd party plugins script file                                             |
+    |  17. @PAGE LEVEL PLUGINS          |  Specific 3rd party plugins script file                                             |
+    |  18. @PAGE LEVEL SCRIPTS          |  The main theme script file                                                         |
+    |=========================================================================================================================|
 
+    START @BODY
+    |=========================================================================================================================|
+        |  TABLE OF CONTENTS (Apply to body class)                                                                                |
+        |=========================================================================================================================|
+    |  01. page-boxed                   |  Page into the box is not full width screen                                         |
+        |  02. page-header-fixed            |  Header element become fixed position                                               |
+        |  03. page-sidebar-fixed           |  Sidebar element become fixed position with scroll support                          |
+        |  04. page-sidebar-minimize        |  Sidebar element become minimize style width sidebar                                |
+        |  05. page-footer-fixed            |  Footer element become fixed position with scroll support on page content           |
+        |  06. page-sound                   |  For playing sounds on user actions and page events                                 |
+        |=========================================================================================================================|
 
-    <div id="wrapper">
-
-        <!-- begin TOP NAVIGATION -->
-        <nav class="navbar-top" role="navigation">
-
-            <!-- begin BRAND HEADING -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle pull-right" data-toggle="collapse" data-target=".sidebar-collapse">
-                    <i class="fa fa-bars"></i> Menu
-                </button>
-                <div class="navbar-brand">
-                    <a href="index.html">
-                        <img src="{{asset('img/siged15.png') }}" data-1x="{{asset('img/siged15.png')}}" data-2x="{{asset('img/siged15.png')}}" class="hisrc img-responsive" alt="">
-                    </a>
-                </div>
-            </div>
-            <!-- end BRAND HEADING -->
-
-            <div class="nav-top">
-
-                <!-- begin LEFT SIDE WIDGETS -->
-                <ul class="nav navbar-left">
-                    <li class="tooltip-sidebar-toggle">
-                        <a href="index.html#" id="sidebar-toggle" data-toggle="tooltip" data-placement="right" title="Menu principal">
-                            <i class="fa fa-bars"></i>
-                        </a>
-                    </li>
-                    <!-- You may add more widgets here using <li> -->
-                </ul>
-                <!-- end LEFT SIDE WIDGETS -->
-
-                <!-- begin MESSAGES/ALERTS/TASKS/USER ACTIONS DROPDOWNS -->
-                <ul class="nav navbar-right">
-
-                    <!-- begin MESSAGES DROPDOWN -->
-                    <li class="dropdown">
-                        <a href="index.html#" class="messages-link dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-envelope"></i>
-                            <span class="number">0</span> <i class="fa fa-caret-down"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-scroll dropdown-messages">
-
-                            <!-- Messages Dropdown Heading -->
-                            <li class="dropdown-header">
-                                <i class="fa fa-envelope"></i> 0 New Messages
+    -->
+    <body>
+        <!--[if lt IE 9]>
+        <p class="upgrade-browser">Upps!! You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" target="_blank">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <!-- START @WRAPPER -->
+        <section id="wrapper">
+            <!-- START @HEADER -->
+            <header id="header">
+                <!-- Start header left -->
+                <div class="header-left">
+                    <!-- Start offcanvas left: This menu will take position at the top of template header (mobile only). Make sure that only #header have the `position: relative`, or it may cause unwanted behavior -->
+                    <div class="navbar-minimize-mobile left">
+                        <i class="fa fa-bars"></i>
+                    </div>
+                    <!--/ End offcanvas left -->
+                    <!-- Start navbar header -->
+                    <div class="navbar-header">
+                        <!-- Start brand -->
+                        <a class="navbar-brand" href="{{path('principal_web')}}">
+                            <img class="logo" src="{{asset('webherramienta/img/logo/html/logo-white.png')}}" alt="brand logo"/>
+                        </a><!-- /.navbar-brand -->
+                        <!--/ End brand -->
+                    </div><!-- /.navbar-header -->
+                    <!--/ End navbar header -->
+                    <!-- Start offcanvas right: This menu will take position at the top of template header (mobile only). Make sure that only #header have the `position: relative`, or it may cause unwanted behavior -->
+                    <div class="navbar-minimize-mobile right">
+                        <i class="fa fa-cog"></i>
+                    </div>
+                    <!--/ End offcanvas right -->
+                    <div class="clearfix"></div>
+                </div><!-- /.header-left -->
+                <!--/ End header left -->
+                <!-- Start header right -->
+                <div class="header-right">
+                    <!-- Start navbar toolbar -->
+                    <div class="navbar navbar-toolbar">
+                        <!-- Start left navigation -->
+                        <ul class="nav navbar-nav navbar-left">
+                            <!-- Start sidebar shrink -->
+                            <li class="navbar-minimize">
+                                <a href="javascript:void(0);" title="Minimize sidebar">
+                                    <i class="fa fa-bars"></i>
+                                </a>
                             </li>
+                            <!--/ End sidebar shrink -->
+                            <!-- Start form search -->
+                            {#{% if app.session.get('ie_per_cod') is defined %} #}
+                                <li class="navbar-search">
+                                    <!-- Just view on mobile screen-->
+                                    <form action="{{path('history_new_inscription_index')}}" method="post" class="navbar-form">
+                                        <div class="form-group has-feedback">
+                                            <input id="form_codigoRudeHistory" class="form-control" name="form[codigoRudeHistory]" required="required" maxlength="20" type="text" placeholder="¡Ingrese un rude para ver su historial!">
+                                            {#<input type="text" class="form-control typeahead rounded" name="form[Inputrude]" id="form_Inputrude" placeholder="¡Busqueda de rude en el presente periodo!">#}
+                                            <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                                        </div>
+                                    </form>
+                                </li>
+                            {#{% endif %}#}
+                            <!--/ End form search -->
+                        </ul><!-- /.navbar-left -->
 
-                            <!-- Messages Dropdown Body - This is contained within a SlimScroll fixed height box. You can change the height using the SlimScroll jQuery features. -->
-                            <li id="messageScroll">
-                                <ul class="list-unstyled">
-
-                                    <li>
-                                        <a href="#">
-                                            <div class="row">
-                                                <div class="col-xs-2">
-                                                    <img class="img-circle" src="{{asset('img/user-profile-2.jpg') }}" alt="">
-                                                </div>
-                                                <div class="col-xs-10">
-                                                    <p>
-                                                        <strong>Juan Carlos Mamani</strong>: Gracias por la información es todo lo que ...
-                                                    </p>
-                                                    <p class="small">
-                                                        <i class="fa fa-clock-o"></i> 3:39 PM
-                                                    </p>
-                                                </div>
+                        <ul class="nav navbar-nav navbar-right">
+                            {#<li class="dropdown navbar-message">
+                                <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope-o"></i><span class="rounded count label label-danger">1</span></a>
+                                <div class="dropdown-menu animated flipInX">
+                                    <div class="dropdown-header">
+                                        <span class="title">Mensajes <strong>(10)</strong></span>
+                                        <span class="option text-right"><a href="form-element.html#">+ Nuevo mensaje</a></span>
+                                    </div>
+                                    <div class="dropdown-body">
+                                        <form class="form-horizontal" action="form-element.html#">
+                                            <div class="form-group has-feedback has-feedback-sm m-5">
+                                                <input type="text" class="form-control input-sm" placeholder="Search message...">
+                                                <button type="submit" class="btn btn-theme fa fa-search form-control-feedback"></button>
                                             </div>
-                                        </a>
-                                    </li>
+                                        </form>
+                                        <div class="media-list niceScroll">
+                                            <a href="page-messages.html" class="media">
+                                                <div class="pull-left"><img src="{{asset('webherramienta/img/avatar/50/2.png')}}" class="media-object img-circle" alt="John Kribo"/></div>
+                                                <div class="media-body">
+                                                    <span class="media-heading">Alejando Fiengo</span>
+                                                    <span class="media-text">Che hermano necesito que me pases el caso del rude que no guarda el socioconomico</span>
+                                                    <!-- Start meta icon -->
+                                                    <span class="media-meta"><i class="fa fa-reply"></i></span>
+                                                    <span class="media-meta"><i class="fa fa-paperclip"></i></span>
+                                                    <span class="media-meta pull-right">hace 13 minutos</span>
+                                                    <!--/ End meta icon -->
+                                                </div><!-- /.media-body -->
+                                            </a>
+                                            <a href="form-element.html#" class="media indicator inline">
+                                                <span class="spinner">Leyendo mas mensajes...</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-footer">
+                                        <a href="page-messages.html">Ver todos los mensajes</a>
+                                    </div>
+                                </div>
+                            </li>#}
 
+                            <li class="dropdown navbar-notification">
+                                <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell-o"></i>
+                                    <span class="rounded count label label-danger">Aviso</span>
+                                </a>
+                                <div class="dropdown-menu animated flipInX">
+                                    <div class="dropdown-header">
+                                        <span class="title">Notificaciones <strong>(1)</strong></span>
+                                        {#<span class="option text-right"><a href="form-element.html#"><i class="fa fa-cog"></i> Configuración</a></span>#}
+                                    </div>
+                                    <div class="dropdown-body niceScroll">
+                                        <div class="media-list small">
+                                            {#{% if notification is defined  %}
+                                                {% for data in notification %}
+                                                    <a href="form-element.html#" class="media">
+                                                        <div class="media-object pull-left"><img class="img-circle" src="{{asset('webherramienta/img/avatar/50/10.png')}}" alt=""/></div>
+                                                        <div class="media-body">
+                                                            <span class="media-text">{{data.institucioneducativa_id}} {{data.institucioneducativa}} {{data.tramite_estado}}</span>
+                                                            <span class="media-meta">{{data.gestion_tipo_id}} {{data.sucursal_tipo_id}}</span>
+                                                        </div>
+                                                    </a>
+                                                {% endfor %}
+                                            {%endif%}                                            #}
+                                            {#{% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) %}#}
+
+
+                                            <a href="page-messages.html" class="media">
+                                                <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
+                                                <div class="media-body">
+                                                    <span class="media-heading">Victor Jimenez</span>
+                                                    <span class="media-text">
+                                                    A todos los usuarios del sistema de Alternativa:
+                                                    Se les informa que se acerca el plazo final para el cierre definitivo de gestiones pasadas, para tal propósito se ha publicado en la opción de “Panel de Control de Operativos” información de centros y periodos pendientes de finalización, con el cual se espera con urgencia el seguimiento y conclusión del operativo de regularización de gestiones pasadas.
+                                                    También se ha actualizado la lista de Centros pendientes de finalización gestión 2017 para su seguimiento y conclusión.
+                                                    ¡Agradeciéndoles los esfuerzos para concluir la presente gestión, el equipo del SIGED les desea felices fiestas!
+                                                    Atte. Administrador
+                                                    </span>
+                                                    <span class="media-meta pull-right">14/12/2017</span>
+                                                </div>
+                                            </a>
+
+                                            {#<a href="form-element.html#" class="media indicator inline">
+                                                <span class="spinner">Leyendo mas notificaciones...</span>
+                                            </a>#}
+                                        </div>
+                                    </div>
+                                    {#<div class="dropdown-footer">
+                                        <a href="form-element.html#">Ver Todos</a>
+                                    </div>#}
+                                </div>
+                                <!--/ End dropdown menu -->
+                            </li><!-- /.navbar-notification -->
+                            <!--/ End notifications -->
+
+                            <!-- Start profile -->
+                            <li class="dropdown navbar-profile">
+                                <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <span class="meta">
+                                        <span class="avatar"><img src="/uploads/personasfotos/{{app.session.get('userfoto')}}" class="img-circle" alt="IMG"></span>
+                                        <span class="text hidden-xs hidden-sm text-muted">{{app.session.get('name')}}</span>
+                                        <span class="caret"></span>
+                                    </span>
+                                </a>
+                                <!-- Start dropdown menu -->
+                                <ul class="dropdown-menu animated flipInX">
+                                    <li class="dropdown-header">Cuenta</li>
+                                    {#<i class="fa fa-gear"></i> <span class="text-blue"> Gestion de Usuarios</span>#}
+                                    <li><a href="{{path('sie_usuarios_homepage')}}"><i class="fa fa-gear"></i> Gestion de Usuarios</a></li>
+                                    {#<li><a href="mail-inbox.html"><i class="fa fa-envelope-square"></i>Recibidos <span class="label label-info pull-right">30</span></a></li>#}
+                                    <li class="divider"></li>
+                                    <li><a href="{{path('logout')}}"><i class="fa fa-sign-out"></i>Salir</a></li>
                                 </ul>
-                            </li>
+                                <!--/ End dropdown menu -->
+                            </li><!-- /.navbar-profile -->
+                            <!--/ End profile -->
 
-                            <!-- Messages Dropdown Footer -->
-                            <li class="dropdown-footer">
-                                <a href="#">Read All Messages</a>
-                            </li>
-
-                        </ul>
-                        <!-- /.dropdown-menu -->
-                    </li>
-                    <!-- /.dropdown -->
-                    <!-- end MESSAGES DROPDOWN -->
-
-                    <!-- begin ALERTS DROPDOWN -->
-
-                    <!-- end ALERTS DROPDOWN -->
-
-                    <!-- begin TASKS DROPDOWN -->
-
-
-                    <!-- /.dropdown -->
-                    <!-- end TASKS DROPDOWN -->
-
-                    <!-- begin USER ACTIONS DROPDOWN -->
-                    <li class="dropdown">
-                        <a href="index.html#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-user"></i>  <i class="fa fa-caret-down"></i>
+                            <!-- Start settings -->
+                            <li class="navbar-setting pull-right">
+                                <a href="javascript:void(0);"><i class="fa fa-cog fa-spin"></i></a>
+                            </li><!-- /.navbar-setting -->
+                            <!--/ End settings -->
+                        </ul><!-- /.navbar-right -->
+                        <!--/ End right navigation -->
+                    </div><!-- /.navbar-toolbar -->
+                    <!--/ End navbar toolbar -->
+                </div><!-- /.header-right -->
+                <!--/ End header left -->
+            </header> <!-- /#header -->
+            <!--/ END HEADER -->
+            <!--
+            START @SIDEBAR LEFT
+            |=========================================================================================================================|
+            |  TABLE OF CONTENTS (Apply to sidebar left class)                                                                        |
+            |=========================================================================================================================|
+            |  01. sidebar-box               |  Variant style sidebar left with box icon                                              |
+            |  02. sidebar-rounded           |  Variant style sidebar left with rounded icon                                          |
+            |  03. sidebar-circle            |  Variant style sidebar left with circle icon                                           |
+            |=========================================================================================================================|
+            -->
+            <aside id="sidebar-left" class="sidebar-circle">
+                <!-- Start left navigation - profile shortcut -->
+                <div class="sidebar-content">
+                    <div class="media">
+                        <a class="pull-left has-notif avatar" {#href="page-profile.html"#}>
+                            {#<img src="{{asset('webherramienta/img/avatar/50/1.png')}}" alt="admin">#}
+                            <img class="img-circle" src ="/uploads/personasfotos/{{app.session.get('userfoto')}}" height="150" width="150" >
+                            <i class="online"></i>
                         </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li>
-                                <a href="{{path('persona_main')}}">
-                                    <i class="fa fa-user"></i> <span class="text-green"> Mi Perfil</span>
-                                </a>
-                            </li>
-                            <!--li>
-                                <a href="mailbox.html">
-                                    <i class="fa fa-envelope"></i> My Messages
-                                    <span class="badge green pull-right">4</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-bell"></i> My Alerts
-                                    <span class="badge orange pull-right">9</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="index.html#">
-                                    <i class="fa fa-tasks"></i> My Tasks
-                                    <span class="badge blue pull-right">10</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="calendar.html">
-                                    <i class="fa fa-calendar"></i> My Calendar
-                                </a>
-                            </li>
-                            <li class="divider"></li-->
-                            <li>
-                                <a href="{{path('usuariopasswd')}}">
-                                    <i class="fa fa-gear"></i> <span class="text-green"> Cambiar Password</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="logout_open" href="index.html#logout">
-                                    <i class="fa fa-sign-out"></i><span class="text-red"> Salir</span>
-                                    <strong>{{ app.session.get('name') }}</strong>
-                                </a>
-                            </li>
+                        <div class="media-body">
+                            <h4 class="media-heading">Hola, <span>{{app.session.get('name')}}</span></h4>
+                            <small>{{app.session.get('cuentauser')}}</small>
+                        </div>
+                    </div>
+                </div><!-- /.sidebar-content -->
+                <!--/ End left navigation -  profile shortcut -->
+                <!-- Start left navigation - menu -->
+                <ul class="sidebar-menu">
+                    <li class="active">
+                        <a href="{{path('principal_web')}}">
+                            <span class="icon"><i class="glyphicon glyphicon-leaf"></i></span>
+                            <span class="text">Bienvenida</span>
+                            <span class="selected"></span>
+                        </a>
+                    </li>
+                    {#<li class="submenu">
+                        <a href="javascript:void(0);">
+                            <span class="icon"><i class="fa fa-home"></i></span>
+                            <span class="text">Solicitud</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul>
+                            <li><a href="#">regularización U.E.</a></li>
+
                         </ul>
-                        <!-- /.dropdown-menu -->
-                    </li>
-                    <!-- /.dropdown -->
-                    <!-- end USER ACTIONS DROPDOWN -->
+                    </li>#}
+                    <!-- Start navigation - dashboard -->
+                    {#<li class="submenu">
+                        <a href="javascript:void(0);">
+                            <span class="icon"><i class="fa fa-home"></i></span>
+                            <span class="text">Unidad Educativa</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul>
+                            <li><a href="dashboard.html">Maestros</a></li>
+                            <li><a href="dashboard-ecommerce.html">Personal Administrativo</a></li>
+                            <li><a href="dashboard-hr.html">Creación de Cursos</a></li>
+                            <li><a href="{{path('adicioneliminacionareas')}}">Adición/Eliminación de Áreas</a></li>
+                            <li><a href="{{path('inscription_ue_all_sie_index')}}">Inscripción de Estudiantes</a></li>
+                            <li><a href="{{path('notas')}}">Notas Cuantitativas</a></li>
+                            <li><a href="{{path('notascualitativas')}}">Notas Cualitativas</a></li>
+                        </ul>
+                    </li>#}
+                    {% if (app.session.get('roluser') == 31) %} {#SUPER USUARIO#}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Configuraciones especiales</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{path('herramientalt_ceducativa_duplicados_paralelos')}}">Cambiar paralelo cursos duplicados </a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_periododistinto')}}">Corregir periodos distintos entre modulo y oferta </a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_aux')}}">Auxiliar 1 </a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
 
-                </ul>
-                <!-- /.nav -->
-                <!-- end MESSAGES/ALERTS/TASKS/USER ACTIONS DROPDOWNS -->
+                    {% if (app.session.get('roluser') == 8) %} {#NACIONAL#}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Gestión</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
+                                <li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>
+                                <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
+                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
+                                <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
+                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
 
-            </div>
-            <!-- /.nav-top -->
-        </nav>
-        <!-- /.navbar-top -->
-        <!-- end TOP NAVIGATION -->
 
-        <!-- begin SIDE NAVIGATION -->
-        <nav class="navbar-side" role="navigation">
-            <div class="navbar-collapse sidebar-collapse collapse">
-                <ul id="side" class="nav navbar-nav side-nav">
-                    <!-- begin SIDE NAV USER PANEL -->
-                    <li class="side-user hidden-xs">
-                        {% if app.session.get('userfoto') is empty %}
-                            <img class="img-circle" src ="/uploads/krlos.jpg " height="150" width="150" >
-                        {% else %}
-                            <img class="img-circle" src ="/uploads/{{app.session.get('userfoto')}} " height="150" width="150" >
-                        {% endif %}
-                        <p class="welcome">
-                            <i class="fa fa-key"></i> Bienvenido
-                        </p>
-                        <p class="name tooltip-sidebar-logout">
-                            {{ app.session.get('name') }}
-                            <span class="last-name"> {{ app.session.get('lastname') }}</span> <a style="color: inherit" class="logout_open" href="index.html#logout" data-toggle="tooltip" data-placement="top" title="Salir"><i class="fa fa-sign-out"></i></a>
-                        </p>
-                        <div class="clearfix"></div>
-                    </li>
-                    <!-- end SIDE NAV USER PANEL -->
-                    <!-- begin SIDE NAV SEARCH -->
-                    <li class="nav-search">
-                        <form role="form">
-                            <input type="search" class="form-control" placeholder="Search...">
-                            <button class="btn">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </form>
-                    </li>
-                    <!-- end SIDE NAV SEARCH -->
-                    <!-- begin DASHBOARD LINK -->
-                        {% if app.session.get('sysname') is not empty %}
-                            <li class="panel">
-                                <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menu_centro">
-                                    <i class="fa fa-edit"></i> Centro <i class="fa fa-caret-down"></i>
-                                </a>
-                                <ul class="collapse nav" id="menu_centro">
-                                    <li>
-                                        <a href="{{path('institucioneducativagestion',{'op':'search'})}}">
-                                            <i class="fa fa-angle-double-right"></i> Información del Centro
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('personaladministrativogestion',{'op':'search'})}}">
-                                            <i class="fa fa-angle-double-right"></i> Personal Administrativo
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('maestrogestion',{'op':'search'})}}">
-                                            <i class="fa fa-angle-double-right"></i> Facilitadores
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('institucioncursocorto',{'op':'search'})}}">
-                                            <i class="fa fa-angle-double-right"></i> Gestión Cursos Cortos
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('institucioncursolargo',{'op':'search'})}}">
-                                            <i class="fa fa-angle-double-right"></i> Gestión Cursos Largos
-                                        </a>
-                                    </li>
-                                </ul>
+                    {% if (app.session.get('roluser') == 20) %} {#NACIONAL INVITADO#}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Gestión</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <!--li><a href="{{path('history_new_inscription_index')}}">Historial Estudiante/Participante </a></li-->
+                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
+                    {% if (app.session.get('roluser') == 7) %} {#DEPTO#}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Gestión</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
+                                <li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>
+                                <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
+                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
+                                <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
+                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                            </ul>
+                        </li>
+                        {#<li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Bachiller de Excelencia</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
+                            </ul>
+                        </li>#}
+                    {% endif %}
+                    {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Gestión</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>
+                                {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
+                                <li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>
+                                <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
+                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
+                                <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if app.session.get('roluser') == 9 %}{#DIRECTOR#}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Gestión</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Bachiller de Excelencia</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                              <!-- <li><a href="#">Operativo Concluido</a></li> -->
+
+                              {#<li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}
+                              <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
+                              {#<li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
+                              <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
+                            
+
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul><!-- /.sidebar-menu -->
+                <!--/ End left navigation - menu -->
+
+                <!-- Start left navigation - footer -->
+                {#<div class="sidebar-footer hidden-xs hidden-sm hidden-md">
+                    <a id="setting" class="pull-left" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-title="Setting"><i class="fa fa-cog"></i></a>
+                    <a id="fullscreen" class="pull-left" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-title="Fullscreen"><i class="fa fa-desktop"></i></a>
+                    <a id="lock-screen" data-url="page-signin.html" class="pull-left" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-title="Lock Screen"><i class="fa fa-lock"></i></a>
+                    <a id="logout" data-url="page-lock-screen.html" class="pull-left" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-title="Logout"><i class="fa fa-power-off"></i></a>
+                </div>#}<!-- /.sidebar-footer -->
+                <!--/ End left navigation - footer -->
+
+            </aside><!-- /#sidebar-left -->
+            <!--/ END SIDEBAR LEFT -->
+
+            <!-- START @PAGE CONTENT -->
+            <section id="page-content">
+                <div class="header-content" style="background-color: #6d7b61;">
+                    <h2><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}}
+                        <span> {{app.session.get('ie_id')}}  {{app.session.get('ie_gestion')}}  {{app.session.get('ie_per_nom')}}
+                            {% if (app.session.get('ie_per_estado') != '0') %}
+                                : <i class="fa fa-wrench"></i> {{app.session.get('ie_operativo')}}
+                            {% endif %}
+                        </span>
+                    </h2>
+                    <div class="breadcrumb-wrapper hidden-xs">
+                        <span class="label">Sub Centro:</span>
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="">{{app.session.get('ie_subcea')}}</a>
                             </li>
-                            <li class="panel">
-                                <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menu_programas">
-                                    <i class="fa fa-edit"></i> Cursos <i class="fa fa-caret-down"></i>
-                                </a>
-                                <ul class="collapse nav" id="menu_programas">
-                                    <li>
-                                        <a href="{{path('areatematica')}}">
-                                            <i class="fa fa-angle-double-right"></i> Áreas de Curso Corto
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('cursolargo')}}">
-                                            <i class="fa fa-angle-double-right"></i> Curso Largo
-                                        </a>
-                                    </li>
-                                    <li style="display:none">
-                                        <a href="{{path('carrerastecnica')}}">
-                                            <i class="fa fa-angle-double-right"></i> Registro y Modificacion
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{path('institucioneducativaCursoTecnica',{'op':'search'})}}">
-                                            <i class="fa fa-angle-double-right"></i> Asignacion de Cursos
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="panel" style="display:none">
-                                <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menu_participantes">
-                                    <i class="fa fa-edit"></i> Participantes <i class="fa fa-caret-down"></i>
-                                </a>
-                                <ul class="collapse nav" id="menu_participantes">
-                                    <li>
-                                        <a href="{{path('estudianteinscripcionTecnica',{'op':'search'})}}">
-                                            <i class="fa fa-angle-double-right"></i> Inscripción y Notas
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        {% endif %}
-                <!-- end FORMS DROPDOWN -->
-                <!-- begin CALENDAR LINK -->
+                        </ol>
+                    </div><!-- /.breadcrumb-wrapper -->
+                </div>
 
-                <!-- /.navbar-collapse -->
-        </nav>
-
-        <!-- /.navbar-side -->
-        <!-- end SIDE NAVIGATION -->
-
-        <!-- begin MAIN PAGE CONTENT -->
-        <div id="page-wrapper">
-
-
-
-
-            <div class="page-content">
                 {% block contentoption %}
                     <!-- here the iptions content -->
                 {% endblock %}
+
+                <!-- Start footer content -->
+                <footer class="footer-content">
+                    <span id="copyright-year"></span> &copy; Vjimenez Admin. Creado por el: <a href="www.minedu.gob.bo" target="_blank">Ministerio de Educación</a> Estado Plurinacional de Bolivia
+                    <span class="pull-right">0.01 GB(0%) of 15 GB used</span>
+                </footer><!-- /.footer-content -->
+                <!--/ End footer content -->
+
+            </section><!-- /#page-content -->
+            <!--/ END PAGE CONTENT -->
+
+            <!-- BARRA DE BOTONES  -->
+            <aside id="sidebar-right">
+                <div class="panel panel-tab">
+                    <div class="panel-heading no-padding">
+                        <div class="pull-right">
+                            <ul class="nav nav-tabs">
+                                <li>
+                                    <a href="form-element.html#sidebar-profile" data-toggle="tab">
+                                        <i class="fa fa-question-circle"></i>
+                                    </a>
+                                </li>
+                                {#<li>
+                                    <a href="form-element.html#sidebar-layout" data-toggle="tab">
+                                        <i class="fa fa-cogs"></i>
+                                    </a>
+                                </li>#}
+                                {#<li>
+                                    <a href="form-element.html#sidebar-setting" data-toggle="tab">
+                                        <i class="fa fa-paint-brush"></i>
+                                    </a>
+                                </li>#}
+                                {#<li>
+                                    <a href="form-element.html#sidebar-chat" data-toggle="tab">
+                                        <i class="fa fa-comments"></i>
+                                    </a>
+                                </li>#}
+                            </ul>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body no-padding">
+                        <div class="tab-content">
+                            <div class="tab-pane" id="sidebar-profile">
+                                <div class="sidebar-profile">
+                                    <!-- Start right navigation - menu -->
+                                    <ul class="sidebar-menu niceScroll">
+                                        <!-- Start category about me -->
+                                        <li class="sidebar-category">
+                                            <span>ATENCIÓN AL CLIENTE</span>
+                                            <span class="pull-right"><i class="fa fa-phone-square"></i></span>
+                                        </li>
+                                        <!--/ End category about me -->
+                                        <!--/ Start navigation - about me -->
+                                        <li>
+                                            <ul class="list-unstyled">
+                                                <li>
+                                                    <i class="fa fa-envelope"></i> roge.flores1@gmail.com
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-phone"></i> 2442144 (Internos:317-371)
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <!--/ End navigation - about me -->
+                                        <!-- Start category recent activity -->
+                                        <li class="sidebar-category">
+                                            <span>RUDES GENERADOS</span>
+                                            <span class="pull-right"><i class="fa fa-key"></i></span>
+                                        </li>
+                                        <!--/ End category recent activity -->
+                                        <!--/ Start navigation - reset settings -->
+                                        <li>
+                                            <a onclick="getRudesUser();" class="btn btn-inverse btn-block"><i class="fa fa-refresh fa-spin"></i> Ver mis rudes generados </a>
+                                        </li>
+                                        <!--/ End navigation - reset settings -->
+                                        <!--/ Start navigation - activity -->
+                                        <li>
+                                            <div class="media-list activity">
+                                                <a class="media">
+                                                    <div id="divrudesuser">
+
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </li>
+                                        {#<li class="sidebar-category">
+                                            <span>CHAT COMUNIDAD DE TRABAJO</span>
+                                            <span class="pull-right"><i class="fa fa-group"></i></span>
+                                        </li>
+
+                                        <li>
+                                            <div class="media-list working">
+                                                <a href="form-element.html#" class="media">
+                                                    <div class="media-object pull-left has-notif">
+                                                        <img src="{{asset('webherramienta/img/avatar/35/10.png')}}" class="img-circle" alt="Daddy Botak">
+                                                        <i class="online"></i>
+                                                    </div><!-- /.media-object -->
+                                                    <div class="media-body">
+                                                        <span class="media-heading">Daddy Botak</span>
+                                                        <span class="media-meta status">online</span>
+                                                        <span class="media-meta device"><i class="fa fa-globe"></i></span>
+                                                    </div><!-- /.media-body -->
+                                                </a><!-- /.media -->
+                                            </div><!-- /.media-list -->
+                                        </li>#}
+                                    </ul>
+                                </div>
+                            </div><!-- /#sidebar-profile -->
+                            {#<div class="tab-pane" id="sidebar-layout">
+                                <div class="sidebar-layout">
+
+                                    <!-- Start right navigation - menu -->
+                                    <ul class="sidebar-menu niceScroll">
+
+                                        <!--/ Start navigation - reset settings -->
+                                        <li>
+                                            <a id="reset-setting" href="javascript:void(0);" class="btn btn-inverse btn-block"><i class="fa fa-refresh fa-spin"></i> RESET SETTINGS</a>
+                                        </li>
+                                        <!--/ End navigation - reset settings -->
+
+                                        <!-- Start category layout -->
+                                        <li class="sidebar-category">
+                                            <span>VISTA</span>
+                                            <span class="pull-right"><i class="fa fa-toggle-on"></i></span>
+                                        </li>
+                                        <!--/ End category layout -->
+
+                                        <!--/ Start navigation - layout -->
+                                        <li>
+                                            <ul class="list-unstyled layout-setting">
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="layout-fluid" type="radio" name="layout" value="">
+                                                        <label for="layout-fluid">Dinamico</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="layout-boxed" type="radio" name="layout" value="page-boxed">
+                                                        <label for="layout-boxed">Encajonado</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <!--/ End navigation - layout -->
+
+                                        <!-- Start category header -->
+                                        <li class="sidebar-category">
+                                            <span>HEADER</span>
+                                            <span class="pull-right"><i class="fa fa-toggle-on"></i></span>
+                                        </li>
+                                        <!--/ End category header -->
+
+                                        <!--/ Start navigation - header -->
+                                        <li>
+                                            <ul class="list-unstyled header-layout-setting">
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="header-default" type="radio" name="header" value="">
+                                                        <label for="header-default">Default</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="header-fixed" type="radio" name="header" value="page-header-fixed">
+                                                        <label for="header-fixed">Fixed</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <!--/ End navigation - header -->
+
+                                        <!-- Start category sidebar -->
+                                        <li class="sidebar-category">
+                                            <span>SIDEBAR</span>
+                                            <span class="pull-right"><i class="fa fa-toggle-on"></i></span>
+                                        </li>
+                                        <!--/ End category sidebar -->
+
+                                        <!--/ Start navigation - sidebar -->
+                                        <li>
+                                            <ul class="list-unstyled sidebar-layout-setting">
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="sidebar-default" type="radio" name="sidebar" value="">
+                                                        <label for="sidebar-default">Default</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="sidebar-fixed" type="radio" name="sidebar" value="page-sidebar-fixed">
+                                                        <label for="sidebar-fixed">Fixed</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <!--/ End navigation - sidebar -->
+
+                                        <!-- Start category sidebar type -->
+                                        <li class="sidebar-category">
+                                            <span>TIPO DE BARRA DE MENU</span>
+                                            <span class="pull-right"><i class="fa fa-toggle-on"></i></span>
+                                        </li>
+                                        <!--/ End category sidebar type -->
+
+                                        <!--/ Start navigation - sidebar -->
+                                        <li>
+                                            <ul class="list-unstyled sidebar-type-setting">
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="sidebar-type-default" type="radio" name="sidebarType" value="">
+                                                        <label for="sidebar-type-default">Por defecto</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="sidebar-type-box" type="radio" name="sidebarType" value="sidebar-box">
+                                                        <label for="sidebar-type-box">Cuadrado</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="sidebar-type-rounded" type="radio" name="sidebarType" value="sidebar-rounded">
+                                                        <label for="sidebar-type-rounded">Redondeado</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="sidebar-type-circle" type="radio" name="sidebarType" value="sidebar-circle">
+                                                        <label for="sidebar-type-circle">Circulo</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="sidebar-category">
+                                            <span>FOOTER</span>
+                                            <span class="pull-right"><i class="fa fa-toggle-on"></i></span>
+                                        </li>
+                                        <li>
+                                            <ul class="list-unstyled footer-layout-setting">
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="footer-default" type="radio" name="footer" value="">
+                                                        <label for="footer-default">Default</label>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="rdio rdio-theme">
+                                                        <input id="footer-fixed" type="radio" name="footer" value="page-footer-fixed">
+                                                        <label for="footer-fixed">Fixed</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <!--/ End navigation - footer -->
+                                    </ul>
+                                    <!-- Start right navigation - menu -->
+                                </div>
+                            </div>#}<!-- /#sidebar-layout -->
+
+                            {#<div class="tab-pane in active" id="sidebar-setting">
+                                <div class="sidebar-setting">
+                                    <ul class="sidebar-menu">
+                                        <li class="sidebar-category">
+                                            <span>COLOR SCHEMES</span>
+                                            <span class="pull-right"><i class="fa fa-tint"></i></span>
+                                        </li>
+                                        <li>
+                                            <div class="sidebar-themes color-schemes">
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #81b71a" data-toggle="tooltip" data-placement="right" data-original-title="Default"><span class="hide">default</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #00B1E1" data-toggle="tooltip" data-placement="top" data-original-title="Blue"><span class="hide">blue</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #37BC9B" data-toggle="tooltip" data-placement="top" data-original-title="Cyan"><span class="hide">cyan</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #8CC152" data-toggle="tooltip" data-placement="top" data-original-title="Green"><span class="hide">green</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #E9573F" data-toggle="tooltip" data-placement="top" data-original-title="Red"><span class="hide">red</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #F6BB42" data-toggle="tooltip" data-placement="top" data-original-title="Yellow"><span class="hide">yellow</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #906094" data-toggle="tooltip" data-placement="top" data-original-title="Purple"><span class="hide">purple</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #D39174" data-toggle="tooltip" data-placement="top" data-original-title="Brown"><span class="hide">brown</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #9FB478" data-toggle="tooltip" data-placement="left" data-original-title="Green Army"><span class="hide">green-army</span></a>
+
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #63D3E9" data-toggle="tooltip" data-placement="right" data-original-title="Blue Sea"><span class="hide">blue-sea</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #5577B4" data-toggle="tooltip" data-placement="top" data-original-title="Blue Gray"><span class="hide">blue-gray</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #AF86B9" data-toggle="tooltip" data-placement="top" data-original-title="Purple Gray"><span class="hide">purple-gray</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #CC6788" data-toggle="tooltip" data-placement="top" data-original-title="Purple Wine"><span class="hide">purple-wine</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #F06F6F" data-toggle="tooltip" data-placement="top" data-original-title="Alizarin Crimson"><span class="hide">alizarin-crimson</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #979797" data-toggle="tooltip" data-placement="top" data-original-title="Black And White"><span class="hide">black-and-white</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #8BC4B9" data-toggle="tooltip" data-placement="top" data-original-title="Amazon"><span class="hide">amazon</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #B0B069" data-toggle="tooltip" data-placement="top" data-original-title="Amber"><span class="hide">amber</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #A9C784" data-toggle="tooltip" data-placement="left" data-original-title="Android green"><span class="hide">android-green</span></a>
+
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #B3998A" data-toggle="tooltip" data-placement="right" data-original-title="Antique brass"><span class="hide">antique-brass</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #8D8D6E" data-toggle="tooltip" data-placement="top" data-original-title="Antique Bronze"><span class="hide">antique-bronze</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #B0B69D" data-toggle="tooltip" data-placement="top" data-original-title="Artichoke"><span class="hide">artichoke</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #F19B69" data-toggle="tooltip" data-placement="top" data-original-title="Atomic Tangerine"><span class="hide">atomic-tangerine</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #98777B" data-toggle="tooltip" data-placement="top" data-original-title="Bazaar"><span class="hide">bazaar</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #C3A961" data-toggle="tooltip" data-placement="top" data-original-title="Bistre Brown"><span class="hide">bistre-brown</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #D6725E" data-toggle="tooltip" data-placement="top" data-original-title="Bittersweet"><span class="hide">bittersweet</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #7789D1" data-toggle="tooltip" data-placement="top" data-original-title="Blueberry"><span class="hide">blueberry</span></a>
+                                                <a class="theme" href="javascript:void(0);" style="background-color: #6FA362" data-toggle="tooltip" data-placement="left" data-original-title="Bud Green"><span class="hide">bud-green</span></a>
+                                            </div><!-- /.sidebar-themes -->
+                                        </li>
+
+                                        <li class="sidebar-category">
+                                            <span>NAVBAR COLOR</span>
+                                            <span class="pull-right"><i class="fa fa-tint"></i></span>
+                                        </li>
+                                        <li>
+                                            <div class="sidebar-themes navbar-color">
+                                                <a class="theme bg-dark" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Dark"><span class="hide">dark</span></a>
+                                                <a class="theme bg-light" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Light"><span class="hide">light</span></a>
+                                                <a class="theme bg-primary" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Primary"><span class="hide">primary</span></a>
+                                                <a class="theme bg-success" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Success"><span class="hide">success</span></a>
+                                                <a class="theme bg-info" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Info"><span class="hide">info</span></a>
+                                                <a class="theme bg-warning" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Warning"><span class="hide">warning</span></a>
+                                                <a class="theme bg-danger" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Danger"><span class="hide">danger</span></a>
+                                            </div>
+                                        </li>
+
+                                        <li class="sidebar-category">
+                                            <span>SIDEBAR COLOR</span>
+                                            <span class="pull-right"><i class="fa fa-tint"></i></span>
+                                        </li>
+                                        <li>
+                                            <div class="sidebar-themes sidebar-color">
+                                                <a class="theme bg-dark" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Dark"><span class="hide">dark</span></a>
+                                                <a class="theme bg-light" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Light"><span class="hide">light</span></a>
+                                                <a class="theme bg-primary" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Primary"><span class="hide">primary</span></a>
+                                                <a class="theme bg-success" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Success"><span class="hide">success</span></a>
+                                                <a class="theme bg-info" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Info"><span class="hide">info</span></a>
+                                                <a class="theme bg-warning" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Warning"><span class="hide">warning</span></a>
+                                                <a class="theme bg-danger" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Danger"><span class="hide">danger</span></a>
+                                            </div>
+                                        </li>
+
+                                        <li class="sidebar-category">
+                                            <span>PROGRESOS</span>
+                                            <span class="pull-right"><i class="fa fa-sliders"></i></span>
+                                        </li>
+                                        <li>
+                                            <ul class="list-group sidebar-task">
+                                                <li class="list-group-item">
+                                                    <p class="details"> <span> Avance de reporte de notas </span> <span class="pull-right"> 82% </span> </p>
+                                                    <div class="progress progress-xs progress-striped active no-margin">
+                                                        <div style="width: 82%" class="progress-bar progress-bar-success"> </div>
+                                                    </div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <p class="details"> <span> Front-End </span> <span class="pull-right"> 67% </span> </p>
+                                                    <div class="progress progress-xs progress-striped active no-margin">
+                                                        <div style="width: 47%" class="progress-bar progress-bar-danger"> </div>
+                                                    </div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <p class="details"> <span> Back-End </span> <span class="pull-right"> 45% </span> </p>
+                                                    <div class="progress progress-xs progress-striped active no-margin">
+                                                        <div style="width: 47%" class="progress-bar progress-bar-info"> </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-category">
+                                            <span>ESTADISTICAS RAPIDAS</span>
+                                            <span class="pull-right"><i class="fa fa-bar-chart-o"></i></span>
+                                        </li>
+                                        <li>
+                                            <ul class="sidebar-summary sparklines">
+                                                <li>
+                                                    <div class="list-info">
+                                                        <span>Matricula por año</span>
+                                                        <h4>1, 412, 101</h4>
+                                                    </div>
+                                                    <div class="chart"><span class="average">4,2,3,2,4,2,5,1,2,2,5,3</span></div>
+                                                    <div class="clearfix"></div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>#}
+
+                            {#<div class="tab-pane" id="sidebar-chat">
+                                <div class="sidebar-chat">
+
+                                    <form class="form-horizontal">
+                                        <div class="form-group has-feedback">
+                                            <input class="form-control" type="text" placeholder="Search messages...">
+                                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                                        </div>
+                                    </form>
+                                    <ul class="sidebar-menu niceScroll">
+                                        <li class="sidebar-category">
+                                            <span>FAMILY</span>
+                                            <span class="pull-right"><i class="fa fa-home"></i></span>
+                                        </li>
+                                        <li>
+                                            <div class="media-list">
+                                                <a href="form-element.html#" class="media">
+                                                    <div class="media-object pull-left has-notif">
+                                                        <img src="{{asset('webherramienta/img/avatar/35/10.png')}}" class="img-circle" alt="Daddy Botak">
+                                                        <i class="online"></i>
+                                                    </div><!-- /.media-object -->
+                                                    <div class="media-body">
+                                                        <span class="media-heading">Daddy Botak</span>
+                                                        <span class="media-meta status">online</span>
+                                                        <span class="media-meta device"><i class="fa fa-globe"></i></span>
+                                                    </div><!-- /.media-body -->
+                                                </a><!-- /.media -->
+                                            </div><!-- /.media-list -->
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>#}
+                        </div>
+                    </div>
+                </div>
+
+            </aside><!-- /#sidebar-right -->
+            <!--/ END SIDEBAR RIGHT -->
+
+        </section><!-- /#wrapper -->
+        <!--/ END WRAPPER -->
+
+        <!-- START @BACK TOP -->
+        <div id="back-top" class="animated pulse circle">
+            <i class="fa fa-angle-up"></i>
+        </div><!-- /#back-top -->
+        <!--/ END BACK TOP -->
+
+        {#VENTANA MODAL PARA QUE LA SELECCION DE LA GESTIÓN SUB CENTRO Y SEMESTRE#}
+        <div class="modal fade bs-example-modal-multiple" id="newModal"  aria-hidden="true" role="dialog" tabindex="-1" style="display: none;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                {% if app.session.get('ie_id') != '-1' %}
+                                    <h3><i class="fa fa-history"></i> Historial del Centro :{{app.session.get('ie_nombre')}} - {{app.session.get('ie_id')}}</h3>
+                                {% else %}
+                                    <h3><i class="fa fa-th-list"></i> Lista de CEAS en su jurisdicción</h3>
+                                {% endif %}
+                            </div>
+                            <div class="pull-right">
+                                <button class="btn btn-sm" data-title="Collapse" data-placement="top" data-toggle="tooltip" data-action="collapse" data-original-title="" title="">
+                                    <i class="fa fa-angle-up"></i>
+                                </button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body no-padding" style="display: block;">
+                            <div id="divgessubsem" class="table-responsive">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Cerrar</button>
+                    </div>
+                </div>
             </div>
-            <!-- /.page-content -->
-
         </div>
-        <!-- /#page-wrapper -->
-        <!-- end MAIN PAGE CONTENT -->
 
-    </div>
-    <!-- /#wrapper -->
+        {% block javascripts %}
+            <!-- START JAVASCRIPT SECTION (Load javascripts at bottom to reduce load time) -->
+            <!-- START @CORE PLUGINS -->
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/typehead.js/dist/handlebars.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/typehead.js/dist/typeahead.bundle.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-nicescroll/jquery.nicescroll.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.sparkline.min/index.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-easing-original/jquery.easing.1.3.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootbox/bootbox.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/retina.js/dist/retina.min.js')}}"></script>
+            <!--/ END CORE PLUGINS -->
+
+            <!-- START @PAGE LEVEL PLUGINS -->
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/js/jasny-bootstrap.fileinput.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/holderjs/holder.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-validation/dist/jquery.validate.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/datatables/js/datatables.responsive.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/ion.rangeSlider/js/ion.rangeSlider.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js')}}"></script>
+            {#<script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/typeaheadjs/lib/typeahead.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/typeaheadjs/typeaheadjs.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/address/address.js')}}"></script>#}
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/raphael/raphael-min.js')}}"></script>
+            {#<script src="{{asset('webherramienta/assets/global/plugins/bower_components/morrisjs/morris.min.js')}}"></script>            #}
+            {#<script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-session-timeout/dist/bootstrap-session-timeout.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/waypoints/lib/jquery.waypoints.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/counter-up/jquery.counterup.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-jvectormap-2.0.3.min/index.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jvectormap/tests/assets/jquery-jvectormap-world-mill-en.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/horizontal-chart/build/js/jquery.horizBarChart.min.js')}}"></script>#}
 
 
-    {% block javascripts %}
-        <!-- GLOBAL SCRIPTS -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script src="{{ asset('js/plugins/bootstrap/bootstrap.min.js') }}"></script>
-        <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-        <script src="{{ asset('js/plugins/popupoverlay/jquery.popupoverlay.js') }}"></script>
-        <script src="{{ asset('js/plugins/popupoverlay/defaults.js') }}"></script>
-        <!-- Logout Notification Box -->
-        <div id="logout">
-            <div class="logout-message">
-                {% if app.session.get('userfoto') is empty %}
-                    <img class="img-circle" src ="/uploads/krlos.jpg " height="150" width="150" >
-                {% else %}
-                    <img class="img-circle" src ="/uploads/{{app.session.get('userfoto')}} " height="150" width="150" >
-                {% endif %}
-                <!--img class="img-circle img-logout" src="{{asset('img/profile-pic.jpg') }}" alt=""-->
-                <h3>
-                    <i class="fa fa-sign-out text-green"></i> Listo para salir?
-                </h3>
-                <p>Seleciona "Salir" Si estas listo<br> para terminar su sesión en el Sistema.</p>
-                <ul class="list-inline">
-                    <li>
-                        <a href="{{path('logout')}}" class="btn btn-green">
-                            <strong>Salir</strong>
-                        </a>
-                    </li>
-                    <li>
-                        <button class="logout_close btn btn-green">Cancel</button>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- /#logout -->
-        <!-- Logout Notification jQuery -->
-        <script src="{{ asset('js/plugins/popupoverlay/logout.js') }}"></script>
-        <!-- HISRC Retina Images -->
-        <script src="{{ asset('js/plugins/hisrc/hisrc.js') }}"></script>
 
-        <!-- PAGE LEVEL PLUGIN SCRIPTS -->
-        <!-- HubSpot Messenger -->
-        <script src="{{ asset('js/plugins/messenger/messenger.min.js') }}"></script>
-        <script src="{{ asset('js/plugins/messenger/messenger-theme-flat.js') }}"></script>
-        <!-- Date Range Picker -->
-        <script src="{{ asset('js/plugins/daterangepicker/moment.js') }}"></script>
-        <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
-        <!-- Morris Charts -->
-        <script src="{{ asset('js/plugins/morris/raphael-2.1.0.min.js') }}"></script>
-        <script src="{{ asset('js/plugins/morris/morris.js') }}"></script>
-        <!-- Flot Charts -->
-        <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
-        <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
-        <!-- Sparkline Charts -->
-        <script src="{{ asset('js/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
-        <!-- Moment.js -->
-        <script src="{{ asset('js/plugins/moment/moment.min.js') }}"></script>
-        <!-- jQuery Vector Map -->
-        <script src="{{ asset('js/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
-        <script src="{{ asset('js/plugins/jvectormap/maps/jquery-jvectormap-world-mill-en.js') }}"></script>
-        <script src="{{ asset('js/demo/map-demo-data.js') }}"></script>
-        <!-- Easy Pie Chart -->
-        <script src="{{ asset('js/plugins/easypiechart/jquery.easypiechart.min.js') }}"></script>
-        <!-- DataTables -->
-        <script src="{{ asset('js/plugins/datatables/jquery.dataTables.js') }}"></script>
-        <script src="{{ asset('js/plugins/datatables/datatables-bs3.js') }}"></script>
 
-        <!-- THEME SCRIPTS -->
-        <script src="{{ asset('js/flex.js') }}"></script>
-        <script src="{{asset('js/demo/advanced-form-demo.js')}}"></script>
-        <script src="{{ asset('js/demo/dashboard-demo.js') }}"></script>
-        <!--script src="{{ asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
-        <script src="{{ asset('js/demo/validation-demo.js')}}"></script-->
-        <script src="{{asset('validator/js/validator.js')}}"></script>
+            <!--/ END PAGE LEVEL PLUGINS -->
 
-        <script src="{{asset('js/plugins/bootstrap-timepicker/bootstrap-timepicker.min.js')}}"></script>
-        <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
+            <!-- START @PAGE LEVEL SCRIPTS -->
+            <script src="{{asset('webherramienta/assets/admin/js/apps.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.chart.easypie.js')}}"></script>
+            {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.dashboard.retail.js')}}"></script>#}
+            <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.blog.type2.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.slider.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.form.element.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.form.validation.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/admin/js/demo.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/admin/js/menuTree.js')}}"></script>
+            {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.chart.morris.js')}}"></script>            #}
+            {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.project.portfolio.type4.js')}}"></script>#}
+            <!--/ END PAGE LEVEL SCRIPTS -->
+            <!--/ END JAVASCRIPT SECTION -->
 
-        <script src="{{asset('js/jquery.typeahead.min.js')}}"></script>
+            <!-- START GOOGLE ANALYTICS -->
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+            <!--/ END GOOGLE ANALYTICS -->
 
-        <script src="{{asset('js/funciones.js')}}"></script>
-        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-        <script src="{{ asset('js/initialize.js')}}"></script>
-        <script src="{{asset('bower_components/select2/dist/js/select2.js')}}"></script>
-    {% endblock %}
-</body>
+
+            <script>
+            //ABRIR MODAL CON SUBCENTROS GESTIONES Y SEMESTRES
+            //PENDIENTE DE LLEVAR A OTRO ARCHIVO
+            function selgessubsemFormShow(){
+                    var formData = $('#myModalNotas').serialize();
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('sie_alt_ges_sub_sem'),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            //alert(data);
+                            $('#newModal').modal('show');
+                            {#$("#rolonoff"+rolid).empty();
+                            $("#rolonoff"+rolid).html('<span class="label label-info">'+rol+'</span>');#}
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append(data);
+                        },
+                        error: function(){
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                        }
+                    });
+                };
+
+            //ABRIR MODAL CON CEAS DEL DISTRITO
+            //PENDIENTE DE LLEVAR A OTRO ARCHIVO
+            function selceadistritoShow(){
+                    var formData = $('#myModalNotas').serialize();
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('herramienta_ceducativa_distrito_listaceas'),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            //alert(data);
+                            $('#newModal').modal('show');
+                            {#$("#rolonoff"+rolid).empty();
+                            $("#rolonoff"+rolid).html('<span class="label label-info">'+rol+'</span>');#}
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append(data);
+                        },
+                        error: function(){
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                        }
+                    });
+                };
+
+            //ABRIR MODAL CON CEAS QUE YA CERRARON
+            //PENDIENTE DE LLEVAR A OTRO ARCHIVO
+            function getCeasCerradosShow(){
+                    var formData = $('#myModalNotas').serialize();
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('sie_alt_ges_sub_sem_panel_operativos'),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            $('#newModal').modal('show');
+                            {#$("#rolonoff"+rolid).empty();
+                            $("#rolonoff"+rolid).html('<span class="label label-info">'+rol+'</span>');#}
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append(data);
+                        },
+                        error: function(){
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                        }
+                    });
+                };
+            function getCeasPendientesShow(){
+                    var formData = $('#myModalNotas').serialize();
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('sie_alt_ges_sub_sem_ceas_pendinte'),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            //alert(data);
+                            $('#newModal').modal('show');
+                            {#$("#rolonoff"+rolid).empty();
+                            $("#rolonoff"+rolid).html('<span class="label label-info">'+rol+'</span>');#}
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append(data);
+                        },
+                        error: function(){
+                            $("#divgessubsem").empty();
+                            $("#divgessubsem").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                        }
+                    });
+                };
+            function getRudesUser(){
+                    var formData = $('#myModalNotas').serialize();
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('sie_alt_ges_rudes_user'),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#divrudesuser").empty();
+                            $("#divrudesuser").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            $("#divrudesuser").empty();
+                            $("#divrudesuser").append(data);
+                        },
+                        error: function(){
+                            $("#divrudesuser").empty();
+                            $("#divrudesuser").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
+                        }
+                    });
+                };
+            </script>
+            <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
+            <script src="{{ asset('js/jquery.alphanum.js') }}"></script>
+        {%endblock%}
+    </body>
+    <!--/ END BODY -->
 
 </html>
