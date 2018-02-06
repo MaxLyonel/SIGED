@@ -1,0 +1,238 @@
+
+
+       <div class="form-group">
+
+        <div class="row">
+          <div class="col-md-12">
+            <label class="control-label">3.1 El edificio educativo cuenta con instalaciones de saneamiento (baños)?</label>
+
+            SI: {{form_widget(form.n31EsInstalacionSaneamiento)}}
+          </div><!-- /.form-group -->
+        </div>
+        <!-- /.form-group -->
+
+        <div class="form-group">
+            <label class="control-label">3.2 Cual es el medio para la eliminacion de excretas?</label>
+        </div>
+
+        <div class="form-group">
+              <div class="col-md-6">
+                  <div class="">
+                    {{form_widget(form.n32ExcretasEsAlcantarillado)}}
+                      <label for="">Red de alcantarillado</label>
+                  </div>
+                  <div class=" ">
+                      {{form_widget(form.n32ExcretasEsSeptica)}}
+                      <label for="">Cámara séptica</label>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <div class="">
+                      {{form_widget(form.n32ExcretasEsPozo)}}
+                      <label for="checkbox-type-default9">Pozo de absorción</label>
+                  </div>
+                  <div class=" ">
+                      {{form_widget(form.n32ExcretasEsCieloAbierto)}}
+                      <label for="checkbox-type-rounded10">A cielo abierto</label>
+                  </div>
+              </div>
+              <label class="control-label">Otro</label>
+              {{form_widget(form.n32ExcretasEsOtro)}}
+              <input class="form-control" type="text">
+        </div>
+
+  <!-- </div> end firt column -->
+
+  
+       <div class="form-group">
+        <div class="row">
+          <div class="col-md-6">
+            <label class="control-label">3.3 Como se realiza la eliminación de basura?</label><br>
+            {{form_widget(form.n33ElminacionBasuraTipo, {'attr': {'class': 'form-control'} })}}
+          </div>
+           <div class="col-md-6">
+            <label class="control-label">3.4 Periodicidad de la eliminación de basura?</label><br>
+            {{form_widget(form.n34PeriodicidadTipo, {'attr': {'class': 'form-control'} })}}
+          </div>
+          
+        </div>
+            
+      </div><!-- /.form-group -->
+
+
+  <div class="form-group">
+       <label class="control-label">3.4 la instalación de saneamiento estan generalmente en buen estado y accesibles apra los estudiantes?</label>
+
+       <div class="row">
+         <div class="col-md-4">
+                <label class="control-label">Hay buena ventilación?</label>
+
+                <div class="">
+                    {{form_widget(form.n34EsBuenasventilacion)}}
+                    <label for="radio-type-ventilacionyes">Si</label>
+                </div>
+                
+         </div>
+         <div class="col-md-4">
+                <label class="control-label">Hay buenas condiciones de luz natural?</label>
+
+                <div class="">
+                    {{form_widget(form.n34EsBuenascondiciones)}}
+                    <label for="radio-type-luzyes">Si</label>
+                </div>
+                
+         </div>
+         <div class="col-md-4">
+                <label class="control-label">Se tiene privacidad?</label>
+
+                <div class="">
+                    {{form_widget(form.n34EsPrivacidad)}}
+                    <label for="radio-type-privacidadyes">Si</label>
+                </div>
+                
+         </div>
+
+       </div>
+  </div><!-- /.form-group -->
+
+  <div class="panel rounded shadow">
+    <div class="panel-body">
+        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+            <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="newBateriasBano('{{idInfraestructuraH4Servicio}}');">
+                Adicionar Bateria de Baños
+            </button>
+        </div>
+        <div id="idbateriasbanos">
+          {% include 'SieAppWebBundle:InfraestructuraH4Servicio:bateriabanos.html.twig' with { 'data': 'data'} %}    
+        </div>
+      
+    </div>
+  </div>
+  <div class="panel rounded shadow">
+    <div class="panel-body">
+      <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+            <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="newVestuarios('{{idInfraestructuraH4Servicio}}');">
+                Adicionar Vestuarios
+            </button>
+        </div>
+      <div id="idvestuarios" >
+        {% include 'SieAppWebBundle:InfraestructuraH4Servicio:vestuarios.html.twig' with { 'data': 'data'} %}  
+      </div>
+      
+    </div>
+  </div>
+
+</div>
+
+  <script  type="text/javascript" charset="utf-8" async defer>
+
+  
+        var newBateriasBano = function (idInfraestructuraH4Servicio) {
+            $.ajax({
+                type: 'post',
+                data: ({idInfraestructuraH4Servicio: idInfraestructuraH4Servicio}),
+                url: "{{ path('infraestructurah4servicio_new_bateria_banos') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+        var newVestuarios = function (idInfraestructuraH4Servicio) {
+            $.ajax({
+                type: 'post',
+                data: ({idInfraestructuraH4Servicio: idInfraestructuraH4Servicio}),
+                url: "{{ path('infraestructurah4servicio_new_vestuarios') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+
+        var saveNewBateriaBano=function(){
+
+          // var formBateriasBano=$('#idFormBateriasBano').serialize();
+          var formBateriasBano=$('form[name="sie_appwebbundle_infraestructurah4serviciobateriabanos"]').serialize();
+          
+          $.ajax({
+                type: 'get',
+                data: formBateriasBano,
+                url: "{{ path('infraestructurah4servicio_save_bateria_banos') }}",
+                beforeSend: function () {
+                    // $('#modal').empty();
+                    $('#idbateriasbanos').empty();
+                },
+                success: function (data) {
+                    // $('#modal').empty();
+                    $('#idbateriasbanos').append(data);
+                    $('#modal').modal('hide');
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+
+        var saveNewVestuario=function(){
+
+          var formNewVestuario=$('#idFormNewVestuario').serialize();
+          // var formBateriasBano=$('form[name="sie_appwebbundle_infraestructurah4serviciobateriabanos"]').serialize();
+          
+          $.ajax({
+                type: 'get',
+                data: formNewVestuario,
+                url: "{{ path('infraestructurah4servicio_save_vestuario') }}",
+                beforeSend: function () {
+                    // $('#modal').empty();
+                    $('#idvestuarios').empty();
+                },
+                success: function (data) {
+                    // $('#modal').empty();
+                    $('#idvestuarios').append(data);
+                    $('#modal').modal('hide');
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+      
+    </script>

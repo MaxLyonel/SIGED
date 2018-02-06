@@ -1,0 +1,58 @@
+Sie\AppWebBundle\Entity\InfraestructuraH6AmbienteadministrativoMobiliario:
+    type: entity
+    table: infraestructura_h6_ambienteadministrativo_mobiliario
+    indexes:
+        IDX_F677B8119C1266F1:
+            columns:
+                - n21_mobiliario_tipo_id
+        IDX_F677B811AB9F6573:
+            columns:
+                - n21_estado_tipo_id
+        IDX_F677B811679B6367:
+            columns:
+                - infraestructura_h6_ambienteadministrativo_ambiente_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n21Cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n21_cantidad
+    manyToOne:
+        n21MobiliarioTipo:
+            targetEntity: InfraestructuraH6AmbienteadministrativoMobiliarioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n21_mobiliario_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n21EstadoTipo:
+            targetEntity: InfraestructuraGenEstadoMobEquipTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n21_estado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH6AmbienteadministrativoAmbiente:
+            targetEntity: InfraestructuraH6AmbienteadministrativoAmbiente
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h6_ambienteadministrativo_ambiente_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

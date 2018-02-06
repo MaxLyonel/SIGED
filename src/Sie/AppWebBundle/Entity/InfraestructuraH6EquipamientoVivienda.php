@@ -360,4 +360,27 @@ class InfraestructuraH6EquipamientoVivienda
     {
         return $this->n1ParedEstadogeneralTipo;
     }
+
+    /**
+     * Set n1EsBanio
+     *
+     * @param boolean $n1EsBanio
+     * @return InfraestructuraH6EquipamientoVivienda
+     */
+    public function setN1EsBanio($n1EsBanio)
+    {
+        $this->n1EsBanio = $n1EsBanio;
+    
+        return $this;
+    }
+
+    /**
+     * Get n1EsBanio
+     *
+     * @return boolean 
+     */
+    public function getN1EsBanio()
+    {
+        return $this->n1EsBanio;
+    }
 }

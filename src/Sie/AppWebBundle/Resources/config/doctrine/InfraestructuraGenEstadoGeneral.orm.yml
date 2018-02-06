@@ -1,0 +1,32 @@
+Sie\AppWebBundle\Entity\InfraestructuraGenEstadoGeneral:
+    type: entity
+    table: infraestructura_gen_estado_general
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estado:
+            type: string
+            nullable: true
+            length: 160
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+    lifecycleCallbacks: {  }

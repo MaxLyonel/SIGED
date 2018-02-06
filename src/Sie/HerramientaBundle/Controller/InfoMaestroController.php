@@ -89,6 +89,16 @@ class InfoMaestroController extends Controller {
             $gestion = $request->getSession()->get('idGestion');
         }
 
+        $institucionregular = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $institucion, 'institucioneducativaTipo' => 1));
+
+        if(!$institucionregular){
+            $this->get('session')->getFlashBag()->add('noTuicion', 'La Unidad Educativa no corresponde al Subsistema de Educación Regular');
+                if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
+                    return $this->redirect($this->generateUrl('herramienta_info_maestro_tsie_index'));
+                }
+                return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
+        }
+
         /*
          * lista de maestros registrados en la unidad educativa
          */
@@ -200,14 +210,22 @@ class InfoMaestroController extends Controller {
         $rolTipo = $em->getRepository('SieAppWebBundle:RolTipo')->findOneById(2);
         $ueplena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('gestionTipoId' => $gestion, 'institucioneducativaId' => $institucion->getId(), 'institucioneducativaHumanisticoTecnicoTipo' => 1));
 
+        $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '1'));
+        $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '2'));
+        
+        if(!($consol_gest_pasada or $consol_gest_pasada2)){
+            $activar_acciones = true;
+        }
+
         $validacion_personal_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findOneBy(array('gestionTipo' => $gestionTipo, 'institucioneducativa' => $institucion, 'notaTipo' => $notaTipo, 'rolTipo' => $rolTipo));
+        
         $activar_acciones = true;
         if($validacion_personal_aux){
             $activar_acciones = false;
         }
 
         $descarga_archivo_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array('gestionTipoId' => $gestion, 'institucioneducativa' => $institucion, 'notaTipo' => $notaTipo, 'institucioneducativaOperativoLogTipo' => 1));
-
+        
         $habilitar_ddjj = true;
         if($descarga_archivo_aux){
             $habilitar_ddjj = false;
@@ -382,7 +400,6 @@ class InfoMaestroController extends Controller {
 
     private function newForm($idInstitucion, $gestion, $idPersona) {
         $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
 
         $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
@@ -422,20 +439,20 @@ class InfoMaestroController extends Controller {
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('persona', 'hidden', array('data' => $idPersona))
                 ->add('genero', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $persona->getGeneroTipo()->getId()), 'label' => 'Género', 'required' => true, 'attr' => array('class' => 'form-control')))
-                ->add('celular', 'text', array('label' => 'Nro. de Celular', 'required' => false, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
-                ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
-                ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => false, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
+                ->add('celular', 'text', array('label' => 'Nro. de Celular', 'data' => $persona->getCelular(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+                ->add('correo', 'text', array('label' => 'Correo Electrónico', 'data' => $persona->getCorreo(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
+                ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'data' => $persona->getDireccion(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('funcion', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'form-control')))
                 ->add('financiamiento', 'choice', array('label' => 'Fuente de Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'attr' => array('class' => 'form-control')))
                 ->add('formacion', 'choice', array('label' => 'Último grado de formación alcanzado', 'required' => true, 'choices' => $formacionArray, 'attr' => array('class' => 'form-control')))
                 ->add('formacionDescripcion', 'text', array('label' => 'Denominativo del título del último grado de formación alcanzado', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '45', 'pattern' => '[A-Za-z0-9\Ññ ]{0,45}')))
                 ->add('normalista', 'checkbox', array('required' => false, 'label' => 'Normalista'))
-                ->add('item', 'text', array('label' => 'Número de Item', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
+                ->add('item', 'text', array('label' => 'Número de Item', 'data' => '0', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
                 ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => $em->getReference('SieAppWebBundle:IdiomaMaterno', 97), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'form-control')))
                 ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille'))
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
-        $em->getConnection()->commit();
+
         return $form;
     }
 
@@ -512,22 +529,23 @@ class InfoMaestroController extends Controller {
             // Verificar si la persona ya esta registrada
 
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['persona']);
+            $personaId = $persona->getId();
+
+            // verificamos si el maestro esta registrado ya en tabla maestro inscripcion
+            $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'persona' => $personaId, 'gestionTipo' => $form['gestion'], 'rolTipo' => 2));
+            if ($maestroInscripcion) { // Si  el maestro ya esta inscrito
+                $em->getConnection()->commit();
+                $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
+                return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
+            }
+
+            //Actualizamos datos de la persona
             $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));
             $persona->setDireccion(mb_strtoupper($form['direccion']), 'utf-8');
             $persona->setCelular($form['celular']);
             $persona->setCorreo(mb_strtolower($form['correo']), 'utf-8');
             $em->persist($persona);
             $em->flush();
-
-            $personaId = $persona->getId();
-
-            // verificamos si el personal administrativo esta registrado ya en tabla maestro inscripcion
-            $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'persona' => $personaId, 'gestionTipo' => $form['gestion'], 'rolTipo' => 2));
-            if ($maestroInscripcion) { // Si  el personalAdministrativo ya esta inscrito
-                $em->getConnection()->commit();
-                $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
-                return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
-            }
 
             // Registro Maestro inscripcion
             $maestroinscripcion = new MaestroInscripcion();
@@ -551,7 +569,7 @@ class InfoMaestroController extends Controller {
             $maestroinscripcion->setRolTipo($em->getRepository('SieAppWebBundle:RolTipo')->findOneById(2));
             $maestroinscripcion->setItem($form['item']);
             $maestroinscripcion->setFechaRegistro(new \DateTime('now'));
-            $maestroinscripcion->setEsVigenteAdministrativo(0);
+            $maestroinscripcion->setEsVigenteAdministrativo(1);
             $em->persist($maestroinscripcion);
             $em->flush();
 

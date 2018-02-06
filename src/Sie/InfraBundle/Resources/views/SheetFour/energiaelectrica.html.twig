@@ -5,37 +5,42 @@
 
                                      <div class="form-group">
                                           <label class="control-label">1.1 El edificio educativo dispone de energia electrica?</label>
-
-                                              <div class="rdio rdio-theme">
-                                                  <input id="radio-type-default2" checked="checked" type="radio" name="radiotype2">
-                                                  <label for="radio-type-default2">Si</label>
-                                              </div>
-                                              <div class="rdio rdio-theme rounded">
-                                                  <input id="radio-type-rounded2" type="radio" name="radiotype2">
-                                                  <label for="radio-type-rounded2">No</label>
-                                              </div>
-
+                                               
+                                            <div class="radio">
+                                              <label class="radio-inline">
+                                                  <input id="form_disponeelectrica" name="form[electrica][disponeelectrica]" checked="checked" type="radio" value="yes">
+                                                  Si
+                                              </label>
+                                              <label class="radio-inline">
+                                                  <input id="form_disponeelectrica" name="form[electrica][disponeelectrica]" type="radio" value="no">
+                                                  No
+                                              </label>
+                                            </div>
+        
                                       </div><!-- /.form-group -->
                                       <div class="form-group">
                                             <label class="control-label">1.2 Fuente Principal de energia</label>
-                                            <select id="form_energia" name="form[energia]" class="form-control input-sm mb-15">
+                                            <select id="form_energia" name="form[electrica][energia]" class="form-control input-sm mb-15">
                                                 <option>Option 1</option>
                                                 <option>Option 2</option>
                                                 <option>Option 3</option>
                                             </select>
                                             <label class="control-label">Otro</label>
-                                            <input class="form-control" type="text">
+                                            <input class="form-control" type="text" id="form_otro" name="form[electrica][otro]">
                                         </div>
                                       <div class="form-group">
                                            <label class="control-label">1.3 Tipos de instalacion</label>
-                                               <div class="rdio rdio-theme">
-                                                   <input id="radio-type-monofasico" checked="checked" type="radio" name="typeInstalation">
-                                                   <label for="radio-type-monofasico">Monofásico</label>
-                                               </div>
-                                               <div class="rdio rdio-theme rounded">
-                                                   <input id="radio-type-trifasico" type="radio" name="typeInstalation">
-                                                   <label for="radio-type-trifasico">Trifásico</label>
-                                               </div>
+                                                <div class="radio">
+                                                  <label class="radio-inline">
+                                                      <input id="form_tipoinstalation" checked="checked" type="radio" name="form[electrica][tipoinstalation]" value="monofasico">
+                                                      Monofásico
+                                                  </label>
+                                                  <label class="radio-inline">
+                                                      <input id="form_tipoinstalation" type="radio" name="form[electrica][tipoinstalation]" value="trifasico">
+                                                      Trifásico
+                                                  </label>
+                                                </div>
+
                                        </div><!-- /.form-group -->
 
 
@@ -46,7 +51,7 @@
 
                                      <div class="form-group">
                                           <label class="control-label">1.4 Disponibilidad del servicio</label>dfasdfasd
-                                          <select id="form_disponibilidad" name="form[disponibilidad]" class="form-control input-sm mb-15">
+                                          <select id="form_disponibilidaddeservicio" name="form[electrica][disponibilidaddeservicio]" class="form-control input-sm mb-15">
                                               <option>Option 1</option>
                                               <option>Option 2</option>
                                               <option>Option 3</option>
@@ -56,7 +61,7 @@
                                       <div class="form-group">
                                            <label class="control-label">1.5 Numero de ambientes que tiene luz electrica:</label></BR>
                                            <label class="control-label">Ambientes pedagogicos</label>
-                                           <input class="form-control" type="text">
+                                           <input class="form-control" type="text" name="form[electrica][tipoinstalation]" >
                                        </div><!-- /.form-group -->
                                        <div class="form-group">
 

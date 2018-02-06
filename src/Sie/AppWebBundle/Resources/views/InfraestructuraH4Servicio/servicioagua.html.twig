@@ -1,0 +1,86 @@
+<div class="row">
+  <div class="col-md-6">
+     <div class="form-body">
+
+       <div class="form-group">
+            <label class="control-label">2.1 El edificio educativo dispone de servicio de agua?</label>
+            SI: {{form_widget(form.n21EsDiponeAgua, {'attr': {'class': ''} })}}
+        </div><!-- /.form-group -->
+        <div class="form-group">
+              <label class="control-label">2.2 El medio o sistema de suministro de agua es por:</label>
+              {{form_widget(form.n22MedioAguaTipo, {'attr': {'class': 'form-control'} })}}
+          </div>
+        <div class="form-group">
+             <label class="control-label">El edificio cuenta con:</label>
+         </div><!-- /.form-group -->
+        <div class="form-group">
+             <label class="control-label">2.3 Tanque de almacenamiento de agua?:</label>
+                 {{form_widget(form.n23EsCuentaTanqueAgua, {'attr': {'class': ''} })}}
+         </div><!-- /.form-group -->
+        <div class="form-group">
+             <label class="control-label">2.4 Bomba de agua?</label>
+                 {{form_widget(form.n24EsCuentaBombaAgua, {'attr': {'class': ''} })}}
+         </div><!-- /.form-group -->
+
+
+     </div>
+  </div> <!-- end firt column -->
+  <div class="col-md-6">
+     <div class="form-body">
+
+       <div class="form-group">
+            <label class="control-label">2.5 Número de ambientes que cuenten con servicio de agua, pero no son baños?</label>
+            {{form_widget(form.n25NumeroAmbientesAgua, {'attr': {'class': 'form-control'} })}}
+        </div><!-- /.form-group -->
+
+        <div class="form-group">
+             <label class="control-label">2.6 El acceso al servicio de provision de agua es:</label>
+             {{form_widget(form.n26AccesoAguaTipo, {'attr': {'class': 'form-control'} })}}
+       </div><!-- /.form-group -->
+        <div class="form-group">
+             <label class="control-label">2.7 El agua del edificio educativo, es utilizada mayormente para:</label>
+             {{form_widget(form.n27UsoAguaTipo, {'attr': {'class': 'form-control'} })}}
+       </div><!-- /.form-group -->
+        <div class="form-group">
+             <label class="control-label">2.8 Utiliza algun tipo de purificador d agua?</label>
+             {{form_widget(form.n28PurificadorAguaTipo, {'attr': {'class': 'form-control'} })}}
+       </div><!-- /.form-group -->
+
+       <div class="form-group">
+            <label class="control-label">2.9 ¿Existen ambientes que cuentan con servicio de agua, pero no son baños?</label>
+            {{form_widget(form.n29AmbientesConAgua, {'attr': {'class': 'form-control'} })}}
+          </br>
+            <div class="col-md-6">
+                <div class="ckbox ckbox-theme">
+                    <input id="checkbox-type-default2"  type="checkbox">
+                    <label for="checkbox-type-default2">Amb. pedagogicos</label>
+                </div>
+                <div class="ckbox ckbox-theme rounded">
+                    <input id="checkbox-type-rounded3"  type="checkbox">
+                    <label for="checkbox-type-rounded3">Amb. administrativos</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="ckbox ckbox-theme">
+                    <input id="checkbox-type-default4"  type="checkbox">
+                    <label for="checkbox-type-default4">Cocina</label>
+                </div>
+                <div class="ckbox ckbox-theme rounded">
+                    <input id="checkbox-type-rounded5"  type="checkbox">
+                    <label for="checkbox-type-rounded5">Comedor</label>
+                </div>
+                <div class="ckbox ckbox-theme rounded">
+                    <input id="checkbox-type-rounded6"  type="checkbox">
+                    <label for="checkbox-type-rounded6">Consultorios</label>
+                </div>
+            </div>
+        </div>
+
+
+
+
+     </div>
+  </div> <!-- end second column -->
+
+
+</div>

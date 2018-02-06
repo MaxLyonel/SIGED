@@ -34,9 +34,10 @@ Sie\AppWebBundle\Entity\InfraestructuraH5AmbienteadministrativoPicina:
             comment: ''
             column: n25_capacidad
         n25AreaMt2:
-            type: integer
+            type: decimal
             nullable: true
-            unsigned: false
+            precision: 8
+            scale: 2
             comment: ''
             default: '0'
             column: n25_area_mt2
@@ -65,7 +66,7 @@ Sie\AppWebBundle\Entity\InfraestructuraH5AmbienteadministrativoPicina:
                     referencedColumnName: id
             orphanRemoval: false
         infraestructuraH5Ambienteadministrativo:
-            targetEntity: InfraestructuraH5Ambienteadministrativo
+            targetEntity: InfraestructuraH6Ambienteadministrativo
             cascade: {  }
             mappedBy: null
             inversedBy: null

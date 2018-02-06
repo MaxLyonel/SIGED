@@ -463,13 +463,15 @@ class CursosController extends Controller {
                 $em->remove($objStudentAsignaturaRemove);
                 $em->flush();
             }
+
             //find estudiante_inscripcion_socioeconomico_alternativa data to delete
             $objSocioEconomicos = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findBy(array(
               'estudianteInscripcion' => $arrInfoStudent['eInsId']
             ));
-            //dump($objSocioEconomicos);die;
+
             foreach ($objSocioEconomicos as $socionEco) {
               # code...
+
               //dump($socionEco->getId());
                 /*eliminar idiomas*/
                 $idiomas = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltHabla')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socionEco->getId() ));
@@ -499,10 +501,33 @@ class CursosController extends Controller {
                 }
                 $em->flush();
 
+                /*
+                //eliminar unidad militar
+                $unimili = $em->getRepository('SieAppWebBundle:UnidadMilitar')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socionEco->getId()));
+                foreach ($unimili as $value) {
+                    $em->remove($value);
+                }
+                $em->flush();
+                //eliminar penal
+                $penal = $em->getRepository('SieAppWebBundle:Penal')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socionEco->getId()));
+                foreach ($penal as $value) {
+                    $em->remove($value);
+                }
+                $em->flush();
+                //eliminar educacion diversa
+                $eddiv = $em->getRepository('SieAppWebBundle:EducacionDiversa')->findBy(array('estudianteInscripcionSocioeconomicoAlternativa' => $socionEco->getId()));
+                foreach ($eddiv as $value) {
+                    $em->remove($value);
+                }
+                $em->flush();
+                */
                 //remove estudiante_inscripcion_socioeconomico_alternativa
+                //dump($socionEco);
                 $em->remove($socionEco);
                 $em->flush();
+
             }
+
             //INI new relation to remove by krlos
 
             //step 4 delete socio economico data
@@ -526,7 +551,7 @@ class CursosController extends Controller {
             }
             $em->flush();
 
-            //dump($objApoIns);die;
+
             //remove attached file
             $objStudentInscriptionExtranjero = $em->getRepository('SieAppWebBundle:EstudianteInscripcionExtranjero')->findOneBy(array('estudianteInscripcion'=>$arrInfoStudent['eInsId']));
             if($objStudentInscriptionExtranjero){
@@ -542,8 +567,12 @@ class CursosController extends Controller {
             $em->flush();
 
            //paso 7 borrando apoderados
+            //dump($arrInfoStudent);
+            //dump($arrInfoStudent['eInsId']);die;
+
             $objEstudianteInscripcionSocioeconomicoRegular = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $arrInfoStudent['eInsId'] ));
-            if($objEstudianteInscripcionSocioeconomicoRegular){
+
+            if(($objEstudianteInscripcionSocioeconomicoRegular)){
               $objEstudianteInscripcionSocioeconomicoRegNacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegNacion')->findBy(array(
                 'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
               ));
@@ -572,7 +601,7 @@ class CursosController extends Controller {
               $em->flush();
             }
             //END new relation to remove by krlos
-            
+dump($objEstudianteInscripcionSocioeconomicoRegular);die;
             //find the inscription to delete $arrInfoStudent['eInsId']
             $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante' => $arrInfoStudent['id'], 'institucioneducativaCurso' => $arrInfoUe['ueducativaInfoId']['iecId']));
             if($objStudentInscription){

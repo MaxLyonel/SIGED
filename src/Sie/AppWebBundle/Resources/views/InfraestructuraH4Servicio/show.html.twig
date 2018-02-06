@@ -1,0 +1,320 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH4Servicio</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>N11esenergiaelectrica</th>
+                <td>{{ entity.n11EsEnergiaelectrica }}</td>
+            </tr>
+            <tr>
+                <th>N12fuenteelectricaotro</th>
+                <td>{{ entity.n12FuenteElectricaOtro }}</td>
+            </tr>
+            <tr>
+                <th>N15numeroambientespedagogicos</th>
+                <td>{{ entity.n15NumeroAmbientesPedagogicos }}</td>
+            </tr>
+            <tr>
+                <th>N15numeroambientesnopedagogicos</th>
+                <td>{{ entity.n15NumeroAmbientesNoPedagogicos }}</td>
+            </tr>
+            <tr>
+                <th>N15numerobanios</th>
+                <td>{{ entity.n15NumeroBanios }}</td>
+            </tr>
+            <tr>
+                <th>N15numeromedidores</th>
+                <td>{{ entity.n15NumeroMedidores }}</td>
+            </tr>
+            <tr>
+                <th>N16numeromedidoresfuncionan</th>
+                <td>{{ entity.n16NumeroMedidoresFuncionan }}</td>
+            </tr>
+            <tr>
+                <th>N16numeromedidoresnofuncionan</th>
+                <td>{{ entity.n16NumeroMedidoresNoFuncionan }}</td>
+            </tr>
+            <tr>
+                <th>N21esdiponeagua</th>
+                <td>{{ entity.n21EsDiponeAgua }}</td>
+            </tr>
+            <tr>
+                <th>N22medioaguaotro</th>
+                <td>{{ entity.n22MedioAguaOtro }}</td>
+            </tr>
+            <tr>
+                <th>N23escuentatanqueagua</th>
+                <td>{{ entity.n23EsCuentaTanqueAgua }}</td>
+            </tr>
+            <tr>
+                <th>N24escuentabombaagua</th>
+                <td>{{ entity.n24EsCuentaBombaAgua }}</td>
+            </tr>
+            <tr>
+                <th>N25escuentaredagua</th>
+                <td>{{ entity.n25EsCuentaRedAgua }}</td>
+            </tr>
+            <tr>
+                <th>N25numeroambientesagua</th>
+                <td>{{ entity.n25NumeroAmbientesAgua }}</td>
+            </tr>
+            <tr>
+                <th>N31esinstalacionsaneamiento</th>
+                <td>{{ entity.n31EsInstalacionSaneamiento }}</td>
+            </tr>
+            <tr>
+                <th>N32excretasesalcantarillado</th>
+                <td>{{ entity.n32ExcretasEsAlcantarillado }}</td>
+            </tr>
+            <tr>
+                <th>N32excretasesseptica</th>
+                <td>{{ entity.n32ExcretasEsSeptica }}</td>
+            </tr>
+            <tr>
+                <th>N32excretasespozo</th>
+                <td>{{ entity.n32ExcretasEsPozo }}</td>
+            </tr>
+            <tr>
+                <th>N32excretasescieloabierto</th>
+                <td>{{ entity.n32ExcretasEsCieloAbierto }}</td>
+            </tr>
+            <tr>
+                <th>N32excretasesotro</th>
+                <td>{{ entity.n32ExcretasEsOtro }}</td>
+            </tr>
+            <tr>
+                <th>N33excretasesnosabe</th>
+                <td>{{ entity.n33ExcretasEsNosabe }}</td>
+            </tr>
+            <tr>
+                <th>N34esbuenascondiciones</th>
+                <td>{{ entity.n34EsBuenascondiciones }}</td>
+            </tr>
+            <tr>
+                <th>N34esbuenasventilacion</th>
+                <td>{{ entity.n34EsBuenasventilacion }}</td>
+            </tr>
+            <tr>
+                <th>N34esprivacidad</th>
+                <td>{{ entity.n34EsPrivacidad }}</td>
+            </tr>
+            <tr>
+                <th>N41eliminacionbasuraotro</th>
+                <td>{{ entity.n41EliminacionBasuraOtro }}</td>
+            </tr>
+            <tr>
+                <th>N41escentrosalud</th>
+                <td>{{ entity.n41EsCentroSalud }}</td>
+            </tr>
+            <tr>
+                <th>N41metroscentrosalud</th>
+                <td>{{ entity.n41MetrosCentroSalud }}</td>
+            </tr>
+            <tr>
+                <th>N42escentropolicial</th>
+                <td>{{ entity.n42EsCentroPolicial }}</td>
+            </tr>
+            <tr>
+                <th>N42metroscentropolicial</th>
+                <td>{{ entity.n42MetrosCentroPolicial }}</td>
+            </tr>
+            <tr>
+                <th>N53escentroesparcimiento</th>
+                <td>{{ entity.n53EsCentroEsparcimiento }}</td>
+            </tr>
+            <tr>
+                <th>N53metroscentroesparcimiento</th>
+                <td>{{ entity.n53MetrosCentroEsparcimiento }}</td>
+            </tr>
+            <tr>
+                <th>N54escentrocultural</th>
+                <td>{{ entity.n54EsCentroCultural }}</td>
+            </tr>
+            <tr>
+                <th>N54metroscentrocultural</th>
+                <td>{{ entity.n54MetrosCentroCultural }}</td>
+            </tr>
+            <tr>
+                <th>N55escentroiglesia</th>
+                <td>{{ entity.n55EsCentroIglesia }}</td>
+            </tr>
+            <tr>
+                <th>N55metroscentroiglesia</th>
+                <td>{{ entity.n55MetrosCentroIglesia }}</td>
+            </tr>
+            <tr>
+                <th>N56escentrointernet</th>
+                <td>{{ entity.n56EsCentroInternet }}</td>
+            </tr>
+            <tr>
+                <th>N56metroscentrointernet</th>
+                <td>{{ entity.n56MetrosCentroInternet }}</td>
+            </tr>
+            <tr>
+                <th>N57escentrocorreo</th>
+                <td>{{ entity.n57EsCentroCorreo }}</td>
+            </tr>
+            <tr>
+                <th>N57metroscentrocorreo</th>
+                <td>{{ entity.n57MetrosCentroCorreo }}</td>
+            </tr>
+            <tr>
+                <th>N58escentrotelefono</th>
+                <td>{{ entity.n58EsCentroTelefono }}</td>
+            </tr>
+            <tr>
+                <th>N58metroscentrotelefono</th>
+                <td>{{ entity.n58MetrosCentroTelefono }}</td>
+            </tr>
+            <tr>
+                <th>N59escentronucleoeducativo</th>
+                <td>{{ entity.n59EsCentroNucleoEducativo }}</td>
+            </tr>
+            <tr>
+                <th>N59metroscentronucleoeducativo</th>
+                <td>{{ entity.n59MetrosCentroNucleoEducativo }}</td>
+            </tr>
+            <tr>
+                <th>N510escentroradiocomunicacion</th>
+                <td>{{ entity.n510EsCentroRadiocomunicacion }}</td>
+            </tr>
+            <tr>
+                <th>N510metroscentroradiocomunicacion</th>
+                <td>{{ entity.n510MetrosCentroRadiocomunicacion }}</td>
+            </tr>
+            <tr>
+                <th>N511esservicioenfermeria</th>
+                <td>{{ entity.n511EsServicioEnfermeria }}</td>
+            </tr>
+            <tr>
+                <th>N512esserviciointernet</th>
+                <td>{{ entity.n512EsServicioInternet }}</td>
+            </tr>
+            <tr>
+                <th>N43esserviciotelecentro</th>
+                <td>{{ entity.n43EsServicioTelecentro }}</td>
+            </tr>
+            <tr>
+                <th>N514esserviciogas</th>
+                <td>{{ entity.n514EsServicioGas }}</td>
+            </tr>
+            <tr>
+                <th>N515essenaldiscapacidad</th>
+                <td>{{ entity.n515EsSenalDiscapacidad }}</td>
+            </tr>
+            <tr>
+                <th>N516esfuncionacee</th>
+                <td>{{ entity.n516EsFuncionaCee }}</td>
+            </tr>
+            <tr>
+                <th>N517esrampasacceso</th>
+                <td>{{ entity.n517EsRampasacceso }}</td>
+            </tr>
+            <tr>
+                <th>N518esguiasdiscapicidadvisual</th>
+                <td>{{ entity.n518EsGuiasDiscapicidadVisual }}</td>
+            </tr>
+            <tr>
+                <th>N519esambientespedagogicosdiscapacidad</th>
+                <td>{{ entity.n519EsAmbientesPedagogicosDiscapacidad }}</td>
+            </tr>
+            <tr>
+                <th>Obs</th>
+                <td>{{ entity.obs }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fecharegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>N13estipoinstalacion</th>
+                <td>{{ entity.n13EsTipoInstalacion }}</td>
+            </tr>
+            <tr>
+                <th>N43metrosserviciotelecentro</th>
+                <td>{{ entity.n43MetrosServicioTelecentro }}</td>
+            </tr>
+            <tr>
+                <th>N43esdnaslim</th>
+                <td>{{ entity.n43EsDnaSlim }}</td>
+            </tr>
+            <tr>
+                <th>N43metrosdnaslim</th>
+                <td>{{ entity.n43MetrosDnaSlim }}</td>
+            </tr>
+            <tr>
+                <th>N43esuesprox</th>
+                <td>{{ entity.n43EsUesProx }}</td>
+            </tr>
+            <tr>
+                <th>N43metrosuesprox</th>
+                <td>{{ entity.n43MetrosUesProx }}</td>
+            </tr>
+            <tr>
+                <th>N43esestbomberos</th>
+                <td>{{ entity.n43EsEstBomberos }}</td>
+            </tr>
+            <tr>
+                <th>N43metrosestbomberos</th>
+                <td>{{ entity.n43MetrosEstBomberos }}</td>
+            </tr>
+            <tr>
+                <th>N43esmercadoproxim</th>
+                <td>{{ entity.n43EsMercadoProxim }}</td>
+            </tr>
+            <tr>
+                <th>N43metrosmercadoproxim</th>
+                <td>{{ entity.n43MetrosMercadoProxim }}</td>
+            </tr>
+            <tr>
+                <th>N43escomunitariaproxim</th>
+                <td>{{ entity.n43EsComunitariaProxim }}</td>
+            </tr>
+            <tr>
+                <th>N43metroscomunitariaproxim</th>
+                <td>{{ entity.n43MetrosComunitariaProxim }}</td>
+            </tr>
+            <tr>
+                <th>N43esuniversidadproxim</th>
+                <td>{{ entity.n43EsUniversidadProxim }}</td>
+            </tr>
+            <tr>
+                <th>N43metrosuniversidadproxim</th>
+                <td>{{ entity.n43MetrosUniversidadProxim }}</td>
+            </tr>
+            <tr>
+                <th>N43estecnologicoproxim</th>
+                <td>{{ entity.n43EsTecnologicoProxim }}</td>
+            </tr>
+            <tr>
+                <th>N43metrostecnologicoproxim</th>
+                <td>{{ entity.n43MetrosTecnologicoProxim }}</td>
+            </tr>
+            <tr>
+                <th>N29ambientesconagua</th>
+                <td>{{ entity.n29AmbientesConAgua }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('infraestructurah4servicio') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('infraestructurah4servicio_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

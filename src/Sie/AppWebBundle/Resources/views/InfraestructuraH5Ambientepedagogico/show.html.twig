@@ -1,0 +1,112 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH5Ambientepedagogico</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>N51ambienteanchomts</th>
+                <td>{{ entity.n51AmbienteAnchoMts }}</td>
+            </tr>
+            <tr>
+                <th>N51ambientelargomts</th>
+                <td>{{ entity.n51AmbienteLargoMts }}</td>
+            </tr>
+            <tr>
+                <th>N51ambientealtomts</th>
+                <td>{{ entity.n51AmbienteAltoMts }}</td>
+            </tr>
+            <tr>
+                <th>N51capacidadambiente</th>
+                <td>{{ entity.n51CapacidadAmbiente }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fecharegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>N51esusoambiente</th>
+                <td>{{ entity.n51EsUsoAmbiente }}</td>
+            </tr>
+            <tr>
+                <th>N51especialidadtipoid</th>
+                <td>{{ entity.n51EspecialidadTipoId }}</td>
+            </tr>
+            <tr>
+                <th>N51talleresespotro</th>
+                <td>{{ entity.n51TalleresEspOtro }}</td>
+            </tr>
+            <tr>
+                <th>N51esusouniversal</th>
+                <td>{{ entity.n51EsUsoUniversal }}</td>
+            </tr>
+            <tr>
+                <th>N51esambientecielofal</th>
+                <td>{{ entity.n51EsAmbienteCieloFal }}</td>
+            </tr>
+            <tr>
+                <th>N51esambientepuerta</th>
+                <td>{{ entity.n51EsAmbientePuerta }}</td>
+            </tr>
+            <tr>
+                <th>N51esambienteventana</th>
+                <td>{{ entity.n51EsAmbienteVentana }}</td>
+            </tr>
+            <tr>
+                <th>N51esiluminacionelectrica</th>
+                <td>{{ entity.n51EsIluminacionElectrica }}</td>
+            </tr>
+            <tr>
+                <th>N51esiluminacionnatural</th>
+                <td>{{ entity.n51EsIluminacionNatural }}</td>
+            </tr>
+            <tr>
+                <th>N51esambientemuros</th>
+                <td>{{ entity.n51EsAmbienteMuros }}</td>
+            </tr>
+            <tr>
+                <th>N51esambienterevestimiento</th>
+                <td>{{ entity.n51EsAmbienteRevestimiento }}</td>
+            </tr>
+            <tr>
+                <th>N51esambientepiso</th>
+                <td>{{ entity.n51EsAmbientePiso }}</td>
+            </tr>
+            <tr>
+                <th>N51esambientetecho</th>
+                <td>{{ entity.n51EsAmbienteTecho }}</td>
+            </tr>
+            <tr>
+                <th>N51nrobloque</th>
+                <td>{{ entity.n51NroBloque }}</td>
+            </tr>
+            <tr>
+                <th>N51nropiso</th>
+                <td>{{ entity.n51NroPiso }}</td>
+            </tr>
+            <tr>
+                <th>N51esusobth</th>
+                <td>{{ entity.n51EsUsoBth }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('infraestructurah5ambientepedagogico') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('infraestructurah5ambientepedagogico_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

@@ -1,3 +1,11 @@
 dgesttla_malla_curricular:
     path:   /mallaindex
     defaults:   { _controller: "SieDgesttlaBundle:MallaCurricular:index" }
+    options:
+        expose: true
+
+dgesttla_malla_tecnica_asignatura_add:
+    path:   /mallaaddasignatura/{pensumid}
+    defaults:   { _controller: "SieDgesttlaBundle:MallaCurricular:addasignatura" }
+    options:
+        expose: true

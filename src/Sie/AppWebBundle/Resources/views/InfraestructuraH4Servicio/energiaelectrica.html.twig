@@ -1,0 +1,67 @@
+
+                              <div class="row">
+                                <div class="col-md-6">
+                                   <div class="form-body">
+
+                                     <div class="form-group">
+                                          <label class="control-label">1.1 El edificio educativo dispone de energia electrica?</label>
+  
+                                          SI: {{form_widget(form.n11EsEnergiaelectrica, {'attr': {'class': ''} }  )}}
+        
+                                      </div><!-- /.form-group -->
+                                      <div class="form-group">
+                                            <label class="control-label">1.2 Fuente Principal de energia</label>
+                                            {{form_widget(form.n12FuenteElectricaTipo, {'attr': {'class': 'form-control'} } )}}
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Otro</label>
+                                            {{form_widget(form.n12FuenteElectricaOtro, {'attr': {'class': 'form-control'} })}}
+                                        </div>
+                                      <div class="form-group">
+                                           <label class="control-label">1.3 Tipos de instalacion</label>
+
+                                           {{form_widget(form.n13EsTipoInstalacion, {'attr': {'class': ''} })}}
+                                                
+                                            <div class="radio">
+                                                  <label class="radio-inline">
+                                                      <input id="form_tipoinstalation" checked="checked" type="radio" name="form[electrica][tipoinstalation]" value="monofasico">
+                                                      Monofásico
+                                                  </label>
+                                                  <label class="radio-inline">
+                                                      <input id="form_tipoinstalation" type="radio" name="form[electrica][tipoinstalation]" value="trifasico">
+                                                      Trifásico
+                                                  </label>
+                                                </div>
+                                       </div><!-- /.form-group -->
+
+  
+                                   </div>
+                                </div> <!-- end firt column -->
+                                <div class="col-md-6">
+                                   <div class="form-body">
+
+                                     <div class="form-group">
+                                          <label class="control-label">1.4 Disponibilidad del servicio</label>
+                                          {{form_widget(form.n14DisponibilidadTipo, {'attr': {'class': 'form-control'} })}}
+                                      </div><!-- /.form-group -->
+
+                                      <div class="form-group">
+                                           <label class="control-label">1.5 Numero de ambientes que tiene luz electrica:</label></BR>
+                                           <label class="control-label">Ambientes pedagogicos</label>
+                                           {{form_widget(form.n15NumeroAmbientesPedagogicos, {'attr': {'class': 'form-control'} })}}
+                                       </div><!-- /.form-group -->
+                                       <div class="form-group">
+
+                                             <label class="control-label">Ambientes no pedagogicos</label>
+                                             {{form_widget(form.n15NumeroAmbientesNoPedagogicos, {'attr': {'class': 'form-control'} })}}
+                                         </div>
+                                         <div class="form-group">
+
+                                               <label class="control-label">Banos</label>
+                                               {{form_widget(form.n15NumeroBanios, {'attr': {'class': 'form-control'} })}}
+                                           </div>
+
+                                   </div>
+                                </div> <!-- end second column -->
+
+                              </div>

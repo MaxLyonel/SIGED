@@ -23,10 +23,10 @@ class SeguimientoController extends Controller {
      */
     public function __construct() {
         $this->session = new Session();
-    }    
+    }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que busca un documento en funcion al numero de serie para su seguimiento
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
@@ -63,16 +63,16 @@ class SeguimientoController extends Controller {
         }
 
         $gestion = $gestionActual->format('Y');
-       
+
         return $this->render($this->session->get('pathSystem') . ':Seguimiento:documentoSerieIndex.html.twig', array(
             'formBusqueda' => $documentoController->creaFormBuscaDocumentoSerie('sie_tramite_seguimiento_documento_lista','')->createView(),
             'titulo' => 'Seguimiento',
             'subtitulo' => 'Número de Serie',
         ));
-    }  
+    }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que lista los documento buscados
     // PARAMETROS: request, serie
     // AUTOR: RCANAVIRI
@@ -90,12 +90,12 @@ class SeguimientoController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-     
+
         if ($request->isMethod('POST')) {
             $form = $request->get('form');
             if ($form) {
-                $serie = $form['serie']; 
-            }  else {          
+                $serie = $form['serie'];
+            }  else {
                 $serie = $request->get('serie');
             }
 
@@ -103,33 +103,33 @@ class SeguimientoController extends Controller {
                 $documentoController = new documentoController();
                 $documentoController->setContainer($this->container);
                 try {
-                    $entityDocumento = $documentoController->getDocumentoSerie($serie); 
+                    $entityDocumento = $documentoController->getDocumentoSerie($serie);
                     if(count($entityDocumento)<=0){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número de serie ingresado'));
-                    }   
+                    }
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:documentoSerieIndex.html.twig', array(
                         'formBusqueda' => $documentoController->creaFormBuscaDocumentoSerie('sie_tramite_seguimiento_documento_lista',$serie)->createView(),
                         'titulo' => 'Seguimiento',
                         'subtitulo' => 'Número de Serie',
-                        'listaBusqueda' => $entityDocumento,                  
+                        'listaBusqueda' => $entityDocumento,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
                     return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
-                } 
-            } else {     
+                }
+            } else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
                 return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
             }
-        } else {                   
+        } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
             return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
-        }    
-    }  
+        }
+    }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que lista el detalle del tramite en funcion al documento
     // PARAMETROS: request, documentoId
     // AUTOR: RCANAVIRI
@@ -146,7 +146,7 @@ class SeguimientoController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-     
+
         if ($request->isMethod('POST')) {
             $codigo = $request->get('codigo');
             if($codigo == ""){
@@ -154,15 +154,15 @@ class SeguimientoController extends Controller {
             } else {
                 $codigo = base64_decode($codigo);
             }
-    
+
             $documentoController = new documentoController();
             $documentoController->setContainer($this->container);
 
             try {
-                $entityDocumento = $documentoController->getDocumento($codigo); 
+                $entityDocumento = $documentoController->getDocumento($codigo);
                 if(count($entityDocumento)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número documento'));
-                }   
+                }
 
                 $tramiteProcesoController = new tramiteProcesoController();
                 $tramiteProcesoController->setContainer($this->container);
@@ -172,21 +172,21 @@ class SeguimientoController extends Controller {
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
                     'subtitulo' => 'Trámite',
-                    'listaDocumento' => $entityDocumento, 
-                    'listaTramiteDetalle' => $entityTramiteDetalle,                 
+                    'listaDocumento' => $entityDocumento,
+                    'listaTramiteDetalle' => $entityTramiteDetalle,
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
                 return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
-            } 
-        } else {                 
+            }
+        } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
             return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
-        }    
-    }    
+        }
+    }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que busca un tramite en funcion al numero de tramite para su seguimiento
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
@@ -223,16 +223,16 @@ class SeguimientoController extends Controller {
         }
 
         $gestion = $gestionActual->format('Y');
-       
+
         return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteNumeroIndex.html.twig', array(
             'formBusqueda' => $tramiteController->creaFormBuscaTramite('sie_tramite_seguimiento_lista','')->createView(),
             'titulo' => 'Seguimiento',
             'subtitulo' => 'Número de Trámite',
         ));
-    }  
+    }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que lista los tramites buscados
     // PARAMETROS: request, serie
     // AUTOR: RCANAVIRI
@@ -249,44 +249,44 @@ class SeguimientoController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-     
+
         if ($request->isMethod('POST')) {
             $form = $request->get('form');
             if ($form) {
                 $tramite = $form['tramite'];
-        
+
                 $tramiteController = new tramiteController();
                 $tramiteController->setContainer($this->container);
 
                 try {
-                    $entityTramite = $tramiteController->getTramite($tramite); 
+                    $entityTramite = $tramiteController->getTramite($tramite);
 
                     if(count($entityTramite)<=0){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número de trámite ingresado'));
-                    }   
+                    }
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteNumeroIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaTramite('sie_tramite_seguimiento_lista',$tramite)->createView(),
                         'titulo' => 'Seguimiento',
                         'subtitulo' => 'Número de Trámite',
-                        'listaBusqueda' => $entityTramite,                  
+                        'listaBusqueda' => $entityTramite,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
                     return $this->redirect($this->generateUrl('sie_tramite_seguimiento_busca'));
-                }  
-            }  else {          
+                }
+            }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
                 return $this->redirect($this->generateUrl('sie_tramite_seguimiento_busca'));
             }
-        } else {                 
+        } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
             return $this->redirect($this->generateUrl('sie_tramite_seguimiento_busca'));
-        }    
-    }  
+        }
+    }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que lista el detalle del tramite en funcion al numero de tramite
     // PARAMETROS: request, documentoId
     // AUTOR: RCANAVIRI
@@ -303,7 +303,7 @@ class SeguimientoController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-     
+
         if ($request->isMethod('POST')) {
             $codigo = $request->get('codigo');;
             if($codigo == ""){
@@ -311,15 +311,15 @@ class SeguimientoController extends Controller {
             } else {
                 $codigo = base64_decode($codigo);
             }
-    
+
             $tramiteController = new tramiteController();
             $tramiteController->setContainer($this->container);
 
             try {
-                $entityTramite = $tramiteController->getTramite($codigo); 
+                $entityTramite = $tramiteController->getTramite($codigo);
                 if(count($entityTramite)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número de trámite'));
-                }   
+                }
 
                 $entityTramite = $entityTramite[0];
 
@@ -331,21 +331,21 @@ class SeguimientoController extends Controller {
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
                     'subtitulo' => 'Trámite',
-                    'listaDocumento' => $entityTramite, 
-                    'listaTramiteDetalle' => $entityTramiteDetalle,                 
+                    'listaDocumento' => $entityTramite,
+                    'listaTramiteDetalle' => $entityTramiteDetalle,
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
                 return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
-            } 
-        } else {                 
+            }
+        } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
             return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
-        }    
-    } 
+        }
+    }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que busca un tramite en funcion al numero de tramite para su seguimiento
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
@@ -382,16 +382,16 @@ class SeguimientoController extends Controller {
         }
 
         $gestion = $gestionActual->format('Y');
-       
+
         return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteRudeIndex.html.twig', array(
             'formBusqueda' => $tramiteController->creaFormBuscaTramiteRude('sie_tramite_seguimiento_rude_lista','')->createView(),
             'titulo' => 'Seguimiento',
             'subtitulo' => 'Número de Trámite',
         ));
-    }  
+    }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que lista los tramites buscados
     // PARAMETROS: request, serie
     // AUTOR: RCANAVIRI
@@ -408,44 +408,44 @@ class SeguimientoController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-     
+
         if ($request->isMethod('POST')) {
             $form = $request->get('form');
             if ($form) {
                 $rude = $form['rude'];
-        
+
                 $tramiteController = new tramiteController();
                 $tramiteController->setContainer($this->container);
 
                 try {
-                    $entityTramiteRude = $tramiteController->getTramiteRude($rude); 
+                    $entityTramiteRude = $tramiteController->getTramiteRude($rude);
 
                     if(count($entityTramiteRude)<=0){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del código rude ingresado'));
-                    }   
+                    }
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteRudeIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaTramiteRude('sie_tramite_seguimiento_rude_lista',$rude)->createView(),
                         'titulo' => 'Seguimiento',
                         'subtitulo' => 'Número de Trámite',
-                        'listaBusqueda' => $entityTramiteRude,                  
+                        'listaBusqueda' => $entityTramiteRude,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
                     return $this->redirect($this->generateUrl('sie_tramite_seguimiento_rude_busca'));
-                }  
-            }  else {          
+                }
+            }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
                 return $this->redirect($this->generateUrl('sie_tramite_seguimiento_rude_busca'));
             }
-        } else {                 
+        } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
             return $this->redirect($this->generateUrl('sie_tramite_seguimiento_rude_busca'));
-        }    
-    }  
+        }
+    }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que lista el detalle del tramite en funcion al codigo rude
     // PARAMETROS: request, tramiteId
     // AUTOR: RCANAVIRI
@@ -462,7 +462,7 @@ class SeguimientoController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-     
+
         if ($request->isMethod('POST')) {
             $codigo = $request->get('codigo');;
             if($codigo == ""){
@@ -470,15 +470,15 @@ class SeguimientoController extends Controller {
             } else {
                 $codigo = base64_decode($codigo);
             }
-    
+
             $tramiteController = new tramiteController();
             $tramiteController->setContainer($this->container);
 
             try {
-                $entityTramite = $tramiteController->getTramite($codigo); 
+                $entityTramite = $tramiteController->getTramite($codigo);
                 if(count($entityTramite)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del código rude'));
-                }   
+                }
 
                 $entityTramite = $entityTramite[0];
 
@@ -490,21 +490,21 @@ class SeguimientoController extends Controller {
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
                     'subtitulo' => 'Trámite',
-                    'listaDocumento' => $entityTramite, 
-                    'listaTramiteDetalle' => $entityTramiteDetalle,                 
+                    'listaDocumento' => $entityTramite,
+                    'listaTramiteDetalle' => $entityTramiteDetalle,
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
                 return $this->redirect($this->generateUrl('sie_tramite_seguimiento_rude_busca'));
-            } 
-        } else {                 
+            }
+        } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
             return $this->redirect($this->generateUrl('sie_tramite_seguimiento_rude_busca'));
-        }    
-    }   
+        }
+    }
 
         //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que busca un tramite en funcion a la cedula de identidad del bachiller para su seguimiento
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
@@ -541,16 +541,16 @@ class SeguimientoController extends Controller {
         }
 
         $gestion = $gestionActual->format('Y');
-       
+
         return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteCedulaIndex.html.twig', array(
             'formBusqueda' => $tramiteController->creaFormBuscaTramiteCedula('sie_tramite_seguimiento_cedula_lista','')->createView(),
             'titulo' => 'Seguimiento',
             'subtitulo' => 'Número de Cédula de Identidad',
         ));
-    }  
+    }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que lista los tramites buscados en función a la cedula de identidad
     // PARAMETROS: request, serie
     // AUTOR: RCANAVIRI
@@ -567,44 +567,44 @@ class SeguimientoController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-     
+
         if ($request->isMethod('POST')) {
             $form = $request->get('form');
             if ($form) {
                 $cedula = $form['cedula'];
-        
+
                 $tramiteController = new tramiteController();
                 $tramiteController->setContainer($this->container);
 
                 try {
-                    $entityTramiteCedula = $tramiteController->getTramiteCedula($cedula); 
+                    $entityTramiteCedula = $tramiteController->getTramiteCedula($cedula);
 
                     if(count($entityTramiteCedula)<=0){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la cédula de identidad ingresada'));
-                    }   
+                    }
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteCedulaIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaTramiteCedula('sie_tramite_seguimiento_cedula_lista',$cedula)->createView(),
                         'titulo' => 'Seguimiento',
                         'subtitulo' => 'Número de Cédula de Indentidad',
-                        'listaBusqueda' => $entityTramiteCedula,                  
+                        'listaBusqueda' => $entityTramiteCedula,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
                     return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
-                }  
-            }  else {          
+                }
+            }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
                 return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
             }
-        } else {                 
+        } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
             return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
-        }    
-    }  
+        }
+    }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Controlador que lista el detalle del tramite en funcion al cedula de identidad
     // PARAMETROS: request, tramiteId
     // AUTOR: RCANAVIRI
@@ -621,7 +621,7 @@ class SeguimientoController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-     
+
         if ($request->isMethod('POST')) {
             $codigo = $request->get('codigo');;
             if($codigo == ""){
@@ -629,16 +629,16 @@ class SeguimientoController extends Controller {
             } else {
                 $codigo = base64_decode($codigo);
             }
-    
+
             $tramiteController = new tramiteController();
             $tramiteController->setContainer($this->container);
 
             try {
-                $entityTramite = $tramiteController->getTramite($codigo); 
+                $entityTramite = $tramiteController->getTramite($codigo);
 
                 if(count($entityTramite)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la cédula de identidad'));
-                }   
+                }
 
                 $entityTramite = $entityTramite[0];
 
@@ -650,16 +650,16 @@ class SeguimientoController extends Controller {
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
                     'subtitulo' => 'Trámite',
-                    'listaDocumento' => $entityTramite, 
-                    'listaTramiteDetalle' => $entityTramiteDetalle,                 
+                    'listaDocumento' => $entityTramite,
+                    'listaTramiteDetalle' => $entityTramiteDetalle,
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
                 return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
-            } 
-        } else {                 
+            }
+        } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
             return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
-        }    
-    }   
+        }
+    }
 }

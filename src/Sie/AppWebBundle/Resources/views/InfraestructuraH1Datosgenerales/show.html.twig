@@ -1,0 +1,276 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH1Datosgenerales</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>N19zonabarrio</th>
+                <td>{{ entity.n19Zonabarrio }}</td>
+            </tr>
+            <tr>
+                <th>N111macrodistrito</th>
+                <td>{{ entity.n111Macrodistrito }}</td>
+            </tr>
+            <tr>
+                <th>N112distritomun</th>
+                <td>{{ entity.n112Distritomun }}</td>
+            </tr>
+            <tr>
+                <th>N110direccion</th>
+                <td>{{ entity.n110Direccion }}</td>
+            </tr>
+            <tr>
+                <th>N22descripcionacceso</th>
+                <td>{{ entity.n22Descripcionacceso }}</td>
+            </tr>
+            <tr>
+                <th>N31tramotroncal</th>
+                <td>{{ entity.n31Tramotroncal }}</td>
+            </tr>
+            <tr>
+                <th>N32tramocomplementaria</th>
+                <td>{{ entity.n32Tramocomplementaria }}</td>
+            </tr>
+            <tr>
+                <th>N33tramovecinal</th>
+                <td>{{ entity.n33Tramovecinal }}</td>
+            </tr>
+            <tr>
+                <th>N34vehiculardistdias</th>
+                <td>{{ entity.n34VehicularDistDias }}</td>
+            </tr>
+            <tr>
+                <th>N34vehiculardisthrs</th>
+                <td>{{ entity.n34VehicularDistHrs }}</td>
+            </tr>
+            <tr>
+                <th>N34vehiculardistmin</th>
+                <td>{{ entity.n34VehicularDistMin }}</td>
+            </tr>
+            <tr>
+                <th>N34vehiculardistcosto</th>
+                <td>{{ entity.n34VehicularDistCosto }}</td>
+            </tr>
+            <tr>
+                <th>N34terrestredescripcion</th>
+                <td>{{ entity.n34TerrestreDescripcion }}</td>
+            </tr>
+            <tr>
+                <th>N34fluvialdistdias</th>
+                <td>{{ entity.n34FluvialDistDias }}</td>
+            </tr>
+            <tr>
+                <th>N34fluvialdisthrs</th>
+                <td>{{ entity.n34FluvialDistHrs }}</td>
+            </tr>
+            <tr>
+                <th>N34fluvialdistmin</th>
+                <td>{{ entity.n34FluvialDistMin }}</td>
+            </tr>
+            <tr>
+                <th>N34fluvialdistcosto</th>
+                <td>{{ entity.n34FluvialDistCosto }}</td>
+            </tr>
+            <tr>
+                <th>N34fluvialdescripcion</th>
+                <td>{{ entity.n34FluvialDescripcion }}</td>
+            </tr>
+            <tr>
+                <th>N34aereodistdias</th>
+                <td>{{ entity.n34AereoDistDias }}</td>
+            </tr>
+            <tr>
+                <th>N34aereodisthrs</th>
+                <td>{{ entity.n34AereoDistHrs }}</td>
+            </tr>
+            <tr>
+                <th>N34aereodistmin</th>
+                <td>{{ entity.n34AereoDistMin }}</td>
+            </tr>
+            <tr>
+                <th>N34aereodistcosto</th>
+                <td>{{ entity.n34AereoDistCosto }}</td>
+            </tr>
+            <tr>
+                <th>N34aereodescripcion</th>
+                <td>{{ entity.n34AereoDescripcion }}</td>
+            </tr>
+            <tr>
+                <th>N34combinaciondias</th>
+                <td>{{ entity.n34CombinacionDias }}</td>
+            </tr>
+            <tr>
+                <th>N34combinacionhrs</th>
+                <td>{{ entity.n34CombinacionHrs }}</td>
+            </tr>
+            <tr>
+                <th>N34combinacionmin</th>
+                <td>{{ entity.n34CombinacionMin }}</td>
+            </tr>
+            <tr>
+                <th>N34combinacioncosto</th>
+                <td>{{ entity.n34CombinacionCosto }}</td>
+            </tr>
+            <tr>
+                <th>N34combinaciondescripcion</th>
+                <td>{{ entity.n34CombinacionDescripcion }}</td>
+            </tr>
+            <tr>
+                <th>N5obs</th>
+                <td>{{ entity.n5Obs }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fecharegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>N34peatonaldistdias</th>
+                <td>{{ entity.n34PeatonalDistDias }}</td>
+            </tr>
+            <tr>
+                <th>N34peatonaldisthrs</th>
+                <td>{{ entity.n34PeatonalDistHrs }}</td>
+            </tr>
+            <tr>
+                <th>N34peatonaldistmin</th>
+                <td>{{ entity.n34PeatonalDistMin }}</td>
+            </tr>
+            <tr>
+                <th>N34peatonaldistcosto</th>
+                <td>{{ entity.n34PeatonalDistCosto }}</td>
+            </tr>
+            <tr>
+                <th>N34peatonalmundias</th>
+                <td>{{ entity.n34PeatonalMunDias }}</td>
+            </tr>
+            <tr>
+                <th>N34peatonalmunhrs</th>
+                <td>{{ entity.n34PeatonalMunHrs }}</td>
+            </tr>
+            <tr>
+                <th>N34peatonalmunmin</th>
+                <td>{{ entity.n34PeatonalMunMin }}</td>
+            </tr>
+            <tr>
+                <th>N34peatonalmuncosto</th>
+                <td>{{ entity.n34PeatonalMunCosto }}</td>
+            </tr>
+            <tr>
+                <th>N34vehicularmundias</th>
+                <td>{{ entity.n34VehicularMunDias }}</td>
+            </tr>
+            <tr>
+                <th>N34vehicularmunhrs</th>
+                <td>{{ entity.n34VehicularMunHrs }}</td>
+            </tr>
+            <tr>
+                <th>N34vehicularmunmin</th>
+                <td>{{ entity.n34VehicularMunMin }}</td>
+            </tr>
+            <tr>
+                <th>N34vehicularmuncosto</th>
+                <td>{{ entity.n34VehicularMunCosto }}</td>
+            </tr>
+            <tr>
+                <th>N34fluvialmundias</th>
+                <td>{{ entity.n34FluvialMunDias }}</td>
+            </tr>
+            <tr>
+                <th>N34fluvialmunhrs</th>
+                <td>{{ entity.n34FluvialMunHrs }}</td>
+            </tr>
+            <tr>
+                <th>N34fluvialmunmin</th>
+                <td>{{ entity.n34FluvialMunMin }}</td>
+            </tr>
+            <tr>
+                <th>N34fluvialmuncosto</th>
+                <td>{{ entity.n34FluvialMunCosto }}</td>
+            </tr>
+            <tr>
+                <th>N34aereomundias</th>
+                <td>{{ entity.n34AereoMunDias }}</td>
+            </tr>
+            <tr>
+                <th>N34aereomunhrs</th>
+                <td>{{ entity.n34AereoMunHrs }}</td>
+            </tr>
+            <tr>
+                <th>N34aereomunmin</th>
+                <td>{{ entity.n34AereoMunMin }}</td>
+            </tr>
+            <tr>
+                <th>N34aereomuncosto</th>
+                <td>{{ entity.n34AereoMunCosto }}</td>
+            </tr>
+            <tr>
+                <th>N21fotografiaprincipal</th>
+                <td>{{ entity.n21FotografiaPrincipal }}</td>
+            </tr>
+            <tr>
+                <th>N21fotografiafrontal</th>
+                <td>{{ entity.n21FotografiaFrontal }}</td>
+            </tr>
+            <tr>
+                <th>N21fotografialateral</th>
+                <td>{{ entity.n21FotografiaLateral }}</td>
+            </tr>
+            <tr>
+                <th>N21fotografiapanoramica</th>
+                <td>{{ entity.n21FotografiaPanoramica }}</td>
+            </tr>
+            <tr>
+                <th>N34peatonalesdist</th>
+                <td>{{ entity.n34PeatonalEsDist }}</td>
+            </tr>
+            <tr>
+                <th>N34vehicularesdist</th>
+                <td>{{ entity.n34VehicularEsDist }}</td>
+            </tr>
+            <tr>
+                <th>N34fluvialesdist</th>
+                <td>{{ entity.n34FluvialEsDist }}</td>
+            </tr>
+            <tr>
+                <th>N34aereoesdist</th>
+                <td>{{ entity.n34AereoEsDist }}</td>
+            </tr>
+            <tr>
+                <th>N34peatonalesmun</th>
+                <td>{{ entity.n34PeatonalEsMun }}</td>
+            </tr>
+            <tr>
+                <th>N34vehicularesmun</th>
+                <td>{{ entity.n34VehicularEsMun }}</td>
+            </tr>
+            <tr>
+                <th>N34fluvialesmun</th>
+                <td>{{ entity.n34FluvialEsMun }}</td>
+            </tr>
+            <tr>
+                <th>N34aereoesmun</th>
+                <td>{{ entity.n34AereoEsMun }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('infraestructurah1datosgenerales') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('infraestructurah1datosgenerales_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

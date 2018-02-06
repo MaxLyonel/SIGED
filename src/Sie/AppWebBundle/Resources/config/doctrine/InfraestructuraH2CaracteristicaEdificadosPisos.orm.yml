@@ -1,0 +1,301 @@
+Sie\AppWebBundle\Entity\InfraestructuraH2CaracteristicaEdificadosPisos:
+    type: entity
+    table: infraestructura_h2_caracteristica_edificados_pisos
+    indexes:
+        IDX_1BA42C571D16F71:
+            columns:
+                - n3_1_senales_tipo_id
+        IDX_1BA42C58B76C1BD:
+            columns:
+                - estado_tipo_id
+        IDX_1BA42C5445F5942:
+            columns:
+                - n35_senales_idioma_tipo2_id
+        IDX_1BA42C556EAF6AC:
+            columns:
+                - n35_senales_idioma_tipo1_id
+        IDX_1BA42C55B92C50E:
+            columns:
+                - n22_2_abre_tipo_id
+        IDX_1BA42C5BCE0933B:
+            columns:
+                - n27_1_piso_material_tipo_id
+        IDX_1BA42C5A9A3CB1C:
+            columns:
+                - n26_1_revest_material_tipo_id
+        IDX_1BA42C54BFE400A:
+            columns:
+                - n25_2_muros_caracteristicas_tipo_id
+        IDX_1BA42C514FED2CC:
+            columns:
+                - n25_1_muros_material_tipo_id
+        IDX_1BA42C5B7302931:
+            columns:
+                - n23_1_vidrios_tipo_id
+        IDX_1BA42C598D8177F:
+            columns:
+                - n22_1_seguro_tipo_id
+        IDX_1BA42C52EA599F6:
+            columns:
+                - n27_2_piso_caracteristicas_tipo_id
+        IDX_1BA42C53148BCED:
+            columns:
+                - n26_2_revest_caracteristicas_tipo_id
+        IDX_1BA42C5BE1A0E5E:
+            columns:
+                - n21_1_caracteristicas_tipo_id
+        IDX_1BA42C570384B65:
+            columns:
+                - n32_gradas_tipo_id
+        IDX_1BA42C5A1BFB071:
+            columns:
+                - n11_nro_piso_tipo_id
+        IDX_1BA42C5EDCDAC95:
+            columns:
+                - infraestructura_h2_caracteristica_edificados_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n12AreaM2:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            comment: ''
+            column: n12_area_m2
+        n13NroAmbPedagogicos:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n13_nro_amb_pedagogicos
+        n14NroAmbNoPedagogicos:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n14_nro_amb_no_pedagogicos
+        n15TotalBanios:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n15_total_banios
+        n16TotalAmbientes:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n16_total_ambientes
+        n21SiCieloFalso:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n21_si_cielo_falso
+        n22SiPuertas:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n22_si_puertas
+        n23SiVentanas:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n23_si_ventanas
+        n24SiTecho:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n24_si_techo
+        n25SiMuros:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n25_si_muros
+        n26SiRevestimiento:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n26_si_revestimiento
+        n27SiPiso:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n27_si_piso
+        n31SiGradas:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n31_si_gradas
+        n33SiRampas:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n33_si_rampas
+        n35SiSenaletica:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: n35_si_senaletica
+    manyToOne:
+        n31SenalesTipo:
+            targetEntity: InfraestructuraH2SenalesTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n3_1_senales_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadoTipo:
+            targetEntity: InfraestructuraGenEstadoGeneral
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n35SenalesiomaTipo2:
+            targetEntity: InfraestructuraH2SenalesIdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n35_senales_idioma_tipo2_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n35SenalesiomaTipo1:
+            targetEntity: InfraestructuraH2SenalesIdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n35_senales_idioma_tipo1_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n222AbreTipo:
+            targetEntity: InfraestructuraGenPuertasAbreTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n22_2_abre_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n271PisoMaterialTipo:
+            targetEntity: InfraestructuraGenPisosMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n27_1_piso_material_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n261RevestMaterialTipo:
+            targetEntity: InfraestructuraGenRevestimientoMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n26_1_revest_material_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n252MurosCaracteristicasTipo:
+            targetEntity: InfraestructuraGenMurosCaracTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n25_2_muros_caracteristicas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n251MurosMaterialTipo:
+            targetEntity: InfraestructuraGenMurosMaterialTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n25_1_muros_material_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n231VidriosTipo:
+            targetEntity: InfraestructuraGenVentanasCaracTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n23_1_vidrios_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n221SeguroTipo:
+            targetEntity: InfraestructuraGenPuertasSeguroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n22_1_seguro_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n272PisoCaracteristicasTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n27_2_piso_caracteristicas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n262RevestCaracteristicasTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n26_2_revest_caracteristicas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n211CaracteristicasTipo:
+            targetEntity: InfraestructuraGenCaracteristicasInfraTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n21_1_caracteristicas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n32GradasTipo:
+            targetEntity: InfraestructuraH2PisosGradasTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n32_gradas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n11NroPisoTipo:
+            targetEntity: InfraestructuraH2PisoNroPisoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n11_nro_piso_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH2CaracteristicaEdificados:
+            targetEntity: InfraestructuraH2CaracteristicaEdificados
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h2_caracteristica_edificados_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

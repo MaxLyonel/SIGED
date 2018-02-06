@@ -1,0 +1,197 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Adición de Ambiente Pedagogico</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+
+
+				{{form_start(form, { 'attr':{'id':'idFormNewVestuario'} })}}
+                <div class="form-body"> 
+
+                    <div class="form-group">
+					<label>1.1 Descripcion ambientes para el desarrollo pedagogico</label>
+						<table class="table">
+						    <tr>
+						      <td>Ambiente:</td>
+						      <td>Bloque</td>
+						      <td>Piso</td>
+						      <td>Capacidad</td>
+						      <td>Ancho(mts)</td>
+						      <td>Largo(mts)</td>
+						      <td>Alto(mts)</td>					      
+						    </tr>
+						    <tr>
+						      <th >{{form_widget(form.n51AmbienteTipo, {'attr': {'class':'form-control'} } )}}</th>
+						      <td>{{form_widget(form.n51NroBloque, {'attr': {'class':'form-control'} } )}}</td>
+						      <td>{{form_widget(form.n51NroPiso, {'attr': {'class':'form-control'} } )}}</td>
+						      <td>{{form_widget(form.n51CapacidadAmbiente, {'attr': {'class':'form-control'} } )}}</td>
+						      <td>{{form_widget(form.n51AmbienteAnchoMts, {'attr': {'class':'form-control'} } )}}</td>
+						      <td>{{form_widget(form.n51AmbienteLargoMts, {'attr': {'class':'form-control'} } )}}</td>
+						      <td>{{form_widget(form.n51AmbienteAltoMts, {'attr': {'class':'form-control'} } )}}</td>
+						    </tr>
+						</table>
+					</div>
+
+					<div class="form-group">
+						<label>1.2 Estado del Ambiente</label>
+						<table class="table">
+						    <tr>
+						      <td>Tiene Techo:</td>
+						      <td>Tiene iluminaci&oacute;n el&eacute;ctrica</td>
+						      <td>Tiene iluminaci&oacute;n Natural</td>
+						      
+						    </tr>
+						    <tr>
+						      <th >{{form_widget(form.n51EsUsoAmbiente, {'attr': {'class':''} } )}}</th>
+						      <td>{{form_widget(form.n51EsUsoUniversal, {'attr': {'class':''} } )}}</td>
+						      <td>{{form_widget(form.n51EsUsoBth, {'attr': {'class':''} } )}}</td>
+						      
+						    </tr>
+						</table>
+					</div>
+
+					<div class="form-group">
+						<table class="table">
+						    <tr>
+						      <td>Uso del Ambiente:</td>
+						      <td>Ambiente considerado de uso universal</td>
+						      <td>Es utilizado como taller para BTH o Especialidad T&eacute;cnica</td>
+						      
+						    </tr>
+						    <tr>
+						      <th >{{form_widget(form.n51EsUsoAmbiente, {'attr': {'class':''} } )}}</th>
+						      <td>{{form_widget(form.n51EsUsoUniversal, {'attr': {'class':''} } )}}</td>
+						      <td>{{form_widget(form.n51EsUsoBth, {'attr': {'class':''} } )}}</td>
+						      
+						    </tr>
+						</table>
+					</div>
+
+
+                      
+{#
+                    <div class="form-group no-margin">
+                        <label>6.2 Estado del vestuario</label>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label>Tiene cielo falso</label>
+                                {{form_widget(form.n62EsTieneCieloFalso, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-3">
+                                <label>Caracteristica</label>
+                                {{form_widget(form.n62TieneCieloFalsoCaracTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+
+                            <div class="col-md-2">
+                                <label>Tiene muros:</label>
+                                {{form_widget(form.n62EsTieneMuros, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                                <label>Material</label>
+                                {{form_widget(form.n62TieneMurosMaterTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+
+                            <div class="col-md-2">
+                                <label>Caracteristica</label>
+                                {{form_widget(form.n62TieneMurosCaracTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                                                      
+                        </div>
+                    </div>
+
+                    <br>
+
+
+                    <div class="form-group">
+                        <div class="row">
+                            
+                            <div class="col-md-2">
+                                <label>Tiene puerta(s)</label>
+                                {{form_widget(form.n62EsTienePuerta, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-3">
+                                <label>Caracteristicas</label>
+                                
+                            </div>
+                            <div class="col-md-2">
+                                <label>Tiene revestimiento:</label>
+                                {{form_widget(form.n62EsTieneRevest, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                                <label>Material </label>
+                                {{form_widget(form.n62TieneRevestMaterTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                                <label>Caracteristicas</label>
+                                {{form_widget(form.n62TieneRevestCaracTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>  
+                            
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <label>Tiene Ventana:</label>
+                                {{form_widget(form.n62EsTieneVentana, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-3">
+                                <label>Caracteristica</label>
+                                {{form_widget(form.n62TieneVentanaCaracTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                                <label>Tiene Piso:</label>
+                                {{form_widget(form.n62EsTienePiso, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                                <label>Caracteristicas</label>
+                                {{form_widget(form.n62TienePisoMaterTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>  
+                            <div class="col-md-2">
+                                <label>Caracteristicas</label>
+                                {{form_widget(form.n62TienePisoCaracTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>  
+                            
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        
+                        <div class="row">
+                            
+                            <div class="col-md-2">
+                                <label>Tiene Techo:</label>
+                                {{form_widget(form.n62EsTieneTecho, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            
+                        </div>
+                    </div>
+
+
+
+#}
+
+                </div>
+                  
+            {{form_end(form)}}
+
+
+
+
+ 			</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-theme" data-dismiss="modal" onclick='saveNewAmbPedagogico()'>Guardar</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+

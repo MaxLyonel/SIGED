@@ -1,0 +1,58 @@
+Sie\AppWebBundle\Entity\InfraestructuraH5AmbientepedagogicoEquipamiento:
+    type: entity
+    table: infraestructura_h5_ambientepedagogico_equipamiento
+    indexes:
+        IDX_798B6AF145A3DDFE:
+            columns:
+                - infraestructura_h5_ambientepedagogico_id
+        IDX_798B6AF1CAD3C5B:
+            columns:
+                - n53_estado_tipo_id
+        IDX_798B6AF125690D64:
+            columns:
+                - n53_equipos_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n53Cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n53_cantidad
+    manyToOne:
+        infraestructuraH5Ambientepedagogico:
+            targetEntity: InfraestructuraH5Ambientepedagogico
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h5_ambientepedagogico_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53EstadoTipo:
+            targetEntity: InfraestructuraGenEstadoMobEquipTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_estado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        n53EquiposTipo:
+            targetEntity: InfraestructuraH5AmbientepedagogicoEquiposTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n53_equipos_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -360,4 +360,88 @@ class InfraestructuraH2CaracteristicaEdificados
     {
         return $this->infraestructuraH2Caracteristica;
     }
+    /**
+     * @var string
+     */
+    private $n31NombreBloque;
+
+    /**
+     * @var boolean
+     */
+    private $n32SiTieneAscensores;
+
+    /**
+     * @var string
+     */
+    private $n33AdjuntarFotoBloque;
+
+
+    /**
+     * Set n31NombreBloque
+     *
+     * @param string $n31NombreBloque
+     * @return InfraestructuraH2CaracteristicaEdificados
+     */
+    public function setN31NombreBloque($n31NombreBloque)
+    {
+        $this->n31NombreBloque = $n31NombreBloque;
+    
+        return $this;
+    }
+
+    /**
+     * Get n31NombreBloque
+     *
+     * @return string 
+     */
+    public function getN31NombreBloque()
+    {
+        return $this->n31NombreBloque;
+    }
+
+    /**
+     * Set n32SiTieneAscensores
+     *
+     * @param boolean $n32SiTieneAscensores
+     * @return InfraestructuraH2CaracteristicaEdificados
+     */
+    public function setN32SiTieneAscensores($n32SiTieneAscensores)
+    {
+        $this->n32SiTieneAscensores = $n32SiTieneAscensores;
+    
+        return $this;
+    }
+
+    /**
+     * Get n32SiTieneAscensores
+     *
+     * @return boolean 
+     */
+    public function getN32SiTieneAscensores()
+    {
+        return $this->n32SiTieneAscensores;
+    }
+
+    /**
+     * Set n33AdjuntarFotoBloque
+     *
+     * @param string $n33AdjuntarFotoBloque
+     * @return InfraestructuraH2CaracteristicaEdificados
+     */
+    public function setN33AdjuntarFotoBloque($n33AdjuntarFotoBloque)
+    {
+        $this->n33AdjuntarFotoBloque = $n33AdjuntarFotoBloque;
+    
+        return $this;
+    }
+
+    /**
+     * Get n33AdjuntarFotoBloque
+     *
+     * @return string 
+     */
+    public function getN33AdjuntarFotoBloque()
+    {
+        return $this->n33AdjuntarFotoBloque;
+    }
 }

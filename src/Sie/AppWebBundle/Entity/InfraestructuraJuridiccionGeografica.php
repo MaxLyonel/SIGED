@@ -44,7 +44,9 @@ class InfraestructuraJuridiccionGeografica
      */
     private $juridiccionGeografica;
 
-
+    public function __toString(){
+        return $this->infraestructura;
+    }
     /**
      * Get id
      *

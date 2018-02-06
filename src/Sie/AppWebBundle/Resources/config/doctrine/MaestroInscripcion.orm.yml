@@ -1,7 +1,6 @@
 Sie\AppWebBundle\Entity\MaestroInscripcion:
     type: entity
     table: maestro_inscripcion
-    repositoryClass: Sie\AppWebBundle\Entity\MaestroInscripcionRepository
     indexes:
         fk_dat_sie_docenteadministrati2:
             columns:
@@ -123,8 +122,18 @@ Sie\AppWebBundle\Entity\MaestroInscripcion:
             type: boolean
             nullable: true
             comment: ''
+            default: false
             column: es_vigente_administrativo
     manyToOne:
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         institucioneducativaSucursal:
             targetEntity: InstitucioneducativaSucursal
             cascade: {  }
@@ -177,15 +186,6 @@ Sie\AppWebBundle\Entity\MaestroInscripcion:
             inversedBy: null
             joinColumns:
                 formacion_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        persona:
-            targetEntity: Persona
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                persona_id:
                     referencedColumnName: id
             orphanRemoval: false
         estadomaestro:

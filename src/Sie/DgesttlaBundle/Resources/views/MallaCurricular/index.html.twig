@@ -29,17 +29,19 @@
                     <div class="panel">
                         <BR>
                             <div class="row">                                                            
-                                <div class="col-md-4">                                    
-                                    <label class="control-label">Elija el Pensum</label>
-                                        <select name="acreditacionid" id="acreditacionid" class="form-control input-sm mb-15">
-                                            <option value="-999">...</option>
-                                                {#{% for data in periodos %}
-                                                    <option value="{{data.saeid}}">{{ data.acreditacion }}</option>
-                                                {% endfor %}#}
-                                        </select>                          
+                                <div class="col-md-4"> 
+                                    <div class="form-group">
+                                        <label class="control-label">Elija el Pensum</label>
+                                            <select onchange="changePensum()" name="pensumid" id="pensumid" class="pensumid form-control input-sm mb-15">
+                                                <option value="-999">...</option>
+                                                    {% for data in pensum %}
+                                                        <option value="{{data.pensum_id}}">{{ data.pensum }}</option>
+                                                    {% endfor %}
+                                            </select>                          
+                                    </div>        
                                 </div>
                                 <div class="col-md-4">
-                                    <h3 class="panel-title text-center"><i class="glyphicon glyphicon-bishop"></i> PENSUM 1</h3>                                                                        
+                                    <h3 class="panel-title text-center"><i class="glyphicon glyphicon-bishop"></i><div id="pensumtitulo">...</div></h3>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="col-sm-offset-5">
@@ -53,18 +55,19 @@
                             <div id="nuevomodulo" style="display:none;">
                                 <div class="panel rounded shadow">
                                     <div class="panel-body no-padding">
-                                        <form id="formnuevomodulotec" onsubmit="enviaformmodulo(); return false;" method="post" style="">                                            
+                                        <form id="formnuevaasignatura" onsubmit="enviaformmodulo(); return false;" method="post" style="">
                                             <div class="form-body">
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <div class="form-group">
-                                                            <label class="control-label">Periodo</label>
-                                                            <select name="acreditacionid" id="acreditacionid" class="form-control input-sm mb-15">
-                                                                    <option value="-999">Elija un periodo</option>
-                                                                    {#{% for data in periodos %}
-                                                                        <option value="{{data.saeid}}">{{ data.acreditacion }}</option>
-                                                                    {% endfor %}#}
-                                                            </select>
+                                                            <label class="control-label">Periodo</label>                                                            
+                                                            <select name="periodoid" id="periodoid" class="form-control input-sm mb-15">
+                                                                <option value="-999">Elija un periodo</option>
+                                                                    {% for data in periodo %}
+                                                                        <option value="{{data.id}}">{{ data.periodo }}</option>
+                                                                    {% endfor %}
+                                                            </select> 
+
                                                         </div>
                                                     </div>          
                                                     <div class="col-md-4">
@@ -130,7 +133,7 @@
                                             <td data-title="Código">{{ materia.codigo_materia }}&nbsp;</td>
                                             <td data-title="Asignatura">{{ materia.asignatura }}&nbsp;</td>                                            
                                             <td data-title="Acciones">
-                                                acciones
+                                                ---
                                                 {#<form action="{{path('dgesttla_info_personal_adm_new')}}" method="post" style="display:inline-block">
                                                     <input type="hidden"  name="form[idPersona]" id="form_idPersona" value="{{persona.id}}">
                                                     <input type="hidden" name="form[idInstitucion]" id="form_idInstitucion"  value="{{institucion.id}}">
@@ -153,18 +156,87 @@
             </div>
         </div>
     </div>
-
 <script>
+
+    function changePensum() {
+        pend = document.getElementById("pensumid");
+        if (pend.selectedIndex != -1){
+            textpensum = pend.options[pend.selectedIndex].text;            
+            $('#pensumtitulo').html(textpensum);
+        }
+    }   
+
     function nuevomoduloabrir(){
-            $("#nuevomodulo").show();
-            $("#barradeareas").hide();            
+            var pensumid = document.getElementById("pensumid").selectedIndex;                        
+            if ( pensumid == null || pensumid == '0' ) {
+                alert('Elija un Pensum.');
+                return false;
+            }else{
+                $("#nuevomodulo").show();
+            }            
 	    }
         
     function nuevomodulocerrar(){
             $("#nuevomodulo").hide();
 	    }
+
+    function enviaformmodulo() {
+            var msj = '\n\n ¿Esta seguro de continuar?';
+
+            var pensumid = document.getElementById("pensumid").selectedIndex;            
+            //alert(pensumid);
+            var per = document.getElementById("periodoid").selectedIndex;            
+            if ( per == null || per == '0' ) {
+                alert('Elija un periodo.');
+                return false;
+            }
+            else{
+                
+                    var codigo = document.getElementById("codigo").value;
+                        if( codigo == null || codigo.length == 0 || /^\s+$/.test(codigo) ) {
+                          alert('Describa el Código.');
+                          return false;
+                    }
+                    else{
+                        var asignatura = document.getElementById("asignatura").value;
+                        if( asignatura == null || asignatura.length == 0 || /^\s+$/.test(asignatura) ) {
+                          alert('Describa la asignatura.');
+                          return false;
+                        }
+                        else{
+                            if (confirm('Está por crear una nueva asignatura: '+asignatura+msj)) {
+                                    var formData = $('#formnuevaasignatura').serialize();
+                                
+                                    $.ajax({
+                                        type: 'post',                                        
+                                        url: Routing.generate('dgesttla_malla_tecnica_asignatura_add', {'pensumid': pensumid}),
+                                        data: formData,
+                                        beforeSend: function () {
+                                            $("#nuevomodulo").hide();
+                                            $("#modulosbasid").empty();            
+                                        },
+                                        success: function () {
+                                            $("#periodoid option").each(function () {
+                                            if ($(this).text() === "-999") {
+                                                $(this).prop("selected", true);
+                                                return;}
+                                            else{
+                                                $(this).prop("selected", false);
+                                                return;}
+                                            });                                             
+
+                                            window.location.href =  Routing.generate('dgesttla_malla_curricular'); 
+                                        },
+                                        error: function () {
+
+                                        }
+                                    });
+                                }
+                            return false;
+                        }
+                    }                
+            }
+        };
 </script>
-
-
 {% endblock %}
 

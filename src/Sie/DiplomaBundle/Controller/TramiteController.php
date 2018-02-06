@@ -2981,7 +2981,7 @@ $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->fi
              * Extrae en codigo de departamento del usuario
              */
             $query = $em->getConnection()->prepare("
-               select lugar_tipo_id from usuario_rol where usuario_id = ".$id_usuario."  and rol_tipo_id = ".$identificador." limit 1
+               select lugar_tipo_id from usuario_rol where usuario_id = ".$id_usuario."  and rol_tipo_id = ".$identificador." order by id asc limit 1
             ");
             $query->execute();
             $entityUsuario = $query->fetchAll();

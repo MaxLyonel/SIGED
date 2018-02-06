@@ -1,0 +1,30 @@
+infraestructurah4serviciobateriabanos:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioBateriaBanos:index" }
+
+infraestructurah4serviciobateriabanos_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioBateriaBanos:show" }
+
+infraestructurah4serviciobateriabanos_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioBateriaBanos:new" }
+
+infraestructurah4serviciobateriabanos_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioBateriaBanos:create" }
+    methods:  POST
+
+infraestructurah4serviciobateriabanos_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioBateriaBanos:edit" }
+
+infraestructurah4serviciobateriabanos_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioBateriaBanos:update" }
+    methods:  [POST, PUT]
+
+infraestructurah4serviciobateriabanos_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH4ServicioBateriaBanos:delete" }
+    methods:  [POST, DELETE]

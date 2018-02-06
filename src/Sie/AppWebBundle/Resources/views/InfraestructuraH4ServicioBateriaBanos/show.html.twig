@@ -1,0 +1,120 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH4ServicioBateriaBanos</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>N5areatotalm2</th>
+                <td>{{ entity.n5Areatotalm2 }}</td>
+            </tr>
+            <tr>
+                <th>N5banioconagua</th>
+                <td>{{ entity.n5BanioConagua }}</td>
+            </tr>
+            <tr>
+                <th>N5baniosinagua</th>
+                <td>{{ entity.n5BanioSinagua }}</td>
+            </tr>
+            <tr>
+                <th>N5letrinafunciona</th>
+                <td>{{ entity.n5LetrinaFunciona }}</td>
+            </tr>
+            <tr>
+                <th>N5letrinanofunciona</th>
+                <td>{{ entity.n5LetrinaNofunciona }}</td>
+            </tr>
+            <tr>
+                <th>N5inodorofunciona</th>
+                <td>{{ entity.n5InodoroFunciona }}</td>
+            </tr>
+            <tr>
+                <th>N5inodoronofunciona</th>
+                <td>{{ entity.n5InodoroNofunciona }}</td>
+            </tr>
+            <tr>
+                <th>N5urinariofunciona</th>
+                <td>{{ entity.n5UrinarioFunciona }}</td>
+            </tr>
+            <tr>
+                <th>N5urinarionofunciona</th>
+                <td>{{ entity.n5UrinarioNofunciona }}</td>
+            </tr>
+            <tr>
+                <th>N5lavamanofunciona</th>
+                <td>{{ entity.n5LavamanoFunciona }}</td>
+            </tr>
+            <tr>
+                <th>N5lavamanonofunciona</th>
+                <td>{{ entity.n5LavamanoNofunciona }}</td>
+            </tr>
+            <tr>
+                <th>N5duchafunciona</th>
+                <td>{{ entity.n5DuchaFunciona }}</td>
+            </tr>
+            <tr>
+                <th>N5duchanofunciona</th>
+                <td>{{ entity.n5DuchaNofunciona }}</td>
+            </tr>
+            <tr>
+                <th>Obs</th>
+                <td>{{ entity.obs }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fecharegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>N5esfuncionaambiente</th>
+                <td>{{ entity.n5EsFuncionaAmbiente }}</td>
+            </tr>
+            <tr>
+                <th>N52estienetecho</th>
+                <td>{{ entity.n52EsTieneTecho }}</td>
+            </tr>
+            <tr>
+                <th>N52estienecielofalso</th>
+                <td>{{ entity.n52EsTieneCieloFalso }}</td>
+            </tr>
+            <tr>
+                <th>N52estienepuerta</th>
+                <td>{{ entity.n52EsTienePuerta }}</td>
+            </tr>
+            <tr>
+                <th>N52estieneventana</th>
+                <td>{{ entity.n52EsTieneVentana }}</td>
+            </tr>
+            <tr>
+                <th>N52estienemuros</th>
+                <td>{{ entity.n52EsTieneMuros }}</td>
+            </tr>
+            <tr>
+                <th>N52estienerevest</th>
+                <td>{{ entity.n52EsTieneRevest }}</td>
+            </tr>
+            <tr>
+                <th>N52estienepiso</th>
+                <td>{{ entity.n52EsTienePiso }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('infraestructurah4serviciobateriabanos') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('infraestructurah4serviciobateriabanos_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

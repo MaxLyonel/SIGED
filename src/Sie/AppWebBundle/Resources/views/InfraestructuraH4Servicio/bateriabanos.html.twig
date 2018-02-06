@@ -1,0 +1,57 @@
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading"></div>
+  <div class="panel-body">
+  </div>
+
+  <!-- Table -->
+  <table class="table">
+        <thead>
+            <tr>
+                <th>Ambiente</th>
+                <th>Área</th>
+                <th>Funciona</th>
+                <th>Estado</th>
+                <th>Letrinas F.</th>
+                <th>Letrinas N.F.</th>
+                <th>Inodoros F.</th>
+                <th>Inodoros N.F.</th>
+                <th>Urinarios F.</th>
+                <th>Urinarios N.F.</th>
+                <th>Lavamanos F.</th>
+                <th>Lavamanos N.F.</th>
+                <th>Duchas F.</th>
+                <th>Duchas N.F.</th>
+              
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entityBateriaBanos %}
+            <tr>
+                
+                <td>{{ entity.n5AmbienteBanoTipo }}</td>
+                <td>{{ entity.n5Areatotalm2 }}</td>
+                <td>{{ entity.n5BanioConagua }}</td>
+                <td>{{ entity.n5BanioSinagua }}</td>
+                <td>{{ entity.n5LetrinaFunciona }}</td>
+                <td>{{ entity.n5LetrinaNofunciona }}</td>
+                <td>{{ entity.n5InodoroFunciona }}</td>
+                <td>{{ entity.n5InodoroNofunciona }}</td>
+                <td>{{ entity.n5UrinarioFunciona }}</td>
+                <td>{{ entity.n5UrinarioNofunciona }}</td>
+                <td>{{ entity.n5LavamanoFunciona }}</td>
+                <td>{{ entity.n5LavamanoNofunciona }}</td>
+                <td>{{ entity.n5DuchaFunciona }}</td>
+                <td>{{ entity.n5DuchaNofunciona }}</td>
+             
+               
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+    
+
+    
+
+    

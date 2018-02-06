@@ -1,0 +1,70 @@
+Sie\AppWebBundle\Entity\InfraestructuraH6AmbienteadministrativoInternadoEst:
+    type: entity
+    table: infraestructura_h6_ambienteadministrativo_internado_est
+    indexes:
+        IDX_DEFEF2D5E19FA047:
+            columns:
+                - n33_responsable_tipo_id
+        IDX_DEFEF2D5AE29A101:
+            columns:
+                - infraestructura_h6_ambienteadministrativo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        n31EsInternadoEst:
+            type: boolean
+            nullable: false
+            comment: ''
+            default: false
+            column: n31_es_internado_est
+        n32DistMetrosFemMas:
+            type: decimal
+            nullable: true
+            precision: 6
+            scale: 2
+            comment: ''
+            column: n32_dist_metros_fem_mas
+        n34DormitorioTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: n34_dormitorio_tipo_id
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fecharegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+    manyToOne:
+        n33ResponsableTipo:
+            targetEntity: InfraestructuraH6ResponsableTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                n33_responsable_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        infraestructuraH6Ambienteadministrativo:
+            targetEntity: InfraestructuraH6Ambienteadministrativo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                infraestructura_h6_ambienteadministrativo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

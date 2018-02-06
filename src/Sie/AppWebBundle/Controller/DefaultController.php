@@ -300,6 +300,7 @@ class DefaultController extends Controller {
                 break;
             case '172.20.196.9:8023':
             case '172.20.0.53:8021':
+            case '172.20.196.7':
             case 'infraestructura.local':
                 $sysname = 'INFRAESTRUCTURA';
                 $sysporlet = 'black';

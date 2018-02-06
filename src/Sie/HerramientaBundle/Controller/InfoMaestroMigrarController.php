@@ -79,6 +79,16 @@ class InfoMaestroMigrarController extends Controller {
         $notaTipo = $em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($operativo);
         $rolTipo = $em->getRepository('SieAppWebBundle:RolTipo')->findOneById(2);
 
+        $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '1'));
+        $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '2'));
+        
+        if(!($consol_gest_pasada or $consol_gest_pasada2)){
+            $gestion = $request->getSession()->get('currentyear') - 1;
+            $request->getSession()->set('idGestion', $gestion);
+            $activar_acciones = true;
+            return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
+        }
+
         $validacion_personal_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findOneBy(array('gestionTipo' => $gestionTipo, 'institucioneducativa' => $institucioneducativa, 'notaTipo' => $notaTipo, 'rolTipo' => $rolTipo));
 
         $activar_acciones = true;
@@ -263,7 +273,7 @@ class InfoMaestroMigrarController extends Controller {
             $maestro_inscripcion_aux->setItem($maestro_inscripcion->getItem() ? $maestro_inscripcion->getItem() : 0);
             $maestro_inscripcion_aux->setEstudiaiomaMaterno($maestro_inscripcion->getEstudiaiomaMaterno() ? $maestro_inscripcion->getEstudiaiomaMaterno() : $em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
             $maestro_inscripcion_aux->setFechaModificacion(null);
-            $maestro_inscripcion_aux->setEsVigenteAdministrativo(false);
+            $maestro_inscripcion_aux->setEsVigenteAdministrativo(true);
             $em->persist($maestro_inscripcion_aux);
             $em->flush();
 

@@ -48,11 +48,11 @@ class TramiteTecnicoController extends Controller {
                                     ->orderBy('gt.id', 'DESC');
                         },
                     ))
-                    ->add('diploma','choice',  
+                    ->add('diploma','choice',
                       array('label' => 'Modalidad',
                             'choices' => array( '3' => 'Agropecuario'
                                                 ,'4' => 'Industrial'
-                                                ,'5' => 'Comercial'                       
+                                                ,'5' => 'Comercial'
                                                 ),
                             'data' => '', 'attr' => array('class' => 'form-control')))
                     ->add('serie', 'text', array('label' => 'Nro. Serie', 'invalid_message' => 'campo obligatorio', 'attr' => array('style' => 'text-transform:uppercase', 'maxlength' => 8, 'required' => true, 'class' => 'form-control')))
@@ -67,8 +67,8 @@ class TramiteTecnicoController extends Controller {
         ));
     }
 
-    
-    
+
+
     /**
      * Registro de la legalizacion de diploma
      * @return type
@@ -79,7 +79,7 @@ class TramiteTecnicoController extends Controller {
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
-        
+
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
@@ -87,7 +87,7 @@ class TramiteTecnicoController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        
+
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
@@ -100,12 +100,12 @@ class TramiteTecnicoController extends Controller {
             if($identificador == 7){
                 $identificador = 16;
             }
-            
+
             /*
              * Extrae en codigo de departamento del usuario
              */
             $query = $em->getConnection()->prepare("
-               select lugar_tipo_id from usuario_rol where usuario_id = ".$id_usuario."  and rol_tipo_id = ".$identificador." limit 1
+               select lugar_tipo_id from usuario_rol where usuario_id = ".$id_usuario."  and rol_tipo_id = ".$identificador." order by id asc limit 1
             ");
             $query->execute();
             $entityUsuario = $query->fetchAll();
@@ -113,7 +113,7 @@ class TramiteTecnicoController extends Controller {
             $departamentoUsuario = 0;
             if (count($entityUsuario) > 0){
                 $departamentoUsuario = $entityUsuario[0]["lugar_tipo_id"];
-            } 
+            }
             $em->getConnection()->beginTransaction();
             try {
                 /*
@@ -124,7 +124,7 @@ class TramiteTecnicoController extends Controller {
                     inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                     inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                     where e.codigo_rude = '".$rude."' and iec.gestion_tipo_id = ".$ges."
-                    and case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id=15 and iec.grado_tipo_id=3) when iec.gestion_tipo_id <= 2010 then (iec.nivel_tipo_id=3 and iec.grado_tipo_id=4) or (iec.nivel_tipo_id=5 and iec.grado_tipo_id=2) else iec.nivel_tipo_id=13 and iec.grado_tipo_id=6 end 
+                    and case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id=15 and iec.grado_tipo_id=3) when iec.gestion_tipo_id <= 2010 then (iec.nivel_tipo_id=3 and iec.grado_tipo_id=4) or (iec.nivel_tipo_id=5 and iec.grado_tipo_id=2) else iec.nivel_tipo_id=13 and iec.grado_tipo_id=6 end
 
                 ");
                 $query->execute();
@@ -145,12 +145,12 @@ class TramiteTecnicoController extends Controller {
                     ");
                     $query->execute();
                     $entityEstudianteDiplomaTecnico = $query->fetchAll();
-                    if (count($entityEstudianteDiplomaTecnico) == 0){ 
+                    if (count($entityEstudianteDiplomaTecnico) == 0){
                         $entityTramite = new Tramite();
                         /*
                          * Verifica si el numero de serie esta disponible y asignado a su departamento
                          */
-                        $query = $em->getConnection()->prepare("                            
+                        $query = $em->getConnection()->prepare("
                             select ds.id as id, ds.gestion_id as gestion_serie, cast(left(ds.id,(char_length(ds.id)-(case ds.gestion_id when 2010 then 2 when 2013 then 2 else 1 end))) as integer) as numero_serie, right(ds.id,(case ds.gestion_id when 2010 then 2 when 2013 then 2 else 1 end)) as tipo_serie from documento_serie as ds where ds.esanulado = 'false' and ds.departamento_tipo_id = ".$departamentoUsuario." and not exists (select * from documento as d where d.documento_serie_id = ds.id) and (case ds.gestion_id when 2011 then ds.id = '".$serie."' when 2012 then ds.id = '".$serie."' when 2013 then ds.id = '".$serie."' else ds.id = (lpad('".$serie."',7,'0')::varchar) end)
                         ");
                         $query->execute();
@@ -192,7 +192,7 @@ class TramiteTecnicoController extends Controller {
                         $em->flush();
 
                         /*
-                         * Extra el id del registro ingresado de la tabla tramite 
+                         * Extra el id del registro ingresado de la tabla tramite
                          */
                         $tramiteId = $entityTramite->getId();
 
@@ -210,7 +210,7 @@ class TramiteTecnicoController extends Controller {
                     } else {
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, ya cuenta con un diploma técnico"'. $serie .'" no existe o no tiene tuición sobre el mismo, intente nuevamente'));
                         return $this->redirectToRoute('sie_diploma_tramite_tecnico_recepcion');
-                    }                     
+                    }
                 } else {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, no cuenta con una inscripción válida para otorgar al estudiante un diploma"'. $serie .'" no existe o no tiene tuición sobre el mismo, intente nuevamente'));
                     return $this->redirectToRoute('sie_diploma_tramite_tecnico_recepcion');
@@ -235,7 +235,7 @@ class TramiteTecnicoController extends Controller {
                         try {
                             $idDocumento = $this->generaDocumento($entity[0]["tramite_id"], $id_usuario, 2, $entity[0]["numero_serie"], $entity[0]["tipo_serie"], $ges, $fechaActual);
                             $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El documento con numero de serie "'.$entity[0]["numero_serie"].$entity[0]["tipo_serie"].'" fue legalizado'));
-                            $em->getConnection()->commit();     
+                            $em->getConnection()->commit();
                             ///////return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
                             $arch = $serie.'_'.$ges.'_legalizacion'.date('YmdHis').'.pdf';
                             $response = new Response();
@@ -255,12 +255,12 @@ class TramiteTecnicoController extends Controller {
                             $em->getConnection()->rollback();
                             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
                             return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
-                        }                   
+                        }
                     }
                 } else {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, inconsistencia de datos con el documento "'. $serie .'" , intente nuevamente'));
                     return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
-                }                
+                }
             } else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, el documento con número de serie "'. $serie .'" no existe o no tiene tuición sobre el mismo, intente nuevamente'));
                 return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
@@ -269,8 +269,8 @@ class TramiteTecnicoController extends Controller {
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Dificultades al realizar el registro, intente nuevamente'));
             return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
-        }   
-    }    
+        }
+    }
 
     private function creaFormularioTramiteTecnico($routing, $value1, $value2, $value3, $identificador) {
         if ($identificador == 0){
@@ -284,17 +284,17 @@ class TramiteTecnicoController extends Controller {
                                     ->orderBy('gt.id', 'DESC');
                         },
                     ))
-                    ->add('lista','choice',  
+                    ->add('lista','choice',
                       array('label' => 'Lista',
                             'choices' => array( '2' => 'Recepción Distrito'
                                                 ,'3' => 'Recepción Departamento'
                                                 ,'4' => 'Autorización'
-                                                ,'5' => 'Impresión'      
-                                                ,'6' => 'Entrega Departamento' 
-                                                ,'7' => 'Entrega Distrito'  
-                                                ,'1' => 'Trámite Observado' 
-                                                ,'100' => 'Diplomas Impresos' 
-                                                ,'101' => 'Diplomas Anulados'                                                  
+                                                ,'5' => 'Impresión'
+                                                ,'6' => 'Entrega Departamento'
+                                                ,'7' => 'Entrega Distrito'
+                                                ,'1' => 'Trámite Observado'
+                                                ,'100' => 'Diplomas Impresos'
+                                                ,'101' => 'Diplomas Anulados'
                                                 ),
                             'data' => $value3))
                     ->add('identificador', 'hidden', array('attr' => array('value' => $identificador)))
@@ -318,8 +318,8 @@ class TramiteTecnicoController extends Controller {
         return $form;
     }
 
-    
-            
+
+
     private function generaDocumento($tramiteId, $usuarioId, $documentoTipo, $numeroSerie, $tipoSerie, $gestion, $fecha) {
         /*
          * Define la zona horaria y halla la fecha actual
@@ -356,7 +356,7 @@ class TramiteTecnicoController extends Controller {
                 $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => str_pad($numeroSerie.$tipoSerie, 7, "0", STR_PAD_LEFT)));
             } else {
                 $entityDocumentoSerie = $em->getRepository('SieAppWebBundle:DocumentoSerie')->findOneBy(array('id' => $numeroSerie.$tipoSerie));
-            }            
+            }
             $entityDocumentoEstado = $em->getRepository('SieAppWebBundle:DocumentoEstado')->findOneBy(array('id' => 1));
             $entityDocumento = new Documento();
             $entityDocumento->setDocumento('');
@@ -369,13 +369,13 @@ class TramiteTecnicoController extends Controller {
             $entityDocumento->setTramite($entityTramite[0]);
             $entityDocumento->setDocumentoEstado($entityDocumentoEstado);
             $em->persist($entityDocumento);
-            $em->flush();   
+            $em->flush();
             return $entityDocumento->getId();
         } else {
             throw new Exception('Se ha producido un error muy grave.');
         }
-    }          
-        
+    }
+
     private function procesaTramite($tramiteId, $usuarioId, $flujoSeleccionado,$obs) {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
@@ -409,7 +409,7 @@ class TramiteTecnicoController extends Controller {
                     ->setParameter('codFlujoProceso', $entityTramiteDetalle[0]->getFlujoProceso()->getId())
                     ->setMaxResults('1');
             $entityFlujoProcesoDetalle = $query2->getQuery()->getResult();
-            
+
             /*
              * Extrae la posicion inicial del flujo actual
              */
@@ -430,15 +430,15 @@ class TramiteTecnicoController extends Controller {
                         ->setMaxResults('1');
             } else {
                 if ($flujoSeleccionado == 'Anular') {
-                    $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 2));                
+                    $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 2));
                     $query = $entityFlujoProceso->createQueryBuilder('fp')
                             ->where('fp.id = :codFlujoProceso')
                             ->orderBy('fp.obs', 'ASC')
                             ->setParameter('codFlujoProceso', $entityFlujoInicio[0]->getId())
                             ->setMaxResults('1');
-                } else {                                  
+                } else {
                     if ($flujoSeleccionado == 'Finalizar') {
-                        $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 3));  
+                        $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 3));
                         /*
                          * Extrae la posicion final del flujo actual
                          */
@@ -448,7 +448,7 @@ class TramiteTecnicoController extends Controller {
                                 ->setParameter('codFlujo', $entityTramite->getFlujoTipo()->getId())
                                 ->setMaxResults('1');
                     } else {
-                        $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 4));  
+                        $entityTramiteEstadoSiguiente = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => 4));
                         $query = $entityFlujoProceso->createQueryBuilder('fp')
                                 ->where('fp.id = :codFlujoProceso')
                                 ->orderBy('fp.obs', 'ASC')
@@ -492,7 +492,7 @@ class TramiteTecnicoController extends Controller {
         $entityTramiteDetalleNew->setFechaEnvio($fechaActual);
         $entityTramiteDetalleNew->setFechaModificacion($fechaActual);
         $entityTramiteDetalleNew->setFlujoProceso($entityFlujoProceso[0]);
-        
+
         /*
          * Define el conjunto de valores a ingresar - Tramite Detalle Anterior
          */
@@ -506,14 +506,14 @@ class TramiteTecnicoController extends Controller {
 
         $em->persist($entityTramiteDetalleNew);
         $em->flush();
-        
-        
+
+
         if ($entityFlujoProceso[0]->getOrden() == 0){
             $entityTramite->setEsactivo('0');
             $em->persist($entityTramite);
             $em->flush();
         }
-    }   
+    }
 
     /**
      * Despliega formulario de busqueda de los departamentos
@@ -570,7 +570,7 @@ class TramiteTecnicoController extends Controller {
             $gestion = $request->get('gestion');
             $identificador = $request->get('identificador');
         }
-        
+
         /*
          * Halla el departamento de la Unidad Educativa
          */
@@ -578,7 +578,7 @@ class TramiteTecnicoController extends Controller {
                 select dt.departamento_tipo_id as codigo from institucioneducativa as ie
                 inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                 inner join distrito_tipo as dt on dt.id = jg.distrito_tipo_id
-                where ie.id = :sie::INT       
+                where ie.id = :sie::INT
                 ");
         $query->bindValue(':sie', $ue);
         $query->execute();
@@ -587,7 +587,7 @@ class TramiteTecnicoController extends Controller {
             $depto = $entityDepto[0]['codigo'];
         } else {
             $depto = 1;
-        }     
+        }
 
         $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
             $query->bindValue(':user_id', $id_usuario );
@@ -596,12 +596,12 @@ class TramiteTecnicoController extends Controller {
             $query->execute();
             $aTuicion = $query->fetchAll();
 
-        
+
         /*if (!$aTuicion[0]['get_ue_tuicion']) {
             $this->session->getFlashBag()->set('danger',array('title' => 'Error','message' => 'No tiene tuición sobre la Unidad Educativa'));
             return $this->redirectToRoute('sie_diploma_tramite_tecnico_impresion_formulario');
-        }*/  
-            
+        }*/
+
         $arch = $ue.'_'.$gestion.'_DIPLOMA_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
@@ -699,7 +699,7 @@ class TramiteTecnicoController extends Controller {
                 }else {
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
                 }
-                break;   
+                break;
             case 2013 :
                 if ($depto == 1) {
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
@@ -722,7 +722,7 @@ class TramiteTecnicoController extends Controller {
                 }else {
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
                 }
-                break;          
+                break;
             default :
                 if ($depto == 1) {
                     $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'gen_dpl_diplomaTecnicoEstudiante_unidadeducativa_2011_ch_v2.rptdesign&__format=pdf&unidadeducativa='.$ue.'&gestion_id='.$gestion.'&tipo=2'));
@@ -747,12 +747,12 @@ class TramiteTecnicoController extends Controller {
                 }
                 break;
         }
-                 
+
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
-        return $response;   
+        return $response;
     }
 }

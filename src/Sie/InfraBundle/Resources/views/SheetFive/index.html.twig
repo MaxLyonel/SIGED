@@ -20,6 +20,7 @@
                   <form action="{{path('infra_list_open')}}" method="post" style="display: inline-block">
                       <input type="hidden" id="form_gestion" name="form[gestion]" value="{{app.session.get('currentyear')}}">
                       <input type="hidden" id="form_data" name="form[sie]" required="required" value="{{app.session.get('ie_id')}}">
+                      <input type="hidden" id="form_data" name="form[infraestructuraJuridiccionGeograficaId]" required="required" value="11392">
                       <button class='btn btn-link'>Menu de Opciones</button>
                   </form>
                 </li>
@@ -41,12 +42,12 @@
                   <div class="panel-heading no-padding">
                       <ul class="nav nav-tabs">
                           <li class="nav-border nav-border-top-danger active">
-                              <a href="component-tabsaccordion.html#tab4-1" data-toggle="tab" class="text-center" aria-expanded="true">
+                              <a href="component-tabsaccordion.html#tab4-1" data-toggle="tab" class="text-center" aria-expanded="true" onclick="openAmbPedagogico();">
                                   1. Ambientes para el desarrollo pedagógico
                               </a>
                           </li>
                           <li class="nav-border nav-border-top-primary">
-                              <a href="component-tabsaccordion.html#tab4-2" data-toggle="tab" class="text-center" aria-expanded="false">
+                              <a href="component-tabsaccordion.html#tab4-2" data-toggle="tab" class="text-center" aria-expanded="false" onclick="openAmbPedagogicoDeportivo();">
                                   2. Ambientes para el desarrollo pedagógico deportivo, cultural y recreativo
                               </a>
                           </li>
@@ -67,11 +68,15 @@
                       <div class="tab-content">
                         <!-- start tab1 -->
                           <div class="tab-pane fade active in" id="tab4-1">
-                            {% include 'SieInfraBundle:SheetFive:ambpedagogico.html.twig' with { 'data': 'data'} %}
+                            {# include 'SieInfraBundle:SheetFive:ambpedagogico.html.twig' with { 'data': 'data'} #}
+                            <div id="idpedagogico">
+                            </div>
                           </div>
                           <!-- end tab1 -->
                           <div class="tab-pane fade" id="tab4-2">
-                            {% include 'SieInfraBundle:SheetFive:ambdeportivo.html.twig' with { 'data': 'data'} %}
+                            {# include 'SieInfraBundle:SheetFive:ambdeportivo.html.twig' with { 'data': 'data'} #}
+                            <div id="idpedagogicoDeportivo">
+                            </div>
                           </div>  <!-- end tab2 -->
                       </div>
                     </form>
@@ -83,8 +88,91 @@
           </div>
       </div>
     </div>
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">
+
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+     var openAmbPedagogico = function(){
+      
+       $.ajax({
+             type: 'post',
+             url: Routing.generate('infra_sheet_five_ambiente_pedagogico'),
+             // data: formData,
+             beforeSend: function () {
+                 $("#idpedagogico").empty();
+                 $("#idpedagogicoDeportivo").empty();
+                 $("#idpedagogico").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idpedagogico").empty();
+                 $("#idpedagogico").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
 
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+
+     };
+     var openAmbPedagogicoDeportivo = function(){
+            $.ajax({
+             type: 'post',
+             url: Routing.generate('infra_sheet_five_ambiente_pedagogico_deportivo'),
+             // data: formData,
+             beforeSend: function () {
+                 $("#idpedagogico").empty();
+                 $("#idpedagogicoDeportivo").empty();
+                 $("#idpedagogicoDeportivo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idpedagogicoDeportivo").empty();
+                 $("#idpedagogicoDeportivo").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });      
+
+     };
+
+    var newAmbPedagogico = function(infraestructuraJuridiccionGeograficaId){
+       $.ajax({
+                type: 'post',
+                data: ({infraestructuraJuridiccionGeograficaId: infraestructuraJuridiccionGeograficaId}),
+                url: "{{ path('infraestructurah4servicio_new_amb_pedagogico') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+    </script>
+    
 {% endblock %}

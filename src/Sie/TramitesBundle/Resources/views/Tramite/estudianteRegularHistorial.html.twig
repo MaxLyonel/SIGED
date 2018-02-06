@@ -6,6 +6,7 @@
                 <span class="text-white h6"> {{ listaHistorial|first[0]['codigo_rude'] }} </span>
             </div>
             <div class="pull-right text-right">
+                <i class="fa fa-clipboard fa-2x"></i>
                 <span class="media-heading block mb-0 h4 text-white"><strong></strong></span>
                 <span class="text-white h6"> </span>
             </div>
@@ -71,18 +72,18 @@
                                         {% endif %}
                                         <td class="text-center">{{ dato.asignatura }}</td>
                                         {% if dato.calendarioId == 1 %}
-                                            <td class="text-center border-right {% if dato.gestion_tipo_id <= 2012 %}{% if dato.n1 < 36 %}text-danger{% endif %}{% else %}{% if dato.n1 < 51 %}text-danger{% endif %}{% endif %}">{{ dato.n1 }}</td>
-                                            <td class="text-center border-right {% if dato.gestion_tipo_id <= 2012 %}{% if dato.n2 < 36 %}text-danger{% endif %}{% else %}{% if dato.n2 < 51 %}text-danger{% endif %}{% endif %}">{{ dato.n2 }}</td>
-                                            <td class="text-center border-right {% if dato.gestion_tipo_id <= 2012 %}{% if dato.n3 < 36 %}text-danger{% endif %}{% else %}{% if dato.n3 < 51 %}text-danger{% endif %}{% endif %}">{{ dato.n3 }}</td>
-                                            <td class="text-center border-right {% if dato.gestion_tipo_id <= 2012 %}{% if dato.n4 < 36 %}text-danger{% endif %}{% else %}{% if dato.n4 < 51 %}text-danger{% endif %}{% endif %}">{{ dato.n4 }}</td>
-                                            <td class="text-center border-right {% if dato.gestion_tipo_id <= 2012 %}{% if dato.n5 < 36 %}text-danger{% endif %}{% else %}{% if dato.n5 < 51 %}text-danger{% endif %}{% endif %}">{{ dato.n5 }}</td>
+                                            <td class="text-center border-right {% if dato.n1 < 51 %}text-danger{% endif %}">{{ dato.n1 }}</td>
+                                            <td class="text-center border-right {% if dato.n2 < 51 %}text-danger{% endif %}">{{ dato.n2 }}</td>
+                                            <td class="text-center border-right {% if dato.n3 < 51 %}text-danger{% endif %}">{{ dato.n3 }}</td>
+                                            <td class="text-center border-right {% if dato.n4 < 51 %}text-danger{% endif %}">{{ dato.n4 }}</td>
+                                            <td class="text-center border-right {% if dato.n5 < 51 %}text-danger{% endif %}">{{ dato.n5 }}</td>
                                         {% else %}
-                                            <td class="text-center border-right {% if dato.gestion_tipo_id <= 2012 %}{% if dato.n1 < 36 %}text-danger{% endif %}{% else %}{% if dato.n1 < 51 %}text-danger{% endif %}{% endif %}">{{ dato.n1 }}</td>
-                                            <td class="text-center border-right {% if dato.gestion_tipo_id <= 2012 %}{% if dato.n2 < 36 %}text-danger{% endif %}{% else %}{% if dato.n2 < 51 %}text-danger{% endif %}{% endif %}">{{ dato.n2 }}</td>
-                                            <td class="text-center border-right {% if dato.gestion_tipo_id <= 2012 %}{% if dato.n3 < 36 %}text-danger{% endif %}{% else %}{% if dato.n3 < 51 %}text-danger{% endif %}{% endif %}">{{ dato.n3 }}</td>
-                                            <td class="text-center border-right {% if dato.gestion_tipo_id <= 2012 %}{% if dato.n4 < 36 %}text-danger{% endif %}{% else %}{% if dato.n4 < 51 %}text-danger{% endif %}{% endif %}">{{ dato.n4 }}</td>
-                                            <td class="text-center border-right {% if dato.gestion_tipo_id <= 2012 %}{% if dato.n5 < 36 %}text-danger{% endif %}{% else %}{% if dato.n5 < 51 %}text-danger{% endif %}{% endif %}">{{ dato.n5 }}</td>
-                                            <td class="text-center border-right {% if dato.gestion_tipo_id <= 2012 %}{% if dato.n6 < 36 %}text-danger{% endif %}{% else %}{% if dato.n6 < 51 %}text-danger{% endif %}{% endif %}">{{ dato.n6 }}</td>
+                                            <td class="text-center border-right {% if dato.n1 < 36 %}text-danger{% endif %}">{{ dato.n1 }}</td>
+                                            <td class="text-center border-right {% if dato.n2 < 36 %}text-danger{% endif %}">{{ dato.n2 }}</td>
+                                            <td class="text-center border-right {% if dato.n3 < 36 %}text-danger{% endif %}">{{ dato.n3 }}</td>
+                                            <td class="text-center border-right {% if dato.n4 < 36 %}text-danger{% endif %}">{{ dato.n4 }}</td>
+                                            <td class="text-center border-right {% if dato.n5 < 36 %}text-danger{% endif %}">{{ dato.n5 }}</td>
+                                            <td class="text-center border-right {% if dato.n6 < 36 %}text-danger{% endif %}">{{ dato.n6 }}</td>
                                         {% endif %}
                                     </tr>
                                 {% endfor %}
@@ -94,54 +95,4 @@
         </div><!-- /.panel-body -->
         <!--/ End tabs content -->
     </div>
-{% if 1 == 2 %}
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <div class="pull-left">
-                    <span class="media-heading block mb-0 h4 text-white"><strong>{{ listaHistorial[0]['nombre'] }} {{ listaHistorial[0]['paterno'] }} {{ listaHistorial[0]['materno'] }}</strong></span>
-                    <span class="text-white h6"> {{ listaHistorial[0]['codigo_rude'] }} </span>
-
-            </div>
-            <div class="pull-right text-right">
-                <span class="media-heading block mb-0 h4 text-white"><strong></strong></span>
-                <span class="text-white h6"> </span>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-        <div class="panel-body no-padding">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th class="text-center border-right">No.</th>
-                        <th class="text-center">Gestión</th>
-                        <th class="text-center">Grado</th>
-                        <th class="text-center">Campos de Saberes y Conocimientos</th>
-                        <th class="text-center">Áreas Curriculares</th>
-                        <th class="width:30px; text-center">B1</th>
-                        <th class="width:30px; text-center">B2</th>
-                        <th class="width:30px; text-center">B3</th>
-                        <th class="width:30px; text-center">B4</th>
-                        <th class="width:30px; text-center">P.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for modulo in listaHistorial %}
-                        <tr>
-                            <td class="text-center border-right">{{ loop.index }}</td>
-                            <td class="text-center">{{ modulo.gestion_tipo_id }}</td>
-                            <td class="text-center">{{ modulo.grado }}</td>
-                            <td class="text-center">{{ modulo.area }}</td>
-                            <td class="text-center">{{ modulo.asignatura }}</td>
-                            <td class="text-center border-right {% if modulo.gestion_tipo_id <= 2012 %}{% if modulo.b1 < 36 %}text-danger{% endif %}{% else %}{% if modulo.b1 < 51 %}text-danger{% endif %}{% endif %}">{{ modulo.b1 }}</td>
-                            <td class="text-center border-right {% if modulo.gestion_tipo_id <= 2012 %}{% if modulo.b2 < 36 %}text-danger{% endif %}{% else %}{% if modulo.b2 < 51 %}text-danger{% endif %}{% endif %}">{{ modulo.b2 }}</td>
-                            <td class="text-center border-right {% if modulo.gestion_tipo_id <= 2012 %}{% if modulo.b3 < 36 %}text-danger{% endif %}{% else %}{% if modulo.b3 < 51 %}text-danger{% endif %}{% endif %}">{{ modulo.b3 }}</td>
-                            <td class="text-center border-right {% if modulo.gestion_tipo_id <= 2012 %}{% if modulo.b4 < 36 %}text-danger{% endif %}{% else %}{% if modulo.b4 < 51 %}text-danger{% endif %}{% endif %}">{{ modulo.b4 }}</td>
-                            <td class="text-center border-right {% if modulo.gestion_tipo_id <= 2012 %}{% if modulo.b5 < 36 %}text-danger{% endif %}{% else %}{% if modulo.b5 < 51 %}text-danger{% endif %}{% endif %}">{{ modulo.b5 }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-{% endif %}
 {% endif %}
