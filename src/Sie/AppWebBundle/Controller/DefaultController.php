@@ -666,7 +666,7 @@ class DefaultController extends Controller {
                     //CUANDO EL USUARIO NO TIENEN ROLES ACTIVOS
                     //dump(count($rolselected));die();
                     if (count($rolselected) === 0) {
-                        $this->session->getFlashBag()->add('error', '¡Usted no cuenta con datos vigentes en la presente gestión!');
+                        $this->session->getFlashBag()->add('error', '¡Usted no cuenta registro vigente en la presente gestión! Consulte con su técnico SIE en el módulo Gestión Administrativos.');
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
                         array(
                             'user' => $this->session->get('userName'),
