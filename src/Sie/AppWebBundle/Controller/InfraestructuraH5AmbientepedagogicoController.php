@@ -29,6 +29,40 @@ class InfraestructuraH5AmbientepedagogicoController extends Controller
             'entities' => $entities,
         ));
     }
+
+    /**
+     * [accessAction description]
+     * @return [type] [description]
+     */
+    public function pedagogicoAction(){
+
+         $infraestructuraJuridiccionGeograficaId = 11392;
+         $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('SieAppWebBundle:InfraestructuraH5Ambientepedagogico')->findBy(array(
+            'infraestructuraJuridiccionGeografica'=> $infraestructuraJuridiccionGeograficaId
+        ));
+
+        return $this->render('SieAppWebBundle:InfraestructuraH5Ambientepedagogico:index.html.twig', array(
+            'entities' => $entities,
+            'infraestructuraJuridiccionGeograficaId' => $infraestructuraJuridiccionGeograficaId,
+        ));
+
+        // return $this->render('SieInfraBundle:SheetFive:access.html.twig', array(
+        //         // ...
+        // ));    
+    }
+    public function newAmbPedagogicoAction(Request $request){
+
+
+        $entity = new InfraestructuraH5Ambientepedagogico();
+        $form   = $this->createCreateForm($entity);
+
+        return $this->render('SieAppWebBundle:InfraestructuraH5Ambientepedagogico:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        ));
+    }
     /**
      * Creates a new InfraestructuraH5Ambientepedagogico entity.
      *
@@ -67,7 +101,7 @@ class InfraestructuraH5AmbientepedagogicoController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        // $form->add('submit', 'submit', array('label' => 'Create'));
 
         return $form;
     }

@@ -16,15 +16,25 @@ class InfraestructuraH5AmbientepedagogicoType extends AbstractType
     {
         $builder
             ->add('n51AmbienteTipo')
+            ->add('n51NroBloque')
+            ->add('n51NroPiso')
             ->add('n51AmbienteAnchoMts')
             ->add('n51AmbienteLargoMts')
             ->add('n51AmbienteAltoMts')
             ->add('n51CapacidadAmbiente')
-            ->add('fecharegistro')
+            
             ->add('n51EsUsoAmbiente')
-            // ->add('n51EspecialidadTipoId')
+            ->add('n51EsUsoUniversal')
+            ->add('n51EsUsoBth')
+            
             // ->add('n51TalleresEspOtro')
-            // ->add('n51EsUsoUniversal')
+            // ->add('n51TalleresEspTipo')
+
+            // ->add('fecharegistro')
+            
+            // ->add('n51EspecialidadTipoId')
+            
+            
             // ->add('n51EsAmbienteCieloFal')
             // ->add('n51EsAmbientePuerta')
             // ->add('n51EsAmbienteVentana')
@@ -34,9 +44,8 @@ class InfraestructuraH5AmbientepedagogicoType extends AbstractType
             // ->add('n51EsAmbienteRevestimiento')
             // ->add('n51EsAmbientePiso')
             // ->add('n51EsAmbienteTecho')
-            // ->add('n51NroBloque')
-            // ->add('n51NroPiso')
-            // ->add('n51EsUsoBth')
+            
+            
             // ->add('estadoTipo')
             // ->add('n51AmbientePisoCaracTipo')
             // ->add('n51AmbientePisoMatTipo')
@@ -48,7 +57,7 @@ class InfraestructuraH5AmbientepedagogicoType extends AbstractType
             // ->add('n512AbreTipo')
             // ->add('n511SeguroTipo')
             // ->add('n51AmbienteCieloFalTipo')
-            // ->add('n51TalleresEspTipo')
+            
             // ->add('n51AreaTipo')
             // ->add('n15UsoOrgcurricularTipo')
             // ->add('n13CielorasoEstadogeneralTipo')
@@ -65,7 +74,7 @@ class InfraestructuraH5AmbientepedagogicoType extends AbstractType
             
             
 
-            ->add('infraestructuraJuridiccionGeografica')
+            // ->add('infraestructuraJuridiccionGeografica')
         ;
     }
     
