@@ -218,13 +218,14 @@ class InfoMaestroController extends Controller {
         }
 
         $validacion_personal_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findOneBy(array('gestionTipo' => $gestionTipo, 'institucioneducativa' => $institucion, 'notaTipo' => $notaTipo, 'rolTipo' => $rolTipo));
+        
         $activar_acciones = true;
         if($validacion_personal_aux){
             $activar_acciones = false;
         }
 
         $descarga_archivo_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array('gestionTipoId' => $gestion, 'institucioneducativa' => $institucion, 'notaTipo' => $notaTipo, 'institucioneducativaOperativoLogTipo' => 1));
-
+        
         $habilitar_ddjj = true;
         if($descarga_archivo_aux){
             $habilitar_ddjj = false;
