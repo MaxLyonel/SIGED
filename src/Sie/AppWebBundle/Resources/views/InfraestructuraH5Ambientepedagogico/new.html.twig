@@ -12,8 +12,7 @@
             </div>
             <div class="panel-body">
 
-
-				{{form_start(form, { 'attr':{'id':'idFormNewVestuario'} })}}
+				{{form_start(form, { 'attr':{'id':'idFormNewPedagogico'} })}}
                 <div class="form-body"> 
 
                     <div class="form-group">
@@ -29,13 +28,31 @@
 						      <td>Alto(mts)</td>					      
 						    </tr>
 						    <tr>
-						      <th >{{form_widget(form.n51AmbienteTipo, {'attr': {'class':'form-control'} } )}}</th>
-						      <td>{{form_widget(form.n51NroBloque, {'attr': {'class':'form-control'} } )}}</td>
-						      <td>{{form_widget(form.n51NroPiso, {'attr': {'class':'form-control'} } )}}</td>
-						      <td>{{form_widget(form.n51CapacidadAmbiente, {'attr': {'class':'form-control'} } )}}</td>
-						      <td>{{form_widget(form.n51AmbienteAnchoMts, {'attr': {'class':'form-control'} } )}}</td>
-						      <td>{{form_widget(form.n51AmbienteLargoMts, {'attr': {'class':'form-control'} } )}}</td>
-						      <td>{{form_widget(form.n51AmbienteAltoMts, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center" >{{form_widget(form.n51AmbienteTipo, {'attr': {'class':'form-control'} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n51NroBloque, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51NroPiso, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51CapacidadAmbiente, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51AmbienteAnchoMts, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51AmbienteLargoMts, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center"> {{form_widget(form.n51AmbienteAltoMts, {'attr': {'class':'form-control'} } )}}</td>
+						    </tr>
+						</table>
+					</div>
+
+					<div class="form-group">
+						
+						<table class="table">
+						    <tr>
+						      <td>Es usado el ambiente:</td>
+						      <td>Ambiente es considerado uso universal</td>
+						      <td>Ambiente utilizado como taller para BTH o Especialidad T&eacute;cnica</td>
+						      
+						    </tr>
+						    <tr>
+						      <td class="text-center" >{{form_widget(form.n51EsUsoAmbiente, {'attr': {'class':''} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n51EsUsoUniversal, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51EsUsoBth, {'attr': {'class':''} } )}}</td>
+						      
 						    </tr>
 						</table>
 					</div>
@@ -47,12 +64,11 @@
 						      <td>Tiene Techo:</td>
 						      <td>Tiene iluminaci&oacute;n el&eacute;ctrica</td>
 						      <td>Tiene iluminaci&oacute;n Natural</td>
-						      
 						    </tr>
 						    <tr>
-						      <th >{{form_widget(form.n51EsUsoAmbiente, {'attr': {'class':''} } )}}</th>
-						      <td>{{form_widget(form.n51EsUsoUniversal, {'attr': {'class':''} } )}}</td>
-						      <td>{{form_widget(form.n51EsUsoBth, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center" >{{form_widget(form.n51EsAmbienteTecho, {'attr': {'class':''} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n51EsIluminacionElectrica, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51EsIluminacionNatural, {'attr': {'class':''} } )}}</td>
 						      
 						    </tr>
 						</table>
@@ -61,123 +77,66 @@
 					<div class="form-group">
 						<table class="table">
 						    <tr>
-						      <td>Uso del Ambiente:</td>
-						      <td>Ambiente considerado de uso universal</td>
-						      <td>Es utilizado como taller para BTH o Especialidad T&eacute;cnica</td>
+						      <td>Tiene cielo falso:</td>
+						      <td>Caracteristicas</td>
+						      <td>Tiene muros</td>
+						      <td>Material</td>
+						      <td>Caracteristicas</td>
 						      
 						    </tr>
 						    <tr>
-						      <th >{{form_widget(form.n51EsUsoAmbiente, {'attr': {'class':''} } )}}</th>
-						      <td>{{form_widget(form.n51EsUsoUniversal, {'attr': {'class':''} } )}}</td>
-						      <td>{{form_widget(form.n51EsUsoBth, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51EsAmbienteCieloFal, {'attr': {'class':''} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n51AmbienteCieloFalTipo, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51EsAmbienteMuros, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51AmbienteMuroMatTipo, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51AmbienteMuroCaracTipo, {'attr': {'class':''} } )}}</td>
+						      
+						    </tr>
+						</table>
+					</div>
+					<div class="form-group">
+						<table class="table">
+						    <tr>
+						      <td>Tiene puertas:</td>
+						      <td>Seguro</td>
+						      <td>Se Abre</td>
+						      <td>Tiene revestimiento</td>
+						      <td>Material</td>
+						      <td>Caracteristicas</td>
+						      
+						    </tr>
+						    <tr>
+						      <td class="text-center">{{form_widget(form.n51EsAmbientePuerta, {'attr': {'class':''} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n511SeguroTipo, {'attr': {'class':''} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n512AbreTipo, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51EsAmbienteRevestimiento, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51AmbienteRevestMatTipo, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51AmbienteRevestCaracTipo, {'attr': {'class':''} } )}}</td>
 						      
 						    </tr>
 						</table>
 					</div>
 
-
-                      
-{#
-                    <div class="form-group no-margin">
-                        <label>6.2 Estado del vestuario</label>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label>Tiene cielo falso</label>
-                                {{form_widget(form.n62EsTieneCieloFalso, {'attr': {'class':'form-control'} } )}}
-                            </div>
-                            <div class="col-md-3">
-                                <label>Caracteristica</label>
-                                {{form_widget(form.n62TieneCieloFalsoCaracTipo, {'attr': {'class':'form-control'} } )}}
-                            </div>
-
-                            <div class="col-md-2">
-                                <label>Tiene muros:</label>
-                                {{form_widget(form.n62EsTieneMuros, {'attr': {'class':'form-control'} } )}}
-                            </div>
-                            <div class="col-md-2">
-                                <label>Material</label>
-                                {{form_widget(form.n62TieneMurosMaterTipo, {'attr': {'class':'form-control'} } )}}
-                            </div>
-
-                            <div class="col-md-2">
-                                <label>Caracteristica</label>
-                                {{form_widget(form.n62TieneMurosCaracTipo, {'attr': {'class':'form-control'} } )}}
-                            </div>
-                                                      
-                        </div>
-                    </div>
-
-                    <br>
-
-
-                    <div class="form-group">
-                        <div class="row">
-                            
-                            <div class="col-md-2">
-                                <label>Tiene puerta(s)</label>
-                                {{form_widget(form.n62EsTienePuerta, {'attr': {'class':'form-control'} } )}}
-                            </div>
-                            <div class="col-md-3">
-                                <label>Caracteristicas</label>
-                                
-                            </div>
-                            <div class="col-md-2">
-                                <label>Tiene revestimiento:</label>
-                                {{form_widget(form.n62EsTieneRevest, {'attr': {'class':'form-control'} } )}}
-                            </div>
-                            <div class="col-md-2">
-                                <label>Material </label>
-                                {{form_widget(form.n62TieneRevestMaterTipo, {'attr': {'class':'form-control'} } )}}
-                            </div>
-                            <div class="col-md-2">
-                                <label>Caracteristicas</label>
-                                {{form_widget(form.n62TieneRevestCaracTipo, {'attr': {'class':'form-control'} } )}}
-                            </div>  
-                            
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label>Tiene Ventana:</label>
-                                {{form_widget(form.n62EsTieneVentana, {'attr': {'class':'form-control'} } )}}
-                            </div>
-                            <div class="col-md-3">
-                                <label>Caracteristica</label>
-                                {{form_widget(form.n62TieneVentanaCaracTipo, {'attr': {'class':'form-control'} } )}}
-                            </div>
-                            <div class="col-md-2">
-                                <label>Tiene Piso:</label>
-                                {{form_widget(form.n62EsTienePiso, {'attr': {'class':'form-control'} } )}}
-                            </div>
-                            <div class="col-md-2">
-                                <label>Caracteristicas</label>
-                                {{form_widget(form.n62TienePisoMaterTipo, {'attr': {'class':'form-control'} } )}}
-                            </div>  
-                            <div class="col-md-2">
-                                <label>Caracteristicas</label>
-                                {{form_widget(form.n62TienePisoCaracTipo, {'attr': {'class':'form-control'} } )}}
-                            </div>  
-                            
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        
-                        <div class="row">
-                            
-                            <div class="col-md-2">
-                                <label>Tiene Techo:</label>
-                                {{form_widget(form.n62EsTieneTecho, {'attr': {'class':'form-control'} } )}}
-                            </div>
-                            
-                        </div>
-                    </div>
-
-
-
-#}
+					<div class="form-group">
+						<table class="table">
+						    <tr>
+						      <td>Tiene ventana(s):</td>
+						      <td>Caracteristicas</td>
+						      <td>Tiene piso</td>
+						      <td>Material</td>
+						      <td>Caracteristicas</td>
+						      
+						    </tr>
+						    <tr>
+						      <td class="text-center">{{form_widget(form.n51EsAmbienteVentana, {'attr': {'class':''} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n51AmbienteVentanaTipo, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51EsAmbientePiso, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51AmbientePisoCaracTipo, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n51AmbientePisoMatTipo, {'attr': {'class':''} } )}}</td>
+						      
+						    </tr>
+						</table>
+					</div>
 
                 </div>
                   

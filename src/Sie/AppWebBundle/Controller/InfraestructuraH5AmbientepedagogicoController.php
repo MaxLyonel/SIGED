@@ -53,10 +53,12 @@ class InfraestructuraH5AmbientepedagogicoController extends Controller
         // ));    
     }
     public function newAmbPedagogicoAction(Request $request){
+        
 
-
+        $infraestructuraJuridiccionGeograficaId = $request->get('infraestructuraJuridiccionGeograficaId');
+// dump($infraestructuraJuridiccionGeograficaId);die;
         $entity = new InfraestructuraH5Ambientepedagogico();
-        $form   = $this->createCreateForm($entity);
+        $form   = $this->createCreateForm($entity, $infraestructuraJuridiccionGeograficaId);
 
         return $this->render('SieAppWebBundle:InfraestructuraH5Ambientepedagogico:new.html.twig', array(
             'entity' => $entity,
@@ -94,17 +96,75 @@ class InfraestructuraH5AmbientepedagogicoController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(InfraestructuraH5Ambientepedagogico $entity)
+    private function createCreateForm(InfraestructuraH5Ambientepedagogico $entity, $infraestructuraJuridiccionGeograficaId)
     {
         $form = $this->createForm(new InfraestructuraH5AmbientepedagogicoType(), $entity, array(
-            'action' => $this->generateUrl('infraestructurah5ambientepedagogico_create'),
+            // 'action' => $this->generateUrl('infraestructurah5ambientepedagogico_create'),
             'method' => 'POST',
         ));
 
         // $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('infraestructuraJuridiccionGeograficaId', 'text', array('mapped'=>false,'data' => $infraestructuraJuridiccionGeograficaId));
 
         return $form;
     }
+
+    public function saveNewPedagogicoAction(Request $request){
+        
+        // cretae db conexion var
+        $em =  $this->getDoctrine()->getManager();
+
+        //get the send data
+        $form = $request->get('sie_appwebbundle_infraestructurah5ambientepedagogico');
+        // dump($form);die;
+        $entity = new InfraestructuraH5Ambientepedagogico();
+
+            // $entity->setN51AmbienteTipo($em->getRepository('SieAppWebBundle:InfraestructuraH5AmbienteTipo')->find($form['n51AmbienteTipo']) );
+            // $entity->setN51NroBloque($form['n51NroBloque']);
+            // $entity->setN51NroPiso($form['n51NroPiso']);
+            // $entity->setN51AmbienteAnchoMts($form['n51AmbienteAnchoMts']);
+            // $entity->setN51AmbienteLargoMts($form['n51AmbienteLargoMts']);
+            // $entity->setN51AmbienteAltoMts($form['n51AmbienteAltoMts']);
+            // $entity->setN51CapacidadAmbiente($form['n51CapacidadAmbiente']);
+            // $entity->setN51EsUsoAmbiente($form['n51EsUsoAmbiente']);
+            // $entity->setN51EsUsoUniversal($form['n51EsUsoUniversal']);
+            // $entity->setN51EsUsoBth($form['n51EsUsoBth']);
+            // $entity->setN51EsAmbienteTecho($form['n51EsAmbienteTecho']);
+            // $entity->setN51EsIluminacionElectrica($form['n51EsIluminacionElectrica']);
+            // $entity->setN51EsIluminacionNatural($form['n51EsIluminacionNatural']);
+            // $entity->setN51EsAmbienteCieloFal($form['n51EsAmbienteCieloFal']);
+            // $entity->setN51AmbienteCieloFalTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenCaracteristicasInfraTipo')->find($form['n51AmbienteCieloFalTipo']) );
+            // $entity->setN51EsAmbienteMuros($form['n51EsAmbienteMuros']);
+            // $entity->setN51AmbienteMuroMatTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenMurosMaterialTipo')->find($form['n51AmbienteMuroMatTipo']) );
+            // $entity->setN51AmbienteMuroCaracTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenMurosCaracTipo')->find($form['n51AmbienteMuroCaracTipo']) );
+            // $entity->setN51EsAmbientePuerta($form['n51EsAmbientePuerta']);
+            // $entity->setN511SeguroTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenPuertasSeguroTipo')->find($form['n511SeguroTipo']) );
+            // $entity->setN512AbreTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenPuertasAbreTipo')->find($form['n512AbreTipo']) );
+            // $entity->setN51EsAmbienteRevestimiento($form['n51EsAmbienteRevestimiento']);
+            // $entity->setN51AmbienteRevestCaracTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenCaracteristicasInfraTipo')->find($form['n51AmbienteRevestCaracTipo']) );
+            // $entity->setN51AmbienteRevestMatTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenRevestimientoMaterialTipo')->find($form['n51AmbienteRevestMatTipo']) );
+            // $entity->setN51EsAmbienteVentana($form['n51EsAmbienteVentana']);
+            // $entity->setN51AmbienteVentanaTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenVentanasCaracTipo')->find($form['n51AmbienteVentanaTipo']) );
+            // $entity->setN51EsAmbientePiso($form['n51EsAmbientePiso']);
+            // $entity->setN51AmbientePisoCaracTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenCaracteristicasInfraTipo')->find($form['n51AmbientePisoCaracTipo']) );
+            // $entity->setN51AmbientePisoMatTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenPisosMaterialTipo')->find($form['n51AmbientePisoMatTipo']) );
+            // $entity->setInfraestructuraJuridiccionGeografica($em->getRepository('SieAppWebBundle:InfraestructuraJuridiccionGeografica')->find($form['infraestructuraJuridiccionGeograficaId']) );
+
+            /*$em->persist($entity);
+            $em->flush();*/
+
+
+             
+            $entitiesH5Ambientepedagogico = $em->getRepository('SieAppWebBundle:InfraestructuraH5Ambientepedagogico')->findBy(array(
+                'infraestructuraJuridiccionGeografica'=> $form['infraestructuraJuridiccionGeograficaId']
+            ));
+
+            return $this->render('SieAppWebBundle:InfraestructuraH5Ambientepedagogico:index.html.twig', array(
+                'entities' => $entitiesH5Ambientepedagogico,
+                'infraestructuraJuridiccionGeograficaId' => $form['infraestructuraJuridiccionGeograficaId'],
+            ));
+    }
+
 
     /**
      * Displays a form to create a new InfraestructuraH5Ambientepedagogico entity.

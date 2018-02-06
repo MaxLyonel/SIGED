@@ -23,3 +23,9 @@ infraestructurah4servicio_new_amb_pedagogico:
     defaults: { _controller: SieAppWebBundle:InfraestructuraH5Ambientepedagogico:newAmbPedagogico }
     options:
         expose: true
+
+infraestructura5pedagico_save_new_pedagogico:
+    path:     /saveNewPedagogico
+    defaults: { _controller: SieAppWebBundle:InfraestructuraH5Ambientepedagogico:saveNewPedagogico }
+    options:
+        expose: true
