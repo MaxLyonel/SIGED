@@ -1,0 +1,78 @@
+
+
+{% if  dataidM.id == 1 %}
+
+    <tr>
+        <td>Maestro/Docente Regular... </td>
+    </tr>
+
+
+
+
+{% elseif ( dataidM.id == 2) %}
+<div class="panel-body">
+    <div class="table-responsive">
+        <table class="table table-hover">
+
+            <tr>
+                <td>Seleccione la unidad militar a la que pertenece</td>
+                <td><div class="col-md-9 form-group">{{ form_widget(formlista.seccioniiFuerzaMilitarTipo) }}</div><div class="form-group" id="answerIDUM"></div></td>
+            </tr>
+            <tr>
+                <td><div class="col-md-5 form-group">   <div class="form-group"></div></div></td>
+                <td><div class="col-md-9 form-group">{{ form_widget(formlista.seccioniiUnidadMilitarTipo) }}</div></td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+
+{% elseif (dataidM.id == 3) %}
+<div class="panel-body">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <tr>
+                <td>Seleccione su Recinto Penintenciario</td>
+                <td><div class="col-md-9 form-group">{{ form_widget(formlista.seccioniiLugarReclusion) }}</div><div class="form-group" id="answerIDP"></div></td>
+            </tr>
+            <tr>
+                <td><div class="col-md-5 form-group">   <div class="form-group"></div></div></td>
+                <td><div class="col-md-9 form-group">{{ form_widget(formlista.seccioniiRecintoPenitenciarioTipo) }} </div></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+{% elseif (dataidM.id == 5) %}
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <tr>
+                    <td>Seleccione su Recinto Penintenciario</td>
+                    <td><div class="col-md-9 form-group">{{ form_widget(formlista.seccioniiLugarReclusion) }}</div><div class="form-group" id="answerIDP"></div></td>
+                </tr>
+                <tr>
+                    <td><div class="col-md-5 form-group">   <div class="form-group"></div></div></td>
+                    <td><div class="col-md-9 form-group">{{ form_widget(formlista.seccioniiRecintoPenitenciarioTipo) }} </div></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+{% elseif (dataidM.id == 4) %}
+    <td><div class="col-md-6 form-group"> </div></td>
+
+{% else %}
+
+    <tr>
+        <td>SELECCIONE UNA OPCION</td>
+    </tr>
+
+{% endif %}
+
+
+<script>
+
+
+</script>

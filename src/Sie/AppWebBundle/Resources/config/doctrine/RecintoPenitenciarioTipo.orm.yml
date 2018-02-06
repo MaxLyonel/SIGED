@@ -1,0 +1,35 @@
+Sie\AppWebBundle\Entity\RecintoPenitenciarioTipo:
+    type: entity
+    table: recinto_penitenciario_tipo
+    indexes:
+        IDX_E0F90BEE2E2E8B07:
+            columns:
+                - lugar_reclusion_tipo_id
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        recintoPenitenciario:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            column: recinto_penitenciario
+    manyToOne:
+        lugarReclusionTipo:
+            targetEntity: LugarReclusionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_reclusion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

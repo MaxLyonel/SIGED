@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\MaestroInscripcionIdioma:
     type: entity
     table: maestro_inscripcion_idioma
     indexes:
+        IDX_52BB824DA4B6FF2:
+            columns:
+                - maestro_inscripcion_id
         IDX_52BB824DCD9F4106:
             columns:
                 - idioma_materno_id
@@ -14,9 +17,6 @@ Sie\AppWebBundle\Entity\MaestroInscripcionIdioma:
         IDX_52BB824D28B91FEE:
             columns:
                 - idiomaconoce_tipo_id_lee
-        IDX_52BB824DA4B6FF2:
-            columns:
-                - maestro_inscripcion_id
     id:
         id:
             type: integer
@@ -35,6 +35,15 @@ Sie\AppWebBundle\Entity\MaestroInscripcionIdioma:
             comment: ''
             column: idioma_tipo_id_estudia
     manyToOne:
+        maestroInscripcion:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestro_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         idiomaMaterno:
             targetEntity: IdiomaMaterno
             cascade: {  }
@@ -69,15 +78,6 @@ Sie\AppWebBundle\Entity\MaestroInscripcionIdioma:
             inversedBy: null
             joinColumns:
                 idiomaconoce_tipo_id_lee:
-                    referencedColumnName: id
-            orphanRemoval: false
-        maestroInscripcion:
-            targetEntity: MaestroInscripcion
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                maestro_inscripcion_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
