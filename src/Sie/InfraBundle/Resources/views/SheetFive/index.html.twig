@@ -88,6 +88,9 @@
           </div>
       </div>
     </div>
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">
+
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
@@ -146,6 +149,56 @@
 
      };
 
+    var newAmbPedagogico = function(infraestructuraJuridiccionGeograficaId){
+       $.ajax({
+                type: 'post',
+                data: ({infraestructuraJuridiccionGeograficaId: infraestructuraJuridiccionGeograficaId}),
+                url: "{{ path('infraestructurah4servicio_new_amb_pedagogico') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+   var saveNewAmbPedagogico = function(){
+
+    formData = $('#idFormNewPedagogico').serialize();
+       $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('infraestructura5pedagico_save_new_pedagogico') }}",
+                beforeSend: function () {
+                    $('#modal').modal('hide');
+                    $('#idpedagogico').empty();
+                    $("#idpedagogico").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                },
+                success: function (data) {
+                    $('#idpedagogico').empty();
+                    $('#idpedagogico').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
 
     </script>
     

@@ -20,7 +20,7 @@
                   <form action="{{path('infra_list_open')}}" method="post" style="display: inline-block">
                       <input type="hidden" id="form_gestion" name="form[gestion]" value="{{app.session.get('currentyear')}}">
                       <input type="hidden" id="form_data" name="form[sie]" required="required" value="{{app.session.get('ie_id')}}">
-                       <input type="hidden" id="form_data" name="form[infraestructuraJuridiccionGeograficaId]" required="required" value="11392">
+                       <input type="hidden" id="form_data" name="form[infraestructuraJuridiccionGeograficaId]" required="required" value="10303">
                       <button class='btn btn-link'>Menu de Opciones</button>
                   </form>
                 </li>
@@ -101,9 +101,62 @@
           </div>
       </div>
     </div>
+
+
+
+<!-- 
+        Start inside form layout
+        <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-photo-viewer">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body no-padding">
+                        <div id="idBateriaBanos" >                        
+                        {# include 'SieAppWebBundle:InfraestructuraH4ServicioBateriaBanos:edit.html.twig' with { 'data': 'data'} #}
+                        </div>
+                        
+                    </div>
+
+                </div>
+                /.modal-content
+            </div>
+            /.modal-dialog
+        </div>
+        /.modal
+        / End inside form layout
+Start inside form layout
+        <div class="modal fade bs-example-modal-formVestuarios" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-photo-viewer">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body no-padding">
+                        
+                        {# include 'SieAppWebBundle:InfraestructuraH4Servicio:new.html.twig' with { 'data': 'data'} #}
+                        
+                    </div>
+
+                </div>
+                /.modal-content
+            </div>
+            /.modal-dialog
+        </div>
+        /.modal
+        / End inside form layout -->
+
+         <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">
+
+
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
+
+  
 
 {% endblock %}
 

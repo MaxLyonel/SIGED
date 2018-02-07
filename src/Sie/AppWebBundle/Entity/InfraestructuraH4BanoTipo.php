@@ -29,7 +29,9 @@ class InfraestructuraH4BanoTipo
      */
     private $gestionTipoId;
 
-
+    public function __toString(){
+        return $this->infraestructuraBano;
+    }
     /**
      * Get id
      *

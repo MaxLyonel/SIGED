@@ -8,12 +8,24 @@ infra_sheet_five_access:
 
 infra_sheet_five_ambiente_pedagogico:
     path:     /pedagogico
-    defaults: { _controller: SieInfraBundle:SheetFive:pedagogico }
+    defaults: { _controller: SieAppWebBundle:InfraestructuraH5Ambientepedagogico:pedagogico }
     options:
         expose: true
 
 infra_sheet_five_ambiente_pedagogico_deportivo:
     path:     /pedagogicoDeportivo
     defaults: { _controller: SieInfraBundle:SheetFive:pedagogicoDeportivo }
+    options:
+        expose: true
+
+infraestructurah4servicio_new_amb_pedagogico:
+    path:     /newAmbPedagogico
+    defaults: { _controller: SieAppWebBundle:InfraestructuraH5Ambientepedagogico:newAmbPedagogico }
+    options:
+        expose: true
+
+infraestructura5pedagico_save_new_pedagogico:
+    path:     /saveNewPedagogico
+    defaults: { _controller: SieAppWebBundle:InfraestructuraH5Ambientepedagogico:saveNewPedagogico }
     options:
         expose: true

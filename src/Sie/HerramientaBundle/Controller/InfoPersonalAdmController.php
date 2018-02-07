@@ -86,6 +86,16 @@ class InfoPersonalAdmController extends Controller {
             $gestion = $request->getSession()->get('idGestion');
         }
 
+        $institucionregular = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $institucion, 'institucioneducativaTipo' => 1));
+
+        if(!$institucionregular){
+            $this->get('session')->getFlashBag()->add('noTuicion', 'La Unidad Educativa no corresponde al Subsistema de Educación Regular');
+            if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
+                return $this->redirect($this->generateUrl('herramienta_info_personal_adm_tsie_index'));
+            }
+            return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+        }
+
         /*
          * lista de personal registrados en la unidad educativa
          */
@@ -177,15 +187,22 @@ class InfoPersonalAdmController extends Controller {
         /*
          * obtenemos datos de la unidad educativa
          */
-        $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($institucion, $request->getSession()->get('currentyear'));
+        $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($institucion, $gestion);
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
         $gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion);
         $notaTipo = $em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($operativo);
         $rolTipo = $em->getRepository('SieAppWebBundle:RolTipo')->findOneById(9);
         $ueplena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('gestionTipoId' => $gestion, 'institucioneducativaId' => $institucion->getId(), 'institucioneducativaHumanisticoTecnicoTipo' => 1));
 
-        $validacion_personal_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findOneBy(array('gestionTipo' => $gestionTipo, 'institucioneducativa' => $institucion, 'notaTipo' => $notaTipo, 'rolTipo' => $rolTipo));
+        $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '1'));
+        $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '2'));
+        
+        if(!($consol_gest_pasada or $consol_gest_pasada2)){
+            $activar_acciones = true;
+        }
 
+        $validacion_personal_aux = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findOneBy(array('gestionTipo' => $gestionTipo, 'institucioneducativa' => $institucion, 'notaTipo' => $notaTipo, 'rolTipo' => $rolTipo));
+        
         $activar_acciones = true;
         if($validacion_personal_aux){
             $activar_acciones = false;
@@ -210,12 +227,6 @@ class InfoPersonalAdmController extends Controller {
                     )));
                 }
             }
-        }
-
-        $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '1'));
-        
-        if(!$consol_gest_pasada){
-            $activar_acciones = true;
         }
 
         return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:index.html.twig', array(
@@ -671,51 +682,6 @@ class InfoPersonalAdmController extends Controller {
         ));
     }
 
-    public function resultAction(Request $request) {
-
-        // Verificamos si no ha caducado la session
-        if (!$this->session->get('userId')) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $form = $request->get('form');
-
-        $em = $this->getDoctrine()->getManager();
-
-        $repository = $em->getRepository('SieAppWebBundle:Persona');
-
-        $query = $repository->createQueryBuilder('p')
-                ->select('p')
-                ->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
-                ->where('p.carnet = :carnet AND (p.esvigente = :esvigente1 OR p.esvigenteApoderado > :esvigente2)')
-                ->setParameter('carnet', $form['carnetIdentidad'])
-                ->setParameter('esvigente1', 't')
-                ->setParameter('esvigente2', 0)
-                ->getQuery();
-
-        $personas = $query->getResult();
-
-        if (!$personas) {
-            $query = $repository->createQueryBuilder('p')
-                ->select('p')
-                ->where('p.carnet = :carnet AND (p.esvigente = :esvigente1 OR p.esvigenteApoderado > :esvigente2)')
-                ->setParameter('carnet', $form['carnetIdentidad'])
-                ->setParameter('esvigente1', 't')
-                ->setParameter('esvigente2', 0)
-                ->getQuery();
-
-            $personas = $query->getResult();
-        }
-        
-        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
-        
-        return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:result.html.twig', array(
-                    'personas' => $personas,
-                    'institucion' => $institucion,
-                    'gestion' => $request->getSession()->get('idGestion')
-        ));
-    }
-
     /**
      * Crea un formulario para buscar una persona por C.I.
      *
@@ -723,11 +689,56 @@ class InfoPersonalAdmController extends Controller {
     private function searchForm() {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_info_personal_adm_result'))
-                ->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
-                ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
-                ->add('buscar', 'submit', array('label' => 'Buscar coincidencias por C.I.', 'attr' => array('class' => 'btn btn-md btn-facebook')))
+                ->add('buscar', 'submit', array('label' => 'Buscar coincidencias', 'attr' => array('class' => 'btn btn-md btn-facebook')))
                 ->getForm();
         return $form;
+    }
+
+    public function resultAction(Request $request) {
+
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+
+        $carnet = $form['carnet'];
+        $complemento = ($form['complemento'] != "") ? $form['complemento']:0;
+        $fechaNacimiento = $form['fechaNac'];
+
+        $servicioPersona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplementoFechaNacimiento($carnet, $complemento, $fechaNacimiento);
+
+        $servicioPersona = json_encode($servicioPersona);
+        $servicioPersona = json_decode($servicioPersona, true);
+
+        if (is_array($servicioPersona['result'])) {
+
+            $fechaNacimiento = $servicioPersona['result'][0]['fecha_nacimiento'];
+            $servicioPersona['result'][0]['fecha_nacimiento'] = date_format(new \DateTime($fechaNacimiento), 'd-m-Y');
+
+            $p = array(
+                'personaId'=>$servicioPersona['result'][0]['id'],
+                'personaCarnet'=>$servicioPersona['result'][0]['carnet'],
+                'personaComplemento'=>$servicioPersona['result'][0]['complemento'],
+                'personaPaterno'=>$servicioPersona['result'][0]['paterno'],
+                'personaMaterno'=>$servicioPersona['result'][0]['materno'],
+                'personaNombre'=>$servicioPersona['result'][0]['nombre'],
+                'personaFechaNac'=>$servicioPersona['result'][0]['fecha_nacimiento'],
+            );
+
+        }else{
+            $p = null;
+        }
+        
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
+        
+        return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:result.html.twig', array(
+                    'persona' => $p,
+                    'institucion' => $institucion,
+                    'gestion' => $request->getSession()->get('idGestion')
+        ));
     }
 
     public function indexTecSieAction(Request $request) {

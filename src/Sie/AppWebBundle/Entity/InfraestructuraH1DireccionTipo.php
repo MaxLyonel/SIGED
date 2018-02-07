@@ -29,6 +29,10 @@ class InfraestructuraH1DireccionTipo
      */
     private $gestionTipoId;
 
+    public function __toString(){
+        return $this->descripcion;
+    }
+
 
     /**
      * Get id

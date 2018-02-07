@@ -12,8 +12,7 @@ use Sie\AppWebBundle\Form\InfraestructuraH5AmbientepedagogicoType;
 
 class SheetFiveController extends Controller
 {
-    public function indexAction()
-    {
+    public function indexAction(Request $request){
         return $this->render('SieInfraBundle:SheetFive:index.html.twig', array(
                 // ...
             ));
@@ -41,6 +40,7 @@ class SheetFiveController extends Controller
 
         return $this->render('SieAppWebBundle:InfraestructuraH5Ambientepedagogico:index.html.twig', array(
             'entities' => $entities,
+            'infraestructuraJuridiccionGeograficaId' => $infraestructuraJuridiccionGeograficaId,
         ));
 
         // return $this->render('SieInfraBundle:SheetFive:access.html.twig', array(

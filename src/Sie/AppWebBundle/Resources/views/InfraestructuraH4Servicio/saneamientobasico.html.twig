@@ -97,13 +97,142 @@
 
   <div class="panel rounded shadow">
     <div class="panel-body">
-      <button type="button" class="btn btn-inverse btn-stroke">Adicionar Bateria de Banhos</button>
+        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+            <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="newBateriasBano('{{idInfraestructuraH4Servicio}}');">
+                Adicionar Bateria de Baños
+            </button>
+        </div>
+        <div id="idbateriasbanos">
+          {% include 'SieAppWebBundle:InfraestructuraH4Servicio:bateriabanos.html.twig' with { 'data': 'data'} %}    
+        </div>
+      
     </div>
   </div>
   <div class="panel rounded shadow">
     <div class="panel-body">
-      <button type="button" class="btn btn-inverse btn-stroke">Adicionar Vestuarios</button>
+      <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+            <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="newVestuarios('{{idInfraestructuraH4Servicio}}');">
+                Adicionar Vestuarios
+            </button>
+        </div>
+      <div id="idvestuarios" >
+        {% include 'SieAppWebBundle:InfraestructuraH4Servicio:vestuarios.html.twig' with { 'data': 'data'} %}  
+      </div>
+      
     </div>
   </div>
 
 </div>
+
+  <script  type="text/javascript" charset="utf-8" async defer>
+
+  
+        var newBateriasBano = function (idInfraestructuraH4Servicio) {
+            $.ajax({
+                type: 'post',
+                data: ({idInfraestructuraH4Servicio: idInfraestructuraH4Servicio}),
+                url: "{{ path('infraestructurah4servicio_new_bateria_banos') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+        var newVestuarios = function (idInfraestructuraH4Servicio) {
+            $.ajax({
+                type: 'post',
+                data: ({idInfraestructuraH4Servicio: idInfraestructuraH4Servicio}),
+                url: "{{ path('infraestructurah4servicio_new_vestuarios') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+
+        var saveNewBateriaBano=function(){
+
+          // var formBateriasBano=$('#idFormBateriasBano').serialize();
+          var formBateriasBano=$('form[name="sie_appwebbundle_infraestructurah4serviciobateriabanos"]').serialize();
+          
+          $.ajax({
+                type: 'get',
+                data: formBateriasBano,
+                url: "{{ path('infraestructurah4servicio_save_bateria_banos') }}",
+                beforeSend: function () {
+                    // $('#modal').empty();
+                    $('#idbateriasbanos').empty();
+                },
+                success: function (data) {
+                    // $('#modal').empty();
+                    $('#idbateriasbanos').append(data);
+                    $('#modal').modal('hide');
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+
+        var saveNewVestuario=function(){
+
+          var formNewVestuario=$('#idFormNewVestuario').serialize();
+          // var formBateriasBano=$('form[name="sie_appwebbundle_infraestructurah4serviciobateriabanos"]').serialize();
+          
+          $.ajax({
+                type: 'get',
+                data: formNewVestuario,
+                url: "{{ path('infraestructurah4servicio_save_vestuario') }}",
+                beforeSend: function () {
+                    // $('#modal').empty();
+                    $('#idvestuarios').empty();
+                },
+                success: function (data) {
+                    // $('#modal').empty();
+                    $('#idvestuarios').append(data);
+                    $('#modal').modal('hide');
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+      
+    </script>

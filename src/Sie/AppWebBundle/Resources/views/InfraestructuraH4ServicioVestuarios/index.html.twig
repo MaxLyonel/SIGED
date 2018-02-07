@@ -1,0 +1,59 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH4ServicioVestuarios list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>N6areatotalm2</th>
+                <th>N6esfuncionaambiente</th>
+                <th>Fecharegistro</th>
+                <th>N62estienetecho</th>
+                <th>N62estienecielofalso</th>
+                <th>N62estienepuerta</th>
+                <th>N62estieneventana</th>
+                <th>N62estienemuros</th>
+                <th>N62estienerevest</th>
+                <th>N62estienepiso</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('infraestructurah4serviciovestuarios_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.n6Areatotalm2 }}</td>
+                <td>{{ entity.n6EsFuncionaAmbiente }}</td>
+                <td>{% if entity.fecharegistro %}{{ entity.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.n62EsTieneTecho }}</td>
+                <td>{{ entity.n62EsTieneCieloFalso }}</td>
+                <td>{{ entity.n62EsTienePuerta }}</td>
+                <td>{{ entity.n62EsTieneVentana }}</td>
+                <td>{{ entity.n62EsTieneMuros }}</td>
+                <td>{{ entity.n62EsTieneRevest }}</td>
+                <td>{{ entity.n62EsTienePiso }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('infraestructurah4serviciovestuarios_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('infraestructurah4serviciovestuarios_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('infraestructurah4serviciovestuarios_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

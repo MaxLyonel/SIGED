@@ -22,7 +22,16 @@
 
                                            {{form_widget(form.n13EsTipoInstalacion, {'attr': {'class': ''} })}}
                                                 
-
+                                            <div class="radio">
+                                                  <label class="radio-inline">
+                                                      <input id="form_tipoinstalation" checked="checked" type="radio" name="form[electrica][tipoinstalation]" value="monofasico">
+                                                      Monofásico
+                                                  </label>
+                                                  <label class="radio-inline">
+                                                      <input id="form_tipoinstalation" type="radio" name="form[electrica][tipoinstalation]" value="trifasico">
+                                                      Trifásico
+                                                  </label>
+                                                </div>
                                        </div><!-- /.form-group -->
 
   
