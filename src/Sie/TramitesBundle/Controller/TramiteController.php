@@ -142,13 +142,15 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         $rolPermitido = array(8,10,13);
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
@@ -174,52 +176,9 @@ class TramiteController extends Controller {
         //}
 
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
-            'formBusqueda' => $this->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_certificado_tecnico_registro_lista',0,0,0,0)->createView(),
+            'formBusqueda' => $this->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_certificado_tecnico_registro_lista',0,0,0,0)->createView(),
             'titulo' => 'Registro',
             'subtitulo' => 'Trámite - Certificación Técnica Alternativa',
-            ));
-    }
-
-    //****************************************************************************************************
-    // DESCRIPCION DEL METODO:
-    // Controlador que busca una unidad educativa humanistica
-    // PARAMETROS: request
-    // AUTOR: RCANAVIRI
-    //****************************************************************************************************
-    public function dipHumRegularRegistroBuscaAction(Request $request) {
-        /*
-         * Define la zona horaria y halla la fecha actual
-         */
-        date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = new \DateTime();
-
-        $sesion = $request->getSession();
-        $id_usuario = $sesion->get('userId');
-
-        //validation if the user is logged
-        if (!isset($id_usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $defaultTramiteController = new defaultTramiteController();
-        $defaultTramiteController->setContainer($this->container);
-
-        $rolPermitido = array(8,10,13);
-
-        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
-
-        if (!$esValidoUsuarioRol){
-            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
-        }
-
-        $gestion = $gestionActual->format('Y');
-
-        return $this->render($this->session->get('pathSystem') . ':Tramite:dipHumIndex.html.twig', array(
-            'formBusqueda' => $this->creaFormBuscaUnidadEducativaHumanistica('sie_tramite_diploma_humanistico_regular_registro_lista',0,0)->createView(),
-            'titulo' => 'Registro',
-            'subtitulo' => 'Trámite - Diploma Humanístico',
             ));
     }
 
@@ -286,33 +245,6 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Funcion que genera un formulario par ala busqueda de unidades educativas humanistica por gestion
-    // PARAMETROS: institucionEducativaId, gestionId
-    // AUTOR: RCANAVIRI
-    //****************************************************************************************************
-    public function creaFormBuscaUnidadEducativaHumanistica($routing, $institucionEducativaId, $gestionId) {
-        $em = $this->getDoctrine()->getManager();
-        $entidadGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestionId));
-        if($institucionEducativaId==0){
-            $institucionEducativaId = "";
-        }
-        $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl($routing))
-                ->add('sie', 'number', array('label' => 'SIE', 'attr' => array('value' => $institucionEducativaId, 'class' => 'form-control', 'placeholder' => 'Código de institución educativa', 'onInput' => 'valSie()', ' onchange' => 'valSieFocusOut()', 'pattern' => '[0-9]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
-                ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control', 'onchange' => 'listar_especialidad(this.value)'), 'disabled' => 'disabled', 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
-                    'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2008')
-                                ->orderBy('gt.id', 'DESC');
-                    },
-                ))
-                ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue', 'disabled' => 'disabled')))
-                ->getForm();
-        return $form;
-    }
-
-    //****************************************************************************************************
-    // DESCRIPCION DEL METODO:
     // Controlador que muestra el listado de participantes para el registro de su tramite certificacion tecnica alternativa
     // PARAMETROS: institucionEducativaId, gestionId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
@@ -345,7 +277,7 @@ class TramiteController extends Controller {
 
                     if ($verTuicionUnidadEducativa != ''){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('sie_tramite_diploma_humanistico_regular_registro_busca'));
+                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca'));
                     }
 
                     $entityAutorizacionCentro = $this->getAutorizacionCentroEducativoTecnica($sie);
@@ -363,7 +295,7 @@ class TramiteController extends Controller {
                     $datosBusqueda = base64_encode(serialize($form));
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:registroIndex.html.twig', array(
-                        'formBusqueda' => $this->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_certificado_tecnico_registro_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
+                        'formBusqueda' => $this->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_certificado_tecnico_registro_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Registro',
                         'subtitulo' => 'Trámite',
                         'listaParticipante' => $entityParticipantes,
@@ -372,82 +304,15 @@ class TramiteController extends Controller {
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_certificado_tecnico_registro_busca'));
+                    return $this->redirect($this->generateUrl('tramite_certificado_tecnico_registro_busca'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_certificado_tecnico_registro_busca'));
+                return $this->redirect($this->generateUrl('tramite_certificado_tecnico_registro_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_certificado_tecnico_registro_busca'));
-        }
-        return $this->redirect($this->generateUrl('login'));
-    }
-
-
-    //****************************************************************************************************
-    // DESCRIPCION DEL METODO:
-    // Controlador que muestra el listado de bachilleres para el registro de su tramite diplomas humanistico regular
-    // PARAMETROS: institucionEducativaId, gestionId
-    // AUTOR: RCANAVIRI
-    //****************************************************************************************************
-    public function dipHumRegularRegistroListaAction(Request $request) {
-        date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = new \DateTime();
-
-        $sesion = $request->getSession();
-        $id_usuario = $sesion->get('userId');
-
-        //validation if the user is logged
-        if (!isset($id_usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        if ($request->isMethod('POST')) {
-            $form = $request->get('form');
-            if ($form) {
-                $sie = $form['sie'];
-                $gestion = $form['gestion'];
-
-                try {
-                    $usuarioRol = $this->session->get('roluser');
-                    $verTuicionUnidadEducativa = $this->verTuicionUnidadEducativa($id_usuario, $sie, $usuarioRol, 'TRAMITES');
-
-                    if ($verTuicionUnidadEducativa != ''){
-                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
-                        return $this->redirect($this->generateUrl('sie_tramite_diploma_humanistico_regular_registro_busca '));
-                    }
-
-                    $entityAutorizacionUnidadEducativa = $this->getAutorizacionUnidadEducativa($sie);
-                    if(count($entityAutorizacionUnidadEducativa)<=0){
-                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información de la unidad educativa, intente nuevamente'));
-                    }
-
-                    $entityParticipantes = $this->getEstudiantesRegularHumanistica($sie,$gestion);
-
-                    $datosBusqueda = base64_encode(serialize($form));
-
-                    return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumRegularRegistroIndex.html.twig', array(
-                        'formBusqueda' => $this->creaFormBuscaUnidadEducativaHumanistica('sie_tramite_diploma_humanistico_regular_registro_lista',$sie,$gestion)->createView(),
-                        'titulo' => 'Registro',
-                        'subtitulo' => 'Trámite',
-                        'listaParticipante' => $entityParticipantes,
-                        'infoAutorizacionUnidadEducativa' => $entityAutorizacionUnidadEducativa,
-                        'datosBusqueda' => $datosBusqueda,
-                    ));
-                } catch (\Doctrine\ORM\NoResultException $exc) {
-                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_diploma_humanistico_regular_registro_busca'));
-                }
-            }  else {
-                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_diploma_humanistico_regular_registro_busca'));
-            }
-        } else {
-            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_diploma_humanistico_regular_registro_busca'));
+            return $this->redirect($this->generateUrl('tramite_certificado_tecnico_registro_busca'));
         }
         return $this->redirect($this->generateUrl('login'));
     }
@@ -490,7 +355,7 @@ class TramiteController extends Controller {
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('registrar', $token)) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                    return $this->redirectToRoute('sie_tramite_certificado_tecnico_registro_busca');
+                    return $this->redirectToRoute('tramite_certificado_tecnico_registro_busca');
                 }
 
                 $messageCorrecto = "";
@@ -526,7 +391,7 @@ class TramiteController extends Controller {
                     }
 
                     if ($msg[0]) {
-                        switch ($nivelId) {
+                        switch ($nivdipHumAlternativaRegistroBuscaActionelId) {
                             case 1:
                                 $tramiteTipoId = 6;
                                 break;
@@ -581,11 +446,260 @@ class TramiteController extends Controller {
             */
 
             $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
-            return $this->redirectToRoute('sie_tramite_certificado_tecnico_registro_lista', ['form' => $formBusqueda], 307);
+            return $this->redirectToRoute('tramite_certificado_tecnico_registro_lista', ['form' => $formBusqueda], 307);
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_certificado_tecnico_registro_busca'));
+            return $this->redirect($this->generateUrl('tramite_certificado_tecnico_registro_busca'));
         }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que despliega un formulario para buscar una unidad educativa humanistica
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumRegularRegistroBuscaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
+        $rolPermitido = array(8,10,13);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$esValidoUsuarioRol){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+        }
+
+        $gestion = $gestionActual->format('Y');
+
+        return $this->render($this->session->get('pathSystem') . ':Tramite:dipHumIndex.html.twig', array(
+            'formBusqueda' => $this->creaFormBuscaUnidadEducativaHumanistica('tramite_diploma_humanistico_regular_registro_lista',0,0)->createView(),
+            'titulo' => 'Registro',
+            'subtitulo' => 'Trámite - Diploma Humanístico Regular',
+            ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que despliega un formulario para buscar un centro de educacioón alternativa humanistica
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumAlternativaRegistroBuscaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
+        $rolPermitido = array(8,10,13);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$esValidoUsuarioRol){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+        }
+
+        $gestion = $gestionActual->format('Y');
+
+        return $this->render($this->session->get('pathSystem') . ':Tramite:dipHumIndex.html.twig', array(
+            'formBusqueda' => $this->creaFormBuscaUnidadEducativaHumanistica('tramite_diploma_humanistico_alternativa_registro_lista',0,0)->createView(),
+            'titulo' => 'Registro',
+            'subtitulo' => 'Trámite - Diploma Humanístico Alternativa',
+            ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario par ala busqueda de unidades educativas humanistica por gestion
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormBuscaUnidadEducativaHumanistica($routing, $institucionEducativaId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $entidadGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestionId));
+        if($institucionEducativaId==0){
+            $institucionEducativaId = "";
+        }
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl($routing))
+                ->add('sie', 'number', array('label' => 'SIE', 'attr' => array('value' => $institucionEducativaId, 'class' => 'form-control', 'placeholder' => 'Código de institución educativa', 'onInput' => 'valSie()', ' onchange' => 'valSieFocusOut()', 'pattern' => '[0-9]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control', 'onchange' => 'listar_especialidad(this.value)'), 'disabled' => 'disabled', 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('gt')
+                                ->where('gt.id > 2008')
+                                ->orderBy('gt.id', 'DESC');
+                    },
+                ))
+                ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue', 'disabled' => 'disabled')))
+                ->getForm();
+        return $form;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que muestra el listado de bachilleres para el registro de su tramite diplomas humanistico regular
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumRegularRegistroListaAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        if ($request->isMethod('POST')) {
+            $form = $request->get('form');
+            if ($form) {
+                $sie = $form['sie'];
+                $gestion = $form['gestion'];
+
+                try {
+                    $usuarioRol = $this->session->get('roluser');
+                    $verTuicionUnidadEducativa = $this->verTuicionUnidadEducativa($id_usuario, $sie, $usuarioRol, 'TRAMITES');
+
+                    if ($verTuicionUnidadEducativa != ''){
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
+                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca '));
+                    }
+
+                    $entityAutorizacionUnidadEducativa = $this->getAutorizacionUnidadEducativa($sie);
+                    if(count($entityAutorizacionUnidadEducativa)<=0){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información de la unidad educativa, intente nuevamente'));
+                    }
+
+                    $entityParticipantes = $this->getEstudiantesRegularHumanistica($sie,$gestion);
+
+                    $datosBusqueda = base64_encode(serialize($form));
+
+                    return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumRegularRegistroIndex.html.twig', array(
+                        'formBusqueda' => $this->creaFormBuscaUnidadEducativaHumanistica('tramite_diploma_humanistico_regular_registro_lista',$sie,$gestion)->createView(),
+                        'titulo' => 'Registro',
+                        'subtitulo' => 'Trámite',
+                        'listaParticipante' => $entityParticipantes,
+                        'infoAutorizacionUnidadEducativa' => $entityAutorizacionUnidadEducativa,
+                        'datosBusqueda' => $datosBusqueda,
+                    ));
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                    return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca'));
+                }
+            }  else {
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca'));
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca'));
+        }
+        //return $this->redirect($this->generateUrl('login'));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que muestra el listado de bachilleres para el registro de su tramite diplomas humanistico alternativa
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumAlternativaRegistroListaAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        if ($request->isMethod('POST')) {
+            $form = $request->get('form');
+            if ($form) {
+                $sie = $form['sie'];
+                $gestion = $form['gestion'];
+
+                try {
+                    $usuarioRol = $this->session->get('roluser');
+                    $verTuicionUnidadEducativa = $this->verTuicionUnidadEducativa($id_usuario, $sie, $usuarioRol, 'TRAMITES');
+
+                    if ($verTuicionUnidadEducativa != ''){
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
+                        return $this->redirect($this->generateUrl('tramite_diploma_humanistico_alternativa_registro_busca '));
+                    }
+
+                    $entityAutorizacionUnidadEducativa = $this->getAutorizacionUnidadEducativa($sie);
+                    if(count($entityAutorizacionUnidadEducativa)<=0){
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información de la unidad educativa, intente nuevamente'));
+                    }
+
+                    $entityParticipantes = $this->getEstudiantesAlternativaHumanistica($sie,$gestion);
+
+                    $datosBusqueda = base64_encode(serialize($form));
+
+                    return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:dipHumAlternativaRegistroIndex.html.twig', array(
+                        'formBusqueda' => $this->creaFormBuscaUnidadEducativaHumanistica('tramite_diploma_humanistico_alternativa_registro_lista',$sie,$gestion)->createView(),
+                        'titulo' => 'Registro',
+                        'subtitulo' => 'Trámite - Diploma Humanístico Alternativa',
+                        'listaParticipante' => $entityParticipantes,
+                        'infoAutorizacionUnidadEducativa' => $entityAutorizacionUnidadEducativa,
+                        'datosBusqueda' => $datosBusqueda,
+                    ));
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                    return $this->redirect($this->generateUrl('tramite_diploma_humanistico_alternativa_registro_busca'));
+                }
+            }  else {
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                return $this->redirect($this->generateUrl('tramite_diploma_humanistico_alternativa_registro_busca'));
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_diploma_humanistico_alternativa_registro_busca'));
+        }
+        //return $this->redirect($this->generateUrl('login'));
     }
 
     //****************************************************************************************************
@@ -624,7 +738,7 @@ class TramiteController extends Controller {
               $token = $request->get('_token');
               if (!$this->isCsrfTokenValid('registrar', $token)) {
                   $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                  return $this->redirectToRoute('sie_tramite_diploma_humanistico_regular_registro_busca');
+                  return $this->redirectToRoute('tramite_diploma_humanistico_regular_registro_busca');
               }
 
               $messageCorrecto = "";
@@ -644,14 +758,8 @@ class TramiteController extends Controller {
                       $msg = array('0'=>true, '1'=>$participanteNombre);
                       $msgContenido = $this->getDipHumRegularValidacion($participanteId, $estudianteInscripcionId, $gestionId);
 
-                      // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
-                      $valCertTecTramiteEspNivel = $this->getCertTecTramiteEspecialidadNivelEstudiante($participanteId, $especialidadId, $nivelId);
-                      if(count($valCertTecTramiteEspNivel) > 0){
-                          $msgContenido = ($msgContenido=="") ? 'ya cuenta con el trámite '.$valCertTecTramiteEspNivel[0]['tramite_id'] : $msgContenido.', ya cuenta con el trámite '.$valCertTecTramiteEspNivel[0]['tramite_id'];
-                      }
-
                       if($msgContenido != ""){
-                          $msg = array('0'=>false, '1'=>$participante.' ('.$msgContenido.')');
+                          $msg = array('0'=>false, '1'=>$participanteNombre.' ('.$msgContenido.')');
                       }
 
                   } else {
@@ -684,11 +792,11 @@ class TramiteController extends Controller {
               $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
           }
 
-          $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
-          return $this->redirectToRoute('sie_tramite_certificado_tecnico_registro_lista', ['form' => $formBusqueda], 307);
+          $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId);
+          return $this->redirectToRoute('tramite_diploma_humanistico_regular_registro_lista', ['form' => $formBusqueda], 307);
       } else {
           $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-          return $this->redirect($this->generateUrl('sie_tramite_certificado_tecnico_registro_busca'));
+          return $this->redirect($this->generateUrl('tramite_diploma_humanistico_regular_registro_busca'));
       }
     }
 
@@ -729,7 +837,7 @@ class TramiteController extends Controller {
             return $response;
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_registro_lista', ['form' => $form], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_registro_lista', ['form' => $form], 307);
         }
     }
 
@@ -806,6 +914,22 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Funcion que despliega un listado de bachilleres registrados en educacion alternativa humanistica
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    private function getEstudiantesAlternativaHumanistica($institucionEducativaId, $gestionId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+            select * from get_estudiante_bachiller_humanistico_alternativa(".$institucionEducativaId."::INT,".$gestionId."::INT) as v
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Funcion que valida la acreditación del nivel autorizado en el centro de educacion especial tecnica
     // PARAMETROS: institucionEducativaId
     // AUTOR: RCANAVIRI
@@ -874,7 +998,7 @@ class TramiteController extends Controller {
           select ie.id, ie.institucioneducativa
           , sum(case iena.nivel_tipo_id when 11 then 1 else 0 end) as inicial
           , sum(case iena.nivel_tipo_id when 12 then 1 else 0 end) as primaria
-          , sum(case iena.nivel_tipo_id when 13 then 1 when 15 then 1 else 0 end) as secundaria
+          , sum(case iena.nivel_tipo_id when 13 then 1 when 202 then 1 else 0 end) as secundaria
           , string_agg(distinct nt.nivel, ', ') as niveles
           from institucioneducativa as ie
           left join institucioneducativa_nivel_autorizado as iena on iena.institucioneducativa_id = ie.id
@@ -1305,7 +1429,7 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Funcion que halla el historial de un estudiante de educación regular segun su inscripción
+    // Funcion que halla el historial de un estudiante de educación regular humanistica segun su inscripción
     // PARAMETROS: participanteId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
@@ -1393,15 +1517,21 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Funcion que halla el historial de un estudiante de educación alternativa segun su inscripción
+    // Funcion que halla el historial de un estudiante de educación alternativa humanistica segun su inscripción
     // PARAMETROS: participanteId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
     public function getDipHumAlternativaHistorial($participanteId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-            select e.id as estudiante_id, e.codigo_rude, e.paterno||' '||e.materno||' '||e.nombre as participante, sest.id as especialidad_id, sest.especialidad, sat.codigo as nivel_id, sat.acreditacion
-            , smp.horas_modulo, smt.modulo, en.nota_cuantitativa, ies.gestion_tipo_id as gestion, pt.periodo as periodo
+            select e.id as estudiante_id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id as especialidad_id, sest.especialidad
+            , sat.codigo as grado_tipo_id, sat.acreditacion as grado, ie.id as institucioneducativa_id, ie.institucioneducativa, pt.paralelo
+            , ei.estadomatricula_tipo_id, smt.id as asignatura_tipo_id, smt.modulo as asignatura, ies.gestion_tipo_id
+            , sast.id as area_tipo_id, sast.area_superior as area, tt.id as turno_tipo_id, tt.turno, pet.id as periodo_tipo_id, pet.periodo as periodo
+            , SUM(case en.nota_tipo_id when 23 then en.nota_cuantitativa else 0 end) as n1
+            , SUM(case en.nota_tipo_id when 24 then en.nota_cuantitativa else 0 end) as n2
+            , SUM(case en.nota_tipo_id when 25 then en.nota_cuantitativa else 0 end) as n3
+            , SUM(case en.nota_tipo_id when 26 then en.nota_cuantitativa else 0 end) as n4
             from superior_facultad_area_tipo as sfat
             inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
             inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
@@ -1413,13 +1543,21 @@ class TramiteController extends Controller {
             inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
             inner join (select * from estudiante where id = ".$participanteId.") as e on ei.estudiante_id=e.id
             inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
-            inner join superior_modulo_tipo smt ON smt.id = smp.superior_modulo_tipo_id
+            inner join superior_modulo_tipo as smt ON smt.id = smp.superior_modulo_tipo_id
+            inner join superior_area_saberes_tipo as sast on sast.id = smt.superior_area_saberes_tipo_id
             inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
-            inner join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
-            inner join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
-            inner join periodo_tipo as pt on pt.id = ies.periodo_tipo_id
-            where sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and en.nota_tipo_id::integer = 22
-            order by smt.id
+            inner join institucioneducativa as ie on ie.id = siea.institucioneducativa_id
+            inner join paralelo_tipo as pt on pt.id = iec.paralelo_tipo_id
+            inner join turno_tipo as tt on tt.id = iec.turno_tipo_id
+            inner join periodo_tipo as pet on pet.id = ies.periodo_tipo_id
+            left join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+            left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
+            where  sfat.codigo in (15) and sat.codigo in (2,3) and sest.codigo in (2)
+            and ei.estadomatricula_tipo_id in (4,5,55) and en.nota_tipo_id::integer in (23,24,25,26)
+            group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, ei.estadomatricula_tipo_id, sest.id, sest.especialidad
+            , sat.codigo, sat.acreditacion, ie.id, ie.institucioneducativa, tt.id, tt.turno, pt.paralelo, smt.id, smt.modulo
+            , ies.gestion_tipo_id, sast.id, sast.area_superior, pet.id, pet.periodo
+            order by ies.gestion_tipo_id desc, pet.id desc, sat.codigo, sast.id, smt.id
         ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -1491,8 +1629,8 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Funcion que lista los tramites en curso de un estudiante segun su especialidad y nivel
-    // PARAMETROS: estudianteInscripcionId, especialidadId, nivelId
+    // Funcion que lista los tramites en curso de un participante en técnica alternativa segun especialidad y nivel
+    // PARAMETROS: estudianteId, especialidadId, nivelId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
     public function getCertTecTramiteEspecialidadNivelEstudiante($estudianteId, $especialidadId, $nivelId) {
@@ -1521,6 +1659,120 @@ class TramiteController extends Controller {
             inner join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (6,7,8) and (case t.tramite_tipo when 6 then 1 when 7 then 2 when 8 then 3 else 0 end) = sat.codigo and t.esactivo = 't'
             where e.id = ".$estudianteId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4,5,55)
             order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, ies.periodo_tipo_id desc
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista los tramites en curso de un estudiante en educación regular humanisitca
+    // PARAMETROS: estudianteId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDipHumTramiteEstudiante($estudianteId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+          SELECT
+          dt.id as dependencia_tipo_id, dt.dependencia,
+          oct.id as orgcurricular_tipo_id,  oct.orgcurricula,
+          ie.le_juridicciongeografica_id, ie.id as institucioneducativa_id, ie.institucioneducativa,
+          iec.gestion_tipo_id, nt.id as nivel_tipo_id, nt.nivel, ct.id as ciclo_tipo_id,  ct.ciclo,
+          iec.grado_tipo_id, pt.id as paralelo_tipo_id, pt.paralelo, tt.id as turno_tipo_id, tt.turno,
+          pet.id as periodo_tipo_id, pet.periodo,
+          e.id as estudiante_id, e.codigo_rude, e.carnet_identidad as carnet, e.complemento,
+          cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad,
+          e.pasaporte, e.paterno,  e.materno, e.nombre,
+          gt.id as genero_tipo_id, gt.genero, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento,  e.localidad_nac,
+          emt.id as estadomatricula_tipo_id, emt.estadomatricula, ei.id as estudiante_inscripcion_id, e.segip_id,
+          case pat.id when 1 then lt2.lugar when 0 then '' else pat.pais end as lugar_nacimiento,
+          CASE
+          WHEN iec.nivel_tipo_id = 13 THEN
+          'Regular Humanística'
+          WHEN iec.nivel_tipo_id = 15 THEN
+          'Alternativa Humanística'
+          WHEN iec.nivel_tipo_id > 17 THEN
+          'Alternativa Técnica'
+          END AS subsistema,
+          e.lugar_prov_nac_tipo_id as lugar_nacimiento_id, lt2.codigo as depto_nacimiento_id, lt2.lugar as depto_nacimiento,
+          t.id as tramite_id--, d.id as documento_id, d.documento_serie_id as documento_serie_id
+          FROM estudiante as e
+          INNER JOIN estudiante_inscripcion as ei on ei.estudiante_id = e.id
+          INNER JOIN institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+          INNER JOIN institucioneducativa as ie on ie.id = iec.institucioneducativa_id
+          INNER JOIN estadomatricula_tipo as emt on emt.id = ei.estadomatricula_tipo_id
+          INNER JOIN dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+          INNER JOIN orgcurricular_tipo as oct on oct.id = ie.orgcurricular_tipo_id
+          INNER JOIN nivel_tipo as nt on nt.id = iec.nivel_tipo_id
+          INNER JOIN ciclo_tipo as ct on ct.id = iec.ciclo_tipo_id
+          INNER JOIN paralelo_tipo as pt on pt.id = iec.paralelo_tipo_id
+          INNER JOIN turno_tipo as tt on tt.id = iec.turno_tipo_id
+          INNER JOIN periodo_tipo as pet on pet.id = iec.periodo_tipo_id
+          INNER JOIN genero_tipo as gt on gt.id = e.genero_tipo_id
+          LEFT JOIN lugar_tipo as lt1 on lt1.id = e.lugar_prov_nac_tipo_id
+          LEFT JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+          left join pais_tipo as pat on pat.id = e.pais_tipo_id
+          inner join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (1) and t.esactivo = 't'
+          --left join documento as d on d.tramite_id = t.id and documento_tipo_id in (1,9) and d.documento_estado_id = 1
+          WHERE e.id = ".$estudianteId." -- and ei.estadomatricula_tipo_id in (4,5,55)
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista los documentos (Diplomas de Bachiller Humanistico) vigente de un estudiante en educación regular humanisitca
+    // PARAMETROS: estudianteId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDipHumDocumentoEstudiante($estudianteId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+          SELECT
+          dt.id as dependencia_tipo_id, dt.dependencia,
+          oct.id as orgcurricular_tipo_id,  oct.orgcurricula,
+          ie.le_juridicciongeografica_id, ie.id as institucioneducativa_id, ie.institucioneducativa,
+          iec.gestion_tipo_id, nt.id as nivel_tipo_id, nt.nivel, ct.id as ciclo_tipo_id,  ct.ciclo,
+          iec.grado_tipo_id, pt.id as paralelo_tipo_id, pt.paralelo, tt.id as turno_tipo_id, tt.turno,
+          pet.id as periodo_tipo_id, pet.periodo,
+          e.id as estudiante_id, e.codigo_rude, e.carnet_identidad as carnet, e.complemento,
+          cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad,
+          e.pasaporte, e.paterno,  e.materno, e.nombre,
+          gt.id as genero_tipo_id, gt.genero, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento,  e.localidad_nac,
+          emt.id as estadomatricula_tipo_id, emt.estadomatricula, ei.id as estudiante_inscripcion_id, e.segip_id,
+          case pat.id when 1 then lt2.lugar when 0 then '' else pat.pais end as lugar_nacimiento,
+          CASE
+          WHEN iec.nivel_tipo_id = 13 THEN
+          'Regular Humanística'
+          WHEN iec.nivel_tipo_id = 15 THEN
+          'Alternativa Humanística'
+          WHEN iec.nivel_tipo_id > 17 THEN
+          'Alternativa Técnica'
+          END AS subsistema,
+          e.lugar_prov_nac_tipo_id as lugar_nacimiento_id, lt2.codigo as depto_nacimiento_id, lt2.lugar as depto_nacimiento,
+          t.id as tramite_id, d.id as documento_id, d.documento_serie_id as documento_serie_id
+          FROM estudiante as e
+          INNER JOIN estudiante_inscripcion as ei on ei.estudiante_id = e.id
+          INNER JOIN institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
+          INNER JOIN institucioneducativa as ie on ie.id = iec.institucioneducativa_id
+          INNER JOIN estadomatricula_tipo as emt on emt.id = ei.estadomatricula_tipo_id
+          INNER JOIN dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+          INNER JOIN orgcurricular_tipo as oct on oct.id = ie.orgcurricular_tipo_id
+          INNER JOIN nivel_tipo as nt on nt.id = iec.nivel_tipo_id
+          INNER JOIN ciclo_tipo as ct on ct.id = iec.ciclo_tipo_id
+          INNER JOIN paralelo_tipo as pt on pt.id = iec.paralelo_tipo_id
+          INNER JOIN turno_tipo as tt on tt.id = iec.turno_tipo_id
+          INNER JOIN periodo_tipo as pet on pet.id = iec.periodo_tipo_id
+          INNER JOIN genero_tipo as gt on gt.id = e.genero_tipo_id
+          LEFT JOIN lugar_tipo as lt1 on lt1.id = e.lugar_prov_nac_tipo_id
+          LEFT JOIN lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+          left join pais_tipo as pat on pat.id = e.pais_tipo_id
+          inner join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (1) and t.esactivo = 't'
+          inner join documento as d on d.tramite_id = t.id and documento_tipo_id in (1,9) and d.documento_estado_id = 1
+          WHERE e.id = ".$estudianteId." -- and ei.estadomatricula_tipo_id in (4,5,55)
         ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -1684,91 +1936,22 @@ class TramiteController extends Controller {
         $gestionServidor= new \DateTime();
         $gestionActual = $gestionServidor->format('Y');
 
-        // VALIDACION DE asignaturas con notas de aprovacion
-        $objCalificacionesObservados = $this->getDipHumRegularCalificacionObsEstudiante($participanteId, $especialidadId, $nivelId);
+        // VALIDACION DE ASIGNATURAS CON NOTAS COMPLETAS (4 BIMESTRAS O 3 TRIMESTRES EN GESTION ANTERIORES  Y 1ER BIMESTRE EN GESTION ACTUAL )
+        $objCalificacionesObservados = $this->getDipHumRegularCalificacionObsEstudiante($participanteId);
         if(count($objCalificacionesObservados)>0){
-            $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en ".$nivel.": ".$objCalificacionesObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
+            $msgContenido = ($msgContenido=="") ? "cuenta con asignaturas sin calificaciones en: ".$objCalificacionesObservados[0]['asignaturas'] : $msgContenido.", cuenta con asignaturas sin calificaciones en: ".$objCalificacionesObservados[0]['asignaturas'];
         }
 
-        if($gestionId==$gestionActual){
+        // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
+        $valTramiteEstudiante = $this->getDipHumTramiteEstudiante($participanteId);
+        if(count($valTramiteEstudiante) > 0){
+            $msgContenido = ($msgContenido=="") ? 'ya cuenta con el trámite '.$valTramiteEstudiante[0]['tramite_id'] : $msgContenido.', ya cuenta con el trámite '.$valTramiteEstudiante[0]['tramite_id'];
         }
 
-        $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, $nivelId);
-        if(count($objModulosObservados)>0){
-            $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en ".$nivel.": ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-        }
-
-        // VALIDACION DE CARGA HORARIA POR ESTUDIANTE SEGUN MODULOS APROBADOS (MAYORES A 36 O 51)
-        $valCertTecCargaHoraria = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, $nivelId);
-        $cargaHoraria = 0;
-        if(!$valCertTecCargaHoraria[0]){
-            $msgContenido = ($msgContenido=="") ? $valCertTecCargaHoraria[1] : $msgContenido.', '.$valCertTecCargaHoraria[1];
-        } else {
-            $cargaHoraria = $valCertTecCargaHoraria[1];
-        }
-
-        // VALIDACION DE UNA CERTIFICACION ANTERIOR PARA CONTINUAR CON EL SIGUIENTE NIVEL
-        // TECNICO MEDIO
-        if($nivelId == 3){
-            $valCertTecCargaHorariaAuxiliar = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 2);
-            // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 2);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel auxiliar: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
-            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
-            // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
-            $cargaHorariaAuxiliar = 0;
-            $cargaHorariaBasico = 0;
-            if(!$valCertTecCargaHorariaAuxiliar[0]){
-                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaAuxiliar[1] : $msgContenido.', '.$valCertTecCargaHorariaAuxiliar[1];
-            } else {
-                $cargaHorariaAuxiliar = $valCertTecCargaHorariaAuxiliar[1];
-            }
-            if(!$valCertTecCargaHorariaBasico[0]){
-                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaBasico[1] : $msgContenido.', '.$valCertTecCargaHorariaBasico[1];
-            }  else {
-                $cargaHorariaBasico = $valCertTecCargaHorariaBasico[1];
-            }
-
-            $cargaHorariaTotal = $cargaHoraria + $cargaHorariaAuxiliar + $cargaHorariaBasico;
-            $valCertTecCargaHorarianivel = $this->certTecCargaHorariaNivel($nivelId,$cargaHorariaTotal);
-            if ($valCertTecCargaHorarianivel == ''){
-                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorarianivel : $msgContenido.', '.$valCertTecCargaHorarianivel;
-            }
-        }
-
-        // TECNICO AUXILIAR
-        if($nivelId == 2){
-            $valCertTecCargaHorariaBasico = $this->getCertTecCargaHorariaEstudiante($participanteId, $especialidadId, 1);
-            // VALIDACION DE MODULOS REPETIDOS POR ESTUDIANTE SEGUN MODULOS APROBADOS (36 O 51)
-            $objModulosObservados = $this->getCertTecModuloObsEstudiante($participanteId, $especialidadId, 1);
-            if(count($objModulosObservados)>0){
-                $msgContenido = ($msgContenido=="") ? "cuenta con módulos duplicados en nivel básico: ".$objModulosObservados[0]['modulos'] : $msgContenido.", cuenta con módulos duplicados: ".$objModulosObservados[0]['modulos'];
-            }
-            $cargaHorariaBasico = 0;
-            if(!$valCertTecCargaHorariaBasico[0]){
-                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorariaBasico[1] : $msgContenido.', '.$valCertTecCargaHorariaBasico[1];
-            }  else {
-                $cargaHorariaBasico = $valCertTecCargaHorariaBasico[1];
-            }
-
-            $cargaHorariaTotal = $cargaHoraria + $cargaHorariaBasico;
-
-            $valCertTecCargaHorarianivel = $this->certTecCargaHorariaNivel($nivelId,$cargaHorariaTotal);
-            if ($valCertTecCargaHorarianivel == ''){
-                $msgContenido = ($msgContenido=="") ? $valCertTecCargaHorarianivel : $msgContenido.', '.$valCertTecCargaHorarianivel;
-            }
-        }
-
-        // VALIDACION DE SOLO UN TIPO DE CERTIFICACION POR ESTUDIANTE (RUDE)
-        $valCertTecDocumentoEspNivel = $this->getCertTecDocumentoEspecialidadNivelEstudiante($participanteId, $especialidadId, $nivelId, $gestionId);
-        if(count($valCertTecDocumentoEspNivel) > 0){
-            $msgContenido = ($msgContenido=="") ? 'ya cuenta con la '.$valCertTecDocumentoEspNivel[0]['documento_tipo'] : $msgContenido.', ya cuenta con la '.$valCertTecDocumentoEspNivel[0]['documento_tipo'];
+        // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
+        $valDocumentoEstudiante = $this->getDipHumDocumentoEstudiante($participanteId);
+        if(count($valDocumentoEstudiante) > 0){
+            $msgContenido = ($msgContenido=="") ? 'ya cuenta con el Diploma de Bachiller Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'] : $msgContenido.', ya cuenta con el Diploma de Bachiller Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'];
         }
 
         return $msgContenido;
@@ -1828,6 +2011,8 @@ class TramiteController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
 
@@ -1835,11 +2020,11 @@ class TramiteController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         return $this->render($this->session->get('pathSystem') . ':Tramite:reactivaIndex.html.twig', array(
-            'formBusqueda' => $documentoController->creaFormAnulaDocumentoSerie('sie_tramite_reactiva_lista','','')->createView(),
+            'formBusqueda' => $documentoController->creaFormAnulaDocumentoSerie('tramite_reactiva_lista','','')->createView(),
             'titulo' => 'Reactivar',
             'subtitulo' => 'Trámite',
         ));
@@ -1902,14 +2087,14 @@ class TramiteController extends Controller {
 
                     if($msgContenido == ""){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido));
-                        return $this->redirect($this->generateUrl('sie_tramite_reactiva_busca'));
+                        return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
                     }
 
                     $entityDocumento = $documentoController->getDocumentoSerieEstado($serie,1);
 
                     if(count($entityDocumento)<=0){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El documento con número de serie '));
-                        return $this->redirect($this->generateUrl('sie_tramite_reactiva_busca'));
+                        return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
                     }
 
                     $tramiteProcesoController = new tramiteProcesoController();
@@ -1921,7 +2106,7 @@ class TramiteController extends Controller {
 
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
-                        'formBusqueda' => $documentoController->creaFormAnulaDocumentoSerie('sie_tramite_reactiva_lista','','')->createView(),
+                        'formBusqueda' => $documentoController->creaFormAnulaDocumentoSerie('tramite_reactiva_lista','','')->createView(),
                         'titulo' => 'Seguimiento',
                         'subtitulo' => 'Trámite',
                         'msgReactivaTramite' => $valUltimoProcesoFlujoTramite,
@@ -1931,15 +2116,15 @@ class TramiteController extends Controller {
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_reactiva_busca'));
+                    return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_reactiva_busca'));
+                return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_reactiva_busca'));
+            return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
         }
     }
 
@@ -1978,7 +2163,7 @@ class TramiteController extends Controller {
 
                     if(count($entityDocumento)<=0){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Documento no encontrado, intente nuevamente'));
-                        return $this->redirect($this->generateUrl('sie_tramite_reactiva_busca'));
+                        return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
                     }
 
                     $tramiteProcesoController = new tramiteProcesoController();
@@ -2001,19 +2186,19 @@ class TramiteController extends Controller {
 
                     $formBusqueda = array('serie'=>$serie,'obs'=>$obs);
                     //return $this->redirectToRoute('sie_tramite_reactiva_lista', ['form' => $formBusqueda], 307);
-                    return $this->redirect($this->generateUrl('sie_tramite_reactiva_busca'));
+                    return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
 
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_reactiva_busca'));
+                    return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
                 }
             } else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_reactiva_busca'));
+                return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_reactiva_busca'));
+            return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
         }
     }
 
@@ -2251,11 +2436,118 @@ class TramiteController extends Controller {
         //dump($listaHistorial);
         //die;
 
-
-
         $gestion = $gestionActual->format('Y');
 
         return $this->render($this->session->get('pathSystem') . ':Tramite:estudianteRegularHistorial.html.twig', array(
+            'titulo' => 'Registro',
+            'subtitulo' => 'Trámite',
+            'listaHistorial' => $listaHistorial,
+            ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que genera el historial academico de un participante de educacion alternativa en funcion a su inscripcion
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumAlternativaRegistroInscripcionHistorialAction(Request $request) {
+
+       /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $estudianteId = $request->get('inscripcion');
+        $especialidadId = $request->get('especialidad');
+        $nivelId = $request->get('nivel');
+
+        $entityCargaHorariaInscripcion = $this->getDipHumAlternativaHistorial(base64_decode($estudianteId));
+
+        $gestionId = 0;
+        $periodoId = 0;
+        $i = 0;
+        $j = 0;
+        foreach ($entityCargaHorariaInscripcion as $registro)
+        {
+          if ($gestionId != $registro['gestion_tipo_id'] or $periodoId != $registro['periodo_tipo_id']) {
+            $gestionId = $registro['gestion_tipo_id'];
+            $periodoId = $registro['periodo_tipo_id'];
+            $i = 0;
+          }
+          if(($registro['gestion_tipo_id'] > 2015)){
+            $listaHistorial[$registro['gestion_tipo_id']][$registro['periodo_tipo_id']][$i] = array(
+                                                                      'codigo_rude'=>$registro['codigo_rude'],
+                                                                      'paterno'=>$registro['paterno'],
+                                                                      'materno'=>$registro['materno'],
+                                                                      'nombre'=>$registro['nombre'],
+                                                                      'institucioneducativa_id'=>$registro['institucioneducativa_id'],
+                                                                      'institucioneducativa'=>$registro['institucioneducativa'],
+                                                                      'turno'=>$registro['turno'],
+                                                                      'grado_tipo_id'=>$registro['grado_tipo_id'],
+                                                                      'grado'=>$registro['grado'],
+                                                                      'paralelo'=>$registro['paralelo'],
+                                                                      'periodo_tipo_id'=>$registro['periodo_tipo_id'],
+                                                                      'periodo'=>$registro['periodo'],
+                                                                      'gestion_tipo_id'=>$registro['gestion_tipo_id'],
+                                                                      'estadomatricula_tipo_id'=>$registro['estadomatricula_tipo_id'],
+                                                                      'asignatura_tipo_id'=>$registro['asignatura_tipo_id'],
+                                                                      'asignatura'=>$registro['asignatura'],
+                                                                      'area_tipo_id'=>$registro['area_tipo_id'],
+                                                                      'area'=>$registro['area'],
+                                                                      'calendarioId'=>1,
+                                                                      'calendario'=>'Unica',
+                                                                      'n1'=>null,
+                                                                      'n2'=>null,
+                                                                      'n3'=>null,
+                                                                      'n4'=>$registro['n4']
+                                                                    );
+          } else {
+            $listaHistorial[$registro['gestion_tipo_id']][$registro['periodo_tipo_id']][$i] = array(
+                                                                      'codigo_rude'=>$registro['codigo_rude'],
+                                                                      'paterno'=>$registro['paterno'],
+                                                                      'materno'=>$registro['materno'],
+                                                                      'nombre'=>$registro['nombre'],
+                                                                      'institucioneducativa_id'=>$registro['institucioneducativa_id'],
+                                                                      'institucioneducativa'=>$registro['institucioneducativa'],
+                                                                      'turno'=>$registro['turno'],
+                                                                      'grado_tipo_id'=>$registro['grado_tipo_id'],
+                                                                      'grado'=>$registro['grado'],
+                                                                      'paralelo'=>$registro['paralelo'],
+                                                                      'periodo_tipo_id'=>$registro['periodo_tipo_id'],
+                                                                      'periodo'=>$registro['periodo'],
+                                                                      'gestion_tipo_id'=>$registro['gestion_tipo_id'],
+                                                                      'estadomatricula_tipo_id'=>$registro['estadomatricula_tipo_id'],
+                                                                      'asignatura_tipo_id'=>$registro['asignatura_tipo_id'],
+                                                                      'asignatura'=>$registro['asignatura'],
+                                                                      'area_tipo_id'=>$registro['area_tipo_id'],
+                                                                      'area'=>$registro['area'],
+                                                                      'calendarioId'=>2,
+                                                                      'calendario'=>'Criterio',
+                                                                      'n1'=>$registro['n1'],
+                                                                      'n2'=>$registro['n2'],
+                                                                      'n3'=>$registro['n3'],
+                                                                      'n4'=>$registro['n4']
+                                                                    );
+          }
+
+          $i++;
+          // $listaHistorial[$i] = $entidadEspecialidadTipo['grado_tipo_id'];
+        }
+        //dump($listaHistorial);
+        //die;
+
+        return $this->render($this->session->get('pathSystem') . ':Tramite:estudianteAlternativaHistorial.html.twig', array(
             'titulo' => 'Registro',
             'subtitulo' => 'Trámite',
             'listaHistorial' => $listaHistorial,

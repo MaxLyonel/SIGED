@@ -15,8 +15,8 @@
     </style>
 {% endblock %}
 
-{% block contentoption %}  
-    {% block contentbuscador %}  
+{% block contentoption %}
+    {% block contentbuscador %}
         <div class="row">
             <div class="col-lg-12">
                 <div class="page-title">
@@ -77,15 +77,15 @@
                     </div>
 
                 </div>
-            </div>   
+            </div>
         </div>
 
-    {% endblock %} 
-    {% block contentregistros %} 
+    {% endblock %}
+    {% block contentregistros %}
         {% if estudiantes is defined  %}
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="row"> 
-                    <div class="col-lg-12 col-md-12">                
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
                         <div class="portlet portlet-default">
                             <div class="portlet-heading">
                                 {#                                <div class="portlet-widgets">#}
@@ -101,12 +101,12 @@
                                         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="margin-top:5px;">
 
                                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top:5px;">
-                                                <a class="btn btn-warning glyphicon glyphicon-print"  href="{{ path('sie_tramite_imprimir_gestion_tm', {'gestion':gestion, 'departamento':departamento} )}}">
+                                                <a class="btn btn-warning glyphicon glyphicon-print"  href="{{ path('tramite_imprimir_gestion_tm', {'gestion':gestion, 'departamento':departamento} )}}">
                                                     Exportar PDF
                                                 </a>
                                             </div>
                                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top:5px;">
-                                                <a class="btn btn-success glyphicon glyphicon-print"  href="{{ path('sie_tramite_imprimir_gestion_tm_excel', {'gestion':gestion, 'departamento':departamento} )}}">
+                                                <a class="btn btn-success glyphicon glyphicon-print"  href="{{ path('tramite_imprimir_gestion_tm_excel', {'gestion':gestion, 'departamento':departamento} )}}">
                                                     Exportar Excel
                                                 </a>
                                             </div>
@@ -125,7 +125,7 @@
                                 {#                                <div class="clearfix"></div>#}
                             </div>
                             <div class="portlet-body">
-                                <div id="no-more-tables"> 
+                                <div id="no-more-tables">
                                     <table id="myTable" class="table table-bordered table-hover cf dataTable tabla_dis">
                                         <thead class="">
                                             <tr class="">
@@ -157,11 +157,11 @@
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
-                                    </table>                                                                                      
-                                </div>  
+                                    </table>
+                                </div>
                             </div>
-                        </div>           
-                    </div>                       
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endif %}
@@ -263,7 +263,7 @@
                     }
                     peticion1 = $.ajax({
                         type: 'POST',
-                        url: '{{ path('sie_tramite_listar_especialidad')}}',
+                        url: '{{ path('tramite_listar_especialidad')}}',
                         data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar},
                         beforeSend: function () {
                             $("#form_especialidad").attr('disabled', 'true');
@@ -297,7 +297,7 @@
                 }
                 peticion2 = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_tramite_listar_nivel')}}',
+                    url: '{{ path('tramite_listar_nivel')}}',
                     data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar, 'especialidad': esp_listar},
                     beforeSend: function () {
                         $('#form_nivel').attr('disabled', 'true');

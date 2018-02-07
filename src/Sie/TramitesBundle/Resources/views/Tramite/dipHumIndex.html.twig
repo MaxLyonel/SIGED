@@ -9,7 +9,7 @@
     <ol class="breadcrumb">
         <li>
             <i class="fa fa-home"></i>
-            <a href="{{path('sie_tramites_homepage')}}">Perfil</a>
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
             <i class="fa fa-angle-right"></i>
         </li>
         {% block contentSearchBread %}
@@ -309,10 +309,34 @@
             }
         }
 
-        function participanteHistorial(inscripcion) {
+        function participanteRegularHistorial(inscripcion) {
             peticion = $.ajax({
                 type: 'POST',
-                url: '{{ path('sie_tramite_diploma_humanistico_regular_registro_inscripcion_historial') }}',
+                url: '{{ path('tramite_diploma_humanistico_regular_registro_inscripcion_historial') }}',
+                data: {'inscripcion': inscripcion},
+                beforeSend: function () {
+                    $("#participanteHistorial").empty();
+                    $("#participanteHistorial").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#participanteHistorial').empty();
+                    $("#participanteHistorial").append(data);
+                },
+                error: function(xhr) {
+                    $("#participanteHistorial").empty();
+                    $("#participanteHistorial").append('<div style="text-align:center">ERROR</div>');
+                },
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                $("#participanteHistorial").empty();
+                $("#participanteHistorial").append('<div style="text-align:center">ERROR FATAL</div>');
+            });
+        }
+
+        function participanteAlternativaHistorial(inscripcion) {
+            peticion = $.ajax({
+                type: 'POST',
+                url: '{{ path('tramite_diploma_humanistico_alternativa_registro_inscripcion_historial') }}',
                 data: {'inscripcion': inscripcion},
                 beforeSend: function () {
                     $("#participanteHistorial").empty();

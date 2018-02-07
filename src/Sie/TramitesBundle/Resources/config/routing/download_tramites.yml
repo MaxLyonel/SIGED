@@ -1,23 +1,23 @@
 tramite_download_ddjjone_web:
     path:    /ddjjone/{rude}/{gestion}/{sie}/{esp}/{nivel}
     defaults: { _controller: SieTramitesBundle:DownloadTramites:ddjjone}
-    
+
 tramite_download_ddjjgroup_web:
     path:   /ddjjgroup/{sie}/{gestion}/{especialidad}/{nivel}
-    defaults: { _controller: SieTramitesBundle:DownloadTramites:ddjjgroup}    
+    defaults: { _controller: SieTramitesBundle:DownloadTramites:ddjjgroup}
 
 tramite_tecnico_medio_index:
     path:     /buscar/tecnico/medio/
-    defaults: { _controller: SieTramitesBundle:DownloadTramites:listadoTM}  
-    
+    defaults: { _controller: SieTramitesBundle:DownloadTramites:listadoTM}
+
 sie_tramite_buscar_gestion_tm:
     path:     /listado/tecnico/medio/
-    defaults: { _controller: SieTramitesBundle:DownloadTramites:listaEstudiantesTecnicoMedio}    
+    defaults: { _controller: SieTramitesBundle:DownloadTramites:listaEstudiantesTecnicoMedio}
 
 sie_tramite_imprimir_gestion_tm:
     path:     /imprimir/tecnico/medio/{gestion}/{departamento}
-    defaults: { _controller: SieTramitesBundle:DownloadTramites:imprimirListaTM}    
+    defaults: { _controller: SieTramitesBundle:DownloadTramites:imprimirListaTM}
 
 sie_tramite_imprimir_gestion_tm_excel:
     path:     /imprimir/tecnico/medio/excel/{gestion}/{departamento}
-    defaults: { _controller: SieTramitesBundle:DownloadTramites:imprimirListaExcelTM}    
+    defaults: { _controller: SieTramitesBundle:DownloadTramites:imprimirListaExcelTM}

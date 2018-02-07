@@ -2,9 +2,9 @@
 
 {% block contenttitulo %}{{ titulo }}{% endblock %}
 {% block contenttitulosmall %}{{ subtitulo }}{% endblock %}
-{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Gestiones Anteriores</li>{% endblock %}  
+{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Gestiones Anteriores</li>{% endblock %}
 
-{% block contentoption %} 
+{% block contentoption %}
     <div class="row">
         <div class="col-lg-12">
             <div class="page-content">
@@ -20,7 +20,7 @@
                     </div>
                 {% endfor %}
             </div>
-        </div>        
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -53,11 +53,11 @@
                             </div>
                             <div class="col-lg-2 col-md-7 col-sm-9 col-xs-12">
                                 {{ form_widget(form.sies) }}
-                            </div>                                
+                            </div>
                             <div class="col-lg-4 col-md-7 col-sm-9 col-xs-12">
                                 {{ form_widget(form.ue) }}
                                 <input type="hidden" name="nombre_ue" id="ue" value=""/>
-                            </div>                                
+                            </div>
                             <div class="col-lg-3 col-md-7 col-sm-9 col-xs-12">
                                 {{ form_widget(form.gestiones,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
                             </div>
@@ -139,7 +139,7 @@
 
             peticion = $.ajax({
                 type: 'POST',
-                url: '{{ path('sie_tramite_certificacion_homologacion_verifica_estudiante')}}',
+                url: '{{ path('tramite_certificacion_homologacion_verifica_estudiante')}}',
                 data: {'rudeal': rudeal},
                 beforeSend: function () {
                     $("#form_nombre_student").attr('disabled', 'true');
@@ -185,7 +185,7 @@
 
             peticion1 = $.ajax({
                 type: 'POST',
-                url: '{{ path('sie_tramite_certificacion_homologacion_lista_especialidad')}}',
+                url: '{{ path('tramite_certificacion_homologacion_lista_especialidad')}}',
                 data: {'id': id},
                 beforeSend: function () {
                     $("#form_especialidad").attr('disabled', 'true');
@@ -214,7 +214,7 @@
 
             peticion2 = $.ajax({
                 type: 'POST',
-                url: '{{ path('sie_tramite_certificacion_homologacion_lista_cea')}}',
+                url: '{{ path('tramite_certificacion_homologacion_lista_cea')}}',
                 data: {'sies': sie},
                 beforeSend: function () {
                     $("#form_ue").attr('disabled', 'true');
