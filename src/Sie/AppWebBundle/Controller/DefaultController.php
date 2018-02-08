@@ -220,7 +220,7 @@ class DefaultController extends Controller {
                 $sysbutton = true;
                 $layout = 'layoutDgesttla.html.twig';
                 $this->session->set('pathSystem', "SieDgesttlaBundle");
-                break;    
+                break;
             case '172.20.196.9:8012':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';
@@ -491,7 +491,7 @@ class DefaultController extends Controller {
                             return $this->redirect($this->generateUrl('sie_juegos_homepage'));
                         }
                         if ($this->session->get('pathSystem') === 'SieTramitesBundle') {
-                            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+                            return $this->redirect($this->generateUrl('tramite_homepage'));
                         }
                         //review if the system is Reportes
                         if ($this->session->get('sysname') === 'REPORTES') {
@@ -542,12 +542,12 @@ class DefaultController extends Controller {
                                 //$this->session->getFlashBag()->add('info', 'Datos Correctos...');
                                 $this->session->set('roluser', $aRoles[0]['id']);
                                 $this->session->set('roluserlugarid', $aRoles[0]['rollugarid']);
-                                return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+                                return $this->redirect($this->generateUrl('tramite_homepage'));
                             }
                             $this->myarrayRoles = $aRoles;
                             if (sizeof($aRoles) > 1) {
                                 $formUserRol = $this->createFormBuilder($user)
-                                        ->setAction($this->generateUrl('sie_tramites_homepage'))
+                                        ->setAction($this->generateUrl('tramite_homepage'))
                                         ->add('username', 'text', array('mapped' => true, 'disabled' => true, 'data' => $this->session->get('userName')))
                                         ->add('name', 'text', array('mapped' => false, 'disabled' => true, 'data' => $aPersona->getNombre()))
                                         ->add('lastName', 'text', array('mapped' => false, 'disabled' => true, 'data' => $aPersona->getPaterno()))
