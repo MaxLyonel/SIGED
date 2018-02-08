@@ -330,11 +330,20 @@ class LocalEducativoController extends Controller {
 
 
         $dis = $em->getRepository('SieAppWebBundle:DistritoTipo')->findBy(array('departamentoTipo' =>  $entity->getDistritoTipo()->getDepartamentoTipo()->getId()));
+        $query = $em->createQuery(
+            'SELECT d
+            FROM SieAppWebBundle:DistritoTipo d
+            WHERE  d.departamentoTipo = :departamento AND d.id NOT IN (:cabeceras)
+            ORDER BY d.id')
+            ->setParameter('departamento', $entity->getDistritoTipo()->getDepartamentoTipo()->getId())
+            ->setParameter('cabeceras', array(1000,2000,3000,4000,5000,6000,7000,8000,9000));
+
+        $dis = $query->getResult();
+
         $distrito = array();
         foreach ($dis as $d) {
         	$distrito[$d->getid()] = $d->getDistrito();
         }
-
 
         $form = $this->createFormBuilder()
         ->setAction($this->generateUrl('le_update'))

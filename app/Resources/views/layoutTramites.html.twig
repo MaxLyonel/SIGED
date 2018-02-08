@@ -139,7 +139,7 @@
                     <!-- Start navbar header -->
                     <div class="navbar-header">
                         <!-- Start brand -->
-                        <a class="navbar-brand" href="{{path('sie_tramites_homepage')}}">
+                        <a class="navbar-brand" href="{{path('tramite_homepage')}}">
                             Certificaciones
                         </a>
                         <!--/ End brand -->
@@ -178,7 +178,7 @@
                             <!-- Start form search -->
                             <li class="navbar-search">
                                 <a href="form-element.html#" class="trigger-search"><i class="fa fa-search"></i></a>
-                                <form class="navbar-form" name="form" method="POST" action="{{ path('sie_tramite_seguimiento_documento_lista') }}">
+                                <form class="navbar-form" name="form" method="POST" action="{{ path('tramite_seguimiento_documento_lista') }}">
                                     <div class="form-group has-feedback">
                                         <input type="text" id="serie" name="serie" required="required" class="form-control typeahead rounded" placeholder="buscar por documento">
                                         <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
@@ -249,7 +249,7 @@
                 <!-- Start left navigation - profile shortcut -->
                 <div class="sidebar-content">
                     <div class="media">
-                        <a class="pull-left has-notif avatar" href="{{path('sie_tramites_homepage')}}">
+                        <a class="pull-left has-notif avatar" href="{{path('tramite_homepage')}}">
                             <img src="{{asset('juegos/img/avatar/50/1.png')}}" alt="admin">
                             <i class="online"></i>
                         </a>
@@ -305,7 +305,7 @@
                                     <span class="arrow"></span>
                                 </a>
                                 <ul>
-                                    <li><a href="{{ path('sie_tramite_certificacion_homologacion') }}">Gestiones anteriores</a></li>
+                                    <li><a href="{{ path('tramite_certificacion_homologacion_index') }}">Gestiones anteriores</a></li>
                                     {% if (rol16 or rol8) and 1 == 2%}
                                         <li><a href="#">Generar número de serie</a></li>
                                     {% endif %}
@@ -322,25 +322,25 @@
                                 </a>
                                 <ul>
                                     {% if rol13 or rol8 %}
-                                        <li class=" "><a href="{{path('sie_tramite_certificado_tecnico_registro_busca')}}">Registro</a></li>
+                                        <li class=" "><a href="{{path('tramite_certificado_tecnico_registro_busca')}}">Registro</a></li>
                                     {% endif %}
                                     {% if (rol14 or rol8) and 1 == 2 %}
-                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_recepcion_busca')}}">Recepción</a></li>
+                                        <li><a href="{{path('tramite_detalle_certificado_tecnico_recepcion_busca')}}">Recepción</a></li>
                                     {% endif %}
                                     {% if rol15 or rol8 %}
-                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_autorizacion_busca')}}">Autorización</a></li>
+                                        <li><a href="{{path('tramite_detalle_certificado_tecnico_autorizacion_busca')}}">Autorización</a></li>
                                     {% endif %}
                                     {% if rol16 or rol8 %}
-                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_impresion_busca')}}">Impresión</a></li>
+                                        <li><a href="{{path('tramite_detalle_certificado_tecnico_impresion_busca')}}">Impresión</a></li>
                                     {% endif %}
                                     {% if (rol14 or rol8) and 1 == 2 %}
-                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_envio_busca')}}">Envío</a></li>
+                                        <li><a href="{{path('tramite_detalle_certificado_tecnico_envio_busca')}}">Envío</a></li>
                                     {% endif %}
                                     {% if rol13 or rol8 %}
-                                        <li><a href="{{path('sie_tramite_detalle_certificado_tecnico_entrega_busca')}}">Entrega</a></li>
+                                        <li><a href="{{path('tramite_detalle_certificado_tecnico_entrega_busca')}}">Entrega</a></li>
                                     {% endif %}
                                     {% if rol16 or rol8 %}
-                                        <li><a href="{{path('sie_tramite_reactiva_busca')}}">Reactivar</a></li>
+                                        <li><a href="{{path('tramite_reactiva_busca')}}">Reactivar</a></li>
                                     {% endif %}
                                     {% if rol17 or rol8 %}
                                         <!--<li><a href="#">Legalización</a></li>-->
@@ -370,9 +370,9 @@
                                     <span class="arrow"></span>
                                 </a>
                                 <ul>
-                                    <li><a href="{{path('sie_tramite_seguimiento_busca')}}">Busqueda por trámite</a></li>
-                                    <li><a href="{{path('sie_tramite_seguimiento_documento_busca')}}">Busqueda por número serie</a></li>
-                                    <li><a href="{{path('sie_tramite_seguimiento_rude_busca')}}">Busqueda por código rude</a></li>
+                                    <li><a href="{{path('tramite_seguimiento_busca')}}">Busqueda por trámite</a></li>
+                                    <li><a href="{{path('tramite_seguimiento_documento_busca')}}">Busqueda por número serie</a></li>
+                                    <li><a href="{{path('tramite_seguimiento_rude_busca')}}">Busqueda por código rude</a></li>
                                 </ul>
                             </li>
                         {% endif %}
@@ -395,7 +395,7 @@
                     {% if rol20 == true or rol8 == true %}
                         <!-- Start development - sub menu -->
                         {% for key,menu in app.session.get('aMenu') %}
-                            <li class="submenu">
+                            <li class="submenu {% if app.session.get('pMenuId') == menu[0]['menuId'] %} active {% endif %}">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-search"></i></span>
                                     <span class="text">{{key}}</span>
@@ -403,7 +403,11 @@
                                 </a>
                                 <ul class="collapse nav" id="menu{{loop.index}}">
                                     {% for smenu in menu %}
-                                        <li><a href="{{ path(smenu.ruta) }}">{{smenu.label}}</a></li>
+                                        {% if app.session.get('pSubMenuId') == smenu.subMenuId %}
+                                          <li class="active"><a href="{{ path(smenu.ruta) }}">{{smenu.label}}</a></li>
+                                        {% else %}
+                                          <li><a href="{{ path(smenu.ruta) }}">{{smenu.label}}</a></li>
+                                        {% endif %}
                                     {% endfor %}
                                 </ul>
                                 <!-- /.nav-second-level -->
@@ -544,12 +548,18 @@
 
 
         <!-- START GOOGLE ANALYTICS -->
-        <script>
-        </script>
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
         <!--/ END GOOGLE ANALYTICS -->
 
+        <script>
+          $(document).ready(function(){
+            $('.sidebar-menu li ul li').click(function() {
+              $('.sidebar-menu li ul li.active').removeClass('active');
+              $(this).addClass('active');
+            });
+          });
+        </script>
         {% block javascripts %}
         {% endblock %}
     </body>

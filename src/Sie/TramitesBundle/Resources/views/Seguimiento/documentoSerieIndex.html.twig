@@ -9,7 +9,7 @@
     <ol class="breadcrumb">
         <li>
             <i class="fa fa-home"></i>
-            <a href="{{path('sie_tramites_homepage')}}">Perfil</a>
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
             <i class="fa fa-angle-right"></i>
         </li>
         {% block contentSearchBread %}
@@ -105,7 +105,7 @@
                                         <td>{{ registro.documentoEstado }}</td>
                                         <td style="text-align:center;">
                                             {% if registro.documentoEstadoId == 1  %}
-                                                <form name="form" role="form" action="{{ path('sie_tramite_seguimiento_documento_detalle') }}" method="POST">
+                                                <form name="form" role="form" action="{{ path('tramite_seguimiento_documento_detalle') }}" method="POST">
                                                     <input type="hidden" name="codigo" value="{{ registro.id|base64_encode }}" />
                                                     <button type="submit" class="btn btn-success btn-xs" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>
                                                 </form>

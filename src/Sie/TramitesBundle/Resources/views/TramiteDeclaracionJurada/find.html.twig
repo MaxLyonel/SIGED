@@ -14,7 +14,7 @@
         }
     </style>
 {% endblock %}
-{% block contentoption %} 
+{% block contentoption %}
 
 
     <div class="row">
@@ -185,7 +185,7 @@
                     }
                     peticion1 = $.ajax({
                         type: 'POST',
-                        url: '{{ path('sie_tramite_listar_especialidad')}}',
+                        url: '{{ path('tramite_listar_especialidad')}}',
                         data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar},
                         beforeSend: function () {
         {#                            $("#form_especialidad").attr('disabled', 'true');#}
@@ -219,7 +219,7 @@
                 }
                 peticion2 = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_tramite_listar_nivel')}}',
+                    url: '{{ path('tramite_listar_nivel')}}',
                     data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar, 'especialidad': esp_listar},
                     beforeSend: function () {
                         $('#form_nivel').attr('disabled', 'true');

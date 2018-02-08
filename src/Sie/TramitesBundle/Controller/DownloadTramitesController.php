@@ -28,12 +28,12 @@ class DownloadTramitesController extends Controller {
      */
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Método que generara un archivo PDF, para la declaracion jurada que sera emitida para cada estudiante.
     // PARAMETROS: codigo rude, gestion, código sie, especialidad y el nivel
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************       
+    //****************************************************************************************************
     public function ddjjoneAction(Request $request, $rude, $gestion, $sie, $esp, $nivel) {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
@@ -66,13 +66,13 @@ class DownloadTramitesController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Método que generara un archivo PDF, para la impresion del listado de tecnico medio  que sera emitida 
+    // DESCRIPCION DEL METODO:
+    // Método que generara un archivo PDF, para la impresion del listado de tecnico medio  que sera emitida
     // para cada estudiante.
     // PARAMETROS: gestion, departamento.
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************  
+    //****************************************************************************************************
     public function imprimirListaTMAction(Request $request) {
         $gestion = $request->get('gestion');
         $depto = $request->get('departamento');
@@ -87,13 +87,13 @@ class DownloadTramitesController extends Controller {
         return $response;
     }
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Método que generara un archivo xls, para la impresion del listado de tecnico medio  que sera emitida 
+    // DESCRIPCION DEL METODO:
+    // Método que generara un archivo xls, para la impresion del listado de tecnico medio  que sera emitida
     // para cada estudiante.
     // PARAMETROS: gestion, departamento.
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************  
+    //****************************************************************************************************
     public function imprimirListaExcelTMAction(Request $request) {
         $gestion = $request->get('gestion');
         $depto = $request->get('departamento');
@@ -108,16 +108,16 @@ class DownloadTramitesController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
-    
+
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Metodo que nos permitira redireccionar a la vista "buscarGestionTecnicoMedio.html.twig", enviando 
+    // DESCRIPCION DEL METODO:
+    // Metodo que nos permitira redireccionar a la vista "buscarGestionTecnicoMedio.html.twig", enviando
     // la variable form que es creada por la funcion "creaFormularioGestion", como tambien el envio del titulo
     // y el subtitulo.
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************    
-    
+    //****************************************************************************************************
+
     public function listadoTMAction(Request $request) {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -127,19 +127,19 @@ class DownloadTramitesController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
         return $this->render('SieTramitesBundle:Tramite:buscarGestionTecnicoMedio.html.twig', array(
-                    'form' => $this->creaFormularioGestion('sie_tramite_buscar_gestion_tm')->createView()
+                    'form' => $this->creaFormularioGestion('tramite_buscar_gestion_tm')->createView()
                     , 'titulo' => 'Impresión Listado'
                     , 'subtitulo' => 'Técnico Medio'
         ));
     }
-    
+
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Metodo que nos permitira crear el formulario para la vista de la declaracion jurada.
     // PARAMETROS: routing = ruta del formulario.
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
-    //****************************************************************************************************  
+    //****************************************************************************************************
     public function creaFormularioGestion($routing) {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl($routing))
@@ -161,10 +161,10 @@ class DownloadTramitesController extends Controller {
                 ->getForm();
         return $form;
     }
-    
+
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
-    // Metodo que proporcionara todos los estudiantes de tecnico medio, y sea enviado a la vista 
+    // DESCRIPCION DEL METODO:
+    // Metodo que proporcionara todos los estudiantes de tecnico medio, y sea enviado a la vista
     // "ListaEstudiantesTecnicoMedio.html.twig".
     // FECHA DE ACTUALIZACION:  31-01-2017
     // AUTOR: PMEAVE
@@ -183,7 +183,7 @@ class DownloadTramitesController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
         if (!isset($save)) {
-            return $this->redirectToRoute('sie_tramites_homepage');
+            return $this->redirectToRoute('tramite_homepage');
         }
         $form = $request->get('form');
         $gestion = $form['gestiones'];
@@ -193,17 +193,17 @@ class DownloadTramitesController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
                     select distinct  ta.estudiante, initcap(e.paterno) paterno, initcap(e.materno) materno, initcap(e.nombre) nombre,
-                    e.codigo_rude, e.carnet_identidad,  e.fecha_nacimiento fecha_nacimiento, 
+                    e.codigo_rude, e.carnet_identidad,  e.fecha_nacimiento fecha_nacimiento,
                     CASE
                             WHEN lt4.lugar = 'NINGUNO' THEN '' ELSE lt4.lugar
                     END depto_nacimiento ,
                     t.tramite_tipo,
-                    ta.tramite_id tramite, nivel as GRADO,  se.especialidad especialidad, 
+                    ta.tramite_id tramite, nivel as GRADO,  se.especialidad especialidad,
                     initcap(ie.institucioneducativa) centro, ta.institucioneducativa institucioneducativa, lt2.lugar,  lt1.lugar distrito
-                    from tramite_alternativa ta 
+                    from tramite_alternativa ta
                     INNER JOIN tramite t ON t.id = ta.tramite_id
                     inner join tramite_detalle td ON td.tramite_id = ta.tramite_id
-                    inner join estudiante e on ta.estudiante  = e.id 
+                    inner join estudiante e on ta.estudiante  = e.id
                     INNER JOIN institucioneducativa ie ON ie.id = ta.institucioneducativa
                     inner join superior_especialidad_tipo se ON se.id = ta.esp
                     inner join jurisdiccion_geografica jg on jg.id = ie.le_juridicciongeografica_id
@@ -211,7 +211,7 @@ class DownloadTramitesController extends Controller {
                     inner join lugar_tipo lt2 on lt2.id = lt1.lugar_tipo_id
                     inner join lugar_tipo lt3 on lt3.id = e.lugar_prov_nac_tipo_id
                     inner join lugar_tipo lt4 on lt4.id = lt3.lugar_tipo_id
-                    WHERE 
+                    WHERE
                     ta.nivel in  (3)
                     AND t.tramite_tipo in (8)
                     AND td.flujo_proceso_id = 18
@@ -225,7 +225,7 @@ class DownloadTramitesController extends Controller {
         $entity = $query->fetchAll();
         return $this->render('SieTramitesBundle:Tramite:ListaEstudiantesTecnicoMedio.html.twig', array(
                     'estudiantes' => $entity,
-                    'form' => $this->creaFormularioGestion('sie_tramite_buscar_gestion_tm')->createView(),
+                    'form' => $this->creaFormularioGestion('tramite_buscar_gestion_tm')->createView(),
                     'gestion' => $gestion,
                     'departamento' => $departamento
         ));
@@ -238,7 +238,7 @@ class DownloadTramitesController extends Controller {
      * @param Request $request
      * @return object form login
      */
-    
+
     public function ddjjStudentWebAction(Request $request) {
 
         //get the data send to the report
