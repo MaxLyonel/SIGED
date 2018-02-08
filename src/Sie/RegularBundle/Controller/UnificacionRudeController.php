@@ -274,9 +274,9 @@ class UnificacionRudeController extends Controller {
 
             //AÑADIENDO CON 9- Y REGISTRO DE LOG DE RUDE INCORRECTO          
             if ($studentinc) {                
-                $studentinc->setCodigoRude("9-".$rudeinc);
+                /*$studentinc->setCodigoRude("9-".$rudeinc);
                 $em->persist($studentinc);
-                $em->flush();
+                $em->flush();*/
 
                 //REGISTRANDO CAMBIO DE ESTADO EN CONTROL DE CALIDAD
                 $antes = $studentinc->getId(); 
