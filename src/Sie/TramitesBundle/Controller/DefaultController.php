@@ -733,7 +733,7 @@ class DefaultController extends Controller {
         }
 
         if (!isset($save)) {
-            return $this->redirectToRoute('sie_tramites_homepage');
+            return $this->redirectToRoute('tramite_homepage');
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -780,7 +780,7 @@ class DefaultController extends Controller {
                 } elseif ($identificador == 0) {
                     $retorna = $this->redirectToRoute('sie_tramite_impresion_listados_detalle');
                 } else {
-                    $retorna = $this->redirectToRoute('sie_tramites_homepage');
+                    $retorna = $this->redirectToRoute('tramite_homepage');
                 }
                 return $retorna;
             }
@@ -1809,7 +1809,7 @@ class DefaultController extends Controller {
                 } elseif ($identificador == 18) {
                     $retorna = 'sie_tramite_entrega_distrito';
                 } else {
-                    $retorna = 'sie_tramites_homepage';
+                    $retorna = 'tramite_homepage';
                 }
 
                 /*
@@ -3154,7 +3154,7 @@ class DefaultController extends Controller {
 
         $this->session->set('pMenuId', $aMenu[2]);
         $this->session->set('pSubMenuId', $aMenu[5]);
-        
+
         return array('pMenuId' => $aMenu[2], 'pSubMenuId' => $aMenu[5]);
     }
 }

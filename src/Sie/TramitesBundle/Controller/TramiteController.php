@@ -166,13 +166,13 @@ class TramiteController extends Controller {
                 $gestion = $request->get('gestion');
                 if ($sie == ''){
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+                    return $this->redirect($this->generateUrl('tramite_homepage'));
                 }
             }
         } */
         //else {
         //    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar información, intente nuevamente'));
-        //    return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+        //    return $this->redirect($this->generateUrl('tramite_homepage'));
         //}
 
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
@@ -802,6 +802,104 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
+    // Controlador que registra el trámite de los bachilleres humanisticos alternativa selecionados
+    // PARAMETROS: estudiantes[], boton
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function dipHumAlternativaRegistroGuardaAction(Request $request) {
+      date_default_timezone_set('America/La_Paz');
+      $fechaActual = new \DateTime(date('Y-m-d'));
+      $gestionActual = new \DateTime();
+
+      $sesion = $request->getSession();
+      $id_usuario = $sesion->get('userId');
+
+      //validation if the user is logged
+      if (!isset($id_usuario)) {
+          return $this->redirect($this->generateUrl('login'));
+      }
+
+      $institucioneducativaId = 0;
+      $gestionId = $gestionActual->format('Y');
+      $flujoTipoId = 1;
+      $tramiteTipoId = 1;
+      $flujoSeleccionado = '';
+
+      if ($request->isMethod('POST')) {
+          $em = $this->getDoctrine()->getManager();
+          $em->getConnection()->beginTransaction();
+          try {
+              $participantes = $request->get('participantes');
+              if (isset($_POST['botonAceptar'])) {
+                  $flujoSeleccionado = 'Adelante';
+              }
+              $token = $request->get('_token');
+              if (!$this->isCsrfTokenValid('registrar', $token)) {
+                  $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                  return $this->redirectToRoute('tramite_diploma_humanistico_alternativa_registro_busca');
+              }
+
+              $messageCorrecto = "";
+              $messageError = "";
+
+              foreach ($participantes as $participante) {
+                  $estudianteInscripcionId = (Int) base64_decode($participante);
+
+                  $entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+                  $participanteNombre = trim($entidadEstudianteInscripcion->getEstudiante()->getPaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getMaterno().' '.$entidadEstudianteInscripcion->getEstudiante()->getNombre());
+                  $participanteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
+                  $msgContenido = "";
+                  if(count($entidadEstudianteInscripcion)>0){
+                      $institucionEducativaId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                      $gestionId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+
+                      $msg = array('0'=>true, '1'=>$participanteNombre);
+                      $msgContenido = $this->getDipHumAlternativaValidacion($participanteId, $estudianteInscripcionId);
+
+                      if($msgContenido != ""){
+                          $msg = array('0'=>false, '1'=>$participanteNombre.' ('.$msgContenido.')');
+                      }
+
+                  } else {
+                      $msg = array('0'=>false, '1'=>'estudiante no encontrado');
+                  }
+
+                  if ($msg[0]) {
+
+                      $tramiteId = $this->setTramiteEstudiante($estudianteInscripcionId, $gestionId, $tramiteTipoId, $flujoTipoId, $em);
+
+                      $tramiteProcesoController = new tramiteProcesoController();
+                      $tramiteProcesoController->setContainer($this->container);
+
+                      $tramiteDetalleId = $tramiteProcesoController->setProcesaTramiteInicio($tramiteId, $id_usuario, 'REGISTRO DEL TRÁMITE', $em);
+
+                      $messageCorrecto = ($messageCorrecto == "") ? $msg[1] : $messageCorrecto.'; '.$msg[1];
+                  } else {
+                      $messageError = ($messageError == "") ? $msg[1] : $messageError.'; '.$msg[1];
+                  }
+              }
+              if($messageCorrecto!=""){
+                  $em->getConnection()->commit();
+                  $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => $messageCorrecto));
+              }
+              if($messageError!=""){
+                  $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $messageError));
+              }
+          } catch (\Doctrine\ORM\NoResultException $exc) {
+              $em->getConnection()->rollback();
+              $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+          }
+
+          $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId);
+          return $this->redirectToRoute('tramite_diploma_humanistico_alternativa_registro_lista', ['form' => $formBusqueda], 307);
+      } else {
+          $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+          return $this->redirect($this->generateUrl('tramite_diploma_humanistico_alternativa_registro_busca'));
+      }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
     // Controlador que lista los trámites recepcionados por la direccion distrital en formato pdf
     // PARAMETROS: sie, gestion, especialidad, nivel
     // AUTOR: RCANAVIRI
@@ -1269,6 +1367,95 @@ class TramiteController extends Controller {
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
     public function getDipHumRegularCalificacionObsEstudiante($participanteId) {
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("
+          select v.codigo_rude, v.carnet_identidad, v.paterno, v.materno, v.nombre
+          , string_agg(distinct v.asignatura||' ('||v.grado_tipo_id||'° '||v.paralelo||' / '||v.gestion_tipo_id||'-'||v.institucioneducativa_id||')', ', ') as asignaturas from (
+            SELECT
+                estudiante.codigo_rude,
+                cast(estudiante.carnet_identidad as varchar)||(case when estudiante.complemento is null then '' when estudiante.complemento = '' then '' else '-'||estudiante.complemento end) as carnet_identidad,
+                estudiante.paterno,
+                estudiante.materno,
+                estudiante.nombre,
+                institucioneducativa_curso.institucioneducativa_id,
+                institucioneducativa_curso.grado_tipo_id,
+                institucioneducativa_curso.paralelo_tipo_id,
+                paralelo_tipo.paralelo,
+                institucioneducativa_curso.gestion_tipo_id,
+                estudiante_inscripcion.estadomatricula_tipo_id,
+                institucioneducativa_curso_oferta.asignatura_tipo_id,
+            asignatura_tipo.asignatura,
+                institucioneducativa_curso.turno_tipo_id,
+                Sum(case when estudiante_nota.nota_tipo_id = 1 then estudiante_nota.nota_cuantitativa end) AS b1,
+                Sum(case when estudiante_nota.nota_tipo_id = 2 then estudiante_nota.nota_cuantitativa end) AS b2,
+                Sum(case when estudiante_nota.nota_tipo_id = 3 then estudiante_nota.nota_cuantitativa end) AS b3,
+                Sum(case when estudiante_nota.nota_tipo_id = 4 then estudiante_nota.nota_cuantitativa end) AS b4,
+                Sum(case when estudiante_nota.nota_tipo_id = 5 then estudiante_nota.nota_cuantitativa end) AS b5,
+                Sum(case when estudiante_nota.nota_tipo_id = 6 then estudiante_nota.nota_cuantitativa end) AS t1,
+                Sum(case when estudiante_nota.nota_tipo_id = 7 then estudiante_nota.nota_cuantitativa end) AS t2,
+                Sum(case when estudiante_nota.nota_tipo_id = 8 then estudiante_nota.nota_cuantitativa end) AS t3,
+                Sum(case when estudiante_nota.nota_tipo_id = 9 then estudiante_nota.nota_cuantitativa end) AS t4,
+                Sum(case when estudiante_nota.nota_tipo_id = 10 then estudiante_nota.nota_cuantitativa end) AS t5,
+                Sum(case when estudiante_nota.nota_tipo_id = 11 then estudiante_nota.nota_cuantitativa end) AS t6
+                FROM
+                estudiante
+                INNER JOIN  estudiante_inscripcion ON  estudiante_inscripcion.estudiante_id =  estudiante.id
+                INNER JOIN  institucioneducativa_curso ON  estudiante_inscripcion.institucioneducativa_curso_id =  institucioneducativa_curso.id
+                INNER JOIN  estudiante_asignatura ON  estudiante_asignatura.estudiante_inscripcion_id =  estudiante_inscripcion.id
+                LEFT JOIN  estudiante_nota ON  estudiante_nota.estudiante_asignatura_id =  estudiante_asignatura.id
+                INNER JOIN  institucioneducativa_curso_oferta ON  institucioneducativa_curso_oferta.insitucioneducativa_curso_id =  institucioneducativa_curso.id AND  estudiante_asignatura.institucioneducativa_curso_oferta_id =  institucioneducativa_curso_oferta.id
+            INNER JOIN  asignatura_tipo ON  institucioneducativa_curso_oferta.asignatura_tipo_id =  asignatura_tipo.id
+                INNER JOIN  paralelo_tipo ON  institucioneducativa_curso.paralelo_tipo_id =  paralelo_tipo.id
+            LEFT JOIN  estudiante_inscripcion_humnistico_tecnico ON estudiante_inscripcion_humnistico_tecnico.estudiante_inscripcion_id = estudiante_inscripcion.id
+                LEFT JOIN  especialidad_tecnico_humanistico_tipo ON estudiante_inscripcion_humnistico_tecnico.especialidad_tecnico_humanistico_tipo_id = especialidad_tecnico_humanistico_tipo.id
+                WHERE
+                estudiante.id = ".$participanteId." and estudiante_inscripcion.estadomatricula_tipo_id in (4,5,55) and institucioneducativa_curso.nivel_tipo_id in (3,13)
+                AND case when institucioneducativa_curso.gestion_tipo_id > 2010 then institucioneducativa_curso.ciclo_tipo_id in (2,3) else true end
+            GROUP BY
+                estudiante.codigo_rude,
+                estudiante.carnet_identidad,
+                estudiante.complemento,
+                estudiante.paterno,
+                estudiante.materno,
+                estudiante.nombre,
+                institucioneducativa_curso.institucioneducativa_id,
+                institucioneducativa_curso.grado_tipo_id,
+                institucioneducativa_curso.paralelo_tipo_id,
+                paralelo_tipo.paralelo,
+                institucioneducativa_curso.gestion_tipo_id,
+                estudiante_inscripcion.estadomatricula_tipo_id,
+                institucioneducativa_curso_oferta.asignatura_tipo_id,
+            asignatura_tipo.asignatura,
+                institucioneducativa_curso.turno_tipo_id,
+                especialidad_tecnico_humanistico_tipo.especialidad
+             ) as v
+           where
+           case
+            when (gestion_tipo_id::double precision = date_part('year',current_date)::double precision)
+            then (b1 is null or b1 = 0)
+            when ((gestion_tipo_id > 2013) or (gestion_tipo_id > 2013 and grado_tipo_id = 1) and gestion_tipo_id < date_part('year',current_date))
+            then (b1 is null or b1 = 0 or b2 is null or b2 = 0 or b3 is null or b3 = 0 or b4 is null or b4 = 0 or b5 is null or b5 = 0)
+            else (b1 is null or t1 = 0 or t2 is null or t2 = 0 or t3 is null or t3 = 0 or t4 is null or t4 = 0)
+          end
+          group by
+          v.codigo_rude,
+          v.carnet_identidad,
+          v.paterno,
+          v.materno,
+          v.nombre
+        ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que halla las calificaciones observadas de un estudiante de educacion alternativa humanistica
+    // PARAMETROS: participanteId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDipHumAlternativaCalificacionObsEstudiante($participanteId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
           select v.codigo_rude, v.carnet_identidad, v.paterno, v.materno, v.nombre
@@ -1938,6 +2125,39 @@ class TramiteController extends Controller {
 
         // VALIDACION DE ASIGNATURAS CON NOTAS COMPLETAS (4 BIMESTRAS O 3 TRIMESTRES EN GESTION ANTERIORES  Y 1ER BIMESTRE EN GESTION ACTUAL )
         $objCalificacionesObservados = $this->getDipHumRegularCalificacionObsEstudiante($participanteId);
+        if(count($objCalificacionesObservados)>0){
+            $msgContenido = ($msgContenido=="") ? "cuenta con asignaturas sin calificaciones en: ".$objCalificacionesObservados[0]['asignaturas'] : $msgContenido.", cuenta con asignaturas sin calificaciones en: ".$objCalificacionesObservados[0]['asignaturas'];
+        }
+
+        // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
+        $valTramiteEstudiante = $this->getDipHumTramiteEstudiante($participanteId);
+        if(count($valTramiteEstudiante) > 0){
+            $msgContenido = ($msgContenido=="") ? 'ya cuenta con el trámite '.$valTramiteEstudiante[0]['tramite_id'] : $msgContenido.', ya cuenta con el trámite '.$valTramiteEstudiante[0]['tramite_id'];
+        }
+
+        // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
+        $valDocumentoEstudiante = $this->getDipHumDocumentoEstudiante($participanteId);
+        if(count($valDocumentoEstudiante) > 0){
+            $msgContenido = ($msgContenido=="") ? 'ya cuenta con el Diploma de Bachiller Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'] : $msgContenido.', ya cuenta con el Diploma de Bachiller Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'];
+        }
+
+        return $msgContenido;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que valida el proceso de registro de un trámite diploma humanistico regular segun el participante y gestion
+    // PARAMETROS: estudianteId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDipHumAlternativaValidacion($participanteId, $estudianteInscripcionId) {
+        $msgContenido = "";
+        $cargaHorariaTotal = 0;
+        $gestionServidor= new \DateTime();
+        $gestionActual = $gestionServidor->format('Y');
+
+        // VALIDACION DE ASIGNATURAS CON NOTAS COMPLETAS (4 BIMESTRAS O 3 TRIMESTRES EN GESTION ANTERIORES  Y 1ER BIMESTRE EN GESTION ACTUAL )
+        $objCalificacionesObservados = $this->getDipHumAlternativaCalificacionObsEstudiante($participanteId);
         if(count($objCalificacionesObservados)>0){
             $msgContenido = ($msgContenido=="") ? "cuenta con asignaturas sin calificaciones en: ".$objCalificacionesObservados[0]['asignaturas'] : $msgContenido.", cuenta con asignaturas sin calificaciones en: ".$objCalificacionesObservados[0]['asignaturas'];
         }

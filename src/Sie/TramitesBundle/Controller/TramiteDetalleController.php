@@ -570,7 +570,7 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
@@ -897,7 +897,7 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
@@ -1224,7 +1224,7 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
@@ -1371,7 +1371,7 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $documentoController = new documentoController();
@@ -1442,7 +1442,7 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $documentoController = new documentoController();
@@ -1563,7 +1563,7 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $institucioneducativaId = 0;
@@ -1743,7 +1743,7 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
@@ -2080,7 +2080,7 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');

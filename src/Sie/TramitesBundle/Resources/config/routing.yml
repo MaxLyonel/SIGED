@@ -1,4 +1,4 @@
-#sie_tramites_homepage:
+#tramite_homepage:
 #    path:     /tramite
 #    defaults: { _controller: SieTramitesBundle:Default:index }
 
