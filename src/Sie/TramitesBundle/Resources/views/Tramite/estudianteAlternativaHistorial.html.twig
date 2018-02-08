@@ -1,0 +1,92 @@
+
+{% if listaHistorial is defined  %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="pull-left">
+                <span class="media-heading block mb-0 h4 text-white"><strong>{{ listaHistorial|first|first[0]['nombre'] }} {{ listaHistorial|first|first[0]['paterno'] }} {{ listaHistorial|first|first[0]['materno'] }}</strong></span>
+                <span class="text-white h6"> {{ listaHistorial|first|first[0]['codigo_rude'] }} </span>
+            </div>
+            <div class="pull-right text-right">
+                <i class="fa fa-clipboard fa-2x"></i>
+                <span class="media-heading block mb-0 h4 text-white"><strong></strong></span>
+                <span class="text-white h6"> </span>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="panel panel-tab panel-tab-double rounded shadow">
+        <!-- Start tabs heading -->
+        <div class="panel-heading no-padding">
+            <ul class="nav nav-tabs">
+                {% for gestion in listaHistorial|keys %}
+                    {% if loop.first %}{% set activar = true %}{% else %}{% set activar = false %}{% endif %}
+                    {% for periodo in listaHistorial[gestion]|keys %}
+                        <li {% if activar %}class="active"{% endif %}>
+                            <a href="#tab{{ gestion }}{{ periodo }}" data-toggle="tab">
+                                <i class="fa fa-slack"></i>
+                                <div>
+                                    <span class="text-strong">{{ listaHistorial[gestion][periodo][0]['gestion_tipo_id'] }} - "{{ listaHistorial[gestion][periodo][0]['paralelo'] }}"</span>
+                                    <span>{{ listaHistorial[gestion][periodo][0]['periodo'] }}</span>
+                                </div>
+                            </a>
+                        </li>
+                        {% set activar = false %}
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div><!-- /.panel-heading -->
+        <!--/ End tabs heading -->
+        <!-- Start tabs content -->
+        <div class="panel-body">
+            <div class="tab-content">
+                {% for gestiones in listaHistorial %}
+                  {% if loop.first %}{% set activar = true %}{% else %}{% set activar = false %}{% endif %}
+                  {% for periodos in gestiones %}
+                      <div class="tab-pane fade in {% if activar %}active{% endif %}" id="tab{{ periodos[0]['gestion_tipo_id'] }}{{ periodos[0]['periodo_tipo_id'] }}">
+                          <div class="col-md-6">
+                              <h5><b>{{ periodos[0]['institucioneducativa_id'] }} - {{ periodos[0]['institucioneducativa'] }}</b></h5>
+                          </div>
+                          <div class="col-md-6 text-right">
+                              <h5><b>{{ periodos[0]['grado'] }}</b></h5>
+                          </div>
+                          <table class="table table-striped">
+                              <thead>
+                                  <tr>
+                                      <th class="text-center border-right">No.</th>
+                                      <th class="text-center">Áreas Curriculares</th>
+                                      {% if periodos[0]['calendarioId'] == 1 %}
+                                          <th class="width:30px; text-center">CF</th>
+                                      {% else %}
+                                          <th class="width:30px; text-center">Part.</th>
+                                          <th class="width:30px; text-center">Apli.</th>
+                                          <th class="width:30px; text-center">Con.</th>
+                                          <th class="width:30px; text-center">CF</th>
+                                      {% endif %}
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  {% for dato in periodos %}
+                                      <tr>
+                                          <td class="text-center border-right">{{ loop.index }}</td>
+                                          <td class="text-center">{{ dato.asignatura }}</td>
+                                          {% if dato.calendarioId == 1 %}
+                                              <td class="text-center border-right {% if dato.n4 < 51 %}text-danger{% endif %}">{{ dato.n4 }}</td>
+                                          {% else %}
+                                              <td class="text-center border-right">{{ dato.n1 }}</td>
+                                              <td class="text-center border-right">{{ dato.n2 }}</td>
+                                              <td class="text-center border-right">{{ dato.n3 }}</td>
+                                              <td class="text-center border-right {% if dato.n4 < 36 %}text-danger{% endif %}">{{ dato.n4 }}</td>
+                                          {% endif %}
+                                      </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                      </div>
+                      {% set activar = false %}
+                  {% endfor %}
+                {% endfor %}
+            </div>
+        </div><!-- /.panel-body -->
+        <!--/ End tabs content -->
+    </div>
+{% endif %}

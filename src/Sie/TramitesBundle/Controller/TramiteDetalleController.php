@@ -559,6 +559,8 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
@@ -568,13 +570,13 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
 
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
-            'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_detalle_certificado_tecnico_recepcion_lista',0,0,0,0)->createView(),
+            'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_recepcion_lista',0,0,0,0)->createView(),
             'titulo' => 'Recepción',
             'subtitulo' => 'Trámite',
         ));
@@ -621,7 +623,7 @@ class TramiteDetalleController extends Controller {
                     $datosBusqueda = base64_encode(serialize($form));
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:recepcionIndex.html.twig', array(
-                        'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_detalle_certificado_tecnico_recepcion_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
+                        'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_recepcion_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Recepción',
                         'subtitulo' => 'Trámite',
                         'listaParticipante' => $entityParticipantes,
@@ -630,15 +632,15 @@ class TramiteDetalleController extends Controller {
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_recepcion_lista'));
+                    return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_recepcion_lista'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_recepcion_lista'));
+                return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_recepcion_lista'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_recepcion_busca'));
+            return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_recepcion_busca'));
         }
     }
 
@@ -678,7 +680,7 @@ class TramiteDetalleController extends Controller {
             return $response;
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_recepcion_lista', ['form' => $form], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_recepcion_lista', ['form' => $form], 307);
         }
     }
 
@@ -774,7 +776,7 @@ class TramiteDetalleController extends Controller {
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('recepcionar', $token)) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                    return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_recepcion_lista');
+                    return $this->redirectToRoute('tramite_detalle_certificado_tecnico_recepcion_lista');
                 }
 
                 $messageCorrecto = "";
@@ -852,10 +854,10 @@ class TramiteDetalleController extends Controller {
             }
 
             $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_recepcion_lista', ['form' => $formBusqueda], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_recepcion_lista', ['form' => $formBusqueda], 307);
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_recepcion_busca'));
+            return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_recepcion_busca'));
         }
     }
 
@@ -884,6 +886,8 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
@@ -893,13 +897,13 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
 
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
-            'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_detalle_certificado_tecnico_autorizacion_lista',0,0,0,0)->createView(),
+            'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_autorizacion_lista',0,0,0,0)->createView(),
             'titulo' => 'Autorización',
             'subtitulo' => 'Trámite',
         ));
@@ -946,7 +950,7 @@ class TramiteDetalleController extends Controller {
                     $datosBusqueda = base64_encode(serialize($form));
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:autorizacionIndex.html.twig', array(
-                        'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_detalle_certificado_tecnico_autorizacion_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
+                        'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_autorizacion_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Autorización',
                         'subtitulo' => 'Trámite',
                         'listaParticipante' => $entityParticipantes,
@@ -955,15 +959,15 @@ class TramiteDetalleController extends Controller {
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_autorizacion_lista'));
+                    return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_autorizacion_lista'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_autorizacion_lista'));
+                return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_autorizacion_lista'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_autorizacion_busca'));
+            return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_autorizacion_busca'));
         }
     }
 
@@ -1003,7 +1007,7 @@ class TramiteDetalleController extends Controller {
             return $response;
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_autorizacion_lista', ['form' => $form], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_autorizacion_lista', ['form' => $form], 307);
         }
     }
 
@@ -1099,7 +1103,7 @@ class TramiteDetalleController extends Controller {
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('autorizar', $token)) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                    return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_autorizacion_lista');
+                    return $this->redirectToRoute('tramite_detalle_certificado_tecnico_autorizacion_lista');
                 }
 
                 $messageCorrecto = "";
@@ -1177,10 +1181,10 @@ class TramiteDetalleController extends Controller {
             }
 
             $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_autorizacion_lista', ['form' => $formBusqueda], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_autorizacion_lista', ['form' => $formBusqueda], 307);
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_autorizacion_busca'));
+            return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_autorizacion_busca'));
         }
     }
 
@@ -1209,6 +1213,8 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
@@ -1218,13 +1224,13 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
 
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
-            'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_detalle_certificado_tecnico_impresion_lista',0,0,0,0)->createView(),
+            'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_impresion_lista',0,0,0,0)->createView(),
             'titulo' => 'Impresión',
             'subtitulo' => 'Trámite',
         ));
@@ -1277,7 +1283,7 @@ class TramiteDetalleController extends Controller {
                     $datosBusqueda = base64_encode(serialize($form));
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:impresionIndex.html.twig', array(
-                        'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_detalle_certificado_tecnico_impresion_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
+                        'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_impresion_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Impresión',
                         'subtitulo' => 'Trámite',
                         'listaParticipante' => $entityParticipantes,
@@ -1288,15 +1294,15 @@ class TramiteDetalleController extends Controller {
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_impresion_lista'));
+                    return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_impresion_lista'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_impresion_lista'));
+                return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_impresion_lista'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_impresion_busca'));
+            return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_impresion_busca'));
         }
     }
 
@@ -1336,7 +1342,7 @@ class TramiteDetalleController extends Controller {
             return $response;
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_impresion_lista', ['form' => $form], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_lista', ['form' => $form], 307);
         }
     }
 
@@ -1365,7 +1371,7 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $documentoController = new documentoController();
@@ -1406,7 +1412,7 @@ class TramiteDetalleController extends Controller {
             return $response;
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_impresion_lista', ['form' => $form], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_lista', ['form' => $form], 307);
         }
     }
 
@@ -1436,7 +1442,7 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $documentoController = new documentoController();
@@ -1477,7 +1483,7 @@ class TramiteDetalleController extends Controller {
             return $response;
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_impresion_lista', ['form' => $form], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_lista', ['form' => $form], 307);
         }
     }
 
@@ -1557,7 +1563,7 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $institucioneducativaId = 0;
@@ -1589,7 +1595,7 @@ class TramiteDetalleController extends Controller {
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('imprimir', $token)) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                    return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_impresion_lista');
+                    return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_lista');
                 }
 
                 $tramiteController = new tramiteController();
@@ -1694,10 +1700,10 @@ class TramiteDetalleController extends Controller {
             }
 
             $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_impresion_lista', ['form' => $formBusqueda], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_lista', ['form' => $formBusqueda], 307);
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_impresion_busca'));
+            return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_impresion_busca'));
         }
     }
 
@@ -1726,6 +1732,8 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
@@ -1735,13 +1743,13 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
 
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
-            'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_detalle_certificado_tecnico_envio_lista',0,0,0,0)->createView(),
+            'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_envio_lista',0,0,0,0)->createView(),
             'titulo' => 'Envío',
             'subtitulo' => 'Trámite',
         ));
@@ -1788,7 +1796,7 @@ class TramiteDetalleController extends Controller {
                     $datosBusqueda = base64_encode(serialize($form));
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:envioIndex.html.twig', array(
-                        'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_detalle_certificado_tecnico_envio_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
+                        'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_envio_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Envío',
                         'subtitulo' => 'Trámite',
                         'listaParticipante' => $entityParticipantes,
@@ -1797,15 +1805,15 @@ class TramiteDetalleController extends Controller {
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_envio_lista'));
+                    return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_envio_lista'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_envio_lista'));
+                return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_envio_lista'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_envio_busca'));
+            return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_envio_busca'));
         }
     }
 
@@ -1845,7 +1853,7 @@ class TramiteDetalleController extends Controller {
             return $response;
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_envio_lista', ['form' => $form], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_envio_lista', ['form' => $form], 307);
         }
     }
 
@@ -1945,7 +1953,7 @@ class TramiteDetalleController extends Controller {
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('enviar', $token)) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                    return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_envio_lista');
+                    return $this->redirectToRoute('tramite_detalle_certificado_tecnico_envio_lista');
                 }
 
                 $messageCorrecto = "";
@@ -2029,10 +2037,10 @@ class TramiteDetalleController extends Controller {
             }
 
             $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_envio_lista', ['form' => $formBusqueda], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_envio_lista', ['form' => $formBusqueda], 307);
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_envio_busca'));
+            return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_envio_busca'));
         }
     }
 
@@ -2061,6 +2069,8 @@ class TramiteDetalleController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
@@ -2070,13 +2080,13 @@ class TramiteDetalleController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
 
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
-            'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_detalle_certificado_tecnico_entrega_lista',0,0,0,0)->createView(),
+            'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_entrega_lista',0,0,0,0)->createView(),
             'titulo' => 'Entrega',
             'subtitulo' => 'Trámite',
         ));
@@ -2123,7 +2133,7 @@ class TramiteDetalleController extends Controller {
                     $datosBusqueda = base64_encode(serialize($form));
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:entregaIndex.html.twig', array(
-                        'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('sie_tramite_detalle_certificado_tecnico_entrega_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
+                        'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_entrega_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Entrega',
                         'subtitulo' => 'Trámite',
                         'listaParticipante' => $entityParticipantes,
@@ -2132,15 +2142,15 @@ class TramiteDetalleController extends Controller {
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_entrega_lista'));
+                    return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_entrega_lista'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_entrega_lista'));
+                return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_entrega_lista'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_entrega_busca'));
+            return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_entrega_busca'));
         }
     }
 
@@ -2180,7 +2190,7 @@ class TramiteDetalleController extends Controller {
             return $response;
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_entrega_lista', ['form' => $form], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_entrega_lista', ['form' => $form], 307);
         }
     }
 
@@ -2277,7 +2287,7 @@ class TramiteDetalleController extends Controller {
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('entregar', $token)) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                    return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_entrega_lista');
+                    return $this->redirectToRoute('tramite_detalle_certificado_tecnico_entrega_lista');
                 }
 
                 $messageCorrecto = "";
@@ -2367,10 +2377,10 @@ class TramiteDetalleController extends Controller {
             }
 
             $formBusqueda = array('sie'=>$institucionEducativaId,'gestion'=>$gestionId,'especialidad'=>$especialidadId,'nivel'=>$nivelId);
-            return $this->redirectToRoute('sie_tramite_detalle_certificado_tecnico_entrega_lista', ['form' => $formBusqueda], 307);
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_entrega_lista', ['form' => $formBusqueda], 307);
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_detalle_certificado_tecnico_entrega_busca'));
+            return $this->redirect($this->generateUrl('tramite_detalle_certificado_tecnico_entrega_busca'));
         }
     }
 

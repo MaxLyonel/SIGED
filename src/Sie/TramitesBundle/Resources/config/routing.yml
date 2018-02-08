@@ -1,30 +1,30 @@
-#sie_tramites_homepage:
+#tramite_homepage:
 #    path:     /tramite
 #    defaults: { _controller: SieTramitesBundle:Default:index }
 
-sie_tramites_homepage:
+tramite_homepage:
     path:     /tramite/perfil
     defaults: { _controller: SieTramitesBundle:Default:perfil }
 
 sie_tramite:
     resource: "@SieTramitesBundle/Resources/config/routing/tramite.yml"
-    prefix:   /tramite   
+    prefix:   /tramite
 
 sie_tramite_detalle:
     resource: "@SieTramitesBundle/Resources/config/routing/tramiteDetalle.yml"
-    prefix:   /tramite/detalle 
+    prefix:   /tramite/detalle
 
 sie_tramite_seguimiento:
     resource: "@SieTramitesBundle/Resources/config/routing/tramiteSeguimiento.yml"
-    prefix:   /tramite/seguimiento  
+    prefix:   /tramite/seguimiento
 
 sie_tramite_documento:
     resource: "@SieTramitesBundle/Resources/config/routing/tramiteDocumento.yml"
-    prefix:   /tramite/documento  
+    prefix:   /tramite/documento
 
 sie_tramite_homologacion:
     resource: "@SieTramitesBundle/Resources/config/routing/tramiteHomologacion.yml"
-    prefix:   /tramite/homologacion  
+    prefix:   /tramite/certificacion/homologacion
 
 sie_tramite_busca_ue:
     path:     /lista/estudiantes/unidad/educativa
@@ -32,7 +32,7 @@ sie_tramite_busca_ue:
 
 sie_tramite_recepcion_distrito:
     path:     /recepcion/distrito
-    defaults: { _controller: SieTramitesBundle:Default:recepcionDistrito }   
+    defaults: { _controller: SieTramitesBundle:Default:recepcionDistrito }
 
 sie_tramite_recepcion_distrito_registra:
     path:     /recepcion/distrito/registra
@@ -40,38 +40,38 @@ sie_tramite_recepcion_distrito_registra:
 
 sie_tramite_listar_especialidad:
     path:     /listar_especialidades
-    defaults: { _controller: SieTramitesBundle:Default:listarEspecialidades}  
-    methods:  [POST]   
-    
+    defaults: { _controller: SieTramitesBundle:Default:listarEspecialidades}
+    methods:  [POST]
+
 sie_tramite_listar_nivel:
     path:     /listar_nivel
-    defaults: { _controller: SieTramitesBundle:Default:listarNivel}  
-    methods:  [POST]   
-    
+    defaults: { _controller: SieTramitesBundle:Default:listarNivel}
+    methods:  [POST]
+
 sie_tramite_verificar_rue:
     path:     /verificar/rue
-    defaults: { _controller: SieTramitesBundle:Default:verificarRue}  
-    methods:  [POST]   
-    
+    defaults: { _controller: SieTramitesBundle:Default:verificarRue}
+    methods:  [POST]
+
 
 sie_tramite_verificar_carga_horaria:
     path:     /verificar_datos_carga_horaria
     defaults: { _controller: SieTramitesBundle:Default:mostrar}
-    methods:  [POST]     
-    
+    methods:  [POST]
+
 estudiante_historial_notas:
     path:     /history_notas
     defaults: { _controller: SieTramitesBundle:Default:historial_notas}
     methods:  [POST]
-    
+
 sie_tramite_descarga_reporte_distrito_pdf:
     path:     /reporte/recepcion/distrito/download/{sie}/{gestion}/{especialidad}
     defaults: { _controller: SieTramitesBundle:Default:printReportesDistritoPdf }
-    
+
 sie_tramite_recibir_departamento:
     path:     /recibir/departamento
-    defaults: { _controller: SieTramitesBundle:Default:recepcionDepartamento }    
- 
+    defaults: { _controller: SieTramitesBundle:Default:recepcionDepartamento }
+
 tramite_generar_series_certificados:
     path:     /generar/serieCertificados/
     defaults: { _controller: SieTramitesBundle:Default:generarSeriesCertificados }
@@ -83,34 +83,34 @@ tramite_verificar_generar:
 sie_tramite_homologacion_p:
     path:     /tramite/homologacion/
     defaults: { _controller: SieTramitesBundle:Default:homologacion }
-    
+
 sie_tramite_homologacion_listar_especialidad:
     path:     /listar/homologacion/especialidad
     defaults: { _controller: SieTramitesBundle:Default:listarHEsp}
-    
+
 sie_tramite_homologacion_sie_ue:
     path:     /listar/ue
     defaults: { _controller: SieTramitesBundle:Default:listarUE}
-    
+
 sie_tramite_homologacion_verificar_estudiante:
     path:     /verificar/est
     defaults: { _controller: SieTramitesBundle:Default:verificarStudent}
-    
+
 sie_homologacion_guardar:
     path:     /insert/gestion_anterior
     defaults: { _controller: SieTramitesBundle:Default:GuardarGestionAnterior}
-    
+
 sie_tramite_procesa:
    path:     /procesa/tramite/certificado
    defaults: { _controller: SieTramitesBundle:Default:procesaTramiteCertificado }
-   
+
 sie_tramite_autorizacion:
     path:     /autorizacion/tramite
-    defaults: { _controller: SieTramitesBundle:Default:autorizacionTramite }   
-    
+    defaults: { _controller: SieTramitesBundle:Default:autorizacionTramite }
+
 sie_tramite_entrega_departamento:
     path:     /entrega/departamento
-    defaults: { _controller: SieTramitesBundle:Default:entregaDepartamento }    
+    defaults: { _controller: SieTramitesBundle:Default:entregaDepartamento }
 
 sie_tramite_impresion:
     path:     /impresion/certificado
@@ -123,47 +123,47 @@ sie_tramite_impresion_pdf:
 sie_tramite_impresion_pdf_con_ci:
     path:     /impresion/certificado/pdf/ci
     defaults: { _controller: SieTramitesBundle:Default:impresionCertificadoPdfCI }
-    
+
 sie_tramite_impresion_listados:
     path:     /impresion/listado
-    defaults: { _controller: SieTramitesBundle:Default:impresionListado }       
-    
+    defaults: { _controller: SieTramitesBundle:Default:impresionListado }
+
 sie_tramite_impresion_listados_pdf:
     path:     /impresion/listado/pdf
-    defaults: { _controller: SieTramitesBundle:Default:impresionListadoPdf }    
-    
+    defaults: { _controller: SieTramitesBundle:Default:impresionListadoPdf }
+
 sie_tramite_entrega_distrito:
     path:     /entrega/distrito
-    defaults: { _controller: SieTramitesBundle:Default:entregaDistrito }    
-    
+    defaults: { _controller: SieTramitesBundle:Default:entregaDistrito }
+
 sie_tramite_declaracionjurada:
     resource: "@SieTramitesBundle/Resources/config/routing/declaracion_jurada_tramite.yml"
-    prefix:   /sie/declaracionJurada    
+    prefix:   /sie/declaracionJurada
 
 sie_download_certification:
     resource: "@SieTramitesBundle/Resources/config/routing/download_tramites.yml"
     prefix:   /sie/downloadCertificationDJ
-    
+
 sie_tramite_descarga_reporte_departamental_pdf:
     path:     /reporte/recepcion/departamental/download/{sie}
     defaults: { _controller: SieTramitesBundle:Default:printReportesDepartamentalPdf }
-    
+
 sie_tramite_seguimiento_busqueda:
     path:     /busqueda
     defaults: { _controller: SieTramitesBundle:Default:busquedaCertificado }
-    
+
 sie_tramite_seguimiento_busqueda_rude:
     path:     /busqueda/tramite
-    defaults: { _controller: SieTramitesBundle:Default:busquedaCertificadoRude }  
-    
+    defaults: { _controller: SieTramitesBundle:Default:busquedaCertificadoRude }
+
 sie_tramite_seguimiento_busqueda_detalle:
     path:     /busqueda/detalle
     defaults: { _controller: SieTramitesBundle:Default:busquedaCertificadoDetalle }
-    
+
 sie_tramite_seguimiento_busqueda_rude_detalle:
     path:     /busqueda/detalle/tramite
-    defaults: { _controller: SieTramitesBundle:Default:busquedaCertificadoRudeDetalle }    
-    
+    defaults: { _controller: SieTramitesBundle:Default:busquedaCertificadoRudeDetalle }
+
 sie_tramite_ver_datos_estudiante:
     path:     /certificado/{tramite}
-    defaults: { _controller: SieTramitesBundle:Default:datosCertificado }    
+    defaults: { _controller: SieTramitesBundle:Default:datosCertificado }

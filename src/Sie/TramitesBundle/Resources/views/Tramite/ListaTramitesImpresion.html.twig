@@ -1,8 +1,8 @@
 {% extends 'SieTramitesBundle:Default:Registros.html.twig' %}
 {% block contenttitulo %}{{ titulo }}{% endblock %}
 {% block contenttitulosmall %}{{ subtitulo }}{% endblock %}
-{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Listado de Estudiantes</li>{% endblock %}  
-    {% block contentbuscador %}    
+{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Listado de Estudiantes</li>{% endblock %}
+    {% block contentbuscador %}
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="row">
             <div class="col-lg-12 col-md-12">
@@ -25,11 +25,11 @@
                             {{ form_widget(form.identificador) }}
                             <div class="col-lg-2 col-md-7 col-sm-9 col-xs-12">
                                 {{ form_widget(form.gestiones,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
-                            </div>                            
+                            </div>
                             <div class="col-lg-5 col-md-7 col-sm-9 col-xs-12">
                                 {{ form_widget(form.sies) }}
                                 {#                                    <div class="help-block with-errors"></div>#}
-                            </div>                                
+                            </div>
 
                             <div class="col-lg-5 col-md-7 col-sm-9 col-xs-12">
                                 {{ form_widget(form.lista,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
@@ -46,16 +46,16 @@
                     </div>
                 </div>
             </div>
-        </div>    
+        </div>
     </div>
-{% endblock %} 
-{% block contentregistros %} 
-    {% if bachilleres is defined  %}        
+{% endblock %}
+{% block contentregistros %}
+    {% if bachilleres is defined  %}
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="row">         
-                <form name="formtable" role="form" action="{{ path('sie_tramite_impresion_listados_pdf') }}" method="POST">                    
+            <div class="row">
+                <form name="formtable" role="form" action="{{ path('tramite_impresion_listados_pdf') }}" method="POST">
                     <div class="form-group">
-                        <div class="col-lg-12 col-md-12">                
+                        <div class="col-lg-12 col-md-12">
                             <div class="portlet portlet-default">
                                 <div class="portlet-heading">
                                     <div class="portlet-title">
@@ -66,19 +66,19 @@
                                         <div class="btn-group">
                                             <input type="hidden" name="gestion" value="{{ gestion }}" />
                                             <input type="hidden" name="identificador" value="{{ identificador }}" />
-                                            <input type="hidden" name="sie" value="{{ unidadEducativa[0].id }}" />  
-                                            <input type="hidden" name="lista" value="{{ listas }}" /> 
+                                            <input type="hidden" name="sie" value="{{ unidadEducativa[0].id }}" />
+                                            <input type="hidden" name="lista" value="{{ listas }}" />
                                             {#                                                <input type="hidden" name="esp" value="{{ especialidad }}" /> #}
                                             {#                                                <input type="hidden" name="nivel" value="{{ nivel }}" /> #}
-                                            <input type="submit" name="botonPrint" class="btn btn-success" value="Imprimir"/>  
+                                            <input type="submit" name="botonPrint" class="btn btn-success" value="Imprimir"/>
                                         </div>
                                         <span class="divider"></span>
                                         <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
-                                <div class="portlet-body" id="infouser">                                    
-                                    <div id="no-more-tables"> 
+                                <div class="portlet-body" id="infouser">
+                                    <div id="no-more-tables">
                                         <table id="myTable" class="table table-bordered table-hover cf dataTable">
                                             <thead>
                                                 <tr>
@@ -97,7 +97,7 @@
                                                 {% set cont = 0 %}
                                                 {% for bachiller in bachilleres %}
                                                     {% set cont = cont +1 %}
-                                                    {% set id = bachiller.tramite_id %}    
+                                                    {% set id = bachiller.tramite_id %}
                                                     <tr>
                                                         <td data-title="Tramite">{{ bachiller.tramite_id}}</td>
                                                         <td data-title="Codigo Rude">{{ bachiller.codigo_rude }}</td>
@@ -111,16 +111,16 @@
                                                     </tr>
                                                 {% endfor %}
                                             </tbody>
-                                        </table>                                                                                      
-                                    </div>  
-                                </div>                                           
-                            </div>           
-                        </div>         
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </form>                             
+                </form>
             </div>
-        </div>       
-    {% endif %}  
+        </div>
+    {% endif %}
 {% endblock %}
 {% block javascripts %}
     {{parent()}}

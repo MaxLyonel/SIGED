@@ -2,13 +2,21 @@
     <h1></h1>
 
 <div class="table-responsive mb-20">
- <ul>
+    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+            <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="newAmbPedagogico('{{infraestructuraJuridiccionGeograficaId}}');">
+                Agregar Ambiente
+            </button>
+        </div>
+    {# 
+        <ul>
         <li>
-            <a class="btn btn-success" href="{{ path('infraestructurah5ambientepedagogico_new') }}">
+            <a class="btn btn-success" href="{{ path('infraestructurah5ambientepedagogico_new') }}" onclick="newPedagogico('{{infraestructuraJuridiccionGeograficaId}}')">
                 Agregar Ambiente
             </a>
         </li>
     </ul>
+    #}
+    
     <table class="table">
         <thead>
             <tr>
@@ -79,5 +87,3 @@
     </table>
 
 </div>
-       
-    

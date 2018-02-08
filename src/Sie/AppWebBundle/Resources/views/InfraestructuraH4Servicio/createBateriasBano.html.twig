@@ -1,0 +1,214 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Adición de Baterias de Banos</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+
+<small>
+	
+
+            {{form_start(edit_form, { 'attr':{'id':'idFormBateriasBano'} })}}
+                <div class="form-body"> 
+
+                    <div class="form-group">
+                    	<label>5.1 Baterias de Banos</label>
+                        <div class="row">
+                            <div class="col-md-4">
+                            	<label>Ambiente</label>
+                                {{form_widget(edit_form.n5AmbienteBanoTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-4">
+                            	<label>Área</label>
+                            	{{form_widget(edit_form.n5Areatotalm2, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="form-group no-margin">
+                    	<label>5.2 Regitra la cantidad de artefactos que funcionan(F.) y no funcionan(N.F.)</label>
+                        <div class="row">
+                            <div class="col-md-1">
+                            	<label>Letrinas F.</label>
+                                {{form_widget(edit_form.n5LetrinaFunciona, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-1">
+                            	<label>Letrinas N.F.</label>
+                                {{form_widget(edit_form.n5LetrinaNofunciona, {'attr': {'class':'form-control'} } )}}
+                            </div>
+
+                            <div class="col-md-1">
+                                <label>Inodoros F.</label>
+                                {{form_widget(edit_form.n5InodoroFunciona, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-1">
+                                <label>Inodoros N.F.</label>
+                                {{form_widget(edit_form.n5InodoroNofunciona, {'attr': {'class':'form-control'} } )}}
+                            </div>
+
+                            <div class="col-md-1">
+                                <label>Urinarios F.</label>
+                                {{form_widget(edit_form.n5UrinarioFunciona, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-1">
+                                <label>Urinarios N.F.</label>
+                                {{form_widget(edit_form.n5UrinarioNofunciona, {'attr': {'class':'form-control'} } )}}
+                            </div>
+
+                            <div class="col-md-1">
+                                <label>Lavamanos F.</label>
+                                {{form_widget(edit_form.n5LavamanoFunciona, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-1">
+                                <label>Lavamanos N.F.</label>
+                                {{form_widget(edit_form.n5LavamanoNofunciona, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-1">
+                                <label>Duchas  FF.</label>
+                                {{form_widget(edit_form.n5DuchaFunciona, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-1">
+                                <label>Duchas N.F.</label>
+                                {{form_widget(edit_form.n5DuchaNofunciona, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <br>
+
+
+                    <div class="form-group">
+                    	<label>5.3 Estado de la bateria de Banos</label>
+                        <div class="row">
+                            
+                            <div class="col-md-2">
+                            	<label>Cielo Falso</label>
+                                {{form_widget(edit_form.n52EsTieneCieloFalso, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                            	<label>Caracteristicas</label>
+                            	{{form_widget(edit_form.n52TieneCieloFalsoCaracTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                            	<label>Muro</label>
+                            	{{form_widget(edit_form.n52EsTieneMuros, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                            	<label>Material Muro</label>
+                            	{{form_widget(edit_form.n52TieneMurosMaterTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-3">
+                            	<label>Caracteristicas</label>
+                            	{{form_widget(edit_form.n52TieneMurosCaracTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>  
+                            
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2">
+                            	<label>Puerta</label>
+                                {{form_widget(edit_form.n52EsTienePuerta, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                            	<label>Seguro</label>
+                            	{{form_widget(edit_form.n521SeguroTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                            	<label>Abre</label>
+                            	{{form_widget(edit_form.n522AbreTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                            	<label>Revestimiento</label>
+                            	{{form_widget(edit_form.n52EsTieneRevest, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-3">
+                            	<label>Caracteristicas</label>
+                            	{{form_widget(edit_form.n52TieneRevestCaracTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>  
+                            
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            
+                            <div class="col-md-2">
+                            	<label>Ventana</label>
+                                {{form_widget(edit_form.n52EsTieneVentana, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                            	<label>Caracteristicas</label>
+                            	{{form_widget(edit_form.n52TieneVentanaCaracTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                            	<label>Piso</label>
+                            	{{form_widget(edit_form.n52EsTienePiso, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-2">
+                            	<label>Material Piso</label>
+                            	{{form_widget(edit_form.n52TienePisoMaterTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            <div class="col-md-3">
+                            	<label>Caracteristicas</label>
+                            	{{form_widget(edit_form.n52TienePisoCaracTipo, {'attr': {'class':'form-control'} } )}}
+                            </div>  
+                            
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                    	
+                        <div class="row">
+                            
+                            <div class="col-md-2">
+                            	<label>Techo</label>
+                                {{form_widget(edit_form.n52EsTieneTecho, {'attr': {'class':'form-control'} } )}}
+                            </div>
+                            
+                        </div>
+                    </div>
+
+            		
+
+
+
+                </div>
+
+
+                <!-- /.form-body -->
+                <!-- <div class="form-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-danger mr-5">Cancel</button>
+                        <button class="btn btn-success" type="submit">Submit</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.form-footer --> 
+
+
+                   
+            {{form_end(edit_form)}}
+
+
+</small>
+
+
+
+ </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-theme" data-dismiss="modal" onclick='saveNewBateriaBano()'>Guardar Cambios</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

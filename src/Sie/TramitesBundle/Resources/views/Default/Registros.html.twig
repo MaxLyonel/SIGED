@@ -13,7 +13,7 @@
                     <small>{% block contenttitulosmall %}{{subtitutlo}}{% endblock %}</small>
                 </h1>
                 <ol class="breadcrumb">
-                    {% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li>{% endblock %}                    
+                    {% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li>{% endblock %}
                 </ol>
             </div>
         </div>
@@ -33,16 +33,16 @@
                     </div>
                 {% endfor %}
             </div>
-        </div>        
+        </div>
     </div>
     <!-- /.row -->
 
-    <div class="row">        
+    <div class="row">
         {% block contentbuscador %}
             <!-- here the iptions content -->
         {% endblock %}
     </div>
-    <div class="row">        
+    <div class="row">
         {% block contentregistros %}
             <!-- here the iptions content -->
         {% endblock %}
@@ -193,7 +193,7 @@
 
                 peticion4 = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_tramite_verificar_carga_horaria') }}',
+                    url: '{{ path('tramite_verificar_carga_horaria') }}',
                     data: {'estudiante': id, 'gestiones': gestion, 'sies': sie, 'nivel': nivel, 'esp': especialidad},
                     beforeSend: function () {
                         $("#cargaHoraria_" + id).empty();
@@ -237,7 +237,7 @@
                         console.log(resultado < 800)
                         console.log(resultado < 1200)
                         console.log(resultado < 2000)
-                        
+
                         switch (nivel) {
                             case '1':
                                 if (resultado < 800) {

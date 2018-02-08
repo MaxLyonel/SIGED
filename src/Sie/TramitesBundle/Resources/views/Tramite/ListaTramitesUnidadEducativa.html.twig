@@ -1,8 +1,8 @@
 {% extends 'SieTramitesBundle:Default:Registros.html.twig' %}
 {% block contenttitulo %}{{ titulo }}{% endblock %}
 {% block contenttitulosmall %}{{ subtitulo }}{% endblock %}
-{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Listado de Estudiantes</li>{% endblock %}  
-    {% block contentbuscador %}    
+{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Listado de Estudiantes</li>{% endblock %}
+    {% block contentbuscador %}
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="row">
             <div class="col-lg-12 col-md-12">
@@ -28,7 +28,7 @@
                                 <div class="col-lg-2 col-md-7 col-sm-9 col-xs-12">
                                     {{ form_widget(form.sies) }}
                                     {#                                    <div class="help-block with-errors"></div>#}
-                                </div>                                
+                                </div>
                                 <div class="col-lg-4 col-md-7 col-sm-9 col-xs-12">
                                     {{ form_widget(form.especialidad,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
                                 </div>
@@ -47,28 +47,28 @@
                     </div>
                 </div>
             </div>
-        </div>    
+        </div>
     </div>
-{% endblock %} 
-{% block contentregistros %} 
-    {% if bachilleres is defined  %}        
+{% endblock %}
+{% block contentregistros %}
+    {% if bachilleres is defined  %}
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="row">                                
+            <div class="row">
                 {% if identificador == 13 or identificador == 14 %}
                     {% set nombreBotonPrincipal = "Recepcionar los marcados" %}
-                {% endif %}  
+                {% endif %}
                 {% if identificador == 15 %}
                     {% set nombreBotonPrincipal = "Autorizar los marcados" %}
-                {% endif %}                                      
+                {% endif %}
                 {% if identificador == 16 %}
                     {% set nombreBotonPrincipal = "Asignar serie a los marcados" %}
-                {% endif %}                                      
+                {% endif %}
                 {% if identificador == 17 or identificador == 18 %}
                     {% set nombreBotonPrincipal = "Entrega Los Marcados" %}
-                {% endif %}   
-                <form name="formtable" role="form" action="{{ path('sie_tramite_procesa') }}" method="POST" onsubmit="return verificaCampos()">                    
+                {% endif %}
+                <form name="formtable" role="form" action="{{ path('tramite_procesa') }}" method="POST" onsubmit="return verificaCampos()">
                     <div class="form-group">
-                        <div class="col-lg-12 col-md-12">                
+                        <div class="col-lg-12 col-md-12">
                             <div class="portlet portlet-default">
                                 <div class="portlet-heading">
                                     <div class="portlet-title col-md-12">
@@ -82,32 +82,32 @@
                                             <input type="hidden" name="identificador" value="{{ identificador }}" />
                                             <input type="hidden" name="especialidad" value="{{ especialidad }}" />
                                             <input type="hidden" name="nivel" value="{{ nivel }}" />
-                                            <input type="hidden" name="sie" value="{{ unidadEducativa[0].id }}" />  
+                                            <input type="hidden" name="sie" value="{{ unidadEducativa[0].id }}" />
                                             <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-warning" value="{{nombreBotonPrincipal}}" disabled="true" />
-                                            {% if identificador == 16 %}                                                                                    
-                                                <a class="btn btn-success fa fa-print" style="padding-bottom:12px" href="{{ path('sie_tramite_impresion_pdf', {'sie': unidadEducativa[0].id, 'gestion':gestion, 'identificador':identificador, 'especialidad':especialidad,'nivel':nivel}) }}">
+                                            {% if identificador == 16 %}
+                                                <a class="btn btn-success fa fa-print" style="padding-bottom:12px" href="{{ path('tramite_impresion_pdf', {'sie': unidadEducativa[0].id, 'gestion':gestion, 'identificador':identificador, 'especialidad':especialidad,'nivel':nivel}) }}">
                                                     Generar Certificado sin C.I.
                                                 </a>
-                                                <a class="btn btn-success fa fa-print" style="padding-bottom:12px" href="{{ path('sie_tramite_impresion_pdf_con_ci', {'sie': unidadEducativa[0].id, 'gestion':gestion, 'identificador':identificador, 'especialidad':especialidad,'nivel':nivel}) }}">
+                                                <a class="btn btn-success fa fa-print" style="padding-bottom:12px" href="{{ path('tramite_impresion_pdf_con_ci', {'sie': unidadEducativa[0].id, 'gestion':gestion, 'identificador':identificador, 'especialidad':especialidad,'nivel':nivel}) }}">
                                                     Generar Certificado con C.I.
                                                 </a>
-                                            {% endif %} 
-                                            {% if identificador == 14 or identificador == 15 or identificador == 16 or identificador == 17 or identificador == 18 %}                                                                                    
+                                            {% endif %}
+                                            {% if identificador == 14 or identificador == 15 or identificador == 16 or identificador == 17 or identificador == 18 %}
                                                 <button name="botonModalDevolver" id="botonModalDevolver" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolver"  disabled="true" >
                                                     Devolver los marcados
                                                 </button>
-                                            {% endif %} 
-                                            {% if identificador == 14 %}                                                                                    
-                                                <a class="btn btn-success" href="{{ path('sie_tramite_descarga_reporte_departamental_pdf', {'sie': unidadEducativa[0].id, 'gestion':gestion, 'identificador':identificador,'esp':especialidad}) }}">
+                                            {% endif %}
+                                            {% if identificador == 14 %}
+                                                <a class="btn btn-success" href="{{ path('tramite_descarga_reporte_departamental_pdf', {'sie': unidadEducativa[0].id, 'gestion':gestion, 'identificador':identificador,'esp':especialidad}) }}">
                                                     Imprimir Enviados
-                                                </a>                                                                                 
-                                            {% endif %}                                            
-                                            {% if identificador == 16 %}      
+                                                </a>
+                                            {% endif %}
+                                            {% if identificador == 16 %}
                                                 <input type="submit" name="botonAnular" id="botonAnular" class="btn btn-red" value="Anular" disabled="true"/>
-                                            {% endif %}                                            
-                                            {% if identificador == 17 %}      
+                                            {% endif %}
+                                            {% if identificador == 17 %}
                                                 <input type="submit" name="botonEntregar" id="botonEntregar" class="btn btn-success" value="Entregar Diploma" disabled="true" />
-                                            {% endif %}  
+                                            {% endif %}
                                         </div>
                                         <span class="divider"></span>
                                         <a data-toggle="collapse" data-parent="#accordion" href="index.html#form2"><i class="fa fa-chevron-down"></i></a>
@@ -115,16 +115,16 @@
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="portlet-body" id="form2">
-                                    {% if identificador == 16 %} 
-                                        <div class="col-lg-12 col-md-12">                
+                                    {% if identificador == 16 %}
+                                        <div class="col-lg-12 col-md-12">
                                             <div class="portlet portlet-green">
-                                                <div class="portlet-body">  
+                                                <div class="portlet-body">
                                                     <div class="row">
                                                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                                             Nro. Inicial del Certificado a imprimir: <input type="number" name="numeroSerie" id="numeroSerie" min="1" max="999999" class="form-control" onKeyDown="habilitarBotones()" onKeyUp="habilitarBotones()"/>
-                                                        </div>       
+                                                        </div>
                                                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                                            Serie:                                                             
+                                                            Serie:
                                                             <select class="form-control" name="serie">
                                                                 <option value=""selected>Seleccionar Serie</option>
                                                                 {% for ser in series %}
@@ -135,7 +135,7 @@
                                                                     {% endif %}
                                                                 {% endfor %}
                                                             </select>
-                                                        </div>       
+                                                        </div>
                                                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                                             Gestión:
                                                             <select class="form-control" name="gestion">
@@ -147,16 +147,16 @@
                                                                     {% endif %}
                                                                 {% endfor %}
                                                             </select>
-                                                        </div>       
+                                                        </div>
                                                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                                             Fecha Emisión: <div id="sandbox-container"><input type="text" name="fecha" id="fecha" class="form-control" onKeyDown="habilitarBotones()" onKeyUp="habilitarBotones()" onkeypress="return habilitarBotones()" onchange="habilitarBotones()"/></div>
-                                                        </div> 
-                                                    </div> 
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>                                                                
-                                    {% endif %} 
-                                    <div id="no-more-tables"> 
+                                        </div>
+                                    {% endif %}
+                                    <div id="no-more-tables">
                                         <table id="myTable" class="table table-bordered table-hover cf dataTable">
                                             <thead class="">
                                                 <tr class="">
@@ -181,10 +181,10 @@
                                                         {% set ci = bachiller.carnet_identidad~'-'~bachiller.complemento%}
                                                     {% endif %}#}
                                                     {% if identificador == 13 %}
-                                                        {% set id = bachiller.estudiante_inscripcion_id %}                                                 
+                                                        {% set id = bachiller.estudiante_inscripcion_id %}
                                                         {% set flujo = 0 %}
                                                     {% else %}
-                                                        {% set id = bachiller.tramite_id %}  
+                                                        {% set id = bachiller.tramite_id %}
                                                         {% set flujo = bachiller.flujo_proceso_id %}
                                                     {% endif %}
                                                     <tr>
@@ -196,16 +196,16 @@
                                                         <td data-title="Materno">{{ bachiller.materno }}</td>
                                                         <td data-title="Nombre(s)" >{{ bachiller.nombre }}</td>
                                                         <td data-title="Fecha - Lugar Nacimiento">{{bachiller.fecha_nacimiento|date('d/m/Y')}} - {{bachiller.depto_nacimiento}}</td>
-                                                        <td class="text-center" style="width: 50px"> 
+                                                        <td class="text-center" style="width: 50px">
                                                             <input type="checkbox" name="estudiantes[]" value="{{id}}" onclick="habilitarBotones()">
                                                             <input type="hidden" name="estudiante_id[]" value="{{bachiller.estudiante_id}}"/>
                                                         </td>
                                                     </tr>
                                                 {% endfor %}
                                             </tbody>
-                                        </table>                                                                                      
-                                    </div>  
-                                </div> 
+                                        </table>
+                                    </div>
+                                </div>
                                 <div class="portlet-footer">
                                     <div style="display: none;" class="modal modal-flex fade in" id="modalDevolver" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="false">
                                         <div class="modal-dialog">
@@ -242,11 +242,11 @@
                                         </div>
                                         <!-- /.modal-dialog -->
                                     </div>
-                                </div>            
-                            </div>           
-                        </div>         
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </form>                             
+                </form>
             </div>
         </div>
         <div class="modal modal-flex fade" id="historyInscriptions" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel"  aria-hidden="true">
@@ -274,7 +274,7 @@
         <script>
             function solonumeros(valor) {
 {#               var re = new RegExp("/\d/g");#}
-               
+
 {#                if (!(re.test(valor.key))) {#}
                 if (!((/\d/g).test(valor.key))) {
                     return false;
@@ -364,7 +364,7 @@
 
                     peticion1 = $.ajax({
                         type: 'POST',
-                        url: '{{ path('sie_tramite_listar_especialidad')}}',
+                        url: '{{ path('tramite_listar_especialidad')}}',
                         data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar},
                         beforeSend: function () {
                             $("#form_especialidad").attr('disabled', 'true');
@@ -395,7 +395,7 @@
                 }
                 peticion2 = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_tramite_listar_nivel')}}',
+                    url: '{{ path('tramite_listar_nivel')}}',
                     data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar, 'especialidad': esp_listar},
                     beforeSend: function () {
                         $('#form_nivel').attr('disabled', 'true');
@@ -417,5 +417,5 @@
                 });
             }
         </script>
-    {% endif %}    
+    {% endif %}
 {% endblock %}

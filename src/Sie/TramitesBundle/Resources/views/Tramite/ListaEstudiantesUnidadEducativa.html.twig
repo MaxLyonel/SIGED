@@ -2,9 +2,9 @@
 
 {% block contenttitulo %}{{ titulo }}{% endblock %}
 {% block contenttitulosmall %}{{ subtitulo }}{% endblock %}
-{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Listado de Estudiantes</li>{% endblock %}  
+{% block contentnavegacion %}<li class="active"><i class="fa fa-dashboard"></i> Principal</li><li class="active">Listado de Estudiantes</li>{% endblock %}
 
-{% block contentbuscador %}   
+{% block contentbuscador %}
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="row">
             <div class="col-lg-12 col-md-12">
@@ -30,7 +30,7 @@
                                 <div class="col-lg-2 col-md-7 col-sm-9 col-xs-12">
                                     {{ form_widget(form.sies) }}
                                     {#                                    <div class="help-block with-errors"></div>#}
-                                </div>                                
+                                </div>
                                 <div class="col-lg-4 col-md-7 col-sm-9 col-xs-12">
                                     {{ form_widget(form.especialidad,{ 'attr':{'class':'btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12' } }) }}
                                 </div>
@@ -49,30 +49,30 @@
                     </div>
                 </div>
             </div>
-        </div>    
+        </div>
     </div>
 
-{% endblock %} 
-{% block contentregistros %} 
+{% endblock %}
+{% block contentregistros %}
     {% if bachilleres is defined  %}
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="row">
 
                 {% if identificador == 13  %}
                     {% set nombreBotonPrincipal = "Recepción y Envio a la DDE" %}
-                {% endif %}  
+                {% endif %}
                 {% if  identificador == 14 %}
                     {% set nombreBotonPrincipal = "Recepcionar los marcados" %}
-                {% endif %}  
+                {% endif %}
                 {% if identificador == 15 %}
                     {% set nombreBotonPrincipal = "Autorizar los marcados" %}
-                {% endif %}                                      
+                {% endif %}
                 {% if identificador == 16 %}
                     {% set nombreBotonPrincipal = "Imprimir los marcados" %}
-                {% endif %} 
+                {% endif %}
 
-                <form name="formtable" role="form" action="{{ path('sie_tramite_recepcion_distrito_registra') }}" method="POST" onsubmit="return verificaCampos()">
-                    <div class="col-lg-12 col-md-12">                
+                <form name="formtable" role="form" action="{{ path('tramite_recepcion_distrito_registra') }}" method="POST" onsubmit="return verificaCampos()">
+                    <div class="col-lg-12 col-md-12">
                         <div class="portlet portlet-default">
                             <div class="portlet-heading">
                                 <div class="portlet-title col-md-12">
@@ -83,9 +83,9 @@
                                     <div class="btn-group">
                                         <input type="hidden" id="gestion" name="gestion" value="{{ gestion }}" />
                                         <input type="hidden" id="identificador" name="identificador" value="{{ identificador }}" />
-                                        <input type="hidden" id="sie" name="sie" value="{{ unidadEducativa[0].id }}" />    
-                                        <input type="hidden" id="nivel" name="nivel" value="{{ nivel }}" />    
-                                        <input type="hidden" id="especialidad" name="especialidad" value="{{ especialidad }}" />    
+                                        <input type="hidden" id="sie" name="sie" value="{{ unidadEducativa[0].id }}" />
+                                        <input type="hidden" id="nivel" name="nivel" value="{{ nivel }}" />
+                                        <input type="hidden" id="especialidad" name="especialidad" value="{{ especialidad }}" />
                                         <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
                                         </div>
                                         <div class="row">
@@ -99,7 +99,7 @@
                                                 <input type="submit" name="botonAceptar" class="btn btn-warning" value="{{nombreBotonPrincipal}}" disabled="true" />
                                             </div>
                                             <div class="col-lg-6 col-md-7 col-sm-9 col-xs-12">
-                                                <a class="btn btn-success"  href="{{ path('sie_tramite_descarga_reporte_distrito_pdf', {'sie': sie, 'gestion':gestion, 'especialidad':especialidad}) }}">
+                                                <a class="btn btn-success"  href="{{ path('tramite_descarga_reporte_distrito_pdf', {'sie': sie, 'gestion':gestion, 'especialidad':especialidad}) }}">
                                                     Imprimir Enviados
                                                 </a>
 
@@ -115,7 +115,7 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="portlet-body " id="infouser">
-                                <div id="no-more-tables"> 
+                                <div id="no-more-tables">
                                     <table id="myTable" class="table table-bordered table-hover cf  tabla_dis">
                                         <thead class="">
                                             <tr class="">
@@ -165,13 +165,13 @@
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
-                                    </table>   
+                                    </table>
                                     <input type="hidden" name="estudiante"  id="students" value=""/>
-                                </div>  
+                                </div>
                             </div>
-                        </div>           
+                        </div>
                     </div>
-                </form>                             
+                </form>
             </div>
         </div>
     {% endif %}
@@ -218,7 +218,7 @@
         $(function () {
         $('[data-toggle="popover"]').popover();
         });
-        
+
         function buscarBoton(a) {
         $('#form_search').attr('disabled', 'disabled');
         var sie = document.getElementById('form_sies').value;
@@ -231,7 +231,7 @@
         console.log(sie);
         peticion1 = $.ajax({
         type: 'POST',
-                url: '{{ path('sie_tramite_verificar_rue')}}',
+                url: '{{ path('tramite_verificar_rue')}}',
                 data: {'sie': sie},
                 beforeSend: function () {
                 $(".contenedor_navegador").css('display','block');
@@ -338,7 +338,7 @@ function cerrar_pantalla(f,t){
         }
         peticion1 = $.ajax({
         type: 'POST',
-                url: '{{ path('sie_tramite_listar_especialidad')}}',
+                url: '{{ path('tramite_listar_especialidad')}}',
                 data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar},
                 beforeSend: function () {
                 $("#form_especialidad").attr('disabled', 'true');
@@ -372,7 +372,7 @@ function cerrar_pantalla(f,t){
         }
         peticion2 = $.ajax({
         type: 'POST',
-                url: '{{ path('sie_tramite_listar_nivel')}}',
+                url: '{{ path('tramite_listar_nivel')}}',
                 data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar, 'especialidad': esp_listar},
                 beforeSend: function () {
                 $('#form_nivel').attr('disabled', 'true');

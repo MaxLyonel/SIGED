@@ -6,7 +6,7 @@
     {% if listaParticipante is defined  %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <form name="formtable" id="formtable" role="form" action="{{ path('sie_tramite_diploma_humanistico_regular_registro_guarda') }}" method="POST" onsubmit="return verificaCampos()">
+                <form name="formtable" id="formtable" role="form" action="{{ path('tramite_diploma_humanistico_regular_registro_guarda') }}" method="POST" onsubmit="return verificaCampos()">
                     <input type="hidden" name="_token" value="{{ csrf_token('registrar') }}">
                     <input type="hidden" name="_info" value="{{ datosBusqueda }}">
                     <div class="panel">
@@ -16,7 +16,7 @@
                             </div>
                             <div class="pull-right">
                                 <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-primary" value="Registrar" disabled="true" />
-                                <a class="btn btn-lilac" href="{{ path('sie_tramite_diploma_humanistico_regular_registro_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir</a>
+                                <a class="btn btn-lilac" href="{{ path('tramite_diploma_humanistico_regular_registro_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir</a>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -40,7 +40,7 @@
                                         <th style="width:50px; text-align:center;">
                                             <div class="ckbox ckbox-primary">
                                                 <input id="participantesAll" type="checkbox" onchange="marcarTodos(this);">
-                                                <label for="participantesAll"></label>
+                                                <label for="participantesAll">Todos</label>
                                             </div>
                                         </th>
                                     </tr>
@@ -71,9 +71,9 @@
                                         <tr {% if participanteObservado %}class="text-danger"{% endif %}>
                                             <td style="text-align:center;">
                                                 {% if participante.segip_id > 1 or participante.segip_id == 0 %}
-                                                    <buttom onclick="participanteHistorial('{{ participante.estudiante_id|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-danger btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
+                                                    <buttom onclick="participanteRegularHistorial('{{ participante.estudiante_id|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-danger btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
                                                 {% else %}
-                                                    <buttom onclick="participanteHistorial('{{ participante.estudiante_id|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-teal btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
+                                                    <buttom onclick="participanteRegularHistorial('{{ participante.estudiante_id|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-teal btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
                                                 {% endif %}
                                             </td>
                                             <td>{{ participante.estadomatricula }}</td>
@@ -86,10 +86,12 @@
                                             <td>
                                                 {% if participante.gestion_tipo_id != "now"|date("Y") %}
                                                   {% if participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
+                                                    <span class="label label-danger rounded">Abandono/Reprobado</span>
                                                     {% set registro = false %}
                                                   {% endif %}
                                                 {% else %}
                                                   {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
+                                                    <span class="label label-danger rounded">Abandono</span>
                                                     {% set registro = false %}
                                                   {% endif %}
                                                 {% endif %}

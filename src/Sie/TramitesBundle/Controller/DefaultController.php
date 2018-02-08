@@ -101,7 +101,7 @@ class DefaultController extends Controller {
             $limit = count($aBuildMenu);
             $optionMenu = array();
             while ($i < $limit) {
-                $optionMenu[$aBuildMenu[$i]['objeto_tipo_icono']][] = array('label' => $aBuildMenu[$i]['nombre'], 'status' => $aBuildMenu[$i]['menu_objeto_esactivo'], 'ruta' => $aBuildMenu[$i]['ruta'],'icono'=>$aBuildMenu[$i]['menu_tipo_icono']);
+                $optionMenu[$aBuildMenu[$i]['objeto_tipo_icono']][] = array('label' => $aBuildMenu[$i]['nombre'], 'status' => $aBuildMenu[$i]['menu_objeto_esactivo'], 'ruta' => $aBuildMenu[$i]['ruta'],'icono'=>$aBuildMenu[$i]['menu_tipo_icono'],'menuId' => $aBuildMenu[$i]['objeto_tipo_id'],'subMenuId' => $aBuildMenu[$i]['menu_tipo_id']);
                 $i++;
             }
             //set some values fot the view template
@@ -733,7 +733,7 @@ class DefaultController extends Controller {
         }
 
         if (!isset($save)) {
-            return $this->redirectToRoute('sie_tramites_homepage');
+            return $this->redirectToRoute('tramite_homepage');
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -780,7 +780,7 @@ class DefaultController extends Controller {
                 } elseif ($identificador == 0) {
                     $retorna = $this->redirectToRoute('sie_tramite_impresion_listados_detalle');
                 } else {
-                    $retorna = $this->redirectToRoute('sie_tramites_homepage');
+                    $retorna = $this->redirectToRoute('tramite_homepage');
                 }
                 return $retorna;
             }
@@ -1809,7 +1809,7 @@ class DefaultController extends Controller {
                 } elseif ($identificador == 18) {
                     $retorna = 'sie_tramite_entrega_distrito';
                 } else {
-                    $retorna = 'sie_tramites_homepage';
+                    $retorna = 'tramite_homepage';
                 }
 
                 /*
@@ -3132,4 +3132,29 @@ class DefaultController extends Controller {
         ));
     }
 
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion de registra la variable session del menu ejecutado
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function setActiveMenu() {
+        $path = str_replace('/','_',substr($_SERVER['PATH_INFO'],1));
+
+        $em = $this->getDoctrine()->getManager();
+        //****SE GENERAN LOS MENUS PARA EL SIGEN EN BASE AL ID DEL ROL DEL USUARIO
+        $query = $em->getConnection()->prepare('SELECT get_objeto_menu_path(:pathMenu)');
+        $query->bindValue(':pathMenu', $path);
+        //$query->bindValue(':sistema_tipo_id', '{3,10}');
+        $query->execute();
+        $aMenuUser = $query->fetchAll();
+        $menu = $aMenuUser[0]['get_objeto_menu_path'];
+        $menu = str_replace(array('(', ')', '"'), '', $menu);
+        $aMenu = explode(',', $menu);
+
+        $this->session->set('pMenuId', $aMenu[2]);
+        $this->session->set('pSubMenuId', $aMenu[5]);
+
+        return array('pMenuId' => $aMenu[2], 'pSubMenuId' => $aMenu[5]);
+    }
 }
