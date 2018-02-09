@@ -1,3 +1,7 @@
+sie_app_web_h5mobiliario:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah5ambientepedagogicomobiliario.yml"
+    prefix:   /h5mobiliario
+
 sie_app_web_infraestructurah4serviciovestuarios:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah4serviciovestuarios.yml"
     prefix:   /infraestructurah4serviciovestuarios
