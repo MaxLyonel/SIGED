@@ -31,13 +31,7 @@
                             <div class="row">                                                            
                                 <div class="col-md-4"> 
                                     <div class="form-group">
-                                        <label class="control-label">Elija el Pensum</label>
-                                            <select onchange="changePensum()" name="pensumid" id="pensumid" class="pensumid form-control input-sm mb-15">
-                                                <option value="-999">...</option>
-                                                    {% for data in pensum %}
-                                                        <option value="{{data.pensum_id}}">{{ data.pensum }}</option>
-                                                    {% endfor %}
-                                            </select>                          
+                                                                 
                                     </div>        
                                 </div>
                                 <div class="col-md-4">
@@ -52,13 +46,20 @@
                                 </div>                            
                             </div>                        
                         <BR>
-                            <div id="nuevomodulo" style="display:none;">
+                            <div id="nuevomodulo">
                                 <div class="panel rounded shadow">
                                     <div class="panel-body no-padding">
                                         <form id="formnuevaasignatura" onsubmit="enviaformmodulo(); return false;" method="post" style="">
                                             <div class="form-body">
                                                 <div class="row">
                                                     <div class="col-md-4">
+                                                            <label class="control-label">Elija el Pensum</label>
+                                                            <select onchange="changePensum()" name="pensumid" id="pensumid" class="pensumid form-control input-sm mb-15">
+                                                                <option value="-999">...</option>
+                                                                    {% for data in pensum %}
+                                                                        <option value="{{data.pensum_id}}">{{ data.pensum }}</option>
+                                                                    {% endfor %}
+                                                            </select> 
                                                         <div class="form-group">
                                                             <label class="control-label">Periodo</label>                                                            
                                                             <select name="periodoid" id="periodoid" class="form-control input-sm mb-15">
@@ -177,7 +178,7 @@
 	    }
         
     function nuevomodulocerrar(){
-            $("#nuevomodulo").hide();
+            $("#nuevomodulo").show();
 	    }
 
     function enviaformmodulo() {
@@ -209,7 +210,7 @@
                                 
                                     $.ajax({
                                         type: 'post',                                        
-                                        url: Routing.generate('dgesttla_malla_tecnica_asignatura_add', {'pensumid': pensumid}),
+                                        url: Routing.generate('dgesttla_malla_tecnica_asignatura_add'),
                                         data: formData,
                                         beforeSend: function () {
                                             $("#nuevomodulo").hide();

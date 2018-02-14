@@ -29,11 +29,13 @@ class InfraestructuraGenEstadoMobEquipTipo
      */
     private $gestionTipoId;
 
-
+    public function __toString(){
+      return $this->descripcion;
+    }
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -49,14 +51,14 @@ class InfraestructuraGenEstadoMobEquipTipo
     public function setDescripcion($descripcion)
     {
         $this->descripcion = $descripcion;
-    
+
         return $this;
     }
 
     /**
      * Get descripcion
      *
-     * @return string 
+     * @return string
      */
     public function getDescripcion()
     {
@@ -72,14 +74,14 @@ class InfraestructuraGenEstadoMobEquipTipo
     public function setObs($obs)
     {
         $this->obs = $obs;
-    
+
         return $this;
     }
 
     /**
      * Get obs
      *
-     * @return string 
+     * @return string
      */
     public function getObs()
     {
@@ -95,14 +97,14 @@ class InfraestructuraGenEstadoMobEquipTipo
     public function setGestionTipoId($gestionTipoId)
     {
         $this->gestionTipoId = $gestionTipoId;
-    
+
         return $this;
     }
 
     /**
      * Get gestionTipoId
      *
-     * @return integer 
+     * @return integer
      */
     public function getGestionTipoId()
     {

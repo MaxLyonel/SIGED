@@ -110,7 +110,7 @@ class MallaCurricularController extends Controller {
 
 
 
-    public function addasignaturaAction(Request $request, $pensumid) {
+    public function addasignaturaAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         
         //get the session's values
@@ -135,7 +135,7 @@ class MallaCurricularController extends Controller {
         $periodoid = $request->get('periodoid');
         $codigo = $request->get('codigo');
         $asignatura = $request->get('asignatura');
-        //$pensumid = $request->get('pensumid');
+        $pensumid = $request->get('pensumid');
         
         $response = new JsonResponse(); 
 

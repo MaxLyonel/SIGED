@@ -391,7 +391,7 @@ class TramiteController extends Controller {
                     }
 
                     if ($msg[0]) {
-                        switch ($nivdipHumAlternativaRegistroBuscaActionelId) {
+                        switch ($nivelId) {
                             case 1:
                                 $tramiteTipoId = 6;
                                 break;
@@ -863,7 +863,6 @@ class TramiteController extends Controller {
                   } else {
                       $msg = array('0'=>false, '1'=>'estudiante no encontrado');
                   }
-
                   if ($msg[0]) {
 
                       $tramiteId = $this->setTramiteEstudiante($estudianteInscripcionId, $gestionId, $tramiteTipoId, $flujoTipoId, $em);
@@ -1458,80 +1457,57 @@ class TramiteController extends Controller {
     public function getDipHumAlternativaCalificacionObsEstudiante($participanteId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-          select v.codigo_rude, v.carnet_identidad, v.paterno, v.materno, v.nombre
-          , string_agg(distinct v.asignatura||' ('||v.grado_tipo_id||'° '||v.paralelo||' / '||v.gestion_tipo_id||'-'||v.institucioneducativa_id||')', ', ') as asignaturas from (
-            SELECT
-                estudiante.codigo_rude,
-                cast(estudiante.carnet_identidad as varchar)||(case when estudiante.complemento is null then '' when estudiante.complemento = '' then '' else '-'||estudiante.complemento end) as carnet_identidad,
-                estudiante.paterno,
-                estudiante.materno,
-                estudiante.nombre,
-                institucioneducativa_curso.institucioneducativa_id,
-                institucioneducativa_curso.grado_tipo_id,
-                institucioneducativa_curso.paralelo_tipo_id,
-                paralelo_tipo.paralelo,
-                institucioneducativa_curso.gestion_tipo_id,
-                estudiante_inscripcion.estadomatricula_tipo_id,
-                institucioneducativa_curso_oferta.asignatura_tipo_id,
-            asignatura_tipo.asignatura,
-                institucioneducativa_curso.turno_tipo_id,
-                Sum(case when estudiante_nota.nota_tipo_id = 1 then estudiante_nota.nota_cuantitativa end) AS b1,
-                Sum(case when estudiante_nota.nota_tipo_id = 2 then estudiante_nota.nota_cuantitativa end) AS b2,
-                Sum(case when estudiante_nota.nota_tipo_id = 3 then estudiante_nota.nota_cuantitativa end) AS b3,
-                Sum(case when estudiante_nota.nota_tipo_id = 4 then estudiante_nota.nota_cuantitativa end) AS b4,
-                Sum(case when estudiante_nota.nota_tipo_id = 5 then estudiante_nota.nota_cuantitativa end) AS b5,
-                Sum(case when estudiante_nota.nota_tipo_id = 6 then estudiante_nota.nota_cuantitativa end) AS t1,
-                Sum(case when estudiante_nota.nota_tipo_id = 7 then estudiante_nota.nota_cuantitativa end) AS t2,
-                Sum(case when estudiante_nota.nota_tipo_id = 8 then estudiante_nota.nota_cuantitativa end) AS t3,
-                Sum(case when estudiante_nota.nota_tipo_id = 9 then estudiante_nota.nota_cuantitativa end) AS t4,
-                Sum(case when estudiante_nota.nota_tipo_id = 10 then estudiante_nota.nota_cuantitativa end) AS t5,
-                Sum(case when estudiante_nota.nota_tipo_id = 11 then estudiante_nota.nota_cuantitativa end) AS t6
-                FROM
-                estudiante
-                INNER JOIN  estudiante_inscripcion ON  estudiante_inscripcion.estudiante_id =  estudiante.id
-                INNER JOIN  institucioneducativa_curso ON  estudiante_inscripcion.institucioneducativa_curso_id =  institucioneducativa_curso.id
-                INNER JOIN  estudiante_asignatura ON  estudiante_asignatura.estudiante_inscripcion_id =  estudiante_inscripcion.id
-                LEFT JOIN  estudiante_nota ON  estudiante_nota.estudiante_asignatura_id =  estudiante_asignatura.id
-                INNER JOIN  institucioneducativa_curso_oferta ON  institucioneducativa_curso_oferta.insitucioneducativa_curso_id =  institucioneducativa_curso.id AND  estudiante_asignatura.institucioneducativa_curso_oferta_id =  institucioneducativa_curso_oferta.id
-            INNER JOIN  asignatura_tipo ON  institucioneducativa_curso_oferta.asignatura_tipo_id =  asignatura_tipo.id
-                INNER JOIN  paralelo_tipo ON  institucioneducativa_curso.paralelo_tipo_id =  paralelo_tipo.id
-            LEFT JOIN  estudiante_inscripcion_humnistico_tecnico ON estudiante_inscripcion_humnistico_tecnico.estudiante_inscripcion_id = estudiante_inscripcion.id
-                LEFT JOIN  especialidad_tecnico_humanistico_tipo ON estudiante_inscripcion_humnistico_tecnico.especialidad_tecnico_humanistico_tipo_id = especialidad_tecnico_humanistico_tipo.id
-                WHERE
-                estudiante.id = ".$participanteId." and estudiante_inscripcion.estadomatricula_tipo_id in (4,5,55) and institucioneducativa_curso.nivel_tipo_id in (3,13)
-                AND case when institucioneducativa_curso.gestion_tipo_id > 2010 then institucioneducativa_curso.ciclo_tipo_id in (2,3) else true end
-            GROUP BY
-                estudiante.codigo_rude,
-                estudiante.carnet_identidad,
-                estudiante.complemento,
-                estudiante.paterno,
-                estudiante.materno,
-                estudiante.nombre,
-                institucioneducativa_curso.institucioneducativa_id,
-                institucioneducativa_curso.grado_tipo_id,
-                institucioneducativa_curso.paralelo_tipo_id,
-                paralelo_tipo.paralelo,
-                institucioneducativa_curso.gestion_tipo_id,
-                estudiante_inscripcion.estadomatricula_tipo_id,
-                institucioneducativa_curso_oferta.asignatura_tipo_id,
-            asignatura_tipo.asignatura,
-                institucioneducativa_curso.turno_tipo_id,
-                especialidad_tecnico_humanistico_tipo.especialidad
-             ) as v
-           where
-           case
-            when (gestion_tipo_id::double precision = date_part('year',current_date)::double precision)
-            then (b1 is null or b1 = 0)
-            when ((gestion_tipo_id > 2013) or (gestion_tipo_id > 2013 and grado_tipo_id = 1) and gestion_tipo_id < date_part('year',current_date))
-            then (b1 is null or b1 = 0 or b2 is null or b2 = 0 or b3 is null or b3 = 0 or b4 is null or b4 = 0 or b5 is null or b5 = 0)
-            else (b1 is null or t1 = 0 or t2 is null or t2 = 0 or t3 is null or t3 = 0 or t4 is null or t4 = 0)
+          select
+          v.codigo_rude, v.paterno, v.materno, v.nombre
+          , string_agg(distinct v.asignatura||' ('||v.gestion_tipo_id||' / '||v.periodo||' / '||v.institucioneducativa_id||' / '||v.paralelo||')', ', ') as asignaturas
+          from (
+          select e.id as estudiante_id, e.codigo_rude, e.paterno, e.materno, e.nombre, sest.id as especialidad_id, sest.especialidad
+          , sat.codigo as grado_tipo_id, sat.acreditacion as grado, ie.id as institucioneducativa_id, ie.institucioneducativa, pt.paralelo
+          , ei.estadomatricula_tipo_id, smt.id as asignatura_tipo_id, smt.modulo as asignatura, ies.gestion_tipo_id
+          , sast.id as area_tipo_id, sast.area_superior as area, tt.id as turno_tipo_id, tt.turno, pet.id as periodo_tipo_id, pet.periodo as periodo
+          , SUM(case en.nota_tipo_id when 23 then en.nota_cuantitativa else 0 end) as n1
+          , SUM(case en.nota_tipo_id when 24 then en.nota_cuantitativa else 0 end) as n2
+          , SUM(case en.nota_tipo_id when 25 then en.nota_cuantitativa else 0 end) as n3
+          , SUM(case en.nota_tipo_id when 26 then en.nota_cuantitativa else 0 end) as n4
+          from superior_facultad_area_tipo as sfat
+          inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
+          inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
+          inner join superior_acreditacion_tipo as sat on sae.superior_acreditacion_tipo_id=sat.id
+          inner join superior_institucioneducativa_acreditacion as siea on siea.acreditacion_especialidad_id = sae.id
+          inner join institucioneducativa_sucursal as ies on siea.institucioneducativa_sucursal_id = ies.id
+          inner join superior_institucioneducativa_periodo as siep on siep.superior_institucioneducativa_acreditacion_id = siea.id
+          inner join institucioneducativa_curso as iec on iec.superior_institucioneducativa_periodo_id = siep.id
+          inner join estudiante_inscripcion as ei on iec.id=ei.institucioneducativa_curso_id
+          inner join (select * from estudiante where id = ".$participanteId.") as e on ei.estudiante_id=e.id
+          inner join superior_modulo_periodo as smp ON smp.institucioneducativa_periodo_id = siep.id
+          inner join superior_modulo_tipo as smt ON smt.id = smp.superior_modulo_tipo_id
+          inner join superior_area_saberes_tipo as sast on sast.id = smt.superior_area_saberes_tipo_id
+          inner join institucioneducativa_curso_oferta as ieco on ieco.superior_modulo_periodo_id = smp.id and ieco.insitucioneducativa_curso_id = iec.id
+          inner join institucioneducativa as ie on ie.id = siea.institucioneducativa_id
+          inner join paralelo_tipo as pt on pt.id = iec.paralelo_tipo_id
+          inner join turno_tipo as tt on tt.id = iec.turno_tipo_id
+          inner join periodo_tipo as pet on pet.id = ies.periodo_tipo_id
+          left join estudiante_asignatura as ea on ea.institucioneducativa_curso_oferta_id = ieco.id and ea.estudiante_inscripcion_id = ei.id
+          left join estudiante_nota as en on en.estudiante_asignatura_id = ea.id
+          where  sfat.codigo in (15) and sat.codigo in (2,3) and sest.codigo in (2)
+          and ei.estadomatricula_tipo_id in (4,5,55) and en.nota_tipo_id::integer in (23,24,25,26)
+          group by e.id, e.codigo_rude, e.paterno, e.materno, e.nombre, ei.estadomatricula_tipo_id, sest.id, sest.especialidad
+          , sat.codigo, sat.acreditacion, ie.id, ie.institucioneducativa, tt.id, tt.turno, pt.paralelo, smt.id, smt.modulo
+          , ies.gestion_tipo_id, sast.id, sast.area_superior, pet.id, pet.periodo
+          order by ies.gestion_tipo_id desc, pet.id desc, sat.codigo, sast.id, smt.id
+          ) as v
+          where
+          case
+          when (gestion_tipo_id::double precision != date_part('year',current_date)::double precision)
+          then
+            case
+            when (gestion_tipo_id::double precision > 2015) then (n4 is null or n4 = 0)
+            else (n1 is null or n1 = 0 or n2 is null or n2 = 0 or n3 is null or n3 = 0 or n4 is null or n4 = 0)
+            end
+          else
+            true
           end
-          group by
-          v.codigo_rude,
-          v.carnet_identidad,
-          v.paterno,
-          v.materno,
-          v.nombre
+          group by v.codigo_rude, v.paterno, v.materno, v.nombre
         ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
