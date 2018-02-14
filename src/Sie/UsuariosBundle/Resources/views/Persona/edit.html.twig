@@ -6,7 +6,7 @@
                 </h1>
                 <ol class="breadcrumb">
                     <li><i class="fa fa-dashboard"></i>  <a href="index.html">Actualizar Datos</a></li>
-                    <li class="active">Modificar Datos </li>
+                    <li class="active">Modificar Datos55 </li>
                 </ol>
             </div>
         </div>
@@ -20,7 +20,11 @@
                 <div class="portlet-heading">
                     <div class="portlet-title">
                         {% if segipId != 0  %}
-                            <h4>Información Persona <span class="label label-danger">Solo se podra actualizar la información de genero y correo electrónico.</span></h4>
+                            {% if fechaEditOn == 'true'  %}                           
+                                <h4>Información Persona <span class="label label-danger">Solo se podra actualizar la información de Fecha de Nacimiento, Genero y Correo Electrónico.</span></h4>
+                            {% else %}
+                                <h4>Información Persona <span class="label label-danger">Solo se podra actualizar la información de Genero y Correo Electrónico.</span></h4>
+                            {% endif %}
                         {% elseif (count_edit == 1) or (count_edit == '')  %}
                             <h4>Información Persona <span class="label label-info">Usted cuenta con una edicion de datos personales para este registro.</span></h4>                            
                         {% elseif count_edit == 2  %}
@@ -88,7 +92,7 @@
                                 </div>
                             </div>
                              <div style="visibility: hidden;">                                
-                                {{ form_row(form.complemento, { 'id': 'complemento' }) }}                              
+                                {{ form_row(form.complemento, { 'id': 'complemento' }) }} 
                             </div> 
                         </div
                     </div>
@@ -184,11 +188,12 @@
                         //alert(numfila);
                         if (numfila != ''){
                             //ACTUALIZANDO TABLA alert(numfila+data.username);                            
-                            {#$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[0].innerHTML = '<span class="label label-warning">Registro consolidado!</span>';#}
-                            $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[3].innerHTML = $("#carnet").val().toUpperCase();
+                            $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[0].innerHTML = '<span class="label label-warning">Registro Actualizado!</span>'
+                            
+                            {#$($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[3].innerHTML = $("#carnet").val().toUpperCase();
                             $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[4].innerHTML = $("#nombre").val().toUpperCase();
                             $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[5].innerHTML = $("#paterno").val().toUpperCase();
-                            $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[6].innerHTML = $("#materno").val().toUpperCase();
+                            $($('#tablaListadoPersonas').find('tbody > tr')[numfila]).children('td')[6].innerHTML = $("#materno").val().toUpperCase();#}
                         }
                         
                         $("#divAlertUser").html('<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + data.mensaje + '</div>');

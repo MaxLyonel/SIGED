@@ -108,6 +108,23 @@ class PersonaController extends Controller
         $form->get('materno')->setData($persona->getMaterno());
         $form->get('nombre')->setData($persona->getNombre());
         $form->get('complemento')->setData($persona->getComplemento());
+
+        $datetime = $persona->getFechaNacimiento();
+        $year = $datetime->format('Y');
+        $datetimeact = new \DateTime();
+        $yearact = $datetimeact->format('Y');
+
+        $valfecha = intval($yearact) - intval($year);
+        //dump($valfecha); die;
+
+        $fechaEditOn = '0';
+        $form->get('fechaEditOn')->setData('0');
+
+        if ($valfecha > 100){
+            $fechaEditOn = 'true';
+            $form->get('fechaEditOn')->setData('true');
+        }
+                
         $form->get('fechaNacimiento')->setData($persona->getFechaNacimiento());
         $form->get('generoTipo')->setData($persona->getGeneroTipo());
         $form->get('correo')->setData($persona->getCorreo());
@@ -118,6 +135,7 @@ class PersonaController extends Controller
                     'complemento' => $persona->getComplemento(),
                     'count_edit' => $persona->getCountEdit(),
                     'segipId' => $persona->getSegipId(),
+                    'fechaEditOn' => $fechaEditOn,
         ));        
     }
     
@@ -129,6 +147,10 @@ class PersonaController extends Controller
         $response = new JsonResponse();
         try {
             if (($persona->getSegipId() > 0) || ($persona->getCountEdit() > 2)){
+                if ($form['fechaEditOn'] == "true"){
+                    $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
+                    $persona->setFechaNacimiento(\DateTime::createFromFormat('d/m/Y', $fecha));   
+                }    
                 //dump($persona); die; 4537043
                 $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));                
                 $persona->setCorreo($form['correo']);                
