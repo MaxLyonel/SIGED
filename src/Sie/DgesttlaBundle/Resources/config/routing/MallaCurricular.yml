@@ -5,7 +5,7 @@ dgesttla_malla_curricular:
         expose: true
 
 dgesttla_malla_tecnica_asignatura_add:
-    path:   /mallaaddasignatura/{pensumid}
+    path:   /mallaaddasignatura
     defaults:   { _controller: "SieDgesttlaBundle:MallaCurricular:addasignatura" }
     options:
         expose: true
