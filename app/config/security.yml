@@ -32,6 +32,7 @@ security:
             anonymous: true
     access_control:
         - { path: ^/roladmin, roles: [ROLE_TECSS_*] }
+        - { path: ^/apropiacionpersona, roles: [ROLE_TECSS_*] }
         - { path: ^/unificacionrude, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG] }
         - { path: ^/modificaciondatos, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG,ROLE_IMPD_DIP,ROLE_PNPC_PNP] }
         - { path: ^/datosapoderado, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG,ROLE_IMPD_DIP,ROLE_PNPC_PNP,ROLE_IMPD_DIP] }

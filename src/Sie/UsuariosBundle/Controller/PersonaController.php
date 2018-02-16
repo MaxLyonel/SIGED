@@ -300,7 +300,7 @@ class PersonaController extends Controller
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');");
             $query->execute();
 
-            $em = $this->getDoctrine()->getManager();
+            /*$em = $this->getDoctrine()->getManager();
             //$em = $this->getDoctrine()->getEntityManager();
             $db = $em->getConnection();            
             $query = "  select max(carnet)
@@ -311,9 +311,10 @@ class PersonaController extends Controller
             $stmt->execute($params);
             $po = $stmt->fetchAll();
             $newcarnet = (float)($po[0]['max']) + 1;
-            $newcarnetstr = strval ($newcarnet);            
+            $newcarnetstr = strval ($newcarnet);*/
+
             $personaobs = $em->getRepository('SieAppWebBundle:Persona')->find($form['idpersona']);
-            $personaobs->setCarnet($newcarnetstr);
+            $personaobs->setCarnet('9-'.$form['carnet']);
             $em->persist($personaobs);
             $em->flush();
             
@@ -325,6 +326,9 @@ class PersonaController extends Controller
             $newpersona->setComplemento(mb_strtoupper($form['complemento'], "utf-8"));
             $newpersona->setCorreo(mb_strtolower($form['correo'], "utf-8"));
             $fecha = str_pad($form['fechaNacimiento']['day'], 2, '0', STR_PAD_LEFT).'/'.str_pad($form['fechaNacimiento']['month'], 2, '0', STR_PAD_LEFT).'/'.$form['fechaNacimiento']['year'];
+            
+            //printf($fecha); die;
+
             $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
             $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
             $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
