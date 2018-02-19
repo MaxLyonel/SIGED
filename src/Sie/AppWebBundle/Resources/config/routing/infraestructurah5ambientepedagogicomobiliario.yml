@@ -43,6 +43,10 @@ h5mobiliario_updateMobiliario:
         expose: true
     # methods:  POST
 
+infraestructurah5mobiliario_new:
+    path:     /h5mobiliarionew
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:new" }
+
 infraestructurah5mobiliario_fillDataMobiliario:
     path:     /fillDataMobiliario
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:fillDataMobiliario" }

@@ -27,9 +27,9 @@ class InfraestructuraH5AmbientepedagogicoMobiliarioController extends Controller
         $h5AmbientepedagogicoId = $request->get('H5AmbientepedagogicoId');
 
 
-        $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario')->findOneBy(array(
-            'infraestructuraH5Ambientepedagogico'=>$h5AmbientepedagogicoId
-        ));
+        // $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario')->findOneBy(array(
+        //     'infraestructuraH5Ambientepedagogico'=>$h5AmbientepedagogicoId
+        // ));
 
         return $this->redirect($this->generateUrl('h5mobiliario_new', array('id'=> $h5AmbientepedagogicoId)));
         
@@ -52,9 +52,7 @@ class InfraestructuraH5AmbientepedagogicoMobiliarioController extends Controller
         $em = $this->getDoctrine()->getManager();
         //get the send values
         $h5AmbientepedagogicoId = $request->get('H5AmbientepedagogicoId');
-        $entities = $em->getRepository('SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario')->findBy(array(
-            'infraestructuraH5Ambientepedagogico'=>$h5AmbientepedagogicoId
-        ));
+        
         // set the mobiliario type data            
         $objMobiliarioTipo = $em->getRepository('SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliarioTipo')->findAll();
         $arrDataMobiliarioTipo = array();
@@ -71,7 +69,10 @@ class InfraestructuraH5AmbientepedagogicoMobiliarioController extends Controller
                 $arrDataStatusTipo[$statusType->getId()] = $statusType->getDescripcion();
             }
         }
-
+        //get the all values about the mobiliario to this selected row
+        $entities = $em->getRepository('SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario')->findBy(array(
+            'infraestructuraH5Ambientepedagogico'=>$h5AmbientepedagogicoId
+        ));
 
         $arrDataMobiliario = array();
         if($entities){
@@ -126,8 +127,6 @@ class InfraestructuraH5AmbientepedagogicoMobiliarioController extends Controller
      *
      */
     public function savenewAction(Request $request){
-
-        
         
         //cretae the db conexion
         $em = $this->getDoctrine()->getManager();

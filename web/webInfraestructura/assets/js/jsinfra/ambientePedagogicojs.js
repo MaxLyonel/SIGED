@@ -18,9 +18,9 @@ function addAmbPedagogico(){
 
     $("#mobiliarioId").append('<tr id="'+count+'">\n\
     <td><button type="button" onclick="eliminarFila('+count+')"><i class="fa fa-trash text-danger" class="form-control"></i></button></td>\n\
-    <td><select name="form[n52MobiliarioTipo][]" id="form_'+n52MobiliarioTipo+'" required="true" class="jupper" title="n52MobiliarioTipo Tenencia" class="form-control"></select></td>\n\
+    <td><select name="form[n52MobiliarioTipo][]" id="form_'+n52MobiliarioTipo+'" required="true" title="n52MobiliarioTipo Tenencia" class="form-control input-sm mb-15"></select></td>\n\
     <td><input type="text" name="form[n52Cantidad][]" id="form_'+n52Cantidad+'" value="" required="true" size="5" class="form-control"></td>\n\
-    <td><select name="form[n52EstadoTipo][]" id="form_'+n52EstadoTipo+'" required="true" class="jupper" title="n52EstadoTipo" class="form-control"></select></td>\n\
+    <td><select name="form[n52EstadoTipo][]" id="form_'+n52EstadoTipo+'" required="true" class="form-control input-sm mb-15" title="n52EstadoTipo" class="form-control"></select></td>\n\
     </tr>');
 
     $("#form_" + n52MobiliarioTipo).empty();
