@@ -101,8 +101,8 @@ class InfoPersonalAdmController extends Controller {
          */
         $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                        WHERE ct.rolTipo IN (:id) ORDER BY ct.cargo')
-                ->setParameter('id', array(5, 9));
+                        WHERE ct.id NOT IN (:id) ORDER BY ct.id')
+                ->setParameter('id', array(0, 86, 993, 650, 992, 994, 120, 100, 1000, 651, 14));
 
         $cargos = $query->getResult();
         $cargosArray = array();
@@ -274,12 +274,12 @@ class InfoPersonalAdmController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQuery(
-                        'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                        WHERE ct.rolTipo IN (:id2) AND ct.id NOT IN (:id) ORDER BY ct.cargo')
-                ->setParameter('id', array(86))
-                ->setParameter('id2', array(5, 9));
+            'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+                        WHERE ct.id NOT IN (:id) ORDER BY ct.id')
+            ->setParameter('id', array(0, 86, 993, 650, 992, 994, 120, 100, 1000, 651, 14));
 
         $cargos = $query->getResult();
+
         $cargosArray = array();
         foreach ($cargos as $c) {
             $cargosArray[$c->getId()] = $c->getCargo();
@@ -500,11 +500,10 @@ class InfoPersonalAdmController extends Controller {
     private function editForm($idInstitucion, $gestion, $persona, $maestroInscripcion, $idiomas) {
         $em = $this->getDoctrine()->getManager();
 
-       $query = $em->createQuery(
-                        'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                        WHERE ct.rolTipo IN (:id2) AND ct.id NOT IN (:id) ORDER BY ct.cargo')
-                ->setParameter('id', array(86))
-                ->setParameter('id2', array(5, 9));
+        $query = $em->createQuery(
+            'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+                        WHERE ct.id NOT IN (:id) ORDER BY ct.id')
+            ->setParameter('id', array(0, 86, 993, 650, 992, 994, 120, 100, 1000, 651, 14));
 
         $cargos = $query->getResult();
         $cargosArray = array();
