@@ -180,8 +180,12 @@ class InfraestructuraH5AmbientepedagogicoDeportivoController extends Controller
      * Displays a form to create a new InfraestructuraH5AmbientepedagogicoDeportivo entity.
      *
      */
-    public function newAction()
-    {
+    public function newAction(Request $request){
+        // dump($request);die;
+        //create DB conexion
+        // $em= $this->getDoctrine()->getManager();
+        // get the send values
+        // $h5AmbientepedagogicoId = $request->get('H5AmbientepedagogicoId');
         $entity = new InfraestructuraH5AmbientepedagogicoDeportivo();
         $form   = $this->createCreateForm($entity);
 

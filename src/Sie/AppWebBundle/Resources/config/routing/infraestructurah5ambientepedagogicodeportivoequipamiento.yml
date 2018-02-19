@@ -1,0 +1,40 @@
+h5ambpedagogicodeportivoequipamiento:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:indexOld" }
+
+h5ambpedagogicodeportivoequipamiento_index:
+    path:     /deportivoequipamiento
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:index" }    
+
+h5ambpedagogicodeportivoequipamiento_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:show" }
+
+h5ambpedagogicodeportivoequipamiento_new:
+    path:     /{id}/new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:new" }
+
+h5ambpedagogicodeportivoequipamiento_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:create" }
+    methods:  POST
+
+h5ambpedagogicodeportivoequipamiento_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:edit" }
+
+h5ambpedagogicodeportivoequipamiento_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:update" }
+    methods:  [POST, PUT]
+
+h5ambpedagogicodeportivoequipamiento_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:delete" }
+    methods:  [POST, DELETE]
+    
+h5ambpedagogicodeportivoequipamiento_fillDataDeportivoEquipamiento:
+    path:     /fillDataDeportivoEquipamiento
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:fillDataDeportivoEquipamiento" }
+    options:
+        expose: true

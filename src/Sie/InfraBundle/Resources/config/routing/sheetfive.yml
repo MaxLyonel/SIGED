@@ -30,7 +30,4 @@ infraestructura5pedagico_save_new_pedagogico:
     options:
         expose: true
 
-infraestructurah5mobiliario_index:
-    path:     /h5mobiliarioindex
-    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:index" }
 

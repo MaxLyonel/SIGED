@@ -30,7 +30,11 @@ class InfraestructuraH5AmbientepedagogicoEquipamientoController extends Controll
             'entities' => $entities,
         ));
     }
-
+    /**
+     * [fillDataEquipamientoAction description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function fillDataEquipamientoAction(Request $request){
          // create db conexion
         $em= $this->getDoctrine()->getManager();
@@ -84,7 +88,7 @@ class InfraestructuraH5AmbientepedagogicoEquipamientoController extends Controll
 
 
 
-        dump($entities);die;
+        // dump($entities);die;
     }
     /**
      * Creates a new InfraestructuraH5AmbientepedagogicoEquipamiento entity.

@@ -99,6 +99,7 @@
     <script type="text/javascript" charset="utf-8" >
     var count=0;
     var countequipo=0;
+    var countdeportivo=0;
     
 
      var openAmbPedagogico = function(){
@@ -557,11 +558,114 @@ var newAmbPedagogicoEquipamiento = function(H5AmbientepedagogicoId){
     };
 
 
+  arrEstadoEquipamientoTipo =[]
+  arrEquipamientoTipo =[]
+
+ var fillDataAmbPedagogicoDeportivoEquipamiento = function(H5AmbientepedagogicoId){
+
+           $.ajax({
+                    type: 'post',
+                    data: ({H5AmbientepedagogicoId: H5AmbientepedagogicoId}),
+                    url: "{{ path('h5ambpedagogicodeportivoequipamiento_fillDataDeportivoEquipamiento') }}",
+                    beforeSend: function () {
+                        $('#mobiliarioId').empty();
+                    },
+                    success: function (data) {
+                      //   $('#idpedagogicoDeportivo').empty();
+                      // $('#idpedagogicoDeportivo').append(data);
+                        newAmbPedagogicoDeportivoEquipamiento(H5AmbientepedagogicoId);
+
+                        arrayDataDeportivoEquiposTipo = data.arrDataDeportivoEquiposTipo;
+                        arrayDataStatusTipo = data.arrDataStatusTipo;
+
+                        setTimeout(function(){
+                          $.each(data.arrDataEquipamiento, function(i, valores){
+                          
+                            countdeportivo++;
+                            var id                                           = 'id'+countdeportivo;
+                            var n531Cantidad                                 = 'n531Cantidad'+countdeportivo;
+                            var n531EstadoEquipamientoTipo                   = 'n531EstadoEquipamientoTipo'+countdeportivo;
+                            var n531EquipamientoTipo                         = 'n531EquipamientoTipo'+countdeportivo;
+                            var infraestructuraH5AmbientepedagogicoDeportivo = 'infraestructuraH5AmbientepedagogicoDeportivo'+countdeportivo;
+                          
+
+                          $("#deportivoEquipamientoId").append('<tr id="'+countdeportivo+'">\n\
+                          <td><button type="button" onclick="eliminarFila('+countdeportivo+')"><i class="fa fa-trash text-danger" class="form-control"></i></button></td>\n\
+                          <td><select name="form[n531EstadoEquipamientoTipo][]" id="form_'+n531EstadoEquipamientoTipo+'" required="true" class="form-control input-sm mb-15" title="n531EstadoEquipamientoTipo" class="form-control"></select></td>\n\
+                          <td><input type="text" name="form[n531Cantidad][]" id="form_'+n531Cantidad+'" value="" required="true" size="5" class="form-control"></td>\n\
+                          <td><select name="form[n531EquipamientoTipo][]" id="form_'+n531EquipamientoTipo+'" required="true" title="n531EquipamientoTipo Tenencia" class="form-control input-sm mb-15"></select></td>\n\
+                          </tr>');
+
+                        $("#form_" + n531EstadoEquipamientoTipo).empty();
+                        $("#form_" + n531EstadoEquipamientoTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataDeportivoEquiposTipo, function (i, value) {
+                            if(i==valores.n531EstadoEquipamientoTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n531EstadoEquipamientoTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+                        $("#form_" + n53EstadoTipo).empty();
+                        $("#form_" + n53EstadoTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataStatusTipo, function (i, value) {
+                            if(i==valores.n53EstadoTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n53EstadoTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+
+                        });  
+                        },1500);
+
+
+
+
+                      
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+        };
+
+
+var newAmbPedagogicoDeportivoEquipamiento = function(H5AmbientepedagogicoId){
+       $.ajax({
+                type: 'post',
+                data: ({H5AmbientepedagogicoId: H5AmbientepedagogicoId}),
+                url: "{{ path('h5ambpedagogicodeportivoequipamiento_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                      
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+
+
+
+
 
     </script>
     
 
     <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/ambientePedagogicojs.js') }}"></script>
     <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/ambientePedagogicoEquipamientojs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/ambientePedagogicoDeportivoEquipamientojs.js') }}"></script>
     
 {% endblock %}

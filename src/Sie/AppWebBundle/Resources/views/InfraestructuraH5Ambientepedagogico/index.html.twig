@@ -56,7 +56,13 @@
                 <td>{{ entity.n51AmbienteAltoMts }}</td>
                 <td>{{ entity.n51CapacidadAmbiente }}</td>
                 {# <td>{% if entity.fecharegistro %}{{ entity.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td> #}
-                <td>{{ entity.n51EsUsoAmbiente }}</td>
+                <td>
+                    {% if entity.n51EsUsoAmbiente %}
+                        Si
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
                 {#}
                 <td>{{ entity.n51EspecialidadTipoId }}</td>
                 <td>{{ entity.n51TalleresEspOtro }}</td>
