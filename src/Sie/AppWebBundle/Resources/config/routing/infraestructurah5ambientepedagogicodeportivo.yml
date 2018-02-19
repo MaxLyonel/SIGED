@@ -1,0 +1,42 @@
+infrah5ambpedagogicodeportivo:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivo:index" }
+
+infrah5ambpedagogicodeportivo_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivo:show" }
+
+infrah5ambpedagogicodeportivo_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivo:new" }
+
+infrah5ambpedagogicodeportivo_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivo:create" }
+    methods:  POST
+
+infrah5ambpedagogicodeportivo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivo:edit" }
+
+infrah5ambpedagogicodeportivo_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivo:update" }
+    methods:  [POST, PUT]
+
+infrah5ambpedagogicodeportivo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivo:delete" }
+    methods:  [POST, DELETE]
+
+infrah5ambpedagogicodeportivo_newAmbPedagogicoDeportivo:
+    path:     /newAmbPedagogicoDeportivo
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivo:newAmbPedagogicoDeportivo" }
+
+infrah5ambpedagogicodeportivo_new_save_ambpedagogicopeportivo:
+    path:     /newSaveAmbPedagogicoDeportivo
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivo:newSaveAmbPedagogicoDeportivo" }
+    # methods:  POST
+    options:
+        expose: true
+

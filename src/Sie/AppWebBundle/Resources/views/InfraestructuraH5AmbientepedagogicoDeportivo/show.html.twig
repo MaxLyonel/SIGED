@@ -1,0 +1,92 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH5AmbientepedagogicoDeportivo</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>N53esrecreativo</th>
+                <td>{{ entity.n53EsRecreativo }}</td>
+            </tr>
+            <tr>
+                <th>N53esdeportivo</th>
+                <td>{{ entity.n53EsDeportivo }}</td>
+            </tr>
+            <tr>
+                <th>N53escultural</th>
+                <td>{{ entity.n53EsCultural }}</td>
+            </tr>
+            <tr>
+                <th>N53esusouniversal</th>
+                <td>{{ entity.n53EsUsoUniversal }}</td>
+            </tr>
+            <tr>
+                <th>N53ambienteareamts</th>
+                <td>{{ entity.n53AmbienteAreaMts }}</td>
+            </tr>
+            <tr>
+                <th>N53ambientecapacidad</th>
+                <td>{{ entity.n53AmbienteCapacidad }}</td>
+            </tr>
+            <tr>
+                <th>N53estechado</th>
+                <td>{{ entity.n53EsTechado }}</td>
+            </tr>
+            <tr>
+                <th>N53esiluminacionelectrica</th>
+                <td>{{ entity.n53EsIluminacionElectrica }}</td>
+            </tr>
+            <tr>
+                <th>N53esiluminacionnatural</th>
+                <td>{{ entity.n53EsIluminacionNatural }}</td>
+            </tr>
+            <tr>
+                <th>N53esgraderia</th>
+                <td>{{ entity.n53EsGraderia }}</td>
+            </tr>
+            <tr>
+                <th>N53esambientecielofal</th>
+                <td>{{ entity.n53EsAmbienteCieloFal }}</td>
+            </tr>
+            <tr>
+                <th>N53esambientepuerta</th>
+                <td>{{ entity.n53EsAmbientePuerta }}</td>
+            </tr>
+            <tr>
+                <th>N53esambienteventana</th>
+                <td>{{ entity.n53EsAmbienteVentana }}</td>
+            </tr>
+            <tr>
+                <th>N53esambientemuros</th>
+                <td>{{ entity.n53EsAmbienteMuros }}</td>
+            </tr>
+            <tr>
+                <th>N53esambienterevestimiento</th>
+                <td>{{ entity.n53EsAmbienteRevestimiento }}</td>
+            </tr>
+            <tr>
+                <th>N53esambientepiso</th>
+                <td>{{ entity.n53EsAmbientePiso }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('infrah5ambpedagogicodeportivo') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('infrah5ambpedagogicodeportivo_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

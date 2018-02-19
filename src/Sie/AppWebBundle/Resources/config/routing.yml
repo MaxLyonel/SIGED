@@ -1,3 +1,11 @@
+sie_app_web_infrah5ambpedagogicoequipamiento:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah5ambientepedagogicoequipamiento.yml"
+    prefix:   /infrah5ambpedagogicoequipamiento
+
+sie_app_web_infrah5ambpedagogicodeportivo:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah5ambientepedagogicodeportivo.yml"
+    prefix:   /infrah5ambpedagogicodeportivo
+
 sie_app_web_h5mobiliario:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah5ambientepedagogicomobiliario.yml"
     prefix:   /h5mobiliario
