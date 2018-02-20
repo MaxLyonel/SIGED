@@ -577,8 +577,8 @@ var newAmbPedagogicoEquipamiento = function(H5AmbientepedagogicoId){
 
                         arrayDataDeportivoEquiposTipo = data.arrDataDeportivoEquiposTipo;
                         arrayDataStatusTipo = data.arrDataStatusTipo;
-                        $('#idpedagogicoDeportivo').empty();
-                        $('#idpedagogicoDeportivo').append(data);
+                        /*$('#idpedagogicoDeportivo').empty();
+                        $('#idpedagogicoDeportivo').append(data);*/
                         setTimeout(function(){
                           $.each(data.arrDataDeportivoEquipamiento,function(index, el) {
                               
@@ -671,13 +671,13 @@ var newAmbPedagogicoDeportivoEquipamiento = function(H5AmbientepedagogicoId){
                     url: "{{ path('h5ambpedagogicodeportivoequipamiento_savenew') }}",
                     beforeSend: function () {
                         $('#modal').modal('hide');
-                        $('#idpedagogicoDeportivo').empty();
-                        $("#idpedagogicoDeportivo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                        // $('#idpedagogicoDeportivo').empty();
+                        // $("#idpedagogicoDeportivo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
                     },
                     success: function (data) {
                         $('#modal').modal('hide');
-                        $('#idpedagogicoDeportivo').empty();
-                        $('#idpedagogicoDeportivo').append(data);
+                        // $('#idpedagogicoDeportivo').empty();
+                        // $('#idpedagogicoDeportivo').append(data);
 
                     },
                     statusCode: {
