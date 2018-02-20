@@ -54,7 +54,7 @@
                                             <td>{{ persona.personaPaterno }}</td>
                                             <td>{{ persona.personaMaterno }}</td>
                                             <td>{{ persona.personaNombre }}</td>
-                                            <td>{{ persona.personaFechaNac }}</td>
+                                            <td>{{ persona.personaFechaNac|date('d-m-Y') }}</td>
                                             <td>
                                                 <form action="{{path('herramienta_info_maestro_new')}}" method="post" style="display:inline-block">
                                                     <input type="hidden"  name="form[idPersona]" id="form_idPersona" value="{{persona.personaId}}">
@@ -68,7 +68,7 @@
                                 </table>
                             </div>
                         {% else %}
-                            No hay Personas Registradas con el número de carnet y fecha de nacimiento ingresados
+                            No hay Personas Registradas con el número de carnet y complemento ingresados
                         {% endif %}
                     </div>
                 </div>
