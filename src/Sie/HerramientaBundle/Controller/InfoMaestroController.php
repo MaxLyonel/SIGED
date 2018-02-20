@@ -312,22 +312,25 @@ class InfoMaestroController extends Controller {
                 ->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
                 ->where('p.carnet = :carnet AND p.complemento = :complemento and p.segipId > :valor')
                 ->setParameter('carnet', $carnet)
-                ->setParameter('carnet', $complemento)
+                ->setParameter('complemento', mb_strtoupper($complemento, 'utf-8'))
                 ->setParameter('valor', 0)
                 ->getQuery();
         }
         $personas = $query->getResult();
 
-        if (is_array($personas)) {
-            $p = array(
-                'personaId'=>$personas[0]->getId(),
-                'personaCarnet'=>$personas[0]->getCarnet(),
-                'personaComplemento'=>$personas[0]->getComplemento(),
-                'personaPaterno'=>$personas[0]->getPaterno(),
-                'personaMaterno'=>$personas[0]->getMaterno(),
-                'personaNombre'=>$personas[0]->getNombre(),
-                'personaFechaNac'=>$personas[0]->getFechaNacimiento(),
-            );
+        if ($personas) {
+            $p = null;
+            if(is_array($personas)) {
+                $p = array(
+                    'personaId'=>$personas[0]->getId(),
+                    'personaCarnet'=>$personas[0]->getCarnet(),
+                    'personaComplemento'=>$personas[0]->getComplemento(),
+                    'personaPaterno'=>$personas[0]->getPaterno(),
+                    'personaMaterno'=>$personas[0]->getMaterno(),
+                    'personaNombre'=>$personas[0]->getNombre(),
+                    'personaFechaNac'=>$personas[0]->getFechaNacimiento(),
+                );
+            }
         }else{
             $p = null;
         }
