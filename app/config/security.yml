@@ -34,26 +34,24 @@ security:
         - { path: ^/ususie/usuarios/roladmin/asignacionroles/roladmin, roles: [ROLE_TECSS_*] }
         - { path: ^/ususie/usuarios/listas/roladmin/listasgenerales, roles: [ROLE_TECSS_*] }
         - { path: ^/ususie/usuarios/persona/apropiacionpersona, roles: [ROLE_TECSS_*] }
-        - { path: ^/acceso/unificacionrude, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG] }
-        - { path: ^/sie/desunification, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG] }
+        - { path: ^/unificacionrude, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG] }
+        - { path: ^/desunification, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG] }
         - { path: ^/modificaciondatos, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG,ROLE_IMPD_DIP,ROLE_PNPC_PNP] }
         - { path: ^/datosapoderado, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_ALT,ROLE_TECSN_ESP,ROLE_TECSN_PNP,ROLE_TECSDE_SIG,ROLE_TECSDE_ALT,ROLE_TECSDE_ESP,ROLE_TECSDI_SIG,ROLE_IMPD_DIP,ROLE_PNPC_PNP,ROLE_IMPD_DIP] }
         - { path: ^/estudianteinformacion, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_INT_SIG] }
         - { path: ^/homologaciones, roles: [ROLE_TECSS_*,ROLE_IMPD_DIP] }        
-        - { path: ^/sie/removeIns, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG] }
-        - { path: ^/sie/inscriptionExtranjeros, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
-        - { path: ^/sie/inicialPrimaria, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }        
-        - { path: ^/sie/inscriptiongral, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
-        - { path: ^/sie/postBachillerato, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
-        - { path: ^/sie/rezago, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
-        - { path: ^/sie/talento, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
-        - { path: ^/sie/moveinscription, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
-        - { path: ^/sie/removeInscriptionfree, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
+        - { path: ^/removeIns, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG] }
+        - { path: ^/inscriptionExtranjeros, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
+        - { path: ^/inicialPrimaria, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }        
+        - { path: ^/inscriptiongral, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
+        - { path: ^/postBachillerato, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
+        - { path: ^/rezago, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
+        - { path: ^/talento, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
+        - { path: ^/moveinscription, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
+        - { path: ^/removeInscriptionfree, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
         - { path: ^/consolidationsie, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSDE_SIG] }
         - { path: ^/sie, roles: [ROLE_TECSS_*,ROLE_TECSN_SIG,ROLE_TECSN_REG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG,ROLE_DIR_*,ROLE_CONN_SIG,ROLE_INT_SIG] }
         - { path: ^/ususie, roles: [ROLE_TECSS_*,ROLE_TECSN_USU,ROLE_TECSDE_USU,ROLE_TECSDI_USU,ROLE_DIR_*,ROLE_MAE_*,ROLE_PNPP_USU,ROLE_PNPC_USU] }
         - { path: ^/altsie, roles: [ROLE_TECSS_*,ROLE_TECSN_ALT,ROLE_TECSDE_ALT,ROLE_TECSDI_ALT,ROLE_DIR_*,ROLE_MAE_*,ROLE_CONN_ALT] }
         - { path: ^/pnpsie, roles: [ROLE_TECSS_*,ROLE_TECSN_PNP,ROLE_TECSDE_PNP,ROLE_TECSDI_PNP] }
         - { path: ^/diplomas, roles: [ROLE_RECUE_DIP,ROLE_RECD_DIP,ROLE_VENRD_DIP,ROLE_AUTT_DIP,ROLE_IMPD_DIP,ROLE_LEGD_DIP,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
-
-
