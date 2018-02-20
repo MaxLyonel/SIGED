@@ -304,6 +304,11 @@ class InfraestructuraH5AmbientepedagogicoEquipamientoController extends Controll
      * Creates a new InfraestructuraH5AmbientepedagogicoMobiliario entity.
      *
      */
+    /**
+     * [savenewAction description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function savenewAction(Request $request){
         
         //cretae the db conexion

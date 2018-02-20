@@ -38,3 +38,9 @@ h5ambpedagogicodeportivoequipamiento_fillDataDeportivoEquipamiento:
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:fillDataDeportivoEquipamiento" }
     options:
         expose: true
+
+h5ambpedagogicodeportivoequipamiento_savenew:
+    path:     /savenew
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento:savenew" }
+    options:
+        expose: true

@@ -256,21 +256,21 @@ class InfraestructuraH5AmbientepedagogicoDeportivoEquipamientoController extends
             'infraestructuraH5AmbientepedagogicoDeportivo'=>$h5AmbientepedagogicoId
         ));
 
-        $arrDataEquipamiento = array();
+        $arrDataDeportivoEquipamiento = array();
         if($entities){
             foreach ($entities as $equipamiento) {
-                $arrDataEquipamiento[] = array(
-                                        'id'                                  =>  $equipamiento->getId(),
-                                        'n53Cantidad'                         =>  $equipamiento->getN531Cantidad(),
-                                        'n531EstadoEquipamientoTipo'                       =>  $equipamiento->getN531EstadoEquipamientoTipo()->getId(),
-                                        'n531EquipamientoTipo'                      =>  $equipamiento->getN531EquipamientoTipo()->getId(),
+                $arrDataDeportivoEquipamiento[] = array(
+                                        'id'                                           =>  $equipamiento->getId(),
+                                        'n531Cantidad'                                  =>  $equipamiento->getN531Cantidad(),
+                                        'n531EstadoEquipamientoTipo'                   =>  $equipamiento->getN531EstadoEquipamientoTipo()->getId(),
+                                        'n531EquipamientoTipo'                         =>  $equipamiento->getN531EquipamientoTipo()->getId(),
                                         'infraestructuraH5AmbientepedagogicoDeportivo' =>  $equipamiento->getInfraestructuraH5AmbientepedagogicoDeportivo()->getId()
                 );
 
 
             }
         }
-
+// dump($arrDataDeportivoEquipamiento);die;
          // set the status data 
         $objStatusTipo = $em->getRepository('SieAppWebBundle:InfraestructuraGenEstadoMobEquipTipo')->findAll();
         $arrDataStatusTipo = array();
@@ -295,7 +295,7 @@ class InfraestructuraH5AmbientepedagogicoDeportivoEquipamientoController extends
          //return the json data
         $response = new JsonResponse();
         return $response->setData(array(
-            'arrDataEquipamiento' => $arrDataEquipamiento,
+            'arrDataDeportivoEquipamiento' => $arrDataDeportivoEquipamiento,
             'arrDataDeportivoEquiposTipo' => $arrDataDeportivoEquiposTipo,
             'arrDataStatusTipo' => $arrDataStatusTipo,
         ));
@@ -303,5 +303,66 @@ class InfraestructuraH5AmbientepedagogicoDeportivoEquipamientoController extends
 
 
         // dump($entities);die;
+    }
+
+      /**
+     * [savenewAction description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function savenewAction(Request $request){
+
+        
+        //cretae the db conexion
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        
+        try {
+            
+                // get the send values
+                $form = $request->get('form');
+                // dump($form);die;
+                // dump($request);
+                // die;
+                // get the id of mobiliario
+                $h5AmbientepedagogicoId = $form['h5AmbientepedagogicoId'];
+                //find the mobiliario data before to save
+                $objAmbPedagogicoEquipamiento = $em->getRepository('SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento')->findBy(array(
+                    'infraestructuraH5AmbientepedagogicoDeportivo' => $h5AmbientepedagogicoId,
+
+                ));
+                // remove the element to the mobiliario data
+                foreach ($objAmbPedagogicoEquipamiento as $elementAmbPedagogicoEquipamiento) {
+                    $em->remove($elementAmbPedagogicoEquipamiento);
+                }        
+                $em->flush();        
+                //create the limit to do the save    
+                $limitSave = sizeof($form['n531EstadoEquipamientoTipo']);
+                /*dump($limitSave);
+                dump($form);die;*/
+                $ind=0;
+                while ($ind < $limitSave) {
+                    $entity = new InfraestructuraH5AmbientepedagogicoDeportivoEquipamiento();
+
+                    $entity->setN531EstadoEquipamientoTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenEstadoMobEquipTipo')->find($form['n531EstadoEquipamientoTipo'][$ind]) );
+                    $entity->setN531Cantidad($form['n531Cantidad'][$ind]);
+                    $entity->setN531EquipamientoTipo($em->getRepository('SieAppWebBundle:InfraestructuraH4AmbientepedagogicoDeportivoEquimientoTipo')->find($form['n531EquipamientoTipo'][$ind]));
+                    $entity->setInfraestructuraH5AmbientepedagogicoDeportivo($em->getRepository('SieAppWebBundle:InfraestructuraH5AmbientepedagogicoDeportivo')->find($form['h5AmbientepedagogicoId']));
+
+                    $em->persist($entity);    
+
+                    $ind++;
+                }
+
+                $em->flush();    
+
+                $em->getConnection()->commit();
+                
+                 die('done');
+            
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
     }
 }
