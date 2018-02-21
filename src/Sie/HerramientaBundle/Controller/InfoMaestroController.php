@@ -300,8 +300,8 @@ class InfoMaestroController extends Controller {
         if($complemento == '0'){
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
-                ->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
-                ->where('p.carnet = :carnet AND p.segipId > :valor')
+                //->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
+                ->where('p.carnet = :carnet AND p.segipId >= :valor')
                 ->setParameter('carnet', $carnet)
                 ->setParameter('valor', 0)
                 ->getQuery();
@@ -309,7 +309,7 @@ class InfoMaestroController extends Controller {
         else{
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
-                ->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
+                //->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
                 ->where('p.carnet = :carnet AND p.complemento = :complemento and p.segipId >= :valor')
                 ->setParameter('carnet', $carnet)
                 ->setParameter('complemento', mb_strtoupper($complemento, 'utf-8'))

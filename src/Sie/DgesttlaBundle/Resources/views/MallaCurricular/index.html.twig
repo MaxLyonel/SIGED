@@ -22,91 +22,77 @@
 {% block bodycontent %}
 
     {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Turnos y Paralelos', 'gestion': gestion,'sie': institucion.id, 'ieducativa':institucion.institucioneducativa, 'opcion': 'Lista'} %}
-
-        <small>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel">
-                        <BR>
-                            <div class="row">                                                            
-                                <div class="col-md-4"> 
-                                    <div class="form-group">
-                                                                 
-                                    </div>        
-                                </div>
-                                <div class="col-md-4">
-                                    <h3 class="panel-title text-center"><i class="glyphicon glyphicon-bishop"></i><div id="pensumtitulo">...</div></h3>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="col-sm-offset-5">
-                                        <button onclick="nuevomoduloabrir();" class="btn btn-primary btn-stroke">
-                                            <i class="fa fa-newspaper-o"></i> Nueva Asignatura
-                                        </button>                            
-                                    </div>
-                                </div>                            
-                            </div>                        
-                        <BR>
-                            <div id="nuevomodulo">
-                                <div class="panel rounded shadow">
-                                    <div class="panel-body no-padding">
-                                        <form id="formnuevaasignatura" onsubmit="enviaformmodulo(); return false;" method="post" style="">
-                                            <div class="form-body">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                            <label class="control-label">Elija el Pensum</label>
-                                                            <select onchange="changePensum()" name="pensumid" id="pensumid" class="pensumid form-control input-sm mb-15">
-                                                                <option value="-999">...</option>
-                                                                    {% for data in pensum %}
-                                                                        <option value="{{data.pensum_id}}">{{ data.pensum }}</option>
-                                                                    {% endfor %}
-                                                            </select> 
-                                                        <div class="form-group">
-                                                            <label class="control-label">Periodo</label>                                                            
-                                                            <select name="periodoid" id="periodoid" class="form-control input-sm mb-15">
-                                                                <option value="-999">Elija un periodo</option>
-                                                                    {% for data in periodo %}
-                                                                        <option value="{{data.id}}">{{ data.periodo }}</option>
-                                                                    {% endfor %}
-                                                            </select> 
-
-                                                        </div>
-                                                    </div>          
-                                                    <div class="col-md-4">
-                                                        <div class="form-group has-primary">
-                                                            <div class="form-group">
-                                                                <label class="control-label">Código</label>
-                                                                <input name="codigo" id="codigo" class="form-control" type="text">
-                                                            </div>
-                                                        </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="row">                                                    
+                        <div class="col-md-12">
+                            <h3 class="panel-title text-center"><i class="glyphicon glyphicon-bishop"></i><div id="pensumtitulo">...</div></h3>
+                        </div>
+                    </div>
+                    <div id="nuevomodulo">
+                        <div class="panel rounded shadow">
+                            <div class="panel-body no-padding">
+                                <form id="formnuevaasignatura" onsubmit="enviaformmodulo(); return false;" method="post" style="">
+                                    <div class="form-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="control-label">Pensum</label>
+                                                    <select onchange="changePensum()" name="pensumid" id="pensumid" class="pensumid form-control input-sm mb-15">
+                                                        <option value="-999">Elija un pensum...</option>
+                                                            {% for data in pensum %}
+                                                                <option value="{{data.pensum_id}}">{{ data.pensum }}</option>
+                                                            {% endfor %}
+                                                    </select> 
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">Periodo</label>                                                            
+                                                    <select name="periodoid" id="periodoid" class="form-control input-sm mb-15">
+                                                        <option value="-999">Elija un periodo...</option>
+                                                            {% for data in periodo %}
+                                                                <option value="{{data.id}}">{{ data.periodo }}</option>
+                                                            {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>          
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Código</label>
+                                                        <input name="codigo" id="codigo" class="form-control" type="text">
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group has-primary">
-                                                            <div class="form-group">
-                                                                <label class="control-label">Descripción de la Asignatura</label>
-                                                                <input name="asignatura" id="asignatura" class="form-control" type="text">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>                                                
-                                            </div>
-                                            <div class="form-footer">
-                                                <div class="col-sm-offset-5">
-                                                    <a onclick="nuevomodulocerrar();" class="btn btn-danger btn-stroke"><i class="fa fa-ban" aria-hidden="true"></i> Cancelar</a>
-                                                    <button id="botonguardarmodulo" type="submit" class="btn btn-success btn-stroke">
-                                                        <i class="fa fa-floppy-o"></i> Guardar
-                                                    </button>
                                                 </div>
                                             </div>
-                                        </form>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Descripción de la Asignatura</label>
+                                                        <input name="asignatura" id="asignatura" class="form-control" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>                                                
                                     </div>
-                                </div>
-                            </div>                      
-                    <BR>                                                                    
+                                    <div class="form-footer">
+                                        <div class="col-sm-offset-5">
+                                            <a onclick="nuevomodulocerrar();" class="btn btn-danger btn-stroke">
+                                                <i class="fa fa-ban" aria-hidden="true"></i> Limpiar
+                                            </a>
+                                            <button id="botonguardarmodulo" type="submit" class="btn btn-success btn-stroke">
+                                                <i class="fa fa-floppy-o"></i> Guardar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>                      
                 </div>
             </div>
-        </small>
-
-
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-primary">
@@ -134,7 +120,8 @@
                                             <td data-title="Código">{{ materia.codigo_materia }}&nbsp;</td>
                                             <td data-title="Asignatura">{{ materia.asignatura }}&nbsp;</td>                                            
                                             <td data-title="Acciones">
-                                                ---
+                                                {{ materia.periodo_id }}---{{ materia.pensum_id }}---{{ materia.denominacion_id }}---{{ materia.materia_id }}
+                                                
                                                 {#<form action="{{path('dgesttla_info_personal_adm_new')}}" method="post" style="display:inline-block">
                                                     <input type="hidden"  name="form[idPersona]" id="form_idPersona" value="{{persona.id}}">
                                                     <input type="hidden" name="form[idInstitucion]" id="form_idInstitucion"  value="{{institucion.id}}">
@@ -157,6 +144,7 @@
             </div>
         </div>
     </div>
+    
 <script>
 
     function changePensum() {
@@ -165,79 +153,76 @@
             textpensum = pend.options[pend.selectedIndex].text;            
             $('#pensumtitulo').html(textpensum);
         }
-    }   
+    }
 
-    function nuevomoduloabrir(){
-            var pensumid = document.getElementById("pensumid").selectedIndex;                        
-            if ( pensumid == null || pensumid == '0' ) {
-                alert('Elija un Pensum.');
-                return false;
-            }else{
-                $("#nuevomodulo").show();
-            }            
-	    }
-        
     function nuevomodulocerrar(){
-            $("#nuevomodulo").show();
-	    }
+        $("#pensumid").val('');
+        $("#codigo").val('');
+        $("#asignatura").val('');
+        $("#periodoid").val('');
+        $('#pensumtitulo').html('...');
+    }
+
+    function modalmaterias(){
+        $('#modal').empty();
+    }
 
     function enviaformmodulo() {
-            var msj = '\n\n ¿Esta seguro de continuar?';
+        var msj = '\n\n ¿Está segura/o de continuar?';
 
-            var pensumid = document.getElementById("pensumid").selectedIndex;            
-            //alert(pensumid);
-            var per = document.getElementById("periodoid").selectedIndex;            
-            if ( per == null || per == '0' ) {
-                alert('Elija un periodo.');
-                return false;
+        var pensumid = document.getElementById("pensumid").selectedIndex;            
+
+        var per = document.getElementById("periodoid").selectedIndex;            
+        if ( per == null || per == '0' ) {
+            alert('Elija un periodo.');
+            return false;
+        }
+        else{
+            var codigo = document.getElementById("codigo").value;
+            if( codigo == null || codigo.length == 0 || /^\s+$/.test(codigo) ) {
+                    alert('Describa el Código.');
+                    return false;
             }
             else{
-                
-                    var codigo = document.getElementById("codigo").value;
-                        if( codigo == null || codigo.length == 0 || /^\s+$/.test(codigo) ) {
-                          alert('Describa el Código.');
-                          return false;
+                var asignatura = document.getElementById("asignatura").value;
+                if( asignatura == null || asignatura.length == 0 || /^\s+$/.test(asignatura) ) {
+                    alert('Describa la asignatura.');
+                    return false;
+                }
+                else{
+                    if (confirm('Está por crear una nueva asignatura: '+asignatura+msj)) {
+                        var formData = $('#formnuevaasignatura').serialize();
+                        
+                        $.ajax({
+                            type: 'post',                                        
+                            url: Routing.generate('dgesttla_malla_tecnica_asignatura_add'),
+                            data: formData,
+                            beforeSend: function () {
+                                $("#nuevomodulo").hide();
+                                $("#modulosbasid").empty();            
+                            },
+                            success: function () {
+                                $("#periodoid option").each(function () {
+                                if ($(this).text() === "-999") {
+                                    $(this).prop("selected", true);
+                                    return;}
+                                else{
+                                    $(this).prop("selected", false);
+                                    return;}
+                                });                                             
+
+                                window.location.href =  Routing.generate('dgesttla_malla_curricular'); 
+                            },
+                            error: function () {
+
+                            }
+                        });
                     }
-                    else{
-                        var asignatura = document.getElementById("asignatura").value;
-                        if( asignatura == null || asignatura.length == 0 || /^\s+$/.test(asignatura) ) {
-                          alert('Describa la asignatura.');
-                          return false;
-                        }
-                        else{
-                            if (confirm('Está por crear una nueva asignatura: '+asignatura+msj)) {
-                                    var formData = $('#formnuevaasignatura').serialize();
-                                
-                                    $.ajax({
-                                        type: 'post',                                        
-                                        url: Routing.generate('dgesttla_malla_tecnica_asignatura_add'),
-                                        data: formData,
-                                        beforeSend: function () {
-                                            $("#nuevomodulo").hide();
-                                            $("#modulosbasid").empty();            
-                                        },
-                                        success: function () {
-                                            $("#periodoid option").each(function () {
-                                            if ($(this).text() === "-999") {
-                                                $(this).prop("selected", true);
-                                                return;}
-                                            else{
-                                                $(this).prop("selected", false);
-                                                return;}
-                                            });                                             
-
-                                            window.location.href =  Routing.generate('dgesttla_malla_curricular'); 
-                                        },
-                                        error: function () {
-
-                                        }
-                                    });
-                                }
-                            return false;
-                        }
-                    }                
-            }
-        };
+                    return false;
+                }
+            }                
+        }
+    };
 </script>
 {% endblock %}
 
