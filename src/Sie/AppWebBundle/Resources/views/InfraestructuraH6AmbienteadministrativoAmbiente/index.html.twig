@@ -1,0 +1,42 @@
+<div class="table-responsive mb-20">
+    
+    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+        <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="addnewh6ambiente('{{ambienteAdministrativoId}}')">
+            Agregar Ambiente
+        </button>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ambiente</th>
+                <th>&Aacute;rea</th>
+                <th>Estado</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.n11AmbienteadministrativoTipo }}</td>
+                <td>{{ entity.n61AmbienteAreaAdm }}</td>
+                <td>{{ entity.estadoTipo }}</td>
+                <td>
+
+                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+                        <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="fillDatah6AmbienteMobiliario('{{entity.id}}');">
+                            Mobiliario
+                        </button>
+                    </div>
+                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+                        <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="fillDataAmbPedagogicoEquipamiento('{{entity.id}}');">
+                            Equipamiento
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>

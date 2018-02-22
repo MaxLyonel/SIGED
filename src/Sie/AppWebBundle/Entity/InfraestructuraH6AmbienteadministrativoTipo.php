@@ -29,7 +29,9 @@ class InfraestructuraH6AmbienteadministrativoTipo
      */
     private $gestionTipoId;
 
-
+    public function __toString(){
+        return $this->infraestructuraAmbiente;
+    }
     /**
      * Get id
      *

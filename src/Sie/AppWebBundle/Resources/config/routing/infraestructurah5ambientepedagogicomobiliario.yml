@@ -2,9 +2,9 @@ infraestructurah5mobiliario_index:
     path:     /h5mobiliarioindex
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:index" }
 
-h5mobiliario:
-    path:     /
-    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:index" }
+# h5mobiliario:
+#     path:     /
+#     defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:index" }
 
 h5mobiliario_show:
     path:     /{id}/show

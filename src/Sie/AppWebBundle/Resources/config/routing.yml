@@ -1,3 +1,19 @@
+sie_app_web_infrah6ambadmmobiliario:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativomobiliario.yml"
+    prefix:   /infrah6ambadmmobiliario
+
+sie_app_web_infrah6viviendasmaestros:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativovivmaestros.yml"
+    prefix:   /infrah6viviendasmaestros
+
+sie_app_web_infrah6ambadm:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativo.yml"
+    prefix:   /infrah6ambadm
+
+sie_app_web_infrah6ambadmambiente:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativoambiente.yml"
+    prefix:   /infrah6ambadmambiente
+
 sie_app_web_h5ambpedagogicodeportivoequipamiento:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah5ambientepedagogicodeportivoequipamiento.yml"
     prefix:   /h5ambpedagogicodeportivoequipamiento
