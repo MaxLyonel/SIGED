@@ -11,9 +11,9 @@
                                                 <li><a class="glyphicon glyphicon-edit" href="#" onclick="usuarioFormRolEdit('{{persona.usuarioid}}')"> Editar Roles</a></li>                                            
                                                 <li><a class="glyphicon glyphicon-pencil" href="#" onclick="personaFormEdit('{{persona.personaid}}')"> Editar datos personales</a></li>                                                                                        
                                                 
-                                                {% if is_granted('ROLE_TECSS_USU')  %}
+                                                {% if is_granted('ROLE_TECSS_*')  %}
                                                     <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioDesactivar({{persona.usuarioid}})"> Activar/Desactivar Usuario </a></li>
-                                                {% elseif persona.usuarioesactivo is not null and is_granted('ROLE_TECSN_USU')  %}
+                                                {% elseif (persona.usuarioesactivo == true) and (is_granted('ROLE_TECSN_USU'))  %}
                                                     <li><a class="glyphicon glyphicon-ban-circle" href="#" onclick="usuarioDesactivar({{persona.usuarioid}})"> Activar/Desactivar Usuario </a></li>
                                                 {% endif %}
                                             </ul>
