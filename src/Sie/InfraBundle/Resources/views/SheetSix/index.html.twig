@@ -260,6 +260,7 @@
 
     arrayDataMobiliarioTipo = [];
     arrayDataStatusTipo = [];
+    var countambmob = 0;
     var fillDatah6AmbienteMobiliario = function(H6AmbienteAdmAmbienteId,n51AmbienteTipo){
 
            $.ajax({
@@ -326,7 +327,7 @@
                     }
                 });
         };
-    var countambmob = 0;
+    
     var newAmbienteh6Mobiliario = function(H6AmbienteAdmAmbienteId){
        $.ajax({
                 type: 'post',
@@ -382,9 +383,137 @@
             });
     };
 
+    //these method is to equipamiento object
+     arrayDataEquipamientoTipo = [];
+    // arrayDataStatusTipo = [];
+    var countambequip = 0;
+    var fillDatah6AmbienteEquipamiento = function(H6AmbienteAdmAmbienteId){
+
+           $.ajax({
+                    type: 'post',
+                    data: ({H6AmbienteAdmAmbienteId: H6AmbienteAdmAmbienteId}),
+                    url: "{{ path('infrah6ambadmequipamiento_fillDatah6AmbienteEquipamiento') }}",
+                    beforeSend: function () {
+                        $('#equipamientoId').empty();
+                        // $("#idSheetSix").empty();
+                    },
+                    success: function (data) {
+                        newAmbienteh6Equipamiento(H6AmbienteAdmAmbienteId);
+                          // $("#idSheetSix").empty();
+                          // $("#idSheetSix").append(data);
+                        arrayDataEquipamientoTipo = data.arrDataEquipamientoTipo;
+                        arrayDataStatusTipo = data.arrDataStatusTipo;
+                        setTimeout(function(){
+                        
+                        $.each(data.arrH6Equipamiento, function(i, valores){
+                          
+                        
+                         countambequip++;
+                          var id                                  = 'id'+countambequip;
+                          var n63Cantidad                         = 'n63Cantidad'+countambequip;
+                          var n63EstadoTipo                       = 'n63EstadoTipo'+countambequip;
+                          var n63EquipamientoTipo                   = 'n63EquipamientoTipo'+countambequip;
+                          var infraestructuraH5Ambientepedagogico = 'infraestructuraH5Ambientepedagogico'+countambequip;
+                        
+                        $("#equipamientoId").append('<tr id="'+countambequip+'">\n\
+                        <td><button type="button" onclick="eliminarFila('+countambequip+')"><i class="fa fa-trash text-danger" class="form-control"></i></button></td>\n\
+                        <td><select name="form[n63EquipamientoTipo][]" id="form_'+n63EquipamientoTipo+'" required="true" title="n63EquipamientoTipo Tenencia" class="form-control input-sm mb-15"></select></td>\n\
+                        <td><input type="text" name="form[n63Cantidad][]" id="form_'+n63Cantidad+'" value="'+valores.n63Cantidad+'" required="true" size="5" class="form-control"></td>\n\
+                        <td><select name="form[n63EstadoTipo][]" id="form_'+n63EstadoTipo+'" required="true" class="form-control input-sm mb-15" title="n63EstadoTipo" class="form-control"></select></td>\n\
+                        </tr>');
+
+                        $("#form_" + n63EquipamientoTipo).empty();
+                        $("#form_" + n63EquipamientoTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataEquipamientoTipo, function (i, value) {
+                            if(i==valores.n63EquipamientoTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n63EquipamientoTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+                        $("#form_" + n63EstadoTipo).empty();
+                        $("#form_" + n63EstadoTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataStatusTipo, function (i, value) {
+                            if(i==valores.n63EstadoTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n63EstadoTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+
+                        });  
+                        },1500);
+                        
+                        // $('#modal').append(data);
+                         
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+        };
+    
+    var newAmbienteh6Equipamiento = function(H6AmbienteAdmAmbienteId){
+       $.ajax({
+                type: 'post',
+                data: ({H6AmbienteAdmAmbienteId: H6AmbienteAdmAmbienteId}),
+                url: "{{ path('infrah6ambadmequipamiento_new') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                      
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+     var saveNewAmbAdministrativoEquipamiento = function(){
+
+        formData = $('#idFormNewAmbAdmEquipamiento').serialize();
+        
+           $.ajax({
+                    type: 'post',
+                    data: formData,
+                    url: "{{ path('infrah6ambadmequipamiento_savenew') }}",
+                    beforeSend: function () {
+                        $('#modal').modal('hide');
+                        /*$('#idSheetSix').empty();
+                        $("#idSheetSix").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');*/
+                    },
+                    success: function (data) {
+                        $('#modal').modal('hide');
+                      /*  $('#idSheetSix').empty();
+                        $('#idSheetSix').append(data);*/
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+            });
+    };
+
 
     </script>
 
     <script type="text/javascript" src="{{ asset('webinfra/assets/js/jsinfra/ambienteH6Mobiliario.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webinfra/assets/js/jsinfra/ambienteH6Equipamiento.js') }}"></script>
     
 {% endblock %}

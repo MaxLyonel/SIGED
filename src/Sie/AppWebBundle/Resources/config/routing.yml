@@ -1,3 +1,7 @@
+sie_app_web_infrah6ambadmequipamiento:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativoequipamiento.yml"
+    prefix:   /infrah6ambadmequipamiento
+
 sie_app_web_infrah6ambadmmobiliario:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativomobiliario.yml"
     prefix:   /infrah6ambadmmobiliario
