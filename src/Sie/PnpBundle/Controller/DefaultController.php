@@ -3205,6 +3205,9 @@ order by t2.fecha_inicio";
         foreach ($po as $p) {
             $lugar_usuario = $p["lugar"];
         }
+         $lugar_usuario=strtoupper($lugar_usuario);
+       
+       
         //echo "<script>alert('$lugar_usuario')</script>";
 
 
@@ -3349,6 +3352,7 @@ select institucioneducativa_curso.id,
                       INNER JOIN maestro_inscripcion ON institucioneducativa_curso.maestro_inscripcion_id_asesor = maestro_inscripcion.id
                       INNER JOIN persona ON maestro_inscripcion.persona_id = persona.id
 
+
                    GROUP BY
                       institucioneducativa_curso.id,
                       institucioneducativa_curso.institucioneducativa_id, 
@@ -3390,7 +3394,7 @@ select institucioneducativa_curso.id,
                                                 INNER JOIN institucioneducativa_curso ON estudiante_inscripcion.institucioneducativa_curso_id = institucioneducativa_curso.id
                             ) as t2 on t1.id=t2.id
 GROUP BY t1.id,t1.carnet,t1.nombre,t1.paterno,t1.materno, t1.fecha_inicio,t1.fecha_fin,t1.ciclo_tipo_id,t1.grado_tipo_id,
-t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0";
+t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
@@ -3436,6 +3440,23 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0";
         foreach ($po as $p) {
             $lugar_usuario = $p["lugar"];
         }
+    
+        $lugar_usuario=strtoupper($lugar_usuario);
+         switch ($lugar_usuario) {
+            case 'CHUQUISACA': $id_curso_ver=80480300; break;
+            case 'LA PAZ': $id_curso_ver=80730794; break;
+            case 'COCHABAMBA': $id_curso_ver=80980569; break;
+            case 'ORURO': $id_curso_ver=81230297; break;
+            case 'POTOSI': $id_curso_ver=81480201; break;
+            case 'TARIJA': $id_curso_ver=81730264; break;
+            case 'SANTA CRUZ': $id_curso_ver=81981501; break;
+            case 'BENI': $id_curso_ver=82230130; break;
+            case 'PANDO': $id_curso_ver=82480050; break;
+            default: $id_curso_ver=0; break;
+        }
+        
+            
+        if($id_curso_ver==0)$where="";else $where="and institucioneducativa_curso.institucioneducativa_id = $id_curso_ver";
         //echo "<script>alert('$lugar_usuario')</script>";
 
 
@@ -3599,6 +3620,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0";
                 INNER JOIN lugar_tipo ON lugar_tipo.id = institucioneducativa_curso.lugartipo_id
                 INNER JOIN maestro_inscripcion ON institucioneducativa_curso.maestro_inscripcion_id_asesor = maestro_inscripcion.id
                 INNER JOIN persona ON maestro_inscripcion.persona_id = persona.id
+                where 1=1 $where
 
                 GROUP BY
                 institucioneducativa_curso.id,
@@ -5756,7 +5778,7 @@ public function crear_curso_automaticoAction(Request $request){
         $ci=$institucion_educativa->getFacilitador();
         //buscamos el curso siguiente dependendiendo del bloque y parte numeor de materias y el modulo dependiendo de la gestion
         $gestion= substr($fecha_inicio,-4);
-        if($gestion < 2018){
+        if($gestion <= 2018){
             if($bloque_actual==1 and  $parte_actual==1){$bloque_nuevo=1;$parte_nuevo=2;$nroMaterias=6;$modulo=2;}
             elseif($bloque_actual==1 and  $parte_actual==2){$bloque_nuevo=2;$parte_nuevo=1;$nroMaterias=5;$modulo=3;}
             elseif($bloque_actual==2 and  $parte_actual==1){$bloque_nuevo=2;$parte_nuevo=2;$nroMaterias=3;$modulo=4;}
@@ -5764,7 +5786,7 @@ public function crear_curso_automaticoAction(Request $request){
         }//else
         //Sacar la fecha, si fecha menor a 2017 sacamos las materias
         $gestion= substr($fecha_inicio,-4);
-         if($gestion < 2018){
+         if($gestion <= 2018){
             if($modulo==1)
                 $materias = array('2000','2002','2005','2006','2007');
             elseif($modulo==2)
