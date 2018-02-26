@@ -107,7 +107,7 @@ class Login {
             inner join orgcurricular_tipo c on b.orgcurricular_tipo_id = c.id
             where
             a.persona_id = ".$id." and
-            c.id = 1 and            
+            c.id = 2 and            
             a.gestion_tipo_id = ".$gestion." and            
             (a.cargo_tipo_id = 1 or a.cargo_tipo_id = 12 or a.cargo_tipo_id = 0 ) and
             a.es_vigente_administrativo is true and

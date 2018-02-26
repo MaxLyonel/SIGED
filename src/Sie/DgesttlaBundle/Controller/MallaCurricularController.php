@@ -47,13 +47,11 @@ class MallaCurricularController extends Controller {
         
         $denominacion_id = $request->getSession()->get('idDenominacion');
 
-        //dump($denominacion_id);die();
-
         $query = $em->getConnection()->prepare('        
         select a.institucioneducativa_id, c.institucioneducativa, i.regimen_estudio,
         a.ttec_carrera_tipo_id, b.nombre as nombre_carrera
-        ,d.denominacion, e.pensum, e.resolucion_administrativa, e.nro_resolucion
-        ,g.periodo, f.codigo as codigo_materia, f.materia as asignatura        
+        ,d.id as denominacion_id,d.denominacion, e.id as pensum_id, e.pensum, e.resolucion_administrativa, e.nro_resolucion
+        ,g.id as periodo_id,g.periodo, f.id as materia_id, f.codigo as codigo_materia, f.materia as asignatura        
         from ttec_institucioneducativa_carrera_autorizada a        
             inner join ttec_resolucion_carrera h on h.ttec_institucioneducativa_carrera_autorizada_id = a.id
             inner join ttec_regimen_estudio_tipo i on i.id = h.ttec_regimen_estudio_tipo_id            
@@ -108,9 +106,7 @@ class MallaCurricularController extends Controller {
 
     }    
 
-
-
-    public function addasignaturaAction(Request $request, $pensumid) {
+    public function addasignaturaAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         
         //get the session's values
@@ -135,8 +131,8 @@ class MallaCurricularController extends Controller {
         $periodoid = $request->get('periodoid');
         $codigo = $request->get('codigo');
         $asignatura = $request->get('asignatura');
-        //$pensumid = $request->get('pensumid');
-        
+        $pensumid = $request->get('pensumid');
+
         $response = new JsonResponse(); 
 
         $em = $this->getDoctrine()->getManager();
@@ -161,4 +157,7 @@ class MallaCurricularController extends Controller {
         }
     }   
 
+    /*public listmaterias(){
+
+    }*/
 }

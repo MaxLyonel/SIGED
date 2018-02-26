@@ -29,7 +29,9 @@ class InfraestructuraH5AmbientepedagogicoDeportivoAmbienteTipo
      */
     private $gestionTipoId;
 
-
+      public function __toString(){
+        return $this->infraestructuraAmbiente;
+    }
     /**
      * Get id
      *

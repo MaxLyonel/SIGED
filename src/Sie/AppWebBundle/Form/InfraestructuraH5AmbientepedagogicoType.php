@@ -51,7 +51,21 @@ class InfraestructuraH5AmbientepedagogicoType extends AbstractType
             ->add('n51AmbientePisoCaracTipo')
             ->add('n51AmbientePisoMatTipo')
 
-            // ->add('n13PuertasEstadogeneralTipo')
+            // need to review this fields
+            ->add('n13AmbienteEstadogeneralTipo')
+            ->add('n13IluminacionnaturalEstadogeneralTipo')
+
+            ->add('n13PuertasEstadogeneralTipo')
+            ->add('n13CielorasoEstadogeneralTipo')
+            ->add('n13PinturaEstadogeneralTipo')
+            ->add('n13VentanasEstadogeneralTipo')
+            ->add('n13TechoEstadogeneralTipo')
+            ->add('n13ParedEstadogeneralTipo')
+            ->add('n13PisoEstadogeneralTipo')
+            ->add('n13SeguridadEstadogeneralTipo')
+            ->add('n13IluminacionelectricaEstadogeneralTipo')
+            ->add('n15UsoOrgcurricularTipo')
+            // 
             
             // ->add('n51TalleresEspOtro')
             // ->add('n51TalleresEspTipo')
@@ -59,17 +73,11 @@ class InfraestructuraH5AmbientepedagogicoType extends AbstractType
             // ->add('n51EspecialidadTipoId')
             // ->add('estadoTipo')            
             // ->add('n51AreaTipo')
-            // ->add('n15UsoOrgcurricularTipo')
-            // ->add('n13CielorasoEstadogeneralTipo')
-            // ->add('n13PinturaEstadogeneralTipo')
-            // ->add('n13VentanasEstadogeneralTipo')
-            // ->add('n13TechoEstadogeneralTipo')
-            // ->add('n13ParedEstadogeneralTipo')
-            // ->add('n13PisoEstadogeneralTipo')
-            // ->add('n13SeguridadEstadogeneralTipo')
-            // ->add('n13IluminacionelectricaEstadogeneralTipo')
-            // ->add('n13IluminacionnaturalEstadogeneralTipo')
-            // ->add('n13AmbienteEstadogeneralTipo')
+            
+            
+
+            
+            
             // ->add('infraestructuraJuridiccionGeografica')
         ;
     }

@@ -39,22 +39,22 @@
                   <div class="panel-heading no-padding">
                       <ul class="nav nav-tabs">
                           <li class="nav-border nav-border-top-danger active">
-                              <a href="component-tabsaccordion.html#tab1-1" data-toggle="tab" class="text-center" aria-expanded="true">
-                                  1. Disponibilidad de energia electrica
+                              <a href="component-tabsaccordion.html#tab1-1" data-toggle="tab" class="text-center" aria-expanded="true" onclick="openAmbientes('{{infraestructuraJuridiccionGeografica}}')">
+                                  1. Ambientes administrativos
                               </a>
                           </li>
                           <li class="nav-border nav-border-top-primary">
-                              <a href="component-tabsaccordion.html#tab1-2" data-toggle="tab" class="text-center" aria-expanded="false">
-                                  2. Disponibilidad de servicio de agua
+                              <a href="component-tabsaccordion.html#tab1-1" data-toggle="tab" class="text-center" aria-expanded="false" onclick="openViviendas('{{infraestructuraJuridiccionGeografica}}')">
+                                  2. Viviendas para maestros
                               </a>
                           </li>
                           <li class="nav-border nav-border-top-success">
-                              <a href="component-tabsaccordion.html#tab1-3" data-toggle="tab" class="text-center" aria-expanded="false">
+                              <a href="component-tabsaccordion.html#tab1-3" data-toggle="tab" class="text-center" aria-expanded="false" onclick="openInternados('{{infraestructuraJuridiccionGeografica}}')">
                                   3. Saneamiento basico
                               </a>
                           </li>
                           <li class="nav-border nav-border-top-success">
-                              <a href="component-tabsaccordion.html#tab1-4" data-toggle="tab" class="text-center" aria-expanded="false">
+                              <a href="component-tabsaccordion.html#tab1-4" data-toggle="tab" class="text-center" aria-expanded="false" onclick="openServicios('{{infraestructuraJuridiccionGeografica}}')">
                                   4. Servicios proximos al edificio educativo
                               </a>
                           </li>
@@ -66,26 +66,43 @@
                   <!-- Start tabs content -->
                   <div class="panel-body">
                     <form action="#">
-                      <div class="form-footer">
+                      <!-- <div class="form-footer">
                           <div class="pull-right">
-                              <button class="btn btn-danger mr-5">Cancel</button>
+                              <button class="btn btn-danger mr-5">Canceldd</button>
                               <button class="btn btn-success" type="submit">Submit</button>
                           </div>
-                      </div>
+                      </div> -->
                       <div class="tab-content">
                         <!-- start tab1 -->
                           <div class="tab-pane fade active in" id="tab1-1">
-                            {% include 'SieInfraBundle:SheetSix:energiaelectrica.html.twig' with { 'data': 'data'} %}
+                            <div id="idSheetSix">
+                              
+                            </div>
+
+                            {# 
+                                {% include 'SieInfraBundle:SheetSix:energiaelectrica.html.twig' with { 'data': 'data'} %}
+                              #}
+                            
+                            
                           </div>
                           <!-- end tab1 -->
                           <div class="tab-pane fade" id="tab1-2">
+                            {#
                             {% include 'SieInfraBundle:SheetSix:servicioagua.html.twig' with { 'data': 'data'} %}
+                            }
+                            #}
                           </div>  <!-- end tab2 -->
                           <div class="tab-pane fade" id="tab1-3">
+                            {#
                               {% include 'SieInfraBundle:SheetSix:saneamientobasico.html.twig' with { 'data': 'data'} %}
+                            }
+                            #}
                           </div>  <!-- end tab3 -->
                           <div class="tab-pane fade" id="tab1-4">
+                            {#
                               {% include 'SieInfraBundle:SheetSix:serviciosproximos.html.twig' with { 'data': 'data'} %}
+                            }
+                            #}
                           </div>  <!-- end tab4 -->
                       </div>
                     </form>
@@ -97,8 +114,406 @@
           </div>
       </div>
     </div>
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">      
+    </div>
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+    var openAmbientes = function(infraestructuraJuridiccionGeografica){
+       $.ajax({
+             type: 'post',
+             url: Routing.generate('infrah6ambadmambiente_index'),
+             data: {infraestructuraJuridiccionGeografica: infraestructuraJuridiccionGeografica},
+             beforeSend: function () {
+                 $("#idSheetSix").empty();
+                 $("#idSheetSix").empty();
+                 $("#idSheetSix").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idSheetSix").empty();
+                 $("#idSheetSix").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
 
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+      
+    };
+
+    var addnewh6ambiente = function(ambienteAdministrativoId){
+        $.ajax({
+                type: 'post',
+                data: ({ambienteAdministrativoId: ambienteAdministrativoId}),
+                // url: "{{ path('infrah6ambadmambiente_addnewh6ambiente') }}",
+                url: Routing.generate('infrah6ambadmambiente_addnewh6ambiente'),
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+
+       var saveNewh6Ambiente = function(){
+
+    formData = $('#idFormh6NewAmbiente').serialize();
+       $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('infrah6ambadmambiente_saveNewh6Ambiente') }}",
+                beforeSend: function () {
+                    $('#modal').modal('hide');
+                    $('#idSheetSix').empty();
+                    $("#idSheetSix").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                },
+                success: function (data) {
+                    $('#idSheetSix').empty();
+                    $('#idSheetSix').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+
+    var openViviendas = function(infraestructuraJuridiccionGeografica){
+       $.ajax({
+             type: 'post',
+             url: Routing.generate('infrah6viviendasmaestros_index'),
+             data: {infraestructuraJuridiccionGeografica: infraestructuraJuridiccionGeografica},
+             beforeSend: function () {
+                 $("#idSheetSix").empty();
+                 $("#idSheetSix").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                  $("#idSheetSix").empty();
+                 $("#idSheetSix").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+      
+    };
+
+
+    var addnewh6vivienda = function(ambienteAdministrativoId){
+        $.ajax({
+                type: 'post',
+                data: ({ambienteAdministrativoId: ambienteAdministrativoId}),
+                // url: "{{ path('infrah6ambadmambiente_addnewh6ambiente') }}",
+                url: Routing.generate('infrah6viviendasmaestros_addnewh6vivienda'),
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+
+
+
+    arrayDataMobiliarioTipo = [];
+    arrayDataStatusTipo = [];
+    var countambmob = 0;
+    var fillDatah6AmbienteMobiliario = function(H6AmbienteAdmAmbienteId,n51AmbienteTipo){
+
+           $.ajax({
+                    type: 'post',
+                    data: ({H6AmbienteAdmAmbienteId: H6AmbienteAdmAmbienteId}),
+                    url: "{{ path('infrah6ambadmmobiliario_fillDatah6AmbienteMobiliario') }}",
+                    beforeSend: function () {
+                        $('#mobiliarioId').empty();
+                        // $("#idSheetSix").empty();
+                    },
+                    success: function (data) {
+                        newAmbienteh6Mobiliario(H6AmbienteAdmAmbienteId);
+                          // $("#idSheetSix").empty();
+                          // $("#idSheetSix").append(data);
+                        arrayDataMobiliarioTipo = data.arrDataMobiliarioTipo;
+                        arrayDataStatusTipo = data.arrDataStatusTipo;
+                        setTimeout(function(){
+                        
+                        $.each(data.arrH6Mobiliario, function(i, valores){
+                          
+                         countambmob++;
+                          var id                                  = 'id'+countambmob;
+                          var n21Cantidad                         = 'n21Cantidad'+countambmob;
+                          var n21EstadoTipo                       = 'n21EstadoTipo'+countambmob;
+                          var n21MobiliarioTipo                   = 'n21MobiliarioTipo'+countambmob;
+                          var infraestructuraH5Ambientepedagogico = 'infraestructuraH5Ambientepedagogico'+countambmob;
+                        
+                        $("#mobiliarioId").append('<tr id="'+countambmob+'">\n\
+                        <td><button type="button" onclick="eliminarFila('+countambmob+')"><i class="fa fa-trash text-danger" class="form-control"></i></button></td>\n\
+                        <td><select name="form[n21MobiliarioTipo][]" id="form_'+n21MobiliarioTipo+'" required="true" title="n21MobiliarioTipo Tenencia" class="form-control input-sm mb-15"></select></td>\n\
+                        <td><input type="text" name="form[n21Cantidad][]" id="form_'+n21Cantidad+'" required="true" size="5" class="form-control" value="'+valores.n21Cantidad+'"></td>\n\
+                        <td><select name="form[n21EstadoTipo][]" id="form_'+n21EstadoTipo+'" required="true" class="form-control input-sm mb-15" title="n21EstadoTipo" class="form-control"></select></td>\n\
+                        </tr>');
+
+                        $("#form_" + n21MobiliarioTipo).empty();
+                        $("#form_" + n21MobiliarioTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataMobiliarioTipo, function (i, value) {
+                            if(i==valores.n21MobiliarioTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n21MobiliarioTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+                        $("#form_" + n21EstadoTipo).empty();
+                        $("#form_" + n21EstadoTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataStatusTipo, function (i, value) {
+                            if(i==valores.n21EstadoTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n21EstadoTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+
+                        });  
+                        },1500);
+                        
+                        // $('#modal').append(data);
+                         
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+        };
+    
+    var newAmbienteh6Mobiliario = function(H6AmbienteAdmAmbienteId){
+       $.ajax({
+                type: 'post',
+                data: ({H6AmbienteAdmAmbienteId: H6AmbienteAdmAmbienteId}),
+                url: "{{ path('infrah6ambadmmobiliario_new') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                      
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+      var saveNewAmbAdministrativoMobiliario = function(){
+
+        formData = $('#idFormNewAmbAdmMobiliario').serialize();
+        
+           $.ajax({
+                    type: 'post',
+                    data: formData,
+                    url: "{{ path('infrah6ambadmmobiliario_savenew') }}",
+                    beforeSend: function () {
+                        $('#modal').modal('hide');
+                        /*$('#idSheetSix').empty();
+                        $("#idSheetSix").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');*/
+                    },
+                    success: function (data) {
+                        $('#modal').modal('hide');
+                      /*  $('#idSheetSix').empty();
+                        $('#idSheetSix').append(data);*/
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+            });
+    };
+
+    //these method is to equipamiento object
+     arrayDataEquipamientoTipo = [];
+    // arrayDataStatusTipo = [];
+    var countambequip = 0;
+    var fillDatah6AmbienteEquipamiento = function(H6AmbienteAdmAmbienteId){
+
+           $.ajax({
+                    type: 'post',
+                    data: ({H6AmbienteAdmAmbienteId: H6AmbienteAdmAmbienteId}),
+                    url: "{{ path('infrah6ambadmequipamiento_fillDatah6AmbienteEquipamiento') }}",
+                    beforeSend: function () {
+                        $('#equipamientoId').empty();
+                        // $("#idSheetSix").empty();
+                    },
+                    success: function (data) {
+                        newAmbienteh6Equipamiento(H6AmbienteAdmAmbienteId);
+                          // $("#idSheetSix").empty();
+                          // $("#idSheetSix").append(data);
+                        arrayDataEquipamientoTipo = data.arrDataEquipamientoTipo;
+                        arrayDataStatusTipo = data.arrDataStatusTipo;
+                        setTimeout(function(){
+                        
+                        $.each(data.arrH6Equipamiento, function(i, valores){
+                          
+                        
+                         countambequip++;
+                          var id                                  = 'id'+countambequip;
+                          var n63Cantidad                         = 'n63Cantidad'+countambequip;
+                          var n63EstadoTipo                       = 'n63EstadoTipo'+countambequip;
+                          var n63EquipamientoTipo                   = 'n63EquipamientoTipo'+countambequip;
+                          var infraestructuraH5Ambientepedagogico = 'infraestructuraH5Ambientepedagogico'+countambequip;
+                        
+                        $("#equipamientoId").append('<tr id="'+countambequip+'">\n\
+                        <td><button type="button" onclick="eliminarFila('+countambequip+')"><i class="fa fa-trash text-danger" class="form-control"></i></button></td>\n\
+                        <td><select name="form[n63EquipamientoTipo][]" id="form_'+n63EquipamientoTipo+'" required="true" title="n63EquipamientoTipo Tenencia" class="form-control input-sm mb-15"></select></td>\n\
+                        <td><input type="text" name="form[n63Cantidad][]" id="form_'+n63Cantidad+'" value="'+valores.n63Cantidad+'" required="true" size="5" class="form-control"></td>\n\
+                        <td><select name="form[n63EstadoTipo][]" id="form_'+n63EstadoTipo+'" required="true" class="form-control input-sm mb-15" title="n63EstadoTipo" class="form-control"></select></td>\n\
+                        </tr>');
+
+                        $("#form_" + n63EquipamientoTipo).empty();
+                        $("#form_" + n63EquipamientoTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataEquipamientoTipo, function (i, value) {
+                            if(i==valores.n63EquipamientoTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n63EquipamientoTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+                        $("#form_" + n63EstadoTipo).empty();
+                        $("#form_" + n63EstadoTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataStatusTipo, function (i, value) {
+                            if(i==valores.n63EstadoTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n63EstadoTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+
+                        });  
+                        },1500);
+                        
+                        // $('#modal').append(data);
+                         
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+        };
+    
+    var newAmbienteh6Equipamiento = function(H6AmbienteAdmAmbienteId){
+       $.ajax({
+                type: 'post',
+                data: ({H6AmbienteAdmAmbienteId: H6AmbienteAdmAmbienteId}),
+                url: "{{ path('infrah6ambadmequipamiento_new') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                      
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+     var saveNewAmbAdministrativoEquipamiento = function(){
+
+        formData = $('#idFormNewAmbAdmEquipamiento').serialize();
+        
+           $.ajax({
+                    type: 'post',
+                    data: formData,
+                    url: "{{ path('infrah6ambadmequipamiento_savenew') }}",
+                    beforeSend: function () {
+                        $('#modal').modal('hide');
+                        /*$('#idSheetSix').empty();
+                        $("#idSheetSix").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');*/
+                    },
+                    success: function (data) {
+                        $('#modal').modal('hide');
+                      /*  $('#idSheetSix').empty();
+                        $('#idSheetSix').append(data);*/
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+            });
+    };
+
+
+    </script>
+
+    <script type="text/javascript" src="{{ asset('webinfra/assets/js/jsinfra/ambienteH6Mobiliario.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webinfra/assets/js/jsinfra/ambienteH6Equipamiento.js') }}"></script>
+    
 {% endblock %}
