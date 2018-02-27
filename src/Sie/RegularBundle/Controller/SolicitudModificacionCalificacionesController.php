@@ -433,14 +433,15 @@ class SolicitudModificacionCalificacionesController extends Controller {
                     // Preguntamos si la materia del curso ya la tiene el estudiante
                     if(!in_array($ac['id'], $arrayAsignaturasEstudiante)){
                         // Reiniciar el primary key de las tabla estudiante_asignatura
-
+                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
+                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
                         $newAsignatura = new EstudianteAsignatura();
                         $newAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
                         $newAsignatura->setFechaRegistro(new \DateTime('now'));
                         $newAsignatura->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
                         $newAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ac['idCursoOferta']));
                         $em->persist($newAsignatura);
-                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
+                        
                         $em->flush();
 
                         //dump($newAsignatura);die;
