@@ -1,0 +1,34 @@
+infrah6interdormitorios_index:
+    path:     /index
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:index" }
+    options:
+        expose: true
+
+infrah6interdormitorios_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:show" }
+
+infrah6interdormitorios_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:new" }
+    options:
+        expose: true
+
+infrah6interdormitorios_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:create" }
+    methods:  POST
+
+infrah6interdormitorios_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:edit" }
+
+infrah6interdormitorios_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:update" }
+    methods:  [POST, PUT]
+
+infrah6interdormitorios_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:delete" }
+    methods:  [POST, DELETE]

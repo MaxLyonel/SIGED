@@ -1,3 +1,11 @@
+sie_app_web_infrah6internadoestudiante:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativointernadoest.yml"
+    prefix:   /infrah6internadoestudiante
+
+sie_app_web_infrah6interdormitorios:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativointerdormitorios.yml"
+    prefix:   /infrah6interdormitorios
+
 sie_app_web_infrah6ambadmequipamiento:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativoequipamiento.yml"
     prefix:   /infrah6ambadmequipamiento

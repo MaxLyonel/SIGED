@@ -41,4 +41,10 @@ infrah6viviendasmaestros_addnewh6vivienda:
     path:     /addnewh6vivienda
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:addnewh6vivienda" }
     options:
+        expose: true    
+            
+infrah6viviendasmaestros_saveNewh6Vivienda:
+    path:     /saveNewh6Vivienda
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:saveNewh6Vivienda" }
+    options:
         expose: true

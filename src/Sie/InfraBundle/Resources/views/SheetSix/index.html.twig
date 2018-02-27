@@ -49,13 +49,13 @@
                               </a>
                           </li>
                           <li class="nav-border nav-border-top-success">
-                              <a href="component-tabsaccordion.html#tab1-3" data-toggle="tab" class="text-center" aria-expanded="false" onclick="openInternados('{{infraestructuraJuridiccionGeografica}}')">
-                                  3. Saneamiento basico
+                              <a href="component-tabsaccordion.html#tab1-1" data-toggle="tab" class="text-center" aria-expanded="false" onclick="openInternados('{{infraestructuraJuridiccionGeografica}}')">
+                                  3. Internado para estudiantes
                               </a>
                           </li>
                           <li class="nav-border nav-border-top-success">
-                              <a href="component-tabsaccordion.html#tab1-4" data-toggle="tab" class="text-center" aria-expanded="false" onclick="openServicios('{{infraestructuraJuridiccionGeografica}}')">
-                                  4. Servicios proximos al edificio educativo
+                              <a href="component-tabsaccordion.html#tab1-1" data-toggle="tab" class="text-center" aria-expanded="false" onclick="openServicios('{{infraestructuraJuridiccionGeografica}}')">
+                                  4. Servicio de alimentaci&oacute;n
                               </a>
                           </li>
 
@@ -174,7 +174,7 @@
     };
 
 
-       var saveNewh6Ambiente = function(){
+    var saveNewh6Ambiente = function(){
 
     formData = $('#idFormh6NewAmbiente').serialize();
        $.ajax({
@@ -507,6 +507,90 @@
 
                         }
                     }
+            });
+    };
+
+     var saveNewh6Vivienda = function(){
+
+    formData = $('#idFormh6NewVivienda').serialize();
+       $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('infrah6viviendasmaestros_saveNewh6Vivienda') }}",
+                beforeSend: function () {
+                    $('#modal').modal('hide');
+                    $('#idSheetSix').empty();
+                    $("#idSheetSix").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                },
+                success: function (data) {
+                    $('#idSheetSix').empty();
+                    $('#idSheetSix').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+
+
+    var openInternados = function(infraestructuraJuridiccionGeografica){
+       $.ajax({
+             type: 'post',
+             url: Routing.generate('infrah6internadoestudiante_index'),
+             data: {infraestructuraJuridiccionGeografica: infraestructuraJuridiccionGeografica},
+             beforeSend: function () {
+                 $("#idSheetSix").empty();
+                 $("#idSheetSix").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                  $("#idSheetSix").empty();
+                 $("#idSheetSix").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+      
+    };
+
+  var saveH6InternadoEst = function(infraestructuraJuridiccionGeografica){
+    
+    formData = $('#idFormh6InternadoEst').serialize();
+       $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('infrah6internadoestudiante_saveH6InternadoEst') }}",
+                beforeSend: function () {
+                    $('#modal').modal('hide');
+                    $('#idSheetSix').empty();
+                    $("#idSheetSix").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                },
+                success: function (data) {
+                    $('#idSheetSix').empty();
+                    $('#idSheetSix').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
             });
     };
 

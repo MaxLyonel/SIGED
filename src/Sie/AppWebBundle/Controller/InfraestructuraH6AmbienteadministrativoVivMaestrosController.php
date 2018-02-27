@@ -84,6 +84,70 @@ class InfraestructuraH6AmbienteadministrativoVivMaestrosController extends Contr
     }
 
 
+    /**
+     * [saveNewh6ViviendaAction description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function saveNewh6ViviendaAction(Request $request){
+        // cretae db conexion var
+        $em =  $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+
+        //get the send data
+        $form = $request->get('sie_appwebbundle_infraestructurah6ambienteadministrativovivmaestros');
+        
+        
+        try {
+
+            $entity = new InfraestructuraH6AmbienteadministrativoVivMaestros();
+
+            $entity->setN21NumeroAmbientes($form['n21NumeroAmbientes']);
+            $entity->setN21NumeroHabitantes($form['n21NumeroHabitantes']);
+            $entity->setN21NumeroBanios($form['n21NumeroBanios']);
+            $entity->setN21NumeroDuchas($form['n21NumeroDuchas']);
+            $entity->setN21NumeroCocinas($form['n21NumeroCocinas']);
+            $entity->setN21MetrosArea($form['n21MetrosArea']);
+            $entity->setEstadoTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenEstadoGeneral')->find($form['estadoTipo']) );
+            $entity->setN21EsAmbienteCieloFal($form['n21EsAmbienteCieloFal']);
+            $entity->setN21AmbienteCieloFalTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenCaracteristicasInfraTipo')->find($form['n21AmbienteCieloFalTipo']) );
+            $entity->setN21EsAmbienteMuros($form['n21EsAmbienteMuros']);
+            $entity->setN21AmbienteMuroMatTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenMurosMaterialTipo')->find($form['n21AmbienteMuroMatTipo']) );
+            $entity->setN21AmbienteMuroCaracTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenMurosCaracTipo')->find($form['n21AmbienteMuroCaracTipo']) );
+            $entity->setN21EsAmbientePuerta($form['n21EsAmbientePuerta']);
+            $entity->setN211SeguroTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenPuertasSeguroTipo')->find($form['n211SeguroTipo']) );
+            $entity->setN212AbreTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenPuertasAbreTipo')->find($form['n212AbreTipo']) );
+            // $entity->setN612AbreTipoId($form['n612AbreTipoId']);
+            $entity->setN21EsAmbienteRevestimiento($form['n21EsAmbienteRevestimiento']);
+            $entity->setN21AmbienteRevestMatTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenRevestimientoMaterialTipo')->find($form['n21AmbienteRevestMatTipo']) );
+            $entity->setN21AmbienteRevestCaracTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenCaracteristicasInfraTipo')->find($form['n21AmbienteRevestCaracTipo']) );
+            $entity->setN21EsAmbienteVentana($form['n21EsAmbienteVentana']);
+            $entity->setN21AmbienteVentanaTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenVentanasCaracTipo')->find($form['n21AmbienteVentanaTipo']) );
+            $entity->setN21EsAmbientePiso($form['n21EsAmbientePiso']);
+            $entity->setN21AmbientePisoMatTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenPisosMaterialTipo')->find($form['n21AmbientePisoMatTipo']) );
+            $entity->setN21AmbientePisoCaracTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenCaracteristicasInfraTipo')->find($form['n21AmbientePisoCaracTipo']) );  
+            $entity->setN21EsAmbienteTecho($form['n21EsAmbienteTecho']);
+            $entity->setInfraestructuraH6Ambienteadministrativo($em->getRepository('SieAppWebBundle:InfraestructuraH6Ambienteadministrativo')->find($form['ambienteAdministrativoId']) );
+            
+
+            $em->persist($entity);
+            $em->flush();
+
+            $em->getConnection()->commit();
+
+            
+        } catch (Exception $e) {
+             echo $e->getTraceAsString();
+             $em->getConnection()->rollback();
+             $em->close();
+             throw $e;
+        }
+   
+        return $this->redirect($this->generateUrl('infrah6viviendasmaestros_listviviendas', array('id'=>$form['ambienteAdministrativoId'] )));
+    }
+
+
+
 
 
 
