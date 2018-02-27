@@ -408,7 +408,6 @@ class SolicitudModificacionCalificacionesController extends Controller {
                                         ->setParameter('idInscripcion',$idInscripcion)
                                         ->getQuery()
                                         ->getResult();
-
             /* Verificamos si la cantidad de materias del estudiante es igual al del curso */
             $asignaturasCurso = $em->createQuery(
                     'SELECT DISTINCT at.id, ieco.id as idCursoOferta
@@ -421,26 +420,31 @@ class SolicitudModificacionCalificacionesController extends Controller {
 
             $arrayAsignaturasEstudiante = array();
 
+
             if(count($asignaturas) != count($asignaturasCurso)){
-                foreach ($asignaturasCurso as $a) {
+                foreach ($asignaturas as $a) {
                     $arrayAsignaturasEstudiante[] = $a['id'];
                 }
 
-                // Reiniciar el primary key de las tabla estudiante_asignatura
-                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');");
-                $query->execute();
+
+                
                 // Registramos las areas del estudiante
                 foreach ($asignaturasCurso as $ac) {
                     // Preguntamos si la materia del curso ya la tiene el estudiante
                     if(!in_array($ac['id'], $arrayAsignaturasEstudiante)){
+                        // Reiniciar el primary key de las tabla estudiante_asignatura
+
                         $newAsignatura = new EstudianteAsignatura();
                         $newAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
                         $newAsignatura->setFechaRegistro(new \DateTime('now'));
                         $newAsignatura->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
                         $newAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($ac['idCursoOferta']));
                         $em->persist($newAsignatura);
+                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
                         $em->flush();
-                    }
+
+                        //dump($newAsignatura);die;
+                    }//die('adsf');
 
                 }
                 goto vuelta;
