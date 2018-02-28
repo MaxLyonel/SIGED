@@ -4,6 +4,12 @@ infrah6internadoestudiante_index:
     options:
         expose: true
 
+infrah6internadoestudiante_saveH6InternadoEst:
+    path:     /saveH6InternadoEst
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:saveH6InternadoEst" }
+    options:
+        expose: true    
+
 infrah6internadoestudiante_show:
     path:     /{id}/show
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:show" }
@@ -31,8 +37,3 @@ infrah6internadoestudiante_delete:
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:delete" }
     methods:  [POST, DELETE]
 
-infrah6internadoestudiante_saveH6InternadoEst:
-    path:     /saveH6InternadoEst
-    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:saveH6InternadoEst" }
-    options:
-        expose: true    
