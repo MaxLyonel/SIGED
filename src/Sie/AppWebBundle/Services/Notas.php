@@ -89,6 +89,8 @@ class Notas{
                 $tn = array(30,27,6,31,28,7,32,29,8,9,10,11);
                 //$tn = array(6,7,8,9,10,11);
                 // TRIMESTRALES
+                vuelve1:
+
                 $asignaturas = $this->em->createQueryBuilder()
                             ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
                             ->from('SieAppWebBundle:EstudianteAsignatura','ea')
@@ -101,6 +103,36 @@ class Notas{
                             ->setParameter('idInscripcion',$idInscripcion)
                             ->getQuery()
                             ->getResult();
+
+                $cursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()));
+
+                $arrayAsignaturasEstudiante = array();
+                foreach ($asignaturas as $a) {
+                    $arrayAsignaturasEstudiante[] = $a['asignaturaId'];
+                }
+
+                
+                $nuevaArea = false;
+                foreach ($cursoOferta as $co) {
+                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante)){
+
+                        $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');")->execute();
+                        // Si no existe la asignatura, registramos la asignatura para el maestro
+                        $newEstAsig = new EstudianteAsignatura();
+                        $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+                        $newEstAsig->setFechaRegistro(new \DateTime('now'));
+                        $newEstAsig->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
+                        $newEstAsig->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($co->getId()));
+                        $this->em->persist($newEstAsig);
+                        $this->em->flush();
+                        $nuevaArea = true;
+                    }
+                }
+
+                // Volvemos atras si se adiciono alguna nueva materia o asignatura
+                if($nuevaArea == true){
+                    goto vuelve1;
+                }
 
                 $notasArray = array();
                 $cont = 0;
