@@ -64,7 +64,7 @@ class AreasController extends Controller {
                 /**
                  * VErificamos si la gestion es 2015
                  */
-                if ($form['gestion'] < 2008 or $form['gestion'] > 2017) {
+                if ($form['gestion'] < 2008) {
                 
                     $this->get('session')->getFlashBag()->add('noSearch', 'La gestión ingresada no es válida.');
                     return $this->render('SieRegularBundle:Areas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
