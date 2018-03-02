@@ -396,13 +396,10 @@
                             </a>
                             <ul>
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
-                                <li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>
-                                <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
-                                <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
-                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+
+
+                                <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
+
                             </ul>
                         </li>
                     {% endif %}
@@ -515,7 +512,7 @@
 
             <!-- START @PAGE CONTENT -->
             <section id="page-content">
-                <div class="header-content" style="background-color: #6d7b61;">
+                <div class="header-content" style="background-color: #d58f71;">
                     <h2><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}}
                         <span> {{app.session.get('ie_id')}}  {{app.session.get('ie_gestion')}}  {{app.session.get('ie_per_nom')}}
                             {% if (app.session.get('ie_per_estado') != '0') %}

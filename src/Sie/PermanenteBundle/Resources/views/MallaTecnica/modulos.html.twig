@@ -1,0 +1,240 @@
+{#{% extends 'SieHerramientaAlternativaBundle:MallaTecnica:seemodulos.html.twig' %}    
+{% block listamodulos %}#}
+                                <div id= "menprincipal" class="row">
+                                    <div class="col-md-12">                            
+                                        {% for flashMessage in app.session.flashbag.get('successtec') %}
+                                            <div class="alert alert-success alert-dismissible" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <strong>¡Proceso realizado exitosamente!</strong> {{ flashMessage }}
+                                            </div>
+                                        {% endfor %}
+                                        {% for flashMessage in app.session.flashbag.get('messagetec') %}
+                                            <div class="alert alert-warning alert-dismissible" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <strong>¡Aviso!</strong> {{ flashMessage }}
+                                            </div>
+                                        {% endfor %}
+                                        {% for flashMessage in app.session.flashbag.get('errortec') %}
+                                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <strong>¡Proceso detenido! Se ha detectado inconsistencia de datos.</strong> {{ flashMessage }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div> 
+
+                                <table class="table table-no-border table-middle table-lilac">
+                                    <tbody>
+                                        <tr>
+                                            <td align="left" class="warning">#</td>
+                                            <td align="left" class="warning"><b class="text-block">ACREDITACIÓN</b></td>
+                                            <td align="left" class="warning"><b class="text-block">MÓDULO</b></td>
+                                            <td align="left" class="warning"><b class="text-block">HORAS</b></td>
+                                            {#<td align="center" class="warning"><b class="text-block">SEMESTRE</b></td>#}
+                                            {% if (app.session.get('ie_per_estado') != '0') %}
+                                                <td align="center" class="warning"><b class="text-block">ELIMINAR</b></td>
+                                            {% endif %}    
+                                        </tr>
+                                        {% if exist == true %}    
+                                            {% for data in modulos %}                                                                
+                                                <tr>
+                                                    <td>
+                                                        <b class="text-block">{{loop.index}}</b>
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" {#class="xeditablesemestre"#} id="xesemestres{{loop.index}}" data-pk="{{data.mod_per_hor_id}}">{{data.acreditacion}}</a>
+                                                    </td>
+                                                    <td>
+                                                        <b class="text-block">{{data.modulo }} {{data.horas_modulo}}aaaa</b>
+
+                                                        <span class="text-block text-muted">
+                                                            <a href="#" {#class="xeditablearea"#} id="xeareas{{loop.index}}" data-pk="{{data.smtid}}">{{data.area_superior}}</a>
+                                                        </span>
+                                                        <div class="progress progress-xxs no-margin">
+                                                            {% if data.area_saberes_id == 1 %}
+                                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                                                            {% elseif data.area_saberes_id == 2 %}
+                                                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                                                            {% elseif data.area_saberes_id == 3 %}
+                                                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                                                            {%endif %}
+                                                        </div>
+                                                    </td>
+                                                    <td>  
+                                                {% if (data.horas_modulo == '0') or (app.session.get('ie_per_estado') == '3')  %}                                                            
+                                                        <a href="#" class="xeditablehoras" id="xehoras{{loop.index}}" data-pk="{{data.mod_per_hor_id}}">{{data.horas_modulo}}</a> 
+                                                {% else %}    
+                                                        <a href="#" id="xehoras{{loop.index}}" data-pk="{{data.mod_per_hor_id}}">{{data.horas_modulo}}</a> 
+                                                {% endif %} 
+                                                    </td> 
+                                                {% if (app.session.get('ie_per_estado') != '0') %}
+                                                    <td class="text-center">
+                                                        <span><i class="icon-minus-sign"></i>
+                                                            <button type="button" class="btn btn-circle btn-warning btn-stroke" onclick="deleteModulo('{{ data.mod_per_hor_id }}');">                                                            
+                                                                <i class="fa fa-eraser"></i>
+                                                            </button>
+                                                        </span>
+                                                    </td>
+                                                {% endif %}    
+                                                </tr>
+                                            {% endfor %}
+                                        {% endif %}   
+                                    </tbody>
+                                </table>
+{# {% endblock %}   #}                       
+
+    <script>
+        $(document).ready(function() {
+            $.fn.editable.defaults.mode = 'popup';
+            
+            //enable / disable
+{#            $('#enablexeditables').click(function() {
+                $('.editable').editable('toggleDisabled');
+            });#}
+          
+            $('.xeditablehoras').editable({
+                type: 'select',
+                title: 'Seleccione la cantidad de horas',
+                placement: 'right',
+                disabled: 'true',
+                source: [
+                    {value: 60, text: '60'},
+                    {value: 80, text: '80'},
+                    {value: 100, text: '100'},
+                    {value: 120, text: '120'}
+                ],
+                url: Routing.generate('herramienta_alter_malla_tecnica_modulos_change_horas')
+            }); 
+            $('.editable').editable('toggleDisabled');
+            $("#area").change(function() {
+                $("#barradeareas").show();
+                $("#progressbar").removeClass("progress-bar-success progress-bar-warning progress-bar-info");
+                switch(parseInt(this.value)) {
+                    case 1:
+                        $("#progressbar").addClass("progress-bar progress-bar-success");
+                        break;
+                    case 2:
+                        $("#progressbar").addClass("progress-bar progress-bar-warning");
+                        break;
+                    case 3:
+                        $("#progressbar").addClass("progress-bar progress-bar-info");
+                        break;
+                    default:
+                        $("#barradeareas").hide();
+                };
+                            
+            });
+        });
+        
+        function nuevomoduloabrir(){
+            $("#nuevomodulo").show();
+            $("#barradeareas").hide();            
+	}
+        
+        function nuevomodulocerrar(){
+            $("#nuevomodulo").hide();
+	}
+        
+        function enviaformmodulo() {
+            var msj = '\n\n ¿Esta seguro de continuar?';
+            
+            var acre = document.getElementById("acreditacionid").selectedIndex;            
+            if ( acre == null || acre == 0 ) {
+                alert('Elija una acreditación.');
+                return false;
+            }
+            else{
+                var area = document.getElementById("area").selectedIndex;            
+                if ( area == null || area == 0 ) {
+                    alert('Elija un area.');
+                    return false;
+                }
+                else{
+                    var horas = document.getElementById("horas").selectedIndex;            
+                    if ( horas == null || horas == 0 ) {
+                        alert('Elija una carga horaria.');
+                        return false;
+                    }
+                    else{
+                        var modulo = document.getElementById("modulo").value;
+                        if( modulo == null || modulo.length == 0 || /^\s+$/.test(modulo) ) {
+                          alert('Describa el módulo.');
+                          return false;
+                        }
+                        else{
+                            if (confirm('Está por crear un nuevo módulo:' + msj)) {
+                                var formData = $('#formnuevomodulotec').serialize();
+                                    $.ajax({
+                                        type: 'post',
+                                        url: Routing.generate('herramienta_alter_malla_tecnica_modulos_add'),
+                                        data: formData,
+                                        beforeSend: function () {
+                                            $("#nuevomodulo").hide();
+                                            $("#modulosbasid").empty();            
+                                        },
+                                        success: function (data) {
+                                            $("#acreditacionid option").each(function () {
+                                            if ($(this).text() === "-999") {
+                                                $(this).prop("selected", true);
+                                                return;}
+                                            else{
+                                                $(this).prop("selected", false);
+                                                return;}
+                                            });                                           
+                                            $("#modulo").val("");                                            
+                                            $("#area option").each(function () {
+                                            if ($(this).text() === "-999") {
+                                                $(this).prop("selected", true);
+                                                return;}
+                                            else{
+                                                $(this).prop("selected", false);
+                                                return;}
+                                            });
+                                            $("#horas option").each(function () {
+                                            if ($(this).text() === "-999") {
+                                                $(this).prop("selected", true);
+                                                return;}
+                                            else{
+                                                $(this).prop("selected", false);
+                                                return;}
+                                            });
+                                            $("#modulosbasid").empty();
+                                            $("#modulosbasid").append(data);
+                                        },
+                                        error: function () {
+
+                                        }
+                                    });
+                                }
+                            return false;
+                        }
+                    }
+                }
+            }
+        };
+        
+        function deleteModulo(smpid) {
+            var msj = '\n\n ¿Esta seguro de continuar?';
+
+            if (confirm('Está por eliminar un módulo:' + msj)) {
+                var formData = $('#formnuevomodulotec').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('herramienta_alter_malla_tecnica_modulos_delete', {'smpid': smpid}),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#modulosbasid").empty();            
+                    },
+                    success: function (data) {
+                        $("#modulosbasid").empty();
+                        $("#modulosbasid").append(data);
+                        $("#nuevomodulo").hide();
+                    },
+                    error: function () {
+
+                    }
+                });
+                }
+            return false;
+        };
+    </script>

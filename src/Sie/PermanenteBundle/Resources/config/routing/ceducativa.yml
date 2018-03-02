@@ -1,0 +1,114 @@
+herramienta_per_ceducativa_index:
+    path:     /
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:index}
+    
+sie_per_ges_sub_sem:
+    path:     /gessubsem/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:gessubsem}
+    options:
+         expose: true
+         
+sie_per_ges_sub_sem_open:
+    path:     /{teid}/{gestion}/{subcea}/{semestre}/{idiesuc}/gessubsemopen/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:gessubsemopen}
+    options:
+         expose: true
+         
+sie_per_ges_sub_sem_tramite_solicitud:
+    path:     /{idiesuc}/gessubsemtramitesolicitud/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:gessubsemtramitesolicitud}
+    options:
+         expose: true  
+         
+sie_per_ges_sub_sem_panel_operativos:
+    path:     /gessubsempaneloperativos/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:paneloperativos}
+    options:
+         expose: true 
+         
+sie_per_ges_sub_sem_tramite_solicitud_cambiar_estado_a_regularizado:
+    path:     /{iestid}/gessubsemtramitesolicitudcambiarestado/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:gessubsemtramitesolicitudcambiarestado}
+    options:
+         expose: true          
+
+herramienta_per_ceducativa_menu_principal:
+    path:     /menuprincipalopen/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:menuprincipalopen}
+    
+#herramienta_per_ceducativa_generar_inicio:
+#    path:     /{gestion}/{subcea}/{semestre}/generarinicio/
+#    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:generarinicio}
+    
+herramienta_per_ceducativa_update:
+    path:     /update/
+    defaults: { _controller: "SiePermanenteBundle:Institucioneducativa:update" }
+    methods:  [POST, PUT]  
+    
+herramienta_per_ceducativa_cerrar_operativo:
+    path:     /cerraroperativo/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:cerraroperativo}
+    
+herramienta_per_ceducativa_distrito_listaceas:
+    path:     /listaceas/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:listadisceas}
+    options:
+         expose: true
+
+herramienta_per_ceducativa_seleccionar_cea:
+    path:     /seleccionarcea/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:seleccionarcea}
+    
+herramienta_per_ceducativa_buscar_cea:
+    path:     /buscarcea/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:buscarcea}
+    methods:  [POST, PUT]
+    
+herramienta_per_ceducativa_abrir_cea:
+    path:     /{ie_id}/{ie_nombre}/abrircea/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:abrircea}
+    options:
+         expose: true
+
+herramienta_per_ceducativa_crear_periodo:
+    path:     /crearPeriodo/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:crearPeriodo}
+
+herramienta_per_ceducativa_crear_periodo_cea:
+    path:     /crearPeriodoCea/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:crearPeriodoCea}
+
+sie_per_ges_sub_sem_ceas_pendinte:
+    path:     /ceaspendientes/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:ceaspendientes}
+    options:
+         expose: true
+         
+herramienta_per_ceducativa_estadistiscas_cierre:
+    path:     /ceasstdcierre/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:ceasstdcierre}
+    options:
+         expose: true         
+         
+sie_per_ges_rudes_user:
+    path:     /ceasrudeuser/
+    defaults: { _controller: SiePermanenteBundle:Default:ceasrudeuser}
+    options:
+         expose: true 
+         
+sie_per_ges_sub_sem_tramite_continuar_sig_operativo:
+    path:     /{iestid}/tramitecontinuaroperativo/
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:tramitecontinuaroperativo}
+    options:
+         expose: true    
+         
+herramienta_per_ceducativa_estadistiscas_departamento:
+    path:     /deptoestadsiticas/
+    defaults: { _controller: SiePermanenteBundle:Estadisticas:ceasstdcierre}
+    options:
+         expose: true
+
+sie_per_reportes_diversa:
+    path:     /sie/reportesDiversa
+    defaults: { _controller: SiePermanenteBundle:Institucioneducativa:reporteDiversa}
+

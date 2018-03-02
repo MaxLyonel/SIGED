@@ -1,0 +1,6 @@
+
+    
+herramienta_per_cursos_cortos_index:
+    path:    /cursosCortos/
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:index}
+

@@ -1,0 +1,59 @@
+permanente_info_personal_adm_index:
+    path:     /
+    defaults: { _controller: SiePermanenteBundle:InfoPersonalAdm:index}
+
+permanente_info_personal_adm_second:
+    path:     /sie/second
+    defaults: { _controller: SiePermanenteBundle:InfoPersonalAdm:second}
+
+permanente_info_personal_adm_third:
+    path:     /sie/third
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:loadThird"}
+    options:
+         expose: true
+
+permanente_info_personal_adm_show:
+    path:     /{id}/show
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:show" }
+
+permanente_info_personal_adm_new:
+    path:     /new/
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:new" }
+
+permanente_info_personal_adm_create:
+    path:     /create/
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:create" }
+    methods:  POST
+
+permanente_info_personal_adm_edit:
+    path:     /edit/
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:edit" }
+    methods:  [POST, PUT]
+
+permanente_info_personal_adm_update:
+    path:     /update/
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:update" }
+    methods:  [POST, PUT]
+
+permanente_info_personal_adm_es_vigente_administrativo:
+    path:     /administrativoVigente/
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:esVigenteAdministrativo" }
+    methods:  [POST, PUT]         
+
+permanente_info_personal_adm_delete:
+    path:     /delete/
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:delete" }
+    methods:  [POST, DELETE]    
+    
+permanente_info_personal_adm_search:
+    path:     /search/
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:search" }
+    methods:  POST
+
+permanente_info_personal_adm_find:
+    path:     /find/
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:find" }
+    
+permanente_info_personal_adm_result:
+    path:     /result/
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:result" }
