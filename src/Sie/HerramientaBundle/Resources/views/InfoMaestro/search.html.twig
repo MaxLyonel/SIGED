@@ -77,7 +77,7 @@
     {{parent()}}
     <script>
         $("#form_fechaNac").inputmask({ "alias": "dd-mm-yyyy" });
-        $("#form_complemento").inputmask({mask: "9a"});
+        $("#form_complemento").inputmask({mask: "**"});
         $("#form_carnet").numeric("positiveInteger");
 
         function validarDatos() {
