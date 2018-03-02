@@ -1,0 +1,48 @@
+infrah6ambadmambiente_index:
+    path:     /index
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoAmbiente:index" }
+    options:
+        expose: true
+
+infrah6ambadmambiente_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoAmbiente:show" }
+
+infrah6ambadmambiente_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoAmbiente:new" }
+
+infrah6ambadmambiente_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoAmbiente:create" }
+    methods:  POST
+
+infrah6ambadmambiente_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoAmbiente:edit" }
+
+infrah6ambadmambiente_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoAmbiente:update" }
+    methods:  [POST, PUT]
+
+infrah6ambadmambiente_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoAmbiente:delete" }
+    methods:  [POST, DELETE]
+
+infrah6ambadmambiente_listambiente:
+    path:     /{id}/listambiente
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoAmbiente:listambiente" }
+
+infrah6ambadmambiente_addnewh6ambiente:
+    path:     /addnewh6ambiente
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoAmbiente:addnewh6ambiente" }
+    options:
+        expose: true
+
+infrah6ambadmambiente_saveNewh6Ambiente:
+    path:     /saveNewh6Ambiente
+    defaults: { _controller: SieAppWebBundle:InfraestructuraH6AmbienteadministrativoAmbiente:saveNewh6Ambiente }
+    options:
+        expose: true        

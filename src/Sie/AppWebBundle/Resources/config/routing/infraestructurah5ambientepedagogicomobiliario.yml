@@ -1,0 +1,59 @@
+infraestructurah5mobiliario_index:
+    path:     /h5mobiliarioindex
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:index" }
+
+# h5mobiliario:
+#     path:     /
+#     defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:index" }
+
+h5mobiliario_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:show" }
+
+h5mobiliario_new:
+    path:     /{id}/new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:new" }
+
+h5mobiliario_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:create" }
+    methods:  POST
+
+h5mobiliario_savenew:
+    path:     /savenew
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:savenew" }
+    options:
+        expose: true
+    # methods:  POST
+
+h5mobiliario_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:edit" }
+
+h5mobiliario_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:update" }
+    methods:  [POST, PUT]
+
+h5mobiliario_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:delete" }
+    methods:  [POST, DELETE]
+
+h5mobiliario_updateMobiliario:
+    path:     /updateMobiliario
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:updateMobiliario" }
+    options:
+        expose: true
+    # methods:  POST
+
+infraestructurah5mobiliario_new:
+    path:     /h5mobiliarionew
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:new" }
+
+infraestructurah5mobiliario_fillDataMobiliario:
+    path:     /fillDataMobiliario
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:fillDataMobiliario" }
+    options:
+        expose: true
+    # methods:  POST

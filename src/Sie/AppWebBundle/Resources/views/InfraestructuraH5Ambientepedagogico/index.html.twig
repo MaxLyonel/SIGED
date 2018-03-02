@@ -1,13 +1,12 @@
 
-    <h1></h1>
-
 <div class="table-responsive mb-20">
+    <input id="form_infraestructuraJuridiccionGeograficaId" name="form[infraestructuraJuridiccionGeograficaId]" class="form-control" value="{{infraestructuraJuridiccionGeograficaId}}" type="hidden">
     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
-            <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="newAmbPedagogico('{{infraestructuraJuridiccionGeograficaId}}');">
-                Agregar Ambiente
-            </button>
-        </div>
-    {# 
+        <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="newAmbPedagogico('{{infraestructuraJuridiccionGeograficaId}}');">
+            Agregar Ambiente
+        </button>
+    </div>
+    {#
         <ul>
         <li>
             <a class="btn btn-success" href="{{ path('infraestructurah5ambientepedagogico_new') }}" onclick="newPedagogico('{{infraestructuraJuridiccionGeograficaId}}')">
@@ -16,7 +15,7 @@
         </li>
     </ul>
     #}
-    
+
     <table class="table">
         <thead>
             <tr>
@@ -26,9 +25,9 @@
                 <th>Largo</th>
                 <th>Alto</th>
                 <th>Capacidad</th>
-                <th>Fecharegistro</th>
+                <!-- <th>Fecharegistro</th> -->
                 <th>Uso Ambiente</th>
-                <!-- 
+                <!--
                 <th>N51especialidadtipoid</th>
                 <th>N51talleresespotro</th>
                 <th>N51esusouniversal</th>
@@ -56,8 +55,14 @@
                 <td>{{ entity.n51AmbienteLargoMts }}</td>
                 <td>{{ entity.n51AmbienteAltoMts }}</td>
                 <td>{{ entity.n51CapacidadAmbiente }}</td>
-                <td>{% if entity.fecharegistro %}{{ entity.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ entity.n51EsUsoAmbiente }}</td>
+                {# <td>{% if entity.fecharegistro %}{{ entity.fecharegistro|date('Y-m-d H:i:s') }}{% endif %}</td> #}
+                <td>
+                    {% if entity.n51EsUsoAmbiente %}
+                        Si
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
                 {#}
                 <td>{{ entity.n51EspecialidadTipoId }}</td>
                 <td>{{ entity.n51TalleresEspOtro }}</td>
@@ -75,11 +80,23 @@
                 <td>{{ entity.n51NroPiso }}</td>
                 <td>{{ entity.n51EsUsoBth }}</td>#}
                 <td>
-                
-                        <a class="btn btn-success" href="{{ path('infraestructurah5ambientepedagogico_show', { 'id': entity.id }) }}">Mobiliario</a>
-                
-                        <a class="btn btn-success" href="{{ path('infraestructurah5ambientepedagogico_edit', { 'id': entity.id }) }}">Equipamiento</a>
-                    
+
+                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+                        <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="fillDataAmbPedagogicoMobiliario('{{entity.id}}');">
+                            Mobiliario
+                        </button>
+                    </div>
+                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+                        <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="fillDataAmbPedagogicoEquipamiento('{{entity.id}}');">
+                            Equipamiento
+                        </button>
+                    </div>
+
+                {#}
+                      <!--   <a class="btn btn-success" href="{{ path('infraestructurah5ambientepedagogico_show', { 'id': entity.id }) }}">Mobiliario</a>
+
+                        <a class="btn btn-success" href="{{ path('infraestructurah5ambientepedagogico_edit', { 'id': entity.id }) }}">Equipamiento</a> -->
+                  #}
                 </td>
             </tr>
         {% endfor %}

@@ -29,7 +29,7 @@ class Login {
 
         $db = $this->em->getConnection();
         //******************
-        //****COMPRUEBA SI EL DIRECTOR TIENE VIGENTES EN EL PERIODO SOLICITADO        
+        //****COMPRUEBA SI EL DIRECTOR TIENE VIGENTES EN EL PERIODO SOLICITADO ALTERNATIVA    
         //*****************
         $query = "
                 select a.persona_id, b.id, b.institucioneducativa, c.orgcurricula
@@ -44,7 +44,8 @@ class Login {
                 a.gestion_tipo_id = ".$gestion." and
                 d.periodo_tipo_id = ".$semestre." and
                 (a.cargo_tipo_id = 1 or a.cargo_tipo_id = 12 or a.cargo_tipo_id = 0 ) and
-                a.es_vigente_administrativo is true
+                a.es_vigente_administrativo is true and
+                b.institucioneducativa_tipo_id = 2
                 ";
         $stmt = $db->prepare($query);
         $params = array();
@@ -66,7 +67,65 @@ class Login {
                 $periodoAlt = '2';
             }
         }
-        
+
+        //******************
+        //****COMPRUEBA SI EL DIRECTOR TIENE VIGENTES EN EL PERIODO SOLICITADO REGULAR    
+        //*****************
+        $query = "
+                select a.persona_id, b.id, b.institucioneducativa, c.orgcurricula
+                from maestro_inscripcion a
+                inner join institucioneducativa b on a.institucioneducativa_id = b.id            
+                inner join orgcurricular_tipo c on b.orgcurricular_tipo_id = c.id
+                where
+                a.persona_id = ".$id." and
+                c.id = 1 and            
+                a.gestion_tipo_id = ".$gestion." and            
+                (a.cargo_tipo_id = 1 or a.cargo_tipo_id = 12 or a.cargo_tipo_id = 0 ) and
+                a.es_vigente_administrativo is true
+            ";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();                
+
+        //*****EN CASO DE QUE EXISTA VIGENTES EN LA GESTION
+        if (count($po) > 0){ 
+            $gestionReg = $gestion;                
+         //*****EN CASO DE QUE NO EXISTA VIGENTES EN LA GESTION ENVIA LA BUSQUEDA UN PERIODO ATRAS PARA ALTERNATIVA
+        }else{                
+            $gestionReg = strval( intval($gestion)-1);
+        }
+
+
+        //******************
+        //****COMPRUEBA SI EL DIRECTOR TIENE VIGENTES EN EL PERIODO SOLICITADO ESPECIAL    
+        //*****************
+        $query = "
+            select a.persona_id, b.id, b.institucioneducativa, c.orgcurricula
+            from maestro_inscripcion a
+            inner join institucioneducativa b on a.institucioneducativa_id = b.id            
+            inner join orgcurricular_tipo c on b.orgcurricular_tipo_id = c.id
+            where
+            a.persona_id = ".$id." and
+            c.id = 2 and            
+            a.gestion_tipo_id = ".$gestion." and            
+            (a.cargo_tipo_id = 1 or a.cargo_tipo_id = 12 or a.cargo_tipo_id = 0 ) and
+            a.es_vigente_administrativo is true and
+            b.institucioneducativa_tipo_id = 4
+        ";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();                
+
+        //*****EN CASO DE QUE EXISTA VIGENTES EN LA GESTION
+        if (count($po) > 0){ 
+            $gestionEsp = $gestion;                
+        //*****EN CASO DE QUE NO EXISTA VIGENTES EN LA GESTION ENVIA LA BUSQUEDA UN PERIODO ATRAS PARA ALTERNATIVA
+        }else{                
+            $gestionEsp = strval( intval($gestion)-1);
+        }
+                
         $query =    "select * from (
                             --OTROS ROLES                  
                             select '1' as peso, (cast(e.id as varchar)||cast(g.id as varchar)||cast('-' as varchar)) as key, f.id as id, f.rol, h.id as idNivelLugar, h.nivel, g.id as rollugarid, g.lugar, d.persona_id as idPersona, '-' as sie, '-' as institucioneducativa, cast('-' as varchar) as idIETipo, '-' as orgcurricula
@@ -93,7 +152,7 @@ class Login {
                             where 
                             a.persona_id = '".$id."' and
                             c.id = 1 and
-                            a.gestion_tipo_id = '".$gestion."' and
+                            a.gestion_tipo_id = '".$gestionReg."' and
                             (a.cargo_tipo_id = 1 or a.cargo_tipo_id = 12 ) and
                             a.es_vigente_administrativo is true and
                             b.institucioneducativa_tipo_id = 1 and                 
@@ -179,7 +238,7 @@ class Login {
                             where 
                             a.persona_id = '".$id."' and
                             c.id = 2 and
-                            a.gestion_tipo_id = '".$gestion."' and
+                            a.gestion_tipo_id = '".$gestionEsp."' and
                             (a.cargo_tipo_id = 1 or a.cargo_tipo_id = 12 ) and
                             a.es_vigente_administrativo is true and                  
                             f.id = 9 and
@@ -206,15 +265,10 @@ class Login {
                             b.institucioneducativa_tipo_id = 4 and
                             e.esactivo is true
 
-
                             UNION--DOCENTE TECNICA
-
-                            select '8' as peso, (cast(a.id as varchar)||cast(b.id as varchar)||cast(a.id as varchar)) as key,
-                            
+                            select '8' as peso, (cast(a.id as varchar)||cast(b.id as varchar)||cast(a.id as varchar)) as key,                            
                             f.id as id, f.rol, h.id as idNivelLugar, h.nivel, g.id as rollugarid, g.lugar, a.persona_id as idPersona, cast(b.id as varchar) as sie,
                              b.institucioneducativa, cast(b.institucioneducativa_tipo_id as varchar) as idIETipo, 'Técnica Tecnologica' as orgcurricula
-                            
-                            
                             from ttec_docente_persona a
                                 inner join institucioneducativa b on a.institucioneducativa_id = b.id
                                 inner join orgcurricular_tipo y on b.orgcurricular_tipo_id = y.id

@@ -1,12 +1,12 @@
 {% extends 'SieTramitesBundle:Tramite:index.html.twig' %}
 {% block contentSearchBread %}
     <li class="active">Recepción Trámite</li>
-{% endblock %} 
-{% block contentsearch %}          
-    <div class="row">    
+{% endblock %}
+{% block contentsearch %}
+    <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <form name="formtable" role="form" action="{{ path('sie_tramite_detalle_certificado_tecnico_recepcion_guarda') }}" method="POST" onsubmit="return verificaCampos()">  
-                <input type="hidden" name="_token" value="{{ csrf_token('recepcionar') }}">  
+            <form name="formtable" role="form" action="{{ path('tramite_detalle_certificado_tecnico_recepcion_guarda') }}" method="POST" onsubmit="return verificaCampos()">
+                <input type="hidden" name="_token" value="{{ csrf_token('recepcionar') }}">
                 <div class="panel">
                     <div class="panel-heading">
                         <div class="pull-left">
@@ -15,7 +15,7 @@
                         <div class="pull-right">
                             <button class="btn btn-danger" id="botonModalDevolver" name="botonModalDevolver" data-action="search" data-toggle="tooltip" data-placement="top" data-title="Devolver" data-original-title="" title="Devolver" disabled="true" >Devolver</button>
                             <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-primary" value="Registrar" disabled="true" />
-                            <a class="btn btn-lilac" href="{{ path('sie_tramite_detalle_certificado_tecnico_recepcion_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir</a>
+                            <a class="btn btn-lilac" href="{{ path('tramite_detalle_certificado_tecnico_recepcion_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir</a>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -28,23 +28,23 @@
                             </span>
                         </div>
                     </div><!-- /.panel-sub-heading -->
-                    <div class="panel-body">  
-                        {% if listaParticipante is defined and listaParticipante|length > 0 %}  
+                    <div class="panel-body">
+                        {% if listaParticipante is defined and listaParticipante|length > 0 %}
                             {% if infoAutorizacionCentro.tec_basico == 0 and listaParticipante[0].nivel == 1 %}
                                 <div class="alert alert-danger">
                                     <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel básico.
                                 </div>
-                            {% endif %}         
+                            {% endif %}
                             {% if infoAutorizacionCentro.tec_auxiliar == 0 and listaParticipante[0].nivel == 2 %}
                                 <div class="alert alert-danger">
                                     <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel auxiliar.
                                 </div>
-                            {% endif %}   
+                            {% endif %}
                             {% if infoAutorizacionCentro.tec_medio == 0 and listaParticipante[0].nivel == 3 %}
                                 <div class="alert alert-danger">
                                     <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel medio.
                                 </div>
-                            {% endif %}                     
+                            {% endif %}
                             <table id="tablaParticipantes" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
@@ -60,7 +60,7 @@
                                             <div class="ckbox ckbox-primary">
                                                 <input id="participantesAll" type="checkbox" onchange="marcarTodos(this);">
                                                 <label for="participantesAll"></label>
-                                            </div> 
+                                            </div>
                                         </th>
                                     </tr>
                                 </thead>
@@ -75,7 +75,7 @@
                                         <th>Nombre</th>
                                         <th>Fecha y Lugar de Nacimiento</th>
                                         <th style="text-align:center;">
-                                            &nbsp; 
+                                            &nbsp;
                                         </th>
                                     </tr>
                                 </tfoot>
@@ -91,65 +91,65 @@
                                             <td>{{ participante.nombre }}</td>
                                             <td>{{ participante.fecha_nacimiento }} - {{ participante.lugar_nacimiento }}</td>
                                             <td>
-                                                {% set registro = true %} 
+                                                {% set registro = true %}
 
                                                 {% if participante.carnet_identidad == "" %}
                                                     <span class="label label-danger rounded">Sin C.I.</span>
-                                                    {% set registro = false %} 
-                                                {% endif %} 
+                                                    {% set registro = false %}
+                                                {% endif %}
 
                                                 {% if participante.fecha_nacimiento == "" %}
                                                     <span class="label label-danger rounded">Sin Fecha Nac.</span>
-                                                    {% set registro = false %} 
-                                                {% endif %} 
+                                                    {% set registro = false %}
+                                                {% endif %}
 
                                                 {% if participante.lugar_nacimiento == "" %}
                                                     <span class="label label-danger rounded">Sin Lugar Nac.</span>
-                                                    {% set registro = false %} 
-                                                {% endif %} 
+                                                    {% set registro = false %}
+                                                {% endif %}
 
                                                 {% if participante.nivel == 1 %}
                                                     {% if infoAutorizacionCentro.tec_basico == 0 %}
                                                         <span class="label label-inverse rounded">No autorizado</span>
-                                                        {% set registro = false %} 
-                                                    {% endif %} 
-                                                {% endif %} 
+                                                        {% set registro = false %}
+                                                    {% endif %}
+                                                {% endif %}
 
                                                 {% if participante.nivel == 2 %}
                                                     {% if infoAutorizacionCentro.tec_auxiliar == 0 %}
                                                         <span class="label label-inverse rounded">No autorizado</span>
-                                                        {% set registro = false %} 
-                                                    {% endif %} 
-                                                {% endif %} 
+                                                        {% set registro = false %}
+                                                    {% endif %}
+                                                {% endif %}
 
                                                 {% if participante.nivel == 3 %}
                                                     {% if infoAutorizacionCentro.tec_medio == 0 %}
                                                         <span class="label label-inverse rounded">No autorizado</span>
-                                                        {% set registro = false %} 
-                                                    {% endif %} 
-                                                {% endif %} 
+                                                        {% set registro = false %}
+                                                    {% endif %}
+                                                {% endif %}
 
                                                 {% if registro %}
                                                     <div class="ckbox ckbox-info">
                                                         <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.tramite_id|base64_encode }}"  type="checkbox" onchange="validarMarcar(this);">
                                                         <label for="{{ ("participantes"~loop.index)|base64_encode }}"></label>
-                                                    </div>   
-                                                {% endif %}                          
+                                                    </div>
+                                                {% endif %}
                                             </td>
-                                        </tr> 
-                                    {% endfor %} 
-                                </tbody>  
-                            </table>                        
-                        {% else %}    
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
                             <div class="alert alert-warning">
                                 <strong>!</strong> Sin participantes.
                             </div>
-                        {% endif %} 
+                        {% endif %}
                     </div><!-- /.panel-body -->
-                    <div class="panel-footer"> 
+                    <div class="panel-footer">
                     </div><!-- /.panel-foot -->
                 </div>
-            </form> 
-        </div> 
-    </div><!-- /.row -->   
+            </form>
+        </div>
+    </div><!-- /.row -->
 {% endblock %}

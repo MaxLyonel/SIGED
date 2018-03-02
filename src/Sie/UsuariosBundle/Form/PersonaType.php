@@ -16,6 +16,7 @@ class PersonaType extends AbstractType
     {
         $builder            
             ->add('idpersona', 'hidden')            
+            ->add('fechaEditOn', 'hidden')            
             ->add('paterno', 'text', array('label' => 'Paterno', 'required' => false, 'attr' => array('class' => 'form-control jletters','pattern' => '[a-zA-Z\sñÑáéíóúÁÉÍÓÚ]{2,45}','maxlength'=>'13','style'=>'text-transform:uppercase')))
             ->add('materno', 'text', array('label' => 'Materno', 'required' => false, 'attr' => array('class' => 'form-control jletters', 'pattern' => '[a-zA-Z\sñÑáéíóúÁÉÍÓÚ]{2,45}','maxlength'=>'13','style'=>'text-transform:uppercase')))
             ->add('nombre', 'text', array('label' => 'Nombre(s)', 'required' => true, 'attr' => array('class' => 'form-control jletters', 'pattern' => '[a-zA-Z\sñÑáéíóúÁÉÍÓÚ]{2,45}','maxlength'=>'26','style'=>'text-transform:uppercase')))

@@ -1,0 +1,36 @@
+<div class="table-responsive mb-20">
+    
+    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+        <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="addnewh6vivienda('{{ambienteAdministrativoId}}')">
+            Agregar Ambiente
+        </button>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nro. Ambientes</th>
+                <th>Nro. Habitantes</th>
+                <th>Nro. Baños</th>
+                <th>Nro. Duchas</th>
+                <th>Nro. Cocinas</th>
+                <th>&Aacute;rea</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.n21NumeroAmbientes }}</td>
+                <td>{{ entity.n21NumeroHabitantes }}</td>
+                <td>{{ entity.n21NumeroBanios }}</td>
+                <td>{{ entity.n21NumeroDuchas }}</td>
+                <td>{{ entity.n21NumeroCocinas }}</td>
+                <td>{{ entity.n21MetrosArea }}</td>
+                <td>{{ entity.estadoTipo }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>

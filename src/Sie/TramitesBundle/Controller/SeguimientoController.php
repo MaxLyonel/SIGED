@@ -50,6 +50,8 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         $documentoController = new documentoController();
         $documentoController->setContainer($this->container);
 
@@ -59,13 +61,13 @@ class SeguimientoController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
 
         return $this->render($this->session->get('pathSystem') . ':Seguimiento:documentoSerieIndex.html.twig', array(
-            'formBusqueda' => $documentoController->creaFormBuscaDocumentoSerie('sie_tramite_seguimiento_documento_lista','')->createView(),
+            'formBusqueda' => $documentoController->creaFormBuscaDocumentoSerie('tramite_seguimiento_documento_lista','')->createView(),
             'titulo' => 'Seguimiento',
             'subtitulo' => 'Número de Serie',
         ));
@@ -109,22 +111,22 @@ class SeguimientoController extends Controller {
                     }
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:documentoSerieIndex.html.twig', array(
-                        'formBusqueda' => $documentoController->creaFormBuscaDocumentoSerie('sie_tramite_seguimiento_documento_lista',$serie)->createView(),
+                        'formBusqueda' => $documentoController->creaFormBuscaDocumentoSerie('tramite_seguimiento_documento_lista',$serie)->createView(),
                         'titulo' => 'Seguimiento',
                         'subtitulo' => 'Número de Serie',
                         'listaBusqueda' => $entityDocumento,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
+                    return $this->redirect($this->generateUrl('tramite_seguimiento_documento_busca'));
                 }
             } else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
+                return $this->redirect($this->generateUrl('tramite_seguimiento_documento_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
+            return $this->redirect($this->generateUrl('tramite_seguimiento_documento_busca'));
         }
     }
 
@@ -177,11 +179,11 @@ class SeguimientoController extends Controller {
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
+                return $this->redirect($this->generateUrl('tramite_seguimiento_documento_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
+            return $this->redirect($this->generateUrl('tramite_seguimiento_documento_busca'));
         }
     }
 
@@ -210,6 +212,8 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
@@ -219,13 +223,13 @@ class SeguimientoController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
 
         return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteNumeroIndex.html.twig', array(
-            'formBusqueda' => $tramiteController->creaFormBuscaTramite('sie_tramite_seguimiento_lista','')->createView(),
+            'formBusqueda' => $tramiteController->creaFormBuscaTramite('tramite_seguimiento_lista','')->createView(),
             'titulo' => 'Seguimiento',
             'subtitulo' => 'Número de Trámite',
         ));
@@ -266,22 +270,22 @@ class SeguimientoController extends Controller {
                     }
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteNumeroIndex.html.twig', array(
-                        'formBusqueda' => $tramiteController->creaFormBuscaTramite('sie_tramite_seguimiento_lista',$tramite)->createView(),
+                        'formBusqueda' => $tramiteController->creaFormBuscaTramite('tramite_seguimiento_lista',$tramite)->createView(),
                         'titulo' => 'Seguimiento',
                         'subtitulo' => 'Número de Trámite',
                         'listaBusqueda' => $entityTramite,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_seguimiento_busca'));
+                    return $this->redirect($this->generateUrl('tramite_seguimiento_busca'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_seguimiento_busca'));
+                return $this->redirect($this->generateUrl('tramite_seguimiento_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_seguimiento_busca'));
+            return $this->redirect($this->generateUrl('tramite_seguimiento_busca'));
         }
     }
 
@@ -336,11 +340,11 @@ class SeguimientoController extends Controller {
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
+                return $this->redirect($this->generateUrl('tramite_seguimiento_documento_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_seguimiento_documento_busca'));
+            return $this->redirect($this->generateUrl('tramite_seguimiento_documento_busca'));
         }
     }
 
@@ -369,6 +373,8 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
@@ -378,13 +384,13 @@ class SeguimientoController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
 
         return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteRudeIndex.html.twig', array(
-            'formBusqueda' => $tramiteController->creaFormBuscaTramiteRude('sie_tramite_seguimiento_rude_lista','')->createView(),
+            'formBusqueda' => $tramiteController->creaFormBuscaTramiteRude('tramite_seguimiento_rude_lista','')->createView(),
             'titulo' => 'Seguimiento',
             'subtitulo' => 'Número de Trámite',
         ));
@@ -425,22 +431,22 @@ class SeguimientoController extends Controller {
                     }
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteRudeIndex.html.twig', array(
-                        'formBusqueda' => $tramiteController->creaFormBuscaTramiteRude('sie_tramite_seguimiento_rude_lista',$rude)->createView(),
+                        'formBusqueda' => $tramiteController->creaFormBuscaTramiteRude('tramite_seguimiento_rude_lista',$rude)->createView(),
                         'titulo' => 'Seguimiento',
                         'subtitulo' => 'Número de Trámite',
                         'listaBusqueda' => $entityTramiteRude,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_seguimiento_rude_busca'));
+                    return $this->redirect($this->generateUrl('tramite_seguimiento_rude_busca'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_seguimiento_rude_busca'));
+                return $this->redirect($this->generateUrl('tramite_seguimiento_rude_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_seguimiento_rude_busca'));
+            return $this->redirect($this->generateUrl('tramite_seguimiento_rude_busca'));
         }
     }
 
@@ -495,11 +501,11 @@ class SeguimientoController extends Controller {
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_seguimiento_rude_busca'));
+                return $this->redirect($this->generateUrl('tramite_seguimiento_rude_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_seguimiento_rude_busca'));
+            return $this->redirect($this->generateUrl('tramite_seguimiento_rude_busca'));
         }
     }
 
@@ -528,6 +534,8 @@ class SeguimientoController extends Controller {
         $defaultTramiteController = new defaultTramiteController();
         $defaultTramiteController->setContainer($this->container);
 
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         $tramiteController = new tramiteController();
         $tramiteController->setContainer($this->container);
 
@@ -537,13 +545,13 @@ class SeguimientoController extends Controller {
 
         if (!$esValidoUsuarioRol){
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramites_homepage'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
         }
 
         $gestion = $gestionActual->format('Y');
 
         return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteCedulaIndex.html.twig', array(
-            'formBusqueda' => $tramiteController->creaFormBuscaTramiteCedula('sie_tramite_seguimiento_cedula_lista','')->createView(),
+            'formBusqueda' => $tramiteController->creaFormBuscaTramiteCedula('tramite_seguimiento_cedula_lista','')->createView(),
             'titulo' => 'Seguimiento',
             'subtitulo' => 'Número de Cédula de Identidad',
         ));
@@ -584,22 +592,22 @@ class SeguimientoController extends Controller {
                     }
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteCedulaIndex.html.twig', array(
-                        'formBusqueda' => $tramiteController->creaFormBuscaTramiteCedula('sie_tramite_seguimiento_cedula_lista',$cedula)->createView(),
+                        'formBusqueda' => $tramiteController->creaFormBuscaTramiteCedula('tramite_seguimiento_cedula_lista',$cedula)->createView(),
                         'titulo' => 'Seguimiento',
                         'subtitulo' => 'Número de Cédula de Indentidad',
                         'listaBusqueda' => $entityTramiteCedula,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                    return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
+                    return $this->redirect($this->generateUrl('tramite_seguimiento_cedula_busca'));
                 }
             }  else {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
+                return $this->redirect($this->generateUrl('tramite_seguimiento_cedula_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
+            return $this->redirect($this->generateUrl('tramite_seguimiento_cedula_busca'));
         }
     }
 
@@ -655,11 +663,11 @@ class SeguimientoController extends Controller {
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
-                return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
+                return $this->redirect($this->generateUrl('tramite_seguimiento_cedula_busca'));
             }
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
-            return $this->redirect($this->generateUrl('sie_tramite_seguimiento_cedula_busca'));
+            return $this->redirect($this->generateUrl('tramite_seguimiento_cedula_busca'));
         }
     }
 }

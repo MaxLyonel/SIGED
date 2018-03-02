@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\Date;
-
+use Sie\TramitesBundle\Controller\DefaultController as defaultTramiteController;
 /**
  * Vista controller.
  *
@@ -26,7 +26,7 @@ class HomologacionController extends Controller {
     }
 
     //****************************************************************************************************
-    // DESCRIPCION DEL METODO: 
+    // DESCRIPCION DEL METODO:
     // Funcion que muestra la cantidad de certificados tecnicos impresos de educacion alternativa a nivel nacional
     // PARAMETROS: gestion
     // AUTOR: RCANAVIRI
@@ -39,12 +39,18 @@ class HomologacionController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $activeMenu = $defaultTramiteController->setActiveMenu();
+
         return $this->render('SieTramitesBundle:Homologacion:cerAltIndex.html.twig', array(
-                    'form' => $this->creaFormularioCertTecHomologacion('sie_tramite_certificacion_homologacion_guarda', '', $gestionActual)->createView()
+                    'form' => $this->creaFormularioCertTecHomologacion('tramite_certificacion_homologacion_guarda', '', $gestionActual)->createView()
                     , 'titulo' => 'Registro Gestiones Anteriores'
                     , 'subtitulo' => 'Certificación Técnica'
         ));
-    }   
+    }
 
     private function creaFormularioCertTecHomologacion($routing, $cea, $gestion) {
         $especialidad = array();
@@ -87,9 +93,9 @@ class HomologacionController extends Controller {
                 ->add('certificado', 'text', array('label' => 'Nro. Certificado', 'attr' => array('placeholder' => 'Nro. Certificado', 'required' => true, 'class' => 'form-control', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
                 ->add('registrar', 'submit', array('label' => ' Registrar', 'attr' => array('class' => 'btn btn-blue')))
                 ->getForm();
-           
+
         return $form;
-    } 
+    }
 
 
     public function certTecGuardaAction(Request $request) {
@@ -117,7 +123,7 @@ class HomologacionController extends Controller {
          */
         $queryEntidad = $em->getConnection()->prepare(
                 '
-                        SELECT * 
+                        SELECT *
                         FROM estudiante a
                         WHERE a.codigo_rude = :rudeal
                     ');
@@ -165,13 +171,13 @@ class HomologacionController extends Controller {
             $em->getConnection()->beginTransaction();
             $em->getConnection()->rollback();
             $this->session->getFlashBag()->set('success', array('title' => 'Exito!!', 'message' => 'Se Registro Correctamente'));
-            return $this->redirectToRoute('sie_tramite_certificacion_homologacion');
+            return $this->redirectToRoute('tramite_certificacion_homologacion_index');
         } else {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $em->getConnection()->rollback();
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Estos datos ya se encuentran Registrados'));
-            return $this->redirectToRoute('sie_tramite_certificacion_homologacion');
+            return $this->redirectToRoute('tramite_certificacion_homologacion_index');
         }
     }
 
@@ -190,7 +196,7 @@ class HomologacionController extends Controller {
                     b.id = :id and a.especialidad IS NOT NULL
                     GROUP BY
                     a.id, a.especialidad
-                    ORDER BY 
+                    ORDER BY
                     a.especialidad
                     ');
             $queryEntidad->bindValue(':id', $_POST['id']);
@@ -208,7 +214,7 @@ class HomologacionController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $queryEntidad = $em->getConnection()->prepare(
                     '
-                        SELECT * 
+                        SELECT *
                         FROM institucioneducativa a
                         WHERE a.id = :sie
                     ');
@@ -226,7 +232,7 @@ class HomologacionController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare(                '
-                        SELECT * 
+                        SELECT *
                         FROM estudiante a
                         WHERE a.codigo_rude = :rudeal
                     ');

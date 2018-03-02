@@ -1,0 +1,77 @@
+
+<div class="table-responsive mb-20">
+    <input id="form_infraestructuraJuridiccionGeograficaId" name="form[infraestructuraJuridiccionGeograficaId]" class="form-control" value="{{infraestructuraJuridiccionGeograficaId}}" type="hidden">
+    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+        <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="newAmbPedagogicoDeportivo('{{infraestructuraJuridiccionGeograficaId}}');">
+            Agregar Ambiente
+        </button>
+    </div>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ambiente</th>
+                <th>Destinado a</th>
+                <th>&Aacute;rea</th>
+                <th>Capacidad</th>
+                <th>Estado</th>
+                <th></th>
+                
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                {#
+                    <td><a href="{{ path('infrah5ambpedagogicodeportivo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                    #}
+                
+                <td>{{ entity.n53AmbienteTipo }}</td>
+                <td>
+                    
+                        {% if entity.n53EsDeportivo %}
+                            -Deportivo
+                        {% endif %}
+                        {% if entity.n53EsRecreativo %}
+                            -
+                            Recreatvio
+                        {% endif %}
+                        {% if entity.n53EsCultural %}
+                            -Cultural
+                        {% endif %}
+                    
+                </td>                
+                <td>{{ entity.n53AmbienteAreaMts }}</td>
+                <td>{{ entity.n53AmbienteCapacidad }}</td>
+                <td>{{ entity.estadoTipo }}</td>
+                <td>
+                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Adicionar">
+                        <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="fillDataAmbPedagogicoDeportivoEquipamiento('{{entity.id}}');">
+                            Equipamiento
+                        </button>
+                    </div>  
+                </td>
+
+
+                
+                {# 
+                    <td>
+                    <ul>
+                    <li>
+                        <a href="{{ path('infrah5ambpedagogicodeportivo_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('infrah5ambpedagogicodeportivo_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+                #}
+                
+
+                
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

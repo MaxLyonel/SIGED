@@ -90,11 +90,18 @@
     </div>
 
     <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">
+      
+    </div>
 
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
     <script type="text/javascript" charset="utf-8" >
+    var count=0;
+    var countequipo=0;
+    var countdeportivo=0;
+    
+
      var openAmbPedagogico = function(){
       
        $.ajax({
@@ -122,7 +129,354 @@
           });
 
      };
-     var openAmbPedagogicoDeportivo = function(){
+   
+
+    var newAmbPedagogico = function(infraestructuraJuridiccionGeograficaId){
+       $.ajax({
+                type: 'post',
+                data: ({infraestructuraJuridiccionGeograficaId: infraestructuraJuridiccionGeograficaId}),
+                url: "{{ path('infraestructurah4servicio_new_amb_pedagogico') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+   var saveNewAmbPedagogico = function(){
+
+    formData = $('#idFormNewPedagogico').serialize();
+       $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('infraestructura5pedagico_save_new_pedagogico') }}",
+                beforeSend: function () {
+                    $('#modal').modal('hide');
+                    $('#idpedagogico').empty();
+                    $("#idpedagogico").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                },
+                success: function (data) {
+                    $('#idpedagogico').empty();
+                    $('#idpedagogico').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+    // var newAmbPedagogicoMobiliario = function(H5AmbientepedagogicoId){
+    //    $.ajax({
+    //             type: 'post',
+    //             data: ({H5AmbientepedagogicoId: H5AmbientepedagogicoId}),
+    //             url: "{{ path('infraestructurah5mobiliario_index') }}",
+    //             beforeSend: function () {
+    //                 $('#modal').empty();
+    //             },
+    //             success: function (data) {
+    //                 $('#modal').empty();
+    //                 $('#modal').append(data);
+
+    //             },
+    //             statusCode: {
+    //                 500: function () {
+
+    //                 },
+    //                 404: function () {
+
+    //                 }
+    //             }
+    //         });
+    // };
+    var newAmbPedagogicoMobiliario = function(H5AmbientepedagogicoId){
+       $.ajax({
+                type: 'post',
+                data: ({H5AmbientepedagogicoId: H5AmbientepedagogicoId}),
+                url: "{{ path('infraestructurah5mobiliario_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                      
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+    arrayDataMobiliarioTipo = [];
+    arrayDataStatusTipo = [];
+    var fillDataAmbPedagogicoMobiliario = function(H5AmbientepedagogicoId,n51AmbienteTipo){
+
+           $.ajax({
+                    type: 'post',
+                    data: ({H5AmbientepedagogicoId: H5AmbientepedagogicoId}),
+                    url: "{{ path('infraestructurah5mobiliario_fillDataMobiliario') }}",
+                    beforeSend: function () {
+                        $('#mobiliarioId').empty();
+                    },
+                    success: function (data) {
+                        newAmbPedagogicoMobiliario(H5AmbientepedagogicoId);
+                        arrayDataMobiliarioTipo = data.arrDataMobiliarioTipo;
+                        arrayDataStatusTipo = data.arrDataStatusTipo;
+                        setTimeout(function(){
+                          $.each(data.arrDataMobiliario, function(i, valores){
+                          
+                          count++;
+                          var id                                  = 'id'+count;
+                          var n52Cantidad                         = 'n52Cantidad'+count;
+                          var n52EstadoTipo                       = 'n52EstadoTipo'+count;
+                          var n52MobiliarioTipo                   = 'n52MobiliarioTipo'+count;
+                          var infraestructuraH5Ambientepedagogico = 'infraestructuraH5Ambientepedagogico'+count;
+                          // alert(valores.id);
+                          $("#mobiliarioId").append('<tr id="'+count+'">\n\
+                            <td><button type="button" onclick="eliminarFila('+count+')"><i class="fa fa-trash text-danger" class="form-control"></i></button></td>\n\
+                            <td><select name="form[n52MobiliarioTipo][]" id="form_'+n52MobiliarioTipo+'" required="true" title="n52MobiliarioTipo Tenencia" class="form-control input-sm mb-15"></select></td>\n\
+                            <td><input type="text" name="form[n52Cantidad][]" id="form_'+n52Cantidad+'" value="'+valores.n52Cantidad+'" required="true" size="5" class="form-control"></td>\n\
+                            <td><select name="form[n52EstadoTipo][]" id="form_'+n52EstadoTipo+'" required="true" title="n52EstadoTipo" class="form-control"></select></td>\n\
+                            </tr>');
+
+                        $("#form_" + n52MobiliarioTipo).empty();
+                        $("#form_" + n52MobiliarioTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataMobiliarioTipo, function (i, value) {
+                            if(i==valores.n52MobiliarioTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n52MobiliarioTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+                        $("#form_" + n52EstadoTipo).empty();
+                        $("#form_" + n52EstadoTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataStatusTipo, function (i, value) {
+                            if(i==valores.n52EstadoTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n52EstadoTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+
+                        });  
+                        },1500);
+                        
+                        // $('#modal').append(data);
+                         
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+        };
+
+     var saveNewAmbPedagogicoMobiliario = function(){
+
+        formData = $('#idFormNewPedagogicoMobiliario').serialize();
+        
+           $.ajax({
+                    type: 'post',
+                    data: formData,
+                    url: "{{ path('h5mobiliario_savenew') }}",
+                    beforeSend: function () {
+                        $('#modal').modal('hide');
+                        // $('#idpedagogico').empty();
+                        // $("#idpedagogico").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                    },
+                    success: function (data) {
+                        $('#modal').modal('hide');
+                        // $('#idpedagogico').empty();
+                        // $('#idpedagogico').append(data);
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+            });
+    };
+var updateAmbPedagogicoMobiliario = function(){
+
+        formData = $('#idFormNewPedagogicoMobiliario').serialize();
+
+           $.ajax({
+                    type: 'post',
+                    data: formData,
+                    url: "{{ path('h5mobiliario_updateMobiliario') }}",
+                    beforeSend: function () {
+                        $('#modal').modal('hide');
+                       /* $('#idpedagogico').empty();
+                        $("#idpedagogico").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');*/
+                    },
+                    success: function (data) {
+                        $('#modal').modal('hide');
+                      /*  $('#idpedagogico').empty();
+                        $('#idpedagogico').append(data);*/
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+            });
+    };
+
+
+    arrayDataEquipamientoTipo = [];
+    arrayDataStatusTipo = [];
+    var fillDataAmbPedagogicoEquipamiento = function(H5AmbientepedagogicoId,n51AmbienteTipo){
+
+           $.ajax({
+                    type: 'post',
+                    data: ({H5AmbientepedagogicoId: H5AmbientepedagogicoId}),
+                    url: "{{ path('infrah5ambpedagogicoequipamiento_fillDataEquipamiento') }}",
+                    beforeSend: function () {
+                        $('#mobiliarioId').empty();
+                    },
+                    success: function (data) {
+                        newAmbPedagogicoEquipamiento(H5AmbientepedagogicoId);
+
+                        arrayDataEquipamientoTipo = data.arrDataEquiposTipo;
+                        arrayDataStatusTipo = data.arrDataStatusTipo;
+                        setTimeout(function(){
+                          $.each(data.arrDataEquipamiento, function(i, valores){
+                          countequipo++;
+                          var id                                  = 'id'+countequipo;
+                          var n53Cantidad                         = 'n53Cantidad'+countequipo;
+                          var n53EstadoTipo                       = 'n53EstadoTipo'+countequipo;
+                          var n53EquiposTipo                   = 'n53EquiposTipo'+countequipo;
+                          var infraestructuraH5Ambientepedagogico = 'infraestructuraH5Ambientepedagogico'+countequipo;
+                          // alert(valores.id);
+                          $("#equipamientoId").append('<tr id="'+countequipo+'">\n\
+                            <td><button type="button" onclick="eliminarFila('+countequipo+')"><i class="fa fa-trash text-danger" class="form-control"></i></button></td>\n\
+                            <td><select name="form[n53EquiposTipo][]" id="form_'+n53EquiposTipo+'" required="true" class="form-control input-sm mb-10" title="n53EquiposTipo" class="form-control"></select></td>\n\
+                            <td><input type="text" name="form[n53Cantidad][]" id="form_'+n53Cantidad+'" value="'+valores.n53Cantidad+'" required="true" size="5" class="form-control"></td>\n\
+                            <td><select name="form[n53EstadoTipo][]" id="form_'+n53EstadoTipo+'" required="true" title="n53EstadoTipo" class="form-control"></select></td>\n\
+                            </tr>');
+
+                        $("#form_" + n53EquiposTipo).empty();
+                        $("#form_" + n53EquiposTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataEquiposTipo, function (i, value) {
+                            if(i==valores.n53EquiposTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n53EquiposTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+                        $("#form_" + n53EstadoTipo).empty();
+                        $("#form_" + n53EstadoTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataStatusTipo, function (i, value) {
+                            if(i==valores.n53EstadoTipo){sel = 'selected';}else{sel = '';}
+                            $("#form_" + n53EstadoTipo).append('<option value="' + i + '" '+ sel +'>' + value + '</option>');
+                        });
+
+
+                        });  
+                        },1500);
+                        
+                         
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+        };
+
+var newAmbPedagogicoEquipamiento = function(H5AmbientepedagogicoId){
+       $.ajax({
+                type: 'post',
+                data: ({H5AmbientepedagogicoId: H5AmbientepedagogicoId}),
+                url: "{{ path('infrah5ambpedagogicoequipamiento_new') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                      
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+      var saveNewAmbPedagogicoEquipamiento = function(){
+
+        formData = $('#idFormNewPedagogicoMobiliario').serialize();
+        
+           $.ajax({
+                    type: 'post',
+                    data: formData,
+                    url: "{{ path('infrah5ambpedagogicoequipamiento_savenew') }}",
+                    beforeSend: function () {
+                        $('#modal').modal('hide');
+                        $('#idpedagogico').empty();
+                        $("#idpedagogico").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                    },
+                    success: function (data) {
+                        $('#modal').modal('hide');
+                        $('#idpedagogico').empty();
+                        $('#idpedagogico').append(data);
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+            });
+    };
+
+    
+    
+  var openAmbPedagogicoDeportivo = function(){
             $.ajax({
              type: 'post',
              url: Routing.generate('infra_sheet_five_ambiente_pedagogico_deportivo'),
@@ -149,15 +503,17 @@
 
      };
 
-    var newAmbPedagogico = function(infraestructuraJuridiccionGeograficaId){
+  var newAmbPedagogicoDeportivo = function(H5AmbientepedagogicoId){
+
        $.ajax({
                 type: 'post',
-                data: ({infraestructuraJuridiccionGeograficaId: infraestructuraJuridiccionGeograficaId}),
-                url: "{{ path('infraestructurah4servicio_new_amb_pedagogico') }}",
+                data: ({H5AmbientepedagogicoId: H5AmbientepedagogicoId}),
+                url: "{{ path('infrah5ambpedagogicodeportivo_newAmbPedagogicoDeportivo') }}",
                 beforeSend: function () {
                     $('#modal').empty();
                 },
                 success: function (data) {
+                      
                     $('#modal').empty();
                     $('#modal').append(data);
 
@@ -173,6 +529,177 @@
             });
     };
 
+     var saveNewAmbPedagogicoDeportivo = function(){
+
+      formData = $('#idFormNewPedagogicoDeportivo').serialize();
+         $.ajax({
+                  type: 'post',
+                  data: formData,
+                  url: "{{ path('infrah5ambpedagogicodeportivo_new_save_ambpedagogicopeportivo') }}",
+                  beforeSend: function () {
+                      $('#modal').modal('hide');
+                      $('#idpedagogicoDeportivo').empty();
+                      $("#idpedagogicoDeportivo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                  },
+                  success: function (data) {
+                      $('#idpedagogicoDeportivo').empty();
+                      $('#idpedagogicoDeportivo').append(data);
+
+                  },
+                  statusCode: {
+                      500: function () {
+
+                      },
+                      404: function () {
+
+                      }
+                  }
+              });
+    };
+
+
+  arrEstadoEquipamientoTipo =[]
+  arrEquipamientoTipo =[]
+
+ var fillDataAmbPedagogicoDeportivoEquipamiento = function(H5AmbientepedagogicoId){
+
+           $.ajax({
+                    type: 'post',
+                    data: ({H5AmbientepedagogicoId: H5AmbientepedagogicoId}),
+                    url: "{{ path('h5ambpedagogicodeportivoequipamiento_fillDataDeportivoEquipamiento') }}",
+                    beforeSend: function () {
+                        $('#mobiliarioId').empty();
+                    },
+                    success: function (data) {
+                      //   $('#idpedagogicoDeportivo').empty();
+                      // $('#idpedagogicoDeportivo').append(data);
+                        newAmbPedagogicoDeportivoEquipamiento(H5AmbientepedagogicoId);
+
+                        arrayDataDeportivoEquiposTipo = data.arrDataDeportivoEquiposTipo;
+                        arrayDataStatusTipo = data.arrDataStatusTipo;
+                        /*$('#idpedagogicoDeportivo').empty();
+                        $('#idpedagogicoDeportivo').append(data);*/
+                        setTimeout(function(){
+                          $.each(data.arrDataDeportivoEquipamiento,function(index, el) {
+                              
+                            countdeportivo++;
+                            var id                                           = 'id'+countdeportivo;
+                            var n531Cantidad                                 = 'n531Cantidad'+countdeportivo;
+                            var n531EstadoEquipamientoTipo                   = 'n531EstadoEquipamientoTipo'+countdeportivo;
+                            var n531EquipamientoTipo                         = 'n531EquipamientoTipo'+countdeportivo;
+                            var infraestructuraH5AmbientepedagogicoDeportivo = 'infraestructuraH5AmbientepedagogicoDeportivo'+countdeportivo;
+
+                         $("#deportivoEquipamientoId").append('<tr id="'+countdeportivo+'">\n\
+                          <td><button type="button" onclick="eliminarFila('+countdeportivo+')"><i class="fa fa-trash text-danger" class="form-control"></i></button></td>\n\
+                          <td><select name="form[n531EquipamientoTipo][]" id="form_'+n531EquipamientoTipo+'" required="true" title="n531EquipamientoTipo Tenencia" class="form-control input-sm mb-15"></select></td>\n\
+                          <td><input type="text" name="form[n531Cantidad][]" id="form_'+n531Cantidad+'" value="'+el.n531Cantidad+'" required="true" size="5" class="form-control"></td>\n\
+                          <td><select name="form[n531EstadoEquipamientoTipo][]" id="form_'+n531EstadoEquipamientoTipo+'" required="true" class="form-control input-sm mb-15" title="n531EstadoEquipamientoTipo" class="form-control"></select></td>\n\
+                          </tr>');
+
+
+                        $("#form_" + n531EstadoEquipamientoTipo).empty();
+                        $("#form_" + n531EstadoEquipamientoTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataStatusTipo,function(index, el1) {
+                          if(index==el.n531EstadoEquipamientoTipo){sel = 'selected';}else{sel = '';}
+                          $("#form_" + n531EstadoEquipamientoTipo).append('<option value="' + index + '" '+ sel +'>' + el1 + '</option>');
+                        }); 
+
+                        $("#form_" + n531EquipamientoTipo).empty();
+                        $("#form_" + n531EquipamientoTipo).append('<option value="">Seleccionar...</option>');
+                        $.each(data.arrDataDeportivoEquiposTipo,function(index, el2) {
+                          if(index==el.n531EquipamientoTipo){sel = 'selected';}else{sel = '';}
+                          $("#form_" + n531EquipamientoTipo).append('<option value="' + index + '" '+ sel +'>' + el2 + '</option>');
+                        }); 
+
+
+
+
+                          });
+
+                        }, 1000);
+                        
+
+                     
+                      
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+        };
+
+
+var newAmbPedagogicoDeportivoEquipamiento = function(H5AmbientepedagogicoId){
+       $.ajax({
+                type: 'post',
+                data: ({H5AmbientepedagogicoId: H5AmbientepedagogicoId}),
+                url: "{{ path('h5ambpedagogicodeportivoequipamiento_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                      
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+
+
+      var saveNewAmbPedagogicoDeportivoEquipamiento = function(){
+
+        formData = $('#idFormNewPedagogicoDeportivoEquipamiento').serialize();
+        
+           $.ajax({
+                    type: 'post',
+                    data: formData,
+                    url: "{{ path('h5ambpedagogicodeportivoequipamiento_savenew') }}",
+                    beforeSend: function () {
+                        $('#modal').modal('hide');
+                        // $('#idpedagogicoDeportivo').empty();
+                        // $("#idpedagogicoDeportivo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                    },
+                    success: function (data) {
+                        $('#modal').modal('hide');
+                        // $('#idpedagogicoDeportivo').empty();
+                        // $('#idpedagogicoDeportivo').append(data);
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+            });
+    };
+
+
+
+
+
     </script>
+    
+
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/ambientePedagogicojs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/ambientePedagogicoEquipamientojs.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('webInfraestructura/assets/js/jsinfra/ambientePedagogicoDeportivoEquipamientojs.js') }}"></script>
     
 {% endblock %}

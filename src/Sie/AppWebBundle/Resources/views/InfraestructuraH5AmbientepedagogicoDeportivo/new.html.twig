@@ -1,0 +1,163 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Adición de Ambiente Pedagogico Deportivo</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+
+				{{form_start(form, { 'attr':{'id':'idFormNewPedagogicoDeportivo'} })}}
+                <div class="form-body"> 
+
+                    <div class="form-group">
+					<label>2.1 Descripci&oacute;n de ambientes para el desarrollo pedag&oacute;gico deportivo, cultural y recreativo</label>
+						<table class="table">
+						    <tr>
+						      <td class="text-center">Ambiente destiando a ser</td>
+						      <td class="text-center">Recreativo</td>
+						      <td class="text-center">Deportivo</td>
+						      <td class="text-center">Cultural</td>
+						    </tr>
+						    <tr>
+						      <td class=""></td>
+						      <td class="text-center"> {{form_widget(form.n53EsRecreativo, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center"> {{form_widget(form.n53EsDeportivo, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center"> {{form_widget(form.n53EsCultural, {'attr': {'class':''} } )}}</td>
+						    </tr>
+						</table>
+					</div>
+
+					<div class="form-group">
+						<table class="table">
+						  	<tr >
+						      <td class="">Ambiente es considerado de uso universal</td>
+						      <td class="text-left" ></th>
+						    </tr>
+						    <tr >
+						      <td class=""></td>
+						      <td class="text-center" >{{form_widget(form.n53EsUsoUniversal, {'attr': {'class':''} } )}}</th>
+						    </tr>
+						</table>
+					</div>
+					<div class="form-group">
+							
+							<table class="table">
+						    <tr>
+						      <td>Ambiente</td>
+						      <td>&Aacute;rea(m2)</td>
+						      <td>Capacidad</td>
+						      
+						    </tr>
+						    <tr>
+						      <td class="text-center">{{form_widget(form.n53AmbienteTipo, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center" >{{form_widget(form.n53AmbienteAreaMts, {'attr': {'class':'form-control'} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n53AmbienteCapacidad, {'attr': {'class':'form-control'} } )}}</td>
+						      
+						    </tr>
+						</table>
+					</div>
+
+					 <div class="form-body"> 
+
+                    <div class="form-group">
+					<label>2.2 Estado del Ambiente</label>
+						<table class="table" >
+						    <tr>
+						      <td class="">Esta techado </td>
+						      <td class="">Tiene Graderias</td>
+						      <td class="">Tipo Graderia</td>
+						    </tr>
+						    <tr>
+						      <td class="">{{form_widget(form.n53EsTechado, {'attr': {'class':''} } )}}</td>
+						      <td class=""> 
+						      	{{form_widget(form.n53EsGraderia, {'attr': {'class':''} } )}}</td>
+						      <td class=""> {{form_widget(form.n53AmbienteGraderiaTipo, {'attr': {'class':''} } )}}</td>
+						    </tr>
+
+						    <tr>
+						      <td class="">Tiene iluminaci&oacute;n el&eacute;trica </td>
+						      <td class="">Tiene iluminaci&oacute;n Natural </td>
+						      <td class=""></td>
+						    </tr>
+						   	<tr>
+						      <td class="">{{form_widget(form.n53EsIluminacionElectrica, {'attr': {'class':''} } )}}</td>
+						      <td class="">{{form_widget(form.n53EsIluminacionNatural, {'attr': {'class':''} } )}}</td>
+						      <td class=""></td>
+						    </tr>
+						   						    
+						</table>
+					</div>
+				 
+			
+					<div class="form-group">
+							<table class="table" >
+							    <tr>
+							      <td class="">Tiene cielo falso </td>
+							      <td class="">Caracteristicas</td>
+							      <td class="">Tiene muros </td>
+							      <td class="">Material </td>
+							      <td class="">Caracteristicas</td>
+
+							    </tr>
+							    <tr>
+							      <td class="">{{form_widget(form.n53EsAmbienteCieloFal, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n53AmbienteCieloFalTipo, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n53EsAmbienteMuros, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n53AmbienteMuroMatTipo, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n53AmbienteMuroCaracTipo, {'attr': {'class':''} } )}}</td>
+							    </tr>
+
+							    <tr>
+							      <td class="">Tiene puertas </td>
+							      <td class="">Caracteristicas</td>
+							      <td class="">Tiene revestimiento </td>
+							      <td class="">Material </td>
+							      <td class="">Caracteristicas</td>
+
+							    </tr>
+							    <tr>
+							      <td class="">{{form_widget(form.n53EsAmbientePuerta, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n511SeguroTipo, {'attr': {'class':''} } )}}
+							      {{form_widget(form.n512AbreTipo, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n53EsAmbienteRevestimiento, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n53AmbienteRevestMatTipo, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n53AmbienteRevestCaracTipo, {'attr': {'class':''} } )}}</td>
+							    </tr>
+							    <tr>
+							      <td class="">Tiene ventana(s) </td>
+							      <td class="">Caracteristicas</td>
+							      <td class="">Tiene piso </td>
+							      <td class="">Material </td>
+							      <td class="">Caracteristicas</td>
+
+							    </tr>
+							    <tr>
+							      <td class="">{{form_widget(form.n53EsAmbienteVentana, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n53AmbienteVentanaTipo, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n53EsAmbientePiso, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n53AmbientePisoMatTipo, {'attr': {'class':''} } )}}</td>
+							      <td class="">{{form_widget(form.n53AmbientePisoCaracTipo, {'attr': {'class':''} } )}}</td>
+							    </tr>
+							</table>
+					</div>
+                </div>
+                  
+            {{form_end(form)}}
+
+
+
+ 			</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-theme" data-dismiss="modal" onclick='saveNewAmbPedagogicoDeportivo()'>Guardar</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+

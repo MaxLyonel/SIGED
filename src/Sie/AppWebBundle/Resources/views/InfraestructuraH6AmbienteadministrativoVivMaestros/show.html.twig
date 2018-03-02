@@ -1,0 +1,88 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH6AmbienteadministrativoVivMaestros</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>N21numeroambientes</th>
+                <td>{{ entity.n21NumeroAmbientes }}</td>
+            </tr>
+            <tr>
+                <th>N21numerohabitantes</th>
+                <td>{{ entity.n21NumeroHabitantes }}</td>
+            </tr>
+            <tr>
+                <th>N21numerobanios</th>
+                <td>{{ entity.n21NumeroBanios }}</td>
+            </tr>
+            <tr>
+                <th>N21numeroduchas</th>
+                <td>{{ entity.n21NumeroDuchas }}</td>
+            </tr>
+            <tr>
+                <th>N21numerococinas</th>
+                <td>{{ entity.n21NumeroCocinas }}</td>
+            </tr>
+            <tr>
+                <th>N21metrosarea</th>
+                <td>{{ entity.n21MetrosArea }}</td>
+            </tr>
+            <tr>
+                <th>N21esambientetecho</th>
+                <td>{{ entity.n21EsAmbienteTecho }}</td>
+            </tr>
+            <tr>
+                <th>N21esambientecielofal</th>
+                <td>{{ entity.n21EsAmbienteCieloFal }}</td>
+            </tr>
+            <tr>
+                <th>N21esambientepuerta</th>
+                <td>{{ entity.n21EsAmbientePuerta }}</td>
+            </tr>
+            <tr>
+                <th>N21esambienteventana</th>
+                <td>{{ entity.n21EsAmbienteVentana }}</td>
+            </tr>
+            <tr>
+                <th>N21esambientemuros</th>
+                <td>{{ entity.n21EsAmbienteMuros }}</td>
+            </tr>
+            <tr>
+                <th>N21esambienterevestimiento</th>
+                <td>{{ entity.n21EsAmbienteRevestimiento }}</td>
+            </tr>
+            <tr>
+                <th>N21esambientepiso</th>
+                <td>{{ entity.n21EsAmbientePiso }}</td>
+            </tr>
+            <tr>
+                <th>Obs</th>
+                <td>{{ entity.obs }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fecharegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('infrah6viviendasmaestros') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('infrah6viviendasmaestros_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

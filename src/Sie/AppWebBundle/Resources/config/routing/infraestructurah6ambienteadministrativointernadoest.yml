@@ -1,0 +1,38 @@
+infrah6internadoestudiante_index:
+    path:     /index
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:index" }
+    options:
+        expose: true
+
+infrah6internadoestudiante_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:show" }
+
+infrah6internadoestudiante_new:
+    path:     /{id}/new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:new" }
+
+infrah6internadoestudiante_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:create" }
+    methods:  POST
+
+infrah6internadoestudiante_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:edit" }
+
+infrah6internadoestudiante_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:update" }
+    methods:  [POST, PUT]
+
+infrah6internadoestudiante_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:delete" }
+    methods:  [POST, DELETE]
+
+infrah6internadoestudiante_saveH6InternadoEst:
+    path:     /saveH6InternadoEst
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:saveH6InternadoEst" }
+    options:
+        expose: true    

@@ -101,8 +101,8 @@ class InfoPersonalAdmController extends Controller {
          */
         $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                        WHERE ct.rolTipo IN (:id) ORDER BY ct.cargo')
-                ->setParameter('id', array(5, 9));
+                        WHERE ct.id NOT IN (:id) ORDER BY ct.id')
+                ->setParameter('id', array(0, 86, 993, 650, 992, 994, 120, 100, 1000, 651, 14));
 
         $cargos = $query->getResult();
         $cargosArray = array();
@@ -274,12 +274,12 @@ class InfoPersonalAdmController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQuery(
-                        'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                        WHERE ct.rolTipo IN (:id2) AND ct.id NOT IN (:id) ORDER BY ct.cargo')
-                ->setParameter('id', array(86))
-                ->setParameter('id2', array(5, 9));
+            'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+                        WHERE ct.id NOT IN (:id) ORDER BY ct.id')
+            ->setParameter('id', array(0, 86, 993, 650, 992, 994, 120, 100, 1000, 651, 14));
 
         $cargos = $query->getResult();
+
         $cargosArray = array();
         foreach ($cargos as $c) {
             $cargosArray[$c->getId()] = $c->getCargo();
@@ -500,11 +500,10 @@ class InfoPersonalAdmController extends Controller {
     private function editForm($idInstitucion, $gestion, $persona, $maestroInscripcion, $idiomas) {
         $em = $this->getDoctrine()->getManager();
 
-       $query = $em->createQuery(
-                        'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                        WHERE ct.rolTipo IN (:id2) AND ct.id NOT IN (:id) ORDER BY ct.cargo')
-                ->setParameter('id', array(86))
-                ->setParameter('id2', array(5, 9));
+        $query = $em->createQuery(
+            'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+                        WHERE ct.id NOT IN (:id) ORDER BY ct.id')
+            ->setParameter('id', array(0, 86, 993, 650, 992, 994, 120, 100, 1000, 651, 14));
 
         $cargos = $query->getResult();
         $cargosArray = array();
@@ -539,6 +538,9 @@ class InfoPersonalAdmController extends Controller {
                 ->add('idPersona', 'hidden', array('data' => $persona->getId()))
                 ->add('idMaestroInscripcion', 'hidden', array('data' => $maestroInscripcion->getId()))
                 ->add('genero', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $persona->getGeneroTipo()->getId()), 'label' => 'Género', 'required' => true, 'attr' => array('class' => 'form-control')))
+                ->add('celular', 'text', array('label' => 'Nro. de Celular', 'required' => true, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+                ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => true, 'data' => $persona->getCorreo(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
+                ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => true, 'data' => $persona->getDireccion(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('funcion', 'choice', array('label' => 'Función que desempeña', 'required' => true, 'choices' => $cargosArray, 'data' => $maestroInscripcion->getCargoTipo()->getId(), 'attr' => array('class' => 'form-control')))
                 ->add('financiamiento', 'choice', array('label' => 'Fuente de Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'data' => $maestroInscripcion->getFinanciamientoTipo()->getId(), 'attr' => array('class' => 'form-control')))
                 ->add('formacion', 'choice', array('label' => 'Último grado de formación alcanzado', 'required' => true, 'choices' => $formacionArray, 'data' => $maestroInscripcion->getFormacionTipo()->getId(), 'attr' => array('class' => 'form-control')))
@@ -562,9 +564,12 @@ class InfoPersonalAdmController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
-            
+
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['idPersona']);
             $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));
+            $persona->setDireccion(mb_strtoupper($form['direccion']), 'utf-8');
+            $persona->setCelular($form['celular']);
+            $persona->setCorreo(mb_strtolower($form['correo']), 'utf-8');
             $em->persist($persona);
             $em->flush();
 
@@ -682,51 +687,6 @@ class InfoPersonalAdmController extends Controller {
         ));
     }
 
-    public function resultAction(Request $request) {
-
-        // Verificamos si no ha caducado la session
-        if (!$this->session->get('userId')) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $form = $request->get('form');
-
-        $em = $this->getDoctrine()->getManager();
-
-        $repository = $em->getRepository('SieAppWebBundle:Persona');
-
-        $query = $repository->createQueryBuilder('p')
-                ->select('p')
-                ->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
-                ->where('p.carnet = :carnet AND (p.esvigente = :esvigente1 OR p.esvigenteApoderado > :esvigente2)')
-                ->setParameter('carnet', $form['carnetIdentidad'])
-                ->setParameter('esvigente1', 't')
-                ->setParameter('esvigente2', 0)
-                ->getQuery();
-
-        $personas = $query->getResult();
-
-        if (!$personas) {
-            $query = $repository->createQueryBuilder('p')
-                ->select('p')
-                ->where('p.carnet = :carnet AND (p.esvigente = :esvigente1 OR p.esvigenteApoderado > :esvigente2)')
-                ->setParameter('carnet', $form['carnetIdentidad'])
-                ->setParameter('esvigente1', 't')
-                ->setParameter('esvigente2', 0)
-                ->getQuery();
-
-            $personas = $query->getResult();
-        }
-        
-        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
-        
-        return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:result.html.twig', array(
-                    'personas' => $personas,
-                    'institucion' => $institucion,
-                    'gestion' => $request->getSession()->get('idGestion')
-        ));
-    }
-
     /**
      * Crea un formulario para buscar una persona por C.I.
      *
@@ -734,11 +694,96 @@ class InfoPersonalAdmController extends Controller {
     private function searchForm() {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_info_personal_adm_result'))
-                ->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
-                ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
-                ->add('buscar', 'submit', array('label' => 'Buscar coincidencias por C.I.', 'attr' => array('class' => 'btn btn-md btn-facebook')))
+                ->add('buscar', 'submit', array('label' => 'Buscar coincidencias', 'attr' => array('class' => 'btn btn-md btn-facebook')))
                 ->getForm();
         return $form;
+    }
+
+    public function resultAction(Request $request) {
+
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+
+        $carnet = $form['carnet'];
+        $complemento = ($form['complemento'] != "") ? $form['complemento']:0;
+        $repository = $em->getRepository('SieAppWebBundle:Persona');
+
+        if($complemento == '0'){
+            $query = $repository->createQueryBuilder('p')
+                ->select('p')
+                //->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
+                ->where('p.carnet = :carnet AND p.segipId >= :valor')
+                ->setParameter('carnet', $carnet)
+                ->setParameter('valor', 0)
+                ->getQuery();
+        }
+        else{
+            $query = $repository->createQueryBuilder('p')
+                ->select('p')
+                //->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
+                ->where('p.carnet = :carnet AND p.complemento = :complemento and p.segipId >= :valor')
+                ->setParameter('carnet', $carnet)
+                ->setParameter('complemento', mb_strtoupper($complemento, 'utf-8'))
+                ->setParameter('valor', 0)
+                ->getQuery();
+        }
+        $personas = $query->getResult();
+
+        if ($personas) {
+            $p = null;
+            if(is_array($personas)) {
+                $p = array(
+                    'personaId'=>$personas[0]->getId(),
+                    'personaCarnet'=>$personas[0]->getCarnet(),
+                    'personaComplemento'=>$personas[0]->getComplemento(),
+                    'personaPaterno'=>$personas[0]->getPaterno(),
+                    'personaMaterno'=>$personas[0]->getMaterno(),
+                    'personaNombre'=>$personas[0]->getNombre(),
+                    'personaFechaNac'=>$personas[0]->getFechaNacimiento(),
+                );
+            }
+        }else{
+            $p = null;
+        }
+
+        /*$fechaNacimiento = $form['fechaNac'];
+
+        $servicioPersona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplementoFechaNacimiento($carnet, $complemento, $fechaNacimiento);
+
+        $servicioPersona = json_encode($servicioPersona);
+        $servicioPersona = json_decode($servicioPersona, true);
+
+        if (is_array($servicioPersona['result'])) {
+
+            $fechaNacimiento = $servicioPersona['result'][0]['fecha_nacimiento'];
+            $servicioPersona['result'][0]['fecha_nacimiento'] = date_format(new \DateTime($fechaNacimiento), 'd-m-Y');
+
+            $p = array(
+                'personaId'=>$servicioPersona['result'][0]['id'],
+                'personaCarnet'=>$servicioPersona['result'][0]['carnet'],
+                'personaComplemento'=>$servicioPersona['result'][0]['complemento'],
+                'personaPaterno'=>$servicioPersona['result'][0]['paterno'],
+                'personaMaterno'=>$servicioPersona['result'][0]['materno'],
+                'personaNombre'=>$servicioPersona['result'][0]['nombre'],
+                'personaFechaNac'=>$servicioPersona['result'][0]['fecha_nacimiento'],
+            );
+
+        }else{
+            $p = null;
+        }*/
+        
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
+        
+        return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:result.html.twig', array(
+                    'persona' => $p,
+                    'institucion' => $institucion,
+                    'gestion' => $request->getSession()->get('idGestion')
+        ));
     }
 
     public function indexTecSieAction(Request $request) {

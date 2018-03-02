@@ -9,17 +9,17 @@
     <ol class="breadcrumb">
         <li>
             <i class="fa fa-home"></i>
-            <a href="{{path('sie_tramites_homepage')}}">Perfil</a>
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
             <i class="fa fa-angle-right"></i>
             <a >Trámite detalle</a>
-        </li>        
+        </li>
     </ol>
-{% endblock %} 
-{% block contentoption %}    
-    {% if listaDocumento is defined  %}    
-        <div class="row">    
+{% endblock %}
+{% block contentoption %}
+    {% if listaDocumento is defined  %}
+        <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="panel panel-invoice rounded">                    
+                <div class="panel panel-invoice rounded">
                     <div class="panel-sub-heading">
                         <div class="row inner-all">
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -47,15 +47,15 @@
                                     <p class="text-right">
                                         {% if msgReactivaTramite is defined  %}
                                             {% if msgReactivaTramite == ""  %}
-                                                <form name="form" role="form" action="{{ path('sie_tramite_reactiva_guarda') }}" method="POST"> 
-                                                    <input type="hidden" name="supletorio" value="{{listaDocumento.tramite|base64_encode}}"/>                                                 
-                                                    <input type="hidden" name="serie" value="{{ arrayForm.serie }}">                                        
+                                                <form name="form" role="form" action="{{ path('tramite_reactiva_guarda') }}" method="POST">
+                                                    <input type="hidden" name="supletorio" value="{{listaDocumento.tramite|base64_encode}}"/>
+                                                    <input type="hidden" name="serie" value="{{ arrayForm.serie }}">
                                                     <input type="hidden" name="obs" value="{{ arrayForm.obs }}">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token(listaDocumento.tramite) }}">    
+                                                    <input type="hidden" name="_token" value="{{ csrf_token(listaDocumento.tramite) }}">
                                                     <button type="submit" class="btn btn-success" data-original-title="Reactivar Trámite" onclick="this.style.visibility='hidden';"><strong>Reactivar Trámite</strong></button>
-                                                </form> 
-                                            {% endif %}  
-                                        {% endif %}  
+                                                </form>
+                                            {% endif %}
+                                        {% endif %}
                                     </p>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                     <div class="panel-sub-heading">
                         <button type="button" class="btn btn-success btn-lg btn-block"><strong>{{listaDocumento.tramiteTipo}}</strong></button>
                     </div><!-- /.panel-sub-heading -->
-                    <div class="panel-body">                     
+                    <div class="panel-body">
                         <div class="profile-timeline">
                             <div class="timeline">
                                 <div class="timeline-item alt">
@@ -80,23 +80,23 @@
                                 {% set flujo_proceso_id = 0 %}
                                 {% set siguiente_flujo_proceso_id = 0 %}
                                 {% set anterior_flujo_proceso_id = 0 %}
-                                {% set siguienteProceso = "" %} 
-                                {% for detalle in listaTramiteDetalle %}  
+                                {% set siguienteProceso = "" %}
+                                {% for detalle in listaTramiteDetalle %}
                                     {% set c = c + 1 %}
-                                    {% set id = detalle.tramite_detalle_id %} 
-                                    {% set tramite_id = detalle.tramite_id %} 
-                                    {% set tramite_tipo = detalle.tramite_tipo %} 
-                                    {% set tramite_estado = detalle.tramite_estado %} 
-                                    {% set proceso = detalle.proceso %} 
-                                    {% set persona_remitente = detalle.persona_remitente %}   
-                                    {% set persona_destinatario = detalle.persona_destinatario %}   
-                                    {% set fecha_proceso = detalle.fecha_proceso %}   
-                                    {% set observacion = detalle.observacion %}  
+                                    {% set id = detalle.tramite_detalle_id %}
+                                    {% set tramite_id = detalle.tramite_id %}
+                                    {% set tramite_tipo = detalle.tramite_tipo %}
+                                    {% set tramite_estado = detalle.tramite_estado %}
+                                    {% set proceso = detalle.proceso %}
+                                    {% set persona_remitente = detalle.persona_remitente %}
+                                    {% set persona_destinatario = detalle.persona_destinatario %}
+                                    {% set fecha_proceso = detalle.fecha_proceso %}
+                                    {% set observacion = detalle.observacion %}
                                     {% set anterior_estado_id = detalle.anterior_estado_id %}
                                     {% set flujo_proceso_id = detalle.flujo_proceso_id %}
                                     {% set siguiente_flujo_proceso_id = detalle.siguiente_flujo_proceso_id %}
-                                    {% set anterior_flujo_proceso_id = detalle.anterior_flujo_proceso_id %} 
-                                    {% set siguienteProceso = detalle.siguiente_proceso %} 
+                                    {% set anterior_flujo_proceso_id = detalle.anterior_flujo_proceso_id %}
+                                    {% set siguienteProceso = detalle.siguiente_proceso %}
 
                                     {% if c == 1 %}
                                         {% set color = 'primary' %}
@@ -159,7 +159,7 @@
                     </div><!-- /.panel-body -->
                     <div class="panel-footer">
                         {% if msgReactivaTramite is defined  %}
-                            {% if msgReactivaTramite != ""  %}                                
+                            {% if msgReactivaTramite != ""  %}
                                 <div class="alert alert-warning ">
                                     <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
                                     <div class="notification-info">
@@ -172,11 +172,11 @@
                                         </p>
                                     </div>
                                 </div>
-                            {% endif %}  
-                        {% endif %}  
+                            {% endif %}
+                        {% endif %}
                     </div><!-- /.panel-footer -->
                 </div>
-            </div> 
+            </div>
         </div><!-- /.row -->
-    {% endif %}    
+    {% endif %}
 {% endblock %}

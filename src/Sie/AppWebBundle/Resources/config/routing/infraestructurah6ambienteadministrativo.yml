@@ -1,0 +1,30 @@
+infrah6ambadm:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6Ambienteadministrativo:index" }
+
+infrah6ambadm_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6Ambienteadministrativo:show" }
+
+infrah6ambadm_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6Ambienteadministrativo:new" }
+
+infrah6ambadm_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6Ambienteadministrativo:create" }
+    methods:  POST
+
+infrah6ambadm_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6Ambienteadministrativo:edit" }
+
+infrah6ambadm_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6Ambienteadministrativo:update" }
+    methods:  [POST, PUT]
+
+infrah6ambadm_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6Ambienteadministrativo:delete" }
+    methods:  [POST, DELETE]

@@ -10,7 +10,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="dashboard.html">Recibidos</a>
+                    Recibidos
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -38,28 +38,25 @@
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
-                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form', 'onsubmit': 'return validarDatos()'} } )}}
                             <div class="panel-body">
                                 <div class="row">
-                                    <div class="form-group col-lg-3 col-md-6">
-                                        {{ form_label(form.carnetIdentidad)}}
-                                        {{form_widget(form.carnetIdentidad) }}
-                                        <div class="help-block with-errors"></div>
+                                    <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                        <input type="text" class="form-control" name="form[carnet]" id="form_carnet" placeholder="Carnet" maxlength="10" required>
                                     </div>
-                                    <div class="form-group col-lg-3 col-md-6">
-                                        {{ form_label(form.complemento)}}
-                                        <div class="input-group">
-                                            <div class="input-group-addon">-</div>
-                                            {{form_widget(form.complemento,{'attr':{'data-toggle':'tooltip','data-placement':'bottom','data-original-title':'El complemento del CI no es el lugar de expedicion, no coloque abreviaciones de departamentos'} }) }}
-                                        </div>
-                                        <div class="help-block with-errors"></div>
+                                    <div class="form-group col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                        <input type="text" class="form-control" name="form[complemento]" id="form_complemento" placeholder="Complemento">
                                     </div>
-                                    <div class="form-group col-lg-3 col-md-6">                                        
-                                        <p>{{ form_widget(form.buscar ) }}</p>
-                                        <p><a href="{{ path('herramienta_info_personal_adm_index') }}" class="btn btn-default">Cancelar</a></p>
+                                    <!--div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                        <input type="text" class="form-control" name="form[fechaNac]" id="form_fechaNac" placeholder="Fecha de Nacimiento" required>
+                                    </div-->
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-6">
+                                        {{ form_widget(form.buscar ) }}
+                                        <a href="{{ path('herramienta_info_personal_adm_index') }}" class="btn btn-default">Cancelar</a>
                                     </div>
                                 </div>
-                                
                             </div>
                             {{form_end(form)}}
                         </div>
@@ -75,4 +72,22 @@
         </div>
     </div> 
 
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        $("#form_fechaNac").inputmask({ "alias": "dd-mm-yyyy" });
+        $("#form_complemento").inputmask({mask: "**"});
+        $("#form_carnet").numeric("positiveInteger");
+
+        function validarDatos() {
+            var carnet = $('#form_carnet').val();
+            var fechaNac = $('#form_fechaNac').val();
+            if(carnet == '' || fechaNac == ''){
+                alert('Debe ingresar los datos requeridos: Carnet, Fecha de Nacimiento');
+                return false;
+            }
+            return true;
+        }
+    </script>
 {% endblock %}

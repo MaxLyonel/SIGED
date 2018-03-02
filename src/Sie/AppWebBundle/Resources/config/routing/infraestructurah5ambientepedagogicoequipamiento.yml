@@ -1,0 +1,42 @@
+infrah5ambpedagogicoequipamiento:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoEquipamiento:index" }
+
+infrah5ambpedagogicoequipamiento_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoEquipamiento:show" }
+
+infrah5ambpedagogicoequipamiento_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoEquipamiento:create" }
+    methods:  POST
+
+infrah5ambpedagogicoequipamiento_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoEquipamiento:edit" }
+
+infrah5ambpedagogicoequipamiento_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoEquipamiento:update" }
+    methods:  [POST, PUT]
+
+infrah5ambpedagogicoequipamiento_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoEquipamiento:delete" }
+    methods:  [POST, DELETE]
+
+infrah5ambpedagogicoequipamiento_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoEquipamiento:new" }
+
+infrah5ambpedagogicoequipamiento_savenew:
+    path:     /savenew
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoEquipamiento:savenew" }
+    options:
+        expose: true
+
+infrah5ambpedagogicoequipamiento_fillDataEquipamiento:
+    path:     /fillDataEquipamiento
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoEquipamiento:fillDataEquipamiento" }
+    options:
+        expose: true

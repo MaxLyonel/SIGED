@@ -82,7 +82,12 @@ class InfoPersonalAdmMigrarController extends Controller {
         $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '1'));
         $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion, 'bim4' => '2'));
         
-        if(!($consol_gest_pasada or $consol_gest_pasada2)){
+        $registro_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $request->getSession()->get('currentyear') - 1 , 'unidadEducativa' => $institucion));
+        
+        if(!$registro_gest_pasada){
+            $gestion = $request->getSession()->get('currentyear');
+        }
+        else if(!($consol_gest_pasada or $consol_gest_pasada2)){
             $gestion = $request->getSession()->get('currentyear') - 1;
             $request->getSession()->set('idGestion', $gestion);
             $activar_acciones = true;
@@ -265,24 +270,34 @@ class InfoPersonalAdmMigrarController extends Controller {
         foreach ($maestrosArray as $key => $maestro_inscripcion) {
             //Registrar maestro_inscriocion gestión actual
             //$query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
-            $maestro_inscripcion_aux = clone $maestro_inscripcion;
-            $maestro_inscripcion_aux->setGestionTipo($gestionTipo);
-            $maestro_inscripcion_aux->setFechaRegistro(new \DateTime('now'));
-            $maestro_inscripcion_aux->setItem($maestro_inscripcion->getItem() ? $maestro_inscripcion->getItem() : 0);
-            $maestro_inscripcion_aux->setEstudiaiomaMaterno($maestro_inscripcion->getEstudiaiomaMaterno() ? $maestro_inscripcion->getEstudiaiomaMaterno() : $em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
-            $maestro_inscripcion_aux->setFechaModificacion(null);
-            $maestro_inscripcion_aux->setEsVigenteAdministrativo(true);
-            $em->persist($maestro_inscripcion_aux);
-            $em->flush();
+            $persona_verificar = $em->getRepository('SieAppWebBundle:Persona')->findOneById($key);
+            $q = $em->createQuery('select a from SieAppWebBundle:MaestroInscripcion a where a.persona = :persona and a.gestionTipo = :gestion and a.cargoTipo <> :cargo and a.institucioneducativa = :sie')
+                ->setParameter('persona', $persona_verificar->getId())
+                ->setParameter('gestion', $gestionTipo->getId())
+                ->setParameter('cargo', 0)
+                ->setParameter('sie', $institucioneducativa->getId());
+            $maestro_verificar = $q->getResult();
 
-            //Registrar maestro_inscripcion_idioma gestión actual
-            $maestro_inscripcion_idioma = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $maestro_inscripcion));
-
-            foreach ($maestro_inscripcion_idioma as $key => $value) {
-                $maestro_inscripcion_idioma_aux = clone $value;
-                $maestro_inscripcion_idioma_aux->setMaestroInscripcion($maestro_inscripcion_aux);
-                $em->persist($maestro_inscripcion_idioma_aux);
+            if (!$maestro_verificar) {
+                $maestro_inscripcion_aux = clone $maestro_inscripcion;
+                $maestro_inscripcion_aux->setGestionTipo($gestionTipo);
+                $maestro_inscripcion_aux->setFechaRegistro(new \DateTime('now'));
+                $maestro_inscripcion_aux->setItem($maestro_inscripcion->getItem() ? $maestro_inscripcion->getItem() : 0);
+                $maestro_inscripcion_aux->setEstudiaiomaMaterno($maestro_inscripcion->getEstudiaiomaMaterno() ? $maestro_inscripcion->getEstudiaiomaMaterno() : $em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
+                $maestro_inscripcion_aux->setFechaModificacion(null);
+                $em->persist($maestro_inscripcion_aux);
+                $maestro_inscripcion_aux->setEsVigenteAdministrativo(true);
                 $em->flush();
+
+                //Registrar maestro_inscripcion_idioma gestión actual
+                $maestro_inscripcion_idioma = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $maestro_inscripcion));
+
+                foreach ($maestro_inscripcion_idioma as $key => $value) {
+                    $maestro_inscripcion_idioma_aux = clone $value;
+                    $maestro_inscripcion_idioma_aux->setMaestroInscripcion($maestro_inscripcion_aux);
+                    $em->persist($maestro_inscripcion_idioma_aux);
+                    $em->flush();
+                }
             }
         }
 

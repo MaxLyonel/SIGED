@@ -164,7 +164,7 @@
                                                         <td data-title="F. Nac."> {{ entity.fecha_nacimiento|date('d-m-Y') }} </td>
                                                         <td class="text-center">
                                                             <a href="{{ path('tramite_download_ddjjone_web', {'rude': entity.codigo_rude, 'gestion':entity.gestiontipo, 'sie': entity.insteduid, 'esp': entity.especialidad_id, 'nivel': entity.grado_id} )}}">
-                                                                <img src="{{ asset('img/pdf.png') }}" data-1x="{{ asset('img/pdf.png') }}" data-2x="{{ asset('img/pdf.png') }}" height="40" width="40"   class="hisrc img-responsive" alt="Descargar"/>                                                        
+                                                                <img src="{{ asset('img/pdf.png') }}" data-1x="{{ asset('img/pdf.png') }}" data-2x="{{ asset('img/pdf.png') }}" height="40" width="40"   class="hisrc img-responsive" alt="Descargar"/>
                                                             </a>
                                                         </td>
                                                     </tr>
@@ -260,7 +260,7 @@
                     }
                     peticion1 = $.ajax({
                         type: 'POST',
-                        url: '{{ path('sie_tramite_listar_especialidad')}}',
+                        url: '{{ path('tramite_listar_especialidad')}}',
                         data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar},
                         beforeSend: function () {
         {#                            $("#form_especialidad").attr('disabled', 'true');#}
@@ -294,7 +294,7 @@
                 }
                 peticion2 = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_tramite_listar_nivel')}}',
+                    url: '{{ path('tramite_listar_nivel')}}',
                     data: {'sie_listar': sie_listar, 'gestion_listar': gestion_listar, 'especialidad': esp_listar},
                     beforeSend: function () {
                         $('#form_nivel').attr('disabled', 'true');
