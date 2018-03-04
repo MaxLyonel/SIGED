@@ -231,6 +231,7 @@ class DefaultController extends Controller {
             case '172.20.196.4':
             case '172.20.196.9:8024':
             case 'www.dgesttla.local':
+            case 'dgesttla.sie.gob.bo':
                 $sysname = 'DGESTTLA';
                 $sysporlet = 'blue';
                 $sysbutton = true;
