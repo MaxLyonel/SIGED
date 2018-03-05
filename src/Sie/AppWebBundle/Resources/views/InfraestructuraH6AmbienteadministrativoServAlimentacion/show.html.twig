@@ -1,0 +1,72 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH6AmbienteadministrativoServAlimentacion</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>N41numeroambientes</th>
+                <td>{{ entity.n41NumeroAmbientes }}</td>
+            </tr>
+            <tr>
+                <th>N41metrosarea</th>
+                <td>{{ entity.n41MetrosArea }}</td>
+            </tr>
+            <tr>
+                <th>N41esambientetecho</th>
+                <td>{{ entity.n41EsAmbienteTecho }}</td>
+            </tr>
+            <tr>
+                <th>N41esambientecielofal</th>
+                <td>{{ entity.n41EsAmbienteCieloFal }}</td>
+            </tr>
+            <tr>
+                <th>N41esambientepuerta</th>
+                <td>{{ entity.n41EsAmbientePuerta }}</td>
+            </tr>
+            <tr>
+                <th>N41esambienteventana</th>
+                <td>{{ entity.n41EsAmbienteVentana }}</td>
+            </tr>
+            <tr>
+                <th>N41esambientemuros</th>
+                <td>{{ entity.n41EsAmbienteMuros }}</td>
+            </tr>
+            <tr>
+                <th>N41esambienterevestimiento</th>
+                <td>{{ entity.n41EsAmbienteRevestimiento }}</td>
+            </tr>
+            <tr>
+                <th>N41esambientepiso</th>
+                <td>{{ entity.n41EsAmbientePiso }}</td>
+            </tr>
+            <tr>
+                <th>Obs</th>
+                <td>{{ entity.obs }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fecharegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('infrah6ambadmservalimentacion') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('infrah6ambadmservalimentacion_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}
