@@ -241,7 +241,7 @@
                     <div class="cbp-caption-activeWrap">
                         <div class="cbp-l-caption-alignCenter">
                             <div class="cbp-l-caption-body"><br>
-                                <form action="{{path('herramienta_alter_cursos_index')}}" method="post" style="display:inline-block"> 
+                                <form action="{{path('herramienta_alter_cursos_index')}}" method="post" style="display:inline-block">
                                     <button class="btn btn-inverse btn-stroke">INGRESAR</button>
                                 </form>
                                 <br>
@@ -278,7 +278,7 @@
                   <div class="cbp-l-grid-masonry-projects-desc"></div>
               </div><br></div>
 
-                {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO#}       
+                {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO#}
                     {% if (app.session.get('ie_per_estado') != '0') %}                                
                                     {% if (app.session.get('ie_gestion') < '2010') %}
                                             <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
@@ -297,6 +297,7 @@
                                                                         <br>
                                                                     <span style="color:#FFFFFF">Genera un archivo de inconsistencias de información del periodo, para ser analizadas por el usuario.</span>
                                                                 </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -323,6 +324,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+
                                                     </div>
                                                     <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">GENERAR REPORTE DE INCONSISTENCIAS</div>
                                                 <div class="cbp-l-grid-masonry-projects-desc"></div>
@@ -351,8 +353,8 @@
                                                 <div class="cbp-l-grid-masonry-projects-desc"></div>
                                             </div><br></div>
                                         {% endif %}
-                                    {% endif %}                                                                        
-                    {% else %}            
+                                    {% endif %}
+                    {% else %}
                             <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
                             <div class="cbp-caption">
                                     <div class="cbp-caption-defaultWrap">
@@ -387,10 +389,11 @@
                                 <div class="cbp-l-caption-alignCenter">
                                     <div class="cbp-l-caption-body">
                                         <br>
-                                            <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}" method="post" style="display:inline-block"> 
+                                            <form action="{{path('herramienta_alter_reporte_observacionesoperativo')}}" method="post" style="display:inline-block">
                                                 <button class="btn btn-inverse btn-stroke">GENERAR</button>
                                             </form>
                                             <br>
+
                                         <span style="color:#FFFFFF">Genera un archivo de inconsistencias de información del periodo, para ser analizadas por el usuario.</span>
                                     </div>
                                 </div>
@@ -400,6 +403,8 @@
                         <div class="cbp-l-grid-masonry-projects-desc"></div>
                         </div><br></div>
                 {% endif %}
+
+
 
           <div class="col-lg-6 col-md-6 col-sm-6" >
           <div class="cbp-item-wrapper">

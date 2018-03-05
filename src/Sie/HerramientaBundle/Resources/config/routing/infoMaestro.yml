@@ -100,3 +100,9 @@ herramienta_info_maestro_ratificar_currentyear:
 herramienta_info_maestro_habilitar_ddjj:
     path:     /maestrohabilitarDDJJ/
     defaults: { _controller: "SieHerramientaBundle:InfoMaestro:maestroHabilitarDDJJ" }
+
+herramienta_info_maestro_mlistarmenu:
+    path:     /maestrolistarmenu/{idM}/{pertUM}/{pertP}/{umt}/{pt}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:listarmenu" }
+    options:
+         expose: true

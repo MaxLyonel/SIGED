@@ -1,0 +1,175 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Example of Bootstrap 3 Tabs Methods</title>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $("#myTab li:eq(0) a").tab('show');
+                });
+            </script>
+            <style type="text/css">
+                .bs-example{
+                    margin: 20px;
+                }
+            </style>
+        </head>
+
+        <h2><i class="fa fa-university"></i> Datos del Centro de Educación Alternativa <span>Teléfono, email, casilla postal.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-th-large"></i>
+                    <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-university"></i>
+                    Datos del CEA
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+
+    <div class="body-content animated fadeIn">
+
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('noTuicion') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+
+        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" style="" >
+            <div class="blog-item blog-quote rounded shadow">
+                <div class="quote quote-primary">
+                    <a href="\siged\web\uploads\manuales\MANUAL PARA EDUCACION ALTERNATIVA 2017 VERSION_2_1.pdf">
+                       Manual Sistema De Educación Alternativa
+
+                        <medium class="quote-author">Comprende todos los procesos explicados Paso a Paso para la comprensión del usuario con respecto a todas las funcionalidades del sistema</medium>
+                    </a>
+                </div>
+                <div class="blog-details">
+                    <ul class="blog-meta">
+                        <li>By: SIE</li>
+                        <li>Sep 08, 2017</li>
+                        <li>Version 2.1</li>
+
+                    </ul>
+                </div><!-- blog-details -->
+            </div><!-- /.blog-item -->
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" style="">
+            <div class="blog-item blog-quote rounded shadow">
+                <div class="quote quote-teal    ">
+                    <a href="\siged\web\uploads\manuales\rudeal_jovenesyadultos_2012.pdf">
+                      Formulario Socio Economico
+                        <medium class="quote-author"> Formulario de registro unico de Estudiantes de Educación Alternativa </medium>
+                    </a>
+                </div>
+                <div class="blog-details">
+                    <ul class="blog-meta">
+                        <li>By: SIE</li>
+                        <li>Jun 08, 2014</li>
+                        <li>Version 1.0</li>
+
+                    </ul>
+                </div><!-- blog-details -->
+            </div><!-- /.blog-item -->
+        </div>
+
+
+        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" style="">
+            <div class="blog-item blog-quote rounded shadow">
+                <div class="quote quote-success">
+                    <a href="\siged\web\uploads\manuales\MANUAL PARA EDUCACION DIVERSA VERSION_1_0.pdf">
+                        Manual Educacion Diversa
+                        <medium class="quote-author"> Este Manual comprende todos los procesos que involucran Educacion diversa, incluyendo Reportes finales. </medium>
+                    </a>
+                </div>
+                <div class="blog-details" align="center" >
+                    <ul class="blog-meta">
+                        <li>By: SIE</li>
+                        <li>Feb 01, 2018</li>
+                        <li>Version 1.0</li>
+
+                    </ul>
+                </div><!-- blog-details -->
+            </div><!-- /.blog-item -->
+        </div>
+
+
+
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    </script>
+{% endblock %}
+

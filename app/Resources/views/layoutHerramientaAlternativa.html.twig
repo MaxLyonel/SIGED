@@ -49,12 +49,12 @@
             {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/morrisjs/morris.css')}}" rel="stylesheet">#}
             {#NO EXSTE ESTE ARCHIVO#}
             {#<link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet"> #}
-
+            
             {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/dropzone/downloads/css/dropzone.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jvectormap/jquery-jvectormap.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/horizontal-chart/build/css/horizBarChart.css')}}" rel="stylesheet">#}
-
+                                      
             <!--/ END PAGE LEVEL STYLES -->
 
             <!-- START @THEME STYLES -->
@@ -181,7 +181,7 @@
                             {#{% endif %}#}
                             <!--/ End form search -->
                         </ul><!-- /.navbar-left -->
-
+                        
                         <ul class="nav navbar-nav navbar-right">
                             {#<li class="dropdown navbar-message">
                                 <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope-o"></i><span class="rounded count label label-danger">1</span></a>
@@ -223,11 +223,11 @@
 
                             <li class="dropdown navbar-notification">
                                 <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell-o"></i>
-                                    <span class="rounded count label label-danger">Aviso</span>
+                                    {#<span class="rounded count label label-danger">Aviso</span>#}
                                 </a>
                                 <div class="dropdown-menu animated flipInX">
                                     <div class="dropdown-header">
-                                        <span class="title">Notificaciones <strong>(1)</strong></span>
+                                        <span class="title">Notificaciones <strong>(0)</strong></span>
                                         {#<span class="option text-right"><a href="form-element.html#"><i class="fa fa-cog"></i> Configuración</a></span>#}
                                     </div>
                                     <div class="dropdown-body niceScroll">
@@ -243,24 +243,101 @@
                                                     </a>
                                                 {% endfor %}
                                             {%endif%}                                            #}
-                                            {#{% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) %}#}
-
-
-                                            <a href="page-messages.html" class="media">
+                                            {#{% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) %} 
+                                            <a href="form-element.html#" class="media">
+                                                <div class="media-object pull-left"><i class="fa fa-filter fg-info"></i></div>
+                                                <div class="media-body">
+                                                    <span class="media-text">Se ha habilitado para los Tec. Nacionales y Departamentales el módulo de selección de CEA en el menu Gestión.</span>
+                                                    <span class="media-meta">04/07/2016</span>
+                                                </div>
+                                            </a>
+                                            {% endif %}#}
+                                            {#<a href="form-element.html#" class="media">
+                                                <div class="media-object pull-left"><i class="fa fa-plus-circle"></i></div>
+                                                <div class="media-body">
+                                                    <span class="media-text">Se ha habilitado los botones de creación de curso, paralelo, especialidad, acreditación e impresión de libretas.</span>
+                                                    <span class="media-meta">27/07/2016</span>
+                                                </div>
+                                            </a>
+                                            <a href="form-element.html#" class="media">
+                                                <div class="media-object pull-left"><i class="fa fa-times-circle-o"></i></div>
+                                                <div class="media-body">
+                                                    <span class="media-text">Se ha habilitado el boton de cerrar operativo.</span>
+                                                    <span class="media-meta">20/07/2016</span>
+                                                </div>
+                                            </a>#}
+                                            {#<a href="form-element.html#" class="media">
+                                                <div class="media-object pull-left"><i class="fa fa-male"></i></div>
+                                                <div class="media-body">
+                                                    <span class="media-text">La generación de nuevos rudes esta habilitado para su técnico distrital por el sistema: Gestion de Usuarios</span>
+                                                    <span class="media-meta">16/08/2016</span>
+                                                </div>
+                                            </a>#}
+                                            {#<a href="form-element.html#" class="media">
+                                                <div class="media-object pull-left"><i class="fa fa-history"></i></div>
+                                                <div class="media-body">
+                                                    <span class="media-text">Se ha habilitado la modificación de gestiones pasadas a través de su técnico distrital.</span>
+                                                    <span class="media-meta">24/08/2016</span>
+                                                </div>
+                                            </a>
+                                            <a href="form-element.html#" class="media">
+                                                <div class="media-object pull-left"><i class="fa fa-history"></i></div>
+                                                <div class="media-body">
+                                                    <span class="media-text">Se ha habilitado la modificación de gestiones pasadas a directores por un periodo.</span>
+                                                    <span class="media-meta">25/08/2016</span>
+                                                </div>
+                                            </a>#}
+                                            {#<a href="form-element.html#" class="media">
+                                                <div class="media-object pull-left"><i class="fa fa-opencart"></i></div>
+                                                <div class="media-body">
+                                                    <span class="media-text">Se ha habilitado la apertura de inicio de segundo semestre a través de su técnico de distrito.</span>
+                                                    <span class="media-meta">31/08/2016</span>
+                                                </div>
+                                            </a>#}
+                                            {#<a href="form-element.html#" class="media">
+                                                <div class="media-object pull-left"><i class="fa fa-calendar"></i></div>
+                                                <div class="media-body">
+                                                    <span class="media-text">¡Aviso! Para la regularización de gestiones pasadas se ampliara el plazo hasta el siguiente mes, y se habilitaran las opciones desde la siguiente semana una ves concluido trabajos de corrección de datos (Centralizadores, Inscripciones faltantes, Otros).</span>
+                                                    <span class="media-meta">14/10/2016</span>
+                                                </div>
+                                            </a>#}                                            
+                                                                                                                                   
+                                            {#<a href="page-messages.html" class="media">
                                                 <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
                                                 <div class="media-body">
                                                     <span class="media-heading">Victor Jimenez</span>
-                                                    <span class="media-text">
-                                                    A todos los usuarios del sistema de Alternativa:
-                                                    Se les informa que se acerca el plazo final para el cierre definitivo de gestiones pasadas, para tal propósito se ha publicado en la opción de “Panel de Control de Operativos” información de centros y periodos pendientes de finalización, con el cual se espera con urgencia el seguimiento y conclusión del operativo de regularización de gestiones pasadas.
-                                                    También se ha actualizado la lista de Centros pendientes de finalización gestión 2017 para su seguimiento y conclusión.
-                                                    ¡Agradeciéndoles los esfuerzos para concluir la presente gestión, el equipo del SIGED les desea felices fiestas!
-                                                    Atte. Administrador
-                                                    </span>
-                                                    <span class="media-meta pull-right">14/12/2017</span>
+                                                    <span class="media-text">Se ha habilitado la modificación de la carga horaria en la malla curricular. En caso con "0" el director o en caso de modificación con su técnico distrital o departamental.</span>                                                    
+                                                    <span class="media-meta pull-right">14/10/2016</span>
                                                 </div>
-                                            </a>
-
+                                            </a>#}
+                                            
+                                            {#<a href="page-messages.html" class="media">
+                                                <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
+                                                <div class="media-body">
+                                                    <span class="media-heading">Victor Jimenez</span>
+                                                    <span class="media-text">Se ha habilitado el boton de cerrar operativo 2do semestre 2016.</span>                                                    
+                                                    <span class="media-meta pull-right">14/10/2016</span>                                            
+                                                </div>
+                                            </a>#}
+                                                
+                                            {#<a href="page-messages.html" class="media">
+                                                <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
+                                                <div class="media-body">
+                                                    <span class="media-heading">Victor Jimenez</span>
+                                                    <span class="media-text">El equipo del SIGED les desea una exitosa gestión 2017 y les agradece enormemente el apoyo de todos para que la transición del antiguo sistema al nuevo haya concluido. Además les informamos que ya se encuentra habilitado todas las opciones para Inicio del primer semestre 2017.</span>
+                                                    <span class="media-meta pull-right">16/01/2017</span>                                            
+                                                </div>
+                                            </a> #}   
+                                                
+                                            {#<a href="page-messages.html" class="media">
+                                                <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
+                                                <div class="media-body">
+                                                    <span class="media-heading">Victor Jimenez</span>
+                                                    <span class="media-text">El equipo del SIGED les informa que se procederá a cerrar el sistema para inscripciones por vencimiento de plazo para la presentación de este reporte, y se ha habilitado en el menú la lista de CEAS pendientes.</span>
+                                                    <span class="media-meta pull-right">19/04/2017</span>                                            
+                                                </div>
+                                            </a>#}   
+                                            
                                             {#<a href="form-element.html#" class="media indicator inline">
                                                 <span class="spinner">Leyendo mas notificaciones...</span>
                                             </a>#}
@@ -379,14 +456,24 @@
                                 <span class="text">Configuraciones especiales</span>
                                 <span class="arrow"></span>
                             </a>
-                            <ul>
+                            <ul>                                
                                 <li><a href="{{path('herramientalt_ceducativa_duplicados_paralelos')}}">Cambiar paralelo cursos duplicados </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_periododistinto')}}">Corregir periodos distintos entre modulo y oferta </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_aux')}}">Auxiliar 1 </a></li>
+                                
+                                <li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>
+                                <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
+                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos(Lista de CEAs Cerrados)</a></li>                                
+                                <li><a onclick="getCeasPendientesShow();">Lista de CEAs Pendientes </a></li>
+                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                                
+                                <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                             </ul>
                         </li>
                     {% endif %}
-
+                    
                     {% if (app.session.get('roluser') == 8) %} {#NACIONAL#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -398,11 +485,13 @@
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 <li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
+                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos(Lista de CEAs Cerrados)</a></li>                                
                                 <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>
+                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                                
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -419,10 +508,12 @@
                                 <!--li><a href="{{path('history_new_inscription_index')}}">Historial Estudiante/Participante </a></li-->
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                             </ul>
                         </li>
                     {% endif %}
-
+                    
                     {% if (app.session.get('roluser') == 7) %} {#DEPTO#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -434,13 +525,15 @@
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 <li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
+                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos(Lista de CEAs Cerrados)</a></li>
                                 <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                             </ul>
                         </li>
-                        {#<li class="submenu">
+                        <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -449,7 +542,7 @@
                             <ul>
                                 <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                             </ul>
-                        </li>#}
+                        </li>
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -463,9 +556,11 @@
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 <li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
+                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos(Lista de CEAs Cerrados)</a></li>
                                 <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -478,6 +573,8 @@
                             </a>
                             <ul>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
+                                <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
+                                <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                             </ul>
                         </li>
                         <li class="submenu">
@@ -487,13 +584,10 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                              <!-- <li><a href="#">Operativo Concluido</a></li> -->
-
-                              {#<li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}
-                              <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
-                              {#<li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
-                              <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
-                            
+                                <li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>
+                                <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
+                                <li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
+                                <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
 
                             </ul>
                         </li>
@@ -516,11 +610,11 @@
             <!-- START @PAGE CONTENT -->
             <section id="page-content">
                 <div class="header-content" style="background-color: #6d7b61;">
-                    <h2><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}}
+                    <h2><i class="fa fa-university"></i> {{app.session.get('ie_nombre')}} 
                         <span> {{app.session.get('ie_id')}}  {{app.session.get('ie_gestion')}}  {{app.session.get('ie_per_nom')}}
                             {% if (app.session.get('ie_per_estado') != '0') %}
                                 : <i class="fa fa-wrench"></i> {{app.session.get('ie_operativo')}}
-                            {% endif %}
+                            {% endif %}                            
                         </span>
                     </h2>
                     <div class="breadcrumb-wrapper hidden-xs">
@@ -582,7 +676,7 @@
                             <div class="tab-pane" id="sidebar-profile">
                                 <div class="sidebar-profile">
                                     <!-- Start right navigation - menu -->
-                                    <ul class="sidebar-menu niceScroll">
+                                    <ul class="sidebar-menu niceScroll">                                        
                                         <!-- Start category about me -->
                                         <li class="sidebar-category">
                                             <span>ATENCIÓN AL CLIENTE</span>
@@ -591,7 +685,7 @@
                                         <!--/ End category about me -->
                                         <!--/ Start navigation - about me -->
                                         <li>
-                                            <ul class="list-unstyled">
+                                            <ul class="list-unstyled">                                                
                                                 <li>
                                                     <i class="fa fa-envelope"></i> roge.flores1@gmail.com
                                                 </li>
@@ -609,16 +703,16 @@
                                         <!--/ End category recent activity -->
                                         <!--/ Start navigation - reset settings -->
                                         <li>
-                                            <a onclick="getRudesUser();" class="btn btn-inverse btn-block"><i class="fa fa-refresh fa-spin"></i> Ver mis rudes generados </a>
+                                            <a onclick="getRudesUser();" class="btn btn-inverse btn-block"><i class="fa fa-refresh fa-spin"></i> Ver mis rudes generados </a>                                           
                                         </li>
                                         <!--/ End navigation - reset settings -->
                                         <!--/ Start navigation - activity -->
                                         <li>
                                             <div class="media-list activity">
-                                                <a class="media">
+                                                <a class="media">                                                    
                                                     <div id="divrudesuser">
-
-                                                    </div>
+                                                        
+                                                    </div>    
                                                 </a>
                                             </div>
                                         </li>
@@ -1032,21 +1126,21 @@
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/typeaheadjs/typeaheadjs.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/address/address.js')}}"></script>#}
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.easy-pie-chart/dist/jquery.easypiechart.min.js')}}"></script>
-            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/raphael/raphael-min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/raphael/raphael-min.js')}}"></script>            
             {#<script src="{{asset('webherramienta/assets/global/plugins/bower_components/morrisjs/morris.min.js')}}"></script>            #}
-            {#<script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-session-timeout/dist/bootstrap-session-timeout.min.js')}}"></script>
+            {#<script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-session-timeout/dist/bootstrap-session-timeout.min.js')}}"></script>            
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/waypoints/lib/jquery.waypoints.min.js')}}"></script>
-            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/counter-up/jquery.counterup.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/counter-up/jquery.counterup.min.js')}}"></script>            
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-jvectormap-2.0.3.min/index.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jvectormap/tests/assets/jquery-jvectormap-world-mill-en.js')}}"></script>
             <script src="{{asset('webherramienta/assets/global/plugins/bower_components/horizontal-chart/build/js/jquery.horizBarChart.min.js')}}"></script>#}
+            
 
-
-
-
+            
+            
             <!--/ END PAGE LEVEL PLUGINS -->
-
+            
             <!-- START @PAGE LEVEL SCRIPTS -->
             <script src="{{asset('webherramienta/assets/admin/js/apps.js')}}"></script>
             <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.chart.easypie.js')}}"></script>
@@ -1095,7 +1189,7 @@
                         }
                     });
                 };
-
+                
             //ABRIR MODAL CON CEAS DEL DISTRITO
             //PENDIENTE DE LLEVAR A OTRO ARCHIVO
             function selceadistritoShow(){
@@ -1191,7 +1285,7 @@
                             $("#divrudesuser").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> Proceso detenido se ha detectado inconsistencia de datos.</div>');
                         }
                     });
-                };
+                };    
             </script>
             <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
             <script src="{{ asset('js/jquery.alphanum.js') }}"></script>
