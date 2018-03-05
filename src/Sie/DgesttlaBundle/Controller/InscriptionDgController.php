@@ -67,6 +67,7 @@ class InscriptionDgController extends Controller {
         $objInscription = $em->getRepository('SieAppWebBundle:TtecEstudianteInscripcion')->findOneBy(array(
           'persona'=>$objPerson->getId()
         ));
+        
         $form['personaId'] = $objPerson->getId();
         //check if it has history
         if(is_object($objInscription)){
@@ -87,13 +88,13 @@ class InscriptionDgController extends Controller {
               if($data['estadomatricula_tipo_fin_id']!=4){
                 if($data['estadomatricula_tipo_fin_id']==5){
                   //students status promovido
-                  $arrayCurrentPeriodo[$data['periodoid']+1] = array('personaId'=>$objPerson->getId(),'periodoid'=>$data['periodoid']+1,'denominacionId'=>$data['denominacionid'], 'gestionIns'=>$this->session->get('currentyear')  );
+                  $arrayCurrentPeriodo[$data['periodoid']+1] = array('personaId'=>$objPerson->getId(),'periodoid'=>$data['periodoid']+1,'denominacionId'=>$data['denominacionid'], 'gestionIns'=>2017 );
                 }else {
                   //students status reprobado
-                  $arrayCurrentPeriodo[$data['periodoid']] = array('personaId'=>$objPerson->getId(),'periodoid'=>$data['periodoid'],'denominacionId'=>$data['denominacionid'], 'gestionIns'=>$this->session->get('currentyear')  );
+                  $arrayCurrentPeriodo[$data['periodoid']] = array('personaId'=>$objPerson->getId(),'periodoid'=>$data['periodoid'],'denominacionId'=>$data['denominacionid'], 'gestionIns'=>2017 );
                 }
               }else {
-                $arrayCurrentPeriodo[$data['periodoid']] = array('personaId'=>$objPerson->getId(),'periodoid'=>$data['periodoid'],'denominacionId'=>$data['denominacionid'], 'gestionIns'=>$this->session->get('currentyear')  );
+                $arrayCurrentPeriodo[$data['periodoid']] = array('personaId'=>$objPerson->getId(),'periodoid'=>$data['periodoid'],'denominacionId'=>$data['denominacionid'], 'gestionIns'=>2017 );
               }
 
               next($objLastInscription);
@@ -153,8 +154,8 @@ class InscriptionDgController extends Controller {
                 ->add('carreras', 'choice', array('attr' => array('class' => 'form-control')))
                 ->add('denominacionId', 'choice', array('label'=>'Denominacion','attr' => array('class' => 'form-control')))
                 ->add('personaId', 'hidden', array('data'=>$personaId))
-                ->add('gestionIns', 'hidden', array('data' => $this->session->get('currentyear')))
-                ->add('periodoid', 'choice', array('label'=>'Periodo','choices'=>array('10'=>'ANUAL','1'=>'SEMESTRE'),'attr' => array('class' => 'form-control')))
+                ->add('gestionIns', 'hidden', array('data' => 2017))
+                ->add('periodoid', 'choice', array('label'=>'Periodo','choices'=>array('10'=>'ANUAL','1'=>'SEMESTRAL'),'attr' => array('class' => 'form-control')))
                 ->add('Regitrar', 'button', array('label' => 'buscar', 'attr' => array('class' => 'btn btn-success btn-block btn-xs', 'onclick' => 'doRegistration()')))
 
                 ->getForm();
@@ -180,7 +181,7 @@ class InscriptionDgController extends Controller {
       //get the Niveles
 
       $aResult =   $this->get('dgfunctions')->getCarrerasBySie($id);
-      // dump($aResult);die;
+      
       foreach ($aResult as $carrera) {
 
         $aCarreras[$carrera['ctid']] = $carrera['nombre'];
@@ -222,12 +223,11 @@ class InscriptionDgController extends Controller {
       $em = $this->getDoctrine()->getManager();
       //get the send values
       $form = $request->get('form');
-//dump($form);die;
       //look student to check if the person exist
       $objPerson = $em->getRepository('SieAppWebBundle:Persona')->find($form['personaId']);
-// dump($objPerson);die;
+
       $objNextMaterias = $this->get('dgfunctions')->getNextMaterias($form,'new');
-      // dump($objNextMaterias);die;
+      
       return $this->render('SieDgesttlaBundle:InscriptionDg:nextMaterias.html.twig', array(
               'objNextMaterias' => $objNextMaterias,
               'data' => serialize($form),

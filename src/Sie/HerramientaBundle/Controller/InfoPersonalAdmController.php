@@ -717,8 +717,9 @@ class InfoPersonalAdmController extends Controller {
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
                 //->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
-                ->where('p.carnet = :carnet AND p.segipId >= :valor')
+                ->where('p.carnet = :carnet AND p.complemento = :complemento and p.segipId >= :valor')
                 ->setParameter('carnet', $carnet)
+                ->setParameter('complemento', '')
                 ->setParameter('valor', 0)
                 ->getQuery();
         }
