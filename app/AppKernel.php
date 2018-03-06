@@ -45,6 +45,7 @@ class AppKernel extends Kernel {
             new Nelmio\SecurityBundle\NelmioSecurityBundle(),
             new Sie\GisBundle\SieGisBundle(),
             new Sie\InfraBundle\SieInfraBundle(),
+            new Sie\OlimpiadasBundle\SieOlimpiadasBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

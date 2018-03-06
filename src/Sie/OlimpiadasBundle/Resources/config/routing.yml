@@ -1,0 +1,3 @@
+sie_olimpiadas_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SieOlimpiadasBundle:Default:index }
