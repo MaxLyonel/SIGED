@@ -238,6 +238,14 @@ class DefaultController extends Controller {
                 $layout = 'layoutDgesttla.html.twig';
                 $this->session->set('pathSystem', "SieDgesttlaBundle");
                 break;
+            case '172.20.196.9:8030':
+            case 'olimpiadas.sie.gob.bo':
+                $sysname = 'olimpiadas';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutOlimpiadas.html.twig';
+                $this->session->set('pathSystem', "SieOlimpiadasBundle");
+                break;
             default :
                 $sysname = 'REGULAR';
                 $sysporlet = 'blue';
