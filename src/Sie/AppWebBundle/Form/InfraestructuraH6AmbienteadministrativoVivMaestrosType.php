@@ -21,13 +21,48 @@ class InfraestructuraH6AmbienteadministrativoVivMaestrosType extends AbstractTyp
             ->add('n21NumeroDuchas')
             ->add('n21NumeroCocinas')
             ->add('n21MetrosArea')
-            ->add('n21EsAmbienteTecho')
-            ->add('n21EsAmbienteCieloFal')
-            ->add('n21EsAmbientePuerta')
-            ->add('n21EsAmbienteVentana')
-            ->add('n21EsAmbienteMuros')
-            ->add('n21EsAmbienteRevestimiento')
-            ->add('n21EsAmbientePiso')
+            ->add('n21EsAmbienteTecho','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+
+            ->add('n21EsAmbienteCieloFal','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+
+            ->add('n21EsAmbientePuerta','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+
+            ->add('n21EsAmbienteVentana','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+
+            ->add('n21EsAmbienteMuros','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+
+            ->add('n21EsAmbienteRevestimiento','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+
+            ->add('n21EsAmbientePiso','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+
             // ->add('obs')
             // ->add('fecharegistro')
             ->add('estadoTipo')
