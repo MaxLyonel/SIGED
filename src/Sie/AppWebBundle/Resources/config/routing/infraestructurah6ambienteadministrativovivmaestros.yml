@@ -1,0 +1,50 @@
+infrah6viviendasmaestros_index:
+    path:     /index
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:index" }
+    options:
+        expose: true
+
+infrah6viviendasmaestros_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:show" }
+
+infrah6viviendasmaestros_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:new" }
+
+infrah6viviendasmaestros_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:create" }
+    methods:  POST
+
+infrah6viviendasmaestros_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:edit" }
+
+infrah6viviendasmaestros_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:update" }
+    methods:  [POST, PUT]
+
+infrah6viviendasmaestros_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:delete" }
+    methods:  [POST, DELETE]
+
+infrah6viviendasmaestros_listviviendas:
+    path:     /listviviendas
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:listviviendas" }
+    options:
+        expose: true
+        
+infrah6viviendasmaestros_addnewh6vivienda:
+    path:     /addnewh6vivienda
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:addnewh6vivienda" }
+    options:
+        expose: true    
+            
+infrah6viviendasmaestros_saveNewh6Vivienda:
+    path:     /saveNewh6Vivienda
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoVivMaestros:saveNewh6Vivienda" }
+    options:
+        expose: true

@@ -1,3 +1,47 @@
+sie_app_web_infrah6ambadmservalimentacion:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativoservalimentacion.yml"
+    prefix:   /infrah6ambadmservalimentacion
+
+sie_app_web_infrah6internadoestudiante:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativointernadoest.yml"
+    prefix:   /infrah6internadoestudiante
+
+sie_app_web_infrah6interdormitorios:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativointerdormitorios.yml"
+    prefix:   /infrah6interdormitorios
+
+sie_app_web_infrah6ambadmequipamiento:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativoequipamiento.yml"
+    prefix:   /infrah6ambadmequipamiento
+
+sie_app_web_infrah6ambadmmobiliario:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativomobiliario.yml"
+    prefix:   /infrah6ambadmmobiliario
+
+sie_app_web_infrah6viviendasmaestros:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativovivmaestros.yml"
+    prefix:   /infrah6viviendasmaestros
+
+sie_app_web_infrah6ambadm:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativo.yml"
+    prefix:   /infrah6ambadm
+
+sie_app_web_infrah6ambadmambiente:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativoambiente.yml"
+    prefix:   /infrah6ambadmambiente
+
+sie_app_web_h5ambpedagogicodeportivoequipamiento:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah5ambientepedagogicodeportivoequipamiento.yml"
+    prefix:   /h5ambpedagogicodeportivoequipamiento
+
+sie_app_web_infrah5ambpedagogicoequipamiento:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah5ambientepedagogicoequipamiento.yml"
+    prefix:   /infrah5ambpedagogicoequipamiento
+
+sie_app_web_infrah5ambpedagogicodeportivo:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah5ambientepedagogicodeportivo.yml"
+    prefix:   /infrah5ambpedagogicodeportivo
+
 sie_app_web_h5mobiliario:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah5ambientepedagogicomobiliario.yml"
     prefix:   /h5mobiliario

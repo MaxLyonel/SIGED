@@ -75,7 +75,6 @@ class CreacionCursosEspecialController extends Controller {
                 //if ($nivelUsuario != 9 && $nivelUsuario != 5) { // si no es institucion educativa 5 o administrativo 9
                     // formulario de busqueda de institucion educativa
                     $sesinst = $request->getSession()->get('idInstitucion');
-
                     if ($sesinst) {
                         $institucion = $sesinst;
                         $gestion = $request->getSession()->get('idGestion');

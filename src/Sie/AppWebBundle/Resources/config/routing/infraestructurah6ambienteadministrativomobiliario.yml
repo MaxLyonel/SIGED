@@ -1,0 +1,45 @@
+infrah6ambadmmobiliario_index:
+    path:     /h6mobiliarioindex
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoMobiliario:index" }
+
+infrah6ambadmmobiliario_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoMobiliario:show" }
+
+infrah6ambadmmobiliario_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoMobiliario:new" }
+
+infrah6ambadmmobiliario_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoMobiliario:create" }
+    methods:  POST
+
+infrah6ambadmmobiliario_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoMobiliario:edit" }
+
+infrah6ambadmmobiliario_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoMobiliario:update" }
+    methods:  [POST, PUT]
+
+infrah6ambadmmobiliario_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoMobiliario:delete" }
+    methods:  [POST, DELETE]
+
+infrah6ambadmmobiliario_fillDatah6AmbienteMobiliario:
+    path:     /fillDatah6AmbienteMobiliario
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoMobiliario:fillDatah6AmbienteMobiliario" }
+    options:
+        expose: true
+
+infrah6ambadmmobiliario_savenew:
+    path:     /savenew
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoMobiliario:savenew" }
+    options:
+        expose: true
+
+
+    

@@ -164,7 +164,9 @@ class InfraestructuraH5AmbientepedagogicoDeportivo
      */
     private $infraestructuraJuridiccionGeografica;
 
-
+    public function __toString(){
+        return $this->n53AmbienteAreaMts;
+    }
     /**
      * Get id
      *

@@ -1,0 +1,84 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>InfraestructuraH6AmbienteadministrativoInterDormitorios</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>N34ambientecantidad</th>
+                <td>{{ entity.n34AmbienteCantidad }}</td>
+            </tr>
+            <tr>
+                <th>N34ambientearea</th>
+                <td>{{ entity.n34AmbienteArea }}</td>
+            </tr>
+            <tr>
+                <th>N34ambientecamaliteras</th>
+                <td>{{ entity.n34AmbienteCamaLiteras }}</td>
+            </tr>
+            <tr>
+                <th>N34ambientecamasimples</th>
+                <td>{{ entity.n34AmbienteCamaSimples }}</td>
+            </tr>
+            <tr>
+                <th>N34ambientecamaotros</th>
+                <td>{{ entity.n34AmbienteCamaOtros }}</td>
+            </tr>
+            <tr>
+                <th>N34esambientetecho</th>
+                <td>{{ entity.n34EsAmbienteTecho }}</td>
+            </tr>
+            <tr>
+                <th>N34esambientecielofal</th>
+                <td>{{ entity.n34EsAmbienteCieloFal }}</td>
+            </tr>
+            <tr>
+                <th>N34esambientepuerta</th>
+                <td>{{ entity.n34EsAmbientePuerta }}</td>
+            </tr>
+            <tr>
+                <th>N34esambienteventana</th>
+                <td>{{ entity.n34EsAmbienteVentana }}</td>
+            </tr>
+            <tr>
+                <th>N34esambientemuros</th>
+                <td>{{ entity.n34EsAmbienteMuros }}</td>
+            </tr>
+            <tr>
+                <th>N34esambienterevestimiento</th>
+                <td>{{ entity.n34EsAmbienteRevestimiento }}</td>
+            </tr>
+            <tr>
+                <th>N34esambientepiso</th>
+                <td>{{ entity.n34EsAmbientePiso }}</td>
+            </tr>
+            <tr>
+                <th>Obs</th>
+                <td>{{ entity.obs }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fecharegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('infrah6interdormitorios') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('infrah6interdormitorios_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

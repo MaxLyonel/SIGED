@@ -1,0 +1,61 @@
+<div class="panel-body no-padding rounded-bottom">
+    
+    			{{form_start(form, { 'attr':{'id':'idFormh6InternadoEst', 'class':'form-horizontal form-bordered'} })}}
+                	
+
+                    <div class="form-body">
+                    	<div class="form-group">
+                    		<label class="col-sm-11 control-label">
+                    		 <button type="button" class="btn btn-inverse btn-danger btn-stroke " onclick="saveH6InternadoEst('{{arrElement.id}}');">
+                				Guardar
+            				</button>
+                    		</label>                		
+                		</div>
+	                    <div class="form-group">
+	                        <label class="col-sm-6 control-label">3.1 Edificio educativo funciona como internado para estudiantes</label>
+	                        <div class="col-sm-6">
+	                            {{form_widget(form.n31EsInternadoEst, {'attr': {'class':''} } )}}
+	                    	</div>
+	                 	</div><!-- /.form-group -->
+
+	                 	<div class="form-group">
+	                        <label class="col-sm-6 control-label">3.2 Distancia entre dormitorios femeninos y masculinos</label>
+	                        <div class="col-sm-6">
+	                            {{form_widget(form.n32DistMetrosFemMas, {'attr': {'class':'form-control'} } )}}
+	                    	</div>
+	                 	</div><!-- /.form-group -->
+
+	                 	<div class="form-group">
+	                        <label class="col-sm-6 control-label">3.3 Responsable</label>
+	                        <div class="col-sm-6">
+	                            {{form_widget(form.n33ResponsableTipo, {'attr': {'class':'form-control'} } )}}
+	                    	</div>
+	                 	</div><!-- /.form-group -->
+	                 	
+	                 	<div class="form-group">
+
+	                        <label class="col-sm-6 control-label"></label>
+	                 	</div><!-- /.form-group -->
+
+	                 	{% if  arrElement.interEstId %}
+
+	                 	<div class="form-group">
+	                 		<caption>3.4 Detalle de dormitorios para estudiantes(Estudiantes en modalidad de internado)</caption></br>
+	                 		 <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="addInternadoEstudiante('{{arrElement.interEstId}}');">
+                				Agregar ambiente
+            				</button>
+	                 		<div id="idListInternadoEstudiante">
+	                 			
+	                 			{% include 'SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:index.html.twig' with { 'data': 'data'} %}  
+	                 			
+	                 		</div>
+	                 	</div>
+	                 	{% endif %}
+                    </div>
+
+                  
+            {{form_end(form)}}
+
+
+</div>    		
+

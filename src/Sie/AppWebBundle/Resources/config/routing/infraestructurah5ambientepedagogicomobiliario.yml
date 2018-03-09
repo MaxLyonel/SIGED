@@ -1,6 +1,10 @@
-h5mobiliario:
-    path:     /
+infraestructurah5mobiliario_index:
+    path:     /h5mobiliarioindex
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:index" }
+
+# h5mobiliario:
+#     path:     /
+#     defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:index" }
 
 h5mobiliario_show:
     path:     /{id}/show
@@ -42,6 +46,10 @@ h5mobiliario_updateMobiliario:
     options:
         expose: true
     # methods:  POST
+
+infraestructurah5mobiliario_new:
+    path:     /h5mobiliarionew
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH5AmbientepedagogicoMobiliario:new" }
 
 infraestructurah5mobiliario_fillDataMobiliario:
     path:     /fillDataMobiliario

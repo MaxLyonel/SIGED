@@ -295,7 +295,48 @@ class InfoMaestroController extends Controller {
 
         $carnet = $form['carnet'];
         $complemento = ($form['complemento'] != "") ? $form['complemento']:0;
-        $fechaNacimiento = $form['fechaNac'];
+        $repository = $em->getRepository('SieAppWebBundle:Persona');
+
+        if($complemento == '0'){
+            $query = $repository->createQueryBuilder('p')
+                ->select('p')
+                //->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
+                ->where('p.carnet = :carnet and p.segipId >= :valor')
+                ->setParameter('carnet', $carnet)
+                //->setParameter('complemento', '')
+                ->setParameter('valor', 0)
+                ->getQuery();
+        }
+        else{
+            $query = $repository->createQueryBuilder('p')
+                ->select('p')
+                //->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
+                ->where('p.carnet = :carnet AND p.complemento = :complemento and p.segipId >= :valor')
+                ->setParameter('carnet', $carnet)
+                ->setParameter('complemento', mb_strtoupper($complemento, 'utf-8'))
+                ->setParameter('valor', 0)
+                ->getQuery();
+        }
+        $personas = $query->getResult();
+
+        if ($personas) {
+            $p = null;
+            if(is_array($personas)) {
+                $p = array(
+                    'personaId'=>$personas[0]->getId(),
+                    'personaCarnet'=>$personas[0]->getCarnet(),
+                    'personaComplemento'=>$personas[0]->getComplemento(),
+                    'personaPaterno'=>$personas[0]->getPaterno(),
+                    'personaMaterno'=>$personas[0]->getMaterno(),
+                    'personaNombre'=>$personas[0]->getNombre(),
+                    'personaFechaNac'=>$personas[0]->getFechaNacimiento(),
+                );
+            }
+        }else{
+            $p = null;
+        }
+
+        /*$fechaNacimiento = $form['fechaNac'];
 
         $servicioPersona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplementoFechaNacimiento($carnet, $complemento, $fechaNacimiento);
 
@@ -319,7 +360,7 @@ class InfoMaestroController extends Controller {
 
         }else{
             $p = null;
-        }
+        }*/
 
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
 

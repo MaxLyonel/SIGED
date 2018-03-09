@@ -29,7 +29,9 @@ class InfraestructuraH6Ambienteadministrativo
      */
     private $infraestructuraJuridiccionGeografica;
 
-
+    public function __toString(){
+        return $this->obs;
+    }
     /**
      * Get id
      *

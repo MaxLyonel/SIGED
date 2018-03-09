@@ -1,0 +1,130 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Agregar Ambiente</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+
+
+			  
+				{{form_start(form, { 'attr':{'id':'idFormh6NewAmbiente'} })}}
+                <div class="form-body"> 
+
+                    <div class="form-group">
+					<label>1.1 Descripcion de ambientes administrativos</label>
+						<table class="table">
+						    <tr>
+						      <td class='text-center'>Ambiente:</td>
+						      <td class='text-center'>&Aacute;rea</td>
+						      <td class='text-center'>Estado</td>
+						    </tr>
+						    <tr>
+						      <td class="text-center" >{{form_widget(form.n11AmbienteadministrativoTipo, {'attr': {'class':'form-control'} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n61AmbienteAreaAdm, {'attr': {'class':'form-control'} } )}}</td>
+						     <td class="text-center">{{form_widget(form.estadoTipo, {'attr': {'class':'form-control'} } )}}</td>
+						     
+						    </tr>
+						</table>
+					</div>
+
+					<div class="form-group">
+						<label>1.2 Estado del Ambiente</label>
+						<table class="table">
+						    <tr>
+						      <td class='text-center'>Tiene cielo falso:</td>
+						      <td class='text-center'>Caracteristicas</td>
+						      <td class='text-center'>Tiene muros</td>
+						      <td class='text-center'>Material</td>
+						      <td class='text-center'>Caracteristicas</td>
+						      
+						    </tr>
+						    <tr>
+						      <td class="text-center">{{form_widget(form.n61EsAmbienteCieloFal, {'attr': {'class':''} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n61AmbienteCieloFalTipo, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n61EsAmbienteMuros, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n61AmbienteMuroMatTipo, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n61AmbienteMuroCaracTipo, {'attr': {'class':'form-control'} } )}}</td>
+						      
+						    </tr>
+						</table>
+					</div>
+
+					<div class="form-group">
+						<table class="table">
+						    <tr>
+						      <td class='text-center'>Tiene puertas:</td>
+						      <td class='text-center'>Seguro</td>
+						      <td class='text-center'>Se Abre</td>
+						      <td class='text-center'>Tiene revestimiento</td>
+						      <td class='text-center'>Material</td>
+						      <td class='text-center'>Caracteristicas</td>
+						      
+						    </tr>
+						    <tr>
+						      <td class="text-center">{{form_widget(form.n61EsAmbientePuerta, {'attr': {'class':''} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n611SeguroTipo, {'attr': {'class':'form-control'} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n612AbreTipoId, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n61EsAmbienteRevestimiento, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n61AmbienteRevestMatTipo, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n61AmbienteRevestCaracTipo, {'attr': {'class':'form-control'} } )}}</td>
+						      
+						    </tr>
+						</table>
+					</div>
+
+					<div class="form-group">
+						<table class="table">
+						    <tr>
+						      <td class='text-center'>Tiene ventana(s):</td>
+						      <td class='text-center'>Caracteristicas</td>
+						      <td class='text-center'>Tiene piso</td>
+						      <td class='text-center'>Material</td>
+						      <td class='text-center'>Caracteristicas</td>
+						      
+						    </tr>
+						    <tr>
+						      <td class="text-center">{{form_widget(form.n61EsAmbienteVentana, {'attr': {'class':''} } )}}</th>
+						      <td class="text-center">{{form_widget(form.n61AmbienteVentanaTipo, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n61EsAmbientePiso, {'attr': {'class':''} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n61AmbientePisoMatTipo, {'attr': {'class':'form-control'} } )}}</td>
+						      <td class="text-center">{{form_widget(form.n61AmbientePisoCaracTipo, {'attr': {'class':'form-control'} } )}}</td>
+						      
+						    </tr>
+						</table>
+					</div>
+
+					<div class="form-group">
+						
+						<table class="table">
+						    <tr>
+						      <td>Tiene Techo:</td>
+						    </tr>
+						    <tr>
+						      <td class="text-left" >{{form_widget(form.n61EsAmbienteTecho, {'attr': {'class':''} } )}}</th>
+						    </tr>
+						</table>
+					</div>
+
+                </div>
+                  
+            {{form_end(form)}}
+
+
+	    	</div>
+	        </div>
+	        <div class="modal-footer">
+	            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+	            <button type="button" class="btn btn-theme" data-dismiss="modal" onclick='saveNewh6Ambiente()'>Guardar</button>
+	        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+
+

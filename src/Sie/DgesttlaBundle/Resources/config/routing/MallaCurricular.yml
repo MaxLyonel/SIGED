@@ -1,11 +1,27 @@
 dgesttla_malla_curricular:
     path:   /mallaindex
     defaults:   { _controller: "SieDgesttlaBundle:MallaCurricular:index" }
+
+dgesttla_malla_tecnica_asignatura_add:
+    path:   /mallaaddasignatura
+    defaults:   { _controller: "SieDgesttlaBundle:MallaCurricular:addasignatura" }
     options:
         expose: true
 
-dgesttla_malla_tecnica_asignatura_add:
-    path:   /mallaaddasignatura/{pensumid}
-    defaults:   { _controller: "SieDgesttlaBundle:MallaCurricular:addasignatura" }
+dgesttla_malla_tecnica_asignatura_delete:
+    path:   /malladeleteasignatura
+    defaults:   { _controller: "SieDgesttlaBundle:MallaCurricular:deleteasignatura" }
+    options:
+        expose: true
+
+dgesttla_malla_tecnica_asignatura_lista:
+    path:   /mallalistasignatura/{periodo_id}/{pensum_id}/{denominacion_id}/{materia_id}
+    defaults:   { _controller: "SieDgesttlaBundle:MallaCurricular:listasignatura" }
+    options:
+        expose: true
+
+dgesttla_malla_tecnica_prerrequisito_add:
+    path:   /mallaaddprerrequisito
+    defaults:   { _controller: "SieDgesttlaBundle:MallaCurricular:addprerrequisito" }
     options:
         expose: true
