@@ -41,37 +41,37 @@
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
-                            {% if personas is not empty %}
+                            {% if persona is not empty %}
                                 <div id="no-more-tables">
                                     <table class="table table-striped table-primary">
                                         <thead>
                                             <tr>
-                                                <th>N°</th>
                                                 <th>Carnet de Identidad</th>
+                                                <th>Complemento</th>
                                                 <th>Paterno</th>
                                                 <th>Materno</th>
                                                 <th>Nombre(s)</th>
+                                                <th>Fecha Nac.</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for persona in personas %}
-                                                <tr>
-                                                    <td data-title="N°">{{ loop.index }}</td>
-                                                    <td data-title="Carnet">{{ persona.carnet }}&nbsp;</td>
-                                                    <td data-title="Paterno">{{ persona.paterno }}&nbsp;</td>
-                                                    <td data-title="Materno">{{ persona.materno }}&nbsp;</td>
-                                                    <td data-title="Nombre(s)">{{ persona.nombre }}&nbsp;</td>
-                                                    <td data-title="Acciones">
-                                                        <form action="{{path('herramientalt_info_maestro_new')}}" method="post" style="display:inline-block">
-                                                            <input type="hidden"  name="form[idPersona]" id="form_idPersona" value="{{persona.id}}">
-                                                            <input type="hidden" name="form[idInstitucion]" id="form_idInstitucion"  value="{{institucion.id}}">
-                                                            <input type="hidden" name="form[gestion]" id="form_gestion" value="{{gestion}}">
-                                                            <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Inscribir</button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
+                                            <tr>
+                                                <td>{{ persona.personaCarnet }}</td>
+                                                <td>{{ persona.personaComplemento }}</td>
+                                                <td>{{ persona.personaPaterno }}</td>
+                                                <td>{{ persona.personaMaterno }}</td>
+                                                <td>{{ persona.personaNombre }}</td>
+                                                <td>{{ persona.personaFechaNac|date('d-m-Y') }}</td>
+                                                <td>
+                                                    <form action="{{path('herramientalt_info_maestro_new')}}" method="post" style="display:inline-block">
+                                                        <input type="hidden"  name="form[idPersona]" id="form_idPersona" value="{{persona.personaId}}">
+                                                        <input type="hidden" name="form[idInstitucion]" id="form_idInstitucion"  value="{{institucion.id}}">
+                                                        <input type="hidden" name="form[gestion]" id="form_gestion" value="{{gestion}}">
+                                                        <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Inscribir</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
