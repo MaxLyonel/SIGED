@@ -1,0 +1,126 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaCursoCorto:
+    type: entity
+    table: institucioneducativa_curso_corto
+    indexes:
+        IDX_EF2914B03AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_EF2914B0E942526E:
+            columns:
+                - areatematica_tipo_id
+        IDX_EF2914B0FD507F28:
+            columns:
+                - poblacion_tipo_id
+        IDX_EF2914B0179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_EF2914B0D943617C:
+            columns:
+                - lugar_tipo_municipio_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        duracionhoras:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaInicio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaConclusion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_conclusion
+        obs:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        lugar:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        numero:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        curso:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        poblacionDetalle:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: poblacion_detalle
+        esabierto:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: true
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        areatematicaTipo:
+            targetEntity: AreatematicaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                areatematica_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        poblacionTipo:
+            targetEntity: PoblacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                poblacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lugarTipoMunicipio:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_tipo_municipio_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

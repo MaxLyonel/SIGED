@@ -1,0 +1,83 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionCursoCorto:
+    type: entity
+    table: estudiante_inscripcion_curso_corto
+    indexes:
+        IDX_B609B83DCF0374F6:
+            columns:
+                - institucioneducativa_curso_corto_id
+        IDX_B609B83D2BCFBA7:
+            columns:
+                - genero_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        paterno:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        edad:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        carnetIdentidad:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: carnet_identidad
+        organizacionComunidad:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: organizacion_comunidad
+        complemento:
+            type: string
+            nullable: true
+            length: 5
+            fixed: false
+            comment: ''
+    manyToOne:
+        institucioneducativaCursoCorto:
+            targetEntity: InstitucioneducativaCursoCorto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_corto_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        generoTipo:
+            targetEntity: GeneroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                genero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
