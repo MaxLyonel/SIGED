@@ -164,6 +164,7 @@ class SeguimientoController extends Controller {
                 $entityDocumento = $documentoController->getDocumento($codigo);
                 if(count($entityDocumento)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número documento'));
+                    return $this->redirect($this->generateUrl('tramite_seguimiento_documento_busca'));
                 }
 
                 $tramiteProcesoController = new tramiteProcesoController();
@@ -171,11 +172,17 @@ class SeguimientoController extends Controller {
 
                 $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($entityDocumento['tramite']);
 
+                $documentoController = new documentoController();
+                $documentoController->setContainer($this->container);
+
+                $entityDocumentoDetalle = $documentoController->getDocumentoDetalle($entityDocumento['tramite']);
+
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
                     'subtitulo' => 'Trámite',
                     'listaDocumento' => $entityDocumento,
                     'listaTramiteDetalle' => $entityTramiteDetalle,
+                    'listaDocumentoDetalle' => $entityDocumentoDetalle,
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
@@ -323,6 +330,7 @@ class SeguimientoController extends Controller {
                 $entityTramite = $tramiteController->getTramite($codigo);
                 if(count($entityTramite)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número de trámite'));
+                    return $this->redirect($this->generateUrl('tramite_seguimiento_documento_busca'));
                 }
 
                 $entityTramite = $entityTramite[0];
@@ -332,11 +340,17 @@ class SeguimientoController extends Controller {
 
                 $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($entityTramite['tramite']);
 
+                $documentoController = new documentoController();
+                $documentoController->setContainer($this->container);
+
+                $entityDocumentoDetalle = $documentoController->getDocumentoDetalle($entityTramite['tramite']);
+
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
                     'subtitulo' => 'Trámite',
                     'listaDocumento' => $entityTramite,
                     'listaTramiteDetalle' => $entityTramiteDetalle,
+                    'listaDocumentoDetalle' => $entityDocumentoDetalle,
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
@@ -428,6 +442,7 @@ class SeguimientoController extends Controller {
 
                     if(count($entityTramiteRude)<=0){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del código rude ingresado'));
+                        return $this->redirect($this->generateUrl('tramite_seguimiento_rude_busca'));
                     }
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteRudeIndex.html.twig', array(
@@ -484,6 +499,7 @@ class SeguimientoController extends Controller {
                 $entityTramite = $tramiteController->getTramite($codigo);
                 if(count($entityTramite)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del código rude'));
+                    return $this->redirect($this->generateUrl('tramite_seguimiento_rude_busca'));
                 }
 
                 $entityTramite = $entityTramite[0];
@@ -493,11 +509,17 @@ class SeguimientoController extends Controller {
 
                 $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($entityTramite['tramite']);
 
+                $documentoController = new documentoController();
+                $documentoController->setContainer($this->container);
+
+                $entityDocumentoDetalle = $documentoController->getDocumentoDetalle($entityTramite['tramite']);
+
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
                     'subtitulo' => 'Trámite',
                     'listaDocumento' => $entityTramite,
                     'listaTramiteDetalle' => $entityTramiteDetalle,
+                    'listaDocumentoDetalle' => $entityDocumentoDetalle,
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
@@ -589,6 +611,7 @@ class SeguimientoController extends Controller {
 
                     if(count($entityTramiteCedula)<=0){
                         $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la cédula de identidad ingresada'));
+                        return $this->redirect($this->generateUrl('tramite_seguimiento_cedula_busca'));
                     }
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteCedulaIndex.html.twig', array(
@@ -646,6 +669,7 @@ class SeguimientoController extends Controller {
 
                 if(count($entityTramite)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la cédula de identidad'));
+                    return $this->redirect($this->generateUrl('tramite_seguimiento_cedula_busca'));
                 }
 
                 $entityTramite = $entityTramite[0];
@@ -655,11 +679,17 @@ class SeguimientoController extends Controller {
 
                 $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($entityTramite['tramite']);
 
+                $documentoController = new documentoController();
+                $documentoController->setContainer($this->container);
+
+                $entityDocumentoDetalle = $documentoController->getDocumentoDetalle($entityTramite['tramite']);
+
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
                     'subtitulo' => 'Trámite',
                     'listaDocumento' => $entityTramite,
                     'listaTramiteDetalle' => $entityTramiteDetalle,
+                    'listaDocumentoDetalle' => $entityDocumentoDetalle,
                 ));
             } catch (\Doctrine\ORM\NoResultException $exc) {
                 $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));

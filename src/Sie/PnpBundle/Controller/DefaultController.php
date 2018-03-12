@@ -4477,6 +4477,71 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             }
         else 
             $where="estudiante.codigo_rude = '$ci'";
+        /////////////////INICAL conocer fecha inicial del curso para permitir o no inscribir
+        $gestion_ini= $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($curso_id);
+        $gestion_ini=$gestion_ini->getFechaInicio();
+        $gestion_ini= date_format($gestion_ini,"Y");
+       
+        if($gestion_ini<=2015){////////como es 2009-2015 no debe entrar por los controles
+            $po = array();
+            $po=$this->retornar_estudianteAction($where);
+            $filas = array();
+            $datos_filas = array();
+            $exxx=0;
+            foreach ($po as $p) {
+                $filas['rude'] = $p["codigo_rude"];
+                $filas['paterno'] = $p["paterno"];
+                $filas['materno'] = $p["materno"];
+                $filas['nombre'] = $p["nombre"];
+                $filas['fecha_nac'] = $p["fecha_nacimiento"];
+                $filas['genero'] = $p["genero"];
+                $filas['ci'] = $p["carnet_identidad"];
+                $filas['complemento'] = $p["complemento"];
+                $obs_adicional=$p["observacionadicional"];
+                $exxx=1;
+            }
+            //print_r($filas);die;
+            //echo '<div class="alert alert-success">El Estudiante '.$nombre.' '.$paterno.' '.$materno.' con CI: '.$ci.' con fecha de nacimiento: '.$fecha_nac.' puede ser registrao a este curso.</div>';
+            if ($exxx==1){
+                if($obs_adicional!=""){
+                    return $this->render('SiePnpBundle:Default:mostrarestudiante.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id)); die;
+                }
+                else{
+                    return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>2));  die;          
+                }
+            }
+            else{
+                if($rude==1){
+                    echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante CODIGO RUDE '.$ci.' No existe.</div>'; die; 
+                }
+                $servicioPersona = $this->get('sie_app_web.persona');
+                $persona = $servicioPersona->buscarPersona($ci,$complemento,0);    
+                if($persona->type_msg === "success"){   
+                    $filas = array();
+                    $filas['id'] = $persona->result[0]->id;
+                    $filas['paterno'] = $persona->result[0]->paterno;
+                    $filas['materno'] = $persona->result[0]->materno;
+                    $filas['nombre'] = $persona->result[0]->nombre;
+                    $fecha_nac=$persona->result[0]->fecha_nacimiento;
+                    $filas['fecha_nac'] = $fecha_nac;
+                    $filas['genero'] = $persona->result[0]->genero_tipo_id;
+                    $filas['ci'] = $persona->result[0]->carnet;
+                    $filas['complemento'] = $persona->result[0]->complemento;
+                    return $this->render('SiePnpBundle:Default:mostrarestudiantes.html.twig', array('filas'=>$filas,'curso_id'=>$curso_id,'opcion'=>1));  die;
+                    echo $curso_id;die;
+                    die;
+                }
+                else{
+                    echo '<div class="alert alert-danger">'.$persona->msg.'</div>';die;
+                }
+            }
+        }
+
+
+        /////////////////////////////////////////////FIN 
+
+
+        
         $query = "SELECT
                       estudiante.id as estudiante_id,
                       estudiante.codigo_rude
