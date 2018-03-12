@@ -24,10 +24,11 @@ class InfraestructuraH6AmbienteadministrativoInternadoEstController extends Cont
         $em = $this->getDoctrine()->getManager();
         //get send values
         $infraestructuraJuridiccionGeografica = $request->get('infraestructuraJuridiccionGeografica');
-        $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst')->find($infraestructuraJuridiccionGeografica);
+        $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst')->findOneBy(
+            array('infraestructuraH6Ambienteadministrativo' => $infraestructuraJuridiccionGeografica));
 
         if($entity){
-            $jsonelement = json_encode(array('id'=>$infraestructuraJuridiccionGeografica, 'interEstId' => $Entity->getId()));
+            $jsonelement = json_encode(array('id'=>$infraestructuraJuridiccionGeografica, 'interEstId' => $entity->getId()));
             // edit the info
             return $this->redirectToRoute('infrah6internadoestudiante_edit', array('id'=>$jsonelement ));
         }else{
@@ -102,6 +103,7 @@ class InfraestructuraH6AmbienteadministrativoInternadoEstController extends Cont
         $entity = new InfraestructuraH6AmbienteadministrativoInternadoEst();
         $form   = $this->createCreateForm($entity, $arrElement['id']);
 
+
         return $this->render('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
@@ -109,6 +111,7 @@ class InfraestructuraH6AmbienteadministrativoInternadoEstController extends Cont
 
         ));
     }
+
 
     /**
      * Finds and displays a InfraestructuraH6AmbienteadministrativoInternadoEst entity.
@@ -136,24 +139,51 @@ class InfraestructuraH6AmbienteadministrativoInternadoEstController extends Cont
      * Displays a form to edit an existing InfraestructuraH6AmbienteadministrativoInternadoEst entity.
      *
      */
-    public function editAction($id)
-    {
+    public function editAction(Request $request){
+       //get the send values
+        $jsonelement = $request->get('id');
+        $arrElement = json_decode($jsonelement, true);
+        
+        //create the db conexion
         $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst')->find($id);
-
+        // find the entity to show
+        $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst')->find($arrElement['interEstId']);
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find InfraestructuraH6AmbienteadministrativoInternadoEst entity.');
         }
+        //create form to edit the values
+        $form   = $this->createCreateForm($entity, $arrElement['id']);
 
-        $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+        // get the internado student
+        $entities = $em->getRepository('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios')->findBy(array(
+            'infraestructuraH6AmbienteadministrativoInternadoEst'=> $arrElement['interEstId']
         ));
+
+        return $this->render('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:new.html.twig', array(
+            'entities' => $entities,
+            'entity' => $entity,
+            'form'   => $form->createView(),
+            'arrElement'   => $arrElement,
+
+        ));
+
+
+
+        die;
+        // $em = $this->getDoctrine()->getManager();
+
+        // $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst')->find($id);
+
+       
+
+        // $editForm = $this->createEditForm($entity);
+        // $deleteForm = $this->createDeleteForm($id);
+
+        // return $this->render('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst:edit.html.twig', array(
+        //     'entity'      => $entity,
+        //     'edit_form'   => $editForm->createView(),
+        //     'delete_form' => $deleteForm->createView(),
+        // ));
     }
 
     /**
@@ -245,52 +275,57 @@ class InfraestructuraH6AmbienteadministrativoInternadoEstController extends Cont
         ;
     }
 
-
-
-   public function saveH6InternadoEstAction(Request $request){
-    
-    
-    //get the send values
-    $form = $request->get('sie_appwebbundle_infraestructurah6ambienteadministrativointernadoest');
-    
-    //create db conexion
-    $em = $this->getDoctrine()->getManager();
-    $em->getConnection()->beginTransaction();
-
-    try {
-
-        $entity = new InfraestructuraH6AmbienteadministrativoInternadoEst();
-        $entity->setN31EsInternadoEst($form['n31EsInternadoEst']);
-        $entity->setN32DistMetrosFemMas($form['n32DistMetrosFemMas']);
-        $entity->setN33ResponsableTipo($em->getRepository('SieAppWebBundle:InfraestructuraH6ResponsableTipo')->find($form['n33ResponsableTipo']));
-        $entity->setInfraestructuraH6Ambienteadministrativo($em->getRepository('SieAppWebBundle:InfraestructuraH6Ambienteadministrativo')->find($form['ambienteadministrativoid']));
-        $entity->setFechaRegistro(new \DateTime('now'));
-
-        $em->persist($entity);
-        $em->flush();
-
-        $em->getConnection()->commit();
+    /**
+     * [saveH6InternadoEstAction description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function saveH6InternadoEstAction(Request $request){
         
-    } catch (Exception $e) {
-             echo $e->getTraceAsString();
-             $em->getConnection()->rollback();
-             $em->close();
-             throw $e;
-    }
+        //get the send values
+        $form = $request->get('sie_appwebbundle_infraestructurah6ambienteadministrativointernadoest');
+        
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
 
+        try {
 
+            //get send values to show the correct form
+            $ambienteadministrativoid = $form['ambienteadministrativoid'];
 
-    //get send values to show the correct form
-    $infraestructuraJuridiccionGeografica = $form['ambienteadministrativoid'];
-    $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst')->find($infraestructuraJuridiccionGeografica);
+            $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInternadoEst')->findOneBy(
+                array('infraestructuraH6Ambienteadministrativo' => $ambienteadministrativoid));
+            // check if the data exist to do the save or update
+            if(!$entity){
+                $entity = new InfraestructuraH6AmbienteadministrativoInternadoEst();
+            }
+            
+            $entity->setN31EsInternadoEst($form['n31EsInternadoEst']);
+            $entity->setN32DistMetrosFemMas($form['n32DistMetrosFemMas']);
+            $entity->setN33ResponsableTipo($em->getRepository('SieAppWebBundle:InfraestructuraH6ResponsableTipo')->find($form['n33ResponsableTipo']));
+            $entity->setInfraestructuraH6Ambienteadministrativo($em->getRepository('SieAppWebBundle:InfraestructuraH6Ambienteadministrativo')->find($form['ambienteadministrativoid']));
+            $entity->setFechaRegistro(new \DateTime('now'));
 
+            $em->persist($entity);
+            $em->flush();
+
+            $em->getConnection()->commit();
+            
+        } catch (Exception $e) {
+                 echo $e->getTraceAsString();
+                 $em->getConnection()->rollback();
+                 $em->close();
+                 throw $e;
+        }
+        //show the correct edit or new form
         if($entity){
-            $jsonelement = json_encode(array('id'=>$infraestructuraJuridiccionGeografica, 'interEstId' => $Entity->getId()));
+            $jsonelement = json_encode(array('id'=>$ambienteadministrativoid, 'interEstId' => $entity->getId()));
             // edit the info
             return $this->redirect($this->generateUrl('infrah6internadoestudiante_edit', array('id'=>$jsonelement )));
         }else{
             // create new data
-            $jsonelement = json_encode(array('id'=>$infraestructuraJuridiccionGeografica, 'interEstId' => false));
+            $jsonelement = json_encode(array('id'=>$ambienteadministrativoid, 'interEstId' => false));
             return $this->redirect($this->generateUrl('infrah6internadoestudiante_new',  array('id'=>$jsonelement )));
 
         }

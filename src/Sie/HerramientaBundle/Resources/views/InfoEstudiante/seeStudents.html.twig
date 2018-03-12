@@ -188,7 +188,7 @@
                                             (app.session.get('ue_plena')  and app.session.get('ue_humanistica') ) or
                                             (app.session.get('ue_tecteg') and app.session.get('ue_humanistica') ) or
                                             (app.session.get('ue_humanistica_web') and app.session.get('ue_humanistica') ) or
-                                            (app.session.get('ue_modular') and app.session.get('ue_humanistica') )
+                                            (app.session.get('ue_modular') and app.session.get('ue_humanistica') or false )
                                           %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                                 <button type="button" class="btn btn-circle btn-{{styleButton}} " data-toggle="modal" data-target=".bs-example-modal-table" onclick="socioeconomico('{{infoUe}}','{{jsnInfoStudent}}',0);" >
@@ -276,7 +276,7 @@
                                   {% endif %}
                                   {% else %}<!-- here is the else to UE HUMANISTICA -->
                                     {% if  app.session.get('ue_humanistica') %}
-                                      {% if data.estadomatriculaId == 4 %}
+                                      {% if data.estadomatriculaId == 4 or false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                             <button type="button" class="btn btn-circle btn-{{styleButton}} " data-toggle="modal" data-target=".bs-example-modal-table" onclick="socioeconomico('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>

@@ -50,6 +50,23 @@ Sie\AppWebBundle\Entity\TtecParaleloMateria:
             nullable: true
             unsigned: false
             comment: ''
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        fechaRegistroVigente:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro_vigente
+        fechaRegistroNoVigente:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro_no_vigente
     manyToOne:
         ttecPeriodoTipo:
             targetEntity: TtecPeriodoTipo

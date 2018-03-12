@@ -595,6 +595,142 @@
     };
 
 
+    var addInternadoEstudiante = function(interEstId){
+      
+        $.ajax({
+                type: 'post',
+                data: ({interEstId: interEstId}),
+                // url: "{{ path('infrah6ambadmambiente_addnewh6ambiente') }}",
+                url: Routing.generate('infrah6interdormitorios_addInternadoEstudiante'),
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+  var saveNewInternadoEstudiante = function(){
+
+    formData = $('#idFormh6NewInternadoEstudiante').serialize();
+       $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('infrah6interdormitorios_saveNewInternadoEstudiante') }}",
+                beforeSend: function () {
+                    $('#modal').modal('hide');
+                    $('#idListInternadoEstudiante').empty();
+                    $("#idListInternadoEstudiante").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                },
+                success: function (data) {
+                    $('#idListInternadoEstudiante').empty();
+                    $('#idListInternadoEstudiante').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+
+
+
+    var openServicios = function(infraestructuraJuridiccionGeografica){
+       $.ajax({
+             type: 'post',
+             url: Routing.generate('infrah6ambadmservalimentacion_index'),
+             data: {infraestructuraJuridiccionGeografica: infraestructuraJuridiccionGeografica},
+             beforeSend: function () {
+                 $("#idSheetSix").empty();
+                 $("#idSheetSix").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                  $("#idSheetSix").empty();
+                 $("#idSheetSix").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+      
+    };
+
+    var addnewservalimentacion = function(ambienteAdministrativoId){
+        $.ajax({
+                type: 'post',
+                data: ({ambienteAdministrativoId: ambienteAdministrativoId}),
+                // url: "{{ path('infrah6ambadmambiente_addnewh6ambiente') }}",
+                url: Routing.generate('infrah6ambadmservalimentacion_addnewservalimentacion'),
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+    var saveNewservalimentacion = function(){
+
+    formData = $('#idFormh6NewServAlimentacion').serialize();
+       $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('infrah6ambadmservalimentacion_saveNewservalimentacion') }}",
+                beforeSend: function () {
+                    $('#modal').modal('hide');
+                    $('#idSheetSix').empty();
+                    $("#idSheetSix").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                },
+                success: function (data) {
+                    $('#idSheetSix').empty();
+                    $('#idSheetSix').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+   
     </script>
 
     <script type="text/javascript" src="{{ asset('webinfra/assets/js/jsinfra/ambienteH6Mobiliario.js') }}"></script>

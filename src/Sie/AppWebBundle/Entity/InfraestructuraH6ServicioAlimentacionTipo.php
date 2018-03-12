@@ -24,7 +24,9 @@ class InfraestructuraH6ServicioAlimentacionTipo
      */
     private $obs;
 
-
+    public function __toString(){
+        return $this->infraestructuraServicioAlimentacion;
+    }
     /**
      * Get id
      *

@@ -71,9 +71,9 @@
                                         <tr {% if participanteObservado %}class="text-danger"{% endif %}>
                                             <td style="text-align:center;">
                                                 {% if participante.segip_id > 1 or participante.segip_id == 0 %}
-                                                    <buttom onclick="participanteRegularHistorial('{{ participante.estudiante_id|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-danger btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
+                                                    <buttom onclick="participanteHistorial('{{ participante.estudiante_inscripcion_id|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-danger btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
                                                 {% else %}
-                                                    <buttom onclick="participanteRegularHistorial('{{ participante.estudiante_id|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-teal btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
+                                                    <buttom onclick="participanteHistorial('{{ participante.estudiante_inscripcion_id|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-teal btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
                                                 {% endif %}
                                             </td>
                                             <td>{{ participante.estadomatricula }}</td>

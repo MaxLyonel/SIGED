@@ -256,88 +256,15 @@ class InfoMaestroController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
-        /*$token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTQ4ODU3NDQyNCwiZXhwIjoxNDg4NjYwODI0fQ.u3B5ZB-kMmDBkUGjl6lU6vhmsg1eAaejt9Gp9zRtDOE';
-
-        $client = new Client([
-        // Base URI is used with relative requests
-        'base_uri' => 'http://api.sie.gob.bo',
-        // You can set any number of default request options.
-        //'timeout'  => 3.0,
-        ]);
-
-        $response = $client->request('GET', '/persona/getPersonaByCarnet/' . $form['carnetIdentidad'], ['headers' => ['Accept' => 'application/json', 'Authorization' => $token], ['debug' => true]])->getBody()->getContents();
-        $responseDecode = json_decode($response);
-
-        if($responseDecode->type_msg === "success") {
-            $DatosPersonaDecode = $responseDecode->result;
-        }*/
-
-        $em = $this->getDoctrine()->getManager();
-
-        $repository = $em->getRepository('SieAppWebBundle:Persona');
-
-        $query = $repository->createQueryBuilder('p')
-                ->select('p')
-                ->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
-                ->where('p.carnet = :carnet AND p.segipId > :valor')
-                ->setParameter('carnet', $form['carnetIdentidad'])
-                ->setParameter('valor', 0)
-                ->getQuery();
-
-        $personas = $query->getResult();
-
-        if (!$personas) {
-            $query = $repository->createQueryBuilder('p')
-                ->select('p')
-                ->where('p.carnet = :carnet AND p.segipId > :valor')
-                ->setParameter('carnet', $form['carnetIdentidad'])
-                ->setParameter('valor', 0)
-                ->getQuery();
-
-            $personas = $query->getResult();
-
-            if(!$personas) {
-                $query = $repository->createQueryBuilder('p')
-                ->select('p')
-                ->where('p.carnet = :carnet AND (p.segipId > :valor OR p.esvigente  = :vigente)')
-                ->setParameter('carnet', $form['carnetIdentidad'])
-                ->setParameter('valor', 0)
-                ->setParameter('vigente', 't')
-                ->getQuery();
-
-                $personas = $query->getResult();
-            }
-
-            /*$query = $repository->createQueryBuilder('p')
-                ->select('p')
-                ->innerJoin('SieAppWebBundle:Usuario', 'u', 'WITH', 'u.persona = p.id')
-                ->where('p.carnet = :carnet AND (p.esvigente = :esvigente1 OR p.esvigenteApoderado > :esvigente2)')
-                ->setParameter('carnet', $form['carnetIdentidad'])
-                ->setParameter('esvigente1', 't')
-                ->setParameter('esvigente2', 0)
-                ->getQuery();
-
-            $personas = $query->getResult();
-
-            if (!$personas) {
-                $query = $repository->createQueryBuilder('p')
-                ->select('p')
-                ->where('p.carnet = :carnet AND (p.esvigente = :esvigente1 OR p.esvigenteApoderado > :esvigente2)')
-                ->setParameter('carnet', $form['carnetIdentidad'])
-                ->setParameter('esvigente1', 't')
-                ->setParameter('esvigente2', 0)
-                ->getQuery();
-
-                $personas = $query->getResult();
-            }*/
-        }
-
+        $persona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplemento($form);
+        
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
 
         return $this->render($this->session->get('pathSystem') . ':InfoMaestro:result.html.twig', array(
-                    'personas' => $personas,
+                    'persona' => $persona,
                     'institucion' => $institucion,
                     'gestion' => $request->getSession()->get('idGestion')
         ));
@@ -350,8 +277,8 @@ class InfoMaestroController extends Controller {
     private function searchForm() {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_especial_info_maestro_result'))
-                ->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
-                ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
+                //->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
+                //->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
                 ->add('buscar', 'submit', array('label' => 'Buscar coincidencias por C.I.', 'attr' => array('class' => 'btn btn-md btn-facebook')))
                 ->getForm();
         return $form;

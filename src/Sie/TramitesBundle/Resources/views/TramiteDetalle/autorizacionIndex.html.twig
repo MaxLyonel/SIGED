@@ -92,7 +92,7 @@
                                             <td>{{ participante.fecha_nacimiento }} - {{ participante.lugar_nacimiento }}</td>
                                             <td>
                                                 {% set registro = true %}
-
+                                                
                                                 {% if participante.carnet_identidad == "" %}
                                                     <span class="label label-danger rounded">Sin C.I.</span>
                                                     {% set registro = false %}

@@ -41,21 +41,14 @@
 
 	                 	<div class="form-group">
 	                 		<caption>3.4 Detalle de dormitorios para estudiantes(Estudiantes en modalidad de internado)</caption></br>
-	                 		 <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="newBateriasBano('');">
+	                 		 <button type="button" class="btn btn-inverse btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="addInternadoEstudiante('{{arrElement.interEstId}}');">
                 				Agregar ambiente
             				</button>
-	                 		<table class="table">
-	                 			<thead>
-	                 				<tr>
-	                 					<th></th>
-	                 				</tr>
-	                 			</thead>
-	                 			<tbody>
-	                 				<tr>
-	                 					<td>data</td>
-	                 				</tr>
-	                 			</tbody>
-	                 		</table>
+	                 		<div id="idListInternadoEstudiante">
+	                 			
+	                 			{% include 'SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:index.html.twig' with { 'data': 'data'} %}  
+	                 			
+	                 		</div>
 	                 	</div>
 	                 	{% endif %}
                     </div>

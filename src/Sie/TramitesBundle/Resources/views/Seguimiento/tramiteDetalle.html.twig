@@ -97,6 +97,9 @@
                                     {% set siguiente_flujo_proceso_id = detalle.siguiente_flujo_proceso_id %}
                                     {% set anterior_flujo_proceso_id = detalle.anterior_flujo_proceso_id %}
                                     {% set siguienteProceso = detalle.siguiente_proceso %}
+                                    {% if siguienteProceso == "" %}
+                                        {% set siguienteProceso = "Fin del trámite" %}
+                                    {% endif %}
 
                                     {% if c == 1 %}
                                         {% set color = 'primary' %}
