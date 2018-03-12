@@ -24,7 +24,9 @@ class OlimMateriaTipo
      */
     private $fechaRegistro;
 
-
+    public function __toString(){
+        return $this->materia;
+    }
     /**
      * Get id
      *
