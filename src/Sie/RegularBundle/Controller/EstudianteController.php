@@ -43,9 +43,9 @@ class EstudianteController extends Controller {
         $estudiante = new Estudiante();
         $form = $this->createFormBuilder($estudiante)
                 ->setAction($this->generateUrl('student_result'))
-                ->add('paterno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñ A-ZÑ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
-                ->add('materno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñ A-ZÑ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
-                ->add('nombre', 'text', array('required' => false, 'invalid_message' => 'Campor obligatorio', 'attr' => array('pattern' => '[a-zñ A-ZÑ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
+                ->add('paterno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
+                ->add('materno', 'text', array('required' => false, 'invalid_message' => 'Campo obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
+                ->add('nombre', 'text', array('required' => false, 'invalid_message' => 'Campor obligatorio', 'attr' => array('pattern' => '[a-zñáéíóú A-ZÑÁÉÍÓÚ]{1,25}', 'style' => 'text-transform:uppercase', 'class' => 'form-control')))
                 ->add('lookfor', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
         return $form;
