@@ -14,6 +14,20 @@ infrah6interdormitorios_new:
     options:
         expose: true
 
+infrah6interdormitorios_addInternadoEstudiante:
+    path:     /addInternadoEstudiante
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:addInternadoEstudiante" }
+    options:
+        expose: true           
+
+
+infrah6interdormitorios_saveNewInternadoEstudiante:
+    path:     /saveNewInternadoEstudiante
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:saveNewInternadoEstudiante" }
+    options:
+        expose: true    
+
+
 infrah6interdormitorios_create:
     path:     /create
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoInterDormitorios:create" }

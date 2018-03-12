@@ -903,7 +903,7 @@ class TramiteController extends Controller {
     // PARAMETROS: sie, gestion, especialidad, nivel
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function certTecRegistroListaPdfAction(Request $request) {
+    public function dipHumRegistroListaPdfAction(Request $request) {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestionActual = new \DateTime("Y");
@@ -918,15 +918,14 @@ class TramiteController extends Controller {
             $form = unserialize(base64_decode($info));
             $sie = $form['sie'];
             $ges = $form['gestion'];
-            $especialidad = $form['especialidad'];
-            $nivel = $form['nivel'];
+            $tipLis = 2;
+            $ids = "";
 
-            $arch = $sie.'_'.$ges.'_legalizacion'.date('YmdHis').'.pdf';
+            $arch = 'REGISTRO_'.$sie.'_'.$ges.'_'.date('YmdHis').'.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'tram_lst_certificacion_tecnica_registro_v1_rcm.rptdesign&sie='.$sie.'&gestion='.$ges.'&especialidad='.$especialidad.'&nivel='.$nivel.'&&__format=pdf&'));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'tram_lst_diplomaBachiller_humanistico_v1_rcm.rptdesign&sie='.$sie.'&gestion='.$ges.'&tipoLista='.$tipLis.'&ids='.$ids.'&&__format=pdf&'));
             $response->setStatusCode(200);
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Pragma', 'no-cache');
@@ -934,7 +933,7 @@ class TramiteController extends Controller {
             return $response;
         } catch (\Doctrine\ORM\NoResultException $exc) {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
-            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_registro_lista', ['form' => $form], 307);
+            return $this->redirectToRoute('tramite_diploma_humanistico_regular_registro_lista', ['form' => $form], 307);
         }
     }
 
@@ -947,7 +946,7 @@ class TramiteController extends Controller {
     private function getEstudiantesAlternativaTecnica($institucionEducativaId, $gestionId, $especialidadId, $nivelId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-            select distinct on (sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre)
+            select distinct on (sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude)
             ei.id as estudiante_inscripcion_id,ei.estudiante_id as estudiante_id, sat.codigo as nivel, ies.periodo_tipo_id as periodo, iec.periodo_tipo_id as per, siea.institucioneducativa_id as institucioneducativa
             , sest.id as especialidad_id, ies.gestion_tipo_id,ies.periodo_tipo_id,siea.institucioneducativa_id, sfat.codigo as nivel_id, sfat.facultad_area, sest.codigo as ciclo_id
             ,sest.especialidad,sat.codigo as grado_id,sat.acreditacion,ei.id as estudiante_inscripcion,e.codigo_rude, e.nombre, e.paterno, e.materno, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento
@@ -986,7 +985,7 @@ class TramiteController extends Controller {
             left join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (6,7,8) and (case t.tramite_tipo when 6 then 1 when 7 then 2 when 8 then 3 else 0 end) = sat.codigo and t.esactivo = 't'
             left join documento as d on d.tramite_id = t.id and documento_tipo_id in (6,7,8) and d.documento_estado_id = 1
             where ies.gestion_tipo_id = ".$gestionId."::double precision and siea.institucioneducativa_id = ".$institucionEducativaId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4,5,55)
-            order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, ies.periodo_tipo_id desc
+            order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
             ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -1089,7 +1088,7 @@ class TramiteController extends Controller {
     // PARAMETROS: institucionEducativaId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    private function getAutorizacionUnidadEducativa($institucionEducativaId){
+    public function getAutorizacionUnidadEducativa($institucionEducativaId){
       $em = $this->getDoctrine()->getManager();
       $queryEntidad = $em->getConnection()->prepare("
           select ie.id, ie.institucioneducativa
@@ -1102,7 +1101,7 @@ class TramiteController extends Controller {
           left join nivel_tipo as nt on nt.id = iena.nivel_tipo_id
           where ie.id = ".$institucionEducativaId."
           group by ie.id, ie.institucioneducativa
-          ");
+      ");
       $queryEntidad->execute();
       $objEntidad = $queryEntidad->fetchAll();
       $niveles = array('inicial'=>'false','primaria'=>'false','secundaria'=>'false','msg'=>'');
@@ -1122,6 +1121,35 @@ class TramiteController extends Controller {
         }
       }
       return $objEntidad[0];
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que halla el subsistema al cual pertenece la institucion educativa
+    // PARAMETROS: institucionEducativaId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getSubSistemaInstitucionEducativa($institucionEducativaId){
+      $em = $this->getDoctrine()->getManager();
+      $queryEntidad = $em->getConnection()->prepare("
+          select ie.id as codigo, ie.institucioneducativa as institucioneducativa, oct.id as orgcurricular_id, oct.orgcurricula
+          , (case oct.id when 2 then (case iena.nivel_tipo_id when 6 then 'Especial' else oct.orgcurricula end) else oct.orgcurricula end) as subsistema
+          from institucioneducativa as ie
+          inner join orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
+          left join (select distinct institucioneducativa_id, nivel_tipo_id from institucioneducativa_nivel_autorizado where nivel_tipo_id = 6) as iena on iena.institucioneducativa_id = ie.id
+          where ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.id = ".$institucionEducativaId." and ie.estadoinstitucion_tipo_id = 10
+      ");
+      $queryEntidad->execute();
+      $objEntidad = $queryEntidad->fetchAll();
+      $obj = array('id'=>'0','subsistema'=>'','msg'=>'');
+      if (count($objEntidad)>0){
+          $obj['id'] = $objEntidad[0]['orgcurricular_id'];
+          $obj['subsistema'] = $objEntidad[0]['orgcurricula'];
+          $obj['msg'] = '';
+      } else{
+          $obj['msg'] = "La institución educativa se encuentra cerrada, favor tomar en cuenta";
+      }
+      return $obj;
     }
 
     //****************************************************************************************************
@@ -1759,7 +1787,7 @@ class TramiteController extends Controller {
     public function getCertTecDocumentoEspecialidadNivelEstudiante($estudianteId, $especialidadId, $nivelId, $gestionId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-            select distinct on (sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre)
+            select distinct on (sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude)
             ei.id as estudiante_inscripcion_id,ei.estudiante_id as estudiante_id, sat.codigo as nivel, ies.periodo_tipo_id as periodo, iec.periodo_tipo_id as per, siea.institucioneducativa_id as institucioneducativa
             , sest.id as especialidad_id, ies.gestion_tipo_id,ies.periodo_tipo_id,siea.institucioneducativa_id, sfat.codigo as nivel_id, sfat.facultad_area, sest.codigo as ciclo_id
             ,sest.especialidad,sat.codigo as grado_id,sat.acreditacion,ei.id as estudiante_inscripcion,e.codigo_rude, e.nombre, e.paterno, e.materno, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento
@@ -1783,7 +1811,7 @@ class TramiteController extends Controller {
             inner join documento as d on d.tramite_id = t.id and documento_tipo_id in (6,7,8) and d.documento_estado_id = 1
             inner join documento_tipo as dt on dt.id = d.documento_tipo_id
             where e.id = ".$estudianteId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and t.gestion_id = ".$gestionId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4,5,55)
-            order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, ies.periodo_tipo_id desc
+            order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
         ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -1799,7 +1827,7 @@ class TramiteController extends Controller {
     public function getCertTecTramiteEspecialidadNivelEstudiante($estudianteId, $especialidadId, $nivelId) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-            select distinct on (sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre)
+            select distinct on (sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude)
             ei.id as estudiante_inscripcion_id,ei.estudiante_id as estudiante_id, sat.codigo as nivel, ies.periodo_tipo_id as periodo, iec.periodo_tipo_id as per, siea.institucioneducativa_id as institucioneducativa
             , sest.id as especialidad_id, ies.gestion_tipo_id,ies.periodo_tipo_id,siea.institucioneducativa_id, sfat.codigo as nivel_id, sfat.facultad_area, sest.codigo as ciclo_id
             ,sest.especialidad,sat.codigo as grado_id,sat.acreditacion,ei.id as estudiante_inscripcion,e.codigo_rude, e.nombre, e.paterno, e.materno, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento
@@ -1821,7 +1849,7 @@ class TramiteController extends Controller {
             left join pais_tipo pt on pt.id = e.pais_tipo_id
             inner join tramite as t on t.estudiante_inscripcion_id = ei.id and tramite_tipo in (6,7,8) and (case t.tramite_tipo when 6 then 1 when 7 then 2 when 8 then 3 else 0 end) = sat.codigo and t.esactivo = 't'
             where e.id = ".$estudianteId." and sest.id = ".$especialidadId." and sat.codigo = ".$nivelId." and sfat.codigo in (18,19,20,21,22,23,24,25) and ei.estadomatricula_tipo_id in (4,5,55)
-            order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, ies.periodo_tipo_id desc
+            order by sfat.codigo, sfat.facultad_area, sest.id, sest.especialidad, sat.codigo, sat.acreditacion, e.paterno, e.materno, e.nombre, e.codigo_rude, ies.periodo_tipo_id desc
         ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -2111,7 +2139,7 @@ class TramiteController extends Controller {
             $msgContenido = ($msgContenido=="") ? 'ya cuenta con el trámite '.$valTramiteEstudiante[0]['tramite_id'] : $msgContenido.', ya cuenta con el trámite '.$valTramiteEstudiante[0]['tramite_id'];
         }
 
-        // VALIDACION DE SOLO UN TRAMITE POR ESTUDIANTE (RUDE)
+        // VALIDACION DE SOLO UN DIPLOMA BACHILLER HUMANISTICO POR ESTUDIANTE (RUDE)
         $valDocumentoEstudiante = $this->getDipHumDocumentoEstudiante($participanteId);
         if(count($valDocumentoEstudiante) > 0){
             $msgContenido = ($msgContenido=="") ? 'ya cuenta con el Diploma de Bachiller Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'] : $msgContenido.', ya cuenta con el Diploma de Bachiller Humanístico '.$valDocumentoEstudiante[0]['documento_serie_id'];
@@ -2378,7 +2406,7 @@ class TramiteController extends Controller {
 
                     $documentoId = $documentoController->setDocumentoEstado($documentoId, 2);
 
-                    $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Trámite '.$tramiteId.' con documento nro. '.$serie.' reactivado, el trámite se encuentra en la bandeja de impresión'));
+                    $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Trámite '.$tramiteId.' con documento nro. '.$serie.' reactivado, el trámite se encuentra en la BANDEJA DE IMPRESIÓN'));
 
                     $formBusqueda = array('serie'=>$serie,'obs'=>$obs);
                     //return $this->redirectToRoute('sie_tramite_reactiva_lista', ['form' => $formBusqueda], 307);
@@ -2532,13 +2560,16 @@ class TramiteController extends Controller {
             ));
     }
 
+
+
+
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
     // Controlador que genera el historial academico de un participante de educacion regular en funcion a su inscripcion
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function dipHumRegularRegistroInscripcionHistorialAction(Request $request) {
+    public function dipHumEstudianteInscripcionHistorialAction(Request $request) {
 
        /*
          * Define la zona horaria y halla la fecha actual
@@ -2555,11 +2586,46 @@ class TramiteController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $estudianteId = $request->get('inscripcion');
-        $especialidadId = $request->get('especialidad');
-        $nivelId = $request->get('nivel');
+        $estudianteInscripcionId = base64_decode($request->get('inscripcion'));
 
-        $entityInscripcion = $this->getDipHumRegularHistorial(base64_decode($estudianteId ));
+        $em = $this->getDoctrine()->getManager();
+        $entidadEstudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
+        $institucionEducativaId = $entidadEstudianteInscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $estudianteId =  $entidadEstudianteInscripcion->getEstudiante()->getId();
+
+        $entitySubsistemaInstitucionEducativa = $this->getSubSistemaInstitucionEducativa($institucionEducativaId);
+        if($entitySubsistemaInstitucionEducativa['msg'] != ''){
+            $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => $entitySubsistemaInstitucionEducativa['msg']));
+            return $this->redirect($this->generateUrl('tramite_detalle_diploma_humanistico_regular_autorizacion_busca '));
+        }
+
+        if($entitySubsistemaInstitucionEducativa['id']==1){
+          $listaHistorial = $this->getDipHumRegularEstudianteInscripcionHistorial($estudianteId);
+          return $this->render($this->session->get('pathSystem') . ':Tramite:estudianteRegularHistorial.html.twig', array(
+              'titulo' => 'Registro',
+              'subtitulo' => 'Trámite',
+              'listaHistorial' => $listaHistorial,
+              ));
+        } else {
+          $listaHistorial = $this->getDipHumAlternativaEstudianteInscripcionHistorial($estudianteId);
+          return $this->render($this->session->get('pathSystem') . ':Tramite:estudianteAlternativaHistorial.html.twig', array(
+              'titulo' => 'Registro',
+              'subtitulo' => 'Trámite',
+              'listaHistorial' => $listaHistorial,
+              ));
+        }
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera el historial academico de un participante de educacion regular en funcion a su inscripcion
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDipHumRegularEstudianteInscripcionHistorial($estudianteId) {
+
+        $entityInscripcion = $this->getDipHumRegularHistorial($estudianteId);
 
         $gradoId = 0;
         $i = 0;
@@ -2631,44 +2697,18 @@ class TramiteController extends Controller {
         }
         //dump($listaHistorial);
         //die;
-
-        $gestion = $gestionActual->format('Y');
-
-        return $this->render($this->session->get('pathSystem') . ':Tramite:estudianteRegularHistorial.html.twig', array(
-            'titulo' => 'Registro',
-            'subtitulo' => 'Trámite',
-            'listaHistorial' => $listaHistorial,
-            ));
+        return $listaHistorial;
     }
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Controlador que genera el historial academico de un participante de educacion alternativa en funcion a su inscripcion
+    // funcion que genera el historial academico de un participante de educacion alternativa en funcion a su inscripcion
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function dipHumAlternativaRegistroInscripcionHistorialAction(Request $request) {
+    public function getDipHumAlternativaEstudianteInscripcionHistorial($estudianteId) {
 
-       /*
-         * Define la zona horaria y halla la fecha actual
-         */
-        date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = new \DateTime();
-
-        $sesion = $request->getSession();
-        $id_usuario = $sesion->get('userId');
-
-        //validation if the user is logged
-        if (!isset($id_usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $estudianteId = $request->get('inscripcion');
-        $especialidadId = $request->get('especialidad');
-        $nivelId = $request->get('nivel');
-
-        $entityCargaHorariaInscripcion = $this->getDipHumAlternativaHistorial(base64_decode($estudianteId));
+        $entityCargaHorariaInscripcion = $this->getDipHumAlternativaHistorial($estudianteId);
 
         $gestionId = 0;
         $periodoId = 0;
@@ -2743,11 +2783,7 @@ class TramiteController extends Controller {
         //dump($listaHistorial);
         //die;
 
-        return $this->render($this->session->get('pathSystem') . ':Tramite:estudianteAlternativaHistorial.html.twig', array(
-            'titulo' => 'Registro',
-            'subtitulo' => 'Trámite',
-            'listaHistorial' => $listaHistorial,
-            ));
+        return $listaHistorial;
     }
 
 }

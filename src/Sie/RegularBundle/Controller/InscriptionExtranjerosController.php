@@ -55,7 +55,7 @@ class InscriptionExtranjerosController extends Controller {
 
     private function chooseIncriptionForm(){
 
-      $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria');
+      $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', '100'=>'Incial/Primaria333' );
       $form = $this->createFormBuilder()
               ->setAction($this->generateUrl('inscription_extranjeros_main'))
               ->add('optionInscription', 'choice', array('mapped' => false, 'label' => 'Inscripción', 'choices' => $arrOptionInscription, 'attr' => array('class' => 'form-control')))
@@ -72,7 +72,7 @@ class InscriptionExtranjerosController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         //define the options
-        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria');
+        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', '100'=>'Incial/Primaria333');
         //get the data send
         $formData = $request->get('form');//dump($formData);die;
         $this->labelOption = array('label'=> $arrOptionInscription[$formData['optionInscription']], 'id'=>$formData['optionInscription']);
@@ -462,11 +462,11 @@ class InscriptionExtranjerosController extends Controller {
             $gestion = $request->get('gestion');
         }
         //define the options
-        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria');
+        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria','100'=>'Incial/Primaria333');
 //dump($form);
         $formData = json_decode($form['dataOption'],true);
         //$labelInscription = $
-        //dump($formData);
+        // dump($formData);die;
         $this->labelOption = array('label'=> $arrOptionInscription[$formData['optionInscription']], 'id'=>$formData['optionInscription']);
 //die;
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
@@ -560,7 +560,7 @@ class InscriptionExtranjerosController extends Controller {
     private function createFormExtranjeros($idStudent, $sw, $data, $gestion) {
 
         $aDataOption = json_decode($data['dataOption'],true);
-//dump($aDataOption);die;
+// dump($aDataOption);die;
         $typeElement = ($aDataOption['optionInscription']==19)?'text':'hidden';
         $em = $this->getDoctrine()->getManager();
 
@@ -588,6 +588,12 @@ class InscriptionExtranjerosController extends Controller {
                           return $e->createQueryBuilder('pt')
                                   ->orderBy('pt.id', 'ASC');
                           }, 'property' => 'pais',));
+                }
+
+                if($aDataOption['optionInscription']==100){
+                  $formOmitido = $formOmitido                    
+                    ->add('imgInsExtranjero', 'file', array('mapped'=>'false','label' => 'Subir img', 'required' => false, 'data_class' => null))
+                    ;
                 }
 
 
@@ -644,7 +650,7 @@ class InscriptionExtranjerosController extends Controller {
 
         $aDataStudent = unserialize($form['newdata']);
         $aDataOption = json_decode($aDataStudent['dataOption'],true);
-
+dump($aDataOption);die;
 
         try {
 
@@ -673,7 +679,7 @@ class InscriptionExtranjerosController extends Controller {
               }
             }
           //check if the inscription is extranjero
-          if($aDataOption['optionInscription']==19){
+          if($aDataOption['optionInscription']==19){    
             $oFile = $request->files->get('siefile');
             //get the name of file upload
             $originalName = $oFile->getClientOriginalName();

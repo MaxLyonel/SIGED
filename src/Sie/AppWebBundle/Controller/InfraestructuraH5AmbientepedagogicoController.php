@@ -104,7 +104,7 @@ class InfraestructuraH5AmbientepedagogicoController extends Controller
         ));
 
         // $form->add('submit', 'submit', array('label' => 'Create'));
-        $form->add('infraestructuraJuridiccionGeograficaId', 'text', array('mapped'=>false,'data' => $infraestructuraJuridiccionGeograficaId));
+        $form->add('infraestructuraJuridiccionGeograficaId', 'hidden', array('mapped'=>false,'data' => $infraestructuraJuridiccionGeograficaId));
 
         return $form;
     }

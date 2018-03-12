@@ -1,13 +1,13 @@
 {% extends 'SieTramitesBundle:Tramite:dipHumIndex.html.twig' %}
 {% block contentSearchBread %}
-    <li class="active">Registro Trámite</li>
+    <li class="active">Entrega Trámite</li>
 {% endblock %}
 {% block contentsearch %}
     {% if listaParticipante is defined  %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <form name="formtable" id="formtable" role="form" action="{{ path('tramite_diploma_humanistico_alternativa_registro_guarda') }}" method="POST" onsubmit="return verificaCampos()">
-                    <input type="hidden" name="_token" value="{{ csrf_token('registrar') }}">
+                <form name="formtable" id="formtable" role="form" action="{{ path('tramite_detalle_diploma_humanistico_entrega_guarda') }}" method="POST" onsubmit="return verificaCampos()">
+                    <input type="hidden" name="_token" value="{{ csrf_token('entregar') }}">
                     <input type="hidden" name="_info" value="{{ datosBusqueda }}">
                     <div class="panel">
                         <div class="panel-heading">
@@ -15,11 +15,22 @@
                                 <h4 class="panel-title">C.E.A.: {{infoAutorizacionUnidadEducativa.institucioneducativa}}</h4>
                             </div>
                             <div class="pull-right">
-                                <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-primary" value="Registrar" disabled="true" />
-                                <a class="btn btn-lilac" href="{{ path('tramite_diploma_humanistico_alternativa_registro_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir</a>
+                                <button class="btn btn-danger" id="botonModalDevolver" name="botonModalDevolver" data-action="search" data-toggle="tooltip" data-placement="top" data-title="Devolver" data-original-title="" title="Devolver" disabled="true" >Devolver</button>
+                                <input type="submit" name="botonAnular" id="botonAnular" class="btn btn-youtube" value="Anular" disabled="true" />
+                                <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-primary" value="Entrega" disabled="true" />
+                                <a class="btn btn-lilac" href="{{ path('tramite_detalle_diploma_humanistico_entrega_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir</a>
                             </div>
                             <div class="clearfix"></div>
                         </div>
+                        <div class="panel-search" style="display: none;">
+                            <div class="input-group mb-15">
+                                <input class="form-control" placeholder="Observación..." type="text" id="obs" name="obs" >
+                                <span class="input-group-btn">
+                                    <input type="submit" name="botonDevolver" id="botonDevolver" class="btn btn-primary" value="Registrar la devolución" />
+                                    <button type="button" id="botonCancelarDevolver" name="botonCancelarDevolver" data-action="search" class="btn btn-danger">Cancelar</button>
+                                </span>
+                            </div>
+                        </div><!-- /.panel-sub-heading -->
                         <div class="panel-body">
                             {% if infoAutorizacionUnidadEducativa.secundaria == 0 %}
                                 <div class="alert alert-danger">
@@ -30,13 +41,15 @@
                                 <thead>
                                     <tr>
                                         <th style="width:50px; text-align:center;">#</th>
-                                        <th style="text-align:center;">Estado</th>
+                                        <th style="text-align:center;">Trámite</th>
+                                        <th style="text-align:center;">Diploma</th>
                                         <th style="text-align:center;">Código RUDE</th>
                                         <th style="text-align:center;">C.I.</th>
                                         <th style="text-align:center;">Paterno</th>
                                         <th style="text-align:center;">Materno</th>
                                         <th style="text-align:center;">Nombre</th>
                                         <th style="text-align:center;">Fecha y Lugar de Nacimiento</th>
+                                        <th style="text-align:center;">Estado</th>
                                         <th style="width:50px; text-align:center;">
                                             <div class="ckbox ckbox-primary">
                                                 <input id="participantesAll" type="checkbox" onchange="marcarTodos(this);">
@@ -48,13 +61,15 @@
                                 <tfoot>
                                     <tr>
                                         <th>#</th>
-                                        <th>Estado</th>
+                                        <th>Trámite</th>
+                                        <th>Diploma</th>
                                         <th>Código RUDE</th>
                                         <th>C.I.</th>
                                         <th>Paterno</th>
                                         <th>Materno</th>
                                         <th>Nombre</th>
                                         <th>Fecha y Lugar de Nacimiento</th>
+                                        <th>Estado</th>
                                         <th style="text-align:center;">
                                             &nbsp;
                                         </th>
@@ -76,7 +91,8 @@
                                                     <buttom onclick="participanteHistorial('{{ participante.estudiante_inscripcion_id|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-teal btn-stroke btn-xs" data-target=".bs-example-modal-table">{{ loop.index }}</buttom>
                                                 {% endif %}
                                             </td>
-                                            <td>{{ participante.estadomatricula }}</td>
+                                            <td>{{ participante.tramite_id }}</td>
+                                            <td>{{ participante.documento_serie_id }}</td>
                                             <td>{{ participante.codigo_rude }}</td>
                                             <td>{{ participante.carnet_identidad }}</td>
                                             <td>{{ participante.paterno }}</td>
@@ -86,23 +102,44 @@
                                             <td>
                                                 {% if participante.gestion_tipo_id != "now"|date("Y") %}
                                                   {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                    <span class="label label-danger rounded">Abandono</span>
-                                                    {% set registro = false %}
+                                                    <span class="label label-danger rounded">{{ participante.estadomatricula }}</span>
+                                                  {% else %}
+                                                    {{ participante.estadomatricula }}
                                                   {% endif %}
                                                 {% else %}
-                                                  {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
-                                                    <span class="label label-danger rounded">Abandono</span>
-                                                    {% set registro = false %}
+                                                  {% if participante.nivel_tipo_id == 13 %}
+                                                    {% if participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
+                                                      <span class="label label-danger rounded">{{ participante.estadomatricula }}</span>
+                                                    {% else %}
+                                                      {{ participante.estadomatricula }}
+                                                    {% endif %}
+                                                  {% else %}
+                                                    {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
+                                                      <span class="label label-danger rounded">{{ participante.estadomatricula }}</span>
+                                                    {% else %}
+                                                      {{ participante.estadomatricula }}
+                                                    {% endif %}
                                                   {% endif %}
                                                 {% endif %}
-                                                {% if participante.documento_id != "" %}
-                                                    <span class="label label-success rounded">Dip. {{ participante.documento_serie_id }}</span>
-                                                    {% set registro = false %}
+                                            </td>
+                                            <td>
+                                                {% set registro = true %}
+                                                {% set anular = false %}
+
+                                                {% if participante.gestion_tipo_id != "now"|date("Y") %}
+                                                  {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
+                                                    {% set anular = true %}
+                                                  {% endif %}
                                                 {% else %}
-                                                    {% if participante.tramite_id != "" %}
-                                                        <span class="label label-warning rounded">Tram. en proceso</span>
-                                                        {% set registro = false %}
+                                                  {% if participante.nivel_tipo_id == 13 %}
+                                                    {% if participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
+                                                      {% set anular = true %}
                                                     {% endif %}
+                                                  {% else %}
+                                                    {% if participante.estadomatricula_tipo_id != 4 and participante.estadomatricula_tipo_id != 5 and participante.estadomatricula_tipo_id != 55 %}
+                                                      {% set anular = true %}
+                                                    {% endif %}
+                                                  {% endif %}
                                                 {% endif %}
 
                                                 {% if participante.carnet_identidad == "" %}
@@ -120,16 +157,14 @@
                                                     {% set registro = false %}
                                                 {% endif %}
 
-                                                {% if participante.nivel_tipo_id == 15 %}
-                                                    {% if infoAutorizacionUnidadEducativa.secundaria == 0 %}
-                                                        <span class="label label-inverse rounded">No autorizado</span>
-                                                        {% set registro = false %}
-                                                    {% endif %}
+                                                {% if infoAutorizacionUnidadEducativa.secundaria == 0 %}
+                                                    <span class="label label-inverse rounded">No autorizado</span>
+                                                    {% set registro = false %}
                                                 {% endif %}
 
                                                 {% if registro %}
                                                     <div class="ckbox ckbox-info">
-                                                        <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.estudiante_inscripcion_id|base64_encode }}"  type="checkbox" onchange="validarMarcar(this);">
+                                                        <input name="participantes[]" id="{{ ("participantes"~loop.index)|base64_encode }}" value="{{ participante.tramite_id|base64_encode }}"  type="checkbox" onchange="validarMarcar(this);">
                                                         <label for="{{ ("participantes"~loop.index)|base64_encode }}"></label>
                                                     </div>
                                                 {% endif %}

@@ -49,7 +49,9 @@ class InfraestructuraH6AmbienteadministrativoInternadoEst
      */
     private $infraestructuraH6Ambienteadministrativo;
 
-
+    public function __toString(){
+        return $this->n32DistMetrosFemMas;
+    }
     /**
      * Get id
      *

@@ -15,33 +15,89 @@ class InfraestructuraH5AmbientepedagogicoDeportivoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('n53EsRecreativo')
-            ->add('n53EsDeportivo')
-            ->add('n53EsCultural')
-            ->add('n53EsUsoUniversal')
+            ->add('n53EsRecreativo','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n53EsDeportivo','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n53EsCultural','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n53EsUsoUniversal','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n53AmbienteAreaMts')
             ->add('n53AmbienteTipo')
             ->add('n53AmbienteCapacidad')
-            ->add('n53EsGraderia')
-            ->add('n53EsIluminacionElectrica')
-            ->add('n53EsIluminacionNatural')
-            ->add('n53EsTechado')
-            ->add('n53EsAmbienteCieloFal')
+            ->add('n53EsGraderia','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n53EsIluminacionElectrica','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n53EsIluminacionNatural','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n53EsTechado','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n53EsAmbienteCieloFal','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n53AmbienteCieloFalTipo')
-            ->add('n53EsAmbienteMuros')
+            ->add('n53EsAmbienteMuros','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n53AmbienteMuroCaracTipo')
             ->add('n53AmbienteMuroMatTipo')
-            ->add('n53EsAmbientePuerta')
+            ->add('n53EsAmbientePuerta','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n511SeguroTipo')
             ->add('n512AbreTipo')
-            ->add('n53EsAmbienteRevestimiento')
+            ->add('n53EsAmbienteRevestimiento','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n53AmbienteRevestMatTipo')
             ->add('n53AmbienteRevestCaracTipo')
-            ->add('n53EsAmbienteVentana')
+            ->add('n53EsAmbienteVentana','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n53AmbienteVentanaTipo')
             ->add('n53AmbientePisoMatTipo')
             ->add('n53AmbientePisoCaracTipo')
-            ->add('n53EsAmbientePiso')
+            ->add('n53EsAmbientePiso','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n53AmbienteGraderiaTipo')
             ->add('estadoTipo')
           // ->add('infraestructuraJuridiccionGeografica')

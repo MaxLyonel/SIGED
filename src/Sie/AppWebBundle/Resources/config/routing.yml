@@ -1,3 +1,7 @@
+sie_app_web_infrah6ambadmservalimentacion:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativoservalimentacion.yml"
+    prefix:   /infrah6ambadmservalimentacion
+
 sie_app_web_infrah6internadoestudiante:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativointernadoest.yml"
     prefix:   /infrah6internadoestudiante

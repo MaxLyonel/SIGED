@@ -35,6 +35,9 @@ class DefaultController extends Controller {
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
 
+        $this->session->set('pMenuId', 0);
+        $this->session->set('pSubMenuId', 0);
+
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         $gestion = $request->get('gestion');

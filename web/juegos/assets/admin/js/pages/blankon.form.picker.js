@@ -20,7 +20,7 @@ var BlankonFormPicker = function () {
 
                 // Default datepicker (options)
                 $('#dp1').datepicker({
-                    format: 'mm-dd-yyyy',
+                    format: 'dd-mm-yyyy',
                     todayBtn: 'linked'
                 });
 
@@ -28,7 +28,7 @@ var BlankonFormPicker = function () {
                 $('#dp2').datepicker();
                 $('#btn2').click(function(e){
                     e.stopPropagation();
-                    $('#dp2').datepicker('update', '03/17/12');
+                    $('#dp2').datepicker('update', '03/03/12');
                 });
 
                 //Inline mode
@@ -113,7 +113,7 @@ var BlankonFormPicker = function () {
                 timePicker: true,
                 timePickerIncrement: 30,
                 locale: {
-                    format: 'MM/DD/YYYY h:mm A'
+                    format: 'DD/MM/YYYY h:mm A'
                 }
             });
 
@@ -122,7 +122,7 @@ var BlankonFormPicker = function () {
                     singleDatePicker: true,
                     showDropdowns: true,
                     locale: {
-                        format: 'YYYY/MM/DD'
+                        format: 'DD-MM-YYYY'
                     }
                 },
                 function(start, end, label) {
@@ -132,7 +132,7 @@ var BlankonFormPicker = function () {
 
             // Predefined Ranges
             function cb(start, end) {
-                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                $('#reportrange span').html(start.format('D MMMM, YYYY') + ' - ' + end.format('D MMMM, YYYY'));
             }
             cb(moment().subtract(29, 'days'), moment());
 
@@ -219,7 +219,7 @@ var BlankonFormPicker = function () {
 
                 if ($('#locale').is(':checked')) {
                     options.locale = {
-                        format: 'MM/DD/YYYY',
+                        format: 'DD/MM/YYYY',
                         separator: ' - ',
                         applyLabel: 'Apply',
                         cancelLabel: 'Cancel',
