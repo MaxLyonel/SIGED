@@ -184,7 +184,7 @@
             <div class="portlet portlet-default">
                 <div class="portlet-heading">
                     <div class="portlet-title">
-                        <h4>Inscripcion Extranjeros</h4>
+                        <h4>Nueva Inscripci&oacute;n</h4>
                     </div>
                     <div class="portlet-widgets">
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#omitidos"><i class="fa fa-chevron-down"></i></a>
@@ -215,6 +215,62 @@
                                     {{form_label(formExtranjeros.pais)}}
                                     {{form_widget(formExtranjeros.pais)}}
                                 </div>
+                                <div class="col-md-6">
+                                  <div class="" style='display:none'>
+                                    {{form_label(formExtranjeros.imgInsExtranjero)}}
+                                    {{form_widget(formExtranjeros.imgInsExtranjero)}}
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+
+                                  <div class="fileupload fileupload-new" data-provides="fileupload">
+                                      <div class="input-append">
+                                          <form class="form" method ="POST"  enctype="multipart/form-data" action="{{path('consolidation_sie_upfile_web')}}">
+
+                                              <table class="table table-bordered table-hover cf" border=''>
+                                                  <tr>
+                                                      <td rowspan='1' align='center'>
+                                                          <h4 class='text-blue'> Seleccione archivo para subir:</h4>
+                                                          <p>Capacidad MÁXIMA del archivo a subir <b>1024 KB.</b>
+                                                          </br>
+                                                          Formatos PERMTIDOS del archivo: <b>PNG, JPG.</b>
+                                                          </p>
+                                                      </td>
+
+                                                      <td class='info'>
+                                                          <p class='text-green'>Subir última libreta extranjero</p>
+                                                          <i class='fa fa-hand-o-right'></i> <div class="uneditable-input span6">
+                                                              <i class="icon-file fileupload-exists"></i>
+                                                              <span class="fileupload-preview"></span>
+                                                          </div>
+                                                          <span class="btn btn-file">
+                                                              <span class="fileupload-new text-danger" style="background-color:lightwhite;font-size: 130%; color: #cc0033"> Subir Imagen</span>
+                                                              <span class="fileupload-exists text-danger">Cambiar</span>
+                                                              <input type="file" name="siefile" required="required"/>
+                                                          </span>
+
+                                                      </td>
+                                                  </tr>
+                                              </table>
+
+                                      </div>
+                                  </div>
+
+
+                                </div>
+                              </div>
+
+                            </br>
+                            </br>
+
+                        {% endif %}
+
+
+                        {% if labelInscription.id == 100 %}
+                             
+                              <div class="row">
                                 <div class="col-md-6">
                                   <div class="" style='display:none'>
                                     {{form_label(formExtranjeros.imgInsExtranjero)}}
