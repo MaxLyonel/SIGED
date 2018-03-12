@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\OlimModalidadNumeroIngrantesTipo:
+    type: entity
+    table: olim_modalidad_numero_ingrantes_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        condicion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        cantidadMiembros:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cantidad_miembros
+    lifecycleCallbacks: {  }

@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\OlimDiscapacidadTipo:
+    type: entity
+    table: olim_discapacidad_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        discapacidad:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

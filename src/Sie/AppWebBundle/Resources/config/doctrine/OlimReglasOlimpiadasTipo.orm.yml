@@ -1,0 +1,212 @@
+Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo:
+    type: entity
+    table: olim_reglas_olimpiadas_tipo
+    indexes:
+        IDX_2D86862FCA64564A:
+            columns:
+                - materia_tipo_id
+        IDX_2D86862FAB4891C2:
+            columns:
+                - categoria_tipo_id
+        IDX_2D86862FFF8C3A35:
+            columns:
+                - modalidad_numero_integrantes_tipo_id
+        IDX_2D86862F7473DC9D:
+            columns:
+                - modalidad_participacion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        categoria:
+            type: string
+            nullable: true
+            length: 300
+            fixed: false
+            comment: ''
+        materia:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        pri1:
+            type: boolean
+            nullable: true
+            comment: ''
+        pri2:
+            type: boolean
+            nullable: true
+            comment: ''
+        pri3:
+            type: boolean
+            nullable: true
+            comment: ''
+        pri4:
+            type: boolean
+            nullable: true
+            comment: ''
+        pri5:
+            type: boolean
+            nullable: true
+            comment: ''
+        pri6:
+            type: boolean
+            nullable: true
+            comment: ''
+        sec1:
+            type: boolean
+            nullable: true
+            comment: ''
+        sec2:
+            type: boolean
+            nullable: true
+            comment: ''
+        sec3:
+            type: boolean
+            nullable: true
+            comment: ''
+        sec4:
+            type: boolean
+            nullable: true
+            comment: ''
+        sec5:
+            type: boolean
+            nullable: true
+            comment: ''
+        sec6:
+            type: boolean
+            nullable: true
+            comment: ''
+        cantidadEquipos:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cantidad_equipos
+        cantidadInscritosGrado:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cantidad_inscritos_grado
+        edadInicial:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: edad_inicial
+        edadFinal:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: edad_final
+        fechaComparacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_comparacion
+        periodoFechaInicial:
+            type: date
+            nullable: true
+            comment: ''
+            column: periodo_fecha_inicial
+        periodoFechaFinal:
+            type: date
+            nullable: true
+            comment: ''
+            column: periodo_fecha_final
+        siSubirDocumento:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: si_subir_documento
+        siNombreEquipo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: si_nombre_equipo
+        siNombreProyecto:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: si_nombre_proyecto
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        periodoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: periodo_tipo_id
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioRegistroId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_registro_id
+        usuarioModificacionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_modificacion_id
+    manyToOne:
+        materiaTipo:
+            targetEntity: OlimMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        categoriaTipo:
+            targetEntity: OlimCategoriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                categoria_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modalidadNumeroIntegrantesTipo:
+            targetEntity: OlimModalidadNumeroIngrantesTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modalidad_numero_integrantes_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modalidadParticipacionTipo:
+            targetEntity: OlimModalidadParticipacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modalidad_participacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

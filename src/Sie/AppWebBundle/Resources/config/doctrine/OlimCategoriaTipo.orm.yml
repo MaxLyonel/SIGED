@@ -1,0 +1,25 @@
+Sie\AppWebBundle\Entity\OlimCategoriaTipo:
+    type: entity
+    table: olim_categoria_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        categoria:
+            type: string
+            nullable: true
+            length: 300
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    lifecycleCallbacks: {  }

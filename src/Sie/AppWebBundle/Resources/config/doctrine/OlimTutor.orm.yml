@@ -1,0 +1,69 @@
+Sie\AppWebBundle\Entity\OlimTutor:
+    type: entity
+    table: olim_tutor
+    indexes:
+        IDX_FE09D8F9F5F88DB9:
+            columns:
+                - persona_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        telefono1:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        telefono2:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        correoElectronico:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: correo_electronico
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioRegistroId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_registro_id
+        usuarioModificacionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_modificacion_id
+    manyToOne:
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

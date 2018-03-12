@@ -1,0 +1,76 @@
+Sie\AppWebBundle\Entity\OlimGrupoProyecto:
+    type: entity
+    table: olim_grupo_proyecto
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombreGrupo:
+            type: string
+            nullable: true
+            length: 300
+            fixed: false
+            comment: ''
+            column: nombre_grupo
+        nombreProyecto:
+            type: string
+            nullable: true
+            length: 300
+            fixed: false
+            comment: ''
+            column: nombre_proyecto
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+        documentoPdf1:
+            type: string
+            nullable: true
+            length: 600
+            fixed: false
+            comment: ''
+            column: documento_pdf1
+        documentoPdf2:
+            type: string
+            nullable: true
+            length: 600
+            fixed: false
+            comment: ''
+            column: documento_pdf2
+        documentoPdf3:
+            type: string
+            nullable: true
+            length: 600
+            fixed: false
+            comment: ''
+            column: documento_pdf3
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioRegistroId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_registro_id
+        usuarioModificacionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_modificacion_id
+    lifecycleCallbacks: {  }

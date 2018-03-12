@@ -1,0 +1,25 @@
+Sie\AppWebBundle\Entity\OlimMateriaTipo:
+    type: entity
+    table: olim_materia_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        materia:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    lifecycleCallbacks: {  }
