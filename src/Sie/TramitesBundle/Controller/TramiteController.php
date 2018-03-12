@@ -50,6 +50,7 @@ class TramiteController extends Controller {
                 ->leftJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')
                 ->leftJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->where('t.id = :codTramite')
+                ->andWhere('dt.id in (1,3,4,5,6,7,8,9)')
                 ->setParameter('codTramite', $tramite);
         $entity = $query->getQuery()->getResult();
         return $entity;
@@ -112,6 +113,7 @@ class TramiteController extends Controller {
                 ->leftJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')
                 ->leftJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
                 ->where('e.carnetIdentidad = :cedula')
+                ->andWhere('dt.id in (1,3,4,5,6,7,8,9)')
                 ->setParameter('cedula', $cedula);
         $entity = $query->getQuery()->getResult();
         return $entity;
