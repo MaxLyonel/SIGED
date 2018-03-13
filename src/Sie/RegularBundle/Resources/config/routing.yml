@@ -68,7 +68,7 @@ sie_app_web_traslado:
 
 sie_app_web_isncriptioextranjeros:
     resource: "@SieRegularBundle/Resources/config/routing/inscriptionExtranjeros.yml"
-    prefix:   /sie/inscriptionExtranjeros
+    prefix:   /sie/inscriptionSiged
 
 sie_app_web_history_inscription:
     resource: "@SieRegularBundle/Resources/config/routing/historyInscription.yml"
