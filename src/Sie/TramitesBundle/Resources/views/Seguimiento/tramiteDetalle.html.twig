@@ -134,7 +134,7 @@
                                             <div class="timeline-desk">
                                                 <div class="panel panel-{{color}} shadow">
                                                     <div class="panel-heading">
-                                                        <div class="panel-title">{{ proceso }}</div>
+                                                        <div class="panel-title">{% if anterior_estado_id == 4 %}Devuelto a los trámites con {% endif %}{{ proceso }}</div>
                                                         <span class="arrow{% if loop.index % 2 == 0 %}-alt{% endif %}"></span>
                                                         <span class="timeline-icon bg-{{color}}"><i class="fa {{ icon }}"></i></span>
                                                     </div>
@@ -142,7 +142,7 @@
                                                         <span class="timeline-date"></span>
                                                         <h1 class="fg-{{color}}"><i class="fa fa-book"></i> {{ fecha_proceso|date('d/m/Y') }}</h1>
                                                         <p><i class="fa fa-comment"></i> {{ observacion }} </p>
-                                                        <p><i class="fa fa-user"></i> {{ persona_remitente }} </p>
+                                                        <p><i class="fa fa-user"></i> {{ persona_destinatario }} </p>
                                                     </div>
                                                 </div>
                                             </div>
