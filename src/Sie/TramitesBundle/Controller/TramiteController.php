@@ -899,7 +899,47 @@ class TramiteController extends Controller {
 
     //****************************************************************************************************
     // DESCRIPCION DEL METODO:
-    // Controlador que lista los trámites recepcionados por la direccion distrital en formato pdf
+    // Controlador que lista los trámites de certificacion tecnica registrados por la direccion departamental en formato pdf
+    // PARAMETROS: sie, gestion, especialidad, nivel
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function certTecRegistroListaPdfAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        $gestionActual = new \DateTime("Y");
+        $this->session->set('save', false);
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        try {
+            $info = $request->get('info');
+            $form = unserialize(base64_decode($info));
+            $sie = $form['sie'];
+            $ges = $form['gestion'];
+            $especialidad = $form['especialidad'];
+            $nivel = $form['nivel'];
+
+            $arch = $sie.'_'.$ges.'_registro'.date('YmdHis').'.pdf';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'tram_lst_certificacion_tecnica_registro_v1_rcm.rptdesign&sie='.$sie.'&gestion='.$ges.'&especialidad='.$especialidad.'&nivel='.$nivel.'&&__format=pdf&'));
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
+        } catch (\Doctrine\ORM\NoResultException $exc) {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al generar el listado, intente nuevamente'));
+            return $this->redirectToRoute('tramite_detalle_certificado_tecnico_registro_lista', ['form' => $form], 307);
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que lista los trámites de diploma de bachiller recepcionados por la direccion distrital en formato pdf
     // PARAMETROS: sie, gestion, especialidad, nivel
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
