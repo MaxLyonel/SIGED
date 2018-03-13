@@ -1442,7 +1442,7 @@ class Notas{
                             }
                             $updateNota->setUsuarioId($this->session->get('userId'));
                             $updateNota->setFechaModificacion(new \DateTime('now'));
-                            $this->persist($updateNota);
+                            $this->em->persist($updateNota);
                             $this->em->flush();
 
                             // Registro log
@@ -1485,7 +1485,7 @@ class Notas{
                             $updateCualitativa->setNotaCualitativa(mb_strtoupper($notaCualitativa[$j],'utf-8'));
                             $updateCualitativa->setUsuarioId($this->session->get('userId'));
                             $updateCualitativa->setFechaModificacion(new \DateTime('now'));
-                            $this->persist($updateCualitativa);
+                            $this->em->persist($updateCualitativa);
                             $this->em->flush();
                         }
                     }
