@@ -1,0 +1,59 @@
+herramienta_curso_alternativa:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:index }
+    options:
+         expose: true
+         
+herramienta_areachange:
+    path:     /{areacod}/areachange/
+    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:areachange }
+    options:
+         expose: true         
+         
+herramienta_nivelchange:
+    path:     /{nivelid}/nivelchange/
+    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:nivelchange }
+    options:
+         expose: true  
+         
+herramienta_turnochange:
+    path:     /{areacod}/{nivelid}/{etapaid}/{turnoid}/turnochange/
+    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:turnochange }
+    options:
+         expose: true         
+
+herramienta_curso_alternativa_new:
+    path:     /newcurso
+    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:new }
+    options:
+         expose: true
+
+herramienta_curso_alternativa_add:
+    path:     /areasadd
+    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:areasadd }
+    options:
+         expose: true
+
+herramienta_curso_alternativa_delete:
+    path:     /cursodelete
+    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:cursodelete }
+    options:
+         expose: true
+
+herramienta_curso_alternativa_maestros_asignar:
+    path:     /maestrosAsignar
+    defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:maestrosAsignar"}
+    options:
+         expose: true
+         
+herramientalt_ceducativa_duplicados_paralelos:
+    path:     /cursosduplicados
+    defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:cursosduplicados"}
+    
+herramientalt_ceducativa_periododistinto:
+    path:     /periodosdintintos
+    defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:periodosdintintos"}    
+    
+herramientalt_ceducativa_aux:
+    path:     /auxuno
+    defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:auxuno"}        
