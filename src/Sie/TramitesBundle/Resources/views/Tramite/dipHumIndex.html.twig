@@ -110,6 +110,7 @@
         // funcion que marca/desmarca todos los participantes visibles en la pantalla
         function marcarTodos(chkAll){
             var botonAceptar = document.getElementsByName('botonAceptar')[0];
+            var botonAnular = document.getElementsByName('botonAnular')[0];
             var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
             var participantes = document.getElementsByName('participantes[]');
             if(chkAll.checked){
@@ -123,6 +124,9 @@
                     if(botonModalDevolver){
                         botonModalDevolver.disabled = false;
                     }
+                    if(botonAnular){
+                        botonAnular.disabled = false;
+                    }
                 }
             }else{
                 for (var i=0; i < participantes.length; i++){
@@ -134,6 +138,9 @@
                 if(botonModalDevolver){
                     botonModalDevolver.disabled = true;
                 }
+                if(botonAnular){
+                    botonAnular.disabled = false;
+                }
             }
         }
 
@@ -142,6 +149,7 @@
             var participantesAll = document.getElementById('participantesAll');
             var participantes = document.getElementsByName('participantes[]');
             var botonAceptar = document.getElementsByName('botonAceptar')[0];
+            var botonAnular = document.getElementsByName('botonAnular')[0];
             var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
             var estado = false;
             var estadoAll = true;
@@ -164,12 +172,18 @@
                 if(botonAceptar){
                     botonAceptar.disabled = false;
                 }
+                if(botonAnular){
+                    botonAnular.disabled = false;
+                }
                 if(botonModalDevolver){
                     botonModalDevolver.disabled = false;
                 }
             } else {
                 if(botonAceptar){
                     botonAceptar.disabled = true;
+                }
+                if(botonAnular){
+                    botonAnular.disabled = true;
                 }
                 if(botonModalDevolver){
                     botonModalDevolver.disabled = true;
@@ -182,8 +196,11 @@
             var participantesAll = document.getElementById('participantesAll');
             var participantes = document.getElementsByName('participantes[]');
             var botonAceptar = document.getElementsByName('botonAceptar')[0];
+            var botonAnular = document.getElementsByName('botonAnular')[0];
             var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
             var numeroSerie = document.getElementById('numeroSerie');
+            var serie = document.getElementById('serie');
+            var fechaSerie = document.getElementById('fechaSerie');
             var estado = false;
             var estadoAll = true;
 
@@ -205,13 +222,19 @@
                 if(botonModalDevolver){
                     botonModalDevolver.disabled = false;
                 }
+                if(botonAnular){
+                    botonAnular.disabled = false;
+                }
             } else {
                 if(botonModalDevolver){
                     botonModalDevolver.disabled = true;
                 }
+                if(botonAnular){
+                    botonAnular.disabled = true;
+                }
             }
 
-            if(numeroSerie.value === "" && estado === true){
+            if((numeroSerie.value === "" || fechaSerie.value === "") && estado === true){
                 estado = false;
             }
 
@@ -263,8 +286,9 @@
             var botonImprimir = document.getElementById('botonImprimir');
             var botonModalDevolver = document.getElementsByName('botonModalDevolver')[0];
             var botonDevolver = document.getElementsByName('botonDevolver')[0];
+            var botonAnular = document.getElementsByName('botonAnular')[0];
             var botonCancelarDevolver = document.getElementsByName('botonCancelarDevolver')[0];
-            var r = confirm("¿ Desea registrar el trámite de los "+cantidadParticipantes+" participantes seleccionados ?");
+            var r = confirm("¿ Desea registrar el trámite de los "+cantidadParticipantes+" estudiantes seleccionados ?");
 
             if (r == false) {
                 if (botonAceptar){
@@ -274,6 +298,9 @@
                     botonImprimir.style.display = "";
                 }
                 if (botonDevolver){
+                    botonDevolver.style.display = "";
+                }
+                if (botonAnular){
                     botonDevolver.style.display = "";
                 }
                 if (botonCancelarDevolver){
@@ -301,18 +328,21 @@
                 if (botonDevolver){
                     botonDevolver.style.display = "none";
                 }
+                if (botonAnular){
+                    botonAnular.style.display = "none";
+                }
                 if (botonCancelarDevolver){
                     botonCancelarDevolver.style.display = "none";
                 }
+                //$('#form_search').removeAttr('disabled');
                 return true;
-                $('#form_search').removeAttr('disabled');
             }
         }
 
-        function participanteRegularHistorial(inscripcion) {
+        function participanteHistorial(inscripcion) {
             peticion = $.ajax({
                 type: 'POST',
-                url: '{{ path('tramite_diploma_humanistico_regular_registro_inscripcion_historial') }}',
+                url: '{{ path('tramite_diploma_humanistico_estudiante_inscripcion_historial') }}',
                 data: {'inscripcion': inscripcion},
                 beforeSend: function () {
                     $("#participanteHistorial").empty();
@@ -331,30 +361,7 @@
                 $("#participanteHistorial").empty();
                 $("#participanteHistorial").append('<div style="text-align:center">ERROR FATAL</div>');
             });
-        }
-
-        function participanteAlternativaHistorial(inscripcion) {
-            peticion = $.ajax({
-                type: 'POST',
-                url: '{{ path('tramite_diploma_humanistico_alternativa_registro_inscripcion_historial') }}',
-                data: {'inscripcion': inscripcion},
-                beforeSend: function () {
-                    $("#participanteHistorial").empty();
-                    $("#participanteHistorial").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
-                },
-                success: function (data) {
-                    $('#participanteHistorial').empty();
-                    $("#participanteHistorial").append(data);
-                },
-                error: function(xhr) {
-                    $("#participanteHistorial").empty();
-                    $("#participanteHistorial").append('<div style="text-align:center">ERROR</div>');
-                },
-            })
-            .fail(function( jqXHR, textStatus, errorThrown ) {
-                $("#participanteHistorial").empty();
-                $("#participanteHistorial").append('<div style="text-align:center">ERROR FATAL</div>');
-            });
+            return true;
         }
 
        $(window).load(function(){
@@ -378,7 +385,7 @@
 
             // DataTable
             var table = $('#tablaParticipantes').DataTable( {
-                    //"order": [[ 3, "asc" ]],
+                    "order": [[ 0, "asc" ]],
                     "columnDefs": [
                         { "orderable": false, "targets": 8 }
                     ],
@@ -400,17 +407,17 @@
 
             $("#botonModalDevolver").on( "click", function() {
                 $('#botonAceptar').hide();
+                $('#botonAnular').hide();
                 $('#botonImprimir').hide();
                 $('#botonModalDevolver').hide();
             });
 
             $("#botonCancelarDevolver").on( "click", function() {
                 $('#botonAceptar').show();
+                $('#botonAnular').show();
                 $('#botonImprimir').show();
                 $('#botonModalDevolver').show();
             });
         });
     </script>
-    {% if listaParticipante is defined  %}
-    {% endif %}
 {%endblock%}

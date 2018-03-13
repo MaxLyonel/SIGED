@@ -27,8 +27,8 @@ class InfraestructuraH6AmbienteadministrativoInterDormitoriosType extends Abstra
             ->add('n34EsAmbienteMuros')
             ->add('n34EsAmbienteRevestimiento')
             ->add('n34EsAmbientePiso')
-            ->add('obs')
-            ->add('fecharegistro')
+            // ->add('obs')
+            // ->add('fecharegistro')
             ->add('estadoTipo')
             ->add('n342AbreTipo')
             ->add('n34AmbientePisoMatTipo')
@@ -41,7 +41,7 @@ class InfraestructuraH6AmbienteadministrativoInterDormitoriosType extends Abstra
             ->add('n34AmbienteRevestCaracTipo')
             ->add('n34AmbienteCieloFalTipo')
             ->add('n34AmbienteTipo')
-            ->add('infraestructuraH6AmbienteadministrativoInternadoEst')
+            // ->add('infraestructuraH6AmbienteadministrativoInternadoEst')
         ;
     }
     

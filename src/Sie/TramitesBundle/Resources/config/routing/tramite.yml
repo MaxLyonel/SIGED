@@ -43,16 +43,11 @@ tramite_diploma_humanistico_regular_registro_lista:
 
 tramite_diploma_humanistico_regular_registro_lista_pdf:
     path:     /diploma/humanistico/regular/registro/lista/pdf
-    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegularRegistroListaPdf }
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegistroListaPdf }
 
 tramite_diploma_humanistico_regular_registro_guarda:
     path:     /diploma/humanistico/regular/registro/guarda
     defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegularRegistroGuarda }
-
-tramite_diploma_humanistico_regular_registro_inscripcion_historial:
-    path:     /diploma/humanistico/regular/registro/inscripcion/historial
-    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegularRegistroInscripcionHistorial }
-    methods:  [POST]
 
 tramite_diploma_humanistico_alternativa_registro_busca:
     path:     /diploma/humanistico/alternativa/registro/busca
@@ -64,18 +59,18 @@ tramite_diploma_humanistico_alternativa_registro_lista:
 
 tramite_diploma_humanistico_alternativa_registro_lista_pdf:
     path:     /diploma/humanistico/alternativa/registro/lista/pdf
-    defaults: { _controller: SieTramitesBundle:Tramite:dipHumAlternativaRegistroListaPdf }
+    defaults: { _controller: SieTramitesBundle:Tramite:dipHumRegistroListaPdf }
 
 tramite_diploma_humanistico_alternativa_registro_guarda:
     path:     /diploma/humanistico/alternativa/registro/guarda
     defaults: { _controller: SieTramitesBundle:Tramite:dipHumAlternativaRegistroGuarda }
 
-tramite_diploma_humanistico_alternativa_registro_inscripcion_historial:
-    path:     /diploma/humanistico/alternativa/registro/inscripcion/historial
-    defaults: { _controller: SieTramitesBundle:Tramite:dipHumAlternativaRegistroInscripcionHistorial }
-    methods:  [POST]
-
 # TRAMITES EN GENERAL
+
+tramite_diploma_humanistico_estudiante_inscripcion_historial:
+  path:     /diploma/humanistico/estudiante/inscripcion/historial
+  defaults: { _controller: SieTramitesBundle:Tramite:dipHumEstudianteInscripcionHistorial }
+  methods:  [POST]
 
 tramite_reactiva_busca:
     path:     /reactiva/busca

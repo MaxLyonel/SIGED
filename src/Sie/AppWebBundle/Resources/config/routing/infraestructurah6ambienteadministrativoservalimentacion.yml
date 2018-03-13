@@ -1,0 +1,48 @@
+infrah6ambadmservalimentacion_index:
+    path:     /index
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoServAlimentacion:index" }
+    options:
+        expose: true
+
+infrah6ambadmservalimentacion_addnewservalimentacion:
+    path:     /addnewservalimentacion
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoServAlimentacion:addnewservalimentacion" }
+    options:
+        expose: true      
+
+infrah6ambadmservalimentacion_saveNewservalimentacion:
+    path:     /saveNewservalimentacion
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoServAlimentacion:saveNewservalimentacion" }
+    options:
+        expose: true        
+
+infrah6ambadmservalimentacion_listservalimento:
+    path:     /{id}/listservalimento
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoServAlimentacion:listservalimento" }
+
+infrah6ambadmservalimentacion_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoServAlimentacion:show" }
+
+infrah6ambadmservalimentacion_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoServAlimentacion:new" }
+
+infrah6ambadmservalimentacion_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoServAlimentacion:create" }
+    methods:  POST
+
+infrah6ambadmservalimentacion_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoServAlimentacion:edit" }
+
+infrah6ambadmservalimentacion_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoServAlimentacion:update" }
+    methods:  [POST, PUT]
+
+infrah6ambadmservalimentacion_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH6AmbienteadministrativoServAlimentacion:delete" }
+    methods:  [POST, DELETE]

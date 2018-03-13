@@ -49,10 +49,48 @@ class DocumentoController extends Controller {
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
                 ->where('d.id = :codDocumento')
+                ->andWhere('dt.id in (1,3,4,5,6,7,8,9)')
+                ->andWhere('de.id in (1)')
                 ->setParameter('codDocumento', $id);
         $entityDocumento = $query->getQuery()->getResult();
         if(count($entityDocumento)>0){
             return $entityDocumento[0];
+        } else {
+            return $entityDocumento;
+        }
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista el detalle de documento generados dentro de un trámite
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDocumentoDetalle($tramite) {
+        $em = $this->getDoctrine()->getManager();
+        $entityDocumento = $em->getRepository('SieAppWebBundle:Documento');
+        $query = $entityDocumento->createQueryBuilder('d')
+                ->select("d.id as id, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad, tt.tramiteTipo as tramiteTipo, de.documentoEstado as documentoEstado, de.id as documentoEstadoId, d.fechaRegistro as fechaRegistro, d.obs as observacion")
+                ->leftJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
+                ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
+                ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
+                ->innerJoin('SieAppWebBundle:Tramite', 't', 'WITH', 't.id = d.tramite')
+                ->innerJoin('SieAppWebBundle:TramiteTipo', 'tt', 'WITH', 'tt.id = t.tramiteTipo')
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = t.estudianteInscripcion')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'e.id = ei.estudiante')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = ds.gestion')
+                ->innerJoin('SieAppWebBundle:PaisTipo', 'pt', 'WITH', 'pt.id = e.paisTipo')
+                ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'dept', 'WITH', 'dept.id = ds.departamentoTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
+                ->where('t.id = :codTramite')
+                ->setParameter('codTramite', $tramite)
+                ->orderBy('d.fechaRegistro', 'DESC');
+        $entityDocumento = $query->getQuery()->getResult();
+        if(count($entityDocumento)>0){
+            return $entityDocumento;
         } else {
             return $entityDocumento;
         }
@@ -67,7 +105,14 @@ class DocumentoController extends Controller {
     public function getSerieTipo($tipos) {
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-            select distinct left(right(ds.id,4),3) as serie from documento_serie as ds where ds.documento_tipo_id in (".$tipos.") order by serie asc
+          select distinct
+          case
+          when ds.documento_tipo_id in (1,2,3,4,5)  then (case ds.gestion_id when 2010 then right(ds.id,2) when 2013 then right(ds.id,2) else right(ds.id,1) end)
+          when ds.documento_tipo_id in (6,7,8) then left(right(ds.id,4),3)
+          when ds.documento_tipo_id in (9) then right(ds.id,2)
+          else right(ds.id,1)
+          end as serie
+          from documento_serie as ds where ds.documento_tipo_id in (".$tipos.") order by serie desc
         ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -326,7 +371,7 @@ class DocumentoController extends Controller {
         }
 
         // VALIDACION DEl ESTADO ACTIVO DEL CARTON
-        $valSerieActgetDocumentoivo = $this->validaNumeroSerieActivo($serie);
+        $valSerieActivo = $this->validaNumeroSerieActivo($serie);
         if($valSerieActivo != "" and $msgContenido == ""){
             $msgContenido = ($msgContenido=="") ? $valSerieActivo : $msgContenido.", ".$valSerieActivo;
         }
@@ -346,7 +391,7 @@ class DocumentoController extends Controller {
         $departamentoCodigo = $this->getCodigoLugarRol($usuarioId,$rolId);
 
         if ($departamentoCodigo == 0 and $msgContenido == ""){
-            $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con autorizacion para imprimir el documento ".$serie : $msgContenido.", "."el usuario no cuenta con autorizacion para imprimir el documento ".$serie;
+            $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con autorizacion para imprimir documentos" : $msgContenido.", "."el usuario no cuenta con autorizacion para imprimir el documentos ";
         } else {
             // VALIDACION DE TUICION DEL CARTON
             $valSerieTuicion = $this->validaNumeroSerieTuicion($serie, $departamentoCodigo);
@@ -383,7 +428,7 @@ class DocumentoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entityDocumento = $em->getRepository('SieAppWebBundle:Documento');
         $query = $entityDocumento->createQueryBuilder('d')
-                ->select("d.id as documento, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, tt.tramiteTipo as tramiteTipo")
+                ->select("d.id as documento, t.id as tramite, ds.id as serie, d.fechaImpresion as fechaemision, dept.departamento as departamentoemision, e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, e.fechaNacimiento as fechanacimiento, (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documentoTipo as documentoTipo, tt.tramiteTipo as tramiteTipo, (case e.complemento when '' then e.carnetIdentidad when 'null' then e.carnetIdentidad else CONCAT(CONCAT(e.carnetIdentidad,'-'),e.complemento) end) as carnetIdentidad")
                 ->innerJoin('SieAppWebBundle:DocumentoEstado', 'de', 'WITH', 'de.id = d.documentoEstado')
                 ->innerJoin('SieAppWebBundle:DocumentoTipo', 'dt', 'WITH', 'dt.id = d.documentoTipo')
                 ->innerJoin('SieAppWebBundle:DocumentoSerie', 'ds', 'WITH', 'ds.id = d.documentoSerie')
@@ -440,6 +485,7 @@ class DocumentoController extends Controller {
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
                 ->where('ds.id like :codSerie')
+                ->andWhere('dt.id in (1,3,4,5,6,7,8,9)')
                 ->setParameter('codSerie', '%'.$serie.'%');
         $entityDocumento = $query->getQuery()->getResult();
         if(count($entityDocumento)>0){

@@ -37,8 +37,8 @@ class CalificacionesController extends Controller {
 
 
             $em = $this->getDoctrine()->getManager();
-            $personaId = $this->session->get('personaId');
-            //dump($personaId);die;
+            $personaId = 64116;//$this->session->get('personaId');
+            
             /* Buscar materias vigentes del docente */
             $materias = $em->createQueryBuilder()
                         ->select('tdm')

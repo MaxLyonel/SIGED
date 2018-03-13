@@ -66,6 +66,7 @@
                                     <th style="text-align:center;">Tipo documento</th>
                                     <th style="text-align:center;">Número y Serie</th>
                                     <th style="text-align:center;">Código Rude</th>
+                                    <th style="text-align:center;">Cédula de Identidad</th>
                                     <th style="text-align:center;">Paterno</th>
                                     <th style="text-align:center;">Materno</th>
                                     <th style="text-align:center;">Nombre</th>
@@ -81,6 +82,7 @@
                                     <th>Tipo documento</th>
                                     <th>Número y Serie</th>
                                     <th>Código Rude</th>
+                                    <th>Cédula de Identidad</th>
                                     <th>Paterno</th>
                                     <th>Materno</th>
                                     <th>Nombre</th>
@@ -99,14 +101,16 @@
                                         <td>{{ registro.documentoTipo }}</td>
                                         <td>{{ registro.serie }}</td>
                                         <td>{{ registro.rude }}</td>
+                                        <td>{{ registro.carnetIdentidad }}</td>
                                         <td>{{ registro.paterno }}</td>
                                         <td>{{ registro.materno }}</td>
                                         <td>{{ registro.nombre }}</td>
                                         <td>{{ registro.documentoEstado }}</td>
                                         <td style="text-align:center;">
-                                            {% if registro.documentoEstadoId == 1  %}
+                                            {# if registro.documentoEstadoId == 1  #}
+                                            {% if 1 == 1  %}
                                                 <form name="form" role="form" action="{{ path('tramite_seguimiento_documento_detalle') }}" method="POST">
-                                                    <input type="hidden" name="codigo" value="{{ registro.id|base64_encode }}" />
+                                                    <input type="hidden" name="codigo" value="{{ registro.tramite|base64_encode }}" />
                                                     <button type="submit" class="btn btn-success btn-xs" data-original-title="Ver detalle"><i class="fa fa-eye"></i></button>
                                                 </form>
                                             {% endif %}

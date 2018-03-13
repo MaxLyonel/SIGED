@@ -21,13 +21,41 @@ class InfraestructuraH6AmbienteadministrativoAmbienteType extends AbstractType
             // ->add('obs')
             // ->add('fecharegistro')
             ->add('n61AmbienteAreaAdm')
-            ->add('n61EsAmbienteTecho')
-            ->add('n61EsAmbienteCieloFal')
-            ->add('n61EsAmbientePuerta')
-            ->add('n61EsAmbienteVentana')
-            ->add('n61EsAmbienteMuros')
-            ->add('n61EsAmbienteRevestimiento')
-            ->add('n61EsAmbientePiso')
+            ->add('n61EsAmbienteTecho','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n61EsAmbienteCieloFal','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n61EsAmbientePuerta','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n61EsAmbienteVentana','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n61EsAmbienteMuros','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n61EsAmbienteRevestimiento','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n61EsAmbientePiso','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n612AbreTipoId')
             ->add('estadoTipo')
             ->add('n61AmbientePisoMatTipo')

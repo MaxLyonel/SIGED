@@ -118,20 +118,20 @@ class InfoMaestroController extends Controller {
 
     public function resultAction(Request $request) {
 
-        // Verificamos si no ha caducado la session
-        if (!$this->session->get('userId')) {
+         // Verificamos si no ha caducado la session
+         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
-        $em = $this->getDoctrine()->getManager();
-        $personas = $em->getRepository('SieAppWebBundle:Persona')->findBy(array('carnet' => $form['carnetIdentidad'], 'esvigente' => 't'));
-
+        $persona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplemento($form);
+        
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id'));
 
         return $this->render($this->session->get('pathSystem') . ':InfoMaestro:result.html.twig', array(
-                    'personas' => $personas,
+                    'persona' => $persona,
                     'institucion' => $institucion,
                     'gestion' => $this->session->get('ie_gestion')
         ));
@@ -144,9 +144,9 @@ class InfoMaestroController extends Controller {
     private function searchForm() {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramientalt_info_maestro_result'))
-                ->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
-                ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
-                ->add('buscar', 'submit', array('label' => 'Buscar coincidencias por C.I.', 'attr' => array('class' => 'btn btn-primary')))
+                //->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
+                //->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
+                ->add('buscar', 'submit', array('label' => 'Buscar coincidencias', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
         return $form;
     }
