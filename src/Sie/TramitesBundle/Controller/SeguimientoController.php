@@ -157,15 +157,16 @@ class SeguimientoController extends Controller {
                 $codigo = base64_decode($codigo);
             }
 
-            $documentoController = new documentoController();
-            $documentoController->setContainer($this->container);
+            $tramiteController = new tramiteController();
+            $tramiteController->setContainer($this->container);
 
             try {
-                $entityDocumento = $documentoController->getDocumento($codigo);
+                $entityDocumento = $tramiteController->getTramite($codigo);
                 if(count($entityDocumento)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número documento'));
-                    return $this->redirect($this->generateUrl('tramite_seguimiento_documento_busca'));
                 }
+
+                $entityDocumento = $entityDocumento[0];
 
                 $tramiteProcesoController = new tramiteProcesoController();
                 $tramiteProcesoController->setContainer($this->container);
@@ -330,7 +331,6 @@ class SeguimientoController extends Controller {
                 $entityTramite = $tramiteController->getTramite($codigo);
                 if(count($entityTramite)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número de trámite'));
-                    return $this->redirect($this->generateUrl('tramite_seguimiento_documento_busca'));
                 }
 
                 $entityTramite = $entityTramite[0];
@@ -499,7 +499,6 @@ class SeguimientoController extends Controller {
                 $entityTramite = $tramiteController->getTramite($codigo);
                 if(count($entityTramite)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del código rude'));
-                    return $this->redirect($this->generateUrl('tramite_seguimiento_rude_busca'));
                 }
 
                 $entityTramite = $entityTramite[0];
@@ -669,7 +668,6 @@ class SeguimientoController extends Controller {
 
                 if(count($entityTramite)<=0){
                     $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la cédula de identidad'));
-                    return $this->redirect($this->generateUrl('tramite_seguimiento_cedula_busca'));
                 }
 
                 $entityTramite = $entityTramite[0];

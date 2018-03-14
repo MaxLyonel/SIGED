@@ -27,30 +27,24 @@
         <div class="panel-body">
 
           <div class="table-responsive mb-20">
-              <table class="table">
+              <table class="table table-striped">
                   <thead>
                       <tr>
                           <th class="text-center">Codigo</th>
                           <th>Instituto</th>
                           <th>Carrera</th>
-                          <th>Pensum</th>
-                          <th >Gestion</th>
+                          <th >Gestión</th>
                           <th >Periodo</th>
-                          <th>turno</th>
-                          <th>codigo Asig.</th>
+                          <th>Turno</th>
+                          <th>Código Asig.</th>
                           <th>Asignatura</th>
                           <th>Paralelo</th>
-                          <th>Matricula</th>
+                          <th>Matrícula</th>
                       </tr>
                   </thead>
                   <tbody>
                     {% for data in objInscriptionHistory %}
-                     {% if data.periodoid is odd %}
-                      <tr class="success">
-                     {% else %}
-                     <tr class="danger">
-                     {% endif %}
-
+                     <tr>
                           <td>{{data.institucioneducativa_id}}</td>
                           <td>{{data.institucioneducativa}}</td>
                           <td>{{data.nombre_carrera}}</td>
@@ -62,7 +56,6 @@
                           <td>{{data.asignatura}}</td>
                           <td>{{data.paralelo}}</td>
                           <td>{{data.estadomatricula}}</td>
-
                       </tr>
                     {% endfor %}
                   </tbody>
@@ -81,7 +74,7 @@
   <div class="col-md-12">
     <form method="POST" action="{{path('InscriptionDg_do_inscription_dg')}}" name="formInsc" id="formInsc" onsubmit="javascript:if(confirm('Esta seguro de realizar la inscripción? presione en OK para continuar')){return true;}else{return false;} ">
     <div class="table-responsive mb-20">
-        <table class="table">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th class="text-center">GESTIÓN</th>
@@ -90,7 +83,8 @@
                     <th>MATERIA/ASIGNATURA</th>
                     <th >TURNO</th>
                     <th>PARALELO</th>
-                    <th></th>
+                    <th>OBSERVACIÓN</th>
+                    <th>SELECCIONAR MATERIA/ASIGNATURA</th>
                 </tr>
             </thead>
             <tbody>
@@ -98,7 +92,7 @@
                 <input type="hidden" id="verificarReg_data" name="verificarReg[data]" value="{{data}}">
               {% for materias in objNextMaterias %}
 
-                <tr class="success">
+                <tr>
 
                     <td>{{materias.gestion_tipo_id}}</td>
                     <td>{{materias.periodo}}</td>
@@ -106,14 +100,23 @@
                     <td>{{materias.materia}}</td>
                     <td>{{materias.turno}}</td>
                     <td>{{materias.paralelo}}</td>
-                    <td align="center">
-                      <input type="checkbox" id="verificarReg_{{materias.ttec_paralelo_materia_id}}" name="verificarReg[parmat][{{materias.ttec_paralelo_materia_id}}]" >
+                    <td>
+                        {% if materias.id_obs == 1 %}
+                            <span class="text-success">{{materias.obs}}</span>
+                        {% else %}
+                            <span class="text-danger">{{materias.obs}}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if materias.id_obs == 1 %}
+                            <input type="checkbox" id="verificarReg_{{materias.ttec_paralelo_materia_id}}" name="verificarReg[parmat][{{materias.ttec_paralelo_materia_id}}]" >
+                        {% endif %}
                     </td>
 
                 </tr>
               {% endfor %}
 
-              <tr><td colspan="7"><div class="span4 pull-right"><input type="submit" class="btn btn-md btn-success" value="Registrar Inscripción"></div></td></tr>
+              <tr><td colspan="8"><div class="span4 pull-right"><input type="submit" class="btn btn-md btn-success" value="Registrar Inscripción"></div></td></tr>
 
             </tbody>
         </table>

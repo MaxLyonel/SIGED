@@ -23,7 +23,7 @@
 
 <form method="POST" action="{{path('InscriptionDg_do_inscription_dg')}}" name="formInsc" id="formInsc" onsubmit="javascript:if(confirm('Esta seguro de realizar la inscripción? presione en OK para continuar')){return true;}else{return false;} ">
 <div class="table-responsive mb-20">
-    <table class="table">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th class="text-center">GESTIÓN</th>
@@ -32,7 +32,8 @@
                 <th>MATERIA/ASIGNATURA</th>
                 <th >TURNO</th>
                 <th>PARALELO</th>
-                <th></th>
+                <th>OBSERVACIÓN</th>
+                <th>SELECCIONAR MATERIA/ASIGNATURA</th>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +41,7 @@
             <input type="hidden" id="verificarReg_data" name="verificarReg[data]" value="{{data}}">
           {% for materias in objNextMaterias %}
 
-            <tr class="success">
+            <tr>
 
                 <td>{{materias.gestion_tipo_id}}</td>
                 <td>{{materias.periodo}}</td>
@@ -48,14 +49,23 @@
                 <td>{{materias.materia}}</td>
                 <td>{{materias.turno}}</td>
                 <td>{{materias.paralelo}}</td>
-                <td align="center">
-                  <input type="checkbox" id="verificarReg_{{materias.ttec_paralelo_materia_id}}" name="verificarReg[parmat][{{materias.ttec_paralelo_materia_id}}]" >
+                <td>
+                    {% if materias.id_obs == 1 %}
+                        <span class="text-success">{{materias.obs}}</span>
+                    {% else %}
+                        <span class="text-danger">{{materias.obs}}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if materias.id_obs == 1 %}
+                        <input type="checkbox" id="verificarReg_{{materias.ttec_paralelo_materia_id}}" name="verificarReg[parmat][{{materias.ttec_paralelo_materia_id}}]" >
+                    {% endif %}
                 </td>
 
             </tr>
           {% endfor %}
 
-          <tr><td colspan="7"><div class="span4 pull-right"><input type="submit" class="btn btn-md btn-success" value="Registrar Inscripción"></div></td></tr>
+          <tr><td colspan="8"><div class="span4 pull-right"><input type="submit" class="btn btn-md btn-success" value="Registrar Inscripción"></div></td></tr>
 
         </tbody>
     </table>

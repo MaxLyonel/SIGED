@@ -209,6 +209,7 @@ class TramiteDetalleController extends Controller {
 
         $tramiteEstadoId = 1;
         $tramiteEstadoSiguienteId = 3;
+
         /*
          * Forma las entidades para ingresar sus valores (solo en caso de campos relacionados) - Tramite
          */
@@ -3187,7 +3188,7 @@ class TramiteDetalleController extends Controller {
             $entidadDepartamento = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $departamentoCodigo));
 
             $dep = $entidadDepartamento->getSigla();
-            
+
             $arch = 'AUTORIZACION_'.$sie.'_'.$ges.'_'.date('YmdHis').'.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');

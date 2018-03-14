@@ -462,9 +462,11 @@ class InscriptionGestionesPasadasController extends Controller {
                 ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
                 ->where('e.codigoRude = :id')
                 ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('i.institucioneducativaTipo = :itipo')
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
+                ->setParameter('itipo', 1)
                 ->setParameter('mat', array('5', '4'))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
