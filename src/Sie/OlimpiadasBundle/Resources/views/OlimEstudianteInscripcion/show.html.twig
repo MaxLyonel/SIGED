@@ -1,0 +1,68 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>OlimEstudianteInscripcion</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Telefonoestudiante</th>
+                <td>{{ entity.telefonoEstudiante }}</td>
+            </tr>
+            <tr>
+                <th>Correoestudiante</th>
+                <td>{{ entity.correoEstudiante }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Carnetcodepedis</th>
+                <td>{{ entity.carnetCodepedis }}</td>
+            </tr>
+            <tr>
+                <th>Carnetibc</th>
+                <td>{{ entity.carnetIbc }}</td>
+            </tr>
+            <tr>
+                <th>Navegador</th>
+                <td>{{ entity.navegador }}</td>
+            </tr>
+            <tr>
+                <th>Fotoestudiante</th>
+                <td>{{ entity.fotoEstudiante }}</td>
+            </tr>
+            <tr>
+                <th>Fechamodificacion</th>
+                <td>{{ entity.fechaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioregistroid</th>
+                <td>{{ entity.usuarioRegistroId }}</td>
+            </tr>
+            <tr>
+                <th>Usuariomodificacionid</th>
+                <td>{{ entity.usuarioModificacionId }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('oliminscriptions') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('oliminscriptions_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

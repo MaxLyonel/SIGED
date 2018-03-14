@@ -1,0 +1,61 @@
+<small>
+<div class="row">
+    <div class="col-md-6">
+        <button type="button" class="btn btn-inverse btn-danger btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addTutor('{{jsonDataInscription}}')">
+                    Registre Tutor
+        </button>
+
+        <!-- Start bordered table -->
+        <h4 class="no-margin">Lista Tutores</h4>
+        <!-- <button type="button" class="btn btn-inverse btn-xs" onclick="addTutor();">Registre tutor</button> -->
+
+        
+        <div class="table-responsive mb-20">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                       <th>#</th>
+                        <th>Datos Tutor</th>
+                        <th>Telefonos</th>
+                        <th>Correoelectronico</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entity in entities %}
+                        <tr>
+                            <td><a href="{{ path('olimtutor_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                            <td>{{ entity.nomnbre }} {{ entity.paterno }} {{ entity.materno }}</td>
+                            <td>{{ entity.telefono1 }}/{{ entity.telefono2 }}</td>
+                            <td>{{ entity.correoElectronico }}</td>
+                            <td>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('olimtutor_show', { 'id': entity.id }) }}">show</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('olimtutor_edit', { 'id': entity.id }) }}">edit</a>
+                                </li>
+                            </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div><!-- /.table-responsive -->
+        <!--/ End bordered table -->
+
+    </div>
+    <div class="col-md-6">
+
+      
+    </div><!-- /.table-responsive -->
+    <!--/ End hover table -->
+
+    </div>    
+</small>
+
+
+
+ 
+     

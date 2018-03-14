@@ -1,0 +1,54 @@
+olimtutor:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:index" }
+
+olimtutor_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:show" }
+
+olimtutor_new:
+    path:     /new
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:new" }
+
+olimtutor_create:
+    path:     /create
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:create" }
+    methods:  POST
+
+olimtutor_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:edit" }
+
+olimtutor_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:update" }
+    methods:  [POST, PUT]
+
+olimtutor_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:delete" }
+    methods:  [POST, DELETE]
+
+olimtutor_listTutor:
+    path:     /listTutor
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:listTutor" }
+    options:
+        expose: true
+
+olimtutor_addTutor:
+    path:     /addTutor
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:addTutor" }
+    options:
+        expose: true
+
+olimtutor_buscarTutor:
+    path:     /buscarTutor
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:buscarTutor" }
+    options:
+        expose: true
+
+olimtutor_registrarTutor:
+    path:     /registrarTutor
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:registrarTutor" }
+    options:
+        expose: true

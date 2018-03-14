@@ -1,0 +1,305 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Incripciones <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-pencil"></i>
+                    <a href="{{path('infra_list_index')}}">
+                       Inscripciones
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+    <div class="row">
+          <div class="col-md-6 col-md-offset-3">
+              <!-- this is the beginner -->
+
+                                    <!-- Start select fields - basic form -->
+                        <div class="panel rounded shadow no-overflow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"></h3>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body no-padding">
+                                {{form_start(form, { 'attr':{'id':'idForminscriptionOlim'} })}}
+                                    <div class="form-body">
+                                          
+                                      <div class="row">
+                                          <div class="col-md-4">
+                                              {% if app.session.get('roluser') == 8 %}
+                                              SIE:
+                                                {{form_widget(form.institucionEducativa, {'attr': {'class':'form-control'} } )}}
+                                              {% endif %}
+                                          </div>
+                                          <div class="col-md-4">
+                                            MATERIA:
+                                              {{form_widget(form.olimMateria, {'attr': {'class':'form-control'} } )}}
+                                          </div>
+                                          <div class="col-md-4">
+                                            GESTION;
+                                              {{form_widget(form.gestion, {'attr': {'class':'form-control'} } )}}
+                                          </div>
+                                      </div>
+
+                                    </div><!-- /.form-body -->
+                                    <div class="form-footer">
+                                        <div class="pull-right">
+                                            <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
+                                             {{form_widget(form.buscar, {'attr': {'class':'btn btn-primary'} } )}}
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.form-footer -->
+                                          
+                                {{form_end(form)}}
+
+                            </div><!-- /.panel-body -->
+                        </div><!-- /.panel -->
+                        <!--/ End select fields - basic form -->
+
+                        
+
+            <!-- this is the end -->
+            
+            
+
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div id="idResult">
+            
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">      
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+
+    var openInscriptinoOlimpiadas = function(){
+      formData = $('#idForminscriptionOlim').serialize();
+       $.ajax({
+             type: 'post',
+             url: Routing.generate('oliminscriptions_openInscriptinoOlimpiadas'),
+             data: formData,
+             beforeSend: function () {
+                 $("#idResult").empty();
+                 $("#idResult").empty();
+                 $("#idResult").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idResult").empty();
+                 $("#idResult").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+      
+    };
+
+    var regDirector = function(datainscription){
+      
+         $.ajax({
+             type: 'post',
+             url: Routing.generate('olimdirectordata_regDirector'),
+             data: {datainscription: datainscription},
+             beforeSend: function () {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+    };
+
+
+    var saveDataDirector = function(){
+
+    formData = $('#idFormDirector').serialize();
+    // alert(formData);return false;
+       $.ajax({
+             type: 'post',
+             url: Routing.generate('olimdirectordata_saveDataDirector'),
+             data: formData,
+             beforeSend: function () {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+    };
+
+
+     var listTutor = function(datainscription){
+      
+         $.ajax({
+             type: 'post',
+             url: Routing.generate('olimtutor_listTutor'),
+             data: {datainscription: datainscription},
+             beforeSend: function () {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+    };
+
+
+    var addTutor = function(jsonDataInscription){
+       $.ajax({
+                type: 'post',
+                data: ({jsonDataInscription: jsonDataInscription}),
+                // url: "{{ path('infrah6ambadmambiente_addnewh6ambiente') }}",
+                url: Routing.generate('olimtutor_addTutor'),
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    }
+
+    var buscarTutor = function (){
+
+
+    formData = $('#addTutorFormId').serialize();
+    // alert(formData);return false;
+       $.ajax({
+             type: 'post',
+             url: Routing.generate('olimtutor_buscarTutor'),
+             data: formData,
+             beforeSend: function () {
+                 $("#idanswerTutors").empty();
+                 $("#idanswerTutors").empty();
+                 $("#idanswerTutors").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idanswerTutors").empty();
+                 $("#idanswerTutors").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+    };
+
+
+
+    var registrarTutor = function(){
+
+      formData = $('#regTutorFormId').serialize();
+         $.ajax({
+                  type: 'post',
+                  data: formData,
+                  url: "{{ path('olimtutor_registrarTutor') }}",
+                  beforeSend: function () {
+                      $('#modal').modal('hide');
+                      $('#idanswerTutors').empty();
+                      $("#idanswerTutors").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                  },
+                  success: function (data) {
+                      $('#idOptionResult').empty();
+                      $('#idOptionResult').append(data);
+
+                  },
+                  statusCode: {
+                      500: function () {
+
+                      },
+                      404: function () {
+
+                      }
+                  }
+              });
+    };
+
+
+
+    </script>
+
+    
+    
+{% endblock %}

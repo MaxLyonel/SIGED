@@ -1,0 +1,56 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>OlimTutor</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Telefono1</th>
+                <td>{{ entity.telefono1 }}</td>
+            </tr>
+            <tr>
+                <th>Telefono2</th>
+                <td>{{ entity.telefono2 }}</td>
+            </tr>
+            <tr>
+                <th>Correoelectronico</th>
+                <td>{{ entity.correoElectronico }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Fechamodificacion</th>
+                <td>{{ entity.fechaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioregistroid</th>
+                <td>{{ entity.usuarioRegistroId }}</td>
+            </tr>
+            <tr>
+                <th>Usuariomodificacionid</th>
+                <td>{{ entity.usuarioModificacionId }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('olimtutor') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('olimtutor_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

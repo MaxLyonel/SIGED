@@ -1,0 +1,44 @@
+oliminscriptions:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:index" }
+
+oliminscriptions_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:show" }
+
+oliminscriptions_new:
+    path:     /new
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:new" }
+
+oliminscriptions_create:
+    path:     /create
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:create" }
+    methods:  POST
+
+oliminscriptions_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:edit" }
+
+oliminscriptions_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:update" }
+    methods:  [POST, PUT]
+
+oliminscriptions_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:delete" }
+    methods:  [POST, DELETE]
+
+oliminscriptions_openInscriptinoOlimpiadas:
+    path:     /openInscriptinoOlimpiadas
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:openInscriptinoOlimpiadas" }
+    options:
+        expose: true
+        
+oliminscriptions_regDirector:
+    path:     /regDirector
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:regDirector" }
+    options:
+        expose: true
+
+
