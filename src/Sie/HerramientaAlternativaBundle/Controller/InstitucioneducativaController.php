@@ -1640,4 +1640,48 @@ class InstitucioneducativaController extends Controller {
 //        dump($objUeducativa);die;
     }
 
+    public function manualesAction(Request $request){
+
+        $sesion = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getEntityManager();
+        $db = $em->getConnection();
+        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));
+        $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
+        // dump($idlugarusuario);die;
+
+
+        // dump($request);die;
+
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        //validationremoveInscriptionAction if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        //get and set the variables
+
+        $arrDataReport = array(
+            'roluser' => $this->session->get('roluser'),
+            'userId' => $this->session->get('userId'),
+            'sie' => $this->session->get('ie_id'),
+            'gestion' => $this->session->get('ie_gestion'),
+            'subcea' => $this->session->get('ie_subcea'),
+            'periodo' => $this->session->get('ie_per_cod'),
+            'lugarid'=> $idlugarusuario
+        );
+
+        return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:manuales.html.twig', array(
+            'dataReport' => $arrDataReport,
+            'dataInfo' => serialize($arrDataReport),
+        ));
+
+
+
+//        $em = $this->getDoctrine()->getManager();
+//        $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPer($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'));
+//        dump($objUeducativa);die;
+    }
+
 }

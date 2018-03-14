@@ -2,34 +2,31 @@ sie_permanente_homepage:
     path:     /hello/{name}
     defaults: { _controller: SiePermanenteBundle:Default:index }
 
-sie_app_web_carreras_tecnica:
-    resource: "@SiePermanenteBundle/Resources/config/routing/carrerastecnica.yml"
-    prefix:   /sie/carreras
-    
-sie_app_web_institucioneducativa_curso_tecnica:
-    resource: "@SiePermanenteBundle/Resources/config/routing/institucioneducativaCursoTecnica.yml"
-    prefix:   /sie/institucioncursotecnica
-    
-sie_app_web_estudianteinscripcion_tecnica:
-    resource: "@SiePermanenteBundle/Resources/config/routing/estudianteinscripcionTecnica.yml"
-    prefix:   /sie/estudianteinscripciontecnica
+sie_permanente_ceducativa:
+    resource: "@SiePermanenteBundle/Resources/config/routing/ceducativa.yml"
+    prefix:   /persie/ieducativa
 
-sie_app_web_curso_corto:
-    resource: "@SiePermanenteBundle/Resources/config/routing/cursocorto.yml"
-    prefix:   /sie/cursocorto
+sie_permanente_reportes:
+    resource: "@SiePermanenteBundle/Resources/config/routing/reportes.yml"
+    prefix:   /persie/reportesper
 
-sie_app_web_curso_largo:
-    resource: "@SiePermanenteBundle/Resources/config/routing/cursolargo.yml"
-    prefix:   /sie/cursolargo
 
-sie_app_web_institucion_curso_corto:
-    resource: "@SiePermanenteBundle/Resources/config/routing/institucioncursocorto.yml"
-    prefix:   /sie/institucioncursocorto
+sie_permanente_info_personal_adm:
+    resource: "@SiePermanenteBundle/Resources/config/routing/infoPersonalAdm.yml"
+    prefix:   /persie/infoPersonalAdmAlt
 
-sie_app_web_institucion_curso_largo:
-    resource: "@SiePermanenteBundle/Resources/config/routing/institucioncursolargo.yml"
-    prefix:   /sie/institucioncursolargo
+sie_permanente_info_maestro:
+    resource: "@SiePermanenteBundle/Resources/config/routing/infoMaestro.yml"
+    prefix:   /persie/infoMaestroAlt
 
-sie_app_web_area_tematica:
-    resource: "@SiePermanenteBundle/Resources/config/routing/areatematica.yml"
-    prefix:   /sie/areatematica
+sie_permanente_cursos:
+    resource: "@SiePermanenteBundle/Resources/config/routing/cursos.yml"
+    prefix:   /persie/cursos
+
+sie_permanente_malla_tecnica:
+    resource: "@SiePermanenteBundle/Resources/config/routing/mallaTecnica.yml"
+    prefix:   /persie/mallaTecnica
+
+sie_permanente_cursos_cortos:
+    resource: "@SiePermanenteBundle/Resources/config/routing/cursosCortos.yml"
+    prefix:   /persie/cursosCortos

@@ -111,3 +111,9 @@ herramientalt_ceducativa_estadistiscas_departamento:
 sie_alt_reportes_diversa:
     path:     /sie/reportesDiversa
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:reporteDiversa}
+    options:
+         expose: true
+
+sie_alt_manuales:
+    path:     /sie/manuales
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:manuales}

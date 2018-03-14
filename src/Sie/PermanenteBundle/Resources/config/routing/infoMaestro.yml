@@ -1,0 +1,78 @@
+permanente_info_maestro_index:
+    path:     /
+    defaults: { _controller: SiePermanenteBundle:InfoMaestro:index}
+
+permanente_info_maestro_second:
+    path:     /sie/second
+    defaults: { _controller: SiePermanenteBundle:InfoMaestro:second}
+
+herramienta_info_maestro_third:
+    path:     /sie/third
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:loadThird"}
+    options:
+         expose: true
+
+permanente_info_maestro_show:
+    path:     /{id}/show
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:show" }
+
+permanente_info_maestro_new:
+    path:     /new/
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:new" }
+    methods:  [POST, PUT]
+
+permanente_info_maestro_create:
+    path:     /create/
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:create" }
+    methods:  POST
+
+permanente_info_maestro_edit:
+    path:     /edit/
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:edit" }
+    methods:  [POST, PUT]
+
+permanente_info_maestro_update:
+    path:     /update/
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:update" }
+    methods:  [POST, PUT]
+
+permanente_info_maestro_delete:
+    path:     /delete/
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:delete" }
+    methods:  [POST, DELETE]
+    
+permanente_info_maestro_search:
+    path:     /search/
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:search" }
+    methods:  POST
+
+permanente_info_maestro_find:
+    path:     /find/
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:find" }
+    
+permanente_info_maestro_result:
+    path:     /result/
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:result" }    
+
+permanente_listaridiomasleehablaescribe:
+     path:    /idiomas/
+     defaults: { _controller: SiePermanenteBundle:InfoMaestro:listaridiomasleehablaescribe }
+     options:
+         expose: true
+
+permanente_listaridiomasleehablaescribe_edit:
+     path:    /idiomasmaestro/{idMaestroInscripcion}/
+     defaults: { _controller: SiePermanenteBundle:InfoMaestro:listaridiomasleehablaescribeedit }
+     options:
+         expose: true
+
+permanente_verificar_existe_persona:
+     path:    /verificar_existe_persona/{carnet}/
+     defaults: { _controller: SiePermanenteBundle:InfoMaestro:verificar_existe_persona }
+     options:
+         expose: true    
+
+permanente_info_maestro_es_vigente_maestro:
+    path:     /maestroVigente/
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:esVigenteMaestro" }
+    methods:  [POST, PUT]         

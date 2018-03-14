@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\PenalTipo:
+    type: entity
+    table: penal_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        penalTipo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: penal_tipo
+    lifecycleCallbacks: {  }

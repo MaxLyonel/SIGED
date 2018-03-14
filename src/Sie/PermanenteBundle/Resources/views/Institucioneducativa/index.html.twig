@@ -1,0 +1,482 @@
+{% extends 'layoutPermanente.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-university"></i> Datos del Centro de Educación Alternativa <span>Teléfono, email, casilla postal.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-th-large"></i>
+                    <a href="{{path('herramienta_per_ceducativa_menu_principal')}}">Menu Principal</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-university"></i>
+                    Datos del CEA
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+
+    <div class="body-content animated fadeIn">
+
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('noTuicion') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-teal">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Datos del Centro de Educación Alternativa</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary">
+                            {% if(ieducativa) %}
+                                {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} }) }}
+                                <div class="row">
+                                    <div class="col-md-9 col-sm-9 col-xs-9">
+                                        <div class="panel panel-lilac">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">1.- Datos de Identificación</h3>
+                                            </div><!-- /.panel-heading -->
+                                            <div class="panel-body">
+
+                                                {% set iedu = ieducativa[0] %}
+                                                {% set iedusu = ieducativa[1] %}
+                                                {% set ubicacion = ubicacion[0] %}
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <strong>Código del Centro de Educación Alternativa (CEA)</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input value="{{ iedu.id }}" id="readonlyinput1" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <strong>Nombre del Centro de Educación Alternativa (CEA)</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input value="{{ iedu.institucioneducativa }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    {% if director %}
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <strong>Nombre de la Directora ó Director encargada/o del CEA</strong>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <input value="{{ director.paterno ~' '~ director.materno ~' '~ director.nombre }}" id="readonlyinput1" class="form-control" readonly="readonly" type="text">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <strong>C.I. Directora ó Director Encargada/o</strong>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <input value="{{ director.carnet }}" class="form-control" readonly="readonly" type="text">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <strong>{{ form_label(form.telefono2) }}</strong>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    {{form_widget(form.telefono2) }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <strong>Nombre de la Directora ó Director encargada/o del CEA</strong>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <p>El CEA no ha registrado a la Directora o al Director. <span class="text-danger">(Verifique en el módulo de Gestión de Personal Administrativo)</span></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <strong>{{ form_label(form.email) }}</strong>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <strong>{{ form_label(form.telefono1) }}</strong>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <strong>{{ form_label(form.casilla) }}</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                {{form_widget(form.email) }}
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                {{form_widget(form.telefono1) }}
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                {{form_widget(form.casilla) }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div><!-- /.panel-body -->
+                                        </div><!-- /.panel -->
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3">
+                                        <div class="panel panel-lilac">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">¿El CEA está cerrado?</h3>
+                                            </div><!-- /.panel-heading -->
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input value="{{ ubicacion['estadoinstitucion'] }}" class="form-control text-center" readonly="readonly" type="text">
+                                                    </div>
+                                                </div>
+                                            </div><!-- /.panel-body -->
+                                        </div><!-- /.panel -->
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="panel panel-lilac">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">2.- Datos de Ubicación del Edificio Escolar</h3>
+                                            </div><!-- /.panel-heading -->
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                Departamento:
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <input value="{{ ubicacion['codigo_departamento'] }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                            <div class="col-md-7">
+                                                                <input value="{{ ubicacion['departamento'] }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                Sección Municipal:
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <input value="{{ ubicacion['codigo_seccion'] }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                            <div class="col-md-7">
+                                                                <input value="{{ ubicacion['seccion'] }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                Ciudad o Localidad:
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <input value="{{ ubicacion['codigo_localidad'] }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                            <div class="col-md-7">
+                                                                <input value="{{ ubicacion['localidad'] }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                Provincia:
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <input value="{{ ubicacion['codigo_provincia'] }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                            <div class="col-md-7">
+                                                                <input value="{{ ubicacion['provincia'] }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                Cantón:
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <input value="{{ ubicacion['codigo_canton'] }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                            <div class="col-md-7">
+                                                                <input value="{{ ubicacion['canton'] }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                Zona:
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                <input value="{{ iedusu.zona }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                Código de Edificio Escolar
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['codigo_le'] }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                Dirección
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['direccion'] }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                Área
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['area2001'] }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- /.panel-body -->
+                                        </div><!-- /.panel -->
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="panel panel-lilac">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">3.- Jurisdicción Administrativa</h3>
+                                            </div><!-- /.panel-heading -->
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                Código de Distrito
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['codigo_distrito'] }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                Nombre de Distrito
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['distrito'] }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- /.panel-body -->
+                                        </div><!-- /.panel -->
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="panel panel-lilac">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">4.- Dependencia</h3>
+                                            </div><!-- /.panel-heading -->
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                Descripción
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['dependencia'] }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                Turno
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                {{ form_widget(form.turno) }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- /.panel-body -->
+                                        </div><!-- /.panel -->
+                                    </div>
+                                </div>
+                                {% if app.session.get('ie_per_estado') != '0' %}
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-lg-12 text-center">
+                                                {{ form_widget(form.guardar ) }}
+                                                <a href="{{ path('herramienta_per_ceducativa_menu_principal') }}" class="btn btn-default">Cancelar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {{ form_end(form) }}
+                                
+                            {% else %}
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="callout callout-warning">
+                                            <strong>¡Advertencia!</strong> No Existe información para el CEA en la presente gestión.
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if app.session.get('roluser') != '2' %}
+            <div class="row">
+                <div class="col-md-12 well well-sm">
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <a class="btn btn-default btn-lg btn-slidedown" href="{{path('permanente_reporte_siecaratula')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Generar Carátula</a>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <a class="btn btn-default btn-lg btn-slidedown" href="{{path('permanente_reporte_sieadministrativos')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Lista Administrativos.</a>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <a class="btn btn-default btn-lg btn-slidedown" href="{{path('permanente_reporte_siemaestros')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Lista Docentes</a>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <a class="btn btn-default btn-lg btn-slidedown" href="{{path('permanente_reporte_sieparticipantes')}}"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> Lista Participantes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    </script>
+{% endblock %}
+

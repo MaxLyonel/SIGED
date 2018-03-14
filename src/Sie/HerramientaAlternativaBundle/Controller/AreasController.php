@@ -319,9 +319,9 @@ class AreasController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro');
         $query = $repository->createQueryBuilder('iecom')
                 ->where('iecom.institucioneducativaCursoOferta = :curso')
-                //->andWhere('iecom.notaTipo = :nota')
+                ->andWhere('iecom.notaTipo = :nota')
                 ->setParameter('curso', $cursoOferta)
-                //->setParameter('nota', $notaT)
+                ->setParameter('nota', $notaT)
                 ->getQuery();
 
         $maestrosMateria = $query->getResult();

@@ -1,0 +1,114 @@
+permanente_reporte_siecaratula:
+    path:     /sie100
+    defaults: { _controller: SiePermanenteBundle:Reportes:siecaratula }
+    
+permanente_reporte_sieadministrativos:
+    path:     /sieadminsitrativos
+    defaults: { _controller: SiePermanenteBundle:Reportes:sieadministrativos }
+    
+permanente_reporte_siemaestros:
+    path:     /siemaestros
+    defaults: { _controller: SiePermanenteBundle:Reportes:siemaestros }
+    
+
+permanente_reporte_mallatecnica:
+    path:     /mallatecnica
+    defaults: { _controller: SiePermanenteBundle:Reportes:mallatecnica }
+    
+permanente_reporte_observacionesoperativo:
+    path:     /observacionesoperativo
+    defaults: { _controller: SiePermanenteBundle:Reportes:observacionesoperativo }
+    
+permanente_reporte_centralizadores:
+    path:     /centralizadores
+    defaults: { _controller: SiePermanenteBundle:Reportes:centralizadores }
+    
+permanente_reporte_sieparticipantes:
+    path:     /sieparticipantes
+    defaults: { _controller: SiePermanenteBundle:Reportes:sieparticipantes }
+    
+permanente_libretas:
+    path:     /{eInsId}/{nivel}/siealtlibretas
+    defaults: { _controller: SiePermanenteBundle:Reportes:siealtlibretas }
+    
+permanente_reporte_observacionesoperativoinicio:
+    path:     /observacionesoperativoinicio
+    defaults: { _controller: SiePermanenteBundle:Reportes:observacionesoperativoinicio }
+    
+permanente_reporte_ddjj_hum:
+    path:     /ddjjhum
+    defaults: { _controller: SiePermanenteBundle:Reportes:ddjjhum }
+    
+permanente_reporte_ddjj_tec:
+    path:     /ddjjtec
+    defaults: { _controller: SiePermanenteBundle:Reportes:ddjjtec }
+    
+permanente_reporte_socioeconomico:
+    path:     /socioeconomico
+    defaults: { _controller: SiePermanenteBundle:Reportes:socioeconomico }
+
+permanente_reporte_edudiv_som_esp:
+    path:     /reportEsp/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEsp }
+
+permanente_reporte_edudiv_som_est:
+    path:     /reportEst/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEst }
+
+permanente_reporte_edudiv_som_espex:
+    path:     /reportEspEX/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEspEX }
+
+permanente_reporte_edudiv_som_estex:
+    path:     /reportEstEX/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEstEX }
+
+permanente_reporte_edudiv_pece_esp:
+    path:     /reportEspPece/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEspPece }
+
+permanente_reporte_edudiv_pece_est:
+    path:     /reportEstPece/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEstPece }
+
+permanente_reporte_edudiv_pece_espex:
+    path:     /reportEspEXPece/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEspEXPece }
+
+permanente_reporte_edudiv_pece_estex:
+    path:     /reportEstEXPece/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEstEXPece }
+
+permanente_reporte_edudiv_th_esp:
+    path:     /reportEspTh/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEspTh }
+
+permanente_reporte_edudiv_th_est:
+    path:     /reportEstTh/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEstTh }
+
+permanente_reporte_edudiv_th_espex:
+    path:     /reportEspEXTh/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEspEXTh }
+
+permanente_reporte_edudiv_th_estex:
+    path:     /reportEstEXTh/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportEstEXTh }
+
+permanente_reporte_edudiv_maestros_instructores_list:
+    path:     /reportListMaestroIns/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportListMaestroIns }
+
+permanente_reporte_edudiv_maestros_instructores_listex:
+    path:     /reportListMaestroInsEX/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportListMaestroInsEX }
+
+permanente_reporte_edudiv_maestros_penitenciario_list:
+    path:     /reportListMaestroRecP/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportListMaestroRecP }
+
+permanente_reporte_edudiv_maestros_penitenciario_listex:
+    path:     /reportListMaestroRecPEX/{dataInfo}
+    defaults: { _controller: SiePermanenteBundle:Reportes:reportListMaestroRecPEX }
+
+

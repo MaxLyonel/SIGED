@@ -77,7 +77,7 @@
                     </button>
                 </form>
             </div>
-        {% endif %}
+        {% endif%}
         {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') %}
             {# if existins == false #}
                 <div class="col-md-3">
@@ -324,10 +324,12 @@
             beforeSend: function () {
                 $('#modal').empty();
                 $("#modal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" /></div>');
+
             },
             success: function (data) {
                 $('#modal').empty();
                 $('#modal').append(data);
+                reloadmyform();
             },
             statusCode: {
                 500: function () {
@@ -339,6 +341,21 @@
             }
         });
     }
+
+    function reloadmyform(){
+/*
+        $('#id').change(function () {
+            listarmenu($('#form_seccioniiEducacionDiversa').val());
+        });
+        $('#id').on('change', function () {
+            listarmenu($('#form_seccioniiEducacionDiversa').val());
+        });*/
+      //  alert($('#form_seccioniiEducacionDiversa').val());return false;
+        $("#answerID").trigger(onchange(listarmenu($('#form_seccioniiEducacionDiversaTipo').val())));
+       // $("#answerIDUM").trigger(onchange(tipomili($('#form_seccioniiUnidadMilitarTipo').val())));
+        //$("#answerIDP").trigger(onchange(tipopenal($('#form_seccioniiPenalTipo').val())));
+    }
+
 
     var removeInscriptionStudent = function (infoUe, infoStudent) {
 

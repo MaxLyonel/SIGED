@@ -1,0 +1,80 @@
+
+
+{% if  dataidM.id == 1 %}
+
+    <tr>
+        <td>Persona General... Asegurese de guardar sus datos en la pestaña VI. de FINALIZACION DE REGISTRO</td>
+    </tr>
+
+
+{% elseif ( dataidM.id == 2) %}
+
+<div class="panel-body">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+
+
+    <tr>
+        <td>Seleccione su unidad militar si usted es Soldado/Marinero</td>
+        <td><div class="col-md-9 form-group">{{ form_widget(formlista.seccioniiFuerzaMilitarTipo) }}</div><div class="form-group" id="answerIDUM"></div></td>
+    </tr>
+
+    <tr>
+        <td><div class="col-md-5 form-group">   <div class="form-group"></div></div></td>
+        <td><div class="col-md-9 form-group">{{ form_widget(formlista.seccioniiUnidadMilitarTipo) }}</div></td>
+    </tr>
+
+    <tr>
+        <td><div class="col-md-10 form-group">La formación educativa del estudiante se realiza en:</div></td>
+        <td><div class="col-md-5 form-group">{{ form_widget(formlista.seccioniiEsserviciomilitarCea) }}</div></td>
+    </tr>
+        </table>
+    </div>
+</div>
+
+
+{% elseif (dataidM.id == 3) %}
+
+<div class="panel-body">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+
+    <tr>
+        <td>Seleccione su Recinto Penintenciario</td>
+        <td><div class="col-md-9 form-group">{{ form_widget(formlista.seccioniiLugarReclusionTipo) }}</div><div class="form-group" id="answerIDP"></div></td>
+    </tr>
+
+    <tr>
+        <td><div class="col-md-5 form-group">   <div class="form-group"></div></div></td>
+        <td><div class="col-md-9 form-group">{{ form_widget(formlista.seccioniiRecintoPenitenciarioTipo) }} </div></td>
+    </tr>
+
+        </table>
+    </div>
+</div>
+
+
+{% elseif (dataidM.id == 4) %}
+    <tr>
+        <td>Persona Trabajador(a) del Hogar... Asegurese de guardar sus datos en la pestaña VI. de FINALIZACION DE REGISTRO</td>
+    </tr>
+
+
+{% else %}
+
+    <tr>
+        <td>SELECCIONE UNA OPCION</td>
+    </tr>
+
+{% endif %}
+
+
+<script>
+
+
+
+
+
+
+
+</script>

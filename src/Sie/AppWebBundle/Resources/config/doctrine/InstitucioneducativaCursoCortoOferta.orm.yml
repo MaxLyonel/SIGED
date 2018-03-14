@@ -1,0 +1,56 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaCursoCortoOferta:
+    type: entity
+    table: institucioneducativa_curso_corto_oferta
+    indexes:
+        IDX_77B53C47A4B6FF2:
+            columns:
+                - maestro_inscripcion_id
+        IDX_77B53C47CF0374F6:
+            columns:
+                - institucioneducativa_curso_corto_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        horas:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+        modulo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    manyToOne:
+        maestroInscripcion:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestro_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaCursoCorto:
+            targetEntity: InstitucioneducativaCursoCorto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_corto_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
