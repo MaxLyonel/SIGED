@@ -585,29 +585,24 @@ class InfoMaestroController extends Controller {
      */
 
     public function listaridiomasleehablaescribeAction() {
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $em->getConnection()->beginTransaction();
-            //$idioma = $em->getRepository('SieAppWebBundle:IdiomaMaterno')->findAll();
-            $idioma = $em->createQuery(
-                    'SELECT iom FROM SieAppWebBundle:IdiomaMaterno iom
-                        ORDER BY iom.idiomaMaterno');
-            $idiomas = array();
-            foreach ($idioma as $i) {
-                $idiomas[$i->getId()] = $i->getIdiomaMaterno();
-            }
-            $conoce = $em->getRepository('SieAppWebBundle:IdiomaconoceTipo')->findAll();
-            $conocimiento = array();
-            foreach ($conoce as $c) {
-                $conocimiento[$c->getId()] = $c->getIdiomaConoce();
-            }
 
-            $response = new JsonResponse();
-            $em->getConnection()->commit();
-            return $response->setData(array('idiomas' => $idiomas, 'conoce' => $conocimiento));
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();
+        $em = $this->getDoctrine()->getManager();
+        $idioma = $em->getRepository('SieAppWebBundle:IdiomaMaterno')->findAll();
+        
+        $idiomas = array();
+        
+        foreach ($idioma as $i) {
+            $idiomas[$i->getId()] = $i->getIdiomaMaterno();
         }
+
+        $conoce = $em->getRepository('SieAppWebBundle:IdiomaconoceTipo')->findAll();
+        $conocimiento = array();
+        foreach ($conoce as $c) {
+            $conocimiento[$c->getId()] = $c->getIdiomaConoce();
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('idiomas' => $idiomas, 'conoce' => $conocimiento));
     }
 
     /*
@@ -616,34 +611,28 @@ class InfoMaestroController extends Controller {
      */
 
     public function listaridiomasleehablaescribeeditAction($idMaestroInscripcion) {
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $em->getConnection()->beginTransaction();
-            $idiomasM = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $idMaestroInscripcion));
-            $idiomasMaestro = array();
-            foreach ($idiomasM as $im) {
-                $idiomasMaestro[$im->getId()] = array('idioma' => $im->getIdiomaMaterno()->getId(), 'lee' => $im->getIdiomaconoceTipoLee()->getId(), 'habla' => $im->getIdiomaconoceTipoHabla()->getId(), 'escribe' => $im->getIdiomaconoceTipoEscribe()->getId());
-            }
-            //die;
-            //$idioma = $em->getRepository('SieAppWebBundle:IdiomaMaterno')->findAll();
-            $idioma = $em->createQuery(
-                    'SELECT iom FROM SieAppWebBundle:IdiomaMaterno iom
-                        ORDER BY iom.idiomaMaterno');
-            $idiomas = array();
-            foreach ($idioma as $i) {
-                $idiomas[$i->getId()] = $i->getIdiomaMaterno();
-            }
-            $conoce = $em->getRepository('SieAppWebBundle:IdiomaconoceTipo')->findAll();
-            $conocimiento = array();
-            foreach ($conoce as $c) {
-                $conocimiento[$c->getId()] = $c->getIdiomaConoce();
-            }
-            $em->getConnection()->commit();
-            $response = new JsonResponse();
-            return $response->setData(array('idiomasMaestro' => $idiomasMaestro, 'idiomas' => $idiomas, 'conoce' => $conocimiento));
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();
+
+        $em = $this->getDoctrine()->getManager();
+        
+        $idiomasM = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $idMaestroInscripcion));
+        $idiomasMaestro = array();
+        foreach ($idiomasM as $im) {
+            $idiomasMaestro[$im->getId()] = array('idioma' => $im->getIdiomaMaterno()->getId(), 'lee' => $im->getIdiomaconoceTipoLee()->getId(), 'habla' => $im->getIdiomaconoceTipoHabla()->getId(), 'escribe' => $im->getIdiomaconoceTipoEscribe()->getId());
         }
+        
+        $idioma = $em->getRepository('SieAppWebBundle:IdiomaMaterno')->findAll();
+        
+        foreach ($idioma as $i) {
+            $idiomas[$i->getId()] = $i->getIdiomaMaterno();
+        }
+        $conoce = $em->getRepository('SieAppWebBundle:IdiomaconoceTipo')->findAll();
+        $conocimiento = array();
+        foreach ($conoce as $c) {
+            $conocimiento[$c->getId()] = $c->getIdiomaConoce();
+        }
+        
+        $response = new JsonResponse();
+        return $response->setData(array('idiomasMaestro' => $idiomasMaestro, 'idiomas' => $idiomas, 'conoce' => $conocimiento));
     }
 
     /*
