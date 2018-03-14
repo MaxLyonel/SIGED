@@ -565,7 +565,7 @@
 
             peticion2 = $.ajax({
                 type: 'get',
-                url: Routing.generate('bjp_rue_clistarmunicipios', {'prov': idProv}),
+                url: Routing.generate('sie_alt_clistarmunicipios', {'prov': idProv}),
                 beforeSend: function () {
 
                 },
@@ -592,7 +592,7 @@
 
             peticion3 = $.ajax({
                 type: 'get',
-                url: Routing.generate('bjp_rue_clistarcantones', {'muni': idMuni}),
+                url: Routing.generate('sie_alt_clistarcantones', {'muni': idMuni}),
                 beforeSend: function () {
 
                 },
@@ -617,7 +617,7 @@
 
             peticion4 = $.ajax({
                 type: 'get',
-                url: Routing.generate('bjp_rue_clistarlocalidades', {'cantn': idCantn}),
+                url: Routing.generate('sie_alt_clistarlocalidades', {'cantn': idCantn}),
                 beforeSend: function () {
 
                 },

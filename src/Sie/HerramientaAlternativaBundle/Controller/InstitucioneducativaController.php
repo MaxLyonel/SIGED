@@ -1711,4 +1711,118 @@ class InstitucioneducativaController extends Controller {
         }
     }
 
+    public function listarmunicipiosAction($prov) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 3)
+                ->setParameter('lt1', $prov);
+            $municipios = $query->getResult();
+
+            $municipiosArray = array();
+            foreach ($municipios as $c) {
+                $municipiosArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listamunicipios' => $municipiosArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarcantonesAction($muni) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 4)
+                ->setParameter('lt1', $muni);
+            $cantones = $query->getResult();
+
+            $cantonesArray = array();
+            foreach ($cantones as $c) {
+                $cantonesArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listacantones' => $cantonesArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarlocalidadesAction($cantn) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 5)
+                ->setParameter('lt1', $cantn);
+            $localidades = $query->getResult();
+
+            $localidadesArray = array();
+            foreach ($localidades as $c) {
+                $localidadesArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listalocalidades' => $localidadesArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listardistritosAction($dpto) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT dt
+                    FROM SieAppWebBundle:DistritoTipo dt
+                    WHERE dt.id NOT IN (:ids)
+                    AND dt.departamentoTipo = :dpto
+                    ORDER BY dt.id')
+                ->setParameter('ids', array(1000,2000,3000,4000,5000,6000,7000,8000,9000))
+                ->setParameter('dpto', $dpto);
+            $distritos = $query->getResult();
+
+            $distritosArray = array();
+            foreach ($distritos as $c) {
+                $distritosArray[$c->getId()] = $c->getDistrito();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listadistritos' => $distritosArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
 }
