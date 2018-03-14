@@ -75,4 +75,4 @@ herramientalt_verificar_existe_persona:
 herramientalt_info_maestro_es_vigente_maestro:
     path:     /maestroVigente/
     defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:esVigenteMaestro" }
-    methods:  [POST, PUT]         
+    methods:  [POST, PUT]

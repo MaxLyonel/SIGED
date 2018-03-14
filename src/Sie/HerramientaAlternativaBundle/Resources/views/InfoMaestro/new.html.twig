@@ -236,7 +236,7 @@
 
                 $.ajax({
                     type: 'get',
-                    url: Routing.generate('listaridiomasleehablaescribe'),
+                    url: Routing.generate('herramientalt_listaridiomasleehablaescribe_edit'),
                     beforeSend: function () {
                         $("#" + idioma).empty();
                     },
@@ -367,7 +367,7 @@
 
             $.ajax({
                 type: 'get',
-                url: Routing.generate('bjp_rue_tipomili', {'idUM': idUM,'pertUM': pertUM} ),
+                url: Routing.generate('sie_alt_bjp_rue_tipomili', {'idUM': idUM,'pertUM': pertUM} ),
                 beforeSend: function (data) {
                     $('#form_seccioniiUnidadMilitarTipo').empty();
                     $('#form_seccioniiUnidadMilitarTipo').append('<div class="text-center"><img src="{{asset('img/loading.gif')}} /></div>');
@@ -397,7 +397,7 @@
 
             $.ajax({
                 type: 'get',
-                url: Routing.generate('bjp_rue_tipopenal', {'idP': idP, 'pertP': pertP} ),
+                url: Routing.generate('sie_alt_bjp_rue_tipopenal', {'idP': idP, 'pertP': pertP} ),
                 beforeSend: function (data) {
                     $('#form_seccioniiRecintoPenitenciarioTipo').empty();
                     $('#form_seccioniiRecintoPenitenciarioTipo').append('<div class="text-center"><img src="{{asset('img/loading.gif')}} /></div>');

@@ -84,22 +84,3 @@ bjp_rue_clistardistritos:
     defaults: { _controller: "SieRegularBundle:RegistroInstitucionEducativa:listardistritos" }
     options:
          expose: true
-
-bjp_rue_clistarmenu:
-    path:     /bjplistarmenu/{idM}/{pertUM}/{pertP}/{cea}/{umt}/{pt}
-    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:listarmenu" }
-    options:
-         expose: true
-
-
-bjp_rue_tipomili:
-    path:     /bjptipomili/{idUM}/{pertUM}
-    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:tipomili" }
-    options:
-         expose: true
-
-bjp_rue_tipopenal:
-    path:     /bjptipopenal/{idP}/{pertP}
-    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:tipopenal" }
-    options:
-         expose: true

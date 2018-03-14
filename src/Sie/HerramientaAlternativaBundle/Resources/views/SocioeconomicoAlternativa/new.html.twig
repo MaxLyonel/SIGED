@@ -689,7 +689,7 @@
 
              $.ajax({
                  type: 'get',
-                 url: Routing.generate('bjp_rue_clistarmenu', {'idM': idM, 'pertUM': pertUM, 'pertP': pertP,'cea':cea,'umt':umt,'pt':pt} ),
+                 url: Routing.generate('sie_alt_bjp_rue_clistarmenu', {'idM': idM, 'pertUM': pertUM, 'pertP': pertP,'cea':cea,'umt':umt,'pt':pt} ),
                  beforeSend: function () {
                      $('#answerID').empty();
                      $("#answerID").append('<div c lass="text-center"><img src="{{asset('img/loading.gif')}} /></div>');
@@ -713,7 +713,7 @@
 
              $.ajax({
                  type: 'get',
-                 url: Routing.generate('bjp_rue_tipomili', {'idUM': idUM,'pertUM': pertUM} ),
+                 url: Routing.generate('sie_alt_bjp_rue_tipomili', {'idUM': idUM,'pertUM': pertUM} ),
                  beforeSend: function (data) {
                      $('#form_seccioniiUnidadMilitarTipo').empty();
                      $('#form_seccioniiUnidadMilitarTipo').append('<div c lass="text-center"><img src="{{asset('img/loading.gif')}} /></div>');
