@@ -135,3 +135,9 @@ sie_alt_bjp_rue_tipopenal:
     defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:tipopenal" }
     options:
          expose: true
+
+sie_alt_clistarprovincias:
+    path:     /bjplistarprovincias/{dpto}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InstitucionEducativa:listarprovincias" }
+    options:
+         expose: true

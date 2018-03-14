@@ -1684,4 +1684,31 @@ class InstitucioneducativaController extends Controller {
 //        dump($objUeducativa);die;
     }
 
+    public function listarprovinciasAction($dpto) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 2)
+                ->setParameter('lt1', $dpto + 1);
+            $provincias = $query->getResult();
+
+            $provinciasArray = array();
+            foreach ($provincias as $c) {
+                $provinciasArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listaprovincias' => $provinciasArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
 }
