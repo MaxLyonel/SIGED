@@ -44,7 +44,9 @@ class OlimDirectorInscripcionDatos
      */
     private $maestroInscripcion;
 
-
+    public function __toString(){
+        return $this->telefono1;
+    }
     /**
      * Get id
      *
