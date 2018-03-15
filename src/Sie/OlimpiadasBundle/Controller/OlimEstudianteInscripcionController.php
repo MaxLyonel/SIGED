@@ -66,9 +66,11 @@ class OlimEstudianteInscripcionController extends Controller{
      * @return [type]           [description]
      */
     public function openInscriptinoOlimpiadasAction(Request $request){
-
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
         // get the send values
         $form = $request->get('form');
+        
         $jsondataInscription = json_encode(
             array(
             'sie'=>($this->session->get('roluser')==8)?$form['institucionEducativa']:$this->session->get('ie_id'), 
@@ -76,10 +78,12 @@ class OlimEstudianteInscripcionController extends Controller{
             'materia'=>$form['olimMateria'], 
             )
         ) ;
-        // dump($jsondataInscription);die;
-        // dump($form);die;    
+        //get info about materia
+        $entity = $em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($form['olimMateria']);
+        // render the view
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:openInscriptinoOlimpiadas.html.twig', array(
             'jsondataInscription'=>$jsondataInscription,
+            'entity'=>$entity,
         ));
     }
 
