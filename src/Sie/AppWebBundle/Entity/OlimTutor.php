@@ -248,4 +248,60 @@ class OlimTutor
     {
         return $this->persona;
     }
+    /**
+     * @var integer
+     */
+    private $institucioneducativaId;
+
+    /**
+     * @var integer
+     */
+    private $materiaTipoId;
+
+
+    /**
+     * Set institucioneducativaId
+     *
+     * @param integer $institucioneducativaId
+     * @return OlimTutor
+     */
+    public function setInstitucioneducativaId($institucioneducativaId)
+    {
+        $this->institucioneducativaId = $institucioneducativaId;
+    
+        return $this;
+    }
+
+    /**
+     * Get institucioneducativaId
+     *
+     * @return integer 
+     */
+    public function getInstitucioneducativaId()
+    {
+        return $this->institucioneducativaId;
+    }
+
+    /**
+     * Set materiaTipoId
+     *
+     * @param integer $materiaTipoId
+     * @return OlimTutor
+     */
+    public function setMateriaTipoId($materiaTipoId)
+    {
+        $this->materiaTipoId = $materiaTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get materiaTipoId
+     *
+     * @return integer 
+     */
+    public function getMateriaTipoId()
+    {
+        return $this->materiaTipoId;
+    }
 }

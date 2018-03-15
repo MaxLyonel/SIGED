@@ -56,6 +56,18 @@ Sie\AppWebBundle\Entity\OlimTutor:
             unsigned: false
             comment: ''
             column: usuario_modificacion_id
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        materiaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: materia_tipo_id
     manyToOne:
         persona:
             targetEntity: Persona
