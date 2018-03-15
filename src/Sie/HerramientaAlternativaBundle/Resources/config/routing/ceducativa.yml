@@ -118,19 +118,19 @@ sie_alt_manuales:
     path:     /sie/manuales
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:manuales}
 
-sie_alt_sie_alt_clistarmenu:
+sie_alt_bjp_rue_clistarmenu:
     path:     /bjplistarmenu/{idM}/{pertUM}/{pertP}/{cea}/{umt}/{pt}
     defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:listarmenu" }
     options:
          expose: true
 
-sie_alt_sie_alt_tipomili:
+sie_alt_bjp_rue_tipomili:
     path:     /bjptipomili/{idUM}/{pertUM}
     defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:tipomili" }
     options:
          expose: true
 
-sie_alt_sie_alt_tipopenal:
+sie_alt_bjp_rue_tipopenal:
     path:     /bjptipopenal/{idP}/{pertP}
     defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:tipopenal" }
     options:
