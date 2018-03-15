@@ -447,7 +447,7 @@
                     $('#form_seccioniiUnidadMilitarTipo').append('<div c lass="text-center"><img src="{{asset('img/loading.gif')}} /></div>');
                 },
                 success: function (data) {
-                    $('#form_seccioniiUnidadMilitarTIpo').empty();
+                    $('#form_seccioniiUnidadMilitarTipo').empty();
                     /*$('#form_seccioniiUnidadMilitar').append(('<option value="">Seleccionar...</option>');*/
                     $.each(data.listarunidadmilitar, function (i, value) {
                         $('#form_seccioniiUnidadMilitarTipo').append('<option value="' + i + '">' + value + '</option>');
