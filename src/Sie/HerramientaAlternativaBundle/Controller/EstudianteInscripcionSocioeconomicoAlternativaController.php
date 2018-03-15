@@ -865,7 +865,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
                 $socioinscripcion->setSeccioniiEsserviciomilitarCea(true);
                 $socioinscripcion->setSeccioniiEsserviciomilitar(false);
                 $socioinscripcion->setSeccioniiRecintoPenitenciarioTipo($em->getRepository('SieAppWebBundle:RecintoPenitenciarioTipo')->find(0));
-                $socioinscripcion->setSeccioniiUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTIpo')->find(0));
+                $socioinscripcion->setSeccioniiUnidadMilitarTipo($em->getRepository('SieAppWebBundle:UnidadMilitarTipo')->find(0));
             }else{
 
             }
