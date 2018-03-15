@@ -1,0 +1,5 @@
+oliminscriptions_robotica:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcionRobotica:index" }
+
+

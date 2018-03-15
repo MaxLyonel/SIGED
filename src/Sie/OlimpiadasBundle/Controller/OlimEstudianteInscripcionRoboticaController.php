@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * OlimEstudianteInscripcion controller.
  *
  */
-class OlimEstudianteInscripcionController extends Controller{
+class OlimEstudianteInscripcionRoboticaController extends Controller{
 
     private $sesion;
 
@@ -28,11 +28,11 @@ class OlimEstudianteInscripcionController extends Controller{
         
         $em = $this->getDoctrine()->getManager();
 
-        // $entities = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findAll();
+        $entities = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findAll();
 
-        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:index.html.twig', array(
-            'form' => $this->inscriptionForm()->createView(),
-            // 'entities' => $entities,
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcionRobotica:index.html.twig', array(
+            //'form' => $this->inscriptionForm()->createView(),
+            'entities' => $entities,
         ));
     }
 
