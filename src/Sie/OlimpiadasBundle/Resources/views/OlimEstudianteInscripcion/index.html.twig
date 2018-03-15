@@ -296,6 +296,34 @@
               });
     };
 
+    var selectTypeInscription = function(jsonDataInscription, tutorid){
+
+      $.ajax({
+             type: 'post',
+             url: Routing.generate('olimtutor_selectTypeInscription'),
+             data: {jsonDataInscription:jsonDataInscription, tutorid:tutorid},
+             beforeSend: function () {
+                 $("#typeInscriptionId").empty();
+                 $("#typeInscriptionId").empty();
+                 $("#typeInscriptionId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#typeInscriptionId").empty();
+                 $("#typeInscriptionId").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+      
+    }
+
 
 
     </script>

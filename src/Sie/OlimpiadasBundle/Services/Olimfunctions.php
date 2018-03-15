@@ -37,21 +37,26 @@ class Olimfunctions {
    * @return [type]            [description]
    */
   public function getTutores($arrDataInscription){
-
+// dump($arrDataInscription);die;
     $query = $this->em->getConnection()->prepare(
-      "   
-          select p.id as personadid, p.nombre, p.paterno,p.materno, ot.telefono1, ot.telefono2, ot.correo_electronico, omt.materia
-          from olim_tutor ot 
-            left join olim_inscripcion_tutor oit on ot.id = oit.olim_tutor_id
-              left join olim_estudiante_inscripcion oei on oit.olim_estudiante_inscripcion_id = oei.id
-                left join estudiante_inscripcion ei on oei.estudiante_inscripcion_id = ei.id
-                  left join institucioneducativa_curso ic on ei.institucioneducativa_curso_id = ic.id
-                    left join olim_materia_tipo omt on oei.materia_tipo_id = omt.id
-                      left join persona p on ot.persona_id=p.id
-          where oei.materia_tipo_id = ".$arrDataInscription['materia']." and ic.institucioneducativa_id = ".$arrDataInscription['sie']." and ic.gestion_tipo_id= ".$arrDataInscription['gestion']."
-          group by p.id,p.nombre, p.paterno,p.materno, ot.telefono1, ot.telefono2, ot.correo_electronico, omt.materia
-      "
+      // "   
+      //     select p.id as personadid, p.nombre, p.paterno,p.materno, ot.telefono1, ot.telefono2, ot.correo_electronico, omt.materia
+      //     from olim_tutor ot 
+      //       left join olim_inscripcion_tutor oit on ot.id = oit.olim_tutor_id
+      //         left join olim_estudiante_inscripcion oei on oit.olim_estudiante_inscripcion_id = oei.id
+      //           left join estudiante_inscripcion ei on oei.estudiante_inscripcion_id = ei.id
+      //             left join institucioneducativa_curso ic on ei.institucioneducativa_curso_id = ic.id
+      //               left join olim_materia_tipo omt on oei.materia_tipo_id = omt.id
+      //                 left join persona p on ot.persona_id=p.id
+      //     where oei.materia_tipo_id = ".$arrDataInscription['materia']." and ic.institucioneducativa_id = ".$arrDataInscription['sie']." and ic.gestion_tipo_id= ".$arrDataInscription['gestion']."
+      //     group by p.id,p.nombre, p.paterno,p.materno, ot.telefono1, ot.telefono2, ot.correo_electronico, omt.materia
+      // "
+      "select ot.id, p.id as personadid, p.nombre, p.paterno,p.materno, ot.telefono1, ot.telefono2, ot.correo_electronico
+        from olim_tutor ot
+             left join persona p on ot.persona_id=p.id
+        where ot.institucioneducativa_id = ".$arrDataInscription['sie']." and ot.materia_tipo_id=".$arrDataInscription['materia'].""
     );
+    
     $query->execute();
     $objTutores = $query->fetchAll();
    

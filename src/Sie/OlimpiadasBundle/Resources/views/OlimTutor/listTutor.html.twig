@@ -24,19 +24,14 @@
                 <tbody>
                     {% for entity in entities %}
                         <tr>
-                            <td><a href="{{ path('olimtutor_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                            <td>{{ entity.nomnbre }} {{ entity.paterno }} {{ entity.materno }}</td>
+                            <td>{{loop.index}}</a></td>
+                            <td>{{ entity.nombre }} {{ entity.paterno }} {{ entity.materno }}</td>
                             <td>{{ entity.telefono1 }}/{{ entity.telefono2 }}</td>
-                            <td>{{ entity.correoElectronico }}</td>
+                            <td>{{ entity.correo_electronico }}</td>
                             <td>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('olimtutor_show', { 'id': entity.id }) }}">show</a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('olimtutor_edit', { 'id': entity.id }) }}">edit</a>
-                                </li>
-                            </ul>
+                                <a href="#" ><i class="fa fa-edit fa-md pr-2"></i></a>
+                                <a href="#" onclick="selectTypeInscription('{{jsonDataInscription}}', {{entity.id}} );"><i class="fa fa-list"></i></a> 
+                                <a href="#" ><i class="fa fa-eye"></i></a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -47,7 +42,10 @@
 
     </div>
     <div class="col-md-6">
-
+        <div id="typeInscriptionId">            
+        </div>
+            
+    </div>
       
     </div><!-- /.table-responsive -->
     <!--/ End hover table -->

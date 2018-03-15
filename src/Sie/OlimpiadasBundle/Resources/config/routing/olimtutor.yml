@@ -52,3 +52,9 @@ olimtutor_registrarTutor:
     defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:registrarTutor" }
     options:
         expose: true
+
+olimtutor_selectTypeInscription:
+    path:     /selectTypeInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:selectTypeInscription" }
+    options:
+        expose: true

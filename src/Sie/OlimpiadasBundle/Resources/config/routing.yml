@@ -14,6 +14,6 @@ sie_app_web_olimtutor:
     resource: "@SieOlimpiadasBundle/Resources/config/routing/olimtutor.yml"
     prefix:   /olimtutor
 
-sie_app_web_oliminscriptions:
+sie_app_web_oliminscriptions_robot:
     resource: "@SieOlimpiadasBundle/Resources/config/routing/olimestudianteinscripcionrobotica.yml"
     prefix:   /oliminscriptionsrobot

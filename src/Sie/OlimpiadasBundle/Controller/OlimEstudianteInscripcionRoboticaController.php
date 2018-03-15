@@ -25,7 +25,7 @@ class OlimEstudianteInscripcionRoboticaController extends Controller{
      *
      */
     public function indexAction(){
-        
+        dump('krkrkr');die;
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findAll();

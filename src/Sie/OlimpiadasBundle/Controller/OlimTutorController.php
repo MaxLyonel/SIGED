@@ -43,7 +43,7 @@ class OlimTutorController extends Controller
 
         // $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findAll();
         $entities =  $this->get('olimfunctions')->getTutores($arrDataInscription);
-        
+        // dump($entities);die;
         return $this->render('SieOlimpiadasBundle:OlimTutor:listTutor.html.twig', array(
             'entities' => $entities,
             'jsonDataInscription' => $jsonDataInscription,
@@ -113,6 +113,8 @@ class OlimTutorController extends Controller
     public function registrarTutorAction(Request $request){
         //get the send values
         $form = $request->get('form');
+        $data = json_decode($form['data'],true);
+        
         //create db conexion 
         $em = $this->getDoctrine()->getManager();
         // udpate the indice
@@ -125,6 +127,8 @@ class OlimTutorController extends Controller
         $entity->setTelefono2($form['telefono2']);
         $entity->setCorreoElectronico($form['correoElectronico']);
         $entity->setFechaRegistro(new \Datetime('now'));
+        $entity->setInstitucioneducativaId($data['sie']);        
+        $entity->setMateriaTipoId($data['materia']);
         $em->persist($entity);
         $em->flush();
 
@@ -139,6 +143,52 @@ class OlimTutorController extends Controller
             'jsonDataInscription' => $jsonDataInscription,
         ));
     }
+
+    public function selectTypeInscriptionAction(Request $request){
+        //ge the send data
+        $jsonDataInscription = $request->get('jsonDataInscription');
+        $tutorid = $request->get('tutorid');
+        //ge the inscription data
+        $arrDataInscription = json_decode($jsonDataInscription, true);
+        // dump($arrDataInscription);die;
+        switch ($arrDataInscription['materia']) {
+            //common inscription
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                # code...
+                dump('common');
+                break;
+            //informatica inscription
+            case 8:
+                # code...
+                dump('info');
+                break;
+            // robotica inscription
+            case 10:
+                # code...
+                return $this->redirectToRoute('oliminscriptions_robotica');
+                break;
+            // feria inscription
+            case 11:
+                # code...
+                dump('feria');
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        
+
+    }
+
+
+
 
 
 
