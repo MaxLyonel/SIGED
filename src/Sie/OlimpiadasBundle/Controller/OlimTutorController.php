@@ -143,7 +143,11 @@ class OlimTutorController extends Controller
             'jsonDataInscription' => $jsonDataInscription,
         ));
     }
-
+    /**
+     * [selectTypeInscriptionAction description] by krlos
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function selectTypeInscriptionAction(Request $request){
         //ge the send data
         $jsonDataInscription = $request->get('jsonDataInscription');
@@ -160,7 +164,7 @@ class OlimTutorController extends Controller
             case 6:
             case 7:
                 # code...
-                dump('common');
+                return $this->redirectToRoute('oliminscriptions_commonareainscription', array('jsonDataInscription'=> $jsonDataInscription,'tutorid'=>$tutorid));
                 break;
             //informatica inscription
             case 8:

@@ -291,4 +291,14 @@ class OlimEstudianteInscripcionController extends Controller{
             ->getForm()
         ;
     }
+
+
+    public function commonAreaInscriptionAction(Request $request){
+        //get the send values
+        $jsonDataInscription = $request->get('jsonDataInscription');
+        $tutorid = $request->get('tutorid');
+        dump($tutorid);die;
+    }
+
+
 }

@@ -41,4 +41,10 @@ oliminscriptions_regDirector:
     options:
         expose: true
 
+oliminscriptions_commonareainscription:
+    path:     /commonareainscription/{jsonDataInscription}/{tutorid}
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:commonAreaInscription" }
+    options:
+        expose: true
+
 

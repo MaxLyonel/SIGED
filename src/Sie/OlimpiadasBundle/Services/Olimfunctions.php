@@ -72,7 +72,7 @@ class Olimfunctions {
   public function lookForTutores($data){
     //look for the tutores in persona table
     $query = $this->em->getConnection()->prepare("select id, nombre, paterno, materno, carnet from persona 
-    where carnet like '".$data['carnet']."%' ");
+    where carnet = '".$data['carnet']."' ");
     $query->execute();
     return $query->fetchAll();
   }
