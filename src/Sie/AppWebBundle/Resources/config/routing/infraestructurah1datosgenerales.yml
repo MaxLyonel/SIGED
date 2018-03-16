@@ -7,7 +7,7 @@ infraestructurah1datosgenerales_show:
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH1Datosgenerales:show" }
 
 infraestructurah1datosgenerales_new:
-    path:     /{infraJurgeoId}/new
+    path:     /new
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH1Datosgenerales:new" }
 
 infraestructurah1datosgenerales_create:

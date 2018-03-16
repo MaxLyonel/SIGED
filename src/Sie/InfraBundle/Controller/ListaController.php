@@ -47,8 +47,8 @@ class ListaController extends Controller
 
       return $this->render($this->session->get('pathSystem') . ':Lista:open.html.twig', array(
                   'sheetOneform'   => $this->openSheetAction('infraestructurah1datosgenerales',   'Datos Generales', $data)->createView(),
-                  'sheetTwoform'   => $this->openSheetAction('infra_sheet_two_index',   'Caracteristicas del Edificio',$data)->createView(),
-                  'sheetThreeform' => $this->openSheetAction('infra_sheet_three_index', 'Riesgos y Delitos',$data)->createView(),
+                  'sheetTwoform'   => $this->openSheetAction('infraestructurah2caracteristica',   'Caracteristicas del Edificio',$data)->createView(),
+                  'sheetThreeform' => $this->openSheetAction('infraestructurah3riesgosdelitos', 'Riesgos y Delitos',$data)->createView(),
                   'sheetFourform'  => $this->openSheetAction('infraestructurah4servicio',  'Servicios del Edificio',$data)->createView(),
                   'sheetFiveform'  => $this->openSheetAction('infra_sheet_five_index',  'Ambientes Pedagogicos',$data)->createView(),
                   'sheetSixform'   => $this->openSheetAction('infra_sheet_six_index',   'Ambientes No Pedagogicos',$data)->createView(),

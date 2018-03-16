@@ -3,9 +3,9 @@
 {% block contentoption %}
 	<style>
 		.fotografia{
-			background:#EEEEEE;
+			background:#FFFFFF;
 			width: 100%;
-			height: 300px;
+			height: 250px;
 			overflow: hidden;
 			text-align: center;
 		}
@@ -519,13 +519,20 @@
 												<input type="hidden" name="usie[]">
 												{{ unidad.institucion }}
 											</td>
-											<td>{{ unidad.orgCurricularNombre }}</td>
+											<td>
+												<select name="ucurricular[]" required="required">
+													<option value="">Seleccionar...</option>
+													{% for c in unidad.curricularTipo %}
+													    <option value="{{ c.id }}" {% if c.id == unidad.orgCurricular %} selected {% endif %}>{{c.orgcurricula}}</option>
+													{% endfor %}
+												</select>
+											</td>
 											<td>{{ unidad.director }}</td>
 											<td>
 												<input type="text" name="utelefono[]" value="{{ unidad.telefono }}">
 											</td>
 											<td>
-												<select name="utenencia[]">
+												<select name="utenencia[]" required="required">
 													<option value="">Seleccionar...</option>
 													{% for t in unidad.tenenciaTipo %}
 													    <option value="{{ t.id }}" {% if t.id == unidad.tenencia %} selected {% endif %}>{{t.tenenciaTipo}}</option>

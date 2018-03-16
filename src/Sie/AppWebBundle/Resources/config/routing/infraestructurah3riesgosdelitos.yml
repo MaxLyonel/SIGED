@@ -1,0 +1,18 @@
+infraestructurah3riesgosdelitos:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH3RiesgosDelitos:index" }
+    methods: [GET, POST]
+
+##  FUNCIONES AJAX ##
+
+infra_getDelitos:
+    path:     /getDelitos
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH3RiesgosDelitos:getDelitos" }
+    options:
+        expose: true
+
+infra_createDelito:
+    path:     /createDelito
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH3RiesgosDelitos:createDelito" }
+    options:
+        expose: true

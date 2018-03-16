@@ -1,0 +1,886 @@
+{% extends 'layoutInfra.html.twig' %}
+
+{% block contentoption %}
+
+	<style>
+		.fotografia{
+			background:#EEEEEE;
+			width: 100%;
+			height: 300px;
+			overflow: hidden;
+			text-align: center;
+		}
+
+		.fotografia img{
+			width: auto;
+			height: 100%;
+		}
+
+		input[type=text]{
+			text-transform: uppercase;
+		}
+
+		input[type=radio]{
+			margin-left: 15px;
+			margin-right: 5px;
+		}
+		input[type=checkbox]{
+			margin-left: 15px;
+			margin-right: 5px;
+		}
+
+		.tabla tr{
+			border: 1px solid #CCCCCC;
+		}
+	</style>
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Características del Edificio <span>Hoja 2</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('infra_list_index')}}">
+                       Operativos
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">
+                  <form action="{{path('infra_list_open')}}" method="post" style="display: inline-block">
+                      <input type="hidden" id="form_gestion" name="form[gestion]" value="{{app.session.get('currentyear')}}">
+                      <input type="hidden" id="form_data" name="form[sie]" required="required" value="{{app.session.get('ie_id')}}">
+                      <button class='btn btn-link'>Menu de Opciones</button>
+                  </form>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+	{{ form_start(form) }}
+
+    <div class="body-content animated fadeIn">
+    	<div class="form-footer">
+                          <div class="pull-right">
+                            <button class="btn btn-success" type="submit">Guardar Cambios</button>
+                              <!-- <button class="btn btn-danger mr-5">Cancelar</button> -->
+                            <input value="Cancelar" class="btn btn-danger mr-5" onclick="history.back()" type="button">
+                              
+                          </div>
+                          <div class="clear-fix"></div>
+                      </div>
+                      <hr>
+      	<div class="row">
+          	<div class="panel panel-tab panel-tab-double shadow">
+				<!-- Start tabs heading -->
+				<div class="panel-heading no-padding">
+				  <ul class="nav nav-tabs">
+				      <li class="nav-border nav-border-top-danger active">
+				          <a href="component-tabsaccordion.html#tab6-1" data-toggle="tab" class="text-center" aria-expanded="true">
+				              1. Caracteristicas del terreno
+				          </a>
+				      </li>
+				      <li class="nav-border nav-border-top-primary">
+				          <a href="component-tabsaccordion.html#tab6-2" data-toggle="tab" class="text-center" aria-expanded="false">
+				              2. Características de la edificación
+				          </a>
+				      </li>
+				      <li class="nav-border nav-border-top-success">
+				          <a href="component-tabsaccordion.html#tab6-3" data-toggle="tab" class="text-center" aria-expanded="false">
+				              3. Bloques edificados
+				          </a>
+				      </li>
+
+				  </ul>
+				</div><!-- /.panel-heading -->
+				<!--/ End tabs heading -->
+
+				<!-- Start tabs content -->
+				<div class="panel-body">
+				  <div class="tab-content">
+				      <div class="tab-pane fade active in" id="tab6-1">
+				          	<label>1.1 Área total del terreno m2:</label>
+				          	<div class="form-group row">
+				              	<div class="col-md-2">
+				                	<label>Area total</label>
+				                	{{ form_widget(form.n11Areatotal, {'attr': {'class':'form-control','readonly':'readonly'} }) }}
+				              	</div>
+							</div>
+							<div class="form-group row">
+				              	<div class="col-xs-6 col-sm-4 col-md-2 col-lg-2">
+				                	<label>Area construida</label>
+				                	{{ form_widget(form.n11Areaconstruida, {'attr': {'class':'form-control'} }) }}
+				              	</div>
+				              	<div class="col-xs-6 col-sm-4 col-md-2 col-lg-2">
+				                	<label>Area de recreacion</label>
+				                	{{ form_widget(form.n11Arearecreacion, {'attr': {'class':'form-control'} }) }}
+				              	</div>
+				              	<div class="col-xs-6 col-sm-4 col-md-2 col-lg-2">
+				                	<label>Area no construida</label>
+				                	{{ form_widget(form.n11Areanoconstruida, {'attr': {'class':'form-control'} }) }}
+				              	</div>
+				              	<div class="col-xs-6 col-sm-4 col-md-2 col-lg-2">
+				                	<label>Area del huerto escolar</label>
+				                	{{ form_widget(form.n11AreaHuerto, {'attr': {'class':'form-control'} }) }}
+				              	</div>
+				              	<div class="col-xs-6 col-sm-4 col-md-2 col-lg-2">
+				                	<label>Area de invernadero</label>
+				                	{{ form_widget(form.n11AreaInvernadero, {'attr': {'class':'form-control'} }) }}
+				              	</div>
+				              	<div class="col-xs-6 col-sm-4 col-md-2 col-lg-2">
+				                	<label>Area de granja escolar</label>
+				                	{{ form_widget(form.n11AreaGranjaEscolar, {'attr': {'class':'form-control'} }) }}
+				              	</div>
+				          	</div>
+				          	<div class="form-group row">
+				            	<div class=" col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				            		<label>1.2 Topografia</label>
+				              		{{ form_widget(form.n12InfraestructuraH2TopografiaTipo, {'attr': {'class':'form-control'} }) }}
+				            	</div>
+				          	</div>
+				          	<label>1.3 Muros perimetrales</label>
+				          	<div class=" form-group row">
+				            	<div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
+				            		<label>Perímetro del terreno(*) (mts)</label>
+				              		{{ form_widget(form.n13Muroperimetral, {'attr': {'class':'form-control'} }) }}
+				            	</div>
+				            	<div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
+				            		<label>¿Esta amurallada la edificación? (*)</label>
+				              		{{ form_widget(form.n13EdificacionAmurallada, {'attr': {'class':'form-control'} }) }}
+				            	</div>
+				            	<div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
+				            		<label>Muro actual mts (*)</label>
+				              		{{ form_widget(form.n13MuroperimetralActual, {'attr': {'class':'form-control'} }) }}
+				            	</div>
+				          	</div>
+				      	</div>
+				      <div class="tab-pane fade" id="tab6-2">
+				    		<div class="row">
+				    			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				    				<div class="form-group">
+				    					<label>2.1 La edificación fue construida para ser:</label>
+				    					{{ form_widget(form.n21InfraestructuraH2ConstruidaEducativoTipo, {'attr': {'class':'form-control'} }) }}
+				    				</div>
+				    				<div class="form-group row">
+				    					<div class="col-md-12">
+				    						<label>2.2 Año de construcción</label>	
+				    					</div>
+				    					<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+				    						{{ form_widget(form.n22AnioConstruccion, {'attr': {'class':'form-control'} }) }}
+				    					</div>
+				    					<div class="col-xs-12 col-sm-6 col-md-5 col-lg-5">
+				    						¿Se contempló criterios de accesibilidad para personas con discapacidad?
+				    					</div>
+				    					<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+				    						{{ form_widget(form.n22AnioConstruccionEsDiscap, {'attr': {'class':''} }) }}
+				    					</div>
+				    				</div>
+				    				<div class="form-group row">
+				    					<div class="col-md-12">
+				    						<label>2.3 Año de última refacción</label>
+				    					</div>
+				    					<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+				    						{{ form_widget(form.n23AnioRefaccion, {'attr': {'class':'form-control'} }) }}
+				    					</div>
+				    					<div class="col-xs-12 col-sm-6 col-md-5 col-lg-5">
+				    						¿Se contempló criterios de accesibilidad para personas con discapacidad?
+				    					</div>
+				    					<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+				    						{{ form_widget(form.n23AnioRefaccionEsDiscap, {'attr': {'class':''} }) }}
+				    					</div>
+				    				</div>
+				    				<div class="form-group row">
+				    					<div class="col-md-12">
+				    						<label>2.4 Año de última ampliación</label>
+				    					</div>
+				    					<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+				    						{{ form_widget(form.n24AnioAmpliacion, {'attr': {'class':'form-control'} }) }}
+				    					</div>
+				    					<div class="col-xs-12 col-sm-6 col-md-5 col-lg-5">
+				    						¿Se contempló criterios de accesibilidad para personas con discapacidad?
+				    					</div>
+				    					<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+				    						{{ form_widget(form.n24AnioAmpliacionEsDiscap, {'attr': {'class':''} }) }}
+				    					</div>
+				    				</div>
+									<div class="form-group">
+				    					<label>2.5 Tipo de propiedad</label>
+				    					{{ form_widget(form.n25InfraestructuraH2PropiedadTipo, {'attr': {'class':'form-control'} }) }}
+				    				</div>
+				    				<div class="form-group">
+				    					<label>2.6 Razón Social (Nombre de propietario o institución)</label>
+				    					{{ form_widget(form.n26Razonsocial, {'attr': {'class':'form-control'} }) }}
+				    				</div>
+				    			</div>
+
+								<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+									<p>Documentación acerca del Edificio Educativo</p>
+									<div class="form-group">
+										<label>2.7 Tipo de documentación de mayor validez legal</label>
+										{{ form_widget(form.n27TipoDocumentacion, {'attr': {'class':'form-control'} }) }}
+									</div>
+									<div class="form-group">
+										<label>2.8 Anote el número de Folio Real o Tarjeta computarizada y sus observaciones acerca de la documentación que certifica la propiedad del edificio</label>
+										{{ form_widget(form.n28FolioRealTarjetaObs, {'attr': {'class':'form-control', 'rows':'7'} }) }}
+									</div>
+									<div class="form-group row">
+										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+											<label>2.9 Número de Partida DD.RR.</label>
+											{{ form_widget(form.n29DocumentoNroPartida, {'attr': {'class':'form-control'} }) }}
+										</div>
+										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+											<label>2.10 ¿Tiene planos aprobados por el Gobierno Municipal?</label>
+											{{ form_widget(form.n210EsPlanoAprobado, {'attr': {'class':''} }) }}
+										</div>
+										
+									</div>
+									<div class="form-group">
+										<label>2.11 Adjuntar Documentos (Folio Real/Contrato de arrendamiento)</label>
+										{{ form_widget(form.n211AdjDocumentacionFolio, {'attr': {'class':'form-control'} }) }}
+										{{ form_widget(form.fileFolio, {'attr': {'class':'form-control'} }) }}
+									</div>
+
+								</div>
+
+				    		</div>
+				    		<hr>
+							<label>El ingreso al edificio educativo cuenta con:</label>
+				    		<div class="row">
+				    			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				    				<div class="form-group">
+				    					<label>2.12 ¿Tiene Señalética?</label>
+				    					{{ form_widget(form.n212SiSenaletica, {'attr': {'class':''} }) }}
+				    				</div>
+				    				<div class="form-group">
+				    					<label>2.13 Tipo de señales</label>
+				    					<div>
+											{{ form_widget(form.senalesTipo) }}	
+										</div>
+				    					
+				    					{{ form_widget(form.n212SenalesiomaTipo1, {'attr': {'class':'form-control'} }) }}
+				    					<br>
+				    					{{ form_widget(form.n212SenalesiomaTipo2, {'attr': {'class':'form-control'} }) }}
+				    				</div>
+				    			</div>
+
+				    			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				    				<div class="form-group">
+				    					<label>2.14 ¿Posee rampas?</label>
+				    					{{ form_widget(form.n212SiRampas, {'attr': {'class':''} }) }}
+				    				</div>
+				    				<div class="form-group">
+				    					<label>2.15 Las rampas cuentan con:</label>
+				    					<div>
+											{{ form_widget(form.rampasTipo) }}	
+										</div>
+				    				</div>
+				    			</div>
+				    		</div>
+				      </div>
+				      
+				      <div class="tab-pane fade" id="tab6-3">								
+				      		<div class="row">
+				      			<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+									<div class="panel">
+		                                <div class="panel-heading">
+		                                    <div class="pull-left">
+		                                        <h3 class="panel-title">Bloques</h3>
+		                                    </div>
+		                                    <div class="pull-right">
+		                                        <button onclick="openModalBloque()" type="button" class="btn btn-primary btn-circle" data-toggle="tooltip" data-placemente="top" data-original-title="Nuevo bloque"><i class="fa fa-plus"></i></button>	
+		                                    </div>
+		                                    <div class="clearfix"></div>
+		                                </div><!-- /.panel-heading -->
+		                                <div class="panel-body">
+		                                    <div id="bloques"><span style="color: #bbbbbb; font-style: italic; font-size: 1.2em"> No hay bloques registrados.</span></div>
+		                                </div><!-- /.panel-body -->
+		                            </div>
+				      			</div>
+				      			<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+									<div class="panel">
+		                                <div class="panel-heading">
+		                                    <div class="pull-left">
+		                                        <h3 class="panel-title">Pisos <span id="tituloPisos"></span> </h3>
+		                                    </div>
+		                                    <div class="pull-right">
+		                                        <button id="btnPisos" style="display: none" onclick="openModalPiso()" type="button" class="btn btn-primary btn-circle"><i class="fa fa-plus"></i></button>	
+		                                    </div>
+		                                    <div class="clearfix"></div>
+		                                </div><!-- /.panel-heading -->
+		                                <div class="panel-body">
+		                                    <div id="pisos"></div>
+		                                </div><!-- /.panel-body -->
+		                            </div>
+				      			</div>
+				      			
+				      		</div>
+				      		
+				          {{ form(form) }}
+				      </div>
+
+				  </div>
+				</div><!-- /.panel-body -->
+			<!--/ End tabs content -->
+			</div>
+      	</div>
+      	
+    </div>
+
+    {{ form_end(form) }}
+
+	<div class="modal fade" id="modalBloque">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="tituloModalBloque">Modal title</h4>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" name="modalBloqueId" id="modalBloqueId">
+					<div class="row">
+						<div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6">
+							<label>3.1 Bloque Nro.:</label>
+							<input type="text" id="modalBloqueNro" class="form-control" value="" pattern="" title="">
+						</div>
+						<div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6">
+							<label>3.2 ¿Tiene ascensores?</label>
+							<div class="radio">
+								<label>
+									<input type="radio" name="modalBloqueAscensor" id="modalBloqueAscensorSi" value="1" >
+									Si
+								</label>
+								&nbsp;
+								<label>
+									<input type="radio" name="modalBloqueAscensor" id="modalBloqueAscensorNo" value="0" >
+									No
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="display:none">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<label>Fotografia</label>
+							<input type="file" name="modalBloqueFile" id="modalBloqueFile">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+					<button onclick="createBloque()" type="button" class="btn btn-primary">Guardar cambios</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade in" tabindex="-1" role="dialog" aria-hidden="true" id="modalPiso">
+		
+	</div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+	<script type="text/javascript">
+
+		var bloques = [];
+		var bloqueEdit = null;
+		var bloqueSelected = null;
+
+		var pisos = [];
+		var pisoEdit = null;
+
+		function openModalBloque(){
+			if(arguments[0] === undefined){
+				$('#modalBloqueId').val('new');
+				$('#modalBloqueNro').val('');
+				$("input[name*='modalBloqueAscensor']").prop('checked', false);
+				$('#modalBloqueAscensorNo').prop('checked',true);
+
+				bloqueEdit = null;
+			}else{
+				var p = arguments[0];
+				$('#modalBloqueId').val(bloques[p].id);
+				$('#modalBloqueNro').val(bloques[p].numero);
+
+				$("input[name*='modalBloqueAscensor']").prop('checked', false);
+				if(bloques[p].ascensor === '1'){
+					$('#modalBloqueAscensorSi').prop('checked',true);
+				}else{
+					$('#modalBloqueAscensorNo').prop('checked',true);	
+				}
+
+				bloqueEdit = p;
+			}
+			$('#modalBloque').modal();
+			//console.log(bloques);
+		}
+
+		function createBloque(){
+
+			// Verificamos si ya existe un bloque con el mismo numero
+			var existeNumero = false;
+			for(var i = 0; i < bloques.length; i++){
+				var valor = $('#modalBloqueNro').val();
+				if(valor == bloques[i].numero && bloqueEdit != i ){
+					existeNumero = true;
+				}
+			}
+
+			if(existeNumero == true){
+				alert('El numero de bloque ya existe, debe registrar otro número');
+				return;
+			}
+
+			if(bloqueEdit == null){
+				/**
+				 * Nuevo bloque
+				 */
+				var bloque = {
+					id: $('#modalBloqueId').val(),
+					numero: $('#modalBloqueNro').val(),
+					ascensor: $('input:radio[name=modalBloqueAscensor]:checked').val(),
+					fotografia: $('#modalBloqueFile').val(),
+					pisos: []
+				}
+				bloques.push(bloque);
+			}else{
+				/**
+				 * Editar bloque
+				 */
+				bloques[bloqueEdit].numero = $('#modalBloqueNro').val();
+				bloques[bloqueEdit].ascensor = $('input:radio[name=modalBloqueAscensor]:checked').val();
+				bloques[bloqueEdit].fotografia = $('#modalBloqueFile').val();
+			}
+
+			viewBloques();
+
+			$('#modalBloque').modal('hide');
+		}
+
+		function ordenarBloque(a,b) {
+            if (a.numero < b.numero)
+                return -1;
+            else if (a.numero > b.numero)
+                return 1;
+            else 
+                return 0;
+        };
+
+		function viewBloques(){
+			$('#bloques').empty();
+
+			if(bloques.length > 0){
+
+				// mostramos el boton para agregar pisos
+				$('#btnPisos').css('display', 'block');
+				
+				// Ordenar bloques
+				//bloques.sort(ordenarBloque);
+
+				var tabla = $('<table class="table table-bordered table-sm"><thead><tr><th>Bloque Nro.</th><th>¿Tiene Ascensores?</th><th>Acciones</th></tr></thead><tbody id="bloquesFilas"></tbody></table>');
+				$.each(bloques, function(index, val) {
+
+					var tiene = 'No';
+					if(val.ascensor == '1'){
+						tiene = 'Si';
+					}
+
+					 var fila = $('<tr/>', { id: index });
+					 fila.append('<td>'+
+					 			 '<input type="hidden" name="bloqueId[]" value="'+ val.id +'">'+ 
+					 			 '<input type="hidden" name="bloqueNro[]" value="'+ val.numero +'">'+ 
+					 			 '<input type="hidden" name="bloqueAscensor[]" value="'+ val.ascensor +'">'+ 
+					 			 '<input type="hidden" name="bloqueFotografia[]" value="'+ val.fotografia +'">'+ 
+					 			 val.numero +' </td>');
+					 fila.append('<td>'+ tiene +'</td>');
+					 //fila.append('<td><input type="file" name="fotografia[]"></td>');
+					 fila.append('<td><i class="fa fa-edit" onclick="openModalBloque('+index+')"></i>'+
+					 				' <i class="fa fa-trash" onclick="deleteBloque('+index+')"></i>'+
+					 				' </td>');
+					 tabla.append(fila);
+				});
+
+				$('#bloques').append(tabla);
+			}else{
+				// ocultamos el boton para agregar pisos
+				$('#btnPisos').css('display', 'none');
+			}
+		}
+
+		function deleteBloque(idx){
+			var numeroBloque = bloques[idx].numero;
+
+			// Verificamos si existen pisos asociados
+			var existenPisos = false;
+			for(var i = 0; i < pisos.length; i++){
+				if(pisos[i].bloque == numeroBloque){
+					existenPisos = true;
+					alert('Primero debe eliminar los pisos asociados al bloque');
+					break;
+				}
+			}
+
+			if(existenPisos == false){
+				if(confirm('¿Esta seguro de eliminar el registro?')){
+					
+					bloques.splice(idx,1);
+					$('#'+idx).remove();
+
+					viewBloques();
+
+				}
+			}
+		}
+
+		/**
+		 * ----------------   Pisos  -----------------
+		 */
+
+		function openModalPiso(){
+			var argumento = arguments[0];
+			$.ajax({
+				url: Routing.generate('infra_createPiso'),
+				type: 'get'
+			})
+			.done(function(data) {
+				//console.log("success");
+				$('#modalPiso').empty();
+				$('#modalPiso').append(data);
+
+				$('#bloqueNro').empty();
+				$.each(bloques, function(index, val) {
+					 $('#bloqueNro').append('<option value="'+val.numero+'">'+val.numero+'</option>')
+				});
+
+				pisoEdit = null;
+
+				if(argumento !== undefined){
+					var p = argumento;
+					$('#pisoId').val(pisos[p].id);
+					$('#bloqueNro').val(pisos[p].bloque);
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n11NroPisoTipo').val(pisos[p].nroPiso);
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n12AreaM2').val(pisos[p].area);
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n13NroAmbPedagogicos').val(pisos[p].nroPedagogicos);
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n14NroAmbNoPedagogicos').val(pisos[p].nroNoPedagogicos);
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n15TotalBanios').val(pisos[p].nroBanios);
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n16TotalAmbientes').val(pisos[p].total);
+
+					$("input[name*='sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n21SiCieloFalso]']").prop('checked', false);
+					if(pisos[p].cielo === '1'){
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n21SiCieloFalso_0').prop('checked',true);
+					}else{
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n21SiCieloFalso_1').prop('checked',true);	
+					}
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n211CaracteristicasTipo').val(pisos[p].cieloCaracteristica);
+
+					$("input[name*='sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n22SiPuertas]']").prop('checked', false);
+					if(pisos[p].puerta === '1'){
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n22SiPuertas_0').prop('checked',true);
+					}else{
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n22SiPuertas_1').prop('checked',true);	
+					}
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n221SeguroTipo').val(pisos[p].puertaSeguro);
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n222AbreTipo').val(pisos[p].puertaAbre);
+
+					$("input[name*='sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n23SiVentanas]']").prop('checked', false);
+					if(pisos[p].ventana === '1'){
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n23SiVentanas_0').prop('checked',true);
+					}else{
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n23SiVentanas_1').prop('checked',true);	
+					}
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n231VidriosTipo').val(pisos[p].ventanaCaracteristica);
+
+					$("input[name*='sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n24SiTecho]']").prop('checked', false);
+					if(pisos[p].techo === '1'){
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n24SiTecho_0').prop('checked',true);
+					}else{
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n24SiTecho_1').prop('checked',true);	
+					}
+
+					$("input[name*='sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n25SiMuros]']").prop('checked', false);
+					if(pisos[p].muro === '1'){
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n25SiMuros_0').prop('checked',true);
+					}else{
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n25SiMuros_1').prop('checked',true);	
+					}
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n251MurosMaterialTipo').val(pisos[p].muroMaterial);
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n252MurosCaracteristicasTipo').val(pisos[p].muroCaracteristica);
+
+					$("input[name*='sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n26SiRevestimiento]']").prop('checked', false);
+					if(pisos[p].revestimiento === '1'){
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n26SiRevestimiento_0').prop('checked',true);
+					}else{
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n26SiRevestimiento_1').prop('checked',true);	
+					}
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n261RevestMaterialTipo').val(pisos[p].revestimientoMaterial);
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n262RevestCaracteristicasTipo').val(pisos[p].revestimientoCaracteristica);
+
+					$("input[name*='sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n27SiPiso]']").prop('checked', false);
+					if(pisos[p].piso === '1'){
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n27SiPiso_0').prop('checked',true);
+					}else{
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n27SiPiso_1').prop('checked',true);	
+					}
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n271PisoMaterialTipo').val(pisos[p].pisoMaterial);
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n272PisoCaracteristicasTipo').val(pisos[p].pisoCaracteristica);
+
+					$("input[name*='sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n31SiGradas]']").prop('checked', false);
+					if(pisos[p].gradas === '1'){
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SiGradas_0').prop('checked',true);
+					}else{
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SiGradas_1').prop('checked',true);	
+					}
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n32GradasTipo_1').prop('checked', pisos[p].gradasCuentan.pasamano );
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n32GradasTipo_2').prop('checked', pisos[p].gradasCuentan.guiaPrevencion );
+
+					$("input[name*='sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n33SiRampas]']").prop('checked', false);
+					if(pisos[p].rampas === '1'){
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n33SiRampas_0').prop('checked',true);
+					}else{
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n33SiRampas_1').prop('checked',true);	
+					}
+
+					$("input[name*='sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n35SiSenaletica]']").prop('checked', false);
+					if(pisos[p].senales === '1'){
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n35SiSenaletica_0').prop('checked',true);
+					}else{
+						$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n35SiSenaletica_1').prop('checked',true);	
+					}
+
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_1').prop('checked', pisos[p].senalesTipo.orientadoras );
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_2').prop('checked', pisos[p].senalesTipo.audibles );
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_3').prop('checked', pisos[p].senalesTipo.visuales );
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_4').prop('checked', pisos[p].senalesTipo.tactiles );
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_5').prop('checked', pisos[p].senalesTipo.direccionales );
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_6').prop('checked', pisos[p].senalesTipo.ubicacion );
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_7').prop('checked', pisos[p].senalesTipo.informativas );
+
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n35SenalesiomaTipo1').val(pisos[p].senalesIdioma1);
+					$('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n35SenalesiomaTipo2').val(pisos[p].senalesIdioma2);
+
+					pisoEdit = p;
+				}
+
+				$('#modalPiso').modal();
+			})
+			.fail(function() {
+				//console.log("error");
+			})
+			.always(function() {
+				//console.log("complete");
+			});
+
+			//console.log(pisos);
+		}
+
+		function viewPisos(){
+			$('#pisos').empty();
+
+			if(pisos.length > 0){
+				
+				// Ordenar bloques
+				//bloques.sort(ordenarBloque);
+
+				var tabla = $('<table class="table table-bordered table-sm"><thead><tr><th>Bloque Nro.</th><th>Piso</th><th>Total ambientes</th><th>Estado</th><th>¿Tiene Gradas?</th><th>¿Tiene Rampas?</th><th>¿Tiene Señaletica?</th><th>Acciones</th></tr></thead><tbody id="pisosFilas"></tbody></table>');
+				$.each(pisos, function(index, val) {
+
+					var tiene = 'No'; if(val.ascensor == '1'){ tiene = 'Si'; }
+					var gradas = 'No'; if(val.gradas == '1' || val.gradas == true){ gradas = 'Si'; }
+					var rampas = 'No'; if(val.rampas == '1' || val.rampas == true){ rampas = 'Si'; }
+					var senales = 'No'; if(val.senales == '1' || val.senales == true){ senales = 'Si'; }
+
+					var fila = $('<tr/>', { id: 'p_'+index });
+					fila.append('<td>'+
+					 			 '<input type="hidden" name="pisoId[]" value="'+ val.id +'">'+ 
+					 			 '<input type="hidden" name="pisoBloque[]" value="'+ val.bloque +'">'+ 
+					 			 '<input type="hidden" name="pisoNroPiso[]" value="'+ val.nroPiso +'">'+ 
+					 			 '<input type="hidden" name="pisoArea[]" value="'+ val.area +'">'+ 
+					 			 '<input type="hidden" name="pisoNroPedagogicos[]" value="'+ val.nroPedagogicos +'">'+ 
+					 			 '<input type="hidden" name="pisoNroNoPedagogicos[]" value="'+ val.nroNoPedagogicos +'">'+ 
+					 			 '<input type="hidden" name="pisoNroBanios[]" value="'+ val.nroBanios +'">'+ 
+					 			 '<input type="hidden" name="pisoTotal[]" value="'+ val.total +'">'+ 
+					 			 '<input type="hidden" name="pisoCielo[]" value="'+ val.cielo +'">'+ 
+					 			 '<input type="hidden" name="pisoCieloCaracteristica[]" value="'+ val.cieloCaracteristica +'">'+ 
+					 			 '<input type="hidden" name="pisoPuerta[]" value="'+ val.puerta +'">'+ 
+					 			 '<input type="hidden" name="pisoPuertaSeguro[]" value="'+ val.puertaSeguro +'">'+ 
+					 			 '<input type="hidden" name="pisoPuertaAbre[]" value="'+ val.puertaAbre +'">'+ 
+					 			 '<input type="hidden" name="pisoVentana[]" value="'+ val.ventana +'">'+ 
+					 			 '<input type="hidden" name="pisoVentanaCaracteristica[]" value="'+ val.ventanaCaracteristica +'">'+ 
+					 			 '<input type="hidden" name="pisoTecho[]" value="'+ val.techo +'">'+ 
+					 			 '<input type="hidden" name="pisoMuro[]" value="'+ val.muro +'">'+ 
+					 			 '<input type="hidden" name="pisoMuroMaterial[]" value="'+ val.muroMaterial +'">'+ 
+					 			 '<input type="hidden" name="pisoMuroCaracteristica[]" value="'+ val.muroCaracteristica +'">'+ 
+					 			 '<input type="hidden" name="pisoRevestimiento[]" value="'+ val.revestimiento +'">'+ 
+					 			 '<input type="hidden" name="pisoRevestimientoMaterial[]" value="'+ val.revestimientoMaterial +'">'+ 
+					 			 '<input type="hidden" name="pisoRevestimientoCaracteristica[]" value="'+ val.revestimientoCaracteristica +'">'+ 
+					 			 '<input type="hidden" name="pisoPiso[]" value="'+ val.piso +'">'+ 
+					 			 '<input type="hidden" name="pisoPisoMaterial[]" value="'+ val.pisoMaterial +'">'+ 
+					 			 '<input type="hidden" name="pisoPisoCaracteristica[]" value="'+ val.pisoCaracteristica +'">'+ 
+					 			 '<input type="hidden" name="pisoGradas[]" value="'+ val.gradas +'">'+ 
+					 			 '<input type="hidden" name="pisoGradasCuentanPasamano[]" value="'+ val.gradasCuentan.pasamano +'">'+ 
+					 			 '<input type="hidden" name="pisoGradasCuentanGuiaPrevencion[]" value="'+ val.gradasCuentan.guiaPrevencion +'">'+ 
+					 			 '<input type="hidden" name="pisoRampas[]" value="'+ val.rampas +'">'+ 
+					 			 '<input type="hidden" name="pisoRampasCuentan[]" value="'+ val.rampasCuentan +'">'+ 
+					 			 '<input type="hidden" name="pisoSenales[]" value="'+ val.senales +'">'+ 
+					 			 '<input type="hidden" name="pisoSenalesTipoOrientadoras[]" value="'+ val.senalesTipo.orientadoras +'">'+ 
+					 			 '<input type="hidden" name="pisoSenalesTipoAudibles[]" value="'+ val.senalesTipo.audibles +'">'+ 
+					 			 '<input type="hidden" name="pisoSenalesTipoVisuales[]" value="'+ val.senalesTipo.visuales +'">'+ 
+					 			 '<input type="hidden" name="pisoSenalesTipoTactiles[]" value="'+ val.senalesTipo.tactiles +'">'+ 
+					 			 '<input type="hidden" name="pisoSenalesTipoDirecciones[]" value="'+ val.senalesTipo.direccionales +'">'+ 
+					 			 '<input type="hidden" name="pisoSenalesTipoUbicacion[]" value="'+ val.senalesTipo.ubicacion +'">'+ 
+					 			 '<input type="hidden" name="pisoSenalesTipoInformativas[]" value="'+ val.senalesTipo.informativas +'">'+ 
+					 			 '<input type="hidden" name="pisoSenalesIdioma1[]" value="'+ val.senalesIdioma1 +'">'+ 
+					 			 '<input type="hidden" name="pisoSenalesIdioma2[]" value="'+ val.senalesIdioma2 +'">'+ 
+								 val.bloque +' </td>');
+					fila.append('<td>'+ val.nroPisoNombre +'</td>');
+					fila.append('<td>'+ val.total +'</td>');
+					fila.append('<td>Bueno</td>');
+					fila.append('<td>'+ gradas +'</td>');
+					fila.append('<td>'+ rampas +'</td>');
+					fila.append('<td>'+ senales +'</td>');
+					fila.append('<td><i class="fa fa-edit" onclick="openModalPiso('+index+')"></i>'+
+					 				' <i class="fa fa-trash" onclick="deletePiso('+index+')"></i>'+
+					 				' </td>');
+					tabla.append(fila);
+				});
+
+				$('#pisos').append(tabla);
+			}
+		}
+
+		function createPiso(){
+
+			// Verificamos si ya existe un bloque con el mismo numero
+			var existeNumero = false;
+			for(var i = 0; i < pisos.length; i++){
+				var bloqueNro = $('#bloqueNro').val();
+				var pisoNombre = $('select[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n11NroPisoTipo]"] option:selected').text();
+
+				if(bloqueNro == pisos[i].bloque && pisoNombre == pisos[i].nroPisoNombre && pisoEdit != i){
+					existeNumero = true;
+				}
+			}
+
+			if(existeNumero == true){
+				alert('El numero de piso para el bloque ya existe, debe registrar otro número');
+				return;
+			}
+
+			if(pisoEdit == null){
+				var piso = {
+					id: 'new',
+					bloque: $('#bloqueNro').val(),
+					nroPiso: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n11NroPisoTipo').val(),
+					nroPisoNombre: $('select[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n11NroPisoTipo]"] option:selected').text(),
+					area: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n12AreaM2').val(),
+					nroPedagogicos: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n13NroAmbPedagogicos').val(),
+					nroNoPedagogicos: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n14NroAmbNoPedagogicos').val(),
+					nroBanios: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n15TotalBanios').val(),
+					total: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n16TotalAmbientes').val(),
+					cielo: $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n21SiCieloFalso]"]:checked').val(),
+					cieloCaracteristica: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n211CaracteristicasTipo').val(),
+					puerta: $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n22SiPuertas]"]:checked').val(),
+					puertaSeguro: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n221SeguroTipo').val(),
+					puertaAbre: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n222AbreTipo').val(),
+					ventana: $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n23SiVentanas]"]:checked').val(),
+					ventanaCaracteristica: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n231VidriosTipo').val(),
+					techo: $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n24SiTecho]"]:checked').val(),
+					muro: $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n25SiMuros]"]:checked').val(),
+					muroMaterial: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n251MurosMaterialTipo').val(),
+					muroCaracteristica: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n252MurosCaracteristicasTipo').val(),
+					revestimiento: $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n26SiRevestimiento]"]:checked').val(),
+					revestimientoMaterial: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n261RevestMaterialTipo').val(),
+					revestimientoCaracteristica: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n262RevestCaracteristicasTipo').val(),
+					piso: $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n27SiPiso]"]:checked').val(),
+					pisoMaterial: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n271PisoMaterialTipo').val(),
+					pisoCaracteristica: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n272PisoCaracteristicasTipo').val(),
+					gradas: $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n31SiGradas]"]:checked').val(),
+					gradasCuentan: {
+						pasamano: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n32GradasTipo_1').prop('checked'),
+						guiaPrevencion: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n32GradasTipo_2').prop('checked')
+					},
+					rampas: $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n33SiRampas]"]:checked').val(),
+					rampasCuentan: {
+
+					},
+					senales: $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n35SiSenaletica]"]:checked').val(),
+					senalesTipo: {
+						orientadoras: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_1').prop('checked'),
+						audibles: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_2').prop('checked'),
+						visuales: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_3').prop('checked'),
+						tactiles: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_4').prop('checked'),
+						direccionales: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_5').prop('checked'),
+						ubicacion: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_6').prop('checked'),
+						informativas: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_7').prop('checked')
+					},
+					senalesIdioma1: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n35SenalesiomaTipo1').val(),
+					senalesIdioma2: $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n35SenalesiomaTipo2').val()
+				};
+
+				pisos.push(piso);
+
+			}else{
+				pisos[pisoEdit].id = 'new';
+				pisos[pisoEdit].bloque = $('#bloqueNro').val();
+				pisos[pisoEdit].nroPiso = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n11NroPisoTipo').val();
+				pisos[pisoEdit].nroPisoNombre = $('select[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n11NroPisoTipo]"] option:selected').text(),
+				pisos[pisoEdit].area = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n12AreaM2').val();
+				pisos[pisoEdit].nroPedagogicos = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n13NroAmbPedagogicos').val();
+				pisos[pisoEdit].nroNoPedagogicos = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n14NroAmbNoPedagogicos').val();
+				pisos[pisoEdit].nroBanios = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n15TotalBanios').val();
+				pisos[pisoEdit].total = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n16TotalAmbientes').val();
+				pisos[pisoEdit].cielo = $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n21SiCieloFalso]"]:checked').val();
+				pisos[pisoEdit].cieloCaracteristica = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n211CaracteristicasTipo').val();
+				pisos[pisoEdit].puerta = $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n22SiPuertas]"]:checked').val();
+				pisos[pisoEdit].puertaSeguro = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n221SeguroTipo').val();
+				pisos[pisoEdit].puertaAbre = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n222AbreTipo').val();
+				pisos[pisoEdit].ventana = $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n23SiVentanas]"]:checked').val();
+				pisos[pisoEdit].ventanaCaracteristica = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n231VidriosTipo').val();
+				pisos[pisoEdit].techo = $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n24SiTecho]"]:checked').val();
+				pisos[pisoEdit].muro = $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n25SiMuros]"]:checked').val();
+				pisos[pisoEdit].muroMaterial = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n251MurosMaterialTipo').val();
+				pisos[pisoEdit].muroCaracteristica = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n252MurosCaracteristicasTipo').val();
+				pisos[pisoEdit].revestimiento = $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n26SiRevestimiento]"]:checked').val();
+				pisos[pisoEdit].revestimientoMaterial = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n261RevestMaterialTipo').val();
+				pisos[pisoEdit].revestimientoCaracteristica = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n262RevestCaracteristicasTipo').val();
+				pisos[pisoEdit].piso = $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n27SiPiso]"]:checked').val();
+				pisos[pisoEdit].pisoMaterial = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n271PisoMaterialTipo').val();
+				pisos[pisoEdit].pisoCaracteristica = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n272PisoCaracteristicasTipo').val();
+				pisos[pisoEdit].gradas = $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n31SiGradas]"]:checked').val();
+				pisos[pisoEdit].gradasCuentan.pasamano = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n32GradasTipo_1').prop('checked');
+				pisos[pisoEdit].gradasCuentan.guiaPrevencion = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n32GradasTipo_2').prop('checked');
+				pisos[pisoEdit].rampas = $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n33SiRampas]"]:checked').val();
+				pisos[pisoEdit].rampasCuentan = {};
+				pisos[pisoEdit].senales = $('input:radio[name="sie_appwebbundle_infraestructurah2caracteristicaedificadospisos[n35SiSenaletica]"]:checked').val();
+				pisos[pisoEdit].senalesTipo.orientadoras = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_1').prop('checked');
+				pisos[pisoEdit].senalesTipo.audibles = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_2').prop('checked');
+				pisos[pisoEdit].senalesTipo.visuales = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_3').prop('checked');
+				pisos[pisoEdit].senalesTipo.tactiles = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_4').prop('checked');
+				pisos[pisoEdit].senalesTipo.direccionales = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_5').prop('checked');
+				pisos[pisoEdit].senalesTipo.ubicacion = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_6').prop('checked');
+				pisos[pisoEdit].senalesTipo.informativas = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n31SenalesTipo_7').prop('checked');
+				pisos[pisoEdit].senalesIdioma1 = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n35SenalesiomaTipo1').val();
+				pisos[pisoEdit].senalesIdioma2 = $('#sie_appwebbundle_infraestructurah2caracteristicaedificadospisos_n35SenalesiomaTipo2').val();
+			}
+			
+			
+			//console.log(pisos);
+			viewPisos();
+
+			$('#modalPiso').modal('hide');
+		}
+
+		function deletePiso(i){
+			if(confirm('¿Esta seguro de eliminar el registro?')){
+				pisos.splice(i,1);
+				$('#p_'+i).remove();
+
+				viewPisos();
+			}
+		}
+
+	</script>
+{% endblock %}
+
