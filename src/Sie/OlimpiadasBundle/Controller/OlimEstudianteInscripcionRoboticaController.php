@@ -25,14 +25,11 @@ class OlimEstudianteInscripcionRoboticaController extends Controller{
      *
      */
     public function indexAction(){
-        dump('krkrkr');die;
+        
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findAll();
-
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcionRobotica:index.html.twig', array(
-            //'form' => $this->inscriptionForm()->createView(),
-            'entities' => $entities,
+            'form' => $this->inscriptionForm()->createView(),
         ));
     }
 
@@ -42,20 +39,10 @@ class OlimEstudianteInscripcionRoboticaController extends Controller{
      */
     private function inscriptionForm(){
         
-
         $newform = $this->createFormBuilder()
-                ->add('olimMateria', 'entity', array('class'=>'SieAppWebBundle:OlimMateriaTipo'))
-                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($this->session->get('currentyear')=>$this->session->get('currentyear')), 'attr' => array('class' => 'form-control')))
-                ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), ))
-                
-                ;
-        if($this->session->get('roluser')==8){
-            $newform = $newform
-                ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control')))
-                ;
-        }
+            ->add('registrar', 'button', array('label'=>'Registrar'))
+            ->getForm();
 
-        $newform = $newform->getForm();
         return $newform;
 
     }
