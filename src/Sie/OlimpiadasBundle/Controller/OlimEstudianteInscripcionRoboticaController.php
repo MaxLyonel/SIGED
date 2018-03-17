@@ -39,7 +39,22 @@ class OlimEstudianteInscripcionRoboticaController extends Controller{
      */
     private function inscriptionForm(){
         
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQuery(
+            'SELECT a FROM SieAppWebBundle:OlimCategoriaTipo a
+            WHERE a.id between 6 and 13
+            ORDER BY a.id');
+        
+        $categorias = $query->getResult();
+        $categoriasArray = array();
+        foreach ($categorias as $value) {
+            $categoriasArray[$value->getId()] = $value->getCategoria();
+        }
+
         $newform = $this->createFormBuilder()
+            ->add('equipo', 'text', array('label' => 'Nombre del Equipo', 'required' => true, 'attr' => array('class' => 'form-control', 'placeholder' => 'Ingrese un nombre para el equipo')))
+            ->add('categoria', 'choice', array('label' => 'Categoría', 'required' => true, 'choices' => $categoriasArray, 'attr' => array('class' => 'form-control')))
             ->add('registrar', 'button', array('label'=>'Registrar'))
             ->getForm();
 

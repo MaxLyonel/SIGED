@@ -2,8 +2,12 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="form-group col-lg-6 col-md-6">
-            <label class="control-label" for="form_equipo">Nombre del Equipo</label>
-            <input id="form_equipo" name="form[equipo]" class="form-control" type="text" placeholder="Ingrese un nombre para el equipo" required>
+            {{form_label(form.equipo)}}
+            {{form_widget(form.equipo)}}
+        </div>
+        <div class="form-group col-lg-6 col-md-6">
+            {{form_label(form.categoria)}}
+            {{form_widget(form.categoria)}}
         </div>
     </div>
 </div>
