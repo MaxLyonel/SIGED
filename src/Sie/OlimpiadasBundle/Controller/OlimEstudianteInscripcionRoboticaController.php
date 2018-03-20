@@ -71,22 +71,14 @@ class OlimEstudianteInscripcionRoboticaController extends Controller{
      * @return [type]           [description]
      */
     public function findEstudianteAction(Request $request)
-    {
-        $entity = new OlimEstudianteInscripcion();
-        $form = $this->createCreateForm($entity);
-        $form->handleRequest($request);
+    {        
+        $em = $this->getDoctrine()->getManager();
+        $rude = $request->get('rude');
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$rude));
 
-            return $this->redirect($this->generateUrl('oliminscriptions_show', array('id' => $entity->getId())));
-        }
-
-        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcionRobotica:estudiante.html.twig', array(
+            'estudiante' => $estudiante,
         ));
     }
     
