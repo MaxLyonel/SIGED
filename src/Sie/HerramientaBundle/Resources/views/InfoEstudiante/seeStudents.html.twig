@@ -190,11 +190,11 @@
                                             (app.session.get('ue_humanistica_web') and app.session.get('ue_humanistica') ) or
                                             (app.session.get('ue_modular') and app.session.get('ue_humanistica') or false )
                                           %}
-                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                            {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                                 <button type="button" class="btn btn-circle btn-{{styleButton}} " data-toggle="modal" data-target=".bs-example-modal-table" onclick="socioeconomico('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                     <i class="fa fa-user"></i>
                                                 </button>
-                                            </div>
+                                            </div> #}
                                           {% endif %}
 
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
@@ -277,11 +277,11 @@
                                   {% else %}<!-- here is the else to UE HUMANISTICA -->
                                     {% if  app.session.get('ue_humanistica') %}
                                       {% if data.estadomatriculaId == 4 or false %}
-                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                        {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
                                             <button type="button" class="btn btn-circle btn-{{styleButton}} " data-toggle="modal" data-target=".bs-example-modal-table" onclick="socioeconomico('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
                                             </button>
-                                        </div>
+                                        </div> #}
                                        {% endif %}
                                     {% endif %}
                                   {% endif %}<!-- here is the end to UE HUMANISTICA -->
