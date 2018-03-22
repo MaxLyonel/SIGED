@@ -44,16 +44,16 @@ class OlimEstudianteInscripcionController extends Controller{
         
 
         $newform = $this->createFormBuilder()
-                ->add('olimMateria', 'entity', array('class'=>'SieAppWebBundle:OlimMateriaTipo'))
+                ->add('olimMateria', 'entity', array('class'=>'SieAppWebBundle:OlimMateriaTipo',  'empty_value' => 'Seleccionar Materia', ))
                 ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($this->session->get('currentyear')=>$this->session->get('currentyear')), 'attr' => array('class' => 'form-control')))
-                ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), ))
+                // ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), ))
                 
                 ;
-        if($this->session->get('roluser')==8){
+        // if($this->session->get('roluser')==8){
             $newform = $newform
-                ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control')))
+                ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control', 'value'=>$this->session->get('ie_id'))))
                 ;
-        }
+        // }
 
         $newform = $newform->getForm();
         return $newform;
@@ -70,20 +70,23 @@ class OlimEstudianteInscripcionController extends Controller{
         $em = $this->getDoctrine()->getManager();
         // get the send values
         $form = $request->get('form');
-        
+        $form['sie']= ($this->session->get('roluser')==8)?$form['institucionEducativa']:$this->session->get('ie_id');
         $jsondataInscription = json_encode(
             array(
-            'sie'=>($this->session->get('roluser')==8)?$form['institucionEducativa']:$this->session->get('ie_id'), 
+            'sie'=>$form['sie'], 
             'gestion'=>$form['gestion'], 
             'materia'=>$form['olimMateria'], 
             )
         ) ;
         //get info about materia
         $entity = $em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($form['olimMateria']);
+        $objInstitucionEducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
+        // dump($objInstitucionEducativa);die;
         // render the view
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:openInscriptinoOlimpiadas.html.twig', array(
             'jsondataInscription'=>$jsondataInscription,
             'entity'=>$entity,
+            'objInstitucionEducativa'=>$objInstitucionEducativa,
         ));
     }
 
@@ -294,10 +297,51 @@ class OlimEstudianteInscripcionController extends Controller{
 
 
     public function commonAreaInscriptionAction(Request $request){
-        //get the send values
+        //get the send data
         $jsonDataInscription = $request->get('jsonDataInscription');
         $tutorid = $request->get('tutorid');
-        dump($tutorid);die;
+        $arrDataInscription = json_decode($jsonDataInscription,true);
+        $arrDataInscription['tutorid'] = $tutorid;
+        $jsonDataInscription = json_encode($arrDataInscription);
+        // dump($jsonDataInscription);die;
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+        $objOlimTutor = $em->getRepository('SieAppWebBundle:OlimTutor')->find($tutorid);
+        $objPersona = $em->getRepository('SieAppWebBundle:Persona')->find($objOlimTutor->getPersona());
+        // dump($objPersona);
+        // die;
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:commonAreaInscription.html.twig', array(
+            'objPersona' => $objPersona,
+            'objOlimTutor' => $objOlimTutor,
+            'jsonDataInscription' => $jsonDataInscription,
+
+        ));
+
+    }
+
+    public function doInscriptionOStudentAction(Request $request){
+        
+        //get the send data
+        $jsonDataInscription = $request->get('jsonDataInscription');
+        $arrDataInscription = json_decode($jsonDataInscription,true);
+        dump($arrDataInscription);die;
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:doInscriptionOStudent.html.twig',array(
+            'form' => $this->formInscriptionOlim()->createView(),
+        ));
+    }
+
+    private function formInscriptionOlim(){
+        return $this->createFormBuilder()
+                ->add('category', 'choice', array('attr'=>array('class'=>'form-control')))
+                ->add('nivel', 'choice', array('attr'=>array('class'=>'form-control')))
+                ->add('grado', 'choice', array('attr'=>array('class'=>'form-control')))
+                ->add('paralelo', 'choice', array('attr'=>array('class'=>'form-control')))
+                ->add('turno', 'choice', array('attr'=>array('class'=>'form-control')))
+                ->getForm();
+    }
+
+    private function getNiveles(){
+
     }
 
 

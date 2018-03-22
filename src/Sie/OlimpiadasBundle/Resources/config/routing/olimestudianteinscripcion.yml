@@ -47,4 +47,10 @@ oliminscriptions_commonareainscription:
     options:
         expose: true
 
+oliminscriptions_doInscriptionOStudent:
+    path:     /doInscriptionOStudent
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:doInscriptionOStudent" }
+    options:
+        expose: true
+
 

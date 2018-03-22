@@ -44,11 +44,15 @@
                                               {% if app.session.get('roluser') == 8 %}
                                               SIE:
                                                 {{form_widget(form.institucionEducativa, {'attr': {'class':'form-control'} } )}}
+                                              {% else %}
+                                              SIE:
+                                              <input type="text" readonly="true" value="{{app.session.get('ie_id')}}" class="form-control">
+                                              
                                               {% endif %}
                                           </div>
                                           <div class="col-md-4">
                                             MATERIA:
-                                              {{form_widget(form.olimMateria, {'attr': {'class':'form-control'} } )}}
+                                              {{form_widget(form.olimMateria, {'attr': {'class':'form-control', 'onchange':'openInscriptinoOlimpiadas()'} } )}}
                                           </div>
                                           <div class="col-md-4">
                                             GESTION;
@@ -60,7 +64,7 @@
                                     <div class="form-footer">
                                         <div class="pull-right">
                                             <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
-                                             {{form_widget(form.buscar, {'attr': {'class':'btn btn-primary'} } )}}
+                                             {#form_widget(form.buscar, {'attr': {'class':'btn btn-primary'} } )#}
                                         </div>
                                         <div class="clearfix"></div>
                                     </div><!-- /.form-footer -->
@@ -98,6 +102,16 @@
     <script type="text/javascript" charset="utf-8" >
 
     var openInscriptinoOlimpiadas = function(){
+        
+      if( $('#form_institucionEducativa').val().length > 0){
+        
+      }else{
+        alert('Favor introducir codigo SIE');return false;
+      } 
+      if( $('#form_institucionEducativa').val().length <  8){
+        alert('el SIE introducido es incorrecto');return false;
+      }
+      
       formData = $('#idForminscriptionOlim').serialize();
        $.ajax({
              type: 'post',
@@ -322,7 +336,39 @@
              }
           });
       
-    }
+    };
+
+    var doInscriptionOStudent = function(jsonDataInscription){
+      
+
+        $.ajax({
+             type: 'post',
+             url: Routing.generate('oliminscriptions_doInscriptionOStudent'),
+             data: {jsonDataInscription:jsonDataInscription},
+             beforeSend: function () {
+                 $("#doInscriptionOStudentId").empty();
+                 $("#doInscriptionOStudentId").empty();
+                 $("#doInscriptionOStudentId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#doInscriptionOStudentId").empty();
+                 $("#doInscriptionOStudentId").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+
+    };
+
+
+
 
 
 

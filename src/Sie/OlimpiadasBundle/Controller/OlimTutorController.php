@@ -114,7 +114,7 @@ class OlimTutorController extends Controller
         //get the send values
         $form = $request->get('form');
         $data = json_decode($form['data'],true);
-        
+        // dump($data);die;
         //create db conexion 
         $em = $this->getDoctrine()->getManager();
         // udpate the indice
