@@ -39,12 +39,47 @@ class OlimEstudianteInscripcionRoboticaController extends Controller{
      */
     private function inscriptionForm(){
         
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQuery(
+            'SELECT a FROM SieAppWebBundle:OlimCategoriaTipo a
+            WHERE a.id between 6 and 13
+            ORDER BY a.id');
+        
+        $categorias = $query->getResult();
+        $categoriasArray = array();
+        foreach ($categorias as $value) {
+            $categoriasArray[$value->getId()] = $value->getCategoria();
+        }
+
         $newform = $this->createFormBuilder()
+            ->add('categoria', 'choice', array('label' => 'Categoría', 'required' => true, 'choices' => $categoriasArray, 'attr' => array('class' => 'form-control', 'onchange' => 'verificarCategoria(this.value)')))
+            ->add('equipo', 'text', array('label' => 'Nombre del Equipo', 'required' => true, 'attr' => array('class' => 'form-control', 'placeholder' => 'Ingrese un nombre para el equipo')))
+            ->add('proyecto', 'text', array('label' => 'Nombre del Proyecto', 'attr' => array('class' => 'form-control', 'placeholder' => 'Ingrese el nombre del proyecto')))
+            ->add('rude1', 'text', array('label' => 'Código Rude 1', 'required' => true, 'attr' => array('class' => 'form-control', 'placeholder' => 'Ingrese un código RUDE')))
+            ->add('rude2', 'text', array('label' => 'Código Rude 2', 'attr' => array('class' => 'form-control', 'placeholder' => 'Ingrese un código RUDE')))
             ->add('registrar', 'button', array('label'=>'Registrar'))
             ->getForm();
 
         return $newform;
 
+    }
+
+    /**
+     * Find Estudiante.
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function findEstudianteAction(Request $request)
+    {        
+        $em = $this->getDoctrine()->getManager();
+        $rude = $request->get('rude');
+
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$rude));
+
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcionRobotica:estudiante.html.twig', array(
+            'estudiante' => $estudiante,
+        ));
     }
     
     /**
@@ -64,8 +99,7 @@ class OlimEstudianteInscripcionRoboticaController extends Controller{
             'materia'=>$form['olimMateria'], 
             )
         ) ;
-        // dump($jsondataInscription);die;
-        // dump($form);die;    
+
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:openInscriptinoOlimpiadas.html.twig', array(
             'jsondataInscription'=>$jsondataInscription,
         ));
@@ -78,7 +112,6 @@ class OlimEstudianteInscripcionRoboticaController extends Controller{
      */
     public function regDirectorAction(Request $request){
 
-        dump($request) ;die;
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:openInscriptinoOlimpiadas.html.twig', array(
             'jsondataInscription'=>$jsondataInscription,
         ));
