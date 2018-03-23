@@ -1,6 +1,19 @@
 Sie\AppWebBundle\Entity\OlimGrupoProyecto:
     type: entity
     table: olim_grupo_proyecto
+    indexes:
+        IDX_7E40BDE96157FA0:
+            columns:
+                - periodo_tipo_id
+        IDX_7E40BDEAB4891C2:
+            columns:
+                - categoria_tipo_id
+        IDX_7E40BDECA64564A:
+            columns:
+                - materia_tipo_id
+        IDX_7E40BDEF30A3A41:
+            columns:
+                - olim_grupo_proyecto_tipo_id
     id:
         id:
             type: integer
@@ -11,20 +24,12 @@ Sie\AppWebBundle\Entity\OlimGrupoProyecto:
             generator:
                 strategy: SEQUENCE
     fields:
-        nombreGrupo:
+        nombre:
             type: string
             nullable: true
             length: 300
             fixed: false
             comment: ''
-            column: nombre_grupo
-        nombreProyecto:
-            type: string
-            nullable: true
-            length: 300
-            fixed: false
-            comment: ''
-            column: nombre_proyecto
         fechaRegistro:
             type: date
             nullable: true
@@ -73,4 +78,47 @@ Sie\AppWebBundle\Entity\OlimGrupoProyecto:
             unsigned: false
             comment: ''
             column: usuario_modificacion_id
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+    manyToOne:
+        periodoTipo:
+            targetEntity: OlimPeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        categoriaTipo:
+            targetEntity: OlimCategoriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                categoria_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        materiaTipo:
+            targetEntity: OlimMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimGrupoProyectoTipo:
+            targetEntity: OlimGrupoProyectoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_grupo_proyecto_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
     lifecycleCallbacks: {  }

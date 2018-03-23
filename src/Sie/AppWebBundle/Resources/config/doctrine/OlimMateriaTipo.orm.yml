@@ -1,6 +1,10 @@
 Sie\AppWebBundle\Entity\OlimMateriaTipo:
     type: entity
     table: olim_materia_tipo
+    indexes:
+        IDX_D55298E1AC1E7EA:
+            columns:
+                - olim_registro_olimpiada_id
     id:
         id:
             type: integer
@@ -22,4 +26,30 @@ Sie\AppWebBundle\Entity\OlimMateriaTipo:
             nullable: true
             comment: ''
             column: fecha_registro
+        fechaInsIni:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_ins_ini
+        fechaInsFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_ins_fin
+        descripcion:
+            type: string
+            nullable: true
+            length: 1500
+            fixed: false
+            comment: ''
+    manyToOne:
+        olimRegistroOlimpiada:
+            targetEntity: OlimRegistroOlimpiada
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_registro_olimpiada_id:
+                    referencedColumnName: id
+            orphanRemoval: false
     lifecycleCallbacks: {  }

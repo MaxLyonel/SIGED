@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\OlimGrupoProyectoTipo:
+    type: entity
+    table: olim_grupo_proyecto_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        tipo:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

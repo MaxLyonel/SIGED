@@ -976,32 +976,4 @@ class OlimReglasOlimpiadasTipo
     {
         return $this->modalidadParticipacionTipo;
     }
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimCategoriaTipo
-     */
-    private $olimCategoriaTipo;
-
-
-    /**
-     * Set olimCategoriaTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\OlimCategoriaTipo $olimCategoriaTipo
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setOlimCategoriaTipo(\Sie\AppWebBundle\Entity\OlimCategoriaTipo $olimCategoriaTipo = null)
-    {
-        $this->olimCategoriaTipo = $olimCategoriaTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get olimCategoriaTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\OlimCategoriaTipo 
-     */
-    public function getOlimCategoriaTipo()
-    {
-        return $this->olimCategoriaTipo;
-    }
 }

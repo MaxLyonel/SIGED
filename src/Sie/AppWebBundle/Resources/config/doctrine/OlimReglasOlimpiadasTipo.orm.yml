@@ -2,12 +2,9 @@ Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo:
     type: entity
     table: olim_reglas_olimpiadas_tipo
     indexes:
-        IDX_2D86862FCA64564A:
+        IDX_2D86862FE9A982C5:
             columns:
-                - materia_tipo_id
-        IDX_2D86862FAB4891C2:
-            columns:
-                - categoria_tipo_id
+                - olim_categoria_tipo_id
         IDX_2D86862FFF8C3A35:
             columns:
                 - modalidad_numero_integrantes_tipo_id
@@ -24,66 +21,6 @@ Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo:
             generator:
                 strategy: SEQUENCE
     fields:
-        categoria:
-            type: string
-            nullable: true
-            length: 300
-            fixed: false
-            comment: ''
-        materia:
-            type: string
-            nullable: true
-            length: 255
-            fixed: false
-            comment: ''
-        pri1:
-            type: boolean
-            nullable: true
-            comment: ''
-        pri2:
-            type: boolean
-            nullable: true
-            comment: ''
-        pri3:
-            type: boolean
-            nullable: true
-            comment: ''
-        pri4:
-            type: boolean
-            nullable: true
-            comment: ''
-        pri5:
-            type: boolean
-            nullable: true
-            comment: ''
-        pri6:
-            type: boolean
-            nullable: true
-            comment: ''
-        sec1:
-            type: boolean
-            nullable: true
-            comment: ''
-        sec2:
-            type: boolean
-            nullable: true
-            comment: ''
-        sec3:
-            type: boolean
-            nullable: true
-            comment: ''
-        sec4:
-            type: boolean
-            nullable: true
-            comment: ''
-        sec5:
-            type: boolean
-            nullable: true
-            comment: ''
-        sec6:
-            type: boolean
-            nullable: true
-            comment: ''
         cantidadEquipos:
             type: integer
             nullable: true
@@ -113,16 +50,6 @@ Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo:
             nullable: true
             comment: ''
             column: fecha_comparacion
-        periodoFechaInicial:
-            type: date
-            nullable: true
-            comment: ''
-            column: periodo_fecha_inicial
-        periodoFechaFinal:
-            type: date
-            nullable: true
-            comment: ''
-            column: periodo_fecha_final
         siSubirDocumento:
             type: boolean
             nullable: true
@@ -173,22 +100,13 @@ Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo:
             comment: ''
             column: usuario_modificacion_id
     manyToOne:
-        materiaTipo:
-            targetEntity: OlimMateriaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                materia_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        categoriaTipo:
+        olimCategoriaTipo:
             targetEntity: OlimCategoriaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                categoria_tipo_id:
+                olim_categoria_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         modalidadNumeroIntegrantesTipo:

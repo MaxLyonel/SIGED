@@ -2,9 +2,12 @@ Sie\AppWebBundle\Entity\OlimEstudianteInscripcion:
     type: entity
     table: olim_estudiante_inscripcion
     indexes:
-        IDX_3F5715E99F8A915C:
+        IDX_3F5715E93C52DD18:
             columns:
-                - reglas_olimpiadas_tipo_id
+                - olim_reglas_olimpiadas_tipo_id
+        IDX_3F5715E996157FA0:
+            columns:
+                - periodo_tipo_id
         IDX_3F5715E9AB4891C2:
             columns:
                 - categoria_tipo_id
@@ -90,14 +93,29 @@ Sie\AppWebBundle\Entity\OlimEstudianteInscripcion:
             unsigned: false
             comment: ''
             column: usuario_modificacion_id
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
     manyToOne:
-        reglasOlimpiadasTipo:
+        olimReglasOlimpiadasTipo:
             targetEntity: OlimReglasOlimpiadasTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                reglas_olimpiadas_tipo_id:
+                olim_reglas_olimpiadas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        periodoTipo:
+            targetEntity: OlimPeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         categoriaTipo:

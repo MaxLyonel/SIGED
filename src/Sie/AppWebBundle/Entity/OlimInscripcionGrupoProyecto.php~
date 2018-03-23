@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * OlimInscripcionTutor
+ * OlimInscripcionGrupoProyecto
  */
-class OlimInscripcionTutor
+class OlimInscripcionGrupoProyecto
 {
     /**
      * @var integer
@@ -20,9 +20,9 @@ class OlimInscripcionTutor
     private $fechaRegistro;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\OlimTutor
+     * @var \Sie\AppWebBundle\Entity\OlimGrupoProyecto
      */
-    private $olimTutor;
+    private $olimGrupoProyecto;
 
     /**
      * @var \Sie\AppWebBundle\Entity\OlimEstudianteInscripcion
@@ -44,7 +44,7 @@ class OlimInscripcionTutor
      * Set fechaRegistro
      *
      * @param \DateTime $fechaRegistro
-     * @return OlimInscripcionTutor
+     * @return OlimInscripcionGrupoProyecto
      */
     public function setFechaRegistro($fechaRegistro)
     {
@@ -64,33 +64,33 @@ class OlimInscripcionTutor
     }
 
     /**
-     * Set olimTutor
+     * Set olimGrupoProyecto
      *
-     * @param \Sie\AppWebBundle\Entity\OlimTutor $olimTutor
-     * @return OlimInscripcionTutor
+     * @param \Sie\AppWebBundle\Entity\OlimGrupoProyecto $olimGrupoProyecto
+     * @return OlimInscripcionGrupoProyecto
      */
-    public function setOlimTutor(\Sie\AppWebBundle\Entity\OlimTutor $olimTutor = null)
+    public function setOlimGrupoProyecto(\Sie\AppWebBundle\Entity\OlimGrupoProyecto $olimGrupoProyecto = null)
     {
-        $this->olimTutor = $olimTutor;
+        $this->olimGrupoProyecto = $olimGrupoProyecto;
     
         return $this;
     }
 
     /**
-     * Get olimTutor
+     * Get olimGrupoProyecto
      *
-     * @return \Sie\AppWebBundle\Entity\OlimTutor 
+     * @return \Sie\AppWebBundle\Entity\OlimGrupoProyecto 
      */
-    public function getOlimTutor()
+    public function getOlimGrupoProyecto()
     {
-        return $this->olimTutor;
+        return $this->olimGrupoProyecto;
     }
 
     /**
      * Set olimEstudianteInscripcion
      *
      * @param \Sie\AppWebBundle\Entity\OlimEstudianteInscripcion $olimEstudianteInscripcion
-     * @return OlimInscripcionTutor
+     * @return OlimInscripcionGrupoProyecto
      */
     public function setOlimEstudianteInscripcion(\Sie\AppWebBundle\Entity\OlimEstudianteInscripcion $olimEstudianteInscripcion = null)
     {

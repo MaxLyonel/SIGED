@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * OlimModalidadParticipacionTipo
+ * OlimDiscapacidadTipo
  */
-class OlimModalidadParticipacionTipo
+class OlimDiscapacidadTipo
 {
     /**
      * @var integer
@@ -17,7 +17,7 @@ class OlimModalidadParticipacionTipo
     /**
      * @var string
      */
-    private $modalidad;
+    private $discapacidad;
 
 
     /**
@@ -31,25 +31,25 @@ class OlimModalidadParticipacionTipo
     }
 
     /**
-     * Set modalidad
+     * Set discapacidad
      *
-     * @param string $modalidad
-     * @return OlimModalidadParticipacionTipo
+     * @param string $discapacidad
+     * @return OlimDiscapacidadTipo
      */
-    public function setModalidad($modalidad)
+    public function setDiscapacidad($discapacidad)
     {
-        $this->modalidad = $modalidad;
+        $this->discapacidad = $discapacidad;
     
         return $this;
     }
 
     /**
-     * Get modalidad
+     * Get discapacidad
      *
      * @return string 
      */
-    public function getModalidad()
+    public function getDiscapacidad()
     {
-        return $this->modalidad;
+        return $this->discapacidad;
     }
 }

@@ -2,6 +2,18 @@ Sie\AppWebBundle\Entity\OlimTutor:
     type: entity
     table: olim_tutor
     indexes:
+        IDX_FE09D8F996157FA0:
+            columns:
+                - periodo_tipo_id
+        IDX_FE09D8F9AB4891C2:
+            columns:
+                - categoria_tipo_id
+        IDX_FE09D8F9CA64564A:
+            columns:
+                - materia_tipo_id
+        IDX_FE09D8F93AB163FE:
+            columns:
+                - institucioneducativa_id
         IDX_FE09D8F9F5F88DB9:
             columns:
                 - persona_id
@@ -56,19 +68,49 @@ Sie\AppWebBundle\Entity\OlimTutor:
             unsigned: false
             comment: ''
             column: usuario_modificacion_id
-        institucioneducativaId:
+        gestionTipoId:
             type: integer
             nullable: true
             unsigned: false
             comment: ''
-            column: institucioneducativa_id
-        materiaTipoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: materia_tipo_id
+            column: gestion_tipo_id
     manyToOne:
+        periodoTipo:
+            targetEntity: OlimPeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        categoriaTipo:
+            targetEntity: OlimCategoriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                categoria_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        materiaTipo:
+            targetEntity: OlimMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         persona:
             targetEntity: Persona
             cascade: {  }
