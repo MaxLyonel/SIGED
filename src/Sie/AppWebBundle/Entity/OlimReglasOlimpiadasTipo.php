@@ -15,76 +15,6 @@ class OlimReglasOlimpiadasTipo
     private $id;
 
     /**
-     * @var string
-     */
-    private $categoria;
-
-    /**
-     * @var string
-     */
-    private $materia;
-
-    /**
-     * @var boolean
-     */
-    private $pri1;
-
-    /**
-     * @var boolean
-     */
-    private $pri2;
-
-    /**
-     * @var boolean
-     */
-    private $pri3;
-
-    /**
-     * @var boolean
-     */
-    private $pri4;
-
-    /**
-     * @var boolean
-     */
-    private $pri5;
-
-    /**
-     * @var boolean
-     */
-    private $pri6;
-
-    /**
-     * @var boolean
-     */
-    private $sec1;
-
-    /**
-     * @var boolean
-     */
-    private $sec2;
-
-    /**
-     * @var boolean
-     */
-    private $sec3;
-
-    /**
-     * @var boolean
-     */
-    private $sec4;
-
-    /**
-     * @var boolean
-     */
-    private $sec5;
-
-    /**
-     * @var boolean
-     */
-    private $sec6;
-
-    /**
      * @var integer
      */
     private $cantidadEquipos;
@@ -108,16 +38,6 @@ class OlimReglasOlimpiadasTipo
      * @var \DateTime
      */
     private $fechaComparacion;
-
-    /**
-     * @var \DateTime
-     */
-    private $periodoFechaInicial;
-
-    /**
-     * @var \DateTime
-     */
-    private $periodoFechaFinal;
 
     /**
      * @var boolean
@@ -167,12 +87,12 @@ class OlimReglasOlimpiadasTipo
     /**
      * @var \Sie\AppWebBundle\Entity\OlimMateriaTipo
      */
-    private $materiaTipo;
+    private $olimMateriaTipo;
 
     /**
      * @var \Sie\AppWebBundle\Entity\OlimCategoriaTipo
      */
-    private $categoriaTipo;
+    private $olimCategoriaTipo;
 
     /**
      * @var \Sie\AppWebBundle\Entity\OlimModalidadNumeroIngrantesTipo
@@ -193,328 +113,6 @@ class OlimReglasOlimpiadasTipo
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set categoria
-     *
-     * @param string $categoria
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setCategoria($categoria)
-    {
-        $this->categoria = $categoria;
-    
-        return $this;
-    }
-
-    /**
-     * Get categoria
-     *
-     * @return string 
-     */
-    public function getCategoria()
-    {
-        return $this->categoria;
-    }
-
-    /**
-     * Set materia
-     *
-     * @param string $materia
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setMateria($materia)
-    {
-        $this->materia = $materia;
-    
-        return $this;
-    }
-
-    /**
-     * Get materia
-     *
-     * @return string 
-     */
-    public function getMateria()
-    {
-        return $this->materia;
-    }
-
-    /**
-     * Set pri1
-     *
-     * @param boolean $pri1
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setPri1($pri1)
-    {
-        $this->pri1 = $pri1;
-    
-        return $this;
-    }
-
-    /**
-     * Get pri1
-     *
-     * @return boolean 
-     */
-    public function getPri1()
-    {
-        return $this->pri1;
-    }
-
-    /**
-     * Set pri2
-     *
-     * @param boolean $pri2
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setPri2($pri2)
-    {
-        $this->pri2 = $pri2;
-    
-        return $this;
-    }
-
-    /**
-     * Get pri2
-     *
-     * @return boolean 
-     */
-    public function getPri2()
-    {
-        return $this->pri2;
-    }
-
-    /**
-     * Set pri3
-     *
-     * @param boolean $pri3
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setPri3($pri3)
-    {
-        $this->pri3 = $pri3;
-    
-        return $this;
-    }
-
-    /**
-     * Get pri3
-     *
-     * @return boolean 
-     */
-    public function getPri3()
-    {
-        return $this->pri3;
-    }
-
-    /**
-     * Set pri4
-     *
-     * @param boolean $pri4
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setPri4($pri4)
-    {
-        $this->pri4 = $pri4;
-    
-        return $this;
-    }
-
-    /**
-     * Get pri4
-     *
-     * @return boolean 
-     */
-    public function getPri4()
-    {
-        return $this->pri4;
-    }
-
-    /**
-     * Set pri5
-     *
-     * @param boolean $pri5
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setPri5($pri5)
-    {
-        $this->pri5 = $pri5;
-    
-        return $this;
-    }
-
-    /**
-     * Get pri5
-     *
-     * @return boolean 
-     */
-    public function getPri5()
-    {
-        return $this->pri5;
-    }
-
-    /**
-     * Set pri6
-     *
-     * @param boolean $pri6
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setPri6($pri6)
-    {
-        $this->pri6 = $pri6;
-    
-        return $this;
-    }
-
-    /**
-     * Get pri6
-     *
-     * @return boolean 
-     */
-    public function getPri6()
-    {
-        return $this->pri6;
-    }
-
-    /**
-     * Set sec1
-     *
-     * @param boolean $sec1
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setSec1($sec1)
-    {
-        $this->sec1 = $sec1;
-    
-        return $this;
-    }
-
-    /**
-     * Get sec1
-     *
-     * @return boolean 
-     */
-    public function getSec1()
-    {
-        return $this->sec1;
-    }
-
-    /**
-     * Set sec2
-     *
-     * @param boolean $sec2
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setSec2($sec2)
-    {
-        $this->sec2 = $sec2;
-    
-        return $this;
-    }
-
-    /**
-     * Get sec2
-     *
-     * @return boolean 
-     */
-    public function getSec2()
-    {
-        return $this->sec2;
-    }
-
-    /**
-     * Set sec3
-     *
-     * @param boolean $sec3
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setSec3($sec3)
-    {
-        $this->sec3 = $sec3;
-    
-        return $this;
-    }
-
-    /**
-     * Get sec3
-     *
-     * @return boolean 
-     */
-    public function getSec3()
-    {
-        return $this->sec3;
-    }
-
-    /**
-     * Set sec4
-     *
-     * @param boolean $sec4
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setSec4($sec4)
-    {
-        $this->sec4 = $sec4;
-    
-        return $this;
-    }
-
-    /**
-     * Get sec4
-     *
-     * @return boolean 
-     */
-    public function getSec4()
-    {
-        return $this->sec4;
-    }
-
-    /**
-     * Set sec5
-     *
-     * @param boolean $sec5
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setSec5($sec5)
-    {
-        $this->sec5 = $sec5;
-    
-        return $this;
-    }
-
-    /**
-     * Get sec5
-     *
-     * @return boolean 
-     */
-    public function getSec5()
-    {
-        return $this->sec5;
-    }
-
-    /**
-     * Set sec6
-     *
-     * @param boolean $sec6
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setSec6($sec6)
-    {
-        $this->sec6 = $sec6;
-    
-        return $this;
-    }
-
-    /**
-     * Get sec6
-     *
-     * @return boolean 
-     */
-    public function getSec6()
-    {
-        return $this->sec6;
     }
 
     /**
@@ -630,52 +228,6 @@ class OlimReglasOlimpiadasTipo
     public function getFechaComparacion()
     {
         return $this->fechaComparacion;
-    }
-
-    /**
-     * Set periodoFechaInicial
-     *
-     * @param \DateTime $periodoFechaInicial
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setPeriodoFechaInicial($periodoFechaInicial)
-    {
-        $this->periodoFechaInicial = $periodoFechaInicial;
-    
-        return $this;
-    }
-
-    /**
-     * Get periodoFechaInicial
-     *
-     * @return \DateTime 
-     */
-    public function getPeriodoFechaInicial()
-    {
-        return $this->periodoFechaInicial;
-    }
-
-    /**
-     * Set periodoFechaFinal
-     *
-     * @param \DateTime $periodoFechaFinal
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setPeriodoFechaFinal($periodoFechaFinal)
-    {
-        $this->periodoFechaFinal = $periodoFechaFinal;
-    
-        return $this;
-    }
-
-    /**
-     * Get periodoFechaFinal
-     *
-     * @return \DateTime 
-     */
-    public function getPeriodoFechaFinal()
-    {
-        return $this->periodoFechaFinal;
     }
 
     /**
@@ -886,49 +438,49 @@ class OlimReglasOlimpiadasTipo
     }
 
     /**
-     * Set materiaTipo
+     * Set olimMateriaTipo
      *
-     * @param \Sie\AppWebBundle\Entity\OlimMateriaTipo $materiaTipo
+     * @param \Sie\AppWebBundle\Entity\OlimMateriaTipo $olimMateriaTipo
      * @return OlimReglasOlimpiadasTipo
      */
-    public function setMateriaTipo(\Sie\AppWebBundle\Entity\OlimMateriaTipo $materiaTipo = null)
+    public function setOlimMateriaTipo(\Sie\AppWebBundle\Entity\OlimMateriaTipo $olimMateriaTipo = null)
     {
-        $this->materiaTipo = $materiaTipo;
+        $this->olimMateriaTipo = $olimMateriaTipo;
     
         return $this;
     }
 
     /**
-     * Get materiaTipo
+     * Get olimMateriaTipo
      *
      * @return \Sie\AppWebBundle\Entity\OlimMateriaTipo 
      */
-    public function getMateriaTipo()
+    public function getOlimMateriaTipo()
     {
-        return $this->materiaTipo;
+        return $this->olimMateriaTipo;
     }
 
     /**
-     * Set categoriaTipo
+     * Set olimCategoriaTipo
      *
-     * @param \Sie\AppWebBundle\Entity\OlimCategoriaTipo $categoriaTipo
+     * @param \Sie\AppWebBundle\Entity\OlimCategoriaTipo $olimCategoriaTipo
      * @return OlimReglasOlimpiadasTipo
      */
-    public function setCategoriaTipo(\Sie\AppWebBundle\Entity\OlimCategoriaTipo $categoriaTipo = null)
+    public function setOlimCategoriaTipo(\Sie\AppWebBundle\Entity\OlimCategoriaTipo $olimCategoriaTipo = null)
     {
-        $this->categoriaTipo = $categoriaTipo;
+        $this->olimCategoriaTipo = $olimCategoriaTipo;
     
         return $this;
     }
 
     /**
-     * Get categoriaTipo
+     * Get olimCategoriaTipo
      *
      * @return \Sie\AppWebBundle\Entity\OlimCategoriaTipo 
      */
-    public function getCategoriaTipo()
+    public function getOlimCategoriaTipo()
     {
-        return $this->categoriaTipo;
+        return $this->olimCategoriaTipo;
     }
 
     /**
@@ -975,33 +527,5 @@ class OlimReglasOlimpiadasTipo
     public function getModalidadParticipacionTipo()
     {
         return $this->modalidadParticipacionTipo;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimCategoriaTipo
-     */
-    private $olimCategoriaTipo;
-
-
-    /**
-     * Set olimCategoriaTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\OlimCategoriaTipo $olimCategoriaTipo
-     * @return OlimReglasOlimpiadasTipo
-     */
-    public function setOlimCategoriaTipo(\Sie\AppWebBundle\Entity\OlimCategoriaTipo $olimCategoriaTipo = null)
-    {
-        $this->olimCategoriaTipo = $olimCategoriaTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get olimCategoriaTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\OlimCategoriaTipo 
-     */
-    public function getOlimCategoriaTipo()
-    {
-        return $this->olimCategoriaTipo;
     }
 }
