@@ -5,3 +5,23 @@ herramienta_especial_info_centro_index:
 herramienta_especial_info_ueducativa_update:
     path:     /updateInfoEsp
     defaults: { _controller: SieEspecialBundle:InfoCentro:update }
+
+herramienta_especial_buscar_centro:
+    path:     /buscarCentro
+    defaults: { _controller: SieEspecialBundle:InfoCentro:buscarCentro }
+
+herramienta_especial_habilitar_gestion_search:
+    path:     /habilitarGestion
+    defaults: { _controller: SieEspecialBundle:InfoCentro:habilitarGestionSearch }
+
+herramienta_especial_habilitar_gestion:
+    path:     /habilitarGestion
+    defaults: { _controller: SieEspecialBundle:InfoCentro:habilitarGestion }
+    options:
+        expose: true
+
+herramienta_especial_gestion_hab:
+    path:     /gestionHab
+    defaults: { _controller: SieEspecialBundle:InfoCentro:gestionHab }
+    options:
+        expose: true        

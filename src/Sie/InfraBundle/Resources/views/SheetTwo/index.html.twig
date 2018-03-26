@@ -4,7 +4,7 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-table"></i> Sheet # <span></span></h2>
+        <h2><i class="fa fa-table"></i> Características del Edificio <span>Hoja 2</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
             <ol class="breadcrumb">
@@ -31,15 +31,85 @@
 
     <div class="body-content animated fadeIn">
       <div class="row">
+          <div class="panel panel-tab panel-tab-double shadow">
+                                          <!-- Start tabs heading -->
+                                          <div class="panel-heading no-padding">
+                                              <ul class="nav nav-tabs">
+                                                  <li class="nav-border nav-border-top-danger active">
+                                                      <a href="component-tabsaccordion.html#tab6-1" data-toggle="tab" class="text-center" aria-expanded="true">
+                                                          1. Caracteristicas del terreno
+                                                      </a>
+                                                  </li>
+                                                  <li class="nav-border nav-border-top-primary">
+                                                      <a href="component-tabsaccordion.html#tab6-2" data-toggle="tab" class="text-center" aria-expanded="false">
+                                                          2. Características de la edificación
+                                                      </a>
+                                                  </li>
+                                                  <li class="nav-border nav-border-top-success">
+                                                      <a href="component-tabsaccordion.html#tab6-3" data-toggle="tab" class="text-center" aria-expanded="false">
+                                                          3. Bloques edificados
+                                                      </a>
+                                                  </li>
+                                                  <li class="nav-border nav-border-top-info">
+                                                      <a href="component-tabsaccordion.html#tab6-4" data-toggle="tab" class="text-center" aria-expanded="false">
+                                                          4. Ebicación cartográfica del edificio educativo (Coordenadas geográficas)
+                                                      </a>
+                                                  </li>
+                                              </ul>
+                                          </div><!-- /.panel-heading -->
+                                          <!--/ End tabs heading -->
 
-            <div class="col-md-10 col-sm-8 col-md-offset-1">
-            <!-- Lista de tramites aprobados por la DDE -->
-
-                        <!--/ End team table -->
-
-                    <div id="logs"></div>
-            <!--end lista tramites aprobados por la DDE -->
-            </div>
+                                          <!-- Start tabs content -->
+                                          <div class="panel-body">
+                                              <div class="tab-content">
+                                                  <div class="tab-pane fade active in" id="tab6-1">
+                                                      <label>1.1 Área total del terreno m2:</label>
+                                                      <div class="row">
+                                                          <div class="col-md-2">
+                                                            <label>Area total</label>
+                                                            <input type="text" name="">
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                            <label>Area construida</label>
+                                                            <input type="text" name="">
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                            <label>Area de recreacion</label>
+                                                            <input type="text" name="">
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                            <label>Area del huerto escolar</label>
+                                                            <input type="text" name="">
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                            <label>Area de invernadero</label>
+                                                            <input type="text" name="">
+                                                          </div>
+                                                          <div class="col-md-2">
+                                                            <label>Area de granja</label>
+                                                            <input type="text" name="">
+                                                          </div>
+                                                      </div>
+                                                      <div class="row">
+                                                        <div class="col-md-12">
+                                                          <label>1.2 Topografia</label>
+                                                          <select></select>
+                                                        </div>
+                                                      </div>
+                                                  </div>
+                                                  <div class="tab-pane fade" id="tab6-2">
+                                                      
+                                                  </div>
+                                                  <div class="tab-pane fade" id="tab6-3">
+                                                      
+                                                  </div>
+                                                  <div class="tab-pane fade" id="tab6-4">
+                                                      
+                                                  </div>
+                                              </div>
+                                          </div><!-- /.panel-body -->
+                                          <!--/ End tabs content -->
+                                      </div>
       </div>
     </div>
 {% endblock %}

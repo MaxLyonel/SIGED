@@ -29,6 +29,10 @@ class InfraestructuraH3SenaleticaEvacTipo
      */
     private $gestionTipoId;
 
+    public function __toString(){
+        return $this->descripcion;
+    }
+
 
     /**
      * Get id

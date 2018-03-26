@@ -1,3 +1,11 @@
+sie_app_web_infraestructurah3riesgosdelitos:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah3riesgosdelitos.yml"
+    prefix:   /infraestructurah3riesgosdelitos
+
+sie_app_web_infraestructurah2caracteristica:
+    resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah2caracteristica.yml"
+    prefix:   /infraestructurah2caracteristica
+    
 sie_app_web_infrah6ambadmservalimentacion:
     resource: "@SieAppWebBundle/Resources/config/routing/infraestructurah6ambienteadministrativoservalimentacion.yml"
     prefix:   /infrah6ambadmservalimentacion

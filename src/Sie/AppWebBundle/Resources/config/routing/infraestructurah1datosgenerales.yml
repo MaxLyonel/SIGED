@@ -1,33 +1,7 @@
 infraestructurah1datosgenerales:
     path:     /
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH1Datosgenerales:index" }
-
-infraestructurah1datosgenerales_show:
-    path:     /{id}/show
-    defaults: { _controller: "SieAppWebBundle:InfraestructuraH1Datosgenerales:show" }
-
-infraestructurah1datosgenerales_new:
-    path:     /{infraJurgeoId}/new
-    defaults: { _controller: "SieAppWebBundle:InfraestructuraH1Datosgenerales:new" }
-
-infraestructurah1datosgenerales_create:
-    path:     /create
-    defaults: { _controller: "SieAppWebBundle:InfraestructuraH1Datosgenerales:create" }
-    methods:  POST
-
-infraestructurah1datosgenerales_edit:
-    path:     /{id}/edit
-    defaults: { _controller: "SieAppWebBundle:InfraestructuraH1Datosgenerales:edit" }
-
-infraestructurah1datosgenerales_update:
-    path:     /{id}/update
-    defaults: { _controller: "SieAppWebBundle:InfraestructuraH1Datosgenerales:update" }
-    methods:  [POST, PUT]
-
-infraestructurah1datosgenerales_delete:
-    path:     /{id}/delete
-    defaults: { _controller: "SieAppWebBundle:InfraestructuraH1Datosgenerales:delete" }
-    methods:  [POST, DELETE]
+    methods: [GET, POST]
 
 infraestructurah1datosgenerales_buscarPersona:
     path:     /buscarPersona

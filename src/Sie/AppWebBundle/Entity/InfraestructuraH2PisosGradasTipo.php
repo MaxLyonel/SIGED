@@ -29,6 +29,10 @@ class InfraestructuraH2PisosGradasTipo
      */
     private $gestionTipoId;
 
+    public function __toString(){
+        return $this->descripcion;
+    }
+
 
     /**
      * Get id
