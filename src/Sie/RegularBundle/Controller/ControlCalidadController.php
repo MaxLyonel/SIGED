@@ -123,7 +123,7 @@ class ControlCalidadController extends Controller {
                     ->where('vp.lugarTipoIdDistrito = :lugarDistrito')
                     ->andWhere('gt.id in (:gestion)')
                     ->setParameter('lugarDistrito', $usuario_lugar)
-                    ->setParameter('gestion', array(2010,2011,2012,2013,2014,2015,2016,2017))
+                    ->setParameter('gestion', array(2010,2011,2012,2013,2014,2015,2016,2017,2018))
                     ->addGroupBy('gt.id')
                     ->addOrderBy('gt.id')
                     ->getQuery();
@@ -137,7 +137,7 @@ class ControlCalidadController extends Controller {
                     ->where('vp.institucionEducativaId = :sie')
                     ->andWhere('gt.id in (:gestion)')
                     ->setParameter('sie', $this->session->get('ie_id'))
-                    ->setParameter('gestion', array(2010,2011,2012,2013,2014,2015,2016,2017))
+                    ->setParameter('gestion', array(2010,2011,2012,2013,2014,2015,2016,2017,2018))
                     ->addGroupBy('gt.id')
                     ->addOrderBy('gt.id')
                     ->getQuery();
@@ -152,7 +152,7 @@ class ControlCalidadController extends Controller {
                     ->where('lt.lugarTipo = :lugarDepartamento')
                     ->andWhere('gt.id in (:gestion)')
                     ->setParameter('lugarDepartamento', $usuario_lugar)
-                    ->setParameter('gestion', array(2010,2011,2012,2013,2014,2015,2016,2017))
+                    ->setParameter('gestion', array(2010,2011,2012,2013,2014,2015,2016,2017,2018))
                     ->addGroupBy('gt.id')
                     ->addOrderBy('gt.id')
                     ->getQuery();
