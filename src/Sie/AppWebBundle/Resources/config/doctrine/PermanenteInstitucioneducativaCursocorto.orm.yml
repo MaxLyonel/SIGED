@@ -1,0 +1,93 @@
+Sie\AppWebBundle\Entity\PermanenteInstitucioneducativaCursocorto:
+    type: entity
+    table: permanente_institucioneducativa_cursocorto
+    indexes:
+        idx_institucioneducativa_curso_corto_sub_area_tipo_id:
+            columns:
+                - sub_area_tipo_id
+        idx_institucioneducativa_curso_corto_programa_tipo_id:
+            columns:
+                - programa_tipo_id
+        idx_institucioneducativa_curso_corto_cursocorto_tipo_id:
+            columns:
+                - cursocorto_tipo_id
+        IDX_ADEA5958E942526E:
+            columns:
+                - areatematica_tipo_id
+        IDX_ADEA5958FD507F28:
+            columns:
+                - poblacion_tipo_id
+        IDX_ADEA59589E4EDBFE:
+            columns:
+                - institucioneducativa_curso_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esabierto:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: true
+    manyToOne:
+        areatematicaTipo:
+            targetEntity: PermanenteAreaTematicaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                areatematica_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        poblacionTipo:
+            targetEntity: PermanentePoblacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                poblacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaCurso:
+            targetEntity: InstitucioneducativaCurso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        subAreaTipo:
+            targetEntity: PermanenteSubAreaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sub_area_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        programaTipo:
+            targetEntity: PermanenteProgramaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                programa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        cursocortoTipo:
+            targetEntity: PermanenteCursocortoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cursocorto_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

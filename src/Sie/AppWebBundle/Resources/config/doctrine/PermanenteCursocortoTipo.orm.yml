@@ -1,9 +1,9 @@
-Sie\AppWebBundle\Entity\PermanenteProgramaTipo:
+Sie\AppWebBundle\Entity\PermanenteCursocortoTipo:
     type: entity
-    table: permanente_programa_tipo
+    table: permanente_cursocorto_tipo
     id:
         id:
-            type: smallint
+            type: integer
             nullable: false
             unsigned: false
             comment: ''
@@ -11,16 +11,16 @@ Sie\AppWebBundle\Entity\PermanenteProgramaTipo:
             generator:
                 strategy: SEQUENCE
     fields:
-        programa:
+        cursocorto:
             type: string
-            nullable: false
-            length: 80
+            nullable: true
+            length: null
             fixed: false
             comment: ''
         obs:
             type: string
             nullable: true
-            length: 100
+            length: null
             fixed: false
             comment: ''
     lifecycleCallbacks: {  }

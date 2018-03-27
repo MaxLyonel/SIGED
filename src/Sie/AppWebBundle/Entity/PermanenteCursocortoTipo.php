@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PermanenteSubAreaTipo
+ * PermanenteCursocortoTipo
  */
-class PermanenteSubAreaTipo
+class PermanenteCursocortoTipo
 {
     /**
      * @var integer
@@ -17,7 +17,7 @@ class PermanenteSubAreaTipo
     /**
      * @var string
      */
-    private $subArea;
+    private $cursocorto;
 
     /**
      * @var string
@@ -36,33 +36,33 @@ class PermanenteSubAreaTipo
     }
 
     /**
-     * Set subArea
+     * Set cursocorto
      *
-     * @param string $subArea
-     * @return PermanenteSubAreaTipo
+     * @param string $cursocorto
+     * @return PermanenteCursocortoTipo
      */
-    public function setSubArea($subArea)
+    public function setCursocorto($cursocorto)
     {
-        $this->subArea = $subArea;
+        $this->cursocorto = $cursocorto;
     
         return $this;
     }
 
     /**
-     * Get subArea
+     * Get cursocorto
      *
      * @return string 
      */
-    public function getSubArea()
+    public function getCursocorto()
     {
-        return $this->subArea;
+        return $this->cursocorto;
     }
 
     /**
      * Set obs
      *
      * @param string $obs
-     * @return PermanenteSubAreaTipo
+     * @return PermanenteCursocortoTipo
      */
     public function setObs($obs)
     {
