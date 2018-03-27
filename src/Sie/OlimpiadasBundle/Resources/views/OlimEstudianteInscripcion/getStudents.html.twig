@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-md-12">
+
+                            <!-- Start table with actions -->
+                            <h4 class="no-margin">Estudiantes</h4>
+                            <div class="table-responsive mb-20">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Rude</th>
+                                            <th>Nombre</th>
+                                            <th>Paterno</th>
+                                            <th>Materno</th>
+                                            <th>CI</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in objStudentsToOlimpiadas %}
+                                            <tr>
+                                            <td class="text-center">{{loop.index}}</td>
+                                            <td>{{item.codigo_rude}}</td>
+                                            <td>{{item.paterno}}</td>
+                                            <td>{{item.materno}}</td>
+                                            <td>{{item.nombre}}</td>
+                                            <td>{{item.carnet_identidad}}</td>
+                                            
+                                            </tr>    
+                                        {% endfor %}
+                                        
+                                       
+                                    </tbody>
+                                </table>
+                            </div><!-- /.table-responsive -->
+                            <!--/ End table with actions -->
+
+                        </div>
+    
+</div>

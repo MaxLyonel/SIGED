@@ -485,6 +485,7 @@
                 url: Routing.generate('oliminscriptions_getGradoAllowed'),
                 data: {'idnivel': idnivel, 'jsonRule': jsonRule},
                 beforeSend: function () {
+                  $("#getStudentsId").empty();
                 },
                 success: function (data) {
                     $("#form_grado").empty();
@@ -508,6 +509,7 @@
                 url: Routing.generate('oliminscriptions_getParalelo'),
                 data: {'grado': grado, 'jsonRule': jsonRule, 'nivel': nivel},
                 beforeSend: function () {
+                  $("#getStudentsId").empty();
                 },
                 success: function (data) {
                     $("#form_paralelo").empty();
@@ -531,6 +533,7 @@
                 url: Routing.generate('oliminscriptions_getTurno'),
                 data: {'paralelo': paralelo, 'jsonRule': jsonRule, 'nivel': nivel, 'grado': grado},
                 beforeSend: function () {
+                  $("#getStudentsId").empty();
                 },
                 success: function (data) {
                     $("#form_turno").empty();

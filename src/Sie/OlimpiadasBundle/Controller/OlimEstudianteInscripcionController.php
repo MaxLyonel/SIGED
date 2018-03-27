@@ -537,9 +537,11 @@ class OlimEstudianteInscripcionController extends Controller{
         ));
     
         $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
-        dump($objStudentsToOlimpiadas);die;
+        // dump($objStudentsToOlimpiadas);die;
 
-        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:')
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
+            'objStudentsToOlimpiadas' => $objStudentsToOlimpiadas,
+        ));
     }
 
 
