@@ -3,7 +3,7 @@
     
       <div class="panel">
             <div class="panel-heading">
-                <h3 class="panel-title text-center">SIE: {{objInstitucionEducativa.id}} - <b>{{objInstitucionEducativa.institucioneducativa}}</b>
+                <h3 class="panel-title text-center text-primary">SIE: {{objInstitucionEducativa.id}} - <b>{{objInstitucionEducativa.institucioneducativa}}</b>
                   {{objInstitucionEducativa.institucioneducativaTipo}}
                 </h3>
             </div><!-- /.panel-heading -->
@@ -13,10 +13,14 @@
                         <tbody>
                         <tr>
                             <td>
-                                <h4 class="pull-left text">
-                                  Registro &aacute;rea :  <p class="pull-right text-strong fg-teals">  {{entity.materia}}</p>
+                                <h4 class="pull-left text-lilac">
+                                  Registro &aacute;rea :   <b>{{entity.materia}} </b> 
+                               </h4> 
+                            </td>
+                             <td>
+                                <h4 class="pull-left text-lilac">
+                                  Categoria : <b>{{category}} </b> 
                                </h4>
-                                
                             </td>
                         </tr>
                         </tbody>

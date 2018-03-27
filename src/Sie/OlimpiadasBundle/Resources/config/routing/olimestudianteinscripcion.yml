@@ -53,4 +53,28 @@ oliminscriptions_doInscriptionOStudent:
     options:
         expose: true
 
+oliminscriptions_getCategory:
+    path:     /getCategory
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getCategory" }
+    options:
+        expose: true
+
+oliminscriptions_getGradoAllowed:
+    path:     /getGradoAllowed
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getGradoAllowed" }
+    options:
+        expose: true
+
+oliminscriptions_getParalelo:
+    path:     /getParalelo
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getParalelo" }
+    options:
+        expose: true
+
+oliminscriptions_getTurno:
+    path:     /getTurno
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getTurno" }
+    options:
+        expose: true
+
 

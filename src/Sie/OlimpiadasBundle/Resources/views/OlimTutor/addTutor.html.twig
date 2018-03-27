@@ -14,10 +14,13 @@
 
 
               <div class="row">
-                <div class="col-md-8 col-md-offset-4">
+                <div class="col-md-11 col-md-offset-1">
                       {{form_start(form, {'attr':{'id':'addTutorFormId', 'class':'form-inline'} })}}
                         <div class="form-group mx-sm-3 mb-2">
-                          {{ form_widget(form.carnet, {'attr':{'class':'form-control', 'placeholder':'Buscar por CI', 'pattern':'[0-9]{4,9}'} })}}
+                          {{ form_widget(form.carnet, {'attr':{'class':'form-control', 'placeholder':'CI', 'pattern':'[0-9]{4,9}'} })}}
+                          {{ form_widget(form.complemento, {'attr':{'class':'form-control', 'placeholder':'Complemento', 'pattern':'[0-9]{4,9}'} })}}
+                          {{ form_widget(form.fechanacimiento, {'attr':{'class':'form-control', 'placeholder':'Fecha Nacimiento', 'pattern':'[0-9]{4,9}'} })}}
+
                         </div>
                         {{form_widget(form.buscar, {'attr':{'class':'btn btn-primary mb-2'} })}}
                      {{form_end(form)}}

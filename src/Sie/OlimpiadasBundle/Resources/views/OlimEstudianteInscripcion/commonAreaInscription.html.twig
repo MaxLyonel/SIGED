@@ -1,33 +1,30 @@
-<div class="row">
-
-<div class="col-md-12">
-    <div class="show-grid">
-        <div class="row">
-            
-                <div class="col-md-6"><b class="">Tutor:</b>  
-                <b class="text-primary">  {{objPersona.nombre}} {{objPersona.paterno}} {{objPersona.materno}}</b>
-                </div>
-                <div class="col-md-3"><b>Tel&eacutefono(s):</b> 
+<table class="table" border="0">
+    <thead>
+        <tr>
+            <th><b class="">Tutor:</b>  
+                <b class="text-primary">  {{objPersona.nombre}} {{objPersona.paterno}} {{objPersona.materno}}</b></th>
+            <th><b>Tel&eacutefono(s):</b> 
                     <b class="text-primary">    {{objOlimTutor.telefono1}}/{{objOlimTutor.telefono2}} 
-                    </b>
-                </div>
-                <div class="col-md-3"><b>Email:</b> <b class="text-primary">{{objOlimTutor.correoElectronico}} </b> </div>
-            
-        </div><!-- /.row -->
+                    </b></th>
+            <th><b>Email:</b> <b class="text-primary">{{objOlimTutor.correoElectronico}} </b> </th>
+            <th>   <button class="btn btn-circle btn-danger btn-stroke" onclick="doInscriptionOStudent('{{jsonDataInscription}}');"><i class="fa fa-close"></i></button></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan="4"><button class="btn btn-circle btn-success btn" onclick="doInscriptionOStudent('{{jsonDataInscription}}');"><i class="fa fa-list"></i></button>
+        <button class="btn btn-circle btn-info btn" onclick="doInscriptionOStudent('{{jsonDataInscription}}');"><i class="fa fa-plus"></i></button></td>
+            <!-- <td></td>
+            <td></td>
+            <td></td> -->
+        </tr>
+    </tbody>
+</table>
 
-       
-    </div>
-</div>
+<div class="row">
     
 
 <div class="row">
-    <div class="col-md-12 ">
-        <button class="btn btn-circle btn-success btn-stroke" onclick="doInscriptionOStudent('{{jsonDataInscription}}');"><i class="fa fa-list"></i></button>
-        <button class="btn btn-circle btn-info btn-stroke" onclick="doInscriptionOStudent('{{jsonDataInscription}}');"><i class="fa fa-plus"></i></button>
-        <button class="btn btn-circle btn-danger btn-stroke" onclick="doInscriptionOStudent('{{jsonDataInscription}}');"><i class="fa fa-close"></i></button>
-    </div>
-    
-
     <div class="col-md-12">
         <div id="doInscriptionOStudentId">
 

@@ -29,8 +29,23 @@
                             <td>{{ entity.telefono1 }}/{{ entity.telefono2 }}</td>
                             <td>{{ entity.correo_electronico }}</td>
                             <td>
-                                <a href="#" ><i class="fa fa-edit fa-md pr-2"></i></a>
-                                <a href="#" onclick="selectTypeInscription('{{jsonDataInscription}}', {{entity.id}} );"><i class="fa fa-list"></i></a> 
+                                <table border='0'>
+                                    <thead>
+                                        <tr>
+                                            <td><a href="#" class="btn btn-success btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="updateDataTutor('{{jsonDataInscription}}', {{entity.id}})"><i class="fa fa-edit fa-md pr-2"></i></a></td>
+                                            <td><a href="#" class="btn btn-danger  btn-xs" onclick="removeDataTutor('{{jsonDataInscription}}', {{entity.id}})"><i class="fa fa-trash fa-md pr-2"></i></a></td>
+                                            <td><a href="#" class="btn btn-primary btn-xs" onclick="selectTypeInscription('{{jsonDataInscription}}', {{entity.id}} );"><i class="fa fa-list"></i></a> </td>
+                                        </tr>
+                                    </thead>
+                                   <!--  <tbody>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody> -->
+                                </table>
+                                
+                                
+                                
                                 <!-- <a href="#" ><i class="fa fa-eye"></i></a> -->
                             </td>
                         </tr>

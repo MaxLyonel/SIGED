@@ -1,0 +1,89 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Modificar datos tutor</h3>
+                </div>
+                <div class="pull-right">
+                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+
+
+              <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">Tutor</h3>
+                                    </div>
+                                    
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding">
+
+                                    <!-- Start list message -->
+                                    <div class="media-list">
+
+                                        <a href="#" class="media">
+                                            <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
+                                            <div class="media-body">
+                                                <span class="media-heading">{{dataTutorToUpdate.nombre}} {{dataTutorToUpdate.paterno}} {{dataTutorToUpdate.materno}} </span>
+                                                
+                                                <!-- <span class="media-text">I was impressed how fast the content is loaded. Congratulations. nice design.</span> -->
+                                                
+                                              {{form_start(form, {'attr':{'id':'updateDataTutorId', 'class':'form-inline'} })}}
+                                              <div class="form-group mx-sm-3 mb-2">
+                                                {{ form_widget(form.telefono1, {'attr':{'class':'form-control', 'placeholder':'telefono 1', 'pattern':'[0-9]{4,9}'} })}}
+                                                {{ form_widget(form.telefono2, {'attr':{'class':'form-control', 'placeholder':'telefono 2', 'pattern':'[0-9]{4,9}'} })}}
+                                                {{ form_widget(form.correoElectronico, {'attr':{'class':'form-control', 'placeholder':'email', 'pattern':'[0-9]{4,9}'} })}}
+
+                                              </div>
+                                              {{form_widget(form.update, {'attr':{'class':'btn btn-primary mb-2'} })}}
+                                           {{form_end(form)}}
+
+                                            </div><!-- /.media-body -->
+                                        </a><!-- /.media -->
+
+
+                                    </div>
+                                    <!--/ End list message -->
+
+                                </div><!-- /.panel-body -->
+                            </div>
+                        </div>
+                      
+                        
+                    </div>
+
+
+            <div class="row">
+                <div class="col-md-11 col-md-offset-1">
+                    
+                </div>
+              </div>
+              
+
+                  
+            <div class="row">
+              <div class="col-md-12">
+                  <div id="idanswerTutors">
+                    
+                  </div>
+              </div>
+            </div>
+
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <!-- <button type="button" class="btn btn-theme" data-dismiss="modal" onclick='krlos()'>Guardar</button> -->
+            </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+
+

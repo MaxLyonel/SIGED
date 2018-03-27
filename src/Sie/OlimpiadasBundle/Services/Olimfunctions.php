@@ -10,7 +10,7 @@ use JMS\Serializer\SerializerBuilder;
 /**
  * Author: krlos pacha <pckrlos@gmail.com>
  * Description:This is a class for load all additional connections; if exist in a particular proccess
- * Date: 18-10-2017
+ * Date: 18-02-2018
  *
  *
  * Olimfunctions
@@ -54,7 +54,7 @@ class Olimfunctions {
       "select ot.id, p.id as personadid, p.nombre, p.paterno,p.materno, ot.telefono1, ot.telefono2, ot.correo_electronico
         from olim_tutor ot
              left join persona p on ot.persona_id=p.id
-        where ot.institucioneducativa_id = ".$arrDataInscription['sie']." and ot.materia_tipo_id=".$arrDataInscription['materia'].""
+        where ot.institucioneducativa_id = ".$arrDataInscription['sie']." and ot.materia_tipo_id=".$arrDataInscription['olimMateria']." and ot.gestion_tipo_id = ".$arrDataInscription['gestion']
     );
     
     $query->execute();
@@ -76,6 +76,82 @@ class Olimfunctions {
     $query->execute();
     return $query->fetchAll();
   }
+
+  public function getAllowedAreasByOlim(){
+    // ro.id as olimid, ro.nombre_olimpiada,
+     $query = $this->em->getConnection()->prepare("
+        select  mt.id as materiaid, mt.materia
+        from olim_registro_olimpiada ro
+        left join olim_materia_tipo  mt on (ro.id = mt.olim_registro_olimpiada_id)
+        where ro.gestion_tipo_id = '".$this->session->get('currentyear')."'
+        order by 2 
+      ");
+    $query->execute();
+    $objArea = $query->fetchAll();
+    $arrAreas = array();
+    foreach ($objArea as $value) {
+      $arrAreas[$value['materiaid']] = $value['materia'];
+    }
+    return $arrAreas;
+
+  }
+
+  /**
+   * [getTutor description] by krlos
+   * @param  [type] $arrDataInscription [description]
+   * @return [type]                     [description]
+   */
+   public function getTutor($arrDataInscription){
+  // dump($arrDataInscription);die;
+    $query = $this->em->getConnection()->prepare(
+    
+      "select ot.id, p.id as personadid, p.nombre, p.paterno,p.materno, ot.telefono1, ot.telefono2, ot.correo_electronico
+        from olim_tutor ot
+             left join persona p on ot.persona_id=p.id
+        where ot.institucioneducativa_id = ".$arrDataInscription['sie']." and ot.materia_tipo_id=".$arrDataInscription['olimMateria']." and ot.id = ".$arrDataInscription['tutorid']." and ot.gestion_tipo_id = ".$arrDataInscription['gestion']
+    );
+    
+    $query->execute();
+    $objTutores = $query->fetch();
+   
+     return $objTutores;
+    // return 'krlos';
+   }
+
+   /**
+    * [getReglaByMateriaCategoryGestion description]
+    * @param  [type] $arrDataInscription [description]
+    * @return [type]                     [description]
+    */
+   public function getReglaByMateriaCategoryGestion($arrDataInscription){
+    $arrDataInscription['gestion'] = $arrDataInscription['gestion']-1;
+    $sql = "select * from olim_reglas_olimpiadas_tipo 
+            where olim_materia_tipo_id = ".$arrDataInscription['olimMateria']."  and gestion_tipo_id = ".$arrDataInscription['gestion']
+            ;
+    if($arrDataInscription['category']!=''){
+      $sql .= " and olim_categoria_tipo_id = ".$arrDataInscription['category'];
+    }
+   
+    $query = $this->em->getConnection()->prepare($sql);
+    
+    $query->execute();
+    return $query->fetch();
+    // return 'krlos';
+   }
+
+   public function getGradoAllowed($arrDataInscription){
+
+    $arrDataInscription['gestion'] = $arrDataInscription['gestion']-1;
+    $sql = "select * from olim_reglas_olimpiadas_nivel_grado_tipo 
+            where olim_reglas_olimpiadas_tipo_id = ".$arrDataInscription['idregla']." and  nivel_tipo_id = ".$arrDataInscription['idnivel']
+            ;
+    
+    $query = $this->em->getConnection()->prepare($sql);
+    
+    $query->execute();
+    return $query->fetchAll();
+
+   }
 
 
 

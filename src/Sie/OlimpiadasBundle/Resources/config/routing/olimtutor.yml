@@ -58,3 +58,15 @@ olimtutor_selectTypeInscription:
     defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:selectTypeInscription" }
     options:
         expose: true
+        
+olimtutor_updateDataTutor:
+    path:     /updateDataTutor
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:updateDataTutor" }
+    options:
+        expose: true
+        
+olimtutor_saveUpdateDataTutor:
+    path:     /saveUpdateDataTutor
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:saveUpdateDataTutor" }
+    options:
+        expose: true

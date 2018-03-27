@@ -14,25 +14,20 @@
             {{form_start(form, { 'attr':{'id':'formInscriptionOlimId'} })}}
                 <div class="form-body">
                     <div class="form-group">
-                    	<div class="row">
-                            <div class="col-md-12">Categoria
-                                {{form_widget(form.category, {'attr':{'class':'form-control'} } )}}
-                            </div>
-                        </div>
                         <div class="row">
-                            <div class="col-md-6">Nivel
-                                {{form_widget(form.nivel, {'attr':{'class':'form-control'} } )}}
+                            <div class="col-md-8">Nivel
+                                {{form_widget(form.nivel, {'attr':{'class':'form-control', 'onchange':'getGradoAllowed(this.value)'} } )}}
                             </div>
-                            <div class="col-md-6">Grado
-                                {{form_widget(form.grado, {'attr':{'class':'form-control'} } )}}
+                            <div class="col-md-4">Grado
+                                {{form_widget(form.grado, {'attr':{'class':'form-control', 'onchange':'getParalelo(this.value)'} } )}}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">Paralelo
-                                {{form_widget(form.paralelo, {'attr':{'class':'form-control'} } )}}
+                                {{form_widget(form.paralelo, {'attr':{'class':'form-control','onchange':'getTurno(this.value)'} } )}}
                             </div>
                             <div class="col-md-6">Turno
-                                {{form_widget(form.turno, {'attr':{'class':'form-control'} } )}}
+                                {{form_widget(form.turno, {'attr':{'class':'form-control','onchange':'getStudents(this.value)'} } )}}
                             </div>
                         </div>
                     </div>

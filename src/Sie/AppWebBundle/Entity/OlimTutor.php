@@ -50,6 +50,31 @@ class OlimTutor
     private $usuarioModificacionId;
 
     /**
+     * @var integer
+     */
+    private $gestionTipoId;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimPeriodoTipo
+     */
+    private $periodoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimCategoriaTipo
+     */
+    private $categoriaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimMateriaTipo
+     */
+    private $materiaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
+     */
+    private $institucioneducativa;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\Persona
      */
     private $persona;
@@ -227,110 +252,6 @@ class OlimTutor
     }
 
     /**
-     * Set persona
-     *
-     * @param \Sie\AppWebBundle\Entity\Persona $persona
-     * @return OlimTutor
-     */
-    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
-    {
-        $this->persona = $persona;
-    
-        return $this;
-    }
-
-    /**
-     * Get persona
-     *
-     * @return \Sie\AppWebBundle\Entity\Persona 
-     */
-    public function getPersona()
-    {
-        return $this->persona;
-    }
-    /**
-     * @var integer
-     */
-    private $institucioneducativaId;
-
-    /**
-     * @var integer
-     */
-    private $materiaTipoId;
-
-
-    /**
-     * Set institucioneducativaId
-     *
-     * @param integer $institucioneducativaId
-     * @return OlimTutor
-     */
-    public function setInstitucioneducativaId($institucioneducativaId)
-    {
-        $this->institucioneducativaId = $institucioneducativaId;
-    
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativaId
-     *
-     * @return integer 
-     */
-    public function getInstitucioneducativaId()
-    {
-        return $this->institucioneducativaId;
-    }
-
-    /**
-     * Set materiaTipoId
-     *
-     * @param integer $materiaTipoId
-     * @return OlimTutor
-     */
-    public function setMateriaTipoId($materiaTipoId)
-    {
-        $this->materiaTipoId = $materiaTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get materiaTipoId
-     *
-     * @return integer 
-     */
-    public function getMateriaTipoId()
-    {
-        return $this->materiaTipoId;
-    }
-    /**
-     * @var integer
-     */
-    private $gestionTipoId;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimPeriodoTipo
-     */
-    private $periodoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimCategoriaTipo
-     */
-    private $categoriaTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimMateriaTipo
-     */
-    private $materiaTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
-     */
-    private $institucioneducativa;
-
-
-    /**
      * Set gestionTipoId
      *
      * @param integer $gestionTipoId
@@ -443,5 +364,28 @@ class OlimTutor
     public function getInstitucioneducativa()
     {
         return $this->institucioneducativa;
+    }
+
+    /**
+     * Set persona
+     *
+     * @param \Sie\AppWebBundle\Entity\Persona $persona
+     * @return OlimTutor
+     */
+    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
+    {
+        $this->persona = $persona;
+    
+        return $this;
+    }
+
+    /**
+     * Get persona
+     *
+     * @return \Sie\AppWebBundle\Entity\Persona 
+     */
+    public function getPersona()
+    {
+        return $this->persona;
     }
 }
