@@ -77,4 +77,10 @@ oliminscriptions_getTurno:
     options:
         expose: true
 
+oliminscriptions_getStudents:
+    path:     /getStudents
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents" }
+    options:
+        expose: true
+
 

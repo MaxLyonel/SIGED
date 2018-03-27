@@ -526,7 +526,6 @@
             jsonRule = $('#form_jsonRule').val();
             nivel = $('#form_nivel').val();
             grado = $('#form_grado').val();
-            gestionselected = $('#form_gestionIns').val();
             $.ajax({
                 type: 'post',
                 url: Routing.generate('oliminscriptions_getTurno'),
@@ -543,6 +542,41 @@
             });
 
         };
+
+
+
+      var getStudents = function(turno){
+        jsonRule = $('#form_jsonRule').val();
+        nivel = $('#form_nivel').val();
+        grado = $('#form_grado').val();
+        paralelo = $('#form_paralelo').val();
+
+        $.ajax({
+             type: 'post',
+             url: Routing.generate('oliminscriptions_getStudents'),
+             data: {'turno':turno,'paralelo': paralelo, 'jsonRule': jsonRule, 'nivel': nivel, 'grado': grado},
+             beforeSend: function () {
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+
+    };
+
 
 
 

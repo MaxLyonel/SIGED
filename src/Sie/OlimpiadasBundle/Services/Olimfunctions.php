@@ -138,12 +138,36 @@ class Olimfunctions {
     return $query->fetch();
     // return 'krlos';
    }
-
+   /**
+    * [getGradoAllowed description]
+    * @param  [type] $arrDataInscription [description]
+    * @return [type]                     [description]
+    */
    public function getGradoAllowed($arrDataInscription){
 
     $arrDataInscription['gestion'] = $arrDataInscription['gestion']-1;
     $sql = "select * from olim_reglas_olimpiadas_nivel_grado_tipo 
             where olim_reglas_olimpiadas_tipo_id = ".$arrDataInscription['idregla']." and  nivel_tipo_id = ".$arrDataInscription['idnivel']
+            ;
+    
+    $query = $this->em->getConnection()->prepare($sql);
+    
+    $query->execute();
+    return $query->fetchAll();
+
+   }
+
+    public function getStudentsToOlimpiadas($institucionEducativaCursoId){
+
+    $sql = "
+            
+            select ei.id as estinsid,e.codigo_rude, e.nombre, e.paterno, e.materno, e.carnet_identidad  
+            from institucioneducativa ie 
+            left join institucioneducativa_curso iec on ie.id = iec.institucioneducativa_id
+            left join estudiante_inscripcion ei on ei.institucioneducativa_curso_id = iec.id
+            left join estudiante e on ei.estudiante_id = e.id
+            where iec.id = ".$institucionEducativaCursoId."
+        "
             ;
     
     $query = $this->em->getConnection()->prepare($sql);

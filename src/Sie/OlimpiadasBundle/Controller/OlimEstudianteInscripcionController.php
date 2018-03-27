@@ -514,5 +514,34 @@ class OlimEstudianteInscripcionController extends Controller{
     }
 
 
+    public function getStudentsAction(Request $request){
+        //create db conexino
+        $em = $this->getDoctrine()->getManager();
+         //get the send values
+        $turno = $request->get('turno');
+        $paralelo = $request->get('paralelo');
+        $grado = $request->get('grado');
+        $jsonRule = $request->get('jsonRule');
+        $nivel = $request->get('nivel');
+        $arrData = json_decode($jsonRule, true);
+        $sie = $arrData['institucionEducativa'];
+        $gestion = $arrData['gestion'];
+        //look for the id of institucioneducativa_curso
+        $objInstitucionEducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy( array(
+             'nivelTipo' =>$nivel,
+             'gradoTipo' => $grado,
+             'paraleloTipo'=> $paralelo,
+             'turnoTipo' => $turno, 
+             'institucioneducativa' => $sie,
+             'gestionTipo' => $gestion
+        ));
+    
+        $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
+        dump($objStudentsToOlimpiadas);die;
+
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:')
+    }
+
+
 
 }
