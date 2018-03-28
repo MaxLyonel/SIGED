@@ -1,0 +1,136 @@
+Sie\AppWebBundle\Entity\PermanenteInstitucioneducativaCursocorto:
+    type: entity
+    table: permanente_institucioneducativa_cursocorto
+    indexes:
+        idx_institucioneducativa_curso_corto_sub_area_tipo_id:
+            columns:
+                - sub_area_tipo_id
+        idx_institucioneducativa_curso_corto_programa_tipo_id:
+            columns:
+                - programa_tipo_id
+        idx_institucioneducativa_curso_corto_cursocorto_tipo_id:
+            columns:
+                - cursocorto_tipo_id
+        IDX_ADEA5958E942526E:
+            columns:
+                - areatematica_tipo_id
+        IDX_ADEA5958FD507F28:
+            columns:
+                - poblacion_tipo_id
+        IDX_ADEA59589E4EDBFE:
+            columns:
+                - institucioneducativa_curso_id
+        IDX_ADEA5958564AFF69:
+            columns:
+                - lugar_tipo_departamento_id
+        IDX_ADEA5958CF8E5B33:
+            columns:
+                - lugar_tipo_provincia_id
+        IDX_ADEA5958D943617C:
+            columns:
+                - lugar_tipo_municipio_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esabierto:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: true
+        lugarDetalle:
+            type: string
+            nullable: true
+            length: 32
+            fixed: false
+            comment: ''
+            column: lugar_detalle
+    manyToOne:
+        areatematicaTipo:
+            targetEntity: PermanenteAreaTematicaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                areatematica_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        poblacionTipo:
+            targetEntity: PermanentePoblacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                poblacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaCurso:
+            targetEntity: InstitucioneducativaCurso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        subAreaTipo:
+            targetEntity: PermanenteSubAreaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sub_area_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        programaTipo:
+            targetEntity: PermanenteProgramaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                programa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        cursocortoTipo:
+            targetEntity: PermanenteCursocortoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cursocorto_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lugarTipoDepartamento:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_tipo_departamento_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lugarTipoProvincia:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_tipo_provincia_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lugarTipoMunicipio:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_tipo_municipio_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
