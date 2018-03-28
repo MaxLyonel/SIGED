@@ -55,7 +55,7 @@ class InscriptionExtranjerosController extends Controller {
 
     private function chooseIncriptionForm(){
 
-      $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', '100'=>'Incial/Primaria333' );
+      $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria'/*, '100'=>'Incial/Primaria333'*/ );
       $form = $this->createFormBuilder()
               ->setAction($this->generateUrl('inscription_extranjeros_main'))
               ->add('optionInscription', 'choice', array('mapped' => false, 'label' => 'Inscripción', 'choices' => $arrOptionInscription, 'attr' => array('class' => 'form-control')))
@@ -449,6 +449,23 @@ class InscriptionExtranjerosController extends Controller {
         //flag to know is a new estranjero student
         $sw = 0;
         $data = array();
+        $form = $request->get('form');
+        /**
+         * add validation QA
+         * @var [type]
+         */
+        $objObservation = $this->get('seguimiento')->getStudentObservationQA($form);
+        if($objObservation){
+             $message = "Estudiante observado - rude " . $form['codigoRude'] . " :";
+            $this->addFlash('notiext', $message);
+            $observaionMessage='';
+            // foreach ($objObservation as $key => $value) {
+            //   $observaionMessage .=$value['obs']."-".$value['institucion_educativa_id']."*****";
+            // }
+            $observaionMessage = 'Estudiante presenta inconsistencia, se sugiere corregirlos por las opciones de calidad...';
+            $this->addFlash('studentObservation', $observaionMessage);
+            return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+        }
 
         if ($request->get('form')) {
             $form = $request->get('form');
