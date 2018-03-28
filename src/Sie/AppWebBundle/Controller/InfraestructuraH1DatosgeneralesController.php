@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class InfraestructuraH1DatosgeneralesController extends Controller
 {
-
     public $session;
 
     public function __construct(){
@@ -30,7 +29,7 @@ class InfraestructuraH1DatosgeneralesController extends Controller
      * Lists all InfraestructuraH1Datosgenerales entities.
      *
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $this->session->set('infjgid', 13395);
 
@@ -43,28 +42,24 @@ class InfraestructuraH1DatosgeneralesController extends Controller
         /**
          * Verficamos que el registro existe
          */
-        $infrah1datosgenerales = $em->getRepository('SieAppWebBundle:InfraestructuraH1Datosgenerales')->findOneBy(array(
-            'infraestructuraJuridiccionGeografica'=>$this->session->get('infjgid')
-        ));
+        $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH1Datosgenerales')->findOneBy(
+            array(
+                'infraestructuraJuridiccionGeografica'=>$this->session->get('infjgid')
+            )
+        );
 
-        if(is_object($infrah1datosgenerales)){
-            return $this->redirectToRoute('infraestructurah1datosgenerales_edit', array('id'=>$infrah1datosgenerales->getId()));
+        if(!is_object($entity)){
+            $entity = new InfraestructuraH1Datosgenerales();
+            $this->session->set('infh1id', 'new');
         }else{
-            return $this->redirectToRoute('infraestructurah1datosgenerales_new');
+            $this->session->set('infh1id', $entity->getId());
         }
 
-    }
-    /**
-     * Creates a new InfraestructuraH1Datosgenerales entity.
-     *
-     */
-    public function createAction(Request $request)
-    {
-        $entity = new InfraestructuraH1Datosgenerales();
-        $form = $this->createCreateForm($entity);
+        $form = $this->createForm(new InfraestructuraH1DatosgeneralesType() ,$entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
             $entity->setInfraestructuraJuridiccionGeografica($em->getRepository('SieAppWebBundle:InfraestructuraJuridiccionGeografica')->find($this->session->get('infjgid')));
             $em->persist($entity);
@@ -99,255 +94,64 @@ class InfraestructuraH1DatosgeneralesController extends Controller
                 $entity->setN21FotografiaPanoramica($fileName);
             }
 
-            /**
-             * Registro de datos de unidades educativas que operan en el edificio
-             */
-            $uid = $request->get('uid');
-            $usie = $request->get('usie');
-            $ucurricular = $request->get('ucurricular');
-            $utelefono = $request->get('utelefono');
-            $utenencia = $request->get('utenencia');
-            $upersona = ($request->get('upersona'))?$request->get('upersona'):null;
-            $ubth = $request->get('ubth');
-
-            //dump($uid);
-            //dump($usie);
-            //dump($utelefono);
-            //dump($utenencia);
-            //die;
-
-            for ($i=0; $i < count($uid); $i++) { 
-                if($uid[$i] == 'new'){
-
-                    $infraH1Institucion = new InfraestructuraH1Institucioneseducativa();
-
-                    $infraH1Institucion->setInfraestructuraH1Datosgenerales($entity);
-                    $infraH1Institucion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($usie[$i]));
-                    $infraH1Institucion->setOrgcurricularTipo($em->getRepository('SieAppWebBundle:OrgcurricularTipo')->find($ucurricular[$i]));
-                    if($upersona[$i] != null){
-                        $infraH1Institucion->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($upersona[$i]));
-                    }
-                    $infraH1Institucion->setTelefonoJe($utelefono[$i]);
-                    $infraH1Institucion->setTenenciaTipo($em->getRepository('SieAppWebBundle:InfraestructuraH1TenenciaTipo')->find($utenencia[$i]));
-                    $infraH1Institucion->setBthEspecialidad($ubth[$i]);
-
-                    $em->persist($infraH1Institucion);
-                    $em->flush();
-
-                }else{
-                    $infraH1Institucion = $em->getRepository('SieAppWebBundle:InfraestructuraH1Institucioneseducativa')->find($uid[$i]);
-                    $infraH1Institucion->setOrgcurricularTipo($em->getRepository('SieAppWebBundle:OrgcurricularTipo')->find($ucurricular[$i]));
-                    if($upersona[$i] != null){
-                        $infraH1Institucion->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($upersona[$i]));
-                    }
-                    $infraH1Institucion->setTelefonoJe($utelefono[$i]);
-                    $infraH1Institucion->setTenenciaTipo($em->getRepository('SieAppWebBundle:InfraestructuraH1TenenciaTipo')->find($utenencia[$i]));
-                    $infraH1Institucion->setBthEspecialidad($ubth[$i]);
-
-                    $em->persist($infraH1Institucion);
-                    $em->flush();
-                }
-            }
-
-            return $this->redirect($this->generateUrl('infraestructurah1datosgenerales_edit', array('id' => $entity->getId())));
-        }
-
-        return $this->render('SieAppWebBundle:InfraestructuraH1Datosgenerales:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        ));
-    }
-
-    /**
-     * Creates a form to create a InfraestructuraH1Datosgenerales entity.
-     *
-     * @param InfraestructuraH1Datosgenerales $entity The entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createCreateForm(InfraestructuraH1Datosgenerales $entity)
-    {
-        $form = $this->createForm(new InfraestructuraH1DatosgeneralesType(), $entity, array(
-            'action' => $this->generateUrl('infraestructurah1datosgenerales_create'),
-            'method' => 'POST',
-        ));
-
-        //$form->add('submit', 'submit', array('label' => 'Create'));
-
-        return $form;
-    }
-
-    /**
-     * Displays a form to create a new InfraestructuraH1Datosgenerales entity.
-     *
-     */
-    public function newAction(Request $request)
-    {
-        $entity = new InfraestructuraH1Datosgenerales();
-        $form   = $this->createCreateForm($entity);
-
-        $em = $this->getDoctrine()->getManager();
-
-        $infraJurisdiccion = $em->getRepository('SieAppWebBundle:InfraestructuraJuridiccionGeografica')->find($this->session->get('infjgid'));
-
-        //dump($infraJurisdiccion);die;
-
-        return $this->render('SieAppWebBundle:InfraestructuraH1Datosgenerales:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-            'ubicacion'=> $this->getUbicacion($this->session->get('infjgid')),
-            'ues'=>$this->getUes($this->session->get('infjgid'))
-        ));
-    }
-
-
-    /**
-     * Displays a form to edit an existing InfraestructuraH1Datosgenerales entity.
-     *
-     */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH1Datosgenerales')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find InfraestructuraH1Datosgenerales entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-
-        return $this->render('SieAppWebBundle:InfraestructuraH1Datosgenerales:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'ubicacion'   => $this->getUbicacion($this->session->get('infjgid')),
-            'ues'=>$this->getUes($this->session->get('infjgid'))
-        ));
-    }
-
-    /**
-    * Creates a form to edit a InfraestructuraH1Datosgenerales entity.
-    *
-    * @param InfraestructuraH1Datosgenerales $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(InfraestructuraH1Datosgenerales $entity)
-    {
-        $form = $this->createForm(new InfraestructuraH1DatosgeneralesType(), $entity, array(
-            'action' => $this->generateUrl('infraestructurah1datosgenerales_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
-
-        return $form;
-    }
-    /**
-     * Edits an existing InfraestructuraH1Datosgenerales entity.
-     *
-     */
-    public function updateAction(Request $request, $id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH1Datosgenerales')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find InfraestructuraH1Datosgenerales entity.');
-        }
-
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
-
-            /**
-             * Upload de fotografias
-             */
-            $filePrincipal = $editForm['filePrincipal']->getData();
-            $fileFrontal = $editForm['fileFrontal']->getData();
-            $fileLateral = $editForm['fileLateral']->getData();
-            $filePanoramica = $editForm['filePanoramica']->getData();
-            
-            if($filePrincipal != null){
-                $fileName = md5(uniqid()).'.'.$filePrincipal->guessExtension();
-                $filePrincipal->move(__DIR__.'/../../../../web/uploads/infraestructura/datosgenerales', $fileName);
-                $entity->setN21FotografiaPrincipal($fileName);
-            }
-            if($fileFrontal != null){
-                $fileName = md5(uniqid()).'.'.$fileFrontal->guessExtension();
-                $fileFrontal->move(__DIR__.'/../../../../web/uploads/infraestructura/datosgenerales', $fileName);
-                $entity->setN21FotografiaFrontal($fileName);
-            }
-            if($fileLateral != null){
-                $fileName = md5(uniqid()).'.'.$fileLateral->guessExtension();
-                $fileLateral->move(__DIR__.'/../../../../web/uploads/infraestructura/datosgenerales', $fileName);
-                $entity->setN21FotografiaLateral($fileName);
-            }
-            if($filePanoramica != null){
-                $fileName = md5(uniqid()).'.'.$filePanoramica->guessExtension();
-                $filePanoramica->move(__DIR__.'/../../../../web/uploads/infraestructura/datosgenerales', $fileName);
-                $entity->setN21FotografiaPanoramica($fileName);
-            }
-
-            /**
-             * Registro de datos de unidades educativas que operan en el edificio
-             */
-            $uid = $request->get('uid');
-            $usie = $request->get('usie');
-            $ucurricular = $request->get('ucurricular');
-            $utelefono = $request->get('utelefono');
-            $utenencia = $request->get('utenencia');
-            $upersona = ($request->get('upersona'))?$request->get('upersona'):null;
-            $ubth = $request->get('ubth');
-
-            for ($i=0; $i < count($uid); $i++) { 
-                if($uid[$i] == 'new'){
-
-                    $infraH1Institucion = new InfraestructuraH1Institucioneseducativa();
-
-                    $infraH1Institucion->setInfraestructuraH1Datosgenerales($entity);
-                    $infraH1Institucion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($usie[$i]));
-                    $infraH1Institucion->setOrgcurricularTipo($em->getRepository('SieAppWebBundle:OrgcurricularTipo')->find($ucurricular[$i]));
-                    if($upersona[$i] != null){
-                        $infraH1Institucion->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($upersona[$i]));
-                    }
-                    $infraH1Institucion->setTelefonoJe($utelefono[$i]);
-                    $infraH1Institucion->setTenenciaTipo($em->getRepository('SieAppWebBundle:InfraestructuraH1TenenciaTipo')->find($utenencia[$i]));
-                    $infraH1Institucion->setBthEspecialidad($ubth[$i]);
-
-                    $em->persist($infraH1Institucion);
-                    $em->flush();
-
-                }else{
-                    $infraH1Institucion = $em->getRepository('SieAppWebBundle:InfraestructuraH1Institucioneseducativa')->find($uid[$i]);
-                    $infraH1Institucion->setOrgcurricularTipo($em->getRepository('SieAppWebBundle:OrgcurricularTipo')->find($ucurricular[$i]));
-                    if($upersona[$i] != null){
-                        $infraH1Institucion->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($upersona[$i]));
-                    }
-                    $infraH1Institucion->setTelefonoJe($utelefono[$i]);
-                    $infraH1Institucion->setTenenciaTipo($em->getRepository('SieAppWebBundle:InfraestructuraH1TenenciaTipo')->find($utenencia[$i]));
-                    $infraH1Institucion->setBthEspecialidad($ubth[$i]);
-
-                    $em->persist($infraH1Institucion);
-                    $em->flush();
-                }
-            }
-
-
-
             $em->flush();
 
-            return $this->redirect($this->generateUrl('infraestructurah1datosgenerales_edit', array('id' => $id)));
+            /**
+             * Registro de datos de unidades educativas que operan en el edificio
+             */
+            $uid = $request->get('uid');
+            $usie = $request->get('usie');
+            $ucurricular = $request->get('ucurricular');
+            $utelefono = $request->get('utelefono');
+            $utenencia = $request->get('utenencia');
+            $upersona = ($request->get('upersona'))?$request->get('upersona'):null;
+            $ubth = $request->get('ubth');
+
+            for ($i=0; $i < count($uid); $i++) { 
+                if($uid[$i] == 'new'){
+
+                    $infraH1Institucion = new InfraestructuraH1Institucioneseducativa();
+
+                    $infraH1Institucion->setInfraestructuraH1Datosgenerales($entity);
+                    $infraH1Institucion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($usie[$i]));
+                    $infraH1Institucion->setOrgcurricularTipo($em->getRepository('SieAppWebBundle:OrgcurricularTipo')->find($ucurricular[$i]));
+                    if($upersona[$i] != null){
+                        $infraH1Institucion->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($upersona[$i]));
+                    }
+                    $infraH1Institucion->setTelefonoJe($utelefono[$i]);
+                    $infraH1Institucion->setTenenciaTipo($em->getRepository('SieAppWebBundle:InfraestructuraH1TenenciaTipo')->find($utenencia[$i]));
+                    $infraH1Institucion->setBthEspecialidad($ubth[$i]);
+
+                    $em->persist($infraH1Institucion);
+                    $em->flush();
+
+                }else{
+                    $infraH1Institucion = $em->getRepository('SieAppWebBundle:InfraestructuraH1Institucioneseducativa')->find($uid[$i]);
+                    $infraH1Institucion->setOrgcurricularTipo($em->getRepository('SieAppWebBundle:OrgcurricularTipo')->find($ucurricular[$i]));
+                    if($upersona[$i] != null){
+                        $infraH1Institucion->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($upersona[$i]));
+                    }
+                    $infraH1Institucion->setTelefonoJe($utelefono[$i]);
+                    $infraH1Institucion->setTenenciaTipo($em->getRepository('SieAppWebBundle:InfraestructuraH1TenenciaTipo')->find($utenencia[$i]));
+                    $infraH1Institucion->setBthEspecialidad($ubth[$i]);
+
+                    $em->persist($infraH1Institucion);
+                    $em->flush();
+                }
+            }
+
+            return $this->redirect($this->generateUrl('infraestructurah1datosgenerales'));
+
         }
 
-        return $this->render('SieAppWebBundle:InfraestructuraH1Datosgenerales:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'ubicacion'   => $this->getUbicacion($entity->getInfraestructuraJuridiccionGeografica()->getId()),
-            'ues'=>$this->getUes($id)
+        return $this->render('SieAppWebBundle:InfraestructuraH1Datosgenerales:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+            'ubicacion' => $this->getUbicacion($this->session->get('infjgid')),
+            'ues'=>$this->getUes($this->session->get('infjgid'))
         ));
+
     }
-    
 
     /**
      * Funcion para obtener los datos de ubicacion del edificio educativo

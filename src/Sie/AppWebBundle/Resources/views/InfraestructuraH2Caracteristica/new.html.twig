@@ -391,6 +391,112 @@
 		var pisos = [];
 		var pisoEdit = null;
 
+		$(function(){
+			getBloques();
+		});
+
+		function getBloques(){
+			$.ajax({
+				type: 'get',
+				url: Routing.generate('infra_getBloques'),
+				beforeSend: function(){
+					$('#bloques').empty();
+					$('#bloques').append('<div align="center"><img src="{{asset("webinfra/assets/global/img/loader/general/10.gif")}}" width="20px"></div');
+				},
+				success: function(data){
+					$.each(data.items, function(index, val) {
+						var ascensor = '0'; if(val.n32SiTieneAscensores == true){ ascensor = '1' }
+						var bloque = {
+							id: val.id,
+							numero: val.n31NombreBloque,
+							ascensor: ascensor,
+							fotografia: '',
+							pisos: []
+						}
+
+						bloques.push(bloque);
+
+					});
+
+					viewBloques();
+
+					//console.log(data.pisos);
+
+					$.each(data.pisos, function(index, val) {
+						if(val.n211CaracteristicasTipo == null){ val.n211CaracteristicasTipo = {id:''} }
+						if(val.n221SeguroTipo == null){ val.n221SeguroTipo = {id:''} }
+						if(val.n222AbreTipo == null){ val.n222AbreTipo = {id:''} }
+						if(val.n231CidriosTipo == null){ val.n231CidriosTipo = {id:''} }
+						if(val.n251MurosMaterialTipo == null){ val.n251MurosMaterialTipo = {id:''} }
+						if(val.n252MurosCaracteristicasTipo == null){ val.n252MurosCaracteristicasTipo = {id:''} }
+						if(val.n261RevestMaterialTipo == null){ val.n261RevestMaterialTipo = {id:''} }
+						if(val.n262MurosCaracteristicasTipo == null){ val.n262MurosCaracteristicasTipo = {id:''} }
+						if(val.n271PisoMaterialTipo == null){ val.n271PisoMaterialTipo = {id:''} }
+						if(val.n272PisoCaracteristicasTipo == null){ val.n272PisoCaracteristicasTipo = {id:''} }
+						if(val.n35SenalesIdiomaTipo1 == null){ val.n35SenalesIdiomaTipo1 = {id:''} }
+						if(val.n35SenalesIdiomaTipo2 == null){ val.n35SenalesIdiomaTipo2 = {id:''} }
+						var piso = {
+							id: val.id,
+							bloque: val.infraestructuraH2CaracteristicaEdificados.n31NombreBloque,
+							nroPiso: val.n11NroPisoTipo.id,
+							nroPisoNombre: val.n11NroPisoTipo.descripcion,
+							area: val.n12AreaM2,
+							nroPedagogicos: val.n13NroAmbPedagogicos,
+							nroNoPedagogicos: val.n14NroAmbNopedagogicos,
+							nroBanios: val.n15TotalBanios,
+							total: val.n16TotalAmbientes,
+							cielo: val.n21SiCieloFalso,
+							cieloCaracteristica: val.n211CaracteristicasTipo.id,
+							puerta: val.n22SiPuertas,
+							puertaSeguro: val.n221SeguroTipo.id,
+							puertaAbre: val.n222AbreTipo.id,
+							ventana: val.n23SiVentanas,
+							ventanaCaracteristica: val.n231CidriosTipo.id,
+							techo: val.n24SiTecho,
+							muro: val.n25SiMuros,
+							muroMaterial: val.n251MurosMaterialTipo.id,
+							muroCaracteristica: val.n252MurosCaracteristicasTipo.id,
+							revestimiento: val.n26SiRevestimiento,
+							revestimientoMaterial: val.n261RevestMaterialTipo.id,
+							revestimientoCaracteristica: val.n262MurosCaracteristicasTipo.id,
+							piso: val.n27SiPiso,
+							pisoMaterial: val.n271PisoMaterialTipo.id,
+							pisoCaracteristica: val.n272PisoCaracteristicasTipo.id,
+							gradas: val.n31SiGradas,
+							gradasCuentan: {
+								pasamano: '',
+								guiaPrevencion: ''
+							},
+							rampas: val.n33SiRampas,
+							rampasCuentan: {
+
+							},
+							senales: val.n35SiSenaletica,
+							senalesTipo: {
+								orientadoras: 0,
+								audibles: 0,
+								visuales: 0,
+								tactiles: 0,
+								direccionales: 0,
+								ubicacion: 0,
+								informativas: 0
+							},
+							senalesIdioma1: val.n35SenalesIdiomaTipo1.id,
+							senalesIdioma2: val.n35SenalesIdiomaTipo2.id
+						};
+
+						pisos.push(piso);
+					});
+
+					viewPisos();
+				},
+				error: function(data){
+					$('#bloques').empty();
+					$('#bloques').append('<div class="alert alert-danger">Los registros no fueron cargados correctamente</div>');
+				}
+			})
+		}
+
 		function openModalBloque(){
 			if(arguments[0] === undefined){
 				$('#modalBloqueId').val('new');

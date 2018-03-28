@@ -94,7 +94,7 @@ class AreasController extends Controller {
                 /**
                  * VErificamos si la gestion es 2015
                  */
-                if ($form['gestion'] < 2013 or $form['gestion'] > 2017) {
+                if ($form['gestion'] < 2013) {
                     $this->get('session')->getFlashBag()->add('noSearch', 'La gestión ingresada no es válida.');
                     return $this->render('SieEspecialBundle:Areas:search.html.twig', array(
                         'form' => $this->formSearch($request->getSession()->get('currentyear'), $form['institucioneducativa'], $form['gestion'])->createView(),
@@ -1141,10 +1141,11 @@ class AreasController extends Controller {
             if($operativo == 5){
                 $fin = 4; //4;
             }else{
-                $fin = 0;
+                $fin = $operativo;
             }
 
         }
+        
         for($i=$inicio;$i<=$fin;$i++){
             $existe = false;
             foreach ($maestrosMateria as $mm) {

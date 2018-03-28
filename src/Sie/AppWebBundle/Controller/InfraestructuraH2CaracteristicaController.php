@@ -32,7 +32,7 @@ class InfraestructuraH2CaracteristicaController extends Controller
      * Lists all InfraestructuraH2Caracteristica entities.
      *
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
 
         $this->session->set('infjgid', 13395);
@@ -42,199 +42,24 @@ class InfraestructuraH2CaracteristicaController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $infrah2caracteristica = $em->getRepository('SieAppWebBundle:InfraestructuraH2Caracteristica')->findOneBy(
+        $entity = $em->getRepository('SieAppWebBundle:InfraestructuraH2Caracteristica')->findOneBy(
             array(
                 'infraestructuraJuridiccionGeografica'=>$this->session->get('infjgid')
             )
         );
 
-        if(is_object($infrah2caracteristica)){
-            /**
-             * Editamos el registro
-             */
-            $this->session->set('infh2id', $infrah2caracteristica->getId());
-
-            return $this->redirectToRoute('infraestructurah2caracteristica_edit', array('id'=>$infrah2caracteristica->getId()));
+        if(!is_object($entity)){
+            $entity = new InfraestructuraH2Caracteristica();
+            $this->session->set('infh2id', 'new');
 
         }else{
-            /**
-             * Creamos el registro
-             */
-            $this->session->set('infh2id', 'nuevo');
-
-            return $this->redirectToRoute('infraestructurah2caracteristica_new');
+            $this->session->set('infh2id', $entity->getId());
         }
 
-    }
-    /**
-     * Creates a new InfraestructuraH2Caracteristica entity.
-     *
-     */
-    public function newAction(Request $request)
-    {
-        $entity = new InfraestructuraH2Caracteristica();
         $form = $this->createForm(new InfraestructuraH2CaracteristicaType(), $entity);
         $form->handleRequest($request);
 
-        //dump($request);die;
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('infraestructura_h2_caracteristica');")->execute();
-            //dump($this->session->get('infjgid'));die;
-            $entity->setInfraestructuraJuridiccionGeografica($em->getRepository('SieAppWebBundle:InfraestructuraJuridiccionGeografica')->find($this->session->get('infjgid')));
-            $em->persist($entity);
-            $em->flush();
-
-            $this->session->set('infh2id', $entity->getId());
-
-            // Registro de señales
-            $senales = $request->get('sie_appwebbundle_infraestructurah2caracteristica[senalesTipo]');
-
-
-            // Registro de bloques
-            $bloqueId = $request->get('bloqueId');
-            $bloqueNro = $request->get('bloqueNro');
-            $bloqueAscensor = $request->get('bloqueAscensor');
-            $bloqueFotografia = $request->get('bloqueFotografia');
-
-            for ($i=0; $i < count($bloqueId); $i++) {
-                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('infraestructura_h2_caracteristica_edificados');")->execute();
-                $bloque = new InfraestructuraH2CaracteristicaEdificados();
-                $bloque->setInfraestructuraH2Caracteristica($em->getRepository('SieAppWebBundle:InfraestructuraH2Caracteristica')->find($entity->getId()));
-                $bloque->setN31NombreBloque($bloqueNro[$i]);
-                $bloque->setN32SiTieneAscensores($bloqueAscensor[$i]);
-                $em->persist($bloque);
-                $em->flush();
-            }
-
-            // Registro de pisos
-            $pisoId = $request->get('pisoId');
-            $pisoBloque = $request->get('pisoBloque');
-            $pisoNroPiso = $request->get('pisoNroPiso');
-            $pisoArea = $request->get('pisoArea');
-            $pisoNroPedagogicos = $request->get('pisoNroPedagogicos');
-            $pisoNroNoPedagogicos = $request->get('pisoNroNoPedagogicos');
-            $pisoNroBanios = $request->get('pisoNroBanios');
-            $pisoTotal = $request->get('pisoTotal');
-            $pisoCielo = $request->get('pisoCielo');
-            $pisoCieloCaracteristica = $request->get('pisoCieloCaracteristica');
-            $pisoPuerta = $request->get('pisoPuerta');
-            $pisoPuertaSeguro = $request->get('pisoPuertaSeguro');
-            $pisoPuertaAbre = $request->get('pisoPuertaAbre');
-            $pisoVentana = $request->get('pisoVentana');
-            $pisoVentanaCaracteristica = $request->get('pisoVentanaCaracteristica');
-            $pisoTecho = $request->get('pisoTecho');
-            $pisoMuro = $request->get('pisoMuro');
-            $pisoMuroMaterial = $request->get('pisoMuroMaterial');
-            $pisoMuroCaracteristica = $request->get('pisoMuroCaracteristica');
-            $pisoRevestimiento = $request->get('pisoRevestimiento');
-            $pisoRevestimientoMaterial = $request->get('pisoRevestimientoMaterial');
-            $pisoRevestimientoCaracteristica = $request->get('pisoRevestimientoCaracteristica');
-            $pisoPiso = $request->get('pisoPiso');
-            $pisoPisoMaterial = $request->get('pisoPisoMaterial');
-            $pisoPisoCaracteristica = $request->get('pisoPisoCaracteristica');
-            $pisoGradas = $request->get('pisoGradas');
-            $pisoGradasCuentanPasamano = $request->get('pisoGradasCuentanPasamano');
-            $pisoGradasCuentanGuiaPrevencion = $request->get('pisoGradasCuentanGuiaPrevencion');
-            $pisoRampas = $request->get('pisoRampas');
-            $pisoRampasCuentan = $request->get('pisoRampasCuentan');
-            $pisoSenales = $request->get('pisoSenales');
-            $pisoSenalesTipoOrientadoras = $request->get('pisoSenalesTipoOrientadoras');
-            $pisoSenalesTipoAudibles = $request->get('pisoSenalesTipoAudibles');
-            $pisoSenalesTipoVisuales = $request->get('pisoSenalesTipoVisuales');
-            $pisoSenalesTipoTactiles = $request->get('pisoSenalesTipoTactiles');
-            $pisoSenalesTipoDirecciones = $request->get('pisoSenalesTipoDirecciones');
-            $pisoSenalesTipoUbicacion = $request->get('pisoSenalesTipoUbicacion');
-            $pisoSenalesTipoInformativas = $request->get('pisoSenalesTipoInformativas');
-            $pisoSenalesIdioma1 = $request->get('pisoSenalesIdioma1');
-            $pisoSenalesIdioma2 = $request->get('pisoSenalesIdioma2');
-
-            for ($i=0; $i < count($pisoId) ; $i++) { 
-                $em->getConnection()->prepare("select * from sp_reinicia_secuencia('infraestructura_h2_caracteristica_edificados_pisos');")->execute();
-                $piso = new InfraestructuraH2CaracteristicaEdificadosPisos();
-
-                $bloque = $em->getRepository('SieAppWebBundle:InfraestructuraH2CaracteristicaEdificados')->findOneBy(array(
-                    'n31NombreBloque'=>$pisoBloque[$i],
-                    'infraestructuraH2Caracteristica'=>$entity->getId()
-                ));
-                $piso->setInfraestructuraH2CaracteristicaEdificados($bloque);
-
-                $piso->setN11NroPisoTipo($em->getRepository('SieAppWebBundle:InfraestructuraH2PisoNroPisoTipo')->find($pisoNroPiso[$i]));
-                $piso->setN12AreaM2((int) $pisoArea[$i]);
-                $piso->setN13NroAmbPedagogicos((int) $pisoNroPedagogicos[$i]);
-                $piso->setN14NroAmbNoPedagogicos((int) $pisoNroNoPedagogicos[$i]);
-                $piso->setN15TotalBanios((int) $pisoNroBanios[$i]);
-                $piso->setN16TotalAmbientes((int) $pisoTotal[$i]);
-                $piso->setN21SiCieloFalso((int) $pisoCielo[$i]);
-                if($pisoCieloCaracteristica[$i] != ""){
-                    $piso->setN211CaracteristicasTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenCaracteristicasInfraTipo')->find($pisoCieloCaracteristica[$i]));
-                }
-                $piso->setN22SiPuertas($pisoPuerta[$i]);
-                if($pisoPuertaSeguro[$i] != ""){
-                    $piso->setN221SeguroTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenPuertasSeguroTipo')->find($pisoPuertaSeguro[$i]));
-                }
-                if($pisoPuertaAbre[$i] != ""){
-                    $piso->setN222AbreTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenPuertasAbreTipo')->find($pisoPuertaAbre[$i]));
-                }
-                $piso->setN23SiVentanas($pisoVentana[$i]);
-                if($pisoVentanaCaracteristica[$i] != ""){
-                    $piso->setN231VidriosTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenVentanasCaracTipo')->find($pisoVentanaCaracteristica[$i]));
-                }
-                $piso->setN24SiTecho($pisoTecho[$i]);
-                $piso->setN25SiMuros($pisoMuro[$i]);
-                if($pisoMuroMaterial[$i] != ""){
-                    $piso->setN251MurosMaterialTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenMurosMaterialTipo')->find($pisoMuroMaterial[$i]));
-                }
-                if($pisoMuroCaracteristica[$i] != ""){
-                    $piso->setN252MurosCaracteristicasTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenMurosCaracTipo')->find($pisoMuroCaracteristica[$i]));
-                }
-                $piso->setN26SiRevestimiento($pisoRevestimiento[$i]);
-                if($pisoRevestimientoMaterial[$i] != ""){
-                    $piso->setN261RevestMaterialTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenRevestimientoMaterialTipo')->find($pisoRevestimientoMaterial[$i]));
-                }
-                if($pisoRevestimientoCaracteristica[$i] != ""){
-                    $piso->setN262RevestCaracteristicasTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenCaracteristicasInfraTipo')->find($pisoRevestimientoCaracteristica[$i]));
-                }
-                $piso->setN27SiPiso($pisoPiso[$i]);
-                if($pisoPisoMaterial[$i] != ""){
-                    $piso->setN271PisoMaterialTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenPisosMaterialTipo')->find($pisoPisoMaterial[$i]));
-                }
-                if($pisoPisoCaracteristica[$i] != ""){
-                    $piso->setN272PisoCaracteristicasTipo($em->getRepository('SieAppWebBundle:InfraestructuraGenCaracteristicasInfraTipo')->find($pisoPisoCaracteristica[$i]));
-                }
-                $piso->setN31SiGradas($pisoGradas[$i]);
-                $piso->setN33SiRampas($pisoRampas[$i]);
-                $piso->setN35SiSenaletica($pisoSenales[$i]);
-
-
-                $em->persist($piso);
-                $em->flush();
-
-
-            }            
-
-            return $this->redirect($this->generateUrl('infraestructurah2caracteristica_edit', array('id' => $entity->getId())));
-        }
-
-        return $this->render('SieAppWebBundle:InfraestructuraH2Caracteristica:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        ));
-    }
-
-
-
-    /**
-     * Displays a form to edit an existing InfraestructuraH2Caracteristica entity.
-     *
-     */
-    public function editAction(Request $request, InfraestructuraH2Caracteristica $infraestructuraH2Caracteristica)
-    {
-        $editForm = $this->createForm(new InfraestructuraH2CaracteristicaType() ,$infraestructuraH2Caracteristica);
-        $editForm->handleRequest($request);
-
-        if($editForm->isSubmitted() && $editForm->isValid()){
+        if($form->isSubmitted() && $form->isValid()){
             $this->getDoctrine()->getManager()->flush();
 
             $em = $this->getDoctrine()->getManager();
@@ -285,7 +110,7 @@ class InfraestructuraH2CaracteristicaController extends Controller
                 $em->flush();
             }*/
 
-            $infrah2id = $infraestructuraH2Caracteristica->getId(); //$this->session->get('infh2id');
+            $infrah2id = $entity->getId(); //$this->session->get('infh2id');
 
             // Eliminacion de pisos y bloques
             $bloques = $em->getRepository('SieAppWebBundle:InfraestructuraH2CaracteristicaEdificados')->findBy(array('infraestructuraH2Caracteristica'=>$infrah2id));
@@ -425,15 +250,15 @@ class InfraestructuraH2CaracteristicaController extends Controller
 
             }
 
-            return $this->redirectToRoute('infraestructurah2caracteristica_edit', arraY('id'=> $infraestructuraH2Caracteristica->getId()));
+            
         }
 
-        return $this->render('SieAppWebBundle:InfraestructuraH2Caracteristica:edit.html.twig', array(
-            'entity'      => $infraestructuraH2Caracteristica,
-            'edit_form'   => $editForm->createView()
+        return $this->render('SieAppWebBundle:InfraestructuraH2Caracteristica:new.html.twig', array(
+            'form'=>$form->createView()
         ));
-        
+
     }
+    
 
     /**
      * Funciones ajax para bloques

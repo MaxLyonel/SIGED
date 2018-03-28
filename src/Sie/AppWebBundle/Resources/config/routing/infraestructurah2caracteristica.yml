@@ -1,14 +1,15 @@
 infraestructurah2caracteristica:
     path:     /
     defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:index" }
+    methods: [GET, POST]
 
-infraestructurah2caracteristica_new:
-    path:     /new
-    defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:new" }
+# infraestructurah2caracteristica_new:
+#     path:     /new
+#     defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:new" }
 
-infraestructurah2caracteristica_edit:
-    path:     /{id}/edit
-    defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:edit" }
+# infraestructurah2caracteristica_edit:
+#     path:     /{id}/edit
+#     defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:edit" }
 
 
 # Routing para funciones ajax BLOQUES
