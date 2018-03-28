@@ -395,7 +395,7 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->add('grado', 'choice', array('attr'=>array('class'=>'form-control')))
                 ->add('paralelo', 'choice', array('attr'=>array('class'=>'form-control')))
                 ->add('turno', 'choice', array('attr'=>array('class'=>'form-control')))
-                ->add('jsonRule', 'text', array('data'=>$jsonDataInscription))
+                ->add('jsonRule', 'hidden', array('data'=>$jsonDataInscription))
                 // ->add('masteria','text', array('data'=>$arrDataInscription['olimMateria']))
                 // ->add('category','text', array('data'=>$arrDataInscription['category']))
                 // ->add('gestion','text', array('data'=>$arrDataInscription['gestion']))
@@ -541,7 +541,17 @@ class OlimEstudianteInscripcionController extends Controller{
 
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
             'objStudentsToOlimpiadas' => $objStudentsToOlimpiadas,
+            'form' => $this->studentsRegisterform()->createView(),
+
         ));
+    }
+
+    private function studentsRegisterform(){
+        return $this->createFormBuilder()
+                ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegister()')))
+                ->getForm()
+                ;
+
     }
 
 

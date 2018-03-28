@@ -9,26 +9,38 @@
                                         <tr>
                                             <th class="text-center">#</th>
                                             <th>Rude</th>
-                                            <th>Nombre</th>
-                                            <th>Paterno</th>
-                                            <th>Materno</th>
-                                            <th>CI</th>
+                                            <th>Estudiante</th>
+                                            <th colspan="2">CI - complemento</th>
+                                            <th>&nbsp;</th>
                                             
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for item in objStudentsToOlimpiadas %}
+                                        <small>
+                                        {{form_start(form, {'attr':{'id':'studentsRegisterId'} })}}
+                                            {% for item in objStudentsToOlimpiadas %}
+                                                <tr>
+                                                <td class="text-center">{{loop.index}}</td>
+                                                <td>{{item.codigo_rude}}</td>
+                                                <td>{{item.paterno}} {{item.materno}} {{item.nombre}}</td>
+                                                <td><input type="text" id="form_ci" name="form[ci]" value={{item.carnet_identidad}} > </td> 
+                                                <td>
+                                                    <input type="text" id="form_complemento" name="form[complemento]" value="{{item.complemento}}" size='2'> </td>    
+                                                    
+                                                <td>
+
+                                                     <input type="checkbox" id="form_datasend_{{item.estinsid}}" name="form[datasend_{{item.estinsid}}][student]"   value='{{item.estinsid}}'>
+                                                    <input type="hidden" id="form_datasend_{{item.estinsid}}" name="form[datasend_{{item.estinsid}}][eInsId]"   value='{{item.estinsid}}'>
+                                                </td>
+                                                
+                                                </tr>    
+                                            {% endfor %}
                                             <tr>
-                                            <td class="text-center">{{loop.index}}</td>
-                                            <td>{{item.codigo_rude}}</td>
-                                            <td>{{item.paterno}}</td>
-                                            <td>{{item.materno}}</td>
-                                            <td>{{item.nombre}}</td>
-                                            <td>{{item.carnet_identidad}}</td>
+                                                <td colspan="4" align="right">{{form_widget(form.register)}}</td>
+                                            </tr>
                                             
-                                            </tr>    
-                                        {% endfor %}
-                                        
+                                        {{form_end(form)}}
+                                        </small>
                                        
                                     </tbody>
                                 </table>

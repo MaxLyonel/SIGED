@@ -161,7 +161,7 @@ class Olimfunctions {
 
     $sql = "
             
-            select ei.id as estinsid,e.codigo_rude, e.nombre, e.paterno, e.materno, e.carnet_identidad  
+            select ei.id as estinsid,e.codigo_rude, e.nombre, e.paterno, e.materno, e.carnet_identidad, e.complemento 
             from institucioneducativa ie 
             left join institucioneducativa_curso iec on ie.id = iec.institucioneducativa_id
             left join estudiante_inscripcion ei on ei.institucioneducativa_curso_id = iec.id
