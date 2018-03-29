@@ -1,59 +1,59 @@
-herramienta_curso_alternativa:
+herramienta_curso_permanente:
     path:     /
-    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:index }
+    defaults: { _controller: SiePermanenteBundle:CursoPermanente:index }
     options:
          expose: true
          
-herramienta_areachange:
+herramienta_per_areachange:
     path:     /{areacod}/areachange/
-    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:areachange }
+    defaults: { _controller: SiePermanenteBundle:CursoPermanente:areachange }
     options:
          expose: true         
          
-herramienta_nivelchange:
+herramienta_per_nivelchange:
     path:     /{nivelid}/nivelchange/
-    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:nivelchange }
+    defaults: { _controller: SiePermanenteBundle:CursoPermanente:nivelchange }
     options:
          expose: true  
          
-herramienta_turnochange:
+herramienta_per_turnochange:
     path:     /{areacod}/{nivelid}/{etapaid}/{turnoid}/turnochange/
-    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:turnochange }
+    defaults: { _controller: SiePermanenteBundle:CursoPermanente:turnochange }
     options:
          expose: true         
 
-herramienta_curso_alternativa_new:
+herramienta_per_curso_permanente_new:
     path:     /newcurso
-    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:new }
+    defaults: { _controller: SiePermanenteBundle:CursoPermanente:new }
     options:
          expose: true
 
-herramienta_curso_alternativa_add:
+herramienta_per_curso_permanente_add:
     path:     /areasadd
-    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:areasadd }
+    defaults: { _controller: SiePermanenteBundle:CursoPermanente:areasadd }
     options:
          expose: true
 
-herramienta_curso_alternativa_delete:
+herramienta_per_curso_permanente_delete:
     path:     /cursodelete
-    defaults: { _controller: SieHerramientaAlternativaBundle:CursoAlternativa:cursodelete }
+    defaults: { _controller: SiePermanenteBundle:CursoPermanente:cursodelete }
     options:
          expose: true
 
-herramienta_curso_alternativa_maestros_asignar:
+herramienta_per_curso_permanente_maestros_asignar:
     path:     /maestrosAsignar
-    defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:maestrosAsignar"}
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:maestrosAsignar"}
     options:
          expose: true
          
-herramientalt_ceducativa_duplicados_paralelos:
+herramientalt_per_ceducativa_duplicados_paralelos:
     path:     /cursosduplicados
-    defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:cursosduplicados"}
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:cursosduplicados"}
     
-herramientalt_ceducativa_periododistinto:
+herramientalt_per_ceducativa_periododistinto:
     path:     /periodosdintintos
-    defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:periodosdintintos"}    
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:periodosdintintos"}    
     
-herramientalt_ceducativa_aux:
+herramientalt_per_ceducativa_aux:
     path:     /auxuno
-    defaults: { _controller: "SieHerramientaAlternativaBundle:CursoAlternativa:auxuno"}        
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:auxuno"}        

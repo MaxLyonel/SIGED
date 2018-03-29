@@ -1,6 +1,23 @@
 
     
 herramienta_per_cursos_cortos_index:
-    path:    /cursosCortos/
+    path:    /index/
     defaults: { _controller: SiePermanenteBundle:CursosCortos:index}
 
+herramienta_per_cursos_cortos_new:
+    path:   /new/
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:newCursoCorto}
+    options:
+          expose: true
+
+herramienta_per_cursos_cortos_edit:
+    path:   /edit/
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:editCursoCorto}
+    options:
+          expose: true
+
+herramienta_per_cursos_cortos_delete:
+    path:   /delete/
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:deleteCursoCorto}
+    options:
+          expose: true

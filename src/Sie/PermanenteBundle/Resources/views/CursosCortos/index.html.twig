@@ -3,8 +3,142 @@
 {% block contentoption %}
     <div class="header-content">
         <h2><i class="fa fa-users"></i> Cursos y alumnos <span>Lista de cursos y alumnos del centro de educación alternativa.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-th-large"></i>
+                    <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-child"></i>
+                    Cursos y alumnos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
     </div>
-    <!--/ End body content -->
+
+
+    <div class="body-content animated fadeIn">
+
+        <!-- Start mail page -->
+        <div class="row">
+            <div class="col-sm-3">
+                <ul class="nav nav-pills nav-stacked nav-email shadow mb-10">
+                    <li class="active">
+                        <a href="mail-inbox.html">
+                            <i class="fa fa-inbox"></i> Area Tematica   <span class="label pull-right">7</span>
+                        </a>
+                    </li>
+
+                </ul><!-- /.nav -->
+                <ul class="list-group list-group-flush">
+                    {% for areatematic in areatematica %}
+
+
+                    <li class="list-group-item"><a href="mail-compose.html"><i class="fa fa-file-text-o"></i>     </a>
+                    </li>
+
+                    {% endfor %}
+                </ul>
+
+
+
+
+
+            </div>
+
+
+
+            <div class="col-sm-9">
+                <div>
+                    <a href="{{path('herramienta_per_cursos_cortos_new')}}" class="btn btn-primary btn-stroke">  <i class="fa fa-cloud-download"></i>Nuevo Curso</a>
+                </div>
+               <div class="panel rounded shadow panel-teal">
+                    <div class="panel-heading">
+
+                        <div class="pull-left">
+                            <h3 class="panel-title"> Listado de Cursos Cortos</h3>
+                        </div>
+                        <div class="pull-right">
+                            <form action="#" class="form-horizontal mr-5 mt-3">
+                                <div class="form-group no-margin no-padding has-feedback">
+                                    <input type="text" class="form-control no-border" placeholder="Buscar Curso">
+                                    <button type="submit" class="btn btn-theme fa fa-search form-control-feedback"></button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-sub-heading inner-all">
+
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-sub-heading -->
+                    <div class="panel-body no-padding">
+
+                        <div class="table-responsive">
+                            <table class="table table-hover table-email">
+                                <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 1%;">No.</th>
+                                    <th>Name</th>
+                                    <th class="text-center" style="width: 12%;">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for cursosCor in cursosCortos %}
+                                <tr>
+
+                                    <td class="text-center border-right">            </td>
+                                    <td>
+
+                                                        <h4 class="text-primary">           </h4>
+                                                        <p class="email-summary"><strong> Numero de Horas:</strong>          </p>
+                                                        <span class="media-meta">             hasta </span>
+
+
+                                    </td>
+                                    <td align="center">
+                                        <a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail" aria-describedby="tooltip929810"><i class="fa fa-eye"></i></a><div class="tooltip fade top in" role="tooltip" id="tooltip929810" style="top: 15px; left: 763px; display: block;"><div class="tooltip-arrow" style="left: 48.6667%;"></div></div>
+                                        <a href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a>
+                                        <a href="#" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div><!-- /.table-responsive -->
+
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+
+
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+        </div><!-- /.row -->
+        <!--/ End mail page -->
+
+    </div>
+
+
 
 
 
@@ -13,6 +147,7 @@
 
 {% block javascripts %}
     {{parent()}}
+    <script src="../../../assets/admin/js/pages/blankon.mail.js"></script>
     <script>
 
     </script>

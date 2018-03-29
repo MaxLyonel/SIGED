@@ -30,3 +30,8 @@ sie_permanente_malla_tecnica:
 sie_permanente_cursos_cortos:
     resource: "@SiePermanenteBundle/Resources/config/routing/cursosCortos.yml"
     prefix:   /persie/cursosCortos
+
+sie_permanente_alternativa_curso:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/cursoAlternativa.yml"
+    prefix:   /altsie/cursoAlternativa
+

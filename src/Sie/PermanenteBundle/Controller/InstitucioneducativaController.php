@@ -1640,6 +1640,36 @@ class InstitucioneducativaController extends Controller {
 //        dump($objUeducativa);die;
     }
 
+    public function operativosAction (Request $request)
+    {
+        $sesion = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getEntityManager();
+        $db = $em->getConnection();
+        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));
+        $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
 
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        //validationremoveInscriptionAction if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        $arrDataReport = array(
+            'roluser' => $this->session->get('roluser'),
+            'userId' => $this->session->get('userId'),
+            'sie' => $this->session->get('ie_id'),
+            'gestion' => $this->session->get('ie_gestion'),
+            'subcea' => $this->session->get('ie_subcea'),
+            'periodo' => $this->session->get('ie_per_cod'),
+            'lugarid'=> $idlugarusuario
+        );
+
+        return $this->render($this->session->get('pathSystem') . ':Principal:operativos.html.twig', array(
+            'dataReport' => $arrDataReport,
+            'dataInfo' => serialize($arrDataReport),
+        ));
+
+    }
 
 }

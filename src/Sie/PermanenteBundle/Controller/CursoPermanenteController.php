@@ -1,6 +1,6 @@
 <?php
 
-namespace Sie\HerramientaAlternativaBundle\Controller;
+namespace Sie\PermanenteBundle\Controller;
 
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * EstudianteInscripcion controller.
  *
  */
-class CursoAlternativaController extends Controller {
+class CursoPermanenteController extends Controller {
 
     public $session;
 
@@ -39,7 +39,7 @@ class CursoAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
         
-        return $this->render('SieHerramientaAlternativaBundle:CursoAlternativa:index.html.twig');        
+        return $this->render('SiePermanenteBundle:CursoPermanente:index.html.twig');
     }
     
     public function areachangeAction(Request $request, $areacod) {

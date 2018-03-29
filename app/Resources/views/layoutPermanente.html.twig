@@ -11,8 +11,8 @@
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
             <meta name="description" content="Blankon is a theme fullpack admin template powered by Twitter bootstrap 3 front-end framework. Included are multiple example pages, elements styles, and javascript widgets to get your project started.">
             <meta name="keywords" content="admin, admin template, bootstrap3, clean, fontawesome4, good documentation, lightweight admin, responsive dashboard, webapp">
-            <meta name="author" content="Djava UI">
-            <title>SIGED | Herramienta Acadamica Alternativa</title>
+            <meta name="author" content="">
+            <title>SIGED | Educación Permanente</title>
             <!--/ END META SECTION -->
 
             <!-- START @FAVICONS -->
@@ -396,7 +396,9 @@
                             </a>
                             <ul>
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
-
+                                {% if (app.session.get('ie_id') != -1) %}
+                                    <li><a href="{{path('sie_per_operativos')}}">Operativos </a></li>
+                                {% endif %}
 
                                 <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
 

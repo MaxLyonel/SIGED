@@ -123,68 +123,7 @@
 
             </div>
         </div>
-        <div class="col-lg-8">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="portlet portlet-blue">
-                        <div class="portlet-heading">
-                            <div class="portlet-title">
-                                <h4><i class="fa fa-map-marker fa-fw"></i> Información Operativos</h4>
-                            </div>
-                            <div class="portlet-widgets">
-                                <!-- Button Dropdown -->
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        {% if app.session.get('ie_id') %}
-                            <div class="portlet-body">
-                            <div id="map"></div>
-                            <br>
-                            <div class="table-responsive">
 
-                                <div class="table-responsive mb-20">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th class="text-center">#</th>
-                                            <th>Table heading</th>
-                                            <th>Table heading</th>
-                                            <th>Table heading</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td class="text-center">1</td>
-                                            <td>Table cell</td>
-                                            <td>Table cell</td>
-                                            <td>
-                                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'0', 'gestion': '2017','subcea':'0','semestre':'2','idiesuc':'575465'})}}" method="post" style="display:inline-block">
-                                                    <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="AAA">
-                                                        <i class="fa fa-eye"></i>
-                                                    </button>
-                                                </form>
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">2</td>
-                                            <td></td>
-                                            <td>Table cell</td>
-                                            <td>Table cell</td>
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- /.table-responsive -->
-                        </div>
-                        {% else %}
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
 

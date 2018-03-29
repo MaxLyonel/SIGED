@@ -1,0 +1,42 @@
+{% extends 'layoutPermanente.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-users"></i> Cursos y alumnos <span>Lista de cursos y alumnos del centro de educación alternativa.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-th-large"></i>
+                    <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-child"></i>
+                    Cursos y alumnos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+
+    </div>
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+    </script>
+{%endblock%}
