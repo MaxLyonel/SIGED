@@ -1,6 +1,6 @@
 <small>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <button type="button" class="btn btn-inverse btn-danger btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addTutor('{{jsonDataInscription}}')">
                     Registre Tutor
         </button>
@@ -9,54 +9,89 @@
         <h4 class="no-margin">Lista Tutores</h4>
         <!-- <button type="button" class="btn btn-inverse btn-xs" onclick="addTutor();">Registre tutor</button> -->
 
+
+
         
-        <div class="table-responsive mb-20">
-            <table class="table table-bordered">
+        <div class="table-responsive mb-10">
+            
+
+                <table class="table ">
                 <thead>
                     <tr>
-                       <th>#</th>
+                       <!-- <th>#</th> -->
                         <th>Datos Tutor</th>
-                        <th>Telefonos</th>
+                        <!-- <th>Telefonos</th>
                         <th>Correoelectronico</th>
-                        <th>Actions</th>
+                        <th>Actions</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     {% for entity in entities %}
                         <tr>
-                            <td>{{loop.index}}</a></td>
-                            <td>{{ entity.nombre }} {{ entity.paterno }} {{ entity.materno }}</td>
-                            <td>{{ entity.telefono1 }}/{{ entity.telefono2 }}</td>
-                            <td>{{ entity.correo_electronico }}</td>
+                            {#
+                                <td>{{loop.index}}</a></td>
+                                #}
+                            
                             <td>
-                                <table border='0'>
-                                    <thead>
+                                <table border="0" class="" >
+                                    
+                                    <tbody>
                                         <tr>
-                                            <td><a href="#" class="btn btn-success btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="updateDataTutor('{{jsonDataInscription}}', {{entity.id}})"><i class="fa fa-edit fa-md pr-2"></i></a></td>
-                                            <td><a href="#" class="btn btn-danger  btn-xs" onclick="removeDataTutor('{{jsonDataInscription}}', {{entity.id}})"><i class="fa fa-trash fa-md pr-2"></i></a></td>
-                                            <td><a href="#" class="btn btn-primary btn-xs" onclick="selectTypeInscription('{{jsonDataInscription}}', {{entity.id}} );"><i class="fa fa-list"></i></a> </td>
+                                            <td>
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{ entity.nombre }} {{ entity.paterno }} {{ entity.materno }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                            </td>
+                                               
+                                            <td>
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><a href="#" class="btn btn-success btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="updateDataTutor('{{jsonDataInscription}}', {{entity.id}})"><i class="fa fa-edit fa-md pr-2"></i></a></td>
+                                                            <td><a href="#" class="btn btn-danger  btn-xs" onclick="removeDataTutor('{{jsonDataInscription}}', {{entity.id}})"><i class="fa fa-trash fa-md pr-2"></i></a></td>
+                                                            <td><a href="#" class="btn btn-primary btn-xs" onclick="selectTypeInscription('{{jsonDataInscription}}', {{entity.id}} );"><i class="fa fa-list"></i></a> </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                   <!--  <tbody>
                                         <tr>
-                                            <td></td>
+                                            <td>
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{ entity.telefono1 }}/{{ entity.telefono2 }}</td>
+                                                        <td>{{ entity.correo_electronico }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            </td>
+                                            
                                         </tr>
-                                    </tbody> -->
+                                        
+                                    </tbody>
                                 </table>
-                                
-                                
-                                
-                                <!-- <a href="#" ><i class="fa fa-eye"></i></a> -->
                             </td>
+                            
+                            
+                          
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+                
+            
+            
         </div><!-- /.table-responsive -->
         <!--/ End bordered table -->
 
     </div>
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div id="typeInscriptionId">            
         </div>
             

@@ -396,7 +396,7 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->add('paralelo', 'choice', array('attr'=>array('class'=>'form-control')))
                 ->add('turno', 'choice', array('attr'=>array('class'=>'form-control')))
                 ->add('jsonRule', 'hidden', array('data'=>$jsonDataInscription))
-                // ->add('masteria','text', array('data'=>$arrDataInscription['olimMateria']))
+                // ->add('msateria','text', array('data'=>$arrDataInscription['olimMateria']))
                 // ->add('category','text', array('data'=>$arrDataInscription['category']))
                 // ->add('gestion','text', array('data'=>$arrDataInscription['gestion']))
                 ->getForm();
@@ -524,6 +524,7 @@ class OlimEstudianteInscripcionController extends Controller{
         $jsonRule = $request->get('jsonRule');
         $nivel = $request->get('nivel');
         $arrData = json_decode($jsonRule, true);
+        
         $sie = $arrData['institucionEducativa'];
         $gestion = $arrData['gestion'];
         //look for the id of institucioneducativa_curso
@@ -535,8 +536,16 @@ class OlimEstudianteInscripcionController extends Controller{
              'institucioneducativa' => $sie,
              'gestionTipo' => $gestion
         ));
-    
+        
         $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
+        foreach ($objStudentsToOlimpiadas as $key => $value) {
+            $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
+            $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, '30-6-2018');
+        
+        }
+
+
+        
         // dump($objStudentsToOlimpiadas);die;
 
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
