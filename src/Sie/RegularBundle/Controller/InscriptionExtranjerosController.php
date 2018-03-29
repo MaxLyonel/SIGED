@@ -667,7 +667,7 @@ class InscriptionExtranjerosController extends Controller {
 
         $aDataStudent = unserialize($form['newdata']);
         $aDataOption = json_decode($aDataStudent['dataOption'],true);
-dump($aDataOption);die;
+// dump($aDataOption);die;
 
         try {
 
@@ -720,7 +720,7 @@ dump($aDataOption);die;
             //validate the year of student
             $idStudent = $form ['idStudent'];
             $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($idStudent);
-            $tiempo = $this->tiempo_transcurrido($objStudent->getFechaNacimiento()->format('d-m-Y'), '30-6-2017');
+            $tiempo = $this->tiempo_transcurrido($objStudent->getFechaNacimiento()->format('d-m-Y'), '30-6-2018');
 
             switch ($tiempo[0]) {
               case 3:
