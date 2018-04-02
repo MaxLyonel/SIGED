@@ -52,6 +52,7 @@
                         <div class="row">
                 <div class="col-lg-12">
                     <ul class="nav nav-tabs">
+                        <li><a href="{{ path('sie_pnp_listar_archivos_editnew')}}" >Cursos Abiertos</a></li>
                         {% for i in gestion_ini_t..gestion_fin_t %}
                             <li {% if(gestion == i) %} class="active" {% endif %}><a href="{{ path('sie_pnp_listar_archivos_editnew',{'gestion':i})}}" >{{i}}</a></li>
                         {% endfor %}
@@ -93,67 +94,69 @@
                     <div id="pinformation" class="panel-collapse collapse in">
                         <div class="portlet-body" align="center">
                             <div class="row">
-                {% if (totales) %}
-                <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
-                <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
-                    <thead>
-                        <tr>
-                            <th>Id del Curso</th>
-                            <th>Consolidado</th>
-                            <th>Participantes (Regsitrar)</th>
-                            <th>Carnet</th>
-                            <th>Nombre</th>
-                            <th>Paterno</th>
-                            <th>Materno</th>                            
-                            <th>Fecha Inicio</th>                            
-                            <th>Fecha Fin</th>                            
-                            <th>Bloque</th>                            
-                            <th>Parte</th>                            
-                            <th>Departamento</th>  
-                            <th>Provincia</th>
-                            <th>Municipio</th>
-                            <th>localidad</th>
-                            <th>Editar Fecha Fin</th>
-                            <th>Usuario Curso</th>
-                            <th>Cerrar Curso</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for fila in totales %}
-                        {% if fila.esactivo != 1 %} {% set op=0 %} {% else %} {% set op=1 %} {% endif %}
-                        <tr>
-                           <td>{{ fila.id }}</td>
-                           <td><a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': fila.id~fila.ciclo_tipo_id~fila.grado_tipo_id,'esactivo':op}) }}" > Imprimir Consolidado</a></td>
-                            <td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id,'val':0 }) }}" > Ver participantes</a></td>
-                            <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
-                            <td>{{ fila.nombre }}</td>                            
-                            <td>{{ fila.paterno }}</td>
-                            <td>{{ fila.materno }}</td> 
-                            <td>{{ fila.fecha_inicio|date('d-m-Y') }}</td>
-                            <td>{{ fila.fecha_fin|date('d-m-Y') }}</td>
-                            <td>{{ fila.ciclo_tipo_id }}</td>
-                            <td>{{ fila.grado_tipo_id }}</td>
-                            <td>{{ fila.depto }}</td>
-                            <td>{{ fila.provincia }}</td>
-                            <td>{{ fila.lugar }}</td>
-                            <td>{{ fila.localidad }}</td>
-                            {% if fila.esactivo != 1 %}
-                                <td><a role="button" class="btn btn-info btn-xs" href="#" onclick="ver_fecha_fin({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}','{{ fila.fecha_inicio|date("d/m/Y") }}');" > Editar Fecha</a></td>
-                            {% else %}
-                                <td>Finalizado</td>
-                            {% endif %}
-                            <td>{{ fila.usu_a }}</td>
-                            {% if fila.esactivo != 1 %}
-                            <td><a role="button" class="btn btn-warning btn-xs" href="{{ path('sie_pnp_listar_archivos_editnew', { 'id': fila.id }) }}" onclick="return confirm('Está seguro de CERRAR EL CURSO?, si cierra el curso POR TEMAS DE SEGURIDAD SE GUARDARÁ SU NOMBRE, ya no tendrá las opciones de editar; Pero podrá imprimir el PDF original para sus firmas respectivas. No olvide que 10 estudiantes mínimo para áreas concentradas y 8 para desconcentradas.');" > Cerrar Curso</a></td>
-                            {% else %}
-                                <td>Cerrado por {{ fila.usu_c }}</td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-             {% endif %}
+                                {% if (totales) %}
+                                    <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                                        <table id="tablaTotales" class="display" cellspacing="0" width="100%">    
+                                            <thead>
+                                                <tr>
+                                                    <th>Id del Curso</th>
+                                                    <th>Consolidado</th>
+                                                    <th>Participantes (Regsitrar)</th>
+                                                    <th>Carnet</th>
+                                                    <th>Nombre</th>
+                                                    <th>Paterno</th>
+                                                    <th>Materno</th>                            
+                                                    <th>Fecha Inicio</th>                            
+                                                    <th>Fecha Fin</th>                            
+                                                    <th>Bloque</th>                            
+                                                    <th>Parte</th>                            
+                                                    <th>Departamento</th>  
+                                                    <th>Provincia</th>
+                                                    <th>Municipio</th>
+                                                    <th>localidad</th>
+                                                    <th>Editar Fechas</th>
+                                                    <th>Usuario Curso</th>
+                                                    <th>Cerrar Curso</th>
+                                                </tr>
+                                             </thead>
+                                            <tbody>
+                                                {% for fila in totales %}
+                                                    {% if fila.esactivo != 1 %} {% set op=0 %} {% else %} {% set op=1 %} {% endif %}
+                                                    <tr>
+                                                       <td>{{ fila.id }}</td>
+                                                       <td><a role="button" class="btn btn-primary btn-xs glyphicon glyphicon-print" href="{{ path('sie_pnp_imprimir_consolidado', { 'id': fila.id~fila.ciclo_tipo_id~fila.grado_tipo_id,'esactivo':op}) }}" > Imprimir Consolidado</a></td>
+                                                        <td><a role="button" class="btn btn-success btn-xs glyphicon glyphicon-arrow-right" href="{{ path('sie_pnp_curso_listado_editnew', { 'id': fila.id,'val':0 }) }}" > Ver participantes</a></td>
+                                                        <td>{{ fila.carnet }}{% if fila.complemento != '' %}-{{fila.complemento}}{% endif %}</td>
+                                                        <td>{{ fila.nombre }}</td>                            
+                                                        <td>{{ fila.paterno }}</td>
+                                                        <td>{{ fila.materno }}</td> 
+                                                        <td>{{ fila.fecha_inicio|date('d-m-Y') }}</td>
+                                                        <td>{{ fila.fecha_fin|date('d-m-Y') }}</td>
+                                                        <td>{{ fila.ciclo_tipo_id }}</td>
+                                                        <td>{{ fila.grado_tipo_id }}</td>
+                                                        <td>{{ fila.depto }}</td>
+                                                        <td>{{ fila.provincia }}</td>
+                                                        <td>{{ fila.lugar }}</td>
+                                                        <td>{{ fila.localidad }}</td>
+                                                        {% if fila.esactivo != 1 %}
+                                                            <td><a role="button" class="btn btn-info btn-xs" href="#" onclick="ver_fecha_fin({{ fila.id }},'{{ fila.fecha_fin|date("d/m/Y") }}','{{ fila.fecha_inicio|date("d/m/Y") }}');" > Editar Fecha</a></td>
+                                                        {% else %}
+                                                            <td>Finalizado</td>
+                                                        {% endif %}
+                                                        <td>{{ fila.usu_a }}</td>
+                                                        {% if fila.esactivo != 1 %}
+                                                        <td><a role="button" class="btn btn-warning btn-xs" href="{{ path('sie_pnp_listar_archivos_editnew', { 'id': fila.id }) }}" onclick="return confirm('Está seguro de CERRAR EL CURSO?, si cierra el curso POR TEMAS DE SEGURIDAD SE GUARDARÁ SU NOMBRE, ya no tendrá las opciones de editar; Pero podrá imprimir el PDF original para sus firmas respectivas. No olvide que 10 estudiantes mínimo para áreas concentradas y 8 para desconcentradas.');" > Cerrar Curso</a></td>
+                                                        {% else %}
+                                                            <td>Cerrado por {{ fila.usu_c }}</td>
+                                                        {% endif %}
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endif %}
                             </div>
+    
                         </div>
                     </div>
                 </div>
@@ -165,14 +168,17 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="flexModalLabel">EDITAR CURSO (FECHA FIN).</h4>             
+                    <h4 class="modal-title" id="flexModalLabel">EDITAR CURSO (FECHAS).</h4>             
                 </div>
                 <div class="modal-body">
                     <div id="editar-Modal">
                         <form role="form" method="post" action="{{path('sie_pnp_listar_archivos_editnew')}}">
-                            <div align="center"><input type="text" id="curso_id" name="curso_id" value="" required="required" style="display:none" />
-                            <input type="hidden" id="fecha_inicio" name="fecha_inicio" placeholder="Digite Fecha Final" required="required" value=""/>
+                            <div align="center"><input type="text" id="curso_id" name="curso_id" value="" required="required" style="display:none" />Fecha Inicio:
+                            <input type="text" id="fecha_inicio" name="fecha_inicio" placeholder="Digite Fecha Inicio" required="required" value=""/>&nbsp;&nbsp;Fecha Fin:
                             <input type="text" id="fecha_fin" name="fecha_fin" placeholder="Digite Fecha Final" required="required" value=""/>
+                            <div>
+                                &nbsp;
+                            </div>
                             <button type="submit" class="btn btn-success btn-large glyphicon glyphicon-pencil" onclick="return validar_fecha()"> Guardar Cambios</button>
                         </form>
                     </div>
@@ -183,7 +189,55 @@
             </div>                
         </div>
     </div>
+    {% else %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet portlet-blue">
+                    <div class="portlet-heading">
+                        <div class="portlet-title">
+                            <h4>Reporte de Cursos Abiertos y Cerrados</h4>
+                        </div>
+                        <div class="portlet-widgets">
+                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#pinformation"><i class="fa fa-chevron-down"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="pinformation" class="panel-collapse collapse in">
+                        <div class="portlet-body" align="center">
+                            <div class="row">
+                                <table id="" align="center" class="display" cellspacing="0" width="70%">    
+                                    <tbody>                                           
+                                    <tr align="center">                                        
+                                        <td><strong>Gestión</strong></td>
+                                        <td><strong>Cursos Abiertos</strong></td>
+                                        <td><strong>Cursos Cerrados</strong></td>
+                                        <td><strong>Total</strong></td>
+                                    </tr>
+                                        {% for d_c in reporte_c %}
+                                            <tr align="center">
+                                                {% if d_c.gestion == "Total" %}
+                                                    <td><strong>{{ d_c.gestion }}</strong></td> 
+                                                    <td><strong>{{ d_c.abierto }}</strong></td>
+                                                    <td><strong>{{ d_c.cerrado }}</strong></td> 
+                                                    <td><strong>{{ d_c.total_c }}</strong></td>
+                                                {% else %}
+                                                    <td>{{ d_c.gestion }}</td>                            
+                                                    <td>{{ d_c.abierto }}</td>
+                                                    <td>{{ d_c.cerrado }}</td> 
+                                                    <td>{{ d_c.total_c }}</td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endif %}
+
 {% endblock %}
 
 {% block javascripts %}
@@ -214,6 +268,12 @@
         
     $(document).ready(function() {
         $("#fecha_fin").datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd/mm/yyyy',
+            language: "es",
+        });
+        $("#fecha_inicio").datepicker({
             autoclose: true,
             todayHighlight: true,
             format: 'dd/mm/yyyy',
