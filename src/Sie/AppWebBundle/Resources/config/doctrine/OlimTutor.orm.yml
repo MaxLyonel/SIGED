@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\OlimTutor:
     type: entity
     table: olim_tutor
     indexes:
+        IDX_FE09D8F9AC1E7EA:
+            columns:
+                - olim_registro_olimpiada_id
         IDX_FE09D8F996157FA0:
             columns:
                 - periodo_tipo_id
@@ -75,6 +78,15 @@ Sie\AppWebBundle\Entity\OlimTutor:
             comment: ''
             column: gestion_tipo_id
     manyToOne:
+        olimRegistroOlimpiada:
+            targetEntity: OlimRegistroOlimpiada
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_registro_olimpiada_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         periodoTipo:
             targetEntity: OlimPeriodoTipo
             cascade: {  }

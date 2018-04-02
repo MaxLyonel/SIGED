@@ -388,4 +388,32 @@ class OlimTutor
     {
         return $this->persona;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimRegistroOlimpiada
+     */
+    private $olimRegistroOlimpiada;
+
+
+    /**
+     * Set olimRegistroOlimpiada
+     *
+     * @param \Sie\AppWebBundle\Entity\OlimRegistroOlimpiada $olimRegistroOlimpiada
+     * @return OlimTutor
+     */
+    public function setOlimRegistroOlimpiada(\Sie\AppWebBundle\Entity\OlimRegistroOlimpiada $olimRegistroOlimpiada = null)
+    {
+        $this->olimRegistroOlimpiada = $olimRegistroOlimpiada;
+    
+        return $this;
+    }
+
+    /**
+     * Get olimRegistroOlimpiada
+     *
+     * @return \Sie\AppWebBundle\Entity\OlimRegistroOlimpiada 
+     */
+    public function getOlimRegistroOlimpiada()
+    {
+        return $this->olimRegistroOlimpiada;
+    }
 }
