@@ -580,6 +580,35 @@
 
     };
 
+ var studentsRegister = function(){
+
+      formData = $('#studentsRegisterId').serialize();
+
+        $.ajax({
+             type: 'post',
+             url: Routing.generate('oliminscriptions_studentsRegister'),
+             data: formData,
+             beforeSend: function () {
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+
+    };
 
 
 

@@ -83,4 +83,10 @@ oliminscriptions_getStudents:
     options:
         expose: true
 
+oliminscriptions_studentsRegister:
+    path:     /studentsRegister
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:studentsRegister" }
+    options:
+        expose: true
+
 

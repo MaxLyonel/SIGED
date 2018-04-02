@@ -538,19 +538,30 @@ class OlimEstudianteInscripcionController extends Controller{
         ));
         
         $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
+        // dump($objStudentsToOlimpiadas);
+        $arrCorrectStudent = array();
         foreach ($objStudentsToOlimpiadas as $key => $value) {
+
             $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
+            $value['fecha_nacimiento'] = $newStudentDate;
             $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, '30-6-2018');
-        
+            $value['yearsOld'] = $studentYearsOld[0];
+            $arrCorrectStudent[]=($value);
+            
+
         }
-
-
+        //get the discapacidad
+        $objDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
+        
+        // dump($objDiscapacidad);
+        // die;
         
         // dump($objStudentsToOlimpiadas);die;
 
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
-            'objStudentsToOlimpiadas' => $objStudentsToOlimpiadas,
+            'objStudentsToOlimpiadas' => $arrCorrectStudent,
             'form' => $this->studentsRegisterform()->createView(),
+            'objDiscapacidad' => $objDiscapacidad,
 
         ));
     }
@@ -560,6 +571,49 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegister()')))
                 ->getForm()
                 ;
+
+    }
+
+    public function studentsRegisterAction(Request $request){
+        
+        // create db conexioon
+        $em =  $this->getDoctrine()->getManager();
+        //get the send values
+        $form = $request->get('form');
+        // remove the las elemento of form array
+        array_pop($form);
+        //count the send elements
+        //if everything ok on the rule do the save
+        reset ($form);
+        while($val = current($form)){
+            if(isset($val['studentInscription'])){
+                dump($val);   
+                $objOLimStudentInscription = new OlimEstudianteInscripcion();
+                $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
+                $objOLimStudentInscription->setCorreoEstudiante($val['email']);
+                $objOLimStudentInscription->setFechaRegistro(new \DateTime('now'));
+                $objOLimStudentInscription->setUsuarioRegistroId($this->session->get('userId'));
+                $objOLimStudentInscription->setReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($val['fono']) );
+                $objOLimStudentInscription->setCategoriaTipo($em->getRepository('SieAppWebBundle:OlimCategoriaTipo')->find($val['fono']));
+                $objOLimStudentInscription->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($val['fono']));
+                $objOLimStudentInscription->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->find($val['discapacidad']));
+                $objOLimStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($val['studentInscription']));
+                $objOLimStudentInscription->setGestionTipoId($val['fono']);
+                $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
+                $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
+
+
+            }
+            next($form);
+        }
+
+        // dump($form);
+
+dump(sizeof($form));die;
+
+
+
+
 
     }
 

@@ -1,52 +1,83 @@
 <div class="row">
     <div class="col-md-12">
-
+            {{form_start(form, { 'attr':{'id':'studentsRegisterId' }} )}}
                             <!-- Start table with actions -->
                             <h4 class="no-margin">Estudiantes</h4>
                             <div class="table-responsive mb-20">
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">#</th>
+                                            <!-- <th class="text-center">#</th> -->
                                             <th>Rude</th>
                                             <th>Estudiante</th>
+                                            <!-- <th>F. Nacimiento</th> -->
+                                            
+
                                             <th colspan="2">CI - complemento</th>
+                                            <th>Discapacidad</th>
+                                            <th>tel&eacute;fono</th>
+                                            <th>Email</th>
                                             <th>&nbsp;</th>
                                             
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <small>
-                                        {{form_start(form, {'attr':{'id':'studentsRegisterId'} })}}
+                                        
+                                        
                                             {% for item in objStudentsToOlimpiadas %}
                                                 <tr>
-                                                <td class="text-center">{{loop.index}}</td>
+                                                    {#<td class="text-center">{{loop.index}}</td>
+                                                        #}
+                                                
                                                 <td>{{item.codigo_rude}}</td>
                                                 <td>{{item.paterno}} {{item.materno}} {{item.nombre}}</td>
-                                                <td><input type="text" id="form_ci" name="form[ci]" value={{item.carnet_identidad}} > </td> 
+                                                {#
+                                                    <td>{{item.fecha_nacimiento}}</td>
+                                                    #}
+                                                
+                                                
+                                                <td>{{item.carnet_identidad}}</td>
+                                                <td>{{item.complemento}}</td>
+                                                <td>
+                                                     <select class="chosen-select mb-5" name="form[datasend_{{item.estinsid}}][discapacidad]">
+                                                        {% for discapacidad in objDiscapacidad %}
+                                                            <option value="{{discapacidad.id}}">{{discapacidad.origendiscapacidad}}</option>       
+                                                        {% endfor %}
+                                                    </select>
+                                                </td>
+                                                <td><input class="form-control" type="text" id="form_datasend_{{item.estinsid}}" name="form[datasend_{{item.estinsid}}][fono]"></td>
+                                                <td><input class="form-control" type="text" id="form_datasend_{{item.estinsid}}" name="form[datasend_{{item.estinsid}}][email]"></td>
+                                                {# 
+                                                    <td><input type="text" id="form_ci" name="form[ci]" value={{item.carnet_identidad}} > </td> 
                                                 <td>
                                                     <input type="text" id="form_complemento" name="form[complemento]" value="{{item.complemento}}" size='2'> </td>    
-                                                    
+                                                  
+                                                
+                                                    #}
                                                 <td>
 
-                                                     <input type="checkbox" id="form_datasend_{{item.estinsid}}" name="form[datasend_{{item.estinsid}}][student]"   value='{{item.estinsid}}'>
-                                                    <input type="hidden" id="form_datasend_{{item.estinsid}}" name="form[datasend_{{item.estinsid}}][eInsId]"   value='{{item.estinsid}}'>
+                                                     <input type="checkbox" id="form_datasend_{{item.estinsid}}_studentInscription" name="form[datasend_{{item.estinsid}}][studentInscription]"   value='{{item.estinsid}}'>
+                                                     {#
+                                                        <input type="hidden" id="form_datasend_{{item.estinsid}}" name="form[datasend_{{item.estinsid}}][eInsId]"   value='{{item.estinsid}}'>
+                                                        #}
+                                                    
                                                 </td>
                                                 
                                                 </tr>    
                                             {% endfor %}
                                             <tr>
-                                                <td colspan="4" align="right">{{form_widget(form.register)}}</td>
+                                                <td colspan="8" align="right">{{form_widget(form.register)}}</td>
                                             </tr>
                                             
-                                        {{form_end(form)}}
+                                       
                                         </small>
                                        
                                     </tbody>
                                 </table>
                             </div><!-- /.table-responsive -->
                             <!--/ End table with actions -->
-
+                        {{form_end(form)}}
                         </div>
     
 </div>
