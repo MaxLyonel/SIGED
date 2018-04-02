@@ -102,6 +102,12 @@ Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo:
             unsigned: false
             comment: ''
             column: usuario_modificacion_id
+        categoria:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
     manyToOne:
         olimMateriaTipo:
             targetEntity: OlimMateriaTipo

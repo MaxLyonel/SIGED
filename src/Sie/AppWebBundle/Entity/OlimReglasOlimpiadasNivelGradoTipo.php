@@ -136,4 +136,32 @@ class OlimReglasOlimpiadasNivelGradoTipo
     {
         return $this->olimReglasOlimpiadasTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimMateriaTipo
+     */
+    private $olimMateriaTipo;
+
+
+    /**
+     * Set olimMateriaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\OlimMateriaTipo $olimMateriaTipo
+     * @return OlimReglasOlimpiadasNivelGradoTipo
+     */
+    public function setOlimMateriaTipo(\Sie\AppWebBundle\Entity\OlimMateriaTipo $olimMateriaTipo = null)
+    {
+        $this->olimMateriaTipo = $olimMateriaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get olimMateriaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\OlimMateriaTipo 
+     */
+    public function getOlimMateriaTipo()
+    {
+        return $this->olimMateriaTipo;
+    }
 }

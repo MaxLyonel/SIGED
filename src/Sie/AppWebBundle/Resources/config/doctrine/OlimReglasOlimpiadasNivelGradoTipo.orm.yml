@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\OlimReglasOlimpiadasNivelGradoTipo:
     type: entity
     table: olim_reglas_olimpiadas_nivel_grado_tipo
     indexes:
+        IDX_9CC8DB86F29C4FB8:
+            columns:
+                - olim_materia_tipo_id
         IDX_9CC8DB86C6447610:
             columns:
                 - grado_tipo_id
@@ -27,6 +30,15 @@ Sie\AppWebBundle\Entity\OlimReglasOlimpiadasNivelGradoTipo:
             comment: ''
             column: es_vigente
     manyToOne:
+        olimMateriaTipo:
+            targetEntity: OlimMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         gradoTipo:
             targetEntity: GradoTipo
             cascade: {  }

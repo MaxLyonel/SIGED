@@ -528,4 +528,32 @@ class OlimReglasOlimpiadasTipo
     {
         return $this->modalidadParticipacionTipo;
     }
+    /**
+     * @var string
+     */
+    private $categoria;
+
+
+    /**
+     * Set categoria
+     *
+     * @param string $categoria
+     * @return OlimReglasOlimpiadasTipo
+     */
+    public function setCategoria($categoria)
+    {
+        $this->categoria = $categoria;
+    
+        return $this;
+    }
+
+    /**
+     * Get categoria
+     *
+     * @return string 
+     */
+    public function getCategoria()
+    {
+        return $this->categoria;
+    }
 }

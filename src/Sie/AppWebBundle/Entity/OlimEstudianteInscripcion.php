@@ -65,9 +65,19 @@ class OlimEstudianteInscripcion
     private $usuarioModificacionId;
 
     /**
+     * @var integer
+     */
+    private $gestionTipoId;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo
      */
-    private $reglasOlimpiadasTipo;
+    private $olimReglasOlimpiadasTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimPeriodoTipo
+     */
+    private $periodoTipo;
 
     /**
      * @var \Sie\AppWebBundle\Entity\OlimCategoriaTipo
@@ -331,26 +341,72 @@ class OlimEstudianteInscripcion
     }
 
     /**
-     * Set reglasOlimpiadasTipo
+     * Set gestionTipoId
      *
-     * @param \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $reglasOlimpiadasTipo
+     * @param integer $gestionTipoId
      * @return OlimEstudianteInscripcion
      */
-    public function setReglasOlimpiadasTipo(\Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $reglasOlimpiadasTipo = null)
+    public function setGestionTipoId($gestionTipoId)
     {
-        $this->reglasOlimpiadasTipo = $reglasOlimpiadasTipo;
+        $this->gestionTipoId = $gestionTipoId;
     
         return $this;
     }
 
     /**
-     * Get reglasOlimpiadasTipo
+     * Get gestionTipoId
+     *
+     * @return integer 
+     */
+    public function getGestionTipoId()
+    {
+        return $this->gestionTipoId;
+    }
+
+    /**
+     * Set olimReglasOlimpiadasTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $olimReglasOlimpiadasTipo
+     * @return OlimEstudianteInscripcion
+     */
+    public function setOlimReglasOlimpiadasTipo(\Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $olimReglasOlimpiadasTipo = null)
+    {
+        $this->olimReglasOlimpiadasTipo = $olimReglasOlimpiadasTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get olimReglasOlimpiadasTipo
      *
      * @return \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo 
      */
-    public function getReglasOlimpiadasTipo()
+    public function getOlimReglasOlimpiadasTipo()
     {
-        return $this->reglasOlimpiadasTipo;
+        return $this->olimReglasOlimpiadasTipo;
+    }
+
+    /**
+     * Set periodoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\OlimPeriodoTipo $periodoTipo
+     * @return OlimEstudianteInscripcion
+     */
+    public function setPeriodoTipo(\Sie\AppWebBundle\Entity\OlimPeriodoTipo $periodoTipo = null)
+    {
+        $this->periodoTipo = $periodoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get periodoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\OlimPeriodoTipo 
+     */
+    public function getPeriodoTipo()
+    {
+        return $this->periodoTipo;
     }
 
     /**
@@ -443,89 +499,5 @@ class OlimEstudianteInscripcion
     public function getEstudianteInscripcion()
     {
         return $this->estudianteInscripcion;
-    }
-    /**
-     * @var integer
-     */
-    private $gestionTipoId;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo
-     */
-    private $olimReglasOlimpiadasTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimPeriodoTipo
-     */
-    private $periodoTipo;
-
-
-    /**
-     * Set gestionTipoId
-     *
-     * @param integer $gestionTipoId
-     * @return OlimEstudianteInscripcion
-     */
-    public function setGestionTipoId($gestionTipoId)
-    {
-        $this->gestionTipoId = $gestionTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get gestionTipoId
-     *
-     * @return integer 
-     */
-    public function getGestionTipoId()
-    {
-        return $this->gestionTipoId;
-    }
-
-    /**
-     * Set olimReglasOlimpiadasTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $olimReglasOlimpiadasTipo
-     * @return OlimEstudianteInscripcion
-     */
-    public function setOlimReglasOlimpiadasTipo(\Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $olimReglasOlimpiadasTipo = null)
-    {
-        $this->olimReglasOlimpiadasTipo = $olimReglasOlimpiadasTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get olimReglasOlimpiadasTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo 
-     */
-    public function getOlimReglasOlimpiadasTipo()
-    {
-        return $this->olimReglasOlimpiadasTipo;
-    }
-
-    /**
-     * Set periodoTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\OlimPeriodoTipo $periodoTipo
-     * @return OlimEstudianteInscripcion
-     */
-    public function setPeriodoTipo(\Sie\AppWebBundle\Entity\OlimPeriodoTipo $periodoTipo = null)
-    {
-        $this->periodoTipo = $periodoTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get periodoTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\OlimPeriodoTipo 
-     */
-    public function getPeriodoTipo()
-    {
-        return $this->periodoTipo;
     }
 }
