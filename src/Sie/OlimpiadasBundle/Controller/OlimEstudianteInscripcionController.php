@@ -74,20 +74,36 @@ class OlimEstudianteInscripcionController extends Controller{
         $em = $this->getDoctrine()->getManager();
         //get grado
         $agrados = array();
-        $entity = $em->getRepository('SieAppWebBundle:OlimCategoriaTipo');
-        $query = $entity->createQueryBuilder('oct')
-                ->select('oct.id, oct.categoria')
-                ->where('oct.olimMateriaTipo = :materiaid')
+        $entity = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo');
+        $query = $entity->createQueryBuilder('orot')
+                // ->select('oct.id, oct.categoria')
+                ->where('orot.olimMateriaTipo = :materiaid')
                 ->setParameter('materiaid', $idmateria)
-                ->orderBy('oct.categoria', 'ASC')
+                ->orderBy('orot.categoria', 'ASC')
                 ->getQuery();
-                // dump($query->getSQL());die;
+        //         // dump($quer $entity = $em->getRepository('SieAppWebBundle:OlimCategoriaTipo');
+        // $query = $entity->createQueryBuilder('oct')
+        //         ->select('oct.id, oct.categoria')
+        //         ->where('oct.olimMateriaTipo = :materiaid')
+        //         ->setParameter('materiaid', $idmateria)
+        //         ->orderBy('oct.categoria', 'ASC')
+        //         ->getQuery();
+        //         // dump($query->getSQL());die;
         $objCategory = $query->getResult();
-        
+
+        // dump($objCategory);die;
+        $arrCategory = array();
         if(sizeof($objCategory)>0){
-            $arrCategory = array();
+            
             foreach ($objCategory as $value) {
-                $arrCategory[$value['id']] = $value['categoria'];
+                if($value->getCategoria() == NULL)
+                    $arrCategory[$value->getId()] = 'Sin categoria';
+                else
+                    $arrCategory[$value->getId()] = $value->getCategoria();
+
+                // $arrCategory[$value['id']] = $value['categoria'];
+                
+                
             }    
         }else{
             // $arrCategory[1000]='No hay categoria';

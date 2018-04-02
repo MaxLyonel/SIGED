@@ -7,28 +7,51 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Sie\AppWebBundle\Entity\OlimTutor;
 use Sie\AppWebBundle\Form\OlimTutorType;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * OlimTutor controller.
  *
  */
-class OlimTutorController extends Controller
-{
+class OlimTutorController extends Controller{
+    
+    private $sesion;
 
+    public function __construct(){
+        $this->session = new Session();
+    }
     /**
      * Lists all OlimTutor entities.
      *
      */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findAll(array(), array('id'=>'DESC'), 10);
+    public function indexAction(Request $request){
         
+
+        if($this->session->get('ie_id') <= 0){
+            //call find sie template
+            dump($this->session->get('ie_id'));
+            dump($request);
+
+        }else{
+           return $this->redirectToRoute('olimtutor_listTutorBySie', array('id'=>$this->session->get('ie_id')));
+        }
+       
+    }
+
+    public function listTutorBySieAction(Request $request){
+     //data ue
+        $em = $this->getDoctrine()->getManager();
+        // $objOlimRegistroOlimpiada = $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')
+        $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findAll(array(), array('id'=>'DESC'), 10);
+        // dump($entities);die;
         return $this->render('SieOlimpiadasBundle:OlimTutor:index.html.twig', array(
             'entities' => $entities,
         ));
     }
+
+
+
+
     /**
      * [listTutorAction description]
      * @return [type] [description]

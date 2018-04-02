@@ -70,3 +70,8 @@ olimtutor_saveUpdateDataTutor:
     defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:saveUpdateDataTutor" }
     options:
         expose: true
+
+olimtutor_listTutorBySie:
+    path:     /{id}/listTutorBySie
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:listTutorBySie" }
+    methods:  [GET]        
