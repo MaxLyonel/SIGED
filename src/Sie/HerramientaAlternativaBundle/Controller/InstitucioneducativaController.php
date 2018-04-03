@@ -1397,6 +1397,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        $gestionparam = '2018';
         
         if ($request->get('form')) {
             $form = $request->get('form');            
@@ -1404,43 +1405,38 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             //NOTAS 6,13
             if ($form['val'] === '1'){
                     //INSCRIPCIONES 1ER BIM
-                    $gestiontecho = '2016';
                     $periodotecho = '3';
-                    $gestion = '2017';
+                    $gestion = $gestionparam;
                     $periodo = '2';                    
-                    $estadostramite = '7,11';
+                    $estadostramite = '9,12';
                     $titulo = $form['titulo'];
             }else{
                 if ($form['val'] === '2'){
                     //NOTAS 1ER BIM
-                    $gestiontecho = '2016';
                     $periodotecho = '3';
-                    $gestion = '2017';
+                    $gestion = $gestionparam;
                     $periodo = '2';
-                    $estadostramite = '6,13';
+                    $estadostramite = '8,14';
                     $titulo = $form['titulo'];
                 }else{
                     if ($form['val'] === '3'){
                         //INSCRIPCIONES 2DO BIM
-                        $gestiontecho = '2016';
                         $periodotecho = '3';
-                        $gestion = '2017';
+                        $gestion = $gestionparam;
                         $periodo = '3';                        
-                        $estadostramite = '7,11';
+                        $estadostramite = '9,12';
                         $titulo = $form['titulo'];
                     }else{
                         if ($form['val'] === '4'){
                             //NOTAS 2BIM
-                            $gestiontecho = '2016';
                             $periodotecho = '3';
-                            $gestion = '2017';
+                            $gestion = $gestionparam;
                             $periodo = '3';                            
-                            $estadostramite = '6,13';
+                            $estadostramite = '8,14';
                             $titulo = $form['titulo'];
                         }else{
                             if ($form['val'] === '5'){
                                 //NOTAS 2BIM
-                                $gestiontecho = '2016';
                                 $periodotecho = '3';
                                 $gestion = '2017,2016,2015,2014,2013,2012,2011,2010,2009,2008,2007,2006';
                                 $periodo = '2,3';                            
@@ -1451,8 +1447,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                     }
                 }
             }            
-        }else{
-            $gestiontecho = '2016';
+        }else{            
             $periodotecho = '3';
 
             $gestion = '2017,2016,2015,2014,2013,2012,2011,2010,2009,2008,2007,2006';
@@ -1460,7 +1455,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
             //NOTAS 8,14
             //INSCRIPCIONES 9,12 
             //$estadostramite = '7,11';
-            $estadostramite = '5';
+            $estadostramite = '10';
             $titulo = 'Regularización Gestiones Pasadas';
         }        
 
@@ -1468,7 +1463,8 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
         $em = $this->getDoctrine()->getManager();
         //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();
-        $query = "   select *
+        $query = "  select lugar, canttecho, (canttecho - cantconcluido) as cantfaltante from (  
+                    select lugar, canttecho, COALESCE(cantconcluido,'0') as cantconcluido
                         from (
                                 select dd.lugar, count(*) as canttecho
                                  from (
@@ -1486,15 +1482,10 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                             inner join (
 
                                                     select a.id, a.institucioneducativa, a.le_juridicciongeografica_id				
-                                                    from institucioneducativa a
-                                                        inner join institucioneducativa_sucursal z on a.id = z.institucioneducativa_id 
-                                                        inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
+                                                    from institucioneducativa a                                                        
                                                     where a.orgcurricular_tipo_id = 2
                                                     and a.institucioneducativa_tipo_id = 2
-                                                    and z.gestion_tipo_id = '".$gestiontecho."'
-                                                    and z.periodo_tipo_id = ".$periodotecho."
-                                                    and w.tramite_estado_id in (8,14) 
-
+                                                    and a.estadoinstitucion_tipo_id = 10
                                             ) d		
                                             on a.id=d.le_juridicciongeografica_id
                                             inner join lugar_tipo k on k.id = b.lugar_tipo_id
@@ -1502,8 +1493,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                     order by k.lugar, d.id
                                     ) dd
                                     group by dd.lugar ) a left join (
-
-                                    select dd.lugar as lugarcount, count(*) as cantfaltante
+                                    select dd.lugar as lugarcount, count(*) as cantconcluido
                                     from
                                         (select k.lugar, ie.id, ie.institucioneducativa		
                                                 from jurisdiccion_geografica jg 
@@ -1527,7 +1517,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                         and w.tramite_estado_id in (".$estadostramite.") 
                                         group by k.lugar, ie.id, ie.institucioneducativa
                                         order by k.lugar, ie.id) dd
-                                      group by dd.lugar ) b on a.lugar=b.lugarcount";        
+                                      group by dd.lugar ) b on a.lugar=b.lugarcount ) abc";        
         $porcentajes = $db->prepare($query);
         $params = array();
         $porcentajes->execute($params);
@@ -1550,17 +1540,11 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                                 ) b 	
                                                 on a.lugar_tipo_id_distrito = b.id
                                                 inner join (
-
                                                         select a.id, a.institucioneducativa, a.le_juridicciongeografica_id				
-                                                    from institucioneducativa a
-                                                        inner join institucioneducativa_sucursal z on a.id = z.institucioneducativa_id 
-                                                        inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
+                                                    from institucioneducativa a                                                        
                                                     where a.orgcurricular_tipo_id = 2
-                                                    and a.institucioneducativa_tipo_id = 2
-                                                    and z.gestion_tipo_id = '".$gestiontecho."'
-                                                    and z.periodo_tipo_id = ".$periodotecho."
-                                                    and w.tramite_estado_id in (8,14) 
-
+                                                        and a.institucioneducativa_tipo_id = 2
+                                                        and a.estadoinstitucion_tipo_id = 10
                                                 ) d		
                                                 on a.id=d.le_juridicciongeografica_id
                                                 inner join lugar_tipo k on k.id = b.lugar_tipo_id
@@ -1600,15 +1584,13 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
         $totales->execute($params);
         $potot = $totales->fetchAll();
                 
-//        dump($potot);
-//        die;
+        //dump($querytot); die;
         
         return $this->render($this->session->get('pathSystem') . ':Default:estadisticasoperativo.html.twig', array(
                 'entities' => $po,
                 'entitiestot' => $potot,
-                'titulo' => $titulo,
+                'titulo' => $titulo,                
             ));
-
     }
 
     public function reporteDiversaAction(Request $request){
