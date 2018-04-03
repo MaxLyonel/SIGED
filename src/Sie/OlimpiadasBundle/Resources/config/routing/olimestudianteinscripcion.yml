@@ -89,4 +89,8 @@ oliminscriptions_studentsRegister:
     options:
         expose: true
 
+oliminscriptions_selectInscription:
+    path:     /selectInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:selectInscription" }
+
 

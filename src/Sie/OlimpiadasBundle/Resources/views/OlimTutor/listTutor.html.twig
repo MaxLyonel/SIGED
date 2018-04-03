@@ -44,32 +44,67 @@
                                <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Id</th>
+                                        <th>#</th>
+                                        <th>nombre</th>
+                                        <th>paterno</th>
+                                        <th>materno</th>
                                         <th>Telefono1</th>
                                         <th>Telefono2</th>
                                         <th>Correoelectronico</th>
-                                        <th>Fecharegistro</th>
-                                        <th>Fechamodificacion</th>
-                                        <th>Usuarioregistroid</th>
-                                        <th>Usuariomodificacionid</th>
-                                        <th>Gestiontipoid</th>
-                                        <th>Actions</th>
+                                        <th>Acciones</th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
                                 {% for entity in entities %}
                                     <tr>
-                                        <td><a href="{{ path('olimtutor_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ entity.nombre }}</td>
+                                        <td>{{ entity.paterno }}</td>
+                                        <td>{{ entity.materno }}</td>
                                         <td>{{ entity.telefono1 }}</td>
                                         <td>{{ entity.telefono2 }}</td>
-                                        <td>{{ entity.correoElectronico }}</td>
-                                        <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                        <td>{% if entity.fechaModificacion %}{{ entity.fechaModificacion|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                        <td>{{ entity.usuarioRegistroId }}</td>
-                                        <td>{{ entity.usuarioModificacionId }}</td>
-                                        <td>{{ entity.gestionTipoId }}</td>
+                                        <td>{{ entity.correo_electronico }}</td>
+                                        
                                         <td>
-                                        <ul>
+                                            <table>
+                                                <!-- <thead>
+                                                    <tr>
+                                                        <th>header</th>
+                                                    </tr>
+                                                </thead> -->
+                                                <tbody>
+
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <form action="{{path('olimtutor_resultTutores')}}" >
+                                                                <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
+                                                                <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
+                                                                <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
+                                                                <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
+                                                                <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
+                                                                <button href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar"><i class="fa fa-pencil"></i></button>
+                                                            </form>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <a href="#" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times"></i></a>
+                                                            
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <form action="{{path('oliminscriptions_selectInscription')}}" method="POST" >
+                                                                <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
+                                                                <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
+                                                                <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
+                                                                <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
+                                                                <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
+                                                                <button href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Inscripciones"><i class="fa fa-list"></i></button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            {#
+                                                <ul>
                                             <li>
                                                 <a href="{{ path('olimtutor_show', { 'id': entity.id }) }}">show</a>
                                             </li>
@@ -77,13 +112,14 @@
                                                 <a href="{{ path('olimtutor_edit', { 'id': entity.id }) }}">edit</a>
                                             </li>
                                         </ul>
+
+                                                #}
+                                        
                                         </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
-
-                              
 
                             </div><!-- /.panel-body -->
                         </div><!-- /.panel -->

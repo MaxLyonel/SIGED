@@ -47,6 +47,7 @@
                                         {{form_widget(form.telefono1, {'attr':{'class':'form-control', 'placeholder':'telefono1'}})}}
                                         {{form_widget(form.telefono2, {'attr':{'class':'form-control', 'placeholder':'telefono2'}})}}
                                         {{form_widget(form.correoElectronico, {'attr':{'class':'form-control', 'placeholder':'email'}})}}
+                                        <input type="hidden" id="form_personaid" name="form[personaid]" value="{{entity.id}}">
                                     </div>
                                     {{form_widget(form.registrar, {'attr':{'class':'btn btn-inverse btn-danger btn-stroke btn-xs'}})}}
 

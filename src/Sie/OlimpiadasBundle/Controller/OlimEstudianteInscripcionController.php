@@ -634,5 +634,42 @@ dump(sizeof($form));die;
     }
 
 
+    public function selectInscriptionAction(Request $request){
+        // get the send values
+        $form = $request->get('form');
+        
+        $objTutorSelected = $this->get('olimfunctions')->getTutor2($form);
+        // dump($objTutorSelected);die;
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:selectInscription.html.twig', array(
+            'form' => $this->selectInscriptionForm()->createView(),
+            'tutor' => $objTutorSelected
+
+        ));
+    }
+
+     private function selectInscriptionForm(){
+        
+        $arrAreas = $this->get('olimfunctions')->getAllowedAreasByOlim();
+        // dump($arrAreas);die;
+        $newform = $this->createFormBuilder()
+                ->add('olimMateria', 'choice', array('label'=>'materias','choices'=>$arrAreas,  'empty_value' => 'Seleccionar Materia'))
+                ->add('category', 'choice', array('label'=>'categoria', ))
+                // ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($this->session->get('currentyear')=>$this->session->get('currentyear')), 'attr' => array('class' => 'form-control')))
+                ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), ))
+                ;
+        // if($this->session->get('roluser')==8){
+            $newform = $newform
+                ->add('institucionEducativa', 'hidden', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control', 'value'=>$this->session->get('ie_id'))))
+                ;
+        // }
+
+        $newform = $newform->getForm();
+        return $newform;
+
+    }
+
+
+
+
 
 }

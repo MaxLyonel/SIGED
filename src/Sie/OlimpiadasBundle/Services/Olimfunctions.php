@@ -64,6 +64,25 @@ class Olimfunctions {
     // return 'krlos';
   }
 
+   public function getTutores2($arrDataInscription){
+// dump($arrDataInscription);die;
+    $query = $this->em->getConnection()->prepare(
+      
+      "select p.id as personaid,ot.id as olimtutorid, oro.id as olimregistroolimpiadaid, ot.institucioneducativa_id, oro.gestion_tipo_id, p.nombre, p.paterno, p.materno, ot.telefono1, ot.telefono2, ot.correo_electronico 
+        from olim_tutor ot
+        left join olim_registro_olimpiada oro on ot.olim_registro_olimpiada_id = oro.id
+        left join persona p on ot.persona_id = p.id
+        where ot.institucioneducativa_id = ".$arrDataInscription['sie']." and ot.olim_registro_olimpiada_id=".$arrDataInscription['OlimRegistroOlimpiadaId']
+    );
+    
+    $query->execute();
+    $objTutores = $query->fetchAll();
+   
+     return $objTutores;
+    // return 'krlos';
+  }
+
+
   /**
    * [lookForTutores description]
    * @param  [type] $data [description]
@@ -109,6 +128,22 @@ class Olimfunctions {
         from olim_tutor ot
              left join persona p on ot.persona_id=p.id
         where ot.institucioneducativa_id = ".$arrDataInscription['sie']." and ot.materia_tipo_id=".$arrDataInscription['olimMateria']." and ot.id = ".$arrDataInscription['tutorid']." and ot.gestion_tipo_id = ".$arrDataInscription['gestion']
+    );
+    
+    $query->execute();
+    $objTutores = $query->fetch();
+   
+     return $objTutores;
+    // return 'krlos';
+   }
+    public function getTutor2($arrDataInscription){
+  // dump($arrDataInscription);die;
+    $query = $this->em->getConnection()->prepare(
+    
+      "select ot.id, p.id as personadid, p.nombre, p.paterno,p.materno, ot.telefono1, ot.telefono2, ot.correo_electronico
+        from olim_tutor ot
+             left join persona p on ot.persona_id=p.id
+        where ot.id = ".$arrDataInscription['olimtutorid']." and ot.gestion_tipo_id = ".$arrDataInscription['gestiontipoid']
     );
     
     $query->execute();

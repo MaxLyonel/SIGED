@@ -56,51 +56,61 @@ class OlimTutorController extends Controller{
     public function listTutorBySieAction(Request $request){
         //data ue
         if($request->getMethod()=='POST'){
-            // get the send data
-            $form = $request->get('form');
-            $institucioneducativa = $form['sie'];
+                // get the send data
+                $form = $request->get('form');
+                // dump($form);die;
+                $institucioneducativa = $form['sie'];
+                    if(isset($form['newtutor'])){
+                                $arrSendData = json_decode($form['newtutor'],true);
+                                // dump($arrSendData);die;
+                            $em = $this->getDoctrine()->getManager();
+                            // udpate the indice
+                            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_tutor');");
+                            $query->execute();
+                            // create the object to do the save
+                            $entity = new OlimTutor();
+                            $entity->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($form['personaid']));
+                            $entity->setTelefono1($form['telefono1']);
+                            $entity->setTelefono2($form['telefono2']);
+                            $entity->setCorreoElectronico($form['correoElectronico']);
+                            $entity->setFechaRegistro(new \Datetime('now'));
+                            $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']));
+                            $entity->setOlimRegistroOlimpiada($em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->find($arrSendData['olimRegistroOlimpiadaId']));
+                            // $entity->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($data['olimMateria']));   
+                            
+                            // if($data['category']!='')           
+                            //     $entity->setCategoriaTipo($em->getRepository('SieAppWebBundle:OlimCategoriaTipo')->find($data['category']));   
+                            // $entity->setPeriodoTipo($em->getRepository('SieAppWebBundle:OlimPeriodoTipo')->find(1));   
+                            $entity->setGestionTipoId($form['gestion']);   
+
+                            $em->persist($entity);
+                            $em->flush();
+                    }
+        
         }else{
             //set teh institucioneducativa variable
             $institucioneducativa = $this->session->get('ie_id');
         }
-        if(isset($form['newtutor'])){
-            $em = $this->getDoctrine()->getManager();
-            // udpate the indice
-            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_tutor');");
-            $query->execute();
-            // create the object to do the save
-            $entity = new OlimTutor();
-            $entity->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($form['personaid']));
-            $entity->setTelefono1($form['telefono1']);
-            $entity->setTelefono2($form['telefono2']);
-            $entity->setCorreoElectronico($form['correoElectronico']);
-            $entity->setFechaRegistro(new \Datetime('now'));
-            $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['institucionEducativa']));
-            $entity->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($data['olimMateria']));   
-            
-            if($data['category']!='')           
-                $entity->setCategoriaTipo($em->getRepository('SieAppWebBundle:OlimCategoriaTipo')->find($data['category']));   
-            $entity->setPeriodoTipo($em->getRepository('SieAppWebBundle:OlimPeriodoTipo')->find(1));   
-            $entity->setGestionTipoId($data['gestion']);   
 
-            $em->persist($entity);
-            $em->flush();
-        }
-        
         array_pop($form);
-// dump($form);die;
+
         $em = $this->getDoctrine()->getManager();
         $objOlimRegistroOlimpiada = $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->findOneBy(array(
             'gestionTipoId'=>$form['gestion']
         ));
         // dump($objOlimRegistroOlimpiada);
 
-        $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findBy(array(
-            'institucioneducativa'  => $institucioneducativa,
-            'olimRegistroOlimpiada' => $objOlimRegistroOlimpiada->getId()
+        // $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findBy(array(
+        //     'institucioneducativa'  => $institucioneducativa,
+        //     'olimRegistroOlimpiada' => $objOlimRegistroOlimpiada->getId()
 
-        ), array('id'=>'DESC'));
-
+        // ), array('id'=>'DESC'));
+        $form['olimRegistroOlimpiadaId'] = $objOlimRegistroOlimpiada->getId();
+        // dump($entities);
+        // dump($form);die;
+        // die;
+        $datainscription = array('sie'=>$institucioneducativa, 'OlimRegistroOlimpiadaId'=>$objOlimRegistroOlimpiada->getId());
+        $entities = $this->get('olimfunctions')->getTutores2($datainscription);
         // dump($entities);die;
         return $this->render('SieOlimpiadasBundle:OlimTutor:listTutor.html.twig', array(
             'entities' => $entities,
@@ -172,7 +182,7 @@ class OlimTutorController extends Controller{
             ->add('correoElectronico', 'text')
             ->add('sie', 'hidden', array('attr'=>array('value'=>$arrData['sie'])))
             ->add('gestion', 'hidden', array('attr'=>array('value'=>$arrData['gestion'])))
-            ->add('newtutor', 'hidden', array('data'=>true))
+            ->add('newtutor', 'text', array('data'=>$data))
             ->add('registrar', 'submit')
 
             ->getForm()
@@ -182,6 +192,10 @@ class OlimTutorController extends Controller{
 
 
 
+///////////////////////////////////////////////////////////////////the new
+///////////////////////////////////////////////////////////////////the new
+///////////////////////////////////////////////////////////////////the new
+///////////////////////////////////////////////////////////////////the new
 ///////////////////////////////////////////////////////////////////the new
 
     /**
