@@ -93,17 +93,17 @@ class LoginController extends Controller {
         
         //****************
         //****REDIRECCIONA SEGUN EL TIPO DE SUBSISTEMA 
-        switch ($sesion->get('tiposubsistema')) {
-            /*case 1:
+        /*switch ($sesion->get('tiposubsistema')) {
+            case 1:
                 $sesion->set('pathSystem', "SieHerramientaBundle");                
-                break;*/
+                break;
             case 2:
                 $sesion->set('pathSystem', "SieHerramientaAlternativaBundle");                
                 break;
             case 4:
                 $sesion->set('pathSystem', "SieEspecialBundle");                
                 break;
-        }
+        }*/
         //****REDIRECCIONA SEGUN EL TIPO DE SUBSISTEMA 
         //****************
 
