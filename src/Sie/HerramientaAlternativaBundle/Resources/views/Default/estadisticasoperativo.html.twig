@@ -84,10 +84,7 @@
                                 </div><!-- /.mini-stat-info -->
                             </div><!-- /.mini-stat -->
                         </div>
-                        {% set totconcl = entitiestot[0].tottecho - entitiestot[0].totfaltante %}
-                        {% if totconcl < 0 %}
-                            {% set totconcl = 0 %}
-                        {% endif %}
+                        {% set totconcl = entitiestot[0].tottecho - entitiestot[0].totfaltante %}                      
                         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                             <div class="mini-stat clearfix bg-bitbucket">
                                 <span class="mini-stat-icon"><i class="fa fa-flag-o fg-success"></i></span><!-- /.mini-stat-icon -->

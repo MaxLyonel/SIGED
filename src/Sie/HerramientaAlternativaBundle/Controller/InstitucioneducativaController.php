@@ -1523,7 +1523,10 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
         $porcentajes->execute($params);
         $po = $porcentajes->fetchAll();
         
-        $querytot = "select sum(canttecho) as tottecho, sum(cantfaltante) as totfaltante
+        $querytot = "
+            select tottecho, (tottecho - COALESCE(cantconcluido,'0')) as totfaltante from(
+                
+            select sum(canttecho) as tottecho, sum(cantconcluido) as cantconcluido
                     from(
                          select *
                             from ( select dd.lugar, count(*) as canttecho
@@ -1553,7 +1556,7 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                         ) dd
                                         group by dd.lugar
                                         ) a left join (
-                                        select dd.lugar, count(*) as cantfaltante
+                                        select dd.lugar, count(*) as cantconcluido
                                         from
                                             (select k.lugar, ie.id, ie.institucioneducativa		
                                                     from jurisdiccion_geografica jg 
@@ -1578,13 +1581,13 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                             group by k.lugar, ie.id, ie.institucioneducativa
                                             order by k.lugar, ie.id) dd
                                           group by dd.lugar ) b on a.lugar=b.lugar
-                               ) ff";        
+                               ) ff) abcds";        
         $totales = $db->prepare($querytot);
         $params = array();
         $totales->execute($params);
         $potot = $totales->fetchAll();
                 
-        //dump($querytot); die;
+        //dump($potot); die;
         
         return $this->render($this->session->get('pathSystem') . ':Default:estadisticasoperativo.html.twig', array(
                 'entities' => $po,
