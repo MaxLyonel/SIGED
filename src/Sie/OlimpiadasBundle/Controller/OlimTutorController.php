@@ -29,28 +29,117 @@ class OlimTutorController extends Controller{
 
         if($this->session->get('ie_id') <= 0){
             //call find sie template
-            dump($this->session->get('ie_id'));
-            dump($request);
-
+            $modeview = 1;
         }else{
-           return $this->redirectToRoute('olimtutor_listTutorBySie', array('id'=>$this->session->get('ie_id')));
+            $modeview = 0;
+           // return $this->redirectToRoute('olimtutor_listTutorBySie');
         }
+
+        return $this->render('SieOlimpiadasBundle:OlimTutor:index.html.twig', array(
+                'form'=>$this->formFindTutor()->createView(),
+                'modeview' => $modeview
+            ));
        
     }
 
+    private function formFindTutor(){
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('olimtutor_listTutorBySie'))
+            ->setMethod('POST')
+            ->add('sie', 'text', array('attr'=>array('value'=>$this->session->get('ie_id'))))
+            ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($this->session->get('currentyear')=>$this->session->get('currentyear')), 'attr' => array()))
+            ->add('sendData', 'submit', array('label'=>'Enviar'))
+            ->getForm()
+        ;
+    }
+
     public function listTutorBySieAction(Request $request){
-     //data ue
+        //data ue
+        if($request->getMethod()=='POST'){
+            // get the send data
+            $form = $request->get('form');
+            $institucioneducativa = $form['sie'];
+        }else{
+            //set teh institucioneducativa variable
+            $institucioneducativa = $this->session->get('ie_id');
+        }
+        array_pop($form);
+// dump($form);die;
         $em = $this->getDoctrine()->getManager();
-        // $objOlimRegistroOlimpiada = $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')
-        $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findAll(array(), array('id'=>'DESC'), 10);
+        $objOlimRegistroOlimpiada = $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->findOneBy(array(
+            'gestionTipoId'=>$form['gestion']
+        ));
+        dump($objOlimRegistroOlimpiada);
+
+        $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findBy(array(
+            'institucioneducativa'  => $institucioneducativa,
+            'olimRegistroOlimpiada' => $objOlimRegistroOlimpiada->getId()
+
+        ), array('id'=>'DESC'));
+
         // dump($entities);die;
-        return $this->render('SieOlimpiadasBundle:OlimTutor:index.html.twig', array(
+        return $this->render('SieOlimpiadasBundle:OlimTutor:listTutor.html.twig', array(
             'entities' => $entities,
+            'formNewTutor' => $this->formNewTutor(json_encode($form))->createView()
+        ));
+    }
+
+    private function formNewTutor($data){
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('olimtutor_newTutor'))
+            ->setMethod('POST')
+            ->add('data', 'hidden', array('attr'=>array('value'=>$data)))
+            ->add('newTutor', 'submit', array('label'=> 'Nuevo Tutor', 'attr'=>array('class'=>'btn btn-info btn-xs')))
+            ->getForm()
+            ;
+    }
+
+    public function newTutorAction (Request $request){
+        //got the send data
+        $form = $request->get('form');
+        // array_pop(($form));
+        // dump($form);die;
+        return $this->render('SieOlimpiadasBundle:OlimTutor:newTutor.html.twig', array(
+            'form' => $this->formLookForTutor($form['data'])->createView(),
+
+        ));
+
+    }
+
+    private function formLookForTutor($data){
+        return $this->createFormBuilder()
+            ->add('carnet', 'text', array('label'=>'CI:'))
+            ->add('complemento', 'text', array('label'=>'Complemento:'))
+            ->add('fechanacimiento', 'text', array('label'=>'Fecha Nacimiento:'))
+            ->add('data', 'hidden', array('attr'=>array('value'=>$data)))
+            ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'lookForTutor()')))
+            ->getForm()
+            ;
+    }
+
+    public function resultTutoresAction(Request $request){
+        
+        //get the send data
+        $form = $request->get('form');
+        
+        $arrForm = json_decode($form['data'],true);
+        // dump($arrForm);die;
+
+        $resultTutores = $this->get('olimfunctions')->lookForTutores($form);
+        
+        return $this->render('SieOlimpiadasBundle:OlimTutor:resultTutores.html.twig', array(
+            'resultTutores'       => $resultTutores,
+            'jsonDataInscription' => $form['data'],
+            'sieSelected' => $arrForm['sie'],
+            'gestionSelected' => $arrForm['gestion'],
+
+            // 'form' => $this->buscarTutorForm($form['jsonDataInscription'])->createView()
         ));
     }
 
 
 
+///////////////////////////////////////////////////////////////////the new
 
     /**
      * [listTutorAction description]

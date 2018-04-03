@@ -72,6 +72,18 @@ olimtutor_saveUpdateDataTutor:
         expose: true
 
 olimtutor_listTutorBySie:
-    path:     /{id}/listTutorBySie
+    path:     /listTutorBySie
     defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:listTutorBySie" }
-    methods:  [GET]        
+    # methods:  [GET]        
+
+olimtutor_newTutor:
+    path:     /newTutor
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:newTutor" }
+    # methods:  [GET]        
+
+olimtutor_resultTutores:
+    path:     /resultTutores
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:resultTutores" }
+    options:
+        expose: true
+    

@@ -1,112 +1,126 @@
-<small>
-<div class="row">
-    <div class="col-md-4">
-        <button type="button" class="btn btn-inverse btn-danger btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addTutor('{{jsonDataInscription}}')">
-                    Registre Tutor
-        </button>
+{% extends 'layoutOlimpiadas.html.twig' %}
 
-        <!-- Start bordered table -->
-        <h4 class="no-margin">Lista Tutores</h4>
-        <!-- <button type="button" class="btn btn-inverse btn-xs" onclick="addTutor();">Registre tutor</button> -->
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Tutores <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-pencil"></i>
+                    <a href="{{path('infra_list_index')}}">
+                       Inscripciones
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
 
 
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
 
-        
-        <div class="table-responsive mb-10">
+    <div class="body-content animated fadeIn">
+    <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+              <!-- this is the beginner -->
+
+                                    <!-- Start select fields - basic form -->
+                        <div class="panel ">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"></h3>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body no-padding">
+                            <ul>
+                                <li>
+                                   {{form(formNewTutor)}}
+                                </li>
+                            </ul>
+                               <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Telefono1</th>
+                                        <th>Telefono2</th>
+                                        <th>Correoelectronico</th>
+                                        <th>Fecharegistro</th>
+                                        <th>Fechamodificacion</th>
+                                        <th>Usuarioregistroid</th>
+                                        <th>Usuariomodificacionid</th>
+                                        <th>Gestiontipoid</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in entities %}
+                                    <tr>
+                                        <td><a href="{{ path('olimtutor_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                                        <td>{{ entity.telefono1 }}</td>
+                                        <td>{{ entity.telefono2 }}</td>
+                                        <td>{{ entity.correoElectronico }}</td>
+                                        <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                        <td>{% if entity.fechaModificacion %}{{ entity.fechaModificacion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                        <td>{{ entity.usuarioRegistroId }}</td>
+                                        <td>{{ entity.usuarioModificacionId }}</td>
+                                        <td>{{ entity.gestionTipoId }}</td>
+                                        <td>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ path('olimtutor_show', { 'id': entity.id }) }}">show</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ path('olimtutor_edit', { 'id': entity.id }) }}">edit</a>
+                                            </li>
+                                        </ul>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                              
+
+                            </div><!-- /.panel-body -->
+                        </div><!-- /.panel -->
+                        <!--/ End select fields - basic form -->
+
+                        
+
+            <!-- this is the end -->
+            
             
 
-                <table class="table ">
-                <thead>
-                    <tr>
-                       <!-- <th>#</th> -->
-                        <th>Datos Tutor</th>
-                        <!-- <th>Telefonos</th>
-                        <th>Correoelectronico</th>
-                        <th>Actions</th> -->
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for entity in entities %}
-                        <tr>
-                            {#
-                                <td>{{loop.index}}</a></td>
-                                #}
-                            
-                            <td>
-                                <table border="0" class="" >
-                                    
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                            <table>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <b>{{ entity.nombre }} {{ entity.paterno }} {{ entity.materno }}</b>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            
-                                            </td>   
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                            <table>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>{{ entity.telefono1 }}/{{ entity.telefono2 }}</td>
-                                                        <td>{{ entity.correo_electronico }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            </td>
-                                            
-                                        </tr>
-                                        
-                                    </tbody>
-                                </table>
-                            </td>
+          </div>
+      </div>
 
-                            <td>
-                                  <table>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td><a href="#" class="btn btn-success btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="updateDataTutor('{{jsonDataInscription}}', {{entity.id}})"><i class="fa fa-edit fa-md pr-2"></i></a></td>
-                                                            <td><a href="#" class="btn btn-danger  btn-xs" onclick="removeDataTutor('{{jsonDataInscription}}', {{entity.id}})"><i class="fa fa-trash fa-md pr-2"></i></a></td>
-                                                            <td><a href="#" class="btn btn-primary btn-xs" onclick="selectTypeInscription('{{jsonDataInscription}}', {{entity.id}} );"><i class="fa fa-list"></i></a> </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                            </td>
-                            
-                            
-                          
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-                
+      <div class="row">
+        <div class="col-md-12">
+          <div id="idResult">
             
-            
-        </div><!-- /.table-responsive -->
-        <!--/ End bordered table -->
-
-    </div>
-    <div class="col-md-8">
-        <div id="typeInscriptionId">            
+          </div>
         </div>
-            
+        
+      </div>
     </div>
-      
-    </div><!-- /.table-responsive -->
-    <!--/ End hover table -->
 
-    </div>    
-</small>
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">      
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
 
 
 
- 
-     
+
+
+    </script>
+
+    
+    
+{% endblock %}
