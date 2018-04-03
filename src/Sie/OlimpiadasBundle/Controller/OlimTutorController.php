@@ -63,13 +63,37 @@ class OlimTutorController extends Controller{
             //set teh institucioneducativa variable
             $institucioneducativa = $this->session->get('ie_id');
         }
+        if(isset($form['newtutor'])){
+            $em = $this->getDoctrine()->getManager();
+            // udpate the indice
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_tutor');");
+            $query->execute();
+            // create the object to do the save
+            $entity = new OlimTutor();
+            $entity->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($form['personaid']));
+            $entity->setTelefono1($form['telefono1']);
+            $entity->setTelefono2($form['telefono2']);
+            $entity->setCorreoElectronico($form['correoElectronico']);
+            $entity->setFechaRegistro(new \Datetime('now'));
+            $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['institucionEducativa']));
+            $entity->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($data['olimMateria']));   
+            
+            if($data['category']!='')           
+                $entity->setCategoriaTipo($em->getRepository('SieAppWebBundle:OlimCategoriaTipo')->find($data['category']));   
+            $entity->setPeriodoTipo($em->getRepository('SieAppWebBundle:OlimPeriodoTipo')->find(1));   
+            $entity->setGestionTipoId($data['gestion']);   
+
+            $em->persist($entity);
+            $em->flush();
+        }
+        
         array_pop($form);
 // dump($form);die;
         $em = $this->getDoctrine()->getManager();
         $objOlimRegistroOlimpiada = $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->findOneBy(array(
             'gestionTipoId'=>$form['gestion']
         ));
-        dump($objOlimRegistroOlimpiada);
+        // dump($objOlimRegistroOlimpiada);
 
         $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findBy(array(
             'institucioneducativa'  => $institucioneducativa,
@@ -97,8 +121,8 @@ class OlimTutorController extends Controller{
     public function newTutorAction (Request $request){
         //got the send data
         $form = $request->get('form');
-        // array_pop(($form));
-        // dump($form);die;
+        array_pop(($form));
+        // dump($form['data']);die;
         return $this->render('SieOlimpiadasBundle:OlimTutor:newTutor.html.twig', array(
             'form' => $this->formLookForTutor($form['data'])->createView(),
 
@@ -111,7 +135,7 @@ class OlimTutorController extends Controller{
             ->add('carnet', 'text', array('label'=>'CI:'))
             ->add('complemento', 'text', array('label'=>'Complemento:'))
             ->add('fechanacimiento', 'text', array('label'=>'Fecha Nacimiento:'))
-            ->add('data', 'hidden', array('attr'=>array('value'=>$data)))
+            ->add('data', 'text', array('attr'=>array('value'=>$data)))
             ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'lookForTutor()')))
             ->getForm()
             ;
@@ -132,9 +156,28 @@ class OlimTutorController extends Controller{
             'jsonDataInscription' => $form['data'],
             'sieSelected' => $arrForm['sie'],
             'gestionSelected' => $arrForm['gestion'],
-
-            // 'form' => $this->buscarTutorForm($form['jsonDataInscription'])->createView()
+            'form' => $this->formResultTutor($form['data'])->createView()
         ));
+    }
+
+    private function formResultTutor($data){
+        
+        $arrData = json_decode($data, true);
+        // dump($arrData);die;
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('olimtutor_listTutorBySie'))
+            ->setMethod('POST')
+            ->add('telefono1', 'text')
+            ->add('telefono2', 'text')
+            ->add('correoElectronico', 'text')
+            ->add('sie', 'hidden', array('attr'=>array('value'=>$arrData['sie'])))
+            ->add('gestion', 'hidden', array('attr'=>array('value'=>$arrData['gestion'])))
+            ->add('newtutor', 'hidden', array('data'=>true))
+            ->add('registrar', 'submit')
+
+            ->getForm()
+            ;
+
     }
 
 
