@@ -1,0 +1,179 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+    <style type="text/css">
+        .item{
+            border: 1px solid #CCCCCC;
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-book"></i> Categorias <span>Reglas</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    <a href="{{ path('olimregistroolimpiada')}}"> Olimpiadas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{{ path('olimmateriatipo')}}"> Materias</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    Categorias
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                
+                {% include 'SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:materiaDatos.html.twig' %}
+
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Categorias</h3>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{{ path('olimreglasolimpiadastipo_new') }}" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> Crear
+                            </a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+
+                        {% for entity in entities %}
+                            <div class="item" style="display:none">
+                                <div class="row">
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                        <h1>{{ entity.categoria }}</h1>
+                                        <strong>{{ entity.modalidadParticipacionTipo.modalidad }}</strong>
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                        
+                                    </div>
+                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                        <p>Edad inicial: {{ entity.edadInicial }}</p>
+                                        <p>Edad final: {{ entity.edadFinal }}</p>
+                                        <p>Fecha de comparación: {% if entity.fechaComparacion %}{{ entity.fechaComparacion|date('d-m-Y') }}{% endif %}</p>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                        <table class="table table-bordered table-condensed records_list">
+                            <thead>
+                                <tr>
+                                    {# <th>Id</th> #}
+                                    <th>Categoria</th>
+                                    <th>Modalidad</th>
+                                    <th>Cantidad por equipo</th>
+                                    <th>Cantidad equipos</th>
+                                    <th>Cantidad inscritos</th>
+                                    <th>Edad inicial</th>
+                                    <th>Edad final</th>
+                                    <th>Fecha comparacion</th>
+                                    <th>Si subir documento</th>
+                                    <th>Si nombre equipo</th>
+                                    <th>Si nombre proyecto</th>
+                                    {# <th>Gestion</th> #}
+                                    {# <th>Periodo</th> #}
+                                    {# <th>Fecha registro</th> #}
+                                    {# <th>Fecha modificacion</th> #}
+                                    
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for entity in entities %}
+                                <tr>
+                                    {# <td><a href="{{ path('olimreglasolimpiadastipo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
+                                    <td><strong>{{ entity.categoria }}</strong></td>
+                                    <td>
+                                        {% if entity.modalidadParticipacionTipo.id == 1 %}
+                                            <span class="badge badge-primary">
+                                                {{ entity.modalidadParticipacionTipo.modalidad }}        
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-lilac">
+                                                {{ entity.modalidadParticipacionTipo.modalidad }}        
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entity.modalidadParticipacionTipo.id == 2 %}
+                                            {{ entity.modalidadNumeroIntegrantesTipo.condicion }} {{ entity.modalidadNumeroIntegrantesTipo.cantidadMiembros }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ entity.cantidadEquipos }}</td>
+                                    <td>
+                                        {% if entity.modalidadParticipacionTipo.id == 1 %}
+                                            {{ entity.cantidadInscritosGrado }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ entity.edadInicial }}</td>
+                                    <td>{{ entity.edadFinal }}</td>
+                                    <td>{% if entity.fechaComparacion %}{{ entity.fechaComparacion|date('d-m-Y') }}{% endif %}</td>
+                                    <td>
+                                        {% if entity.siSubirDocumento == 1 %}
+                                            Si
+                                        {% else %}
+                                            No        
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entity.modalidadParticipacionTipo.id != 1 %}
+                                            {% if entity.siNombreEquipo == 1 %}
+                                                Si
+                                            {% else %}
+                                                No        
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entity.modalidadParticipacionTipo.id != 1 %}
+                                            {% if entity.siNombreProyecto == 1 %}
+                                                Si
+                                            {% else %}
+                                                No        
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    {# <td>{{ entity.gestionTipoId }}</td> #}
+                                    {# <td>{{ entity.periodoTipoId }}</td> #}
+                                    {# <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('d-m-Y') }}{% endif %}</td> #}
+                                    {# <td>{% if entity.fechaModificacion %}{{ entity.fechaModificacion|date('d-m-Y') }}{% endif %}</td> #}
+                                    <td>
+                                        <a href="{{ path('olimreglasolimpiadastipo_edit', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                                            <i class="fa fa-edit"></i> 
+                                        </a>
+
+                                        <form action="{{ path('olimreglasolimpiadastipo_delete') }}" method="post" style="display:inline-block" onsubmit="return confirm('¿Realmente desea eliminar el registro?'); ">
+                                            <input type="hidden" name="id" value="{{ entity.id }}">
+                                            <button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                                                <i class="fa fa-trash"></i>    
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

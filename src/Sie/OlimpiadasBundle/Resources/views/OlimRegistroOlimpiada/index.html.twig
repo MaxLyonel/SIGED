@@ -1,0 +1,90 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-file-text-o"></i> Olimpiadas <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    
+                    <a href="{{ path('olimregistroolimpiada')}}"> Olimpiadas</a>
+                    
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title"></h3>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{{ path('olimregistroolimpiada_new') }}" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> Crear
+                            </a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <table class="table records_list">
+                            <thead>
+                                <tr>
+                                    {# <th>Id</th> #}
+                                    <th>Nombre</th>
+                                    <th>Fecha inicio</th>
+                                    <th>Fecha fin</th>
+                                    <th>Gestión</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for entity in entities %}
+                                <tr>
+                                    {# <td>{{ entity.id }}</td> #}
+                                    <td>{{ entity.nombreOlimpiada }}</td>
+                                    <td>{% if entity.fechaInicio %}{{ entity.fechaInicio|date('d-m-Y') }}{% endif %}</td>
+                                    <td>{% if entity.fechaFin %}{{ entity.fechaFin|date('d-m-Y') }}{% endif %}</td>
+                                    <td>{{ entity.gestionTipoId }}</td>
+                                    <td>
+                                    <ul>
+                                        <a href="{{ path('olimregistroolimpiada_edit', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                                            <i class="fa fa-edit"></i> 
+                                        </a>
+
+                                        <a href="{{ path('olimmateriatipo', { 'id': entity.id }) }}" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Materias">
+                                            <i class="fa fa-list"></i>
+                                        </a>
+
+                                        <form action="{{ path('olimregistroolimpiada_delete') }}" method="post" style="display:inline-block" onsubmit="return confirm('¿Realmente desea eliminar el registro?'); ">
+                                            <input type="hidden" name="id" value="{{ entity.id }}">
+                                            <button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                                                <i class="fa fa-trash"></i>    
+                                            </button>
+                                        </form>
+                                    </ul>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}

@@ -239,6 +239,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieDgesttlaBundle");
                 break;
             case '172.20.196.9:8030':
+            case '172.20.196.7':
             case 'olimpiadas.sie.gob.bo':
                 $sysname = 'olimpiadas';
                 $sysporlet = 'blue';

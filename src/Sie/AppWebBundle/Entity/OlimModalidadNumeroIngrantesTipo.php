@@ -24,7 +24,9 @@ class OlimModalidadNumeroIngrantesTipo
      */
     private $cantidadMiembros;
 
-
+    public function __toString(){
+        return $this->condicion.' '.$this->cantidadMiembros;
+    }
     /**
      * Get id
      *

@@ -19,6 +19,9 @@ class OlimModalidadParticipacionTipo
      */
     private $modalidad;
 
+    public function __toString(){
+        return $this->modalidad;
+    }
 
     /**
      * Get id

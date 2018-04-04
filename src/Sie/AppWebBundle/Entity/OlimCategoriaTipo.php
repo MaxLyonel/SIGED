@@ -24,6 +24,9 @@ class OlimCategoriaTipo
      */
     private $fechaRegistro;
 
+    public function __toString(){
+        return $this->categoria;
+    }
 
     /**
      * Get id
