@@ -51,26 +51,7 @@
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
 
-                        {% for entity in entities %}
-                            <div class="item" style="display:none">
-                                <div class="row">
-                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                        <h1>{{ entity.categoria }}</h1>
-                                        <strong>{{ entity.modalidadParticipacionTipo.modalidad }}</strong>
-                                    </div>
-                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                        
-                                    </div>
-                                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                        <p>Edad inicial: {{ entity.edadInicial }}</p>
-                                        <p>Edad final: {{ entity.edadFinal }}</p>
-                                        <p>Fecha de comparación: {% if entity.fechaComparacion %}{{ entity.fechaComparacion|date('d-m-Y') }}{% endif %}</p>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-
-                        {% endfor %}
+                        
 
                         <table class="table table-bordered table-condensed records_list">
                             <thead>
@@ -91,7 +72,7 @@
                                     {# <th>Periodo</th> #}
                                     {# <th>Fecha registro</th> #}
                                     {# <th>Fecha modificacion</th> #}
-                                    
+                                    <th>Niveles</th>
                                     <th>Opciones</th>
                                 </tr>
                             </thead>
@@ -99,42 +80,42 @@
                             {% for entity in entities %}
                                 <tr>
                                     {# <td><a href="{{ path('olimreglasolimpiadastipo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
-                                    <td><strong>{{ entity.categoria }}</strong></td>
+                                    <td><strong>{{ entity.entidad.categoria }}</strong></td>
                                     <td>
-                                        {% if entity.modalidadParticipacionTipo.id == 1 %}
+                                        {% if entity.entidad.modalidadParticipacionTipo.id == 1 %}
                                             <span class="badge badge-primary">
-                                                {{ entity.modalidadParticipacionTipo.modalidad }}        
+                                                {{ entity.entidad.modalidadParticipacionTipo.modalidad }}        
                                             </span>
                                         {% else %}
                                             <span class="badge badge-lilac">
-                                                {{ entity.modalidadParticipacionTipo.modalidad }}        
+                                                {{ entity.entidad.modalidadParticipacionTipo.modalidad }}        
                                             </span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if entity.modalidadParticipacionTipo.id == 2 %}
-                                            {{ entity.modalidadNumeroIntegrantesTipo.condicion }} {{ entity.modalidadNumeroIntegrantesTipo.cantidadMiembros }}
+                                        {% if entity.entidad.modalidadParticipacionTipo.id == 2 %}
+                                            {{ entity.entidad.modalidadNumeroIntegrantesTipo.condicion }} {{ entity.entidad.modalidadNumeroIntegrantesTipo.cantidadMiembros }}
                                         {% endif %}
                                     </td>
-                                    <td>{{ entity.cantidadEquipos }}</td>
+                                    <td>{{ entity.entidad.cantidadEquipos }}</td>
                                     <td>
-                                        {% if entity.modalidadParticipacionTipo.id == 1 %}
-                                            {{ entity.cantidadInscritosGrado }}
+                                        {% if entity.entidad.modalidadParticipacionTipo.id == 1 %}
+                                            {{ entity.entidad.cantidadInscritosGrado }}
                                         {% endif %}
                                     </td>
-                                    <td>{{ entity.edadInicial }}</td>
-                                    <td>{{ entity.edadFinal }}</td>
-                                    <td>{% if entity.fechaComparacion %}{{ entity.fechaComparacion|date('d-m-Y') }}{% endif %}</td>
+                                    <td>{{ entity.entidad.edadInicial }}</td>
+                                    <td>{{ entity.entidad.edadFinal }}</td>
+                                    <td>{% if entity.entidad.fechaComparacion %}{{ entity.entidad.fechaComparacion|date('d-m-Y') }}{% endif %}</td>
                                     <td>
-                                        {% if entity.siSubirDocumento == 1 %}
+                                        {% if entity.entidad.siSubirDocumento == 1 %}
                                             Si
                                         {% else %}
                                             No        
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if entity.modalidadParticipacionTipo.id != 1 %}
-                                            {% if entity.siNombreEquipo == 1 %}
+                                        {% if entity.entidad.modalidadParticipacionTipo.id != 1 %}
+                                            {% if entity.entidad.siNombreEquipo == 1 %}
                                                 Si
                                             {% else %}
                                                 No        
@@ -142,8 +123,8 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if entity.modalidadParticipacionTipo.id != 1 %}
-                                            {% if entity.siNombreProyecto == 1 %}
+                                        {% if entity.entidad.modalidadParticipacionTipo.id != 1 %}
+                                            {% if entity.entidad.siNombreProyecto == 1 %}
                                                 Si
                                             {% else %}
                                                 No        
@@ -155,12 +136,28 @@
                                     {# <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('d-m-Y') }}{% endif %}</td> #}
                                     {# <td>{% if entity.fechaModificacion %}{{ entity.fechaModificacion|date('d-m-Y') }}{% endif %}</td> #}
                                     <td>
-                                        <a href="{{ path('olimreglasolimpiadastipo_edit', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                                        {% if entity.primaria|length > 0 %}
+                                            <p><strong>Primaria</strong></p>
+                                            {% for pri in entity.primaria %}
+                                                {# {{ pri.gradoTipo.grado }} #}
+                                                {# {% if loop.index != (entity.primaria|length)  %} , {% endif %} #}
+                                                <div> {{ pri.gradoTipo.grado }} </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                        {% if entity.secundaria|length > 0 %}
+                                            <p style="padding-top: 10px;"><strong>Secundara</strong></p>
+                                            {% for sec in entity.secundaria %}
+                                                <div> {{ sec.gradoTipo.grado }} </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('olimreglasolimpiadastipo_edit', { 'id': entity.entidad.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
                                             <i class="fa fa-edit"></i> 
                                         </a>
 
                                         <form action="{{ path('olimreglasolimpiadastipo_delete') }}" method="post" style="display:inline-block" onsubmit="return confirm('¿Realmente desea eliminar el registro?'); ">
-                                            <input type="hidden" name="id" value="{{ entity.id }}">
+                                            <input type="hidden" name="id" value="{{ entity.entidad.id }}">
                                             <button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar">
                                                 <i class="fa fa-trash"></i>    
                                             </button>

@@ -39,7 +39,37 @@ class OlimReglasOlimpiadasTipoController extends Controller
 
         $entities = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findBy(array(
             'olimMateriaTipo' => $this->session->get('idMateria')
-        ));
+        ),array('id'=>'ASC'));
+
+        $arrayPrimaria = array();
+
+        foreach ($entities as $en) {
+            $primaria = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasNivelGradoTipo')->findBy(array(
+                'olimReglasOlimpiadasTipo'=>$en->getId(),
+                'nivelTipo'=>12
+            ));
+            $arrayPrimaria = array();
+            foreach ($primaria as $p) {
+                $arrayPrimaria[] = $p;
+            }
+
+            $secundaria = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasNivelGradoTipo')->findBy(array(
+                'olimReglasOlimpiadasTipo'=>$en->getId(),
+                'nivelTipo'=>13
+            ));
+            $arraySecundaria = array();
+            foreach ($secundaria as $s) {
+                $arraySecundaria[] = $s;
+            }
+
+            $array[] = array(
+                'entidad'=>$en,
+                'primaria'=>$arrayPrimaria,
+                'secundaria'=>$arraySecundaria,
+            );
+        }
+
+        $entities = $array;
 
         return $this->render('SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:index.html.twig', array(
             'entities' => $entities,
