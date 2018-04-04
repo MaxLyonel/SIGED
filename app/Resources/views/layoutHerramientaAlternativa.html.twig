@@ -456,21 +456,12 @@
                                 <span class="text">Configuraciones especiales</span>
                                 <span class="arrow"></span>
                             </a>
-                            <ul>                                
-                                <li><a href="{{path('herramientalt_ceducativa_duplicados_paralelos')}}">Cambiar paralelo cursos duplicados </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_periododistinto')}}">Corregir periodos distintos entre modulo y oferta </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_aux')}}">Auxiliar 1 </a></li>
-                                
-                                {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
+                            <ul>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos(Lista de CEAs Cerrados)</a></li>                                
+                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>                                
                                 <li><a onclick="getCeasPendientesShow();">Lista de CEAs Pendientes </a></li>
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                                
-                                {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
-                                {% if (app.session.get('ie_id') != -1) %}
-                                    <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
-                                {% endif %}
+                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>
                                 <li><a href="{{path('sie_alt_manuales')}}">Manuales </a></li>
                             </ul>
                         </li>
@@ -487,11 +478,10 @@
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos(Lista de CEAs Cerrados)</a></li>                                
+                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>                                
                                 <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
                                 <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                                
-                                {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
+                                <li><a href="{{path('herramientalt_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>                                                                
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
                                 {% endif %}
@@ -511,8 +501,7 @@
                             </a>
                             <ul>
                                 <!--li><a href="{{path('history_new_inscription_index')}}">Historial Estudiante/Participante </a></li-->
-                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-                                {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
+                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>                                
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
                                 {% endif %}
@@ -533,10 +522,9 @@
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos(Lista de CEAs Cerrados)</a></li>
+                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
                                 <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
-                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-                                {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
+                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>                                
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
                                 {% endif %}
@@ -544,7 +532,7 @@
                                 <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
                             </ul>
                         </li>
-                        <li class="submenu">
+                        {#<li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -553,7 +541,7 @@
                             <ul>
                                 <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
                             </ul>
-                        </li>
+                        </li>#}
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -567,9 +555,8 @@
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos(Lista de CEAs Cerrados)</a></li>
-                                <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
+                                <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>                                
                                 {% if (app.session.get('ie_id') != -1) %}
                                     <li><a href="{{path('sie_alt_reportes_diversa')}}">Reportes Educación Diversa </a></li>
                                 {% endif %}
