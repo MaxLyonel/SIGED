@@ -1,3 +1,15 @@
+sie_app_web_olimreglasolimpiadastipo:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimreglasolimpiadastipo.yml"
+    prefix:   /olimreglasolimpiadastipo
+    
+sie_app_web_olimmateriatipo:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimmateriatipo.yml"
+    prefix:   /olimmateriatipo
+
+sie_app_web_olimregistroolimpiada:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimregistroolimpiada.yml"
+    prefix:   /olimregistroolimpiada
+
 sie_olimpiadas_homepage:
     path:     /hello/{name}
     defaults: { _controller: SieOlimpiadasBundle:Default:index }

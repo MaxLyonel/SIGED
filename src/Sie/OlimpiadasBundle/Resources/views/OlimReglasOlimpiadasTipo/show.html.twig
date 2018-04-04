@@ -1,0 +1,88 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>OlimReglasOlimpiadasTipo</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Cantidadequipos</th>
+                <td>{{ entity.cantidadEquipos }}</td>
+            </tr>
+            <tr>
+                <th>Cantidadinscritosgrado</th>
+                <td>{{ entity.cantidadInscritosGrado }}</td>
+            </tr>
+            <tr>
+                <th>Edadinicial</th>
+                <td>{{ entity.edadInicial }}</td>
+            </tr>
+            <tr>
+                <th>Edadfinal</th>
+                <td>{{ entity.edadFinal }}</td>
+            </tr>
+            <tr>
+                <th>Fechacomparacion</th>
+                <td>{{ entity.fechaComparacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Sisubirdocumento</th>
+                <td>{{ entity.siSubirDocumento }}</td>
+            </tr>
+            <tr>
+                <th>Sinombreequipo</th>
+                <td>{{ entity.siNombreEquipo }}</td>
+            </tr>
+            <tr>
+                <th>Sinombreproyecto</th>
+                <td>{{ entity.siNombreProyecto }}</td>
+            </tr>
+            <tr>
+                <th>Gestiontipoid</th>
+                <td>{{ entity.gestionTipoId }}</td>
+            </tr>
+            <tr>
+                <th>Periodotipoid</th>
+                <td>{{ entity.periodoTipoId }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Fechamodificacion</th>
+                <td>{{ entity.fechaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioregistroid</th>
+                <td>{{ entity.usuarioRegistroId }}</td>
+            </tr>
+            <tr>
+                <th>Usuariomodificacionid</th>
+                <td>{{ entity.usuarioModificacionId }}</td>
+            </tr>
+            <tr>
+                <th>Categoria</th>
+                <td>{{ entity.categoria }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('olimreglasolimpiadastipo') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('olimreglasolimpiadastipo_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

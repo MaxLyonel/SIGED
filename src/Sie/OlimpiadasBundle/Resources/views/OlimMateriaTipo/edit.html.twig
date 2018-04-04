@@ -1,0 +1,419 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-ul"></i> Editar materia <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    <a href="{{ path('olimregistroolimpiada')}}"> Olimpiadas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{{ path('olimmateriatipo')}}"> Materias</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    Editar
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+
+    	{% include 'SieOlimpiadasBundle:OlimRegistroOlimpiada:olimpiadaDatos.html.twig' %}
+
+    	<div class="panel rounded shadow">
+    		<div class="panel-heading">
+    		    <div class="pull-left">
+    		        <h3 class="panel-title">Datos materia</h3>
+    		    </div>
+    		    <div class="pull-right">
+    		        
+    		    </div>
+    		    <div class="clearfix"></div>
+    		</div><!-- /.panel-heading -->
+    		<div class="panel-body">
+    			{{ form_start(edit_form) }}
+    				<div class="row">
+    					{# <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    						<label>Olimpiada</label>
+    						{{ form_widget(edit_form.olimRegistroOlimpiada, {'attr':{'class':'form-control'} }) }}
+    					</div> #}
+    					<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    						<label>Materia</label>
+    						{{ form_widget(edit_form.materia, {'attr':{'class':'form-control'} }) }}
+    					</div>
+    					<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    						<label>Fecha inicio inscripción</label>
+    						{{ form_widget(edit_form.fechaInsIni, {'attr':{'class':'form-control'} }) }}
+    					</div>
+    					<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    						<label>Fecha final inscripción</label>
+    						{{ form_widget(edit_form.fechaInsFin, {'attr':{'class':'form-control'} }) }}
+    					</div>
+    					<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+    						<label>Descripción</label>
+    						{{ form_widget(edit_form.descripcion, {'attr':{'class':'form-control', 'rows':'5'} }) }}
+    					</div>
+    				</div>
+    				<div class="row">
+    					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	    					<button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i> Guardar cambios </button>
+							<a href="{{path('olimmateriatipo')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+    					</div>
+    				</div>
+
+    			{{ form_end(edit_form) }}
+    		</div>
+    	</div>
+    </div>
+
+    <div class="modal fade" id="modal"></div>
+
+{% endblock %}
+
+{% block javascripts %}
+	{{parent()}}
+	<script>
+		var reglas = [];
+		var reglaEdit = null;
+
+		function getReglas(){
+			$.ajax({
+				url: Routing.generate('olimmateriatipo_getReglas'),
+				type: 'post',
+			})
+			.done(function(data) {
+				$.each(data, function(index, val) {
+					var regla = {
+						'id': val.id,
+						'categoriaId': val.categoriaId,
+						'categoria': val.categoria,
+						'modalidad': val.modalidad,
+						'modalidadNombre': val.modalidadNombre,
+						'numeroIntegrantes': val.numeroIntegrantes,
+						'numeroIntegrantesNombre': val.numeroIntegrantesNombre,
+						'cantidadEquipos': val.cantidadEquipos,
+						'cantidadInscrito': val.cantidadInscrito,
+						'edadInicial': val.edadInicial,
+						'edadFinal': val.edadFinal,
+						'fechaComparacion': val.fechaComparacion,
+						'documento': val.documento,
+						'siNombreEquipo': val.siNombreEquipo,
+						'siNombreProyecto': val.siNombreProyecto,
+						'gestion': val.gestion,
+						'periodo': val.periodo,
+						'primaria': val.primaria,
+						'secundaria': val.secundaria,
+						'primaria1': val.primaria1,
+						'primaria2': val.primaria2,
+						'primaria3': val.primaria3,
+						'primaria4': val.primaria4,
+						'primaria5': val.primaria5,
+						'primaria6': val.primaria6,
+						'secundaria1': val.secundaria1,
+						'secundaria2': val.secundaria2,
+						'secundaria3': val.secundaria3,
+						'secundaria4': val.secundaria4,
+						'secundaria5': val.secundaria5,
+						'secundaria6': val.secundaria6
+					}
+
+					reglas.push(regla);
+				});
+
+				console.log(reglas);
+
+				mostrarReglas();
+			})
+			.fail(function() {
+				
+			})
+			.always(function() {
+				
+			});
+			
+		}
+
+		function openModal(){
+			var argumento = arguments[0];
+			// if(reglas.length == 0){
+				$.ajax({
+					url: Routing.generate('olimmateriatipo_createRegla', {id: reglaEdit}),
+					type: 'post',
+				})
+				.done(function(data) {
+					$('#modal').empty();
+					$('#modal').append(data);
+					
+					$('.pri > input[type=checkbox]').addClass('primaria');
+					$('.sec > input[type=checkbox]').addClass('secundaria');
+
+					reglaEdit = null;
+					if(argumento !== undefined){
+						var p = argumento;
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_categoriaId').val(reglas[p].categoriaId);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_categoria').val(reglas[p].categoria);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_modalidadParticipacionTipo').val(reglas[p].modalidad);
+						$('select[name="sie_appwebbundle_olimreglasolimpiadastipo[modalidadParticipacionTipo]"] option:selected').text(reglas[p].modalidadNombre);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_modalidadNumeroIntegrantesTipo').val(reglas[p].numeroIntegrantes);
+						$('select[name="sie_appwebbundle_olimreglasolimpiadastipo[modalidadNumeroIntegrantesTipo]"] option:selected').text(reglas[p].numeroIntegrantesNombre);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_cantidadEquipos').val(reglas[p].cantidadEquipos);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_cantidadInscritosGrado').val(reglas[p].cantidadInscrito);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_edadInicial').val(reglas[p].edadInicial);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_edadFinal').val(reglas[p].edadFinal);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_fechaComparacion').val(reglas[p].fechaComparacion);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_siSubirDocumento').val(reglas[p].documento);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreEquipo').val(reglas[p].siNombreEquipo);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreProyecto').val(reglas[p].siNombreProyecto);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_gestionTipoId').val(reglas[p].gestion);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_periodoTipoId').val(reglas[p].periodo);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_0').attr('checked', reglas[p].primaria1);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_1').attr('checked', reglas[p].primaria2);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_2').attr('checked', reglas[p].primaria3);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_3').attr('checked', reglas[p].primaria4);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_4').attr('checked', reglas[p].primaria5);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_5').attr('checked', reglas[p].primaria6);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_0').attr('checked', reglas[p].secundaria1);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_1').attr('checked', reglas[p].secundaria2);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_2').attr('checked', reglas[p].secundaria3);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_3').attr('checked', reglas[p].secundaria4);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_4').attr('checked', reglas[p].secundaria5);
+						$('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_5').attr('checked', reglas[p].secundaria6);
+
+						reglaEdit = argumento;
+					}
+
+					$('#modal').modal('show');
+				})
+				.fail(function() {
+					//console.log("error");
+				})
+				.always(function() {
+					//console.log("complete");
+				});			
+			// }
+		}
+
+		function saveRegla(){
+			// if(reglas.length == 0){
+				var primaria = [];
+				$(".primaria").each(function(){
+					if($(this).prop('checked')){
+						var gradoId = $(this).val();
+						var gradoNombre = '';
+						if(gradoId == 1){ gradoNombre = 'Primero'; }
+						if(gradoId == 2){ gradoNombre = 'Segundo'; }
+						if(gradoId == 3){ gradoNombre = 'Tercero'; }
+						if(gradoId == 4){ gradoNombre = 'Cuarto'; }
+						if(gradoId == 5){ gradoNombre = 'Quinto'; }
+						if(gradoId == 6){ gradoNombre = 'Sexto'; }
+						primaria.push({'id':gradoId, 'grado': gradoNombre});
+					}
+		    	});
+		    	var secundaria = [];
+				$(".secundaria").each(function(){
+					if($(this).prop('checked')){
+						var gradoId = $(this).val();
+						var gradoNombre = '';
+						if(gradoId == 1){ gradoNombre = 'Primero'; }
+						if(gradoId == 2){ gradoNombre = 'Segundo'; }
+						if(gradoId == 3){ gradoNombre = 'Tercero'; }
+						if(gradoId == 4){ gradoNombre = 'Cuarto'; }
+						if(gradoId == 5){ gradoNombre = 'Quinto'; }
+						if(gradoId == 6){ gradoNombre = 'Sexto'; }
+						secundaria.push({'id':gradoId, 'grado': gradoNombre});
+					}
+		    	});
+
+		    	// for(var i = 0; i < 6; i++){
+		    	// 	if($('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_'+i).prop('checked')){ var primaria+i = true; }else{ var primaria+i = false; }
+		    	// 	console.log(primaria+i);
+		    	// }
+		    	//console.log(primaria);
+				//console.log('primaria',$('#sie_appwebbundle_olimreglasolimpiadastipo_primaria').val());
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_0').prop('checked')){ var primaria1 = true; }else{ var primaria1 = false; }
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_1').prop('checked')){ var primaria2 = true; }else{ var primaria2 = false; }
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_2').prop('checked')){ var primaria3 = true; }else{ var primaria3 = false; }
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_3').prop('checked')){ var primaria4 = true; }else{ var primaria4 = false; }
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_4').prop('checked')){ var primaria5 = true; }else{ var primaria5 = false; }
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_primaria_5').prop('checked')){ var primaria6 = true; }else{ var primaria6 = false; }
+
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_0').prop('checked')){ var secundaria1 = true; }else{ var secundaria1 = false; }
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_1').prop('checked')){ var secundaria2 = true; }else{ var secundaria2 = false; }
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_2').prop('checked')){ var secundaria3 = true; }else{ var secundaria3 = false; }
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_3').prop('checked')){ var secundaria4 = true; }else{ var secundaria4 = false; }
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_4').prop('checked')){ var secundaria5 = true; }else{ var secundaria5 = false; }
+				if($('#sie_appwebbundle_olimreglasolimpiadastipo_secundaria_5').prop('checked')){ var secundaria6 = true; }else{ var secundaria6 = false; }
+
+				if(reglaEdit == null){
+					var regla = {
+						'id': '',
+						'categoriaId': $('#sie_appwebbundle_olimreglasolimpiadastipo_categoriaId').val(),
+						'categoria': $('#sie_appwebbundle_olimreglasolimpiadastipo_categoria').val(),
+						'modalidad': $('#sie_appwebbundle_olimreglasolimpiadastipo_modalidadParticipacionTipo').val(),
+						'modalidadNombre': $('select[name="sie_appwebbundle_olimreglasolimpiadastipo[modalidadParticipacionTipo]"] option:selected').text(),
+						'numeroIntegrantes': $('#sie_appwebbundle_olimreglasolimpiadastipo_modalidadNumeroIntegrantesTipo').val(),
+						'numeroIntegrantesNombre': $('select[name="sie_appwebbundle_olimreglasolimpiadastipo[modalidadNumeroIntegrantesTipo]"] option:selected').text(),
+						'cantidadEquipos': $('#sie_appwebbundle_olimreglasolimpiadastipo_cantidadEquipos').val(),
+						'cantidadInscrito': $('#sie_appwebbundle_olimreglasolimpiadastipo_cantidadInscritosGrado').val(),
+						'edadInicial': $('#sie_appwebbundle_olimreglasolimpiadastipo_edadInicial').val(),
+						'edadFinal': $('#sie_appwebbundle_olimreglasolimpiadastipo_edadFinal').val(),
+						'fechaComparacion': $('#sie_appwebbundle_olimreglasolimpiadastipo_fechaComparacion').val(),
+						'documento': $('#sie_appwebbundle_olimreglasolimpiadastipo_siSubirDocumento').val(),
+						'siNombreEquipo': $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreEquipo').val(),
+						'siNombreProyecto': $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreProyecto').val(),
+						'gestion': $('#sie_appwebbundle_olimreglasolimpiadastipo_gestionTipoId').val(),
+						'periodo': $('#sie_appwebbundle_olimreglasolimpiadastipo_periodoTipoId').val(),
+						'primaria': primaria,
+						'secundaria': secundaria,
+						'primaria1': primaria1,
+						'primaria2': primaria2,
+						'primaria3': primaria3,
+						'primaria4': primaria4,
+						'primaria5': primaria5,
+						'primaria6': primaria6,
+						'secundaria1': secundaria1,
+						'secundaria2': secundaria2,
+						'secundaria3': secundaria3,
+						'secundaria4': secundaria4,
+						'secundaria5': secundaria5,
+						'secundaria6': secundaria6
+
+					};
+					reglas.push(regla);
+
+				}else{
+
+					var reglas[reglaEdit] = {
+						'id': '',
+						'categoriaId': $('#sie_appwebbundle_olimreglasolimpiadastipo_categoriaId').val(),
+						'categoria': $('#sie_appwebbundle_olimreglasolimpiadastipo_categoria').val(),
+						'modalidad': $('#sie_appwebbundle_olimreglasolimpiadastipo_modalidadParticipacionTipo').val(),
+						'modalidadNombre': $('select[name="sie_appwebbundle_olimreglasolimpiadastipo[modalidadParticipacionTipo]"] option:selected').text(),
+						'numeroIntegrantes': $('#sie_appwebbundle_olimreglasolimpiadastipo_modalidadNumeroIntegrantesTipo').val(),
+						'numeroIntegrantesNombre': $('select[name="sie_appwebbundle_olimreglasolimpiadastipo[modalidadNumeroIntegrantesTipo]"] option:selected').text(),
+						'cantidadEquipos': $('#sie_appwebbundle_olimreglasolimpiadastipo_cantidadEquipos').val(),
+						'cantidadInscrito': $('#sie_appwebbundle_olimreglasolimpiadastipo_cantidadInscritosGrado').val(),
+						'edadInicial': $('#sie_appwebbundle_olimreglasolimpiadastipo_edadInicial').val(),
+						'edadFinal': $('#sie_appwebbundle_olimreglasolimpiadastipo_edadFinal').val(),
+						'fechaComparacion': $('#sie_appwebbundle_olimreglasolimpiadastipo_fechaComparacion').val(),
+						'documento': $('#sie_appwebbundle_olimreglasolimpiadastipo_siSubirDocumento').val(),
+						'siNombreEquipo': $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreEquipo').val(),
+						'siNombreProyecto': $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreProyecto').val(),
+						'gestion': $('#sie_appwebbundle_olimreglasolimpiadastipo_gestionTipoId').val(),
+						'periodo': $('#sie_appwebbundle_olimreglasolimpiadastipo_periodoTipoId').val(),
+						'primaria': primaria,
+						'secundaria': secundaria,
+						'primaria1': primaria1,
+						'primaria2': primaria2,
+						'primaria3': primaria3,
+						'primaria4': primaria4,
+						'primaria5': primaria5,
+						'primaria6': primaria6,
+						'secundaria1': secundaria1,
+						'secundaria2': secundaria2,
+						'secundaria3': secundaria3,
+						'secundaria4': secundaria4,
+						'secundaria5': secundaria5,
+						'secundaria6': secundaria6
+
+					};
+				}
+				
+				console.log(regla);
+				
+				mostrarReglas();
+			// }
+			$('#modal').modal('hide');
+		}
+
+		function mostrarReglas(){
+			var tabla = $('<table class="table table-bordered"><thead><tr><th>Categoria</th><th>Modalidad Participacion</th><th>Numero de integrantes</th><th>Cantidad de equipos</th><th>CAntidad de inscritos</th><th>Edad inicial</th><th>Edad final</th><th>Fecha comparacion</th><th>Documento</th><th>Si nombre de equipo</th><th>Si nombre proyecto</th><th>Gestion</th><th>Periodo</th><th>Niveles</th><th>Opciones</th></tr></thead></table>');
+
+			$.each(reglas, function(index, val) {
+				var fila = $('<tr/>', {id: 'r_'+index});
+				fila.append('<td>'+
+							'<input type="hidden" name="id" value="'+val.id+'">'+
+							'<input type="hidden" name="categoriaId" value="'+val.categoriaId+'">'+
+							'<input type="hidden" name="modalidad" value="'+val.modalidad+'">'+
+							'<input type="hidden" name="numeroIntegrantes" value="'+val.numeroIntegrantes+'">'+
+							'<input type="hidden" name="cantidadEquipos" value="'+val.cantidadEquipos+'">'+
+							'<input type="hidden" name="cantidadInscrito" value="'+val.cantidadInscrito+'">'+
+							'<input type="hidden" name="edadInicial" value="'+val.edadInicial+'">'+
+							'<input type="hidden" name="edadFinal" value="'+val.edadFinal+'">'+
+							'<input type="hidden" name="fechaComparacion" value="'+val.fechaComparacion+'">'+
+							'<input type="hidden" name="documento" value="'+val.documento+'">'+
+							'<input type="hidden" name="siNombreEquipo" value="'+val.siNombreEquipo+'">'+
+							'<input type="hidden" name="siNombreProyecto" value="'+val.siNombreProyecto+'">'+
+							'<input type="hidden" name="gestion" value="'+val.gestion+'">'+
+							'<input type="hidden" name="periodo" value="'+val.periodo+'">'+
+							'<input type="hidden" name="primaria" value="'+val.id+'">'+
+							'<input type="hidden" name="secundaria" value="'+val.id+'">'+
+							val.categoria +'</td>');
+				fila.append('<td>'+ val.modalidadNombre +'</td>');
+				fila.append('<td>'+ val.numeroIntegrantesNombre +'</td>');
+				fila.append('<td>'+ val.cantidadEquipos +'</td>');
+				fila.append('<td>'+ val.cantidadInscrito +'</td>');
+				fila.append('<td>'+ val.edadInicial +'</td>');
+				fila.append('<td>'+ val.edadFinal +'</td>');
+				fila.append('<td>'+ val.fechaComparacion +'</td>');
+				fila.append('<td>'+ val.documento +'</td>');
+				fila.append('<td>'+ val.siNombreEquipo +'</td>');
+				fila.append('<td>'+ val.siNombreProyecto +'</td>');
+				fila.append('<td>'+ val.gestion +'</td>');
+				fila.append('<td>'+ val.periodo +'</td>');
+				fila.append('<td id="grados'+index+'"></td>');
+
+
+				fila.append('<td><button type="button" onclick="openModal('+ index +')" class="btn btn-primary btn-xs"> <i class="fa fa-pencil"></i> </button> <button type="button" onclick="removeRegla('+ index +')" class="btn btn-danger btn-xs"> <i class="fa fa-trash"></i> </button></td>');
+
+
+				for(j=0; j<reglas.length; j++){
+					for(var i=0; i<reglas[j].primaria.length; i++){
+						fila.append('<input type="hidden" name="primaria[]" value="'+ reglas[j].primaria[i].id +'">');
+					}
+					for(var i=0; i<reglas[j].secundaria.length; i++){
+						fila.append('<input type="hidden" name="secundaria[]" value="'+ reglas[j].secundaria[i].id +'">');
+					}
+				}
+
+				//console.log(regla[0].primaria.length);
+				
+
+				tabla.append(fila);
+			});
+
+			$('#reglas').empty();
+			$('#reglas').append(tabla);
+
+			for(j=0; j<reglas.length; j++){
+				if(reglas[j].primaria.length > 0){
+					$('#grados'+j).append('<div><strong>Primaria</strong></div>');
+				}
+				for(var i=0; i<reglas[j].primaria.length; i++){
+					$('#grados'+j).append(reglas[j].primaria[i].grado + '<br>');
+				}
+				if(reglas[j].secundaria.length > 0){
+					$('#grados'+j).append('<div><strong>Secundaria</strong></div>');
+				}
+				for(var i=0; i<reglas[j].secundaria.length; i++){
+					$('#grados'+j).append(reglas[j].secundaria[i].grado + '<br>');
+				}
+			}
+		}
+
+		function removeRegla(i){
+			$('#r_'+i).remove();
+			mostrarReglas();
+		}
+
+	</script>
+{% endblock %}
+

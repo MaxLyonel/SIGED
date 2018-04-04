@@ -34,6 +34,9 @@ class OlimRegistroOlimpiada
      */
     private $gestionTipoId;
 
+    public function __toString(){
+        return $this->nombreOlimpiada;
+    }
 
     /**
      * Get id
@@ -53,7 +56,7 @@ class OlimRegistroOlimpiada
      */
     public function setNombreOlimpiada($nombreOlimpiada)
     {
-        $this->nombreOlimpiada = $nombreOlimpiada;
+        $this->nombreOlimpiada = mb_strtoupper($nombreOlimpiada,'utf-8');
     
         return $this;
     }

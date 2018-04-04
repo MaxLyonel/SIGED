@@ -322,4 +322,74 @@ class OlimDirectorInscripcionDatosController extends Controller
             ->getForm()
         ;
     }
+
+    /**
+     * Displays a form to edit an existing OlimDirectorInscripcionDatos entity.
+     *
+     */
+    public function editManualAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+
+        $entity = $em->getRepository('SieAppWebBundle:OlimDirectorInscripcionDatos')->find($form['datosId']);
+        
+        if (!$entity) {
+            return $this->redirect($this->generateUrl('olimtutor_listTutorBySie'));
+        }
+
+        $editForm = $this->createEditManualForm($entity);
+
+        return $this->render('SieOlimpiadasBundle:OlimDirectorInscripcionDatos:edit.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+        ));
+    }
+
+    /**
+    * Creates a form to edit a OlimDirectorInscripcionDatos entity.
+    *
+    * @param OlimDirectorInscripcionDatos $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createEditManualForm(OlimDirectorInscripcionDatos $entity)
+    {
+        $form = $this->createForm(new OlimDirectorInscripcionDatosType(), $entity, array(
+            'action' => $this->generateUrl('olimdirectordata_manual_update', array('id' => $entity->getId())),
+            'method' => 'PUT',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Actualizar'));
+
+        return $form;
+    }
+
+    /**
+     * Edits an existing OlimDirectorInscripcionDatos entity.
+     *
+     */
+    public function updateManualAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('SieAppWebBundle:OlimDirectorInscripcionDatos')->find($id);
+
+        if (!$entity) {
+            return $this->redirect($this->generateUrl('olimtutor_listTutorBySie'));
+        }
+
+        $editForm = $this->createEditManualForm($entity);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('olimtutor_listTutorBySie'));
+        }
+
+        return $this->render('SieOlimpiadasBundle:OlimDirectorInscripcionDatos:edit.html.twig', array(
+            'entity'      => $entity
+        ));
+    }
 }

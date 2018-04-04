@@ -23,6 +23,88 @@
     <!--/ End page header -->
 
     <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-5 col-md-offset-1">
+                <div class="panel panel-info shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Datos Institución Educativa</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding">
+                        <!-- Start list message -->
+                        <div class="media-list">
+                            <div class="media">
+                                <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/25.png')}}" class="media-object img-circle" alt="..."></div>
+                                <div class="media-body">
+                                    <span class="media-heading">
+                                        {{institucion.id}} - {{institucion.institucioneducativa}}
+                                    </span>
+                                    <span class="media-text">
+                                        <b>Código LE:</b> {{institucion.leJuridicciongeografica.id}} <br />
+                                        <b>Subsistema:</b> {{institucion.orgcurricularTipo.orgcurricula}} <br />
+                                        <b>Dependencia:</b> {{institucion.dependenciaTipo.dependencia}} <br />
+                                    </span>
+                                    <!-- Start meta icon -->
+                                    
+                                    <!--/ End meta icon -->
+                                </div><!-- /.media-body -->
+                            </div><!-- /.media -->
+
+                        </div>
+                        <!--/ End list message -->
+
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                    <div class="panel panel-info shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">Datos Director(a)</h3>
+                            </div>
+                            <div class="pull-right">
+                                <form method="post" action="{{path('olimdirectordata_manual_edit')}}">
+                                    <input type="hidden" id="form_datosId" name="form[datosId]" value="{{director.datosId}}">
+                                    <input type="hidden" id="form_personaId" name="form[personaId]" value="{{director.personaId}}">
+                                    <input type="hidden" id="form_maestroId" name="form[maestroId]" value="{{director.maestroId}}">
+                                    <button type="submit" class="btn btn-sm btn-primary">Editar</button>
+                                </form>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body no-padding">
+                            <!-- Start list message -->
+                            <div class="media-list">
+                                <div class="media">
+                                    <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
+                                    <div class="media-body">
+                                        <span class="media-heading">
+                                            {{director.nombre}}
+                                            {{director.paterno}}
+                                            {{director.materno}}
+                                        </span>
+                                        <span class="media-text">
+                                            <b>Teléfono 1:</b> {{director.telefono1}} </br>
+                                            <b>Teléfono 2:</b> {{director.telefono2}} </br>
+                                            <b>Correo Electrónico:</b> {{director.correoElectronico}}
+                                        </span>
+                                        <!-- Start meta icon -->
+                                        
+                                        <!--/ End meta icon -->
+                                    </div><!-- /.media-body -->
+                                </div><!-- /.media -->
+    
+                            </div>
+                            <!--/ End list message -->
+    
+                        </div><!-- /.panel-body -->
+                    </div>
+                </div>
+        </div>
+
     <div class="row">
           <div class="col-md-10 col-md-offset-1">
               <!-- this is the beginner -->
@@ -36,12 +118,12 @@
                                 <div class="clearfix"></div>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body no-padding">
-                            <ul>
-                                <li>
-                                   {{form(formNewTutor)}}
-                                </li>
-                            </ul>
-                               <table class="table">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{form(formNewTutor)}}
+                                </div>
+                            </div>
+                            <table class="table">
                                 <thead>
                                     <tr>
                                         <th>#</th>

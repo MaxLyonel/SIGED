@@ -60,6 +60,7 @@ class OlimTutorController extends Controller{
                 $form = $request->get('form');
                 // dump($form);die;
                 $institucioneducativa = $form['sie'];
+                $gestion = $form['gestion'];
                     if(isset($form['newtutor'])){
                                 $arrSendData = json_decode($form['newtutor'],true);
                                 // dump($arrSendData);die;
@@ -90,6 +91,7 @@ class OlimTutorController extends Controller{
         }else{
             //set teh institucioneducativa variable
             $institucioneducativa = $this->session->get('ie_id');
+            $gestion = $this->session->get('currentyear');
         }
 
         array_pop($form);
@@ -112,9 +114,29 @@ class OlimTutorController extends Controller{
         $datainscription = array('sie'=>$institucioneducativa, 'OlimRegistroOlimpiadaId'=>$objOlimRegistroOlimpiada->getId());
         $entities = $this->get('olimfunctions')->getTutores2($datainscription);
         // dump($entities);die;
+
+        $repositorio = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
+        $query = $repositorio->createQueryBuilder('a')
+            ->select('a.id as maestroId, b.id as personaId, c.id as datosId, b.carnet, b.paterno, b.materno, b.nombre, c.telefono1, c.telefono2, c.correoElectronico')
+            ->innerjoin('SieAppWebBundle:Persona', 'b', 'WITH', 'a.persona = b.id')
+            ->innerjoin('SieAppWebBundle:OlimDirectorInscripcionDatos', 'c', 'WITH', 'c.maestroInscripcion=a.id')
+            ->where('a.gestionTipo = :gestion')
+            ->andwhere('a.institucioneducativa = :sie')
+            ->andwhere('a.esVigenteAdministrativo = :vigente')
+            ->setParameter('gestion', $gestion)
+            ->setParameter('sie', $institucioneducativa)
+            ->setParameter('vigente', 't')
+            ->getQuery();
+
+        $director = $query->getSingleResult();
+
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucioneducativa);
+
         return $this->render('SieOlimpiadasBundle:OlimTutor:listTutor.html.twig', array(
             'entities' => $entities,
-            'formNewTutor' => $this->formNewTutor(json_encode($form))->createView()
+            'formNewTutor' => $this->formNewTutor(json_encode($form))->createView(),
+            'director' => $director,
+            'institucion' => $institucion
         ));
     }
 

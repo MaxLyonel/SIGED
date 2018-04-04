@@ -1,0 +1,88 @@
+<style type="text/css">
+	.grados input[type=checkbox]{
+		margin-right: 5px;
+		margin-left: 20px;
+	}
+</style>
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h4 class="modal-title">Modal title</h4>
+		</div>
+		<div class="modal-body">
+			{{ form_start(form) }}
+			
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<label>Categoría</label>
+					{{ form_widget(form.categoria, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<hr>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>Modalidad Participacion</label>
+					{{ form_widget(form.modalidadParticipacionTipo, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>NUmero de integrantes</label>
+					{{ form_widget(form.modalidadNumeroIntegrantesTipo, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>Cantidad equipos</label>
+					{{ form_widget(form.cantidadEquipos, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>Cantidad de inscritos</label>
+					{{ form_widget(form.cantidadInscritosGrado, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>Edad inicial</label>
+					{{ form_widget(form.edadInicial, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>Edad final</label>
+					{{ form_widget(form.edadFinal, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>Fecha comparacion</label>
+					{{ form_widget(form.fechaComparacion, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>Documento</label>
+					{{ form_widget(form.siSubirDocumento, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>Si nombre equipo</label>
+					{{ form_widget(form.siNombreEquipo, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>Si nombre proyecto</label>
+					{{ form_widget(form.siNombreProyecto, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>Gestion</label>
+					{{ form_widget(form.gestionTipoId, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<label>Periodo</label>
+					{{ form_widget(form.periodoTipoId, {'attr':{'class':'form-control'} }) }}
+				</div>
+				<div class="form-group grados col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<label>Primaria</label>
+					{{ form_widget(form.primaria, {'attr':{'class':'pri'} }) }}
+				</div>
+				<div class="form-group grados col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<label>Secundaria</label>
+					{{ form_widget(form.secundaria, {'attr':{'class':'sec'} }) }}
+				</div>
+				
+			</div>
+
+			{{ form_end(form) }}
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+			<button type="button" onclick="saveRegla();" class="btn btn-primary">Guardar</button>
+		</div>
+	</div>
+</div>

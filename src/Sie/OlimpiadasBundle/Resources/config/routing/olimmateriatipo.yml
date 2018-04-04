@@ -1,0 +1,44 @@
+olimmateriatipo:
+    path:     /materias/{id}
+    defaults: { _controller: "SieOlimpiadasBundle:OlimMateriaTipo:index", id: null }
+
+olimmateriatipo_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieOlimpiadasBundle:OlimMateriaTipo:show" }
+
+olimmateriatipo_new:
+    path:     /new
+    defaults: { _controller: "SieOlimpiadasBundle:OlimMateriaTipo:new" }
+
+olimmateriatipo_create:
+    path:     /create
+    defaults: { _controller: "SieOlimpiadasBundle:OlimMateriaTipo:create" }
+    methods:  POST
+
+olimmateriatipo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieOlimpiadasBundle:OlimMateriaTipo:edit" }
+
+olimmateriatipo_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieOlimpiadasBundle:OlimMateriaTipo:update" }
+    methods:  [POST, PUT]
+
+olimmateriatipo_delete:
+    path:     /delete
+    defaults: { _controller: "SieOlimpiadasBundle:OlimMateriaTipo:delete" }
+    methods:  [POST, DELETE]
+
+# Funciones ajax
+
+olimmateriatipo_getReglas:
+    path:     /getReglas
+    defaults: { _controller: "SieOlimpiadasBundle:OlimMateriaTipo:getReglas" }
+    options:
+        expose: true
+
+olimmateriatipo_createRegla:
+    path:     /createRegla
+    defaults: { _controller: "SieOlimpiadasBundle:OlimMateriaTipo:createRegla" }
+    options:
+        expose: true

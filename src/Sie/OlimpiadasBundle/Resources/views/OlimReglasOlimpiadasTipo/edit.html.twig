@@ -1,0 +1,256 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+    <style type="text/css">
+        .titulos{
+            margin-bottom: 20px;
+        }
+        input[type=radio]{
+            margin-left: 10px;
+            margin-right: 5px;
+        }
+        .niveles{
+            background: #FFFFFF;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #EEEEEE;
+        }
+    </style>
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-book"></i> Editar categoria<span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    <a href="{{ path('olimregistroolimpiada')}}"> Olimpiadas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{{ path('olimmateriatipo')}}"> Materias</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{{ path('olimreglasolimpiadastipo')}}"> Categorías</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    Editar
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+
+                {% include 'SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:materiaDatos.html.twig' %}
+
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title"> Datos categoria </h3>
+                        </div>
+                        <div class="pull-right">
+                            
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+
+                        {{ form_start(edit_form) }}
+                            <div class="row">
+                                <div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <h4 class="titulos">Categoría</h4>
+                                    <label>Nombre categoría</label>
+                                    {{ form_widget(edit_form.categoria, {'attr':{'class':'form-control'} }) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                                    <h4 class="titulos">Reglas</h4>
+
+                                    <div class="row">
+                                        <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                            <label>Modalidad participacion</label>
+                                            {{ form_widget(edit_form.modalidadParticipacionTipo, {'attr':{'class':'form-control'} }) }}
+                                        </div>
+                                        <div id="numeroIntegrantes" class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                            <label>Modalidad numero integrantes</label>
+                                            {{ form_widget(edit_form.modalidadNumeroIntegrantesTipo, {'attr':{'class':'form-control'} }) }}
+                                        </div>
+                                        <div id="cantidadEquipos" class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                            <label>Cantidad de equipos</label>
+                                            {{ form_widget(edit_form.cantidadEquipos, {'attr':{'class':'form-control'} }) }}
+                                        </div>
+                                        <div id="cantidadInscritos" class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                            <label>Cantidad inscritos</label>
+                                            {{ form_widget(edit_form.cantidadInscritosGrado, {'attr':{'class':'form-control'} }) }}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                
+                                <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    <label>Edad inicial</label>
+                                    {{ form_widget(edit_form.edadInicial, {'attr':{'class':'form-control'} }) }}
+                                </div>
+                                <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    <label>Edad final</label>
+                                    {{ form_widget(edit_form.edadFinal, {'attr':{'class':'form-control'} }) }}
+                                </div>
+                                <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    <label>Fecha comparacion</label>
+                                    {{ form_widget(edit_form.fechaComparacion, {'attr':{'class':'form-control'} }) }}
+                                </div>
+                                <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    <label>Subir documento PDF</label>
+                                    {{ form_widget(edit_form.siSubirDocumento, {'attr':{'class':''} }) }}
+                                </div>
+                                <div id="nombreEquipo" class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    <label>Nombre del equipo</label>
+                                    {{ form_widget(edit_form.siNombreEquipo, {'attr':{'class':'', 'required': false} }) }}
+                                </div>
+                                <div id="nombreProyecto" class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    <label>Nombre del proyecto</label>
+                                    {{ form_widget(edit_form.siNombreProyecto, {'attr':{'class':'', 'required': false} }) }}
+                                </div>
+                                
+                                
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <h4 class="titulos">Niveles</h4>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <div class="niveles">
+                                        <p><strong>Primaria</strong></p>
+                                        <div class="checkbox">
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.pri1) }}
+                                                Primero
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.pri2) }}
+                                                Segundo
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.pri3) }}
+                                                Tercero
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.pri4) }}
+                                                Cuarto
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.pri5) }}
+                                                Quinto
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.pri6) }}
+                                                Sexto
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <div class="niveles">
+                                        <p><strong>Secundaria</strong></p>
+                                        <div class="checkbox">
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.sec1) }}
+                                                Primero
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.sec2) }}
+                                                Segundo
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.sec3) }}
+                                                Tercero
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.sec4) }}
+                                                Cuarto
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.sec5) }}
+                                                Quinto
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                {{ form_widget(edit_form.sec6) }}
+                                                Sexto
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i> Guardar cambios </button>
+                            <a href="{{ path('olimreglasolimpiadastipo') }}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar</a>
+
+                        {{ form_end(edit_form) }}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+
+    	$(function(){
+    		controles();
+    	});
+
+        $('#sie_appwebbundle_olimreglasolimpiadastipo_modalidadParticipacionTipo').on('change', function(){
+            controles();
+        });
+
+        function controles(){
+        	if($('#sie_appwebbundle_olimreglasolimpiadastipo_modalidadParticipacionTipo').val() == 1){
+        	    console.log('individual');
+        	    $('#numeroIntegrantes').css('display','none');
+        	    $('#cantidadEquipos').css('display','none');
+
+        	    $('#sie_appwebbundle_olimreglasolimpiadastipo_modalidadNumeroIntegrantesTipo').val('');
+        	    $('#sie_appwebbundle_olimreglasolimpiadastipo_cantidadEquipos').val('');
+
+        	    $('#nombreEquipo').css('display','none');
+        	    $('#nombreProyecto').css('display','none');
+
+        	    $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreEquipo_1').prop('checked','checked');
+        	    $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreProyecto_1').prop('checked','checked');
+
+        	    $('#cantidadInscritos').css('display','block');
+        	}else{
+        	    console.log('grupal');
+        	    $('#numeroIntegrantes').css('display','block');
+        	    $('#cantidadEquipos').css('display','block');
+
+        	    $('#sie_appwebbundle_olimreglasolimpiadastipo_cantidadInscritosGrado').val('');
+
+        	    $('#nombreEquipo').css('display','block');
+        	    $('#nombreProyecto').css('display','block');
+        	    // $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreEquipo_0').removeAttr('checked');
+        	    // $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreProyecto_0').removeAttr('checked');
+        	    // $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreEquipo_1').removeAttr('checked');
+        	    // $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreProyecto_1').removeAttr('checked');
+        	    
+        	    $('#cantidadInscritos').css('display','none');
+        	}
+        }
+    </script>
+{% endblock %}

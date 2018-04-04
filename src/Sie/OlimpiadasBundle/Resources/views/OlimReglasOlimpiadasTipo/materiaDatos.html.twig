@@ -1,0 +1,27 @@
+<style>
+	a{
+		color: #000000;
+	}
+	a:hover{
+		text-decoration: none;
+	}
+</style>
+<div class="panel rounded shadow">
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				<blockquote>
+		            <p><strong><a href="{{ path('olimmateriatipo') }}">{{ olimpiada.nombreOlimpiada }}</a></strong></p>
+		            <footer>Gestión <cite title="Source Title">{{ olimpiada.gestionTipoId }}</cite></footer>
+		        </blockquote>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				<blockquote>
+		            <p><strong><a href="{{ path('olimreglasolimpiadastipo') }}">{{ materia.materia }}</a></strong></p>
+		            <footer>Fecha Inicio <cite title="Source Title">{{ materia.fechaInsIni | date('d-m-Y') }}</cite></footer>
+		            <footer>Fecha Final <cite title="Source Title">{{ materia.fechaInsFin | date('d-m-Y') }}</cite></footer>
+		        </blockquote>
+			</div>
+		</div>
+	</div>
+</div>
