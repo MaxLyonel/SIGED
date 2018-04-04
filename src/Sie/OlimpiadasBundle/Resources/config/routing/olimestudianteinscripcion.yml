@@ -93,4 +93,14 @@ oliminscriptions_selectInscription:
     path:     /selectInscription
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:selectInscription" }
 
+oliminscriptions_getNiveles:
+    path:     /getNiveles
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getNiveles" }
+    options:
+        expose: true
 
+oliminscriptions_getGrados:
+    path:     /getGrados
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getGrados" }
+    options:
+        expose: true

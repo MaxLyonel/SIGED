@@ -14,6 +14,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * OlimEstudianteInscripcion controller.
  *
  */
+/**
+ * Author: Carlos Pacha Cordova <pckrlos@gmail.com>
+ * Description:This is a class for load the inscription data; if exist in a particular proccess
+ * Date: 03-04-2018
+ *
+ *
+ * OlimEstudianteInscripcionController.php
+ *
+ * Email bugs/suggestions to <pckrlos@gmail.com>
+ */
+
 class OlimEstudianteInscripcionController extends Controller{
 
     private $sesion;
@@ -49,7 +60,7 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->add('olimMateria', 'choice', array('label'=>'materias','choices'=>$arrAreas,  'empty_value' => 'Seleccionar Materia'))
                 ->add('category', 'choice', array('label'=>'categoria', ))
                 ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($this->session->get('currentyear')=>$this->session->get('currentyear')), 'attr' => array('class' => 'form-control')))
-                ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), ))
+                // ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), ))
                 
                 ;
         // if($this->session->get('roluser')==8){
@@ -444,19 +455,117 @@ class OlimEstudianteInscripcionController extends Controller{
         return $response->setData(array('agrados' => $arrGrados));
     }
 
-    /**
+  
+
+
+
+    public function selectInscriptionAction(Request $request){
+        // get the send values
+        $form = $request->get('form');
+        // dump($form);die;
+        $objTutorSelected = $this->get('olimfunctions')->getTutor2($form);
+        // dump($objTutorSelected);die;
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:selectInscription.html.twig', array(
+            'form' => $this->selectInscriptionForm($form)->createView(),
+            'tutor' => $objTutorSelected
+
+        ));
+    }
+
+     private function selectInscriptionForm($data){
+        // dump($data);die;
+        $arrAreas = $this->get('olimfunctions')->getAllowedAreasByOlim();
+        // dump($arrAreas);die;
+        $newform = $this->createFormBuilder()
+                ->add('olimMateria', 'choice', array('label'=>'materias','choices'=>$arrAreas,  'empty_value' => 'Seleccionar Materia'))
+                ->add('category', 'choice', array('label'=>'categoria', ))
+                ->add('nivel', 'choice', array('label'=>'Nivel', ))
+                ->add('grado', 'choice', array('label'=>'Grado', ))
+                ->add('paralelo', 'choice', array('label'=>'Paralelo', ))
+                ->add('turno', 'choice', array('label'=>'Turno', ))
+                ->add('gestion', 'hidden', array('mapped' => false, 'label' => 'Gestion', 'attr' => array('class' => 'form-control', 'value'=>$data['gestiontipoid'])))
+                // ->add('buscar', 'button', array('label'=>'Cancelar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), )) 
+                ;
+        // if($this->session->get('roluser')==8){
+            $newform = $newform
+                ->add('institucionEducativa', 'hidden', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control', 'value'=>$data['institucioneducativaid'])))
+                ;
+        // }
+
+        $newform = $newform->getForm();
+        return $newform;
+
+    }
+
+
+    public function getNivelesAction(Request $request){
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        //get the send values
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+
+         $objNiveles = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasNivelGradoTipo')->findBy(array(
+            'olimReglasOlimpiadasTipo' => $categoryId,
+        ));
+         
+        $arrNiveles = array();
+        foreach ($objNiveles as $value) {    
+            $arrNiveles[$value->getNivelTipo()->getId()] = $value->getNivelTipo()->getNivel();
+        }
+        
+        ksort($arrNiveles);
+        // dump($arrNiveles);die;
+        $response = new JsonResponse();
+        return $response->setData(array('arrNiveles' => $arrNiveles));
+        dump($nivelId);die;
+    }
+
+  public function getGradosAction(Request $request){
+    // dump($request);die;
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        //get the send values
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        $nivelId = $request->get('nivelId');
+
+         $objNiveles = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasNivelGradoTipo')->findBy(array(
+            'olimReglasOlimpiadasTipo' => $categoryId,
+            'nivelTipo' => $nivelId,
+        ));
+         
+        $arrGrados = array();
+        foreach ($objNiveles as $value) {    
+            $arrGrados[$value->getGradoTipo()->getId()] = $value->getGradoTipo()->getGrado();
+        }
+        
+        ksort($arrGrados);
+        // dump($arrGrados);die;
+        $response = new JsonResponse();
+        return $response->setData(array('arrGrados' => $arrGrados));
+        dump($nivelId);die;
+    }
+
+      /**
      * [getParaleloAction description]
      * @param  Request $request [description]
      * @return [type]           [description]
      */
     public function getParaleloAction(Request $request) {
-        //get the send values
-        $grado = $request->get('grado');
-        $jsonRule = $request->get('jsonRule');
-        $nivel = $request->get('nivel');
-        $arrData = json_decode($jsonRule, true);
-        $sie = $arrData['institucionEducativa'];
-        $gestion = $arrData['gestion'];
+        // dump($request);
+        // die;
+        //get the send values        
+        $gradoId = $request->get('gradoId');
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        $nivelId = $request->get('nivelId');
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');;
+        /*dump($sie);
+        dump($nivelId);
+        dump($gradoId);
+        dump($gestion);*/
         $em = $this->getDoctrine()->getManager();
         //get grado
         $aparalelos = array();
@@ -469,8 +578,8 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->andwhere('iec.gradoTipo = :grado')
                 ->andwhere('iec.gestionTipo = :gestion')
                 ->setParameter('sie', $sie)
-                ->setParameter('nivel', $nivel)
-                ->setParameter('grado', $grado)
+                ->setParameter('nivel', $nivelId)
+                ->setParameter('grado', $gradoId)
                 ->setParameter('gestion', $gestion)
                 ->distinct()
                 ->orderBy('iec.paraleloTipo', 'ASC')
@@ -485,20 +594,22 @@ class OlimEstudianteInscripcionController extends Controller{
         return $response->setData(array('aparalelos' => $aparalelos));
     }
 
+
     /**
      * [findturnoAction description]
      * @param  Request $request [description]
      * @return [type]           [description]
      */
     public function getTurnoAction(Request $request) {
-        //get the send values
-        $paralelo = $request->get('paralelo');
-        $grado = $request->get('grado');
-        $jsonRule = $request->get('jsonRule');
-        $nivel = $request->get('nivel');
-        $arrData = json_decode($jsonRule, true);
-        $sie = $arrData['institucionEducativa'];
-        $gestion = $arrData['gestion'];
+        
+        //get the send values     
+        $paraleloId = $request->get('paraleloId');
+        $gradoId = $request->get('gradoId');
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        $nivelId = $request->get('nivelId');
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');;
         //create db conexion
         $em = $this->getDoctrine()->getManager();
         // get turnos
@@ -513,9 +624,9 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->andwhere('iec.paraleloTipo = :paralelo')
                 ->andWhere('iec.gestionTipo = :gestion')
                 ->setParameter('sie', $sie)
-                ->setParameter('nivel', $nivel)
-                ->setParameter('grado', $grado)
-                ->setParameter('paralelo', $paralelo)
+                ->setParameter('nivel', $nivelId)
+                ->setParameter('grado', $gradoId)
+                ->setParameter('paralelo', $paraleloId)
                 ->setParameter('gestion', $gestion)
                 ->distinct()
                 ->orderBy('iec.turnoTipo', 'ASC')
@@ -531,38 +642,47 @@ class OlimEstudianteInscripcionController extends Controller{
 
 
     public function getStudentsAction(Request $request){
+        // dump($request);die;
         //create db conexino
         $em = $this->getDoctrine()->getManager();
          //get the send values
-        $turno = $request->get('turno');
-        $paralelo = $request->get('paralelo');
-        $grado = $request->get('grado');
-        $jsonRule = $request->get('jsonRule');
-        $nivel = $request->get('nivel');
-        $arrData = json_decode($jsonRule, true);
-        
-        $sie = $arrData['institucionEducativa'];
-        $gestion = $arrData['gestion'];
+        $turnoId = $request->get('turnoId');
+        $paraleloId = $request->get('paraleloId');
+        $gradoId = $request->get('gradoId');
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        $nivelId = $request->get('nivelId');
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');;
         //look for the id of institucioneducativa_curso
         $objInstitucionEducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy( array(
-             'nivelTipo' =>$nivel,
-             'gradoTipo' => $grado,
-             'paraleloTipo'=> $paralelo,
-             'turnoTipo' => $turno, 
+             'nivelTipo' =>$nivelId,
+             'gradoTipo' => $gradoId,
+             'paraleloTipo'=> $paraleloId,
+             'turnoTipo' => $turnoId, 
              'institucioneducativa' => $sie,
              'gestionTipo' => $gestion
         ));
         
         $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
-        // dump($objStudentsToOlimpiadas);
+        // $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion);
+        
         $arrCorrectStudent = array();
         foreach ($objStudentsToOlimpiadas as $key => $value) {
-
+            
             $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
             $value['fecha_nacimiento'] = $newStudentDate;
             $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, '30-6-2018');
             $value['yearsOld'] = $studentYearsOld[0];
-            $arrCorrectStudent[]=($value);
+
+            $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
+            // dump($objStudentsInOlimpiadas);
+            if($objStudentsInOlimpiadas){
+            }else{
+                $arrCorrectStudent[]=($value);    
+            }
+
+            
             
 
         }
@@ -573,18 +693,32 @@ class OlimEstudianteInscripcionController extends Controller{
         // die;
         
         // dump($objStudentsToOlimpiadas);die;
+        // get the data to do the inscription 
+        $jsonDataInscription = json_encode( array(
 
+                'turnoId' => $request->get('turnoId'),
+                'paraleloId' => $request->get('paraleloId'),
+                'gradoId' => $request->get('gradoId'),
+                'materiaId' => $request->get('materiaId'),
+                'categoryId' => $request->get('categoryId'),
+                'nivelId' => $request->get('nivelId'),
+                'sie' => $request->get('sie'),
+                'gestion' => $request->get('gestion'),
+                'institucionEducativaCursoId' => $objInstitucionEducativaCurso->getId(),
+        ));
+        // dump($jsonDataInscription);die;
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
             'objStudentsToOlimpiadas' => $arrCorrectStudent,
-            'form' => $this->studentsRegisterform()->createView(),
+            'form' => $this->studentsRegisterform($jsonDataInscription)->createView(),
             'objDiscapacidad' => $objDiscapacidad,
 
         ));
     }
 
-    private function studentsRegisterform(){
+    private function studentsRegisterform($jsonDataInscription){
         return $this->createFormBuilder()
                 ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegister()')))
+                ->add('jsonDataInscription','text', array('data'=>$jsonDataInscription))
                 ->getForm()
                 ;
 
@@ -596,75 +730,49 @@ class OlimEstudianteInscripcionController extends Controller{
         $em =  $this->getDoctrine()->getManager();
         //get the send values
         $form = $request->get('form');
+        $jsonDataInscription = $form['jsonDataInscription'];
+        $arrDataInscription = json_decode($jsonDataInscription, true);
+        
+        /*dump($arrDataInscription);
+        dump($jsonDataInscription);
+        dump($form);
+        die;*/
         // remove the las elemento of form array
         array_pop($form);
         //count the send elements
         //if everything ok on the rule do the save
+        
+        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_estudiante_inscripcion');");
+        $query->execute();
         reset ($form);
         while($val = current($form)){
             if(isset($val['studentInscription'])){
-                dump($val);   
+                // dump($val);   
                 $objOLimStudentInscription = new OlimEstudianteInscripcion();
                 $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
                 $objOLimStudentInscription->setCorreoEstudiante($val['email']);
                 $objOLimStudentInscription->setFechaRegistro(new \DateTime('now'));
                 $objOLimStudentInscription->setUsuarioRegistroId($this->session->get('userId'));
-                $objOLimStudentInscription->setReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($val['fono']) );
-                $objOLimStudentInscription->setCategoriaTipo($em->getRepository('SieAppWebBundle:OlimCategoriaTipo')->find($val['fono']));
-                $objOLimStudentInscription->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($val['fono']));
+                $objOLimStudentInscription->setOlimReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($arrDataInscription['categoryId']) );
+                // $objOLimStudentInscription->setCategoriaTipo($em->getRepository('SieAppWebBundle:OlimCategoriaTipo')->find($val['fono']));
+                $objOLimStudentInscription->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($arrDataInscription['materiaId']));
                 $objOLimStudentInscription->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->find($val['discapacidad']));
                 $objOLimStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($val['studentInscription']));
-                $objOLimStudentInscription->setGestionTipoId($val['fono']);
-                $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
-                $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
-
-
+                $objOLimStudentInscription->setGestionTipoId($arrDataInscription['gestion']);
+                
+                $em->persist($objOLimStudentInscription);
+                $em->flush();
             }
             next($form);
         }
 
         // dump($form);
 
-dump(sizeof($form));die;
+        // dump(sizeof($form));die;
+        echo('inscription DONE!!!!');die;
 
 
 
-
-
-    }
-
-
-    public function selectInscriptionAction(Request $request){
-        // get the send values
-        $form = $request->get('form');
-        
-        $objTutorSelected = $this->get('olimfunctions')->getTutor2($form);
-        // dump($objTutorSelected);die;
-        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:selectInscription.html.twig', array(
-            'form' => $this->selectInscriptionForm()->createView(),
-            'tutor' => $objTutorSelected
-
-        ));
-    }
-
-     private function selectInscriptionForm(){
-        
-        $arrAreas = $this->get('olimfunctions')->getAllowedAreasByOlim();
-        // dump($arrAreas);die;
-        $newform = $this->createFormBuilder()
-                ->add('olimMateria', 'choice', array('label'=>'materias','choices'=>$arrAreas,  'empty_value' => 'Seleccionar Materia'))
-                ->add('category', 'choice', array('label'=>'categoria', ))
-                // ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($this->session->get('currentyear')=>$this->session->get('currentyear')), 'attr' => array('class' => 'form-control')))
-                ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), ))
-                ;
-        // if($this->session->get('roluser')==8){
-            $newform = $newform
-                ->add('institucionEducativa', 'hidden', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control', 'value'=>$this->session->get('ie_id'))))
-                ;
-        // }
-
-        $newform = $newform->getForm();
-        return $newform;
 
     }
 

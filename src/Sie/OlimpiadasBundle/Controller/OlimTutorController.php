@@ -94,11 +94,11 @@ class OlimTutorController extends Controller{
             $gestion = $this->session->get('currentyear');
         }
 
-        array_pop($form);
+        // array_pop($form);
 
         $em = $this->getDoctrine()->getManager();
         $objOlimRegistroOlimpiada = $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->findOneBy(array(
-            'gestionTipoId'=>$form['gestion']
+            'gestionTipoId'=>$gestion
         ));
         // dump($objOlimRegistroOlimpiada);
 

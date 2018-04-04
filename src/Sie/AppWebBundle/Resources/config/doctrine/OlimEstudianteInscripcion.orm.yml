@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\OlimEstudianteInscripcion:
     type: entity
     table: olim_estudiante_inscripcion
     indexes:
+        IDX_3F5715E9EC697A22:
+            columns:
+                - olim_tutor_id
         IDX_3F5715E93C52DD18:
             columns:
                 - olim_reglas_olimpiadas_tipo_id
@@ -100,6 +103,15 @@ Sie\AppWebBundle\Entity\OlimEstudianteInscripcion:
             comment: ''
             column: gestion_tipo_id
     manyToOne:
+        olimTutor:
+            targetEntity: OlimTutor
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_tutor_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         olimReglasOlimpiadasTipo:
             targetEntity: OlimReglasOlimpiadasTipo
             cascade: {  }

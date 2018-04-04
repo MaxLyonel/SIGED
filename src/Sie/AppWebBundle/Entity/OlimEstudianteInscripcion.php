@@ -500,4 +500,32 @@ class OlimEstudianteInscripcion
     {
         return $this->estudianteInscripcion;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimTutor
+     */
+    private $olimTutor;
+
+
+    /**
+     * Set olimTutor
+     *
+     * @param \Sie\AppWebBundle\Entity\OlimTutor $olimTutor
+     * @return OlimEstudianteInscripcion
+     */
+    public function setOlimTutor(\Sie\AppWebBundle\Entity\OlimTutor $olimTutor = null)
+    {
+        $this->olimTutor = $olimTutor;
+    
+        return $this;
+    }
+
+    /**
+     * Get olimTutor
+     *
+     * @return \Sie\AppWebBundle\Entity\OlimTutor 
+     */
+    public function getOlimTutor()
+    {
+        return $this->olimTutor;
+    }
 }
