@@ -223,7 +223,7 @@ class Olimfunctions {
             if (!strlen($fecha_actual)) {
                 $fecha_actual = date('d-m-Y');
             }
-dump($fecha_actual);
+// dump($fecha_actual);
             // separamos en partes las fechas
             $array_nacimiento = explode("-", str_replace('/', '-', $fecha_nacimiento));
             $array_actual = explode("-", $fecha_actual);

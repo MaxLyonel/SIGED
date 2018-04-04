@@ -14,6 +14,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * OlimEstudianteInscripcion controller.
  *
  */
+/**
+ * Author: Carlos Pacha Cordova <pckrlos@gmail.com>
+ * Description:This is a class for load the inscription data; if exist in a particular proccess
+ * Date: 03-04-2018
+ *
+ *
+ * OlimEstudianteInscripcionController.php
+ *
+ * Email bugs/suggestions to <pckrlos@gmail.com>
+ */
+
 class OlimEstudianteInscripcionController extends Controller{
 
     private $sesion;
@@ -446,153 +457,6 @@ class OlimEstudianteInscripcionController extends Controller{
 
   
 
-    /**
-     * [findturnoAction description]
-     * @param  Request $request [description]
-     * @return [type]           [description]
-     */
-    public function getTurnoAction(Request $request) {
-        //get the send values
-        $paralelo = $request->get('paralelo');
-        $grado = $request->get('grado');
-        $jsonRule = $request->get('jsonRule');
-        $nivel = $request->get('nivel');
-        $arrData = json_decode($jsonRule, true);
-        $sie = $arrData['institucionEducativa'];
-        $gestion = $arrData['gestion'];
-        //create db conexion
-        $em = $this->getDoctrine()->getManager();
-        // get turnos
-        $aturnos = array();
-
-        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
-        $query = $entity->createQueryBuilder('iec')
-                ->select('(iec.turnoTipo)')
-                ->where('iec.institucioneducativa = :sie')
-                ->andWhere('iec.nivelTipo = :nivel')
-                ->andwhere('iec.gradoTipo = :grado')
-                ->andwhere('iec.paraleloTipo = :paralelo')
-                ->andWhere('iec.gestionTipo = :gestion')
-                ->setParameter('sie', $sie)
-                ->setParameter('nivel', $nivel)
-                ->setParameter('grado', $grado)
-                ->setParameter('paralelo', $paralelo)
-                ->setParameter('gestion', $gestion)
-                ->distinct()
-                ->orderBy('iec.turnoTipo', 'ASC')
-                ->getQuery();
-        $aTurnos = $query->getResult();
-        foreach ($aTurnos as $turno) {
-            $aturnos[$turno[1]] = $em->getRepository('SieAppWebBundle:TurnoTipo')->find($turno[1])->getTurno();
-        }
-
-        $response = new JsonResponse();
-        return $response->setData(array('aturnos' => $aturnos));
-    }
-
-
-    public function getStudentsAction(Request $request){
-        //create db conexino
-        $em = $this->getDoctrine()->getManager();
-         //get the send values
-        $turno = $request->get('turno');
-        $paralelo = $request->get('paralelo');
-        $grado = $request->get('grado');
-        $jsonRule = $request->get('jsonRule');
-        $nivel = $request->get('nivel');
-        $arrData = json_decode($jsonRule, true);
-        
-        $sie = $arrData['institucionEducativa'];
-        $gestion = $arrData['gestion'];
-        //look for the id of institucioneducativa_curso
-        $objInstitucionEducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy( array(
-             'nivelTipo' =>$nivel,
-             'gradoTipo' => $grado,
-             'paraleloTipo'=> $paralelo,
-             'turnoTipo' => $turno, 
-             'institucioneducativa' => $sie,
-             'gestionTipo' => $gestion
-        ));
-        
-        $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
-        // dump($objStudentsToOlimpiadas);
-        $arrCorrectStudent = array();
-        foreach ($objStudentsToOlimpiadas as $key => $value) {
-
-            $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
-            $value['fecha_nacimiento'] = $newStudentDate;
-            $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, '30-6-2018');
-            $value['yearsOld'] = $studentYearsOld[0];
-            $arrCorrectStudent[]=($value);
-            
-
-        }
-        //get the discapacidad
-        $objDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
-        
-        // dump($objDiscapacidad);
-        // die;
-        
-        // dump($objStudentsToOlimpiadas);die;
-
-        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
-            'objStudentsToOlimpiadas' => $arrCorrectStudent,
-            'form' => $this->studentsRegisterform()->createView(),
-            'objDiscapacidad' => $objDiscapacidad,
-
-        ));
-    }
-
-    private function studentsRegisterform(){
-        return $this->createFormBuilder()
-                ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegister()')))
-                ->getForm()
-                ;
-
-    }
-
-    public function studentsRegisterAction(Request $request){
-        
-        // create db conexioon
-        $em =  $this->getDoctrine()->getManager();
-        //get the send values
-        $form = $request->get('form');
-        // remove the las elemento of form array
-        array_pop($form);
-        //count the send elements
-        //if everything ok on the rule do the save
-        reset ($form);
-        while($val = current($form)){
-            if(isset($val['studentInscription'])){
-                dump($val);   
-                $objOLimStudentInscription = new OlimEstudianteInscripcion();
-                $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
-                $objOLimStudentInscription->setCorreoEstudiante($val['email']);
-                $objOLimStudentInscription->setFechaRegistro(new \DateTime('now'));
-                $objOLimStudentInscription->setUsuarioRegistroId($this->session->get('userId'));
-                $objOLimStudentInscription->setReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($val['fono']) );
-                $objOLimStudentInscription->setCategoriaTipo($em->getRepository('SieAppWebBundle:OlimCategoriaTipo')->find($val['fono']));
-                $objOLimStudentInscription->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($val['fono']));
-                $objOLimStudentInscription->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->find($val['discapacidad']));
-                $objOLimStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($val['studentInscription']));
-                $objOLimStudentInscription->setGestionTipoId($val['fono']);
-                $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
-                $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
-
-
-            }
-            next($form);
-        }
-
-        // dump($form);
-
-dump(sizeof($form));die;
-
-
-
-
-
-    }
 
 
     public function selectInscriptionAction(Request $request){
@@ -619,12 +483,12 @@ dump(sizeof($form));die;
                 ->add('grado', 'choice', array('label'=>'Grado', ))
                 ->add('paralelo', 'choice', array('label'=>'Paralelo', ))
                 ->add('turno', 'choice', array('label'=>'Turno', ))
-                ->add('gestion', 'text', array('mapped' => false, 'label' => 'Gestion', 'attr' => array('class' => 'form-control', 'value'=>$data['gestiontipoid'])))
+                ->add('gestion', 'hidden', array('mapped' => false, 'label' => 'Gestion', 'attr' => array('class' => 'form-control', 'value'=>$data['gestiontipoid'])))
                 ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), )) 
                 ;
         // if($this->session->get('roluser')==8){
             $newform = $newform
-                ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control', 'value'=>$data['institucioneducativaid'])))
+                ->add('institucionEducativa', 'hidden', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control', 'value'=>$data['institucioneducativaid'])))
                 ;
         // }
 
@@ -729,6 +593,180 @@ dump(sizeof($form));die;
         $response = new JsonResponse();
         return $response->setData(array('aparalelos' => $aparalelos));
     }
+
+
+    /**
+     * [findturnoAction description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function getTurnoAction(Request $request) {
+        
+        //get the send values     
+        $paraleloId = $request->get('paraleloId');
+        $gradoId = $request->get('gradoId');
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        $nivelId = $request->get('nivelId');
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');;
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        // get turnos
+        $aturnos = array();
+
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select('(iec.turnoTipo)')
+                ->where('iec.institucioneducativa = :sie')
+                ->andWhere('iec.nivelTipo = :nivel')
+                ->andwhere('iec.gradoTipo = :grado')
+                ->andwhere('iec.paraleloTipo = :paralelo')
+                ->andWhere('iec.gestionTipo = :gestion')
+                ->setParameter('sie', $sie)
+                ->setParameter('nivel', $nivelId)
+                ->setParameter('grado', $gradoId)
+                ->setParameter('paralelo', $paraleloId)
+                ->setParameter('gestion', $gestion)
+                ->distinct()
+                ->orderBy('iec.turnoTipo', 'ASC')
+                ->getQuery();
+        $aTurnos = $query->getResult();
+        foreach ($aTurnos as $turno) {
+            $aturnos[$turno[1]] = $em->getRepository('SieAppWebBundle:TurnoTipo')->find($turno[1])->getTurno();
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('aturnos' => $aturnos));
+    }
+
+
+    public function getStudentsAction(Request $request){
+        // dump($request);die;
+        //create db conexino
+        $em = $this->getDoctrine()->getManager();
+         //get the send values
+        $turnoId = $request->get('turnoId');
+        $paraleloId = $request->get('paraleloId');
+        $gradoId = $request->get('gradoId');
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        $nivelId = $request->get('nivelId');
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');;
+        //look for the id of institucioneducativa_curso
+        $objInstitucionEducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy( array(
+             'nivelTipo' =>$nivelId,
+             'gradoTipo' => $gradoId,
+             'paraleloTipo'=> $paraleloId,
+             'turnoTipo' => $turnoId, 
+             'institucioneducativa' => $sie,
+             'gestionTipo' => $gestion
+        ));
+        
+        $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
+        // dump($objStudentsToOlimpiadas);
+        $arrCorrectStudent = array();
+        foreach ($objStudentsToOlimpiadas as $key => $value) {
+
+            $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
+            $value['fecha_nacimiento'] = $newStudentDate;
+            $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, '30-6-2018');
+            $value['yearsOld'] = $studentYearsOld[0];
+            $arrCorrectStudent[]=($value);
+            
+
+        }
+        //get the discapacidad
+        $objDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
+        
+        // dump($objDiscapacidad);
+        // die;
+        
+        // dump($objStudentsToOlimpiadas);die;
+        // get the data to do the inscription 
+        $jsonDataInscription = json_encode( array(
+
+                'turnoId' => $request->get('turnoId'),
+                'paraleloId' => $request->get('paraleloId'),
+                'gradoId' => $request->get('gradoId'),
+                'materiaId' => $request->get('materiaId'),
+                'categoryId' => $request->get('categoryId'),
+                'nivelId' => $request->get('nivelId'),
+                'sie' => $request->get('sie'),
+                'gestion' => $request->get('gestion'),
+                'institucionEducativaCursoId' => $objInstitucionEducativaCurso->getId(),
+        ));
+        // dump($jsonDataInscription);die;
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
+            'objStudentsToOlimpiadas' => $arrCorrectStudent,
+            'form' => $this->studentsRegisterform($jsonDataInscription)->createView(),
+            'objDiscapacidad' => $objDiscapacidad,
+
+        ));
+    }
+
+    private function studentsRegisterform($jsonDataInscription){
+        return $this->createFormBuilder()
+                ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegister()')))
+                ->add('jsonDataInscription','text', array('data'=>$jsonDataInscription))
+                ->getForm()
+                ;
+
+    }
+
+    public function studentsRegisterAction(Request $request){
+        
+        // create db conexioon
+        $em =  $this->getDoctrine()->getManager();
+        //get the send values
+        $form = $request->get('form');
+        $jsonDataInscription = $form['jsonDataInscription'];
+        $arrDataInscription = json_decode($jsonDataInscription, true);
+        
+        /*dump($arrDataInscription);
+        dump($jsonDataInscription);
+        dump($form);
+        die;*/
+        // remove the las elemento of form array
+        array_pop($form);
+        //count the send elements
+        //if everything ok on the rule do the save
+        
+        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_estudiante_inscripcion');");
+        $query->execute();
+        reset ($form);
+        while($val = current($form)){
+            if(isset($val['studentInscription'])){
+                // dump($val);   
+                $objOLimStudentInscription = new OlimEstudianteInscripcion();
+                $objOLimStudentInscription->setTelefonoEstudiante($val['fono']);
+                $objOLimStudentInscription->setCorreoEstudiante($val['email']);
+                $objOLimStudentInscription->setFechaRegistro(new \DateTime('now'));
+                $objOLimStudentInscription->setUsuarioRegistroId($this->session->get('userId'));
+                $objOLimStudentInscription->setOlimReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($arrDataInscription['categoryId']) );
+                // $objOLimStudentInscription->setCategoriaTipo($em->getRepository('SieAppWebBundle:OlimCategoriaTipo')->find($val['fono']));
+                $objOLimStudentInscription->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($arrDataInscription['materiaId']));
+                $objOLimStudentInscription->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->find($val['discapacidad']));
+                $objOLimStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($val['studentInscription']));
+                $objOLimStudentInscription->setGestionTipoId($arrDataInscription['gestion']);
+                
+                $em->persist($objOLimStudentInscription);
+                $em->flush();
+            }
+            next($form);
+        }
+
+        // dump($form);
+
+        // dump(sizeof($form));die;
+        echo('inscription DONE!!!!');die;
+
+
+
+
+    }
+
 
 
 
