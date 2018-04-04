@@ -444,46 +444,7 @@ class OlimEstudianteInscripcionController extends Controller{
         return $response->setData(array('agrados' => $arrGrados));
     }
 
-    /**
-     * [getParaleloAction description]
-     * @param  Request $request [description]
-     * @return [type]           [description]
-     */
-    public function getParaleloAction(Request $request) {
-        //get the send values
-        $grado = $request->get('grado');
-        $jsonRule = $request->get('jsonRule');
-        $nivel = $request->get('nivel');
-        $arrData = json_decode($jsonRule, true);
-        $sie = $arrData['institucionEducativa'];
-        $gestion = $arrData['gestion'];
-        $em = $this->getDoctrine()->getManager();
-        //get grado
-        $aparalelos = array();
-        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
-        $query = $entity->createQueryBuilder('iec')
-                ->select('(iec.paraleloTipo)')
-                //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
-                ->where('iec.institucioneducativa = :sie')
-                ->andWhere('iec.nivelTipo = :nivel')
-                ->andwhere('iec.gradoTipo = :grado')
-                ->andwhere('iec.gestionTipo = :gestion')
-                ->setParameter('sie', $sie)
-                ->setParameter('nivel', $nivel)
-                ->setParameter('grado', $grado)
-                ->setParameter('gestion', $gestion)
-                ->distinct()
-                ->orderBy('iec.paraleloTipo', 'ASC')
-                ->getQuery();
-        $aParalelos = $query->getResult();
-
-        foreach ($aParalelos as $paralelo) {
-            $aparalelos[$paralelo[1]] = $em->getRepository('SieAppWebBundle:ParaleloTipo')->find($paralelo[1])->getParalelo();
-        }
-
-        $response = new JsonResponse();
-        return $response->setData(array('aparalelos' => $aparalelos));
-    }
+  
 
     /**
      * [findturnoAction description]
@@ -637,29 +598,33 @@ dump(sizeof($form));die;
     public function selectInscriptionAction(Request $request){
         // get the send values
         $form = $request->get('form');
-        
+        // dump($form);die;
         $objTutorSelected = $this->get('olimfunctions')->getTutor2($form);
         // dump($objTutorSelected);die;
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:selectInscription.html.twig', array(
-            'form' => $this->selectInscriptionForm()->createView(),
+            'form' => $this->selectInscriptionForm($form)->createView(),
             'tutor' => $objTutorSelected
 
         ));
     }
 
-     private function selectInscriptionForm(){
-        
+     private function selectInscriptionForm($data){
+        // dump($data);die;
         $arrAreas = $this->get('olimfunctions')->getAllowedAreasByOlim();
         // dump($arrAreas);die;
         $newform = $this->createFormBuilder()
                 ->add('olimMateria', 'choice', array('label'=>'materias','choices'=>$arrAreas,  'empty_value' => 'Seleccionar Materia'))
                 ->add('category', 'choice', array('label'=>'categoria', ))
-                // ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($this->session->get('currentyear')=>$this->session->get('currentyear')), 'attr' => array('class' => 'form-control')))
-                ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), ))
+                ->add('nivel', 'choice', array('label'=>'Nivel', ))
+                ->add('grado', 'choice', array('label'=>'Grado', ))
+                ->add('paralelo', 'choice', array('label'=>'Paralelo', ))
+                ->add('turno', 'choice', array('label'=>'Turno', ))
+                ->add('gestion', 'text', array('mapped' => false, 'label' => 'Gestion', 'attr' => array('class' => 'form-control', 'value'=>$data['gestiontipoid'])))
+                ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), )) 
                 ;
         // if($this->session->get('roluser')==8){
             $newform = $newform
-                ->add('institucionEducativa', 'hidden', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control', 'value'=>$this->session->get('ie_id'))))
+                ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control', 'value'=>$data['institucioneducativaid'])))
                 ;
         // }
 
@@ -668,6 +633,102 @@ dump(sizeof($form));die;
 
     }
 
+
+    public function getNivelesAction(Request $request){
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        //get the send values
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+
+         $objNiveles = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasNivelGradoTipo')->findBy(array(
+            'olimReglasOlimpiadasTipo' => $categoryId,
+        ));
+         
+        $arrNiveles = array();
+        foreach ($objNiveles as $value) {    
+            $arrNiveles[$value->getNivelTipo()->getId()] = $value->getNivelTipo()->getNivel();
+        }
+        
+        ksort($arrNiveles);
+        // dump($arrNiveles);die;
+        $response = new JsonResponse();
+        return $response->setData(array('arrNiveles' => $arrNiveles));
+        dump($nivelId);die;
+    }
+
+  public function getGradosAction(Request $request){
+    // dump($request);die;
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        //get the send values
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        $nivelId = $request->get('nivelId');
+
+         $objNiveles = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasNivelGradoTipo')->findBy(array(
+            'olimReglasOlimpiadasTipo' => $categoryId,
+            'nivelTipo' => $nivelId,
+        ));
+         
+        $arrGrados = array();
+        foreach ($objNiveles as $value) {    
+            $arrGrados[$value->getGradoTipo()->getId()] = $value->getGradoTipo()->getGrado();
+        }
+        
+        ksort($arrGrados);
+        // dump($arrGrados);die;
+        $response = new JsonResponse();
+        return $response->setData(array('arrGrados' => $arrGrados));
+        dump($nivelId);die;
+    }
+
+      /**
+     * [getParaleloAction description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function getParaleloAction(Request $request) {
+        // dump($request);
+        // die;
+        //get the send values        
+        $gradoId = $request->get('gradoId');
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        $nivelId = $request->get('nivelId');
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');;
+        /*dump($sie);
+        dump($nivelId);
+        dump($gradoId);
+        dump($gestion);*/
+        $em = $this->getDoctrine()->getManager();
+        //get grado
+        $aparalelos = array();
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select('(iec.paraleloTipo)')
+                //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->where('iec.institucioneducativa = :sie')
+                ->andWhere('iec.nivelTipo = :nivel')
+                ->andwhere('iec.gradoTipo = :grado')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->setParameter('sie', $sie)
+                ->setParameter('nivel', $nivelId)
+                ->setParameter('grado', $gradoId)
+                ->setParameter('gestion', $gestion)
+                ->distinct()
+                ->orderBy('iec.paraleloTipo', 'ASC')
+                ->getQuery();
+        $aParalelos = $query->getResult();
+
+        foreach ($aParalelos as $paralelo) {
+            $aparalelos[$paralelo[1]] = $em->getRepository('SieAppWebBundle:ParaleloTipo')->find($paralelo[1])->getParalelo();
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('aparalelos' => $aparalelos));
+    }
 
 
 
