@@ -98,7 +98,7 @@ class OlimTutorController extends Controller{
 
         $em = $this->getDoctrine()->getManager();
         $objOlimRegistroOlimpiada = $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->findOneBy(array(
-            'gestionTipoId'=>$form['gestion']
+            'gestionTipoId'=>$gestion
         ));
         // dump($objOlimRegistroOlimpiada);
 
