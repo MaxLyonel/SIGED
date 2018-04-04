@@ -60,7 +60,7 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->add('olimMateria', 'choice', array('label'=>'materias','choices'=>$arrAreas,  'empty_value' => 'Seleccionar Materia'))
                 ->add('category', 'choice', array('label'=>'categoria', ))
                 ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($this->session->get('currentyear')=>$this->session->get('currentyear')), 'attr' => array('class' => 'form-control')))
-                ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), ))
+                // ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), ))
                 
                 ;
         // if($this->session->get('roluser')==8){
@@ -484,7 +484,7 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->add('paralelo', 'choice', array('label'=>'Paralelo', ))
                 ->add('turno', 'choice', array('label'=>'Turno', ))
                 ->add('gestion', 'hidden', array('mapped' => false, 'label' => 'Gestion', 'attr' => array('class' => 'form-control', 'value'=>$data['gestiontipoid'])))
-                ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), )) 
+                // ->add('buscar', 'button', array('label'=>'Cancelar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), )) 
                 ;
         // if($this->session->get('roluser')==8){
             $newform = $newform
@@ -665,15 +665,24 @@ class OlimEstudianteInscripcionController extends Controller{
         ));
         
         $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
-        // dump($objStudentsToOlimpiadas);
+        // $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion);
+        
         $arrCorrectStudent = array();
         foreach ($objStudentsToOlimpiadas as $key => $value) {
-
+            
             $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
             $value['fecha_nacimiento'] = $newStudentDate;
             $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, '30-6-2018');
             $value['yearsOld'] = $studentYearsOld[0];
-            $arrCorrectStudent[]=($value);
+
+            $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
+            // dump($objStudentsInOlimpiadas);
+            if($objStudentsInOlimpiadas){
+            }else{
+                $arrCorrectStudent[]=($value);    
+            }
+
+            
             
 
         }

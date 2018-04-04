@@ -366,6 +366,24 @@ class Olimfunctions {
   }
  
 
+  public function getStudentsInOlimpiadas($materiaId, $ruleId, $gestion, $studentInscriptionId){
+
+    $sql = "
+            
+            select estudiante_inscripcion_id from olim_estudiante_inscripcion 
+            where materia_tipo_id = ".$materiaId." and 
+            olim_reglas_olimpiadas_tipo_id = ".$ruleId." and 
+            gestion_tipo_id = ".$gestion."  and
+            estudiante_inscripcion_id = ".$studentInscriptionId." 
+            "
+            ;
+    
+    $query = $this->em->getConnection()->prepare($sql);
+    
+    $query->execute();
+    return $query->fetchAll();
+
+   }
  
 
 }
