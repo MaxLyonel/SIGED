@@ -1483,9 +1483,11 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
 
                                                     select a.id, a.institucioneducativa, a.le_juridicciongeografica_id				
                                                     from institucioneducativa a                                                        
-                                                    where a.orgcurricular_tipo_id = 2
+                                                    where 
+                                                        a.orgcurricular_tipo_id = 2
                                                     and a.institucioneducativa_tipo_id = 2
                                                     and a.estadoinstitucion_tipo_id = 10
+                                                    and a.institucioneducativa_acreditacion_tipo_id = 1
                                             ) d		
                                             on a.id=d.le_juridicciongeografica_id
                                             inner join lugar_tipo k on k.id = b.lugar_tipo_id
@@ -1545,9 +1547,11 @@ public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERR
                                                 inner join (
                                                         select a.id, a.institucioneducativa, a.le_juridicciongeografica_id				
                                                     from institucioneducativa a                                                        
-                                                    where a.orgcurricular_tipo_id = 2
+                                                    where 
+                                                            a.orgcurricular_tipo_id = 2
                                                         and a.institucioneducativa_tipo_id = 2
                                                         and a.estadoinstitucion_tipo_id = 10
+                                                        and a.institucioneducativa_acreditacion_tipo_id = 1
                                                 ) d		
                                                 on a.id=d.le_juridicciongeografica_id
                                                 inner join lugar_tipo k on k.id = b.lugar_tipo_id
