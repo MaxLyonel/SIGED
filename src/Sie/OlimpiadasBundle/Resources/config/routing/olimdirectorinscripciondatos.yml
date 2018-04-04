@@ -41,9 +41,11 @@ olimdirectordata_saveDataDirector:
     options:
         expose: true
 
+olimdirectordata_manual_edit:
+    path:     /datosedit
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:editManual" }
 
-
-
-
-
-         
+olimdirectordata_manual_update:
+    path:     /{id}/datosupdate
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:updateManual" }
+    methods:  [POST, PUT]
