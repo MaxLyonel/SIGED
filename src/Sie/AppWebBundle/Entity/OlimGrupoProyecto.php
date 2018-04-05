@@ -472,4 +472,32 @@ class OlimGrupoProyecto
     {
         return $this->olimGrupoProyectoTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo
+     */
+    private $olimReglasOlimpiadasTipo;
+
+
+    /**
+     * Set olimReglasOlimpiadasTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $olimReglasOlimpiadasTipo
+     * @return OlimGrupoProyecto
+     */
+    public function setOlimReglasOlimpiadasTipo(\Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $olimReglasOlimpiadasTipo = null)
+    {
+        $this->olimReglasOlimpiadasTipo = $olimReglasOlimpiadasTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get olimReglasOlimpiadasTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo 
+     */
+    public function getOlimReglasOlimpiadasTipo()
+    {
+        return $this->olimReglasOlimpiadasTipo;
+    }
 }

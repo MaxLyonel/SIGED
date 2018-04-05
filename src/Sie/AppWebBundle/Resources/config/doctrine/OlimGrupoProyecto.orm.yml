@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\OlimGrupoProyecto:
     type: entity
     table: olim_grupo_proyecto
     indexes:
+        IDX_7E40BDE3C52DD18:
+            columns:
+                - olim_reglas_olimpiadas_tipo_id
         IDX_7E40BDE96157FA0:
             columns:
                 - periodo_tipo_id
@@ -85,6 +88,15 @@ Sie\AppWebBundle\Entity\OlimGrupoProyecto:
             comment: ''
             column: gestion_tipo_id
     manyToOne:
+        olimReglasOlimpiadasTipo:
+            targetEntity: OlimReglasOlimpiadasTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_reglas_olimpiadas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         periodoTipo:
             targetEntity: OlimPeriodoTipo
             cascade: {  }
