@@ -567,12 +567,25 @@ class EstudianteUpdateController extends Controller {
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
-
+        $oldDataStudent = clone $entity;
         $entity->setPaterno(mb_strtoupper($form['paterno'], 'utf8'));
         $entity->setMaterno(mb_strtoupper($form['materno'], 'utf8'));
         $entity->setNombre(mb_strtoupper($form['nombre'], 'utf8'));
         $entity->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
         $em->flush();
+
+        $this->get('funciones')->setLogTransaccion(
+                               $entity->getId(),
+                                'estudiante',
+                                'U',
+                                '',
+                                $entity,
+                                $oldDataStudent,
+                                'SIGED',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+        );          
+
+
         $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
         return $this->redirect($this->generateUrl('sie_estudiantes'));
     }
@@ -590,6 +603,7 @@ class EstudianteUpdateController extends Controller {
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
+        $oldDataStudent = clone $entity;
         $entity->setPaterno(mb_strtoupper($form['paterno']));
         $entity->setMaterno(mb_strtoupper($form['materno']));
         $entity->setNombre(mb_strtoupper($form['nombre']));
@@ -598,6 +612,16 @@ class EstudianteUpdateController extends Controller {
         $entity->setObservacionadicional($form['obsAdicional']);
         $em->persist($entity);
         $em->flush();
+         $this->get('funciones')->setLogTransaccion(
+                               $entity->getId(),
+                                'estudiante',
+                                'U',
+                                '',
+                                $entity,
+                                $oldDataStudent,
+                                'SIGED',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+        );          
         $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
         return $this->redirect($this->generateUrl('sie_estudiantes'));
     }
@@ -615,7 +639,8 @@ class EstudianteUpdateController extends Controller {
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
-        $this->saveLogTransaction($entity, $form, __FUNCTION__, false);
+        $oldDataStudent = clone $entity;
+        // $this->saveLogTransaction($entity, $form, __FUNCTION__, false);
         //die('"'.isset($form['departamento']).'"');
         //Array ( [pais] => 0 [departamento] => 1 [provincia] => 23 [localidad] => localidad [ci] => 9977761 [complemento] => N [generoTipo] => 0 [oficialia] => ofi [libro] => libro [partida] => partida [folio] => folio [save] => [_token] => OF55YYMRBysUBsEUK_Op9az4wkkA9nnABC1AGDdwCKY )
 //        $entity->setPaterno($form['paterno']);
@@ -658,6 +683,16 @@ class EstudianteUpdateController extends Controller {
         $entity->setEsDobleNacionalidad(isset($form['isDoubleNcnal'])?'1':'0');
         //need to add 2 files too
         $em->flush();
+          $this->get('funciones')->setLogTransaccion(
+                               $entity->getId(),
+                                'estudiante',
+                                'U',
+                                '',
+                                $entity,
+                                $oldDataStudent,
+                                'SIGED',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+        );          
         $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
         return $this->redirect($this->generateUrl('sie_estudiantes'));
     }
@@ -681,7 +716,8 @@ class EstudianteUpdateController extends Controller {
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
-        $this->saveLogTransaction($entity, $form, __FUNCTION__, true);
+        $oldDataStudent = clone $entity;
+        // $this->saveLogTransaction($entity, $form, __FUNCTION__, true);
         //Array ( [pais] => 0 [departamento] => 1 [provincia] => 23 [localidad] => localidad [ci] => 9977761 [complemento] => N [generoTipo] => 0 [oficialia] => ofi
         //[libro] => libro [partida] => partida [folio] => folio [save] => [_token] => OF55YYMRBysUBsEUK_Op9az4wkkA9nnABC1AGDdwCKY )
         $entity->setPaterno(mb_strtoupper($form['paterno']));
@@ -707,6 +743,17 @@ class EstudianteUpdateController extends Controller {
         $entity->setEsDobleNacionalidad(isset($form['isDoubleNcnal'])?'1':'0');
         //need to add 2 files too
         $em->flush();
+
+         $this->get('funciones')->setLogTransaccion(
+                               $entity->getId(),
+                                'estudiante',
+                                'U',
+                                '',
+                                $entity,
+                                $oldDataStudent,
+                                'SIGED',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+        );      
         $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
         return $this->redirect($this->generateUrl('sie_estudiantes'));
     }
@@ -728,6 +775,7 @@ class EstudianteUpdateController extends Controller {
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Estudiante entity.');
         }
+        $oldDataStudent = clone $entity;
         //Array ( [pais] => 0 [departamento] => 1 [provincia] => 23 [localidad] => localidad [ci] => 9977761 [complemento] => N [generoTipo] => 0 [oficialia] => ofi [libro] => libro [partida] => partida [folio] => folio [save] => [_token] => OF55YYMRBysUBsEUK_Op9az4wkkA9nnABC1AGDdwCKY )
         $entity->setPaterno(mb_strtoupper($form['paterno']));
         $entity->setMaterno(mb_strtoupper($form['materno']));
@@ -755,6 +803,16 @@ class EstudianteUpdateController extends Controller {
         //need to save departamento, etc,etc
         //need to add 2 files too
         $em->flush();
+          $this->get('funciones')->setLogTransaccion(
+                               $entity->getId(),
+                                'estudiante',
+                                'U',
+                                '',
+                                $entity,
+                                $oldDataStudent,
+                                'SIGED',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+        );      
         $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
         return $this->redirect($this->generateUrl('sie_estudiantes'));
     }
