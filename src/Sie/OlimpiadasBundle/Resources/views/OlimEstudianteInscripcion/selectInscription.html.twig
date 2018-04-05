@@ -299,11 +299,12 @@
        paraleloId = $('#form_paralelo').val();
        sie = $('#form_institucionEducativa').val();
        gestion = $('#form_gestion').val();
+       olimtutorid = $('#form_olimtutorid').val();
 
         $.ajax({
              type: 'post',
              url: Routing.generate('oliminscriptions_getStudents'),
-             data: {'turnoId':turnoId,'paraleloId':paraleloId,'gradoId': gradoId, 'materiaId': materiaId, 'categoryId': categoryId, 'nivelId':nivelId, 'sie':sie, 'gestion':gestion},
+             data: {'turnoId':turnoId,'paraleloId':paraleloId,'gradoId': gradoId, 'materiaId': materiaId, 'categoryId': categoryId, 'nivelId':nivelId, 'sie':sie, 'gestion':gestion, 'olimtutorid':olimtutorid},
              beforeSend: function () {
                  $("#getStudentsId").empty();
                  $("#getStudentsId").empty();

@@ -483,6 +483,7 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->add('grado', 'choice', array('label'=>'Grado', ))
                 ->add('paralelo', 'choice', array('label'=>'Paralelo', ))
                 ->add('turno', 'choice', array('label'=>'Turno', ))
+                ->add('olimtutorid', 'hidden', array('data'=>$data['olimtutorid']))
                 ->add('gestion', 'hidden', array('mapped' => false, 'label' => 'Gestion', 'attr' => array('class' => 'form-control', 'value'=>$data['gestiontipoid'])))
                 // ->add('buscar', 'button', array('label'=>'Cancelar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), )) 
                 ;
@@ -653,7 +654,8 @@ class OlimEstudianteInscripcionController extends Controller{
         $categoryId = $request->get('categoryId');
         $nivelId = $request->get('nivelId');
         $sie = $request->get('sie');
-        $gestion = $request->get('gestion');;
+        $gestion = $request->get('gestion');
+        $olimtutorid = $request->get('olimtutorid');
         //look for the id of institucioneducativa_curso
         $objInstitucionEducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy( array(
              'nivelTipo' =>$nivelId,
@@ -704,6 +706,7 @@ class OlimEstudianteInscripcionController extends Controller{
                 'nivelId' => $request->get('nivelId'),
                 'sie' => $request->get('sie'),
                 'gestion' => $request->get('gestion'),
+                'olimtutorid' => $request->get('olimtutorid'),
                 'institucionEducativaCursoId' => $objInstitucionEducativaCurso->getId(),
         ));
         // dump($jsonDataInscription);die;
@@ -730,6 +733,7 @@ class OlimEstudianteInscripcionController extends Controller{
         $em =  $this->getDoctrine()->getManager();
         //get the send values
         $form = $request->get('form');
+        // dump($form);die;
         $jsonDataInscription = $form['jsonDataInscription'];
         $arrDataInscription = json_decode($jsonDataInscription, true);
         
@@ -758,6 +762,7 @@ class OlimEstudianteInscripcionController extends Controller{
                 $objOLimStudentInscription->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($arrDataInscription['materiaId']));
                 $objOLimStudentInscription->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->find($val['discapacidad']));
                 $objOLimStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($val['studentInscription']));
+                $objOLimStudentInscription->setOlimTutor($em->getRepository('SieAppWebBundle:OlimTutor')->find($arrDataInscription['olimtutorid']));
                 $objOLimStudentInscription->setGestionTipoId($arrDataInscription['gestion']);
                 
                 $em->persist($objOLimStudentInscription);
