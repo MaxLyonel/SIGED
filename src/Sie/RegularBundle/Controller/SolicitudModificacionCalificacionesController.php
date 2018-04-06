@@ -129,8 +129,10 @@ class SolicitudModificacionCalificacionesController extends Controller {
                                 ->innerJoin('SieAppWebBundle:ParaleloTipo','pt','WITH','iec.paraleloTipo = pt.id')
                                 ->innerJoin('SieAppWebBundle:Estudiante','e','WITH','ei.estudiante = e.id')
                                 ->where('enm.tipo = 1')
-                                ->andWhere('enm.usuarioId = :user')
-                                ->setParameter('user',$idUsuario)
+                                ->andWhere('ie.id = :idInstitucion')
+                                // ->andWhere('enm.usuarioId = :user')
+                                // ->setParameter('user',$idUsuario)
+                                ->setParameter('idInstitucion',$this->session->get('ie_id'))
                                 ->orderBy('enm.id','DESC')
                                 ->getQuery()
                                 ->getResult();
@@ -1077,7 +1079,9 @@ class SolicitudModificacionCalificacionesController extends Controller {
         if(!$responsable){
             $responsable[0] = array('paterno'=>'','materno'=>'','nombre'=>'');
         }
+
         $usuarioRoles = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneBy(array('usuario'=>$solicitud->getUsuarioIdResp(),'rolTipo'=>array(7,8,10)));
+
         if($usuarioRoles){
             $rol = $em->getRepository('SieAppWebBundle:RolTipo')->find($usuarioRoles->getRolTipo()->getId());
         }else{

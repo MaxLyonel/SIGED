@@ -197,7 +197,7 @@
 			                        			<th>Observación</th><td>{{solicitud.respuesta}}</td>
 			                        		</tr>
 			                        		<tr>
-			                        			<th>Solicitud aprobada por:</th><td>{{responsable[0].paterno}} {{responsable[0].materno}} {{responsable[0].nombre}} ({{rol.rol}})</td>
+			                        			<th>Solicitud aprobada por:</th><td>{{responsable[0].paterno}} {{responsable[0].materno}} {{responsable[0].nombre}} {% if rol != null %}({{rol.rol}}){% endif %}</td>
 			                        		</tr>
 			                        	</table>
 		                        	{% else %}
@@ -213,7 +213,7 @@
 				                        			<th>Observación</th><td>{{solicitud.respuesta}}</td>
 				                        		</tr>
 				                        		<tr>
-				                        			<th>Solicitud rechazada por:</th><td>{{responsable[0].paterno}} {{responsable[0].materno}} {{responsable[0].nombre}} ({{rol.rol}})</td>
+				                        			<th>Solicitud rechazada por:</th><td>{{responsable[0].paterno}} {{responsable[0].materno}} {{responsable[0].nombre}} {% if rol != null %}({{rol.rol}}){% endif %}</td>
 				                        		</tr>
 				                        	</table>
 				                        {% endif %}
