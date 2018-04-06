@@ -472,13 +472,82 @@ class OlimEstudianteInscripcionController extends Controller{
         ));
     }
 
-     private function selectInscriptionForm($data){
+
+
+    private function selectInscriptionForm($data){
         // dump($data);die;
         $arrAreas = $this->get('olimfunctions')->getAllowedAreasByOlim();
         // dump($arrAreas);die;
         $newform = $this->createFormBuilder()
                 ->add('olimMateria', 'choice', array('label'=>'materias','choices'=>$arrAreas,  'empty_value' => 'Seleccionar Materia'))
                 ->add('category', 'choice', array('label'=>'categoria', ))
+                // ->add('nivel', 'choice', array('label'=>'Nivel', ))
+                // ->add('grado', 'choice', array('label'=>'Grado', ))
+                // ->add('paralelo', 'choice', array('label'=>'Paralelo', ))
+                // ->add('turno', 'choice', array('label'=>'Turno', ))
+                ->add('olimtutorid', 'hidden', array('data'=>$data['olimtutorid']))
+                ->add('gestion', 'hidden', array('mapped' => false, 'label' => 'Gestion', 'attr' => array('class' => 'form-control', 'value'=>$data['gestiontipoid'])))
+                // ->add('buscar', 'button', array('label'=>'Cancelar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), )) 
+                ;
+        // if($this->session->get('roluser')==8){
+            $newform = $newform
+                ->add('institucionEducativa', 'hidden', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control', 'value'=>$data['institucioneducativaid'])))
+                ;
+        // }
+
+        $newform = $newform->getForm();
+        return $newform;
+
+    }
+
+    public function selectTemplateInscriptionAction(Request $request){
+        // dump($request);die;
+        // get the send data
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        
+        //create db conexion 
+        $em = $this->getDoctrine()->getManager();
+        $objRuleSelected = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findOneBy(array(
+            'olimMateriaTipo'=> $materiaId,
+            'id' => $categoryId
+        ));
+        $arrDataInscription = array(
+            'materiaId' => $request->get('materiaId'),
+            'categoryId' => $request->get('categoryId'),
+            'institucioneducativaid' => $request->get('sie'),
+            'gestiontipoid' => $request->get('gestion'),
+            'olimtutorid' => $request->get('olimtutorId'),
+        );
+        // if the getModalidadParticipacionTipo == 2, then show the informacion about the group
+        if($objRuleSelected->getModalidadParticipacionTipo()->getId()==2){
+            dump('group');die;
+        }else{
+        //if not show the common inscription 
+            return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:commonInscription.html.twig', array(
+               'form' => $this->CommonInscriptionForm($arrDataInscription)->createView(),
+               // 'tutor' => $objTutorSelected
+
+            ));
+        }
+
+
+
+
+        // dump($objRuleSelected->getModalidadParticipacionTipo()->getId());die;
+
+
+        // 
+    }
+
+
+    private function CommonInscriptionForm($data){
+        // dump($data);die;
+        $arrAreas = $this->get('olimfunctions')->getAllowedAreasByOlim();
+        // dump($arrAreas);die;
+        $newform = $this->createFormBuilder()
+                ->add('olimMateria', 'text', array('data'=>$data['materiaId'],))
+                ->add('category', 'text', array('data'=>$data['categoryId'], ))
                 ->add('nivel', 'choice', array('label'=>'Nivel', ))
                 ->add('grado', 'choice', array('label'=>'Grado', ))
                 ->add('paralelo', 'choice', array('label'=>'Paralelo', ))
@@ -499,17 +568,20 @@ class OlimEstudianteInscripcionController extends Controller{
     }
 
 
+
     public function getNivelesAction(Request $request){
         //create db conexion
         $em = $this->getDoctrine()->getManager();
         //get the send values
         $materiaId = $request->get('materiaId');
         $categoryId = $request->get('categoryId');
+        
+        dump($categoryId);
 
          $objNiveles = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasNivelGradoTipo')->findBy(array(
             'olimReglasOlimpiadasTipo' => $categoryId,
         ));
-         
+         dump($objNiveles);die;
         $arrNiveles = array();
         foreach ($objNiveles as $value) {    
             $arrNiveles[$value->getNivelTipo()->getId()] = $value->getNivelTipo()->getNivel();

@@ -1,6 +1,4 @@
-{% extends 'layoutOlimpiadas.html.twig' %}
 
-{% block contentoption %}
 
     <!-- Start page header -->
     <div class="header-content">
@@ -43,17 +41,8 @@
                                         <a href="page-messages.html" class="media">
                                             <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
                                             <div class="media-body">
-                                                <span class="media-heading">
-                                                    {{tutor.nombre}}
-                                                    {{tutor.paterno}}
-                                                    {{tutor.materno}}
-                                                </span>
-                                                <span class="media-text">
-                                                    <b>Tel&eacute;fono 1:</b> {{tutor.telefono1}} </br>
-                                                    <b>Tel&eacute;fono 2:</b> {{tutor.telefono2}} </br>
-                                                    <b>email:</b> {{tutor.correo_electronico}}
-                    
-                                                </span>
+                                                
+                                                
                                                 <!-- Start meta icon -->
                                                 
                                                 <!--/ End meta icon -->
@@ -109,7 +98,7 @@
                                       </div>
 
 
-                                    {#
+                                    
                                         <div class="row">
                                          <div class="col-md-3">
                                             NIVEL:
@@ -129,7 +118,7 @@
                                           </div>
                                           
                                       </div>
-                                        #}
+                                        
                                       
 
                                     </div><!-- /.form-body -->
@@ -163,9 +152,7 @@
       </div>
     </div>
 
-{% endblock %}
-{% block javascripts%}
-    {{parent()}}
+
     <script type="text/javascript" charset="utf-8" >
   var getCategory = function(idmateria){
 
@@ -199,14 +186,11 @@
     var selectTemplateInscription = function(categoryId){
         
         materiaId = $('#form_olimMateria').val();
-        sie = $('#form_institucionEducativa').val();
-        gestion = $('#form_gestion').val();
-        olimtutorId = $('#form_olimtutorid').val();
 
         $.ajax({
              type: 'post',
              url: Routing.generate('oliminscriptions_selectTemplateInscription'),
-             data: {'categoryId':categoryId, 'materiaId':materiaId, 'sie':sie, 'gestion':gestion, 'olimtutorId':olimtutorId},
+             data: {'categoryId':categoryId, 'materiaId':materiaId},
              beforeSend: function () {
                  $("#templateId").empty();
                  $("#templateId").empty();
@@ -404,6 +388,4 @@ var studentsRegister = function(){
 
     </script>
 
-    
-    
-{% endblock %}
+  

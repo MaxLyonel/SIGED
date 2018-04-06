@@ -104,3 +104,9 @@ oliminscriptions_getGrados:
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getGrados" }
     options:
         expose: true
+
+oliminscriptions_selectTemplateInscription:
+    path:     /selectTemplateInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:selectTemplateInscription" }
+    options:
+        expose: true
