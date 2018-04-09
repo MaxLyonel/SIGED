@@ -979,8 +979,10 @@ class OlimEstudianteInscripcionController extends Controller{
         $groupId = $request->get('groupId');
 
         $objStudentsInGroup = $this->get('olimfunctions')->getStudentsInGroup($groupId);
-        dump($objStudentsInGroup);
-        die;
+        
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscritosGroup.html.twig', array(
+            'objStudentsInGroup' => $objStudentsInGroup,
+        ));
 
     }
 
