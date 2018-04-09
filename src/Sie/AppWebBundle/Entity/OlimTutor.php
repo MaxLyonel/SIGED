@@ -78,8 +78,9 @@ class OlimTutor
      * @var \Sie\AppWebBundle\Entity\Persona
      */
     private $persona;
-
-
+    public function __toString(){
+        return $this->correoElectronico;
+    }
     /**
      * Get id
      *

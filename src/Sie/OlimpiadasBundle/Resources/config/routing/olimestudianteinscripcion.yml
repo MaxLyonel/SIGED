@@ -110,3 +110,29 @@ oliminscriptions_selectTemplateInscription:
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:selectTemplateInscription" }
     options:
         expose: true
+
+oliminscriptions_doInscriptionGroup:
+    path:     /doInscriptionGroup
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:doInscriptionGroup" }
+    options:
+        expose: true
+
+oliminscriptions_showOptionDoInscription:
+    path:     /{datainscription}/showOptionDoInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:showOptionDoInscription" }
+
+
+oliminscriptions_studentsRegisterGroup:
+    path:     /studentsRegisterGroup
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:studentsRegisterGroup" }
+    options:
+        expose: true    
+
+oliminscriptions_listInscritosGroup:
+    path:     /listInscritosGroup
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscritosGroup" }
+    options:
+        expose: true    
+
+
+

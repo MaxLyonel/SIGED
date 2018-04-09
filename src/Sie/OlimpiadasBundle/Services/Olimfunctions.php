@@ -384,6 +384,25 @@ class Olimfunctions {
     return $query->fetchAll();
 
    }
+
+  public function getStudentsInGroup($groupId){
+
+    $sql = "
+            
+            select e.paterno, e.materno, e.nombre, e.carnet_identidad
+            from olim_inscripcion_grupo_proyecto oigp
+              left join olim_estudiante_inscripcion oei on oigp.olim_estudiante_inscripcion_id = oei.id
+                left join estudiante_inscripcion ei on oei.estudiante_inscripcion_id = ei.id
+                  left join estudiante e on ei.estudiante_id = e.id
+            where oigp.olim_grupo_proyecto_id = ".$groupId
+            ;
+    
+    $query = $this->em->getConnection()->prepare($sql);
+    
+    $query->execute();
+    return $query->fetchAll();
+
+   }
  
 
 }

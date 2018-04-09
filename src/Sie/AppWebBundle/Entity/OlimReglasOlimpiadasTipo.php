@@ -104,6 +104,9 @@ class OlimReglasOlimpiadasTipo
      */
     private $modalidadParticipacionTipo;
 
+    public function __toString(){
+        return 'krlos';
+    }
 
     /**
      * Get id
