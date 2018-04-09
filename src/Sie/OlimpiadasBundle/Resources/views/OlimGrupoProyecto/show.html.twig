@@ -1,0 +1,68 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>OlimGrupoProyecto</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ entity.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Esvigente</th>
+                <td>{{ entity.esVigente }}</td>
+            </tr>
+            <tr>
+                <th>Documentopdf1</th>
+                <td>{{ entity.documentoPdf1 }}</td>
+            </tr>
+            <tr>
+                <th>Documentopdf2</th>
+                <td>{{ entity.documentoPdf2 }}</td>
+            </tr>
+            <tr>
+                <th>Documentopdf3</th>
+                <td>{{ entity.documentoPdf3 }}</td>
+            </tr>
+            <tr>
+                <th>Fechamodificacion</th>
+                <td>{{ entity.fechaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Usuarioregistroid</th>
+                <td>{{ entity.usuarioRegistroId }}</td>
+            </tr>
+            <tr>
+                <th>Usuariomodificacionid</th>
+                <td>{{ entity.usuarioModificacionId }}</td>
+            </tr>
+            <tr>
+                <th>Gestiontipoid</th>
+                <td>{{ entity.gestionTipoId }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('olimgrupoproyecto') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('olimgrupoproyecto_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

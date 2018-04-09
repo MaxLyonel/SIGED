@@ -1,0 +1,59 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>OlimGrupoProyecto list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Fecharegistro</th>
+                <th>Esvigente</th>
+                <th>Documentopdf1</th>
+                <th>Documentopdf2</th>
+                <th>Documentopdf3</th>
+                <th>Fechamodificacion</th>
+                <th>Usuarioregistroid</th>
+                <th>Usuariomodificacionid</th>
+                <th>Gestiontipoid</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('olimgrupoproyecto_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.nombre }}</td>
+                <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.esVigente }}</td>
+                <td>{{ entity.documentoPdf1 }}</td>
+                <td>{{ entity.documentoPdf2 }}</td>
+                <td>{{ entity.documentoPdf3 }}</td>
+                <td>{% if entity.fechaModificacion %}{{ entity.fechaModificacion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.usuarioRegistroId }}</td>
+                <td>{{ entity.usuarioModificacionId }}</td>
+                <td>{{ entity.gestionTipoId }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('olimgrupoproyecto_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('olimgrupoproyecto_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('olimgrupoproyecto_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

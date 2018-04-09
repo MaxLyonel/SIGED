@@ -24,7 +24,9 @@ class OlimPeriodoTipo
      */
     private $obs;
 
-
+    public function __toString(){
+        return $this->perido;
+    }
     /**
      * Get id
      *

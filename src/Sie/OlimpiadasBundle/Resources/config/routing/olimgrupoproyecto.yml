@@ -1,0 +1,53 @@
+olimgrupoproyecto:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGrupoProyecto:index" }
+
+olimgrupoproyecto_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGrupoProyecto:show" }
+
+olimgrupoproyecto_new:
+    path:     /new
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGrupoProyecto:new" }
+
+olimgrupoproyecto_create:
+    path:     /create
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGrupoProyecto:create" }
+    methods:  POST
+
+olimgrupoproyecto_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGrupoProyecto:edit" }
+
+olimgrupoproyecto_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGrupoProyecto:update" }
+    methods:  [POST, PUT]
+
+olimgrupoproyecto_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGrupoProyecto:delete" }
+    methods:  [POST, DELETE]
+
+olimgrupoproyecto_createGroup:
+    path:     /createGroup
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGrupoProyecto:createGroup" }
+    options:
+        expose: true   
+
+olimgrupoproyecto_showGroup:
+    path:     /{datainscription}/showGroup
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGrupoProyecto:showGroup" }
+    # methods:  GET
+
+olimgrupoproyecto_createGroupSave:
+    path:     /createGroupSave
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGrupoProyecto:createGroupSave" }
+    options:
+        expose: true  
+         
+olimgrupoproyecto_deleteGroup:
+    path:     /deleteGroup
+    defaults: { _controller: "SieOlimpiadasBundle:OlimGrupoProyecto:deleteGroup" }
+    options:
+        expose: true   

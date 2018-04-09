@@ -33,3 +33,7 @@ sie_app_web_olimtutor:
 sie_app_web_oliminscriptions_robot:
     resource: "@SieOlimpiadasBundle/Resources/config/routing/olimestudianteinscripcionrobotica.yml"
     prefix:   /oliminscriptionsrobot
+
+sie_app_web_olimgrupoproyecto:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimgrupoproyecto.yml"
+    prefix:   /olimgrupoproyecto

@@ -17,12 +17,7 @@ class OlimGrupoProyecto
     /**
      * @var string
      */
-    private $nombreGrupo;
-
-    /**
-     * @var string
-     */
-    private $nombreProyecto;
+    private $nombre;
 
     /**
      * @var \DateTime
@@ -64,7 +59,44 @@ class OlimGrupoProyecto
      */
     private $usuarioModificacionId;
 
+    /**
+     * @var integer
+     */
+    private $gestionTipoId;
 
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimTutor
+     */
+    private $olimTutor;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo
+     */
+    private $olimReglasOlimpiadasTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimPeriodoTipo
+     */
+    private $periodoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimCategoriaTipo
+     */
+    private $categoriaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimMateriaTipo
+     */
+    private $materiaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\OlimGrupoProyectoTipo
+     */
+    private $olimGrupoProyectoTipo;
+
+    public function __toString(){
+        return $this->nombreGrupo;
+    }
     /**
      * Get id
      *
@@ -76,49 +108,26 @@ class OlimGrupoProyecto
     }
 
     /**
-     * Set nombreGrupo
+     * Set nombre
      *
-     * @param string $nombreGrupo
+     * @param string $nombre
      * @return OlimGrupoProyecto
      */
-    public function setNombreGrupo($nombreGrupo)
+    public function setNombre($nombre)
     {
-        $this->nombreGrupo = $nombreGrupo;
+        $this->nombre = $nombre;
     
         return $this;
     }
 
     /**
-     * Get nombreGrupo
+     * Get nombre
      *
      * @return string 
      */
-    public function getNombreGrupo()
+    public function getNombre()
     {
-        return $this->nombreGrupo;
-    }
-
-    /**
-     * Set nombreProyecto
-     *
-     * @param string $nombreProyecto
-     * @return OlimGrupoProyecto
-     */
-    public function setNombreProyecto($nombreProyecto)
-    {
-        $this->nombreProyecto = $nombreProyecto;
-    
-        return $this;
-    }
-
-    /**
-     * Get nombreProyecto
-     *
-     * @return string 
-     */
-    public function getNombreProyecto()
-    {
-        return $this->nombreProyecto;
+        return $this->nombre;
     }
 
     /**
@@ -304,59 +313,6 @@ class OlimGrupoProyecto
     {
         return $this->usuarioModificacionId;
     }
-    /**
-     * @var string
-     */
-    private $nombre;
-
-    /**
-     * @var integer
-     */
-    private $gestionTipoId;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimPeriodoTipo
-     */
-    private $periodoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimCategoriaTipo
-     */
-    private $categoriaTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimMateriaTipo
-     */
-    private $materiaTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimGrupoProyectoTipo
-     */
-    private $olimGrupoProyectoTipo;
-
-
-    /**
-     * Set nombre
-     *
-     * @param string $nombre
-     * @return OlimGrupoProyecto
-     */
-    public function setNombre($nombre)
-    {
-        $this->nombre = $nombre;
-    
-        return $this;
-    }
-
-    /**
-     * Get nombre
-     *
-     * @return string 
-     */
-    public function getNombre()
-    {
-        return $this->nombre;
-    }
 
     /**
      * Set gestionTipoId
@@ -379,6 +335,52 @@ class OlimGrupoProyecto
     public function getGestionTipoId()
     {
         return $this->gestionTipoId;
+    }
+
+    /**
+     * Set olimTutor
+     *
+     * @param \Sie\AppWebBundle\Entity\OlimTutor $olimTutor
+     * @return OlimGrupoProyecto
+     */
+    public function setOlimTutor(\Sie\AppWebBundle\Entity\OlimTutor $olimTutor = null)
+    {
+        $this->olimTutor = $olimTutor;
+    
+        return $this;
+    }
+
+    /**
+     * Get olimTutor
+     *
+     * @return \Sie\AppWebBundle\Entity\OlimTutor 
+     */
+    public function getOlimTutor()
+    {
+        return $this->olimTutor;
+    }
+
+    /**
+     * Set olimReglasOlimpiadasTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $olimReglasOlimpiadasTipo
+     * @return OlimGrupoProyecto
+     */
+    public function setOlimReglasOlimpiadasTipo(\Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $olimReglasOlimpiadasTipo = null)
+    {
+        $this->olimReglasOlimpiadasTipo = $olimReglasOlimpiadasTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get olimReglasOlimpiadasTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo 
+     */
+    public function getOlimReglasOlimpiadasTipo()
+    {
+        return $this->olimReglasOlimpiadasTipo;
     }
 
     /**
@@ -471,33 +473,5 @@ class OlimGrupoProyecto
     public function getOlimGrupoProyectoTipo()
     {
         return $this->olimGrupoProyectoTipo;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo
-     */
-    private $olimReglasOlimpiadasTipo;
-
-
-    /**
-     * Set olimReglasOlimpiadasTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $olimReglasOlimpiadasTipo
-     * @return OlimGrupoProyecto
-     */
-    public function setOlimReglasOlimpiadasTipo(\Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo $olimReglasOlimpiadasTipo = null)
-    {
-        $this->olimReglasOlimpiadasTipo = $olimReglasOlimpiadasTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get olimReglasOlimpiadasTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo 
-     */
-    public function getOlimReglasOlimpiadasTipo()
-    {
-        return $this->olimReglasOlimpiadasTipo;
     }
 }
