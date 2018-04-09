@@ -42,6 +42,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
         ),array('id'=>'ASC'));
 
         $arrayPrimaria = array();
+        $array = array();
 
         foreach ($entities as $en) {
             $primaria = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasNivelGradoTipo')->findBy(array(
@@ -90,6 +91,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
         if ($form->isValid()) {
             
             $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_tipo');")->execute();
             $entity->setOlimMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($this->session->get('idMateria')));
             $entity->setFechaRegistro(new \DateTime('now'));
             $entity->setUsuarioRegistroId($this->session->get('userId'));
@@ -334,6 +336,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
             $em->flush();
         }
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['pri1'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(12));
@@ -344,6 +347,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
             $em->flush();
         }
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['pri2'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(12));
@@ -354,6 +358,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
             $em->flush();
         }
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['pri3'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(12));
@@ -364,6 +369,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
             $em->flush();
         }
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['pri4'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(12));
@@ -374,6 +380,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
             $em->flush();
         }
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['pri5'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(12));
@@ -384,6 +391,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
             $em->flush();
         }
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['pri6'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(12));
@@ -395,6 +403,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
         }
 
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['sec1'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(13));
@@ -405,6 +414,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
             $em->flush();
         }
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['sec2'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(13));
@@ -415,6 +425,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
             $em->flush();
         }
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['sec3'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(13));
@@ -425,6 +436,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
             $em->flush();
         }
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['sec4'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(13));
@@ -435,6 +447,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
             $em->flush();
         }
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['sec5'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(13));
@@ -445,6 +458,7 @@ class OlimReglasOlimpiadasTipoController extends Controller
             $em->flush();
         }
         if(isset($request->get('sie_appwebbundle_olimreglasolimpiadastipo')['sec6'])){
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_reglas_olimpiadas_nivel_grado_tipo');")->execute();
             $nivelGrado = new OlimReglasOlimpiadasNivelGradoTipo();
             $nivelGrado->setOlimReglasOlimpiadasTipo($entity);
             $nivelGrado->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(13));

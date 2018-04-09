@@ -47,6 +47,7 @@ class OlimRegistroOlimpiadaController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_registro_olimpiada');")->execute();
             $em->persist($entity);
             $em->flush();
             $this->session->set('olimpiadaId', $entity->getId());
