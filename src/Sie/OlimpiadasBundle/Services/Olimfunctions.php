@@ -403,6 +403,27 @@ class Olimfunctions {
     return $query->fetchAll();
 
    }
+
+
+    public function getDirectorInfo($data){
+// dump($arrDataInscription);die;
+    $query = $this->em->getConnection()->prepare(
+      
+      "
+        SELECT m0_.id AS maestroId, p1_.id AS personaId, o2_.id AS datosId, p1_.carnet AS carnet3, p1_.paterno AS paterno, p1_.materno AS materno, p1_.nombre AS nombre, o2_.telefono1 AS telefono1, o2_.telefono2 AS telefono2, o2_.correo_electronico AS correo_electronico
+        FROM maestro_inscripcion m0_ 
+        INNER JOIN persona p1_ ON (m0_.persona_id = p1_.id) 
+        left JOIN olim_director_inscripcion_datos o2_ ON (o2_.maestro_inscripcion_id = m0_.id) 
+        WHERE m0_.gestion_tipo_id =  ".$data['gestion']." AND m0_.institucioneducativa_id =  ".$data['sie']." AND m0_.es_vigente_administrativo = 't' and m0_.cargo_tipo_id in (1,12)
+      "
+    );
+    
+    $query->execute();
+    $objTutores = $query->fetch();
+   
+     return $objTutores;
+    // return 'krlos';
+  }
  
 
 }

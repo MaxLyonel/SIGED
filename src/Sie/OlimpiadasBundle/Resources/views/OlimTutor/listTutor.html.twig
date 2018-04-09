@@ -61,15 +61,16 @@
 
             <div class="col-md-5">
                     <div class="panel panel-info shadow">
+                        {% if director %}
                         <div class="panel-heading">
                             <div class="pull-left">
                                 <h3 class="panel-title">Datos Director(a)</h3>
                             </div>
                             <div class="pull-right">
                                 <form method="post" action="{{path('olimdirectordata_manual_edit')}}">
-                                    <input type="hidden" id="form_datosId" name="form[datosId]" value="{{director.datosId}}">
-                                    <input type="hidden" id="form_personaId" name="form[personaId]" value="{{director.personaId}}">
-                                    <input type="hidden" id="form_maestroId" name="form[maestroId]" value="{{director.maestroId}}">
+                                    <input type="hidden" id="form_datosId" name="form[datosId]" value="{{director.datosid}}">
+                                    <input type="hidden" id="form_personaId" name="form[personaId]" value="{{director.personaid}}">
+                                    <input type="hidden" id="form_maestroId" name="form[maestroId]" value="{{director.maestroid}}">
                                     <button type="submit" class="btn btn-sm btn-primary">Editar</button>
                                 </form>
                             </div>
@@ -89,7 +90,7 @@
                                         <span class="media-text">
                                             <b>Teléfono 1:</b> {{director.telefono1}} </br>
                                             <b>Teléfono 2:</b> {{director.telefono2}} </br>
-                                            <b>Correo Electrónico:</b> {{director.correoElectronico}}
+                                            <b>Correo Electrónico:</b> {{director.correo_electronico}}
                                         </span>
                                         <!-- Start meta icon -->
                                         
@@ -101,7 +102,11 @@
                             <!--/ End list message -->
     
                         </div><!-- /.panel-body -->
+                        {% else %}
+                        DIRECTOR NO REGISTRADO...
+                        {% endif %}
                     </div>
+                    <!-- end panel -->
                 </div>
         </div>
 

@@ -54,6 +54,7 @@ class OlimTutorController extends Controller{
     }
 
     public function listTutorBySieAction(Request $request){
+
         //data ue
         if($request->getMethod()=='POST'){
                 // get the send data
@@ -101,35 +102,18 @@ class OlimTutorController extends Controller{
             'gestionTipoId'=>$gestion
         ));
         // dump($objOlimRegistroOlimpiada);
-
         // $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findBy(array(
         //     'institucioneducativa'  => $institucioneducativa,
         //     'olimRegistroOlimpiada' => $objOlimRegistroOlimpiada->getId()
-
         // ), array('id'=>'DESC'));
         $form['olimRegistroOlimpiadaId'] = $objOlimRegistroOlimpiada->getId();
-        // dump($entities);
-        // dump($form);die;
-        // die;
+        
         $datainscription = array('sie'=>$institucioneducativa, 'OlimRegistroOlimpiadaId'=>$objOlimRegistroOlimpiada->getId());
         $entities = $this->get('olimfunctions')->getTutores2($datainscription);
-        // dump($entities);die;
-
-        $repositorio = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
-        $query = $repositorio->createQueryBuilder('a')
-            ->select('a.id as maestroId, b.id as personaId, c.id as datosId, b.carnet, b.paterno, b.materno, b.nombre, c.telefono1, c.telefono2, c.correoElectronico')
-            ->innerjoin('SieAppWebBundle:Persona', 'b', 'WITH', 'a.persona = b.id')
-            ->innerjoin('SieAppWebBundle:OlimDirectorInscripcionDatos', 'c', 'WITH', 'c.maestroInscripcion=a.id')
-            ->where('a.gestionTipo = :gestion')
-            ->andwhere('a.institucioneducativa = :sie')
-            ->andwhere('a.esVigenteAdministrativo = :vigente')
-            ->setParameter('gestion', $gestion)
-            ->setParameter('sie', $institucioneducativa)
-            ->setParameter('vigente', 't')
-            ->getQuery();
-
-        $director = $query->getSingleResult();
-
+                
+        // $director = $this->getDirectorInfo($form);
+        $director = $this->get('olimfunctions')->getDirectorInfo($form);
+        // dump($director);die;
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucioneducativa);
 
         return $this->render('SieOlimpiadasBundle:OlimTutor:listTutor.html.twig', array(
@@ -139,6 +123,24 @@ class OlimTutorController extends Controller{
             'institucion' => $institucion
         ));
     }
+
+/*    private function getDirectorInfo($data){
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+        $repositorio = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
+        $query = $repositorio->createQueryBuilder('a')
+            ->select('a.id as maestroId, b.id as personaId, c.id as datosId, b.carnet, b.paterno, b.materno, b.nombre, c.telefono1, c.telefono2, c.correoElectronico')
+            ->innerjoin('SieAppWebBundle:Persona', 'b', 'WITH', 'a.persona = b.id')
+            ->innerjoin('SieAppWebBundle:OlimDirectorInscripcionDatos', 'c', 'WITH', 'c.maestroInscripcion=a.id')
+            ->where('a.gestionTipo = :gestion')
+            ->andwhere('a.institucioneducativa = :sie')
+            ->andwhere('a.esVigenteAdministrativo = :vigente')
+            ->setParameter('gestion', $data['gestion'])
+            ->setParameter('sie', $data['sie'])
+            ->setParameter('vigente', 't')
+            ->getQuery();
+        return  $query->getSingleResult();
+    }*/
 
     private function formNewTutor($data){
         return $this->createFormBuilder()
