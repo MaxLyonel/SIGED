@@ -1,0 +1,164 @@
+{% extends 'SieOlimpiadasBundle:OlimReporte:template.html.twig' %}
+{% block body %}
+    
+    <div class="container">
+        <br>
+        <h3 class="text-primary"> <i class="fa fa-file-o"></i> Verificar inscripción</h3>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Buscar...</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Buscar estudiante</a>
+                </div>
+        
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav">
+                        {# <li class="active"><a href="#">Link</a></li> #}
+                        {# <li><a href="#">Link</a></li> #}
+                    </ul>
+                    {{ form_start(form, {'attr':{'class':'navbar-form navbar-left', 'role':'search'} }) }}
+                        <div class="form-group">
+                            {{ form_widget(form.carnet, {'attr':{'class':'form-control','placeholder':'Carnet','autocomplete':'off'} }) }}
+                            {{ form_widget(form.complemento, {'attr':{'class':'form-control','placeholder':'Complemento','autocomplete':'off'} }) }}
+                            {{ form_widget(form.fechaNacimiento, {'attr':{'class':'form-control','placeholder':'Fecha Nac.','autocomplete':'off'} }) }}
+                            <button type="submit" class="btn btn-primary"> <i class="fa fa-search"></i> </button>
+                        </div>
+                    {{ form_end(form) }}
+
+                    <ul class="nav navbar-nav navbar-right">
+                        {# <li><a href="{{ path('') }}">Ingresar</a></li> #}
+                    </ul>
+
+                </div><!-- /.navbar-collapse -->
+            </div>
+        </nav>
+
+	    {% if estudiante is defined %}
+			{% if estudiante is null %}
+				<div class="alert alert-info">
+					<i class="fa fa-info-circle"></i> Los datos ingresados son incorrectos.
+				</div>
+			{% else %}
+                
+				<div class="row">
+					<div class="col-md-12">
+                        <div class="panel panel-primary shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"> <i class="fa fa-user"></i> Datos Estudiante</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <!-- Start list message -->
+                                <div class="media-list">
+
+                                    <a class="media">
+                                        <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
+                                        <div class="media-body">
+                                            <span class="media-heading">{{ estudiante.nombre }} {{ estudiante.paterno }} {{ estudiante.materno }}</span>
+                                            <p> <b>Rude: </b> {{ estudiante.codigoRude }}</span><br>
+                                            <span> <b>Fecha Nacimiento: </b> {{ estudiante.fechaNacimiento|date('d-m-Y') }}</span><br>
+                                            <!-- Start meta icon -->
+                                            <span class="media-meta pull-right"></span>
+                                            <!--/ End meta icon -->
+                                        </div><!-- /.media-body -->
+                                    </a><!-- /.media -->
+
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+				</div>
+
+                {% if inscripciones|length > 0 %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-default shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title"> <i class="fa fa-list"></i> Registro de inscripciones</h3>
+                                    </div>
+                                    <div class="pull-right">
+                                        <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <!--/ End list message -->
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            {% if inscripciones|length > 0 %}
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Gestion</th>
+                                                            <th>Olimpiada</th>
+                                                            <th>Materia</th>
+                                                            <th>Categoría</th>
+                                                            {# <th>Nivel</th> #}
+                                                            {# <th>GRado</th> #}
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for item in inscripciones %}
+                                                            <tr>
+                                                                <td>{{ item.olimReglasOlimpiadasTipo.olimMateriaTipo.olimRegistroOlimpiada.gestionTipoId }}</td>
+                                                                <td>{{ item.olimReglasOlimpiadasTipo.olimMateriaTipo.olimRegistroOlimpiada.nombreOlimpiada }}</td>
+                                                                <td>{{ item.olimReglasOlimpiadasTipo.olimMateriaTipo.materia }}</td>
+                                                                <td>{{ item.olimReglasOlimpiadasTipo.categoria }}</td>
+                                                                {# <td>{{ item.olimReglasOlimpiadasTipo.nivelTipo.nivel }}</td> #}
+                                                                {# <td>{{ item.olimReglasOlimpiadasTipo.gradoTipo.grado }}</td> #}
+                                                            </tr>
+                                                        {% endfor %}
+                                                        
+                                                    </tbody>
+                                                </table>    
+                                            {% else %}
+                                                <div class="alert alert-info">
+                                                    <i class="fa fa-info"></i> No tiene inscripciones en olimpiadas
+                                                </div>
+                                            {% endif %}
+
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+
+			{% endif %}
+			
+	    {% endif %}
+
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+
+        $(function(){
+            $("#form_carnet").numeric("positiveInteger");
+            $("#form_carnet").attr("maxlength",'20');
+
+            // aplicamos las mascaras para las fechas
+            $("#form_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
+            $("#form_complemento").inputmask({mask: "9a"});
+        });
+        
+    </script>
+{% endblock %}

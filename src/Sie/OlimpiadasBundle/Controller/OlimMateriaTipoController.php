@@ -92,6 +92,7 @@ class OlimMateriaTipoController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_materia_tipo');")->execute();
             $em->persist($entity);
             $em->flush();
 
