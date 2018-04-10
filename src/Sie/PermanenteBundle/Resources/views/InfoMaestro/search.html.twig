@@ -1,0 +1,85 @@
+{% extends 'layoutPermanente.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-users"></i> Datos del Docente <span> Datos personales, cargo, financiamiento, idiomas.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                    <li>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                            <a href="{{path('principal_web')}}">Bienvenida</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>                    
+                    <li>
+                        <i class="fa fa-th-large"></i>
+                            <a href="{{path('herramienta_per_ceducativa_menu_principal')}}">Menu Principal</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <i class="fa fa-users"></i>
+                            <a href="{{path('permanente_info_maestro_index')}}">Docentes</a>
+                        <i class="fa fa-angle-right"></i>
+                    <li>    
+                    <li>
+                        <i class="fa fa-users"></i>
+                            Buscar personas
+                        <i class="fa fa-angle-right"></i>
+                    </li>                
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-danger">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Buscar Persona</h3>
+                        </div>
+                        <div class="pull-right">
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="panel-body panel-primary">
+                            {{form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.carnetIdentidad)}}
+                                        {{form_widget(form.carnetIdentidad) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">
+                                        {{ form_label(form.complemento)}}
+                                        <div class="input-group">
+                                            <div class="input-group-addon">-</div>
+                                            {{form_widget(form.complemento,{'attr':{'data-toggle':'tooltip','data-placement':'bottom','data-original-title':'El complemento del CI no es el lugar de expedicion, no coloque abreviaciones de departamentos'} }) }}
+                                        </div>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="form-group col-lg-3 col-md-6">                                        
+                                        <p>{{ form_widget(form.buscar ) }}</p>
+                                        <p><a href="{{ path('permanente_info_maestro_index') }}" class="btn btn-default">Cancelar</a></p>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="datosPersonas"></div>
+            </div>
+        </div>
+    </div> 
+
+{% endblock %}

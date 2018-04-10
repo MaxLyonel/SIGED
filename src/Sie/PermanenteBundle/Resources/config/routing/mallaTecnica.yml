@@ -1,0 +1,89 @@
+permanente_malla_tecnica_index:
+    path:     /
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:index}
+    options:
+         expose: true
+    
+permanente_malla_tecnica_modulos:
+    path:     /matecmodulos
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:seemodulos}
+    options:
+         expose: true
+         
+permanente_malla_tecnica_modulos_change_semestre:
+    path:     /changesemestre
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:changesemestre}
+    options:
+         expose: true         
+
+permanente_malla_tecnica_modulos_change_horas:
+    path:     /changehoras
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:changehoras}
+    options:
+         expose: true    
+         
+permanente_malla_tecnica_modulos_duracion:
+    path:     /changeduracion
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:changeduracion}
+    options:
+         expose: true       
+         
+permanente_malla_tecnica_modulos_duracion_bas:
+    path:     /changeduracionbas
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:changeduracionbas}
+    options:
+         expose: true           
+         
+permanente_malla_tecnica_modulos_duracion_aux:
+    path:     /changeduracionaux
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:changeduracionaux}
+    options:
+         expose: true   
+         
+permanente_malla_tecnica_modulos_duracion_med:
+    path:     /changeduracionmed
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:changeduracionmed}
+    options:
+         expose: true            
+         
+permanente_malla_tecnica_modulos_duracion_new:
+    path:     /changeduracionnew
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:changeduracionnew}
+    options:
+         expose: true            
+         
+permanente_malla_tecnica_modulos_change_area:
+    path:     /changearea
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:changearea}
+    options:
+         expose: true          
+         
+permanente_malla_tecnica_modulos_add:
+    path:     /addmodulo
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:addmodulo}
+    options:
+         expose: true     
+         
+permanente_malla_tecnica_modulos_ver:
+    path:     /matecmodulosver
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:seemodulosver}
+    options:
+         expose: true         
+         
+permanente_malla_tecnica_modulos_delete:
+    path:     /{smpid}/matecmodulodelete
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:modulodelete}
+    options:
+         expose: true     
+         
+herramienta_nueva_acreditacion:
+    path:     /nuevaacreditacion
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:nuevaacreditacion }
+    options:
+         expose: true         
+         
+herramienta_acreditacion_alternativa_new:
+    path:     /newacreditacion
+    defaults: { _controller: SiePermanenteBundle:MallaTecnica:newacreditacion }
+    options:
+         expose: true         

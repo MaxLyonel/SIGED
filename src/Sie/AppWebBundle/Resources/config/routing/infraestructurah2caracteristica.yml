@@ -1,0 +1,59 @@
+infraestructurah2caracteristica:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:index" }
+    methods: [GET, POST]
+
+# infraestructurah2caracteristica_new:
+#     path:     /new
+#     defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:new" }
+
+# infraestructurah2caracteristica_edit:
+#     path:     /{id}/edit
+#     defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:edit" }
+
+
+# Routing para funciones ajax BLOQUES
+
+infra_getBloque:
+    path:     /getBloque
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:getBloque" }
+    options:
+        expose: true
+
+infra_getBloques:
+    path:     /getBloques
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:getBloques" }
+    options:
+        expose: true
+
+infra_createBloque:
+    path:     /createBloque
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:createBloque" }
+    options:
+        expose: true
+
+infra_updateBloque:
+    path:     /updateBloque
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:updateBloque" }
+    options:
+        expose: true
+
+infra_deleteBloque:
+    path:     /deleteBloque
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:deleteBloque" }
+    options:
+        expose: true
+
+# Routing para funciones ajax PISOS
+
+infra_getPisos:
+    path:     /getPisos
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:getPisos" }
+    options:
+        expose: true
+
+infra_createPiso:
+    path:     /createPiso
+    defaults: { _controller: "SieAppWebBundle:InfraestructuraH2Caracteristica:createPiso" }
+    options:
+        expose: true

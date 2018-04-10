@@ -152,13 +152,15 @@ class DgesttlaFunction {
 
     //create the query about the roluser
     $query = $this->em->getConnection()->prepare("
-      select b.gestion_tipo_id,e.periodo,f.codigo,f.materia,d.turno,c.paralelo,b.id as ttec_paralelo_materia_id
-      from sp_validacion_superior_asignatura_corresponde_web('" . $form['personaId'] . "','" . $form['periodoid'] . "','" . $form['denominacionId'] . "') a
-      inner join ttec_paralelo_materia b on a.ttec_materia_tipo_id=b.ttec_materia_tipo_id and a.ttec_paralelo_tipo_id=b.ttec_paralelo_tipo_id and a.turno_tipo_id=b.turno_tipo_id and a.ttec_periodo_tipo_id=b.ttec_periodo_tipo_id and b.gestion_tipo_id = 2017
-      inner join ttec_paralelo_tipo c on a.ttec_paralelo_tipo_id=c.id
-      inner join turno_tipo d on a.turno_tipo_id=d.id
-      inner join ttec_periodo_tipo e on a.ttec_periodo_tipo_id=e.id
-      inner join ttec_materia_tipo f on b.ttec_materia_tipo_id=f.id
+    select b.gestion_tipo_id,e.periodo,f.codigo,f.materia,d.turno,c.paralelo,b.id as ttec_paralelo_materia_id,a.id_obs,a.obs,a.es_registro_paralelo_materia
+    from sp_validacion_superior_asignatura_corresponde_web2('".$form['personaId']."','".$form['denominacionId']."') a
+        left join ttec_paralelo_materia b on a.ttec_materia_tipo_id=b.ttec_materia_tipo_id and a.ttec_paralelo_tipo_id=b.ttec_paralelo_tipo_id and a.turno_tipo_id=b.turno_tipo_id and a.ttec_periodo_tipo_id=b.ttec_periodo_tipo_id 
+            left join ttec_paralelo_tipo c on a.ttec_paralelo_tipo_id=c.id
+                left join turno_tipo d on a.turno_tipo_id=d.id
+                    left join ttec_periodo_tipo e on a.ttec_periodo_tipo_id=e.id
+                        left join ttec_materia_tipo f on b.ttec_materia_tipo_id=f.id
+    where a.es_registro_paralelo_materia is true
+    order by e.periodo
     ");
 
     $query->execute();

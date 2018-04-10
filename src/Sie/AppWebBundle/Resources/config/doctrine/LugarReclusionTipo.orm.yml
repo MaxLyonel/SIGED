@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\LugarReclusionTipo:
+    type: entity
+    table: lugar_reclusion_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        lugarReclusion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: lugar_reclusion
+    lifecycleCallbacks: {  }

@@ -49,6 +49,8 @@ class DocumentoController extends Controller {
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
                 ->where('d.id = :codDocumento')
+                ->andWhere('dt.id in (1,3,4,5,6,7,8,9)')
+                ->andWhere('de.id in (1)')
                 ->setParameter('codDocumento', $id);
         $entityDocumento = $query->getQuery()->getResult();
         if(count($entityDocumento)>0){
@@ -483,6 +485,7 @@ class DocumentoController extends Controller {
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'ltp.id = e.lugarProvNacTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp    .lugarTipo')
                 ->where('ds.id like :codSerie')
+                ->andWhere('dt.id in (1,3,4,5,6,7,8,9)')
                 ->setParameter('codSerie', '%'.$serie.'%');
         $entityDocumento = $query->getQuery()->getResult();
         if(count($entityDocumento)>0){

@@ -5,44 +5,44 @@
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
                             <div class="form-group has-feedback">                                
-                                <span class="form-control">1er Semestre 2017-Inscripciones</span>
+                                <span class="form-control">1er Semestre 2018-Inscripciones</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="1" id="est1">
-                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="1er Semestre 2017-Inscripciones" id="val1">
-                                <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="1er Semestre 2018-Inscripciones" id="val1">
+                                <button type="submit" class="btn btn-theme fa fa-eye form-control-feedback rounded"></button>
                             </div>
                         </form>
                     </div>
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
                             <div class="form-group has-feedback">                                
-                                <span class="form-control">1er Semestre 2017-Notas</span>
+                                <span class="form-control">1er Semestre 2018-Notas</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="2" id="est2">
-                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="1er Semestre 2017-Notas" id="val2">
-                                <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="1er Semestre 2018-Notas" id="val2">
+                                <button type="submit" class="btn btn-theme fa fa-eye form-control-feedback rounded"></button>
                             </div>
                         </form>
                     </div>
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
                             <div class="form-group has-feedback">                                
-                                <span class="form-control">2do Semestre 2017-Inscripciones</span>
+                                <span class="form-control">2do Semestre 2018-Inscripciones</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="3" id="est3">
-                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="2do Semestre 2017-Inscripciones" id="val3">
-                                <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="2do Semestre 2018-Inscripciones" id="val3">
+                                <button type="submit" class="btn btn-theme fa fa-eye form-control-feedback rounded"></button>
                             </div>
                         </form>
                     </div>
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
                             <div class="form-group has-feedback">                                
-                                <span class="form-control">2do Semestre 2017-Notas</span>
+                                <span class="form-control">2do Semestre 2018-Notas</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="4" id="est4">
-                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="2do Semestre 2017-Notas" id="val4">
-                                <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="2do Semestre 2018-Notas" id="val4">
+                                <button type="submit" class="btn btn-theme fa fa-eye form-control-feedback rounded"></button>
                             </div>
                         </form>
                     </div>
@@ -55,7 +55,7 @@
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="5" id="est5">
                                 <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="Gestiones Pasadas" id="val4">
-                                <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                                <button type="submit" class="btn btn-theme fa fa-eye form-control-feedback rounded"></button>
                             </div>
                         </form>
                     </div>
@@ -84,10 +84,7 @@
                                 </div><!-- /.mini-stat-info -->
                             </div><!-- /.mini-stat -->
                         </div>
-                        {% set totconcl = entitiestot[0].tottecho - entitiestot[0].totfaltante %}
-                        {% if totconcl < 0 %}
-                            {% set totconcl = 0%}
-                        {% endif %}
+                        {% set totconcl = entitiestot[0].tottecho - entitiestot[0].totfaltante %}                      
                         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                             <div class="mini-stat clearfix bg-bitbucket">
                                 <span class="mini-stat-icon"><i class="fa fa-flag-o fg-success"></i></span><!-- /.mini-stat-icon -->
@@ -206,4 +203,4 @@
                     </div>                                               
                 </div><!-- /.body-content -->
                 <!--/ End body content -->
-{% endblock %}            
+{% endblock %} 

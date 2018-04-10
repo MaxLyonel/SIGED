@@ -197,32 +197,22 @@
                                 <!-- Start dropdown menu -->
                                 <div class="dropdown-menu animated flipInX">
                                     <div class="dropdown-header">
-                                        <span class="title">Messages <strong>(1)</strong></span>
+                                        <span class="title">Notificaciones <strong>(1)</strong></span>
                                         <!--span class="option text-right"><a href="form-element.html#">+ New message</a></span-->
                                     </div>
                                     <div class="dropdown-body">
 
-                                        <!-- Start message search -->
-                                        <form class="form-horizontal" action="form-element.html#">
-                                            <div class="form-group has-feedback has-feedback-sm m-5">
-                                                <input type="text" class="form-control input-sm" placeholder="Search message...">
-                                                <!--button type="submit" class="btn btn-theme fa fa-search form-control-feedback"></button-->
-                                            </div>
-                                        </form>
-                                        <!--/ End message search -->
-
                                         <!-- Start message list -->
                                         <div class="media-list niceScroll">
 
-                                            <a href="page-messages.html" class="media">
-                                                <div class="pull-left"><img src="{{asset('webEspecial/img/avatar/50/2.png')}}" class="media-object img-circle" alt="krlos"/></div>
+                                            <a href="{{path('principal_web')}}" class="media">
                                                 <div class="media-body">
-                                                    <span class="media-heading">krlos</span>
-                                                    <span class="media-text">Se publico el academico para las Unidades Educativas</span>
+                                                    <span class="media-heading"><strong>Actualización del Sistema</strong></span>
+                                                    <span class="media-text">Se incorporó la opción para "Seleccionar Centro" dentro del menú "Especial" para Técnicos SIE Departamental y Distrital. Con el propósito de que los mismos puedan verificar la información registrada por los Centros de Educación Especial bajo su tuición.</span>
                                                     <!-- Start meta icon -->
                                                     <span class="media-meta"><i class="fa fa-reply"></i></span>
                                                     <span class="media-meta"><i class="fa fa-paperclip"></i></span>
-                                                    <span class="media-meta pull-right">13 minutes</span>
+                                                    <span class="media-meta pull-right">15 minutos</span>
                                                     <!--/ End meta icon -->
                                                 </div><!-- /.media-body -->
                                             </a><!-- /.media -->
@@ -326,11 +316,10 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                            <li><a href="{{ path('creacioncursos_especial') }}">Creacion de Cursos</a></li>
-                            {#<li><a href="{{ path('estudianteinscripcion_especial') }}"> Estudiante Inscripcion</a></li>#}
+                            <li><a href="{{ path('herramienta_especial_buscar_centro') }}">Seleccionar Centro</a></li>
                         </ul>
                     </li>
-                    <li class="submenu">
+                    {#<li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-diamond"></i></span>
                             <span class="text">Gestión Personal</span>
@@ -345,7 +334,7 @@
                                 <li><a href="{{ path('herramienta_especial_info_maestro_tsie_index')}}">Personal Docente</a></li>
                             {% endif %}
                         </ul>
-                    </li>
+                    </li>#}
                     {% else %}
                     <li class="submenu">
                         <a href="javascript:void(0);">
@@ -372,7 +361,7 @@
                             <li><a href="{{ path('history_inscription_index') }}"> Historial de Inscripción</a></li>
                         </ul>
                     </li>
-                    <li class="submenu">
+                    {#<li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bono Juancito Pinto</span>
@@ -380,6 +369,19 @@
                         </a>
                         <ul>
                             <li><a href="{{ path('herramienta_info_estudiante_bjp_index')}}">Validar Estudiantes</a></li>
+                        </ul>
+                    </li>#}
+
+                    <li class="submenu">
+                        <a href="javascript:void(0);">
+                            <span class="icon"><i class="fa fa-home"></i></span>
+                            <span class="text">Herramientas</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul>
+                            {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 %}
+                                <li><a href="{{ path('herramienta_especial_habilitar_gestion_search')}}">Habilitar gestión</a></li>
+                            {% endif %}
                         </ul>
                     </li>
 
@@ -410,8 +412,8 @@
                 {% endblock %}
 
                 <!-- Start footer content -->
-                <footer class="footer-content text-right">
-                    2016 - <span id="copyright-year"></span> &copy; Ministerio de Educación.
+                <footer class="footer-content text-left">
+                    2016 - <span id="copyright-year"></span> &copy; Ministerio de Educación
                 </footer><!-- /.footer-content -->
                 <!--/ End footer content -->
 
@@ -939,13 +941,6 @@
                             </div><!-- /#sidebar-setting -->
                             <div class="tab-pane" id="sidebar-chat">
                                 <div class="sidebar-chat">
-
-                                    <form class="form-horizontal">
-                                        <div class="form-group has-feedback">
-                                            <input class="form-control" type="text" placeholder="Search messages...">
-                                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                                        </div>
-                                    </form>
 
                                     <!-- Start right navigation - menu -->
                                     <ul class="sidebar-menu niceScroll">

@@ -16,9 +16,44 @@ class InfoEspecialController extends Controller{
     $this->session = new Session();
   }
   public function indexAction(Request $request){
+    // get the data conexion
+    $em = $this->getDoctrine()->getManager();
 
-     // get the data conexion
-     $em = $this->getDoctrine()->getManager();
+    if ($request->getMethod() == 'POST') {
+        $form = $request->get('form');
+
+        $institucion = $form['sie'];
+
+        $objCentro = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $institucion, 'institucioneducativaTipo' => 4));
+
+        if($objCentro){
+            /*
+             * verificamos si tiene tuicion
+             */
+            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+            $query->bindValue(':user_id', $this->session->get('userId'));
+            $query->bindValue(':sie', $institucion);
+            $query->bindValue(':rolId', $this->session->get('roluser'));
+            $query->execute();
+            $aTuicion = $query->fetchAll();
+
+            if ($aTuicion[0]['get_ue_tuicion']) {
+                $institucion = $form['sie'];
+                // creamos variables de sesion de la institucion educativa y gestion
+                $request->getSession()->set('ie_id', $institucion);
+            } else {
+                $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa');
+                return $this->redirect($this->generateUrl('herramienta_especial_buscar_centro'));
+            }
+            
+        } else {
+            $this->get('session')->getFlashBag()->add('noSearch', 'El código ingresado no es válido o no corresponde a un Centro de Educación Especial');
+            return $this->redirect($this->generateUrl('herramienta_especial_buscar_centro'));
+        }
+
+        // creamos variables de sesion de la institucion educativa
+    }
+
      //$this->session = $request->getSession();
      // dump($request);die;
      $id_usuario = $this->session->get('userId');
@@ -192,7 +227,8 @@ class InfoEspecialController extends Controller{
       $form = $request->get('form');
 
       //get the current operativo
-      $objOperativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($form['sie'], $form['gestion']);
+      $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+      
       //update the close operativo to registro consolido table
       $objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
         'unidadEducativa' => $form['sie'],
@@ -269,4 +305,38 @@ class InfoEspecialController extends Controller{
       return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $form['sie'], 'gestion' => $form['gestion'], 'periodo' => $periodo));
     }
 
+    public function operativo($sie,$gestion){
+        $em = $this->getDoctrine()->getManager();
+        // Obtenemos el operativo para bloquear los controles
+        $registroOperativo = $em->createQueryBuilder()
+                        ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+                        ->from('SieAppWebBundle:RegistroConsolidacion','rc')
+                        ->where('rc.unidadEducativa = :ue')
+                        ->andWhere('rc.gestion = :gestion')
+                        ->setParameter('ue',$sie)
+                        ->setParameter('gestion',$gestion)
+                        ->getQuery()
+                        ->getResult();
+        if(!$registroOperativo){
+            // Si no existe es operativo inicio de gestion
+            $operativo = 0;
+        }else{
+            if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
+                $operativo = 1; // Primer Bimestre
+            }
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
+                $operativo = 2; // Primer Bimestre
+            }
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
+                $operativo = 3; // Primer Bimestre
+            }
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] == 0){
+                $operativo = 4; // Primer Bimestre
+            }
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] >= 1){
+                $operativo = 5; // Fin de gestion o cerrado
+            }
+        }
+        return $operativo;
+    }
 }

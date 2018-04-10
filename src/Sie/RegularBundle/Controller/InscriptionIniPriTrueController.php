@@ -83,6 +83,26 @@ class InscriptionIniPriTrueController extends Controller {
         $data = array();
 
         $form = $request->get('form');
+      
+        /**
+         * add validation QA
+         * @var [type]
+         */
+        $objObservation = $this->get('seguimiento')->getStudentObservationQA($form);
+        // dump($objObservation);die;
+        if($objObservation){
+            $message = "Estudiante observado - rude " . $form['codigoRude'] . " :";
+            $this->addFlash('notiext', $message);
+            $observaionMessage='';
+            // foreach ($objObservation as $key => $value) {
+            //   $observaionMessage .=$value['obs']."-".$value['institucion_educativa_id']."*****";
+            // }
+            $observaionMessage = 'Estudiante presenta inconsistencia, se sugiere corregirlos por las opciones de calidad...';
+            $this->addFlash('studentObservation', $observaionMessage);
+            return $this->redirectToRoute('inscription_ini_pri_rue_index');
+        }
+
+
         if ($request->get('form')) {
             $form = $request->get('form');
         } else {

@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\FuerzaMilitarTipo:
+    type: entity
+    table: fuerza_militar_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fuerzaMilitar:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: fuerza_militar
+    lifecycleCallbacks: {  }

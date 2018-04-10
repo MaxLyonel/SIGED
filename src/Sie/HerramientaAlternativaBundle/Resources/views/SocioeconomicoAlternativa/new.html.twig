@@ -63,7 +63,7 @@
             </div>
             <div class="panel-body no-padding" id="modal-body">
 
-                {{form_start(form, { 'attr': {'role': 'form'} } )}}
+                {{form_start(form, { 'attr': {'role': 'form','onsubmit':'return (validaLista()&&validaSeleccion())'} } )}}
                 <div class="form-body">
                 <div class="alert alert-info">
                     <span class="alert-icon"><i class="fa fa-info"></i></span>
@@ -211,6 +211,7 @@
                                             <td>2.8. Nº DE HIJOS</td>
                                             <td><div class="col-md-2">{{ form_widget(form.seccioniiHijos) }}</div></td>
                                         </tr>
+                                       <!--
                                         <tr>
                                             <td>2.9. ¿ACTUALMENTE PRESTA SERVICIO MILITAR?</td>
                                             <td><div class="col-md-3">{{ form_widget(form.seccioniiEsserviciomilitar) }}</div></td>
@@ -219,6 +220,23 @@
                                             <td>En caso afirmativo, la formación educativa del estudiante/participante se realiza en:</td>
                                             <td><div class="col-md-6">{{ form_widget(form.seccioniiEsserviciomilitarCea) }}</div></td>
                                         </tr>
+                                        -->
+                                        <tr>
+                                            <td><strong>
+                                                    2.9. APARTADO DE EDUCACION DIVERSA
+
+                                                </strong></td>
+                                            <td><div class="col-md-8 form-group">{{ form_widget(form.seccioniiEducacionDiversaTipo) }}</div></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="2">  <div class="form-group" id="answerID"></div></td>
+
+
+                                        </tr>
+
+
+
                                     </table>
                                 </div>
                             </div>
@@ -454,6 +472,9 @@
 </div><!-- /.modal-dialog -->
 <script>
 
+    var conta=0;
+    var contb=0;
+    var contc=0;
          $(".js-example-basic-multiple").select2({
             tags: "true",
             placeholder: "Seleccione una opción",
@@ -501,7 +522,7 @@
 
             peticion1 = $.ajax({
                 type: 'get',
-                url: Routing.generate('bjp_rue_clistarprovincias', {'dpto': idDpto}),
+                url: Routing.generate('sie_alt_clistarprovincias', {'dpto': idDpto}),
                 beforeSend: function () {
 
                 },
@@ -530,7 +551,7 @@
 
             peticion2 = $.ajax({
                 type: 'get',
-                url: Routing.generate('bjp_rue_clistarmunicipios', {'prov': idProv}),
+                url: Routing.generate('sie_alt_clistarmunicipios', {'prov': idProv}),
                 beforeSend: function () {
 
                 },
@@ -557,7 +578,7 @@
 
             peticion3 = $.ajax({
                 type: 'get',
-                url: Routing.generate('bjp_rue_clistarcantones', {'muni': idMuni}),
+                url: Routing.generate('sie_alt_clistarcantones', {'muni': idMuni}),
                 beforeSend: function () {
 
                 },
@@ -582,7 +603,7 @@
 
             peticion4 = $.ajax({
                 type: 'get',
-                url: Routing.generate('bjp_rue_clistarlocalidades', {'cantn': idCantn}),
+                url: Routing.generate('sie_alt_clistarlocalidades', {'cantn': idCantn}),
                 beforeSend: function () {
 
                 },
@@ -605,7 +626,7 @@
 
             peticion5 = $.ajax({
                 type: 'get',
-                url: Routing.generate('bjp_rue_clistarprovincias', {'dpto': idDpto}),
+                url: Routing.generate('sie_alt_clistarprovincias', {'dpto': idDpto}),
                 beforeSend: function () {
 
                 },
@@ -619,4 +640,118 @@
                 }
             });
         }
-</script>
+
+
+
+
+         function validaLista(){
+             if(conta == 0 || conta == ""){
+                 alert('Asegurese de completar el apartado 2.9 de Educacion Diversa');
+                 return false;
+             }
+             return true;
+         }
+
+         function validaSeleccion(){
+             if(conta ==2)
+             {
+                 if((contb == 0 || contb == "")){
+                     alert('Debe seleccionar la Unidad Militar a la que pertenece');
+                     return false;
+                 }
+
+             } else if(conta ==3)
+             {
+                 if((contc == 0 || contc == "")){
+                     alert('Debe seleccionar el Penal al que pertenece');
+                     return false;
+                 }
+
+             }
+             return true;
+         }
+
+         function listarmenu(idM){
+
+             var pertUM = $('#form_pertUM').val();
+             var pertP= $('#form_pertP').val();
+             var cea= $('#form_cea').val();
+             var umt = $('#form_umt').val();
+             var pt= $('#form_pt').val();
+
+             if(idM ==null || idM=="")
+             {
+                 idM ='0';
+             }
+             conta=idM;
+             contb=umt;
+             contc=pt;
+
+             $.ajax({
+                 type: 'get',
+                 url: Routing.generate('sie_alt_bjp_rue_clistarmenu', {'idM': idM, 'pertUM': pertUM, 'pertP': pertP,'cea':cea,'umt':umt,'pt':pt} ),
+                 beforeSend: function () {
+                     $('#answerID').empty();
+                     $("#answerID").append('<div c lass="text-center"><img src="{{asset('img/loading.gif')}} /></div>');
+                 },
+                 success: function (data) {
+                     $('#answerID').empty();
+                     $('#answerID').append(data);
+
+
+
+                 }
+             });
+         }
+
+
+         function tipomili(idUM){
+
+
+             var pertUM = $('#form_pertUM').val();
+             contb=idUM;
+
+             $.ajax({
+                 type: 'get',
+                 url: Routing.generate('sie_alt_bjp_rue_tipomili', {'idUM': idUM,'pertUM': pertUM} ),
+                 beforeSend: function (data) {
+                     $('#form_seccioniiUnidadMilitarTipo').empty();
+                     $('#form_seccioniiUnidadMilitarTipo').append('<div c lass="text-center"><img src="{{asset('img/loading.gif')}} /></div>');
+                 },
+                 success: function (data) {
+                     $('#form_seccioniiUnidadMilitarTipo').empty();
+                     /*$('#form_seccioniiUnidadMilitar').append(('<option value="">Seleccionar...</option>');*/
+                     $.each(data.listarunidadmilitar, function (i, value) {
+                         $('#form_seccioniiUnidadMilitarTipo').append('<option value="' + i + '">' + value + '</option>');
+                     });
+
+                 }
+             });
+         }
+
+
+         function tipopenal(idP){
+
+             var pertP= $('#form_pertP').val();
+             contc=idP;
+
+             $.ajax({
+                 type: 'get',
+                 url: Routing.generate('bjp_rue_tipopenal', {'idP': idP, 'pertP': pertP} ),
+                 beforeSend: function (data) {
+                     $('#form_seccioniiRecintoPenitenciarioTipo').empty();
+                     $('#form_seccioniiRecintoPenitenciarioTipo').append('<div c lass="text-center"><img src="{{asset('img/loading.gif')}} /></div>');
+                 },
+                 success: function (data) {
+                     $('#form_seccioniiRecintoPenitenciarioTipo').empty();
+                     /*$('#form_seccioniiPenal').append(('<option value="">Seleccionar...</option>');*/
+                     $.each(data.listarpenal, function (i, value) {
+                         $('#form_seccioniiRecintoPenitenciarioTipo').append('<option value="' + i + '">' + value + '</option>');
+                     });
+
+                 }
+             });
+         }
+
+         </script>
+

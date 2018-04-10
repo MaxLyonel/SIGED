@@ -17,20 +17,52 @@ class InfraestructuraH4ServicioVestuariosType extends AbstractType
         $builder
             ->add('n6ServicioAmbienteTipo')
             ->add('n6Areatotalm2')
-            ->add('n6EsFuncionaAmbiente')
-            ->add('n62EsTieneTecho')
-            ->add('n62EsTieneCieloFalso')
+            ->add('n6EsFuncionaAmbiente','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n62EsTieneTecho','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n62EsTieneCieloFalso','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n62TieneCieloFalsoCaracTipo')
-            ->add('n62EsTieneMuros')
+            ->add('n62EsTieneMuros','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n62TieneMurosCaracTipo')
             ->add('n62TieneMurosMaterTipo')
-            ->add('n62EsTienePuerta')
-            ->add('n62EsTieneRevest')
+            ->add('n62EsTienePuerta','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n62EsTieneRevest','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n62TieneRevestMaterTipo')
             ->add('n62TieneRevestCaracTipo')
-            ->add('n62EsTieneVentana')
+            ->add('n62EsTieneVentana','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n62TieneVentanaCaracTipo')
-            ->add('n62EsTienePiso')
+            ->add('n62EsTienePiso','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n62TienePisoMaterTipo')
             ->add('n62TienePisoCaracTipo')
             

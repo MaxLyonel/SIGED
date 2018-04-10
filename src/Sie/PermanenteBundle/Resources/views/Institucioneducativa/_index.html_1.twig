@@ -1,0 +1,618 @@
+{% extends 'layoutHerramientaalternativa.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-user"></i> Datos del Centro de Educación Alternativa <span>Teléfono, email, casilla postal.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                    <li>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                            <a href="{{path('principal_web')}}">Bienvenida</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>                    
+                    <li>
+                        <i class="fa fa-th-large"></i>
+                            <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <i class="fa fa-user"></i>
+                            Datos del CEA
+                        <i class="fa fa-angle-right"></i>
+                    </li>                
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('noSearch') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('noTuicion') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('newError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('updateError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('eliminarError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('msgOk') %}
+                    <div class="alert alert-success" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('msgError') %}
+                    <div class="alert alert-danger" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <i class="fa fa-warning"></i> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <!-- Start double tabs -->
+            <div class="panel panel-tab panel-tab-double rounded shadow">
+                <!-- Start tabs heading -->
+                <div class="panel-heading no-padding">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="component-tabsaccordion.html#tab2-1" data-toggle="tab">
+                                <i class="fa fa-user"></i>
+                                <div>
+                                    <span class="text-strong">Información Centro de Educación Alternativa</span>
+                                    <span>Paso 1</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="component-tabsaccordion.html#tab2-2" data-toggle="tab">
+                                <i class="fa fa-file-text"></i>
+                                <div>
+                                    <span class="text-strong">Cursos</span>
+                                    <span>Paso 2</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div><!-- /.panel-heading -->
+                <!--/ End tabs heading -->
+
+                <!-- Start tabs content -->
+                <div class="panel-body">
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tab2-1">
+                            {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} }) }}
+                            <div class="row">
+                                <div class="col-md-9 col-sm-9 col-xs-9">
+                                    <div class="panel panel-lilac">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">1.- Datos de Identificación</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+
+                                            {% set iedu = ieducativa[0] %}
+                                            {% set iedusu = ieducativa[1] %}
+                                            {% set ubicacion = ubicacion[0] %}                                        
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Código del Centro de Educación Alternativa (CEA)</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input value="{{ iedu.id }}" id="readonlyinput1" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <strong>Nombre del Centro de Educación Alternativa (CEA)</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input value="{{ iedu.institucioneducativa }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                {% if director %}
+                                                    <div class="col-md-6">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <strong>Nombre de la Directora ó Director encargada/o del CEA</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input value="{{ director.paterno ~' '~ director.materno ~' '~ director.nombre }}" id="readonlyinput1" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <strong>C.I. Directora ó Director Encargada/o</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <input value="{{ director.carnet }}" class="form-control" readonly="readonly" type="text">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <strong>{{ form_label(form.telefono2) }}</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                {{form_widget(form.telefono2) }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <strong>Nombre de la Directora ó Director encargada/o del CEA</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <p>El CEA no ha registrado a la Directora o al Director. <span class="text-danger">(Verifique en el módulo de Gestión de Personal Administrativo)</span></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <strong>{{ form_label(form.email) }}</strong>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <strong>{{ form_label(form.telefono1) }}</strong>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <strong>{{ form_label(form.casilla) }}</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            {{form_widget(form.email) }}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            {{form_widget(form.telefono1) }}
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            {{form_widget(form.casilla) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div><!-- /.panel-body -->
+                                    </div><!-- /.panel -->
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-3">
+                                    <div class="panel panel-lilac">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">¿El CEA está cerrado?</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input value="{{ ubicacion['estadoinstitucion'] }}" class="form-control text-center" readonly="readonly" type="text">
+                                                </div>
+                                            </div>
+                                        </div><!-- /.panel-body -->
+                                    </div><!-- /.panel -->
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="panel panel-lilac">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">2.- Datos de Ubicación del Edificio Escolar</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            Departamento:
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <input value="{{ ubicacion['codigo_departamento'] }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input value="{{ ubicacion['departamento'] }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            Sección Municipal:
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <input value="{{ ubicacion['codigo_seccion'] }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input value="{{ ubicacion['seccion'] }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            Ciudad o Localidad:
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <input value="{{ ubicacion['codigo_localidad'] }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input value="{{ ubicacion['localidad'] }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>    
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            Provincia:
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <input value="{{ ubicacion['codigo_provincia'] }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input value="{{ ubicacion['provincia'] }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            Cantón:
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <input value="{{ ubicacion['codigo_canton'] }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <input value="{{ ubicacion['canton'] }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            Zona:
+                                                        </div>
+                                                        <div class="col-md-9">
+                                                            <input value="{{ iedusu.zona }}" class="form-control" readonly="readonly" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Código de Edificio Escolar
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['codigo_le'] }}" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Dirección
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['direccion'] }}" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Área
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['area2001'] }}" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.panel-body -->
+                                    </div><!-- /.panel -->
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="panel panel-lilac">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">3.- Jurisdicción Administrativa</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Código de Distrito
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['codigo_distrito'] }}" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Nombre de Distrito
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['distrito'] }}" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.panel-body -->
+                                    </div><!-- /.panel -->
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="panel panel-lilac">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">4.- Dependencia</h3>
+                                        </div><!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Descripción
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['dependencia'] }}" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            Turno
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <input class="form-control" id="disabledInput" type="text" placeholder="{{ iedusu.turnoTipo }}" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.panel-body -->
+                                    </div><!-- /.panel -->
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-lg-12 text-center">
+                                        {{ form_widget(form.guardar ) }}
+                                        <a href="{{ path('herramienta_ceducativa_menu_principal') }}" class="btn btn-default">Cancelar</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+                        <div class="tab-pane fade" id="tab2-2">
+                            <div class="row">
+                                <div class="col-lg-12 text-right">
+                                    <form action="{{path('herramienta_creacioncursos_new')}}" style="display: inline-block" method="post">
+                                        <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
+                                        <input type="hidden" name="idGestion" value="{{gestion}}">
+                                        <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-plus-square"></i> Nuevo Curso</button>
+                                    </form>
+                                </div>
+                                <hr>
+                                <div class="col-lg-12">
+                                    {% if cursos is not empty %}
+                                        {% set turno = cursos[0].turnoTipo.id %}
+                                        {% set turnoNombre = cursos[0].turnoTipo.turno %}
+                                        <div class="panel panel-teal">
+                                            <div class="panel-heading">
+                                                <div class="panel-title">
+                                                    <h4>Turno - {{turnoNombre}}</h4>
+                                                </div>
+                                                <div class="panel-widgets">
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="panel-collapse collapse in" id="panel{{turno}}">
+                                                <div class="panel-body">
+                                                    <div id="no-more-tables">
+                                                        <table class="table table bordered cf dataTable">
+                                                            <thead class="cf">
+                                                                <tr>
+
+                                                                    <th>Nivel</th>
+                                                                    <th>Grado</th>
+                                                                    <th>Paralelo</th>
+                                                                    <th>Turno</th>
+                                                                    <th>Acciones</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for c in cursos %}
+                                                                    {% if c.turnoTipo.id != turno %}
+
+                                                                        {% set turno = c.turnoTipo.id %}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel panel-blue">
+                                                    <div class="panel-heading">
+                                                        <div class="panel-title">
+                                                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panel{{turno}}">
+                                                                <h4>Turno - {{c.turnoTipo.turno}}</h4>
+                                                            </a>
+                                                        </div>
+                                                        <div class="panel-widgets">
+                                                            <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panel{{turno}}"><i class="fa fa-chevron-down"></i></a>
+                                                        </div>
+                                                        <div class="clearfix"></div>
+                                                    </div>
+                                                    <div class="panel-collapse collapse in" id="panel{{turno}}">
+                                                        <div class="panel-body">
+                                                            <div id="no-more-tables">
+                                                                <table class="table table bordered cf dataTable">
+                                                                    <thead class="cf">
+                                                                        <tr>
+
+                                                                            <th>Nivel</th>
+                                                                            <th>Grado</th>
+                                                                            <th>Paralelo</th>
+                                                                            <th>Turno</th>
+                                                                            <th>Acciones</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr {% if c.nivelTipo.id == 11 %} 
+                                                                            class="success" 
+                                                                        {% else %}
+                                                                            {% if c .nivelTipo.id == 12 %}
+                                                                                class="warning"
+                                                                            {% else %}
+                                                                                class="info"
+                                                                            {% endif %}
+                                                                        {% endif %}>
+
+                                                                        <td data-title="Nivel">{{c.nivelTipo.nivel}}</td>
+                                                                        <td data-title="Grado">{{c.gradoTipo.grado|upper}}</td>
+                                                                        <td data-title="Paralelo">{{c.paraleloTipo.paralelo}}</td>
+                                                                        <td data-title="Turno">{{c.turnoTipo.turno}}</td>
+                                                                        <td data-title="Acciones">
+                                                                            <form action="{{path('herramienta_creacioncursos_delete')}}" style="display: inline-block;" method="post">
+                                                                                <input type="hidden" name="idCurso" value="{{c.id}}">
+                                                                                <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
+                                                                {% else %}
+                                                                    <tr {% if c.nivelTipo.id == 11 %} 
+                                                                        class="success" 
+                                                                    {% else %}
+                                                                        {% if c .nivelTipo.id == 12 %}
+                                                                            class="warning"
+                                                                        {% else %}
+                                                                            class="info"
+                                                                        {% endif %}
+                                                                        {% endif %}>
+
+                                                                            <td data-title="Nivel">{{c.nivelTipo.nivel}}</td>
+                                                                            <td data-title="Grado">{{c.gradoTipo.grado|upper}}</td>
+                                                                            <td data-title="Paralelo">{{c.paraleloTipo.paralelo}}</td>
+                                                                            <td data-title="Turno">{{c.turnoTipo.turno}}</td>
+                                                                            <td data-title="Acciones">
+                                                                                <form action="{{path('herramienta_creacioncursos_delete')}}" style="display: inline-block;" method="post">
+                                                                                    <input type="hidden" name="idCurso" value="{{c.id}}">
+                                                                                    <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                                                                </form>
+                                                                            </td>
+                                                                        </tr>
+                                                                        {% endif %}
+                                                                            {% endfor %}
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {% else %}
+                                                            <div class="alert alert-info">
+                                                                No hay cursos registrados
+                                                            </div>
+                                                            {% endif %}
+                                                            </div>
+                                                        </div>  
+                                                    </div><!-- /.panel -->
+                                                    <!--/ End double tabs -->
+                                                </div>
+                                            </div><!-- /.body-content -->
+                                            <!--/ End body content -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endblock %}
+
+                                {% block javascripts %}
+                                    {{parent()}}
+                                    <script>
+                                    </script>
+                                {% endblock %}
+

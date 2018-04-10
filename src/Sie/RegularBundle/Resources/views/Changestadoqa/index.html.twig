@@ -145,7 +145,7 @@
                                                        <a href="#" onclick="seeNotaNew('{{data.eiid}}', '{{data.eid}}', '{{data.nivel_tipo_id}}', '{{data.grado_tipo_id}}', '{{data.pid}}', '{{data.turno_tipo_id}}', '{{data.gestion_tipo_id}}', '{{data.institucioneducativa_id}}','{{data.estadomatricula_tipo_id}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
                                                   </td>
                                                   <td data-title="VerNota" class="text-center">
-                                                    {% if (data.gestion_tipo_id == 2017)%}
+                                                    {% if (data.gestion_tipo_id == app.session.get('currentyear'))%}
                                                         {% set dataToChange = {
                                                                               'sie':data.institucioneducativa_id, 'rude':data.codigo_rude, 'gestion':data.gestion_tipo_id, 'nivelId':data.nivel_tipo_id,
                                                                               'gradoId':data.grado_tipo_id, 'paraleloId':data.pid,'turnoId':data.turno_tipo_id, 'estInsId':data.eiid,

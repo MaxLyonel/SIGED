@@ -137,7 +137,7 @@ class EstudianteNotasController extends Controller {
                     //->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro','iecom','with','iecom.institucioneducativaCursoOferta = ieco.id')
                     //->innerJoin('SieAppWebBundle:MaestroInscripcion','mi','with','iecom.maestroInscripcion = mi.id')
                     //->innerJoin('SieAppWebBundle:Persona','p','with','mi.persona = p.id')
-                    //->innerJoin('SieAppWebBundle:NotaTipo','nt','with','iecom.notaTipo = nt.id')
+                   // ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','iecom.notaTipo = nt.id')
                     ->groupBy('smt.id, smt.modulo, ea.id, eae.id, ieco.id, sast.id')
                     ->orderBy('sast.id','ASC')
                     ->addOrderBy('smt.modulo','ASC')

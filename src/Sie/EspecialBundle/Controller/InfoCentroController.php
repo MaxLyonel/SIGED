@@ -116,7 +116,8 @@ class InfoCentroController extends Controller {
                         inst.institucioneducativa,
                         lt.area2001,
                         estt.estadoinstitucion,
-                        inss.direccion')
+                        jg.direccion,
+                        jg.zona')
                 ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
@@ -244,6 +245,113 @@ class InfoCentroController extends Controller {
          } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
+    }
+
+    /**
+     * Lista de estudiantes inscritos en la institucion educativa
+     *
+     */
+    public function buscarCentroAction(Request $request) {
+        
+        $em = $this->getDoctrine()->getManager();
+
+        return $this->render('SieEspecialBundle:Institucioneducativa:search.html.twig', array(
+            'form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()
+        ));
+    }
+
+    /*
+     * Formulario de busqueda de institucion educativa
+     */
+    private function formSearch($gestionactual) {
+        $gestiones = array($gestionactual => $gestionactual, $gestionactual - 1 => $gestionactual - 1, $gestionactual - 2 => $gestionactual - 2, $gestionactual - 3 => $gestionactual - 3);
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl('info_especial_index'))
+                ->add('sie', 'text', array('required' => true, 'attr' => array('autocomplete' => 'off', 'maxlength' => 8)))
+                //->add('gestion', 'choice', array('required' => true, 'choices' => $gestiones))
+                ->add('buscar', 'submit', array('label' => 'Buscar'))
+                ->getForm();
+        return $form;
+    }
+
+    /**
+     * Buscar CEE para habilitar gestión
+     */
+    public function habilitarGestionSearchAction(Request $request) {
+        
+        $em = $this->getDoctrine()->getManager();
+
+        return $this->render('SieEspecialBundle:Institucioneducativa:habilitar_search.html.twig', array(
+            'form' => $this->formHabilitarSearch($request->getSession()->get('currentyear'))->createView()
+        ));
+    }
+
+    /*
+     * Formulario de búsqueda de institucion educativa
+     */
+    private function formHabilitarSearch($gestionactual) {
+        $gestiones = array($gestionactual => $gestionactual, $gestionactual - 1 => $gestionactual - 1, $gestionactual - 2 => $gestionactual - 2, $gestionactual - 3 => $gestionactual - 3);
+        $form = $this->createFormBuilder()
+                //->setAction($this->generateUrl('info_especial_index'))
+                ->add('sie', 'text', array('required' => true, 'attr' => array('autocomplete' => 'off', 'maxlength' => 8)))
+                ->add('gestion', 'choice', array('required' => true, 'choices' => $gestiones))
+                ->add('buscar', 'button', array('label' => 'Habilitar', 'attr' => array('class' => 'btn btn-primary', 'onclick' => 'habilitarGestion()')))
+                ->getForm();
+        return $form;
+    }
+  
+    /**
+     * Buscar CEE para habilitar gestión
+     */  
+    public function gestionHabAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+
+        $form = $request->get('form');
+
+        $institucion = $form['sie'];
+        $gestion = $form['gestion'];
+
+        $objCentro = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $institucion, 'institucioneducativaTipo' => 4));
+
+        if($objCentro){
+            // verificamos si tiene tuicion
+            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+            $query->bindValue(':user_id', $this->session->get('userId'));
+            $query->bindValue(':sie', $institucion);
+            $query->bindValue(':rolId', $this->session->get('roluser'));
+            $query->execute();
+            $aTuicion = $query->fetchAll();
+
+            if ($aTuicion[0]['get_ue_tuicion']) {
+                //actualizamos valores en registro_consolidacion
+                $em->getConnection()->beginTransaction();
+                try{
+                    $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $institucion, 'gestion' => $gestion));
+                    $registroConsol->setFecha(new \DateTime("now"));
+                    $registroConsol->setBim1(0);
+                    $registroConsol->setBim2(0);
+                    $registroConsol->setBim3(0);
+                    $registroConsol->setBim4(0);
+                    $em->persist($registroConsol);
+                    $em->flush();
+                    $em->getConnection()->commit();
+
+                    $resultado = "Se habilitó la gestión ".$gestion." para el Centro ".$institucion;
+                } catch (Exception $e) {
+                    $em->getConnection()->rollback();
+                    $resultado = "No se pudo habilitar la gestión ".$gestion." para el Centro ".$institucion.", intente nuevamente";
+                }
+            } else {
+                $resultado = "No tiene tuición sobre la unidad educativa";
+            }
+            
+        } else {
+            $resultado = "El código ingresado(".$institucion." no es válido o no corresponde a un Centro de Educación Especial";
+        }
+
+        return $this->render('SieEspecialBundle:Institucioneducativa:result_habilitar.html.twig', array(
+            'resultado' => $resultado
+        ));
     }
 
 }

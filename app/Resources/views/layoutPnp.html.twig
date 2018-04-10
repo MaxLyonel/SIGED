@@ -236,8 +236,13 @@
                                     <i class="fa fa-angle-double-right"></i> Duplicados Eliminar</a>
                                 </li>
                                 {% if ('8' == app.session.get('roluser')) %}
-                                    <li><a href="{{path('sie_pnp_reporte_con_estadistica')}}">
-                                        <i class="fa fa-angle-double-right"></i> Reporte de Avance SIE y EST</a>
+                                    <li><a href="{{path('sie_pnp_abrir_curso')}}">
+                                        <i class="fa fa-angle-double-right"></i> Abrir Cursos</a>
+                                     </li> 
+                                {% endif %}
+                                {% if ('8' == app.session.get('roluser')) or ('21' == app.session.get('roluser')) %}
+                                    <li><a href="{{path('sie_pnp_cambiar_facilitador')}}">
+                                        <i class="fa fa-angle-double-right"></i> Buscar Curso (Cambiar Facilitador)</a>
                                      </li> 
                                 {% endif %}
                             </ul>

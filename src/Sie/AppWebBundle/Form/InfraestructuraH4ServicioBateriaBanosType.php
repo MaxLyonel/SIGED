@@ -30,24 +30,52 @@ class InfraestructuraH4ServicioBateriaBanosType extends AbstractType
             ->add('n5DuchaFunciona')
             ->add('n5DuchaNofunciona')
 
-            ->add('n52EsTieneCieloFalso')
+            ->add('n52EsTieneCieloFalso','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n52TieneCieloFalsoCaracTipo')
-            ->add('n52EsTieneMuros')
+            ->add('n52EsTieneMuros','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n52TieneMurosMaterTipo')
             ->add('n52TieneMurosCaracTipo')
-            ->add('n52EsTienePuerta')
+            ->add('n52EsTienePuerta','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n521SeguroTipo')
             ->add('n522AbreTipo')
-            ->add('n52EsTieneRevest')
+            ->add('n52EsTieneRevest','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n52TieneRevestCaracTipo')
             
-            ->add('n52EsTieneVentana')
+            ->add('n52EsTieneVentana','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n52TieneVentanaCaracTipo')
-            ->add('n52EsTienePiso')
+            ->add('n52EsTienePiso','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n52TienePisoMaterTipo')
             ->add('n52TienePisoCaracTipo')
             
-            ->add('n52EsTieneTecho')
+            ->add('n52EsTieneTecho','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             
             // ->add('n5TechoEstadogeneralTipo')
             // ->add('obs')

@@ -55,7 +55,7 @@ class InscriptionExtranjerosController extends Controller {
 
     private function chooseIncriptionForm(){
 
-      $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', '100'=>'Incial/Primaria333' );
+      $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria'/*, '100'=>'Incial/Primaria333'*/ );
       $form = $this->createFormBuilder()
               ->setAction($this->generateUrl('inscription_extranjeros_main'))
               ->add('optionInscription', 'choice', array('mapped' => false, 'label' => 'Inscripción', 'choices' => $arrOptionInscription, 'attr' => array('class' => 'form-control')))
@@ -449,6 +449,23 @@ class InscriptionExtranjerosController extends Controller {
         //flag to know is a new estranjero student
         $sw = 0;
         $data = array();
+        $form = $request->get('form');
+        /**
+         * add validation QA
+         * @var [type]
+         */
+        $objObservation = $this->get('seguimiento')->getStudentObservationQA($form);
+        if($objObservation){
+             $message = "Estudiante observado - rude " . $form['codigoRude'] . " :";
+            $this->addFlash('notiext', $message);
+            $observaionMessage='';
+            // foreach ($objObservation as $key => $value) {
+            //   $observaionMessage .=$value['obs']."-".$value['institucion_educativa_id']."*****";
+            // }
+            $observaionMessage = 'Estudiante presenta inconsistencia, se sugiere corregirlos por las opciones de calidad...';
+            $this->addFlash('studentObservation', $observaionMessage);
+            return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+        }
 
         if ($request->get('form')) {
             $form = $request->get('form');
@@ -650,7 +667,7 @@ class InscriptionExtranjerosController extends Controller {
 
         $aDataStudent = unserialize($form['newdata']);
         $aDataOption = json_decode($aDataStudent['dataOption'],true);
-dump($aDataOption);die;
+// dump($aDataOption);die;
 
         try {
 
@@ -703,7 +720,7 @@ dump($aDataOption);die;
             //validate the year of student
             $idStudent = $form ['idStudent'];
             $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($idStudent);
-            $tiempo = $this->tiempo_transcurrido($objStudent->getFechaNacimiento()->format('d-m-Y'), '30-6-2017');
+            $tiempo = $this->tiempo_transcurrido($objStudent->getFechaNacimiento()->format('d-m-Y'), '30-6-2018');
 
             switch ($tiempo[0]) {
               case 3:
@@ -796,12 +813,13 @@ dump($aDataOption);die;
                   mkdir($dirtmp, 0777);
               }
               //move the file emp to the directory temp
-              $file = $oFile->move($dirtmp, $originalName);
+              // $file = $oFile->move($dirtmp, $originalName);
+              $file = $oFile->move($dirtmp, $form['idStudent'].'_'.$form['gestion']);
               //save info extranjero inscription
               $objEstudianteInscripcionExtranjero = new EstudianteInscripcionExtranjero();
               $objEstudianteInscripcionExtranjero->setInstitucioneducativaOrigen($form['institucionEducativaDe']);
               $objEstudianteInscripcionExtranjero->setCursoVencido($form['cursoVencido']);
-              $objEstudianteInscripcionExtranjero->setRutaImagen($dirtmp.$originalName);
+              $objEstudianteInscripcionExtranjero->setRutaImagen($dirtmp.$form['idStudent'].'_'.$form['gestion']);
               $objEstudianteInscripcionExtranjero->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscription->getId()));
               $objEstudianteInscripcionExtranjero->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($form['pais']));
               $em->persist($objEstudianteInscripcionExtranjero);

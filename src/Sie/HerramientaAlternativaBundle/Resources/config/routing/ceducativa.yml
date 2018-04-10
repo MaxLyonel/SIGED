@@ -111,3 +111,57 @@ herramientalt_ceducativa_estadistiscas_departamento:
 sie_alt_reportes_diversa:
     path:     /sie/reportesDiversa
     defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:reporteDiversa}
+    options:
+         expose: true
+
+sie_alt_manuales:
+    path:     /sie/manuales
+    defaults: { _controller: SieHerramientaAlternativaBundle:Institucioneducativa:manuales}
+
+sie_alt_bjp_rue_clistarmenu:
+    path:     /bjplistarmenu/{idM}/{pertUM}/{pertP}/{cea}/{umt}/{pt}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:listarmenu" }
+    options:
+         expose: true
+
+sie_alt_bjp_rue_tipomili:
+    path:     /bjptipomili/{idUM}/{pertUM}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:tipomili" }
+    options:
+         expose: true
+
+sie_alt_bjp_rue_tipopenal:
+    path:     /bjptipopenal/{idP}/{pertP}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:EstudianteInscripcionSocioeconomicoAlternativa:tipopenal" }
+    options:
+         expose: true
+
+sie_alt_clistarprovincias:
+    path:     /bjplistarprovincias/{dpto}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Institucioneducativa:listarprovincias" }
+    options:
+         expose: true
+         
+sie_alt_clistarmunicipios:
+    path:     /bjplistarmunicipios/{prov}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Institucioneducativa:listarmunicipios" }
+    options:
+         expose: true         
+
+sie_alt_clistarcantones:
+    path:     /bjplistarcantones/{muni}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Institucioneducativa:listarcantones" }
+    options:
+         expose: true               
+
+sie_alt_clistarlocalidades:
+    path:     /bjplistarlocalidades/{cantn}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Institucioneducativa:listarlocalidades" }
+    options:
+         expose: true            
+
+sie_alt_clistardistritos:
+    path:     /bjplistardistritos/{dpto}
+    defaults: { _controller: "SieHerramientaAlternativaBundle:Institucioneducativa:listardistritos" }
+    options:
+         expose: true
