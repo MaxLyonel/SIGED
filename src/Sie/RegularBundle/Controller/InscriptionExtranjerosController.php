@@ -813,12 +813,13 @@ class InscriptionExtranjerosController extends Controller {
                   mkdir($dirtmp, 0777);
               }
               //move the file emp to the directory temp
-              $file = $oFile->move($dirtmp, $originalName);
+              // $file = $oFile->move($dirtmp, $originalName);
+              $file = $oFile->move($dirtmp, $form['idStudent'].'_'.$form['gestion']);
               //save info extranjero inscription
               $objEstudianteInscripcionExtranjero = new EstudianteInscripcionExtranjero();
               $objEstudianteInscripcionExtranjero->setInstitucioneducativaOrigen($form['institucionEducativaDe']);
               $objEstudianteInscripcionExtranjero->setCursoVencido($form['cursoVencido']);
-              $objEstudianteInscripcionExtranjero->setRutaImagen($dirtmp.$originalName);
+              $objEstudianteInscripcionExtranjero->setRutaImagen($dirtmp.$form['idStudent'].'_'.$form['gestion']);
               $objEstudianteInscripcionExtranjero->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscription->getId()));
               $objEstudianteInscripcionExtranjero->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($form['pais']));
               $em->persist($objEstudianteInscripcionExtranjero);
