@@ -133,6 +133,10 @@ oliminscriptions_listInscritosGroup:
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscritosGroup" }
     options:
         expose: true    
-
-
+        
+olimgrupoproyecto_inscriptinoRobotica:
+    path:     /inscriptinoRobotica
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:inscriptinoRobotica" }
+    options:
+        expose: true    
 

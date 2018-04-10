@@ -2,6 +2,16 @@
 <div class="row">
     <div class="col-md-12">
         <p class="lead">Lista de Estudiantes</p>
+        {% if roboticaOption %}
+         <div align="right">
+          {{form_start(roboticaOptionForm, {'attr':{ 'id':'roboticaOptionFormId' }})}}
+            <button type="button" class="btn btn-inverse btn-danger btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="inscriptinoRobotica();">
+            Inscripci&oacute;n Robotica
+            </button>
+            {{form_end(roboticaOptionForm)}}
+        </div> 
+          
+        {% endif %}
           <table class="table">
                 <thead>
                     <tr>

@@ -973,17 +973,43 @@ class OlimEstudianteInscripcionController extends Controller{
     //     ));
     // }
     public function listInscritosGroupAction(Request $request){
-        
         //get the send values 
-        $jsonDataInscription = $request->get('jsonDataInscription');
         $groupId = $request->get('groupId');
+        $roboticaOption = $request->get('robotica');
+        $jsonDataInscription = $request->get('jsonDataInscription');
+        $arrData = json_decode($jsonDataInscription, true);
+        $arrData['groupId']= $groupId;
+        $jsonDataInscription = json_encode($arrData);
 
         $objStudentsInGroup = $this->get('olimfunctions')->getStudentsInGroup($groupId);
         
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscritosGroup.html.twig', array(
             'objStudentsInGroup' => $objStudentsInGroup,
+            'roboticaOption' => $roboticaOption,
+            'roboticaOptionForm' => $this->roboticaOptionForm($jsonDataInscription)->createView(),
         ));
+    }
 
+    private function roboticaOptionForm($data){
+        return $this->createFormBuilder()
+                ->add('jsonDataInscription', 'hidden', array('data'=> $data))
+                ->getForm()
+                ;
+    }
+
+    public function inscriptinoRoboticaAction(Request $request){
+
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:inscriptinoRobotica.html.twig', array(
+            'form'=>$this->inscriptionRoboticaForm('krlos')->createView()
+        ));
+    }
+
+    private function inscriptionRoboticaForm($data){
+        return $this->createFormBuilder()
+                ->add('jsonDataInscription','hidden',array('data'=>$data))
+                ->add('codigoRude', 'text', array('label'=>'Codigo Rude'))
+                ->getForm()
+                ;
     }
 
 

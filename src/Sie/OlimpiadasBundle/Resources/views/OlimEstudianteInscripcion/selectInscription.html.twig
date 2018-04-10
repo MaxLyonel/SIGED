@@ -519,11 +519,11 @@ var studentsRegister = function(){
             });
     };
 
-    var listInscritosGroup = function(jsonDataInscription, groupId){
+    var listInscritosGroup = function(jsonDataInscription, groupId, robotica){
 
            $.ajax({
                     type: 'post',
-                    data: {'jsonDataInscription':jsonDataInscription, 'groupId':groupId},
+                    data: {'jsonDataInscription':jsonDataInscription, 'groupId':groupId, 'robotica':robotica},
                     url: "{{ path('oliminscriptions_listInscritosGroup') }}",
                     beforeSend: function () {
                         
@@ -581,6 +581,40 @@ var studentsRegister = function(){
           
     };
 
+
+
+
+  var inscriptinoRobotica = function(){
+
+    let createGroupForm = $('#inscriptionRoboticaFormId').serialize();
+
+       $.ajax({
+                type: 'post',
+                data: createGroupForm,
+                url: "{{ path('olimgrupoproyecto_inscriptinoRobotica') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                      
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+    var lookForOlimStudent = function(){
+      alert('buscando estudiante...');return false;
+    }
 
 
 
