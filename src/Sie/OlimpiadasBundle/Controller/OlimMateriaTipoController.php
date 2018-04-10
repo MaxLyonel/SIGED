@@ -93,10 +93,11 @@ class OlimMateriaTipoController extends Controller
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_materia_tipo');")->execute();
+            $entity->setOlimRegistroOlimpiada($em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->find($this->session->get('idOlimpiada')));
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('olimmateriatipo_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('olimmateriatipo'));
         }
 
         return $this->render('SieOlimpiadasBundle:OlimMateriaTipo:new.html.twig', array(
