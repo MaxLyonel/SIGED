@@ -190,9 +190,6 @@ class OlimReglasOlimpiadasTipoController extends Controller
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:show.html.twig', array(
-            'regla'      => $entity));
-
         return $this->render('SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:edit.html.twig', array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
