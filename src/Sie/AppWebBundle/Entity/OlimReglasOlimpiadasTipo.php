@@ -559,4 +559,32 @@ class OlimReglasOlimpiadasTipo
     {
         return $this->categoria;
     }
+    /**
+     * @var boolean
+     */
+    private $siInsExterna;
+
+
+    /**
+     * Set siInsExterna
+     *
+     * @param boolean $siInsExterna
+     * @return OlimReglasOlimpiadasTipo
+     */
+    public function setSiInsExterna($siInsExterna)
+    {
+        $this->siInsExterna = $siInsExterna;
+    
+        return $this;
+    }
+
+    /**
+     * Get siInsExterna
+     *
+     * @return boolean 
+     */
+    public function getSiInsExterna()
+    {
+        return $this->siInsExterna;
+    }
 }

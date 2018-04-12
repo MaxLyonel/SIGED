@@ -16,10 +16,11 @@ Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo:
                 - modalidad_participacion_tipo_id
     id:
         id:
-            type: integer
+            type: bigint
             nullable: false
             unsigned: false
             comment: ''
+            default: public.olim_reglas_olimpiadas_tipo_id_seq
             id: true
             generator:
                 strategy: SEQUENCE
@@ -108,6 +109,11 @@ Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo:
             length: 255
             fixed: false
             comment: ''
+        siInsExterna:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: si_ins_externa
     manyToOne:
         olimMateriaTipo:
             targetEntity: OlimMateriaTipo
