@@ -246,6 +246,7 @@ class OlimGrupoProyectoController extends Controller
         //get the send values
         $jsonDataInscription = $request->get('datainscription');
         $arrDataInscription = json_decode($jsonDataInscription,true);
+        
         // dump($arrDataInscription);die;
         //create dbconexion
         $em = $this->getDoctrine()->getManager();
@@ -254,12 +255,17 @@ class OlimGrupoProyectoController extends Controller
             'olimReglasOlimpiadasTipo'=> $arrDataInscription['categoryId']
         ));
 
+        //get the rule to do the inscription
+        $objRuleInscription = $this->get('olimfunctions')->getDataRule($arrDataInscription);
+        // dump($objRuleInscription->getSiInsExterna());die;
+
         // dump($objTutorsGrupo);die;
         return $this->render('SieOlimpiadasBundle:OlimGrupoProyecto:showGroup.html.twig', array(
         // 'form' => $this->CommonInscriptionForm($arrDataInscription)->createView(),
             'objTutorsGrupo' => $objTutorsGrupo,
             'formGroup' => $this->newGroupForm($jsonDataInscription)->createView(),
-            'jsonDataInscription' => $jsonDataInscription
+            'jsonDataInscription' => $jsonDataInscription,
+            'inscriptionExterna' => $objRuleInscription->getSiInsExterna()
 
         ));
     }

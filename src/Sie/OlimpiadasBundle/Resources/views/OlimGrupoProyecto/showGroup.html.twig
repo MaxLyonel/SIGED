@@ -31,9 +31,13 @@
                                             
                                             <td class="text-center">
                                                 <a href="#" onclick="listInscritosGroup('{{jsonDataInscription}}', {{group.id}}, 0);"><i class="fa fa-eye"></i></a>
-                                                <a href="#" onclick="doInscriptionGroup('{{jsonDataInscription}}', {{group.id}});"><i class="fa fa-edit"></i></a>
+                                                
                                                 <a href="#" onclick="deleteGroup('{{jsonDataInscription}}', {{group.id}});"><i class="fa fa-trash-o"></i></a>
-                                                <a href="#" onclick="listInscritosGroup('{{jsonDataInscription}}', {{group.id}}, 1);"><i class="fa fa-group"></i></a>
+                                                {% if inscriptionExterna %}
+                                                    <a href="#" onclick="listInscritosGroup('{{jsonDataInscription}}', {{group.id}}, 1);"><i class="fa fa-group"></i></a>
+                                                {% else %}    
+                                                    <a href="#" onclick="doInscriptionGroup('{{jsonDataInscription}}', {{group.id}});"><i class="fa fa-edit"></i></a>
+                                                {% endif %}
                                             </td>
                                         </tr>
                                         {% endfor %}

@@ -134,9 +134,9 @@ oliminscriptions_listInscritosGroup:
     options:
         expose: true    
         
-olimgrupoproyecto_inscriptinoRobotica:
-    path:     /inscriptinoRobotica
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:inscriptinoRobotica" }
+olimgrupoproyecto_inscriptionExterna:
+    path:     /inscriptionExterna
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:inscriptionExterna" }
     options:
         expose: true
 
@@ -151,3 +151,10 @@ oliminscriptions_deleteInscriptionOlimpiada:
 oliminscriptions_viewListInscritosGroup:
     path:     /{jsonDataInscription}/viewListInscritosGroup
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:viewListInscritosGroup" }
+
+
+oliminscriptions_lookForOlimStudent:
+    path:     /lookForOlimStudent
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:lookForOlimStudent" }
+    options:
+        expose: true         

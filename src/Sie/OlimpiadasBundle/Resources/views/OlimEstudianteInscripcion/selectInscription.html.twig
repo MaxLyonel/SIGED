@@ -584,14 +584,14 @@ var studentsRegister = function(){
 
 
 
-  var inscriptinoRobotica = function(){
+  var inscriptionExterna = function(){
 
-    let createGroupForm = $('#inscriptionRoboticaFormId').serialize();
+    let createGroupForm = $('#roboticaOptionFormId').serialize();
 
        $.ajax({
                 type: 'post',
                 data: createGroupForm,
-                url: "{{ path('olimgrupoproyecto_inscriptinoRobotica') }}",
+                url: "{{ path('olimgrupoproyecto_inscriptionExterna') }}",
                 beforeSend: function () {
                     $('#modal').empty();
                 },
@@ -613,7 +613,31 @@ var studentsRegister = function(){
     };
 
     var lookForOlimStudent = function(){
-      alert('buscando estudiante...');return false;
+      let studentForm = $('#inscriptionRoboticaFormId').serialize();
+      $.ajax({
+                    type: 'post',
+                    data: studentForm,
+                    url: "{{ path('oliminscriptions_lookForOlimStudent') }}",
+                    beforeSend: function () {
+                        
+                        $('#answerStudentId').empty();
+                        $("#answerStudentId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                    },
+                    success: function (data) {
+                        
+                        $('#answerStudentId').empty();
+                        $('#answerStudentId').append(data);
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+            });
     }
 
 

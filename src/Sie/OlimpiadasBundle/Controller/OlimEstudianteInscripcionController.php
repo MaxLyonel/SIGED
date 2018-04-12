@@ -532,13 +532,28 @@ class OlimEstudianteInscripcionController extends Controller{
     }
 
     public function showOptionDoInscriptionAction(Request $request){
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
         
         //get the send values
         $jsonDataInscription = $request->get('datainscription');
         $arrDataInscription = json_decode($jsonDataInscription,true);
-
+        //find information about the group in case if exists
+        $objGroup = array();
+        $groupId = false;
+        if(isset($arrDataInscription['groupId'])){
+            $groupId = $arrDataInscription['groupId'];
+            $objGroup = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($groupId);
+        }
+        //get the rule data
+        $regla = $this->get('olimfunctions')->getDataRule($arrDataInscription);
+        
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:commonInscription.html.twig', array(
                'form' => $this->CommonInscriptionForm($arrDataInscription)->createView(),
+               'groupId' => $groupId,
+               'objGroup' => $objGroup,
+               'regla' => $regla,
+
         ));
     }
 
@@ -1015,22 +1030,27 @@ class OlimEstudianteInscripcionController extends Controller{
     }
 
     private function roboticaOptionForm($data){
+
         return $this->createFormBuilder()
                 ->add('jsonDataInscription', 'hidden', array('data'=> $data))
                 ->getForm()
                 ;
     }
 
-    public function inscriptinoRoboticaAction(Request $request){
-
-        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:inscriptinoRobotica.html.twig', array(
-            'form'=>$this->inscriptionRoboticaForm('krlos')->createView()
+    public function inscriptionExternaAction(Request $request){
+        
+        //get the send values
+        $form = $request->get('form');
+        $jsonDataInscription = $form['jsonDataInscription'];
+        
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:inscriptionExterna.html.twig', array(
+            'form'=>$this->inscriptionRoboticaForm($jsonDataInscription)->createView()
         ));
     }
 
-    private function inscriptionRoboticaForm($data){
+    private function inscriptionRoboticaForm($jsonDataInscription){
         return $this->createFormBuilder()
-                ->add('jsonDataInscription','hidden',array('data'=>$data))
+                ->add('jsonDataInscription','hidden',array('data'=>$jsonDataInscription))
                 ->add('codigoRude', 'text', array('label'=>'Codigo Rude'))
                 ->getForm()
                 ;
@@ -1155,6 +1175,35 @@ class OlimEstudianteInscripcionController extends Controller{
         
     }
 
+    public function lookForOlimStudentAction(Request $request){
+        //get the send data
+        $form = $request->get('form');
+        $jsonDataInscription = $form['jsonDataInscription'];
+        $arrDataInscription = json_decode($jsonDataInscription,true);
+        $arrDataInscription['codigoRude'] = $form['codigoRude'];
+        // dump($arrDataInscription);die;
+        $objStudentInscription = $this->get('olimfunctions')->lookForOlimStudentByRudeGestion($arrDataInscription);
+        $arrDataInscription['estinsid'] = $objStudentInscription['estinsid'];
+        // dump($arrDataInscription);
+        // dump($objStudentInscription);
+        // die;
+        $jsonDataInscription = json_encode($arrDataInscription);
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:lookForOlimStudent.html.twig', array(
+            'inscripForm' => $this->doExternalInscriptionForm($jsonDataInscription)->createView(),
+            'objStudentInscription' => $objStudentInscription,
+        ));
+        // die;
+    }
+
+    
+    private function doExternalInscriptionForm($jsonDataInscription){
+        return $this->createFormBuilder()
+                ->add('jsonDataInscription','hidden', array('data'=>$jsonDataInscription) )
+                ->add('doInscription', 'button', array('label'=>'Inscribir','attr'=>array('class'=>'btn btn-warning btn-xs')))
+                ->getForm()
+                ;
+
+    }
 
 
 
