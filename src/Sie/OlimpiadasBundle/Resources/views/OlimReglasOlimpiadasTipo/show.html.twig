@@ -1,61 +1,70 @@
+{# {% extends 'layoutOlimpiadas.html.twig' %}
 
-    <style type="text/css">
-        .datos{
-            font-size: 1.1em;
-        }
-        .datos label{
-            font-weight: bold;
-            color: #546DA7;
-        }
-    </style>
-    <small>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="panel rounded shadow">
-            <div class="heading">
-                <h4>Datos de la regla</h4>
-                <div class="clearfix"></div>
+{% block contentoption %}
+    
+ #}
+<style type="text/css">
+    .datos{
+        font-size: 1em;
+    }
+    .datos label{
+        font-weight: bold;
+        color: #546DA7;
+        padding: 0px;
+        margin: 0px;
+    }
+    .datos div{
+        background: #FFFFFF;
+    }
+</style>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="panel rounded shadow">
+        <div class="panel-heading">
+            <div class="pull-left">
+                <h4 class="panel-title">Datos de la regla</h4>
             </div>
-            <div class="row panel-body datos">
+            <div class="pull-right">
+                <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="panel-body datos">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <label>Materia:</label> {{ regla.olimMateriaTipo.materia }}<br>
+                <label>Categoría:</label> {{ regla.categoria }}<br>
+                <label>Modalidad:</label> {{ regla.modalidadParticipacionTipo.modalidad }}
+            </div>
+
+            {% if regla.modalidadParticipacionTipo.id == 1 %}
+                {# INDIVIDUAL #}
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <label>Materia:</label> {{ regla.olimMateriaTipo.materia }}<br>
-                    <label>Categoría:</label> {{ regla.categoria }}<br>
-                    <label>Modalidad:</label> {{ regla.modalidadParticipacionTipo.modalidad }}
+                    <label>Cantidad de inscritos:</label> {{ regla.cantidadInscritosGrado }}<br>
+                    <label>¿Subir documento?:</label> {% if regla.siSubirDocumento %} Si {% else %} No {% endif %}
                 </div>
 
-                {% if regla.modalidadParticipacionTipo.id == 1 %}
-                    {# INDIVIDUAL #}
-                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                        <label>Cantidad de inscritos:</label> {{ regla.cantidadInscritosGrado }}<br>
-                        <label>¿Subir documento?:</label> {% if regla.siSubirDocumento %} Si {% else %} No {% endif %}
-                    </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>Edad inicial:</label> {{ regla.edadInicial }} años<br>
+                    <label>Edad final:</label> {{ regla.edadFinal }} años<br>
+                    <label>Fecha de comparación:</label> {{ regla.fechaComparacion|date('d-m-Y') }}
+                </div>
+            {% else %}
+                {# GRUPO #}
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>Cantidad por equipo:</label> {{ regla.modalidadNumeroIntegrantesTipo.condicion }} {{ regla.modalidadNumeroIntegrantesTipo.cantidadMiembros }}<br>
+                    <label>Cantidad de equipos:</label> {{ regla.cantidadEquipos }}<br>
+                    <label>¿Nombre equipo?:</label> {% if regla.siNombreEquipo %} Si {% else %} No {% endif %}<br>
+                    <label>¿Nombre proyecto?:</label> {% if regla.siNombreProyecto %} Si {% else %} No {% endif %}
+                </div>
 
-                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                        <label>Edad inicial:</label> {{ regla.edadInicial }} años<br>
-                        <label>Edad final:</label> {{ regla.edadFinal }} años<br>
-                        <label>Fecha de comparación:</label> {{ regla.fechaComparacion|date('d-m-Y') }}<br>
-                    </div>
-                {% else %}
-                    {# GRUPO #}
-                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                        <label>Cantidad por equipo:</label> {{ regla.modalidadNumeroIntegrantesTipo.condicion }} {{ regla.modalidadNumeroIntegrantesTipo.cantidadMiembros }}<br>
-                        <label>Cantidad de equipos:</label> {{ regla.cantidadEquipos }}<br>
-                        <label>¿Nombre equipo?:</label> {% if regla.siNombreEquipo %} Si {% else %} No {% endif %}<br>
-                        <label>¿Nombre proyecto?:</label> {% if regla.siNombreProyecto %} Si {% else %} No {% endif %}
-                    </div>
-
-                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                        <label>Edad inicial:</label> {{ regla.edadInicial }} años<br>
-                        <label>Edad final:</label> {{ regla.edadFinal }} años<br>
-                        <label>Fecha de comparación:</label> {{ regla.fechaComparacion|date('d-m-Y') }}<br>
-                        <label>¿Subir documento?:</label> {% if regla.siSubirDocumento %} Si {% else %} No {% endif %}
-                    </div>
-                {% endif %}
-
-            </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>Edad inicial:</label> {{ regla.edadInicial }} años<br>
+                    <label>Edad final:</label> {{ regla.edadFinal }} años<br>
+                    <label>Fecha de comparación:</label> {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                    <label>¿Subir documento?:</label> {% if regla.siSubirDocumento %} Si {% else %} No {% endif %}
+                </div>
+            {% endif %}
         </div>
     </div>
-
-
-
-    </small>
+</div>
     
+{# {% endblock %} #}

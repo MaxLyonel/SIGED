@@ -66,8 +66,11 @@
                                     <a class="media">
                                         <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
                                         <div class="media-body">
-                                            <span class="media-heading">{{ estudiante.nombre }} {{ estudiante.paterno }} {{ estudiante.materno }}</span>
-                                            <p> <b>Rude: </b> {{ estudiante.codigoRude }}</span><br>
+                                            {# <span class="media-heading">{{ estudiante.nombre }} {{ estudiante.paterno }} {{ estudiante.materno }}</span> #}
+                                            {% if estudiante.carnetIdentidad != "" %}
+                                                <b>Carnet: </b> {{ estudiante.carnetIdentidad }} {{ estudiante.complemento }}</span><br>                                         
+                                            {% endif %}
+                                            <b>Rude: </b> {{ estudiante.codigoRude }}</span><br>
                                             <span> <b>Fecha Nacimiento: </b> {{ estudiante.fechaNacimiento|date('d-m-Y') }}</span><br>
                                             <!-- Start meta icon -->
                                             <span class="media-meta pull-right"></span>
@@ -106,19 +109,19 @@
                                                             <th>Olimpiada</th>
                                                             <th>Materia</th>
                                                             <th>Categoría</th>
-                                                            {# <th>Nivel</th> #}
-                                                            {# <th>GRado</th> #}
+                                                            <th>Nivel</th>
+                                                            <th>Grado</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {% for item in inscripciones %}
                                                             <tr>
-                                                                <td>{{ item.olimReglasOlimpiadasTipo.olimMateriaTipo.olimRegistroOlimpiada.gestionTipoId }}</td>
-                                                                <td>{{ item.olimReglasOlimpiadasTipo.olimMateriaTipo.olimRegistroOlimpiada.nombreOlimpiada }}</td>
-                                                                <td>{{ item.olimReglasOlimpiadasTipo.olimMateriaTipo.materia }}</td>
-                                                                <td>{{ item.olimReglasOlimpiadasTipo.categoria }}</td>
-                                                                {# <td>{{ item.olimReglasOlimpiadasTipo.nivelTipo.nivel }}</td> #}
-                                                                {# <td>{{ item.olimReglasOlimpiadasTipo.gradoTipo.grado }}</td> #}
+                                                                <td>{{ item.gestion }}</td>
+                                                                <td>{{ item.nombreOlimpiada }}</td>
+                                                                <td>{{ item.materia }}</td>
+                                                                <td>{{ item.categoria }}</td>
+                                                                <td>{{ item.nivel }}</td>
+                                                                <td>{{ item.grado }}</td>
                                                             </tr>
                                                         {% endfor %}
                                                         
@@ -152,7 +155,7 @@
     <script type="text/javascript">
 
         $(function(){
-            $("#form_carnet").numeric("positiveInteger");
+            //$("#form_carnet").numeric("positiveInteger");
             $("#form_carnet").attr("maxlength",'20');
 
             // aplicamos las mascaras para las fechas
