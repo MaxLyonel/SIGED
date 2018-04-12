@@ -68,7 +68,7 @@
                             </div>
                             <div class="pull-right">
                                 <form method="post" action="{{path('olimdirectordata_manual_edit')}}">
-                                     <input type="text" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
+                                    <input type="text" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
                                     <input type="hidden" id="form_datosId" name="form[datosId]" value="{{director.datosid}}">
                                     <input type="hidden" id="form_personaId" name="form[personaId]" value="{{director.personaid}}">
                                     <input type="hidden" id="form_maestroId" name="form[maestroId]" value="{{director.maestroid}}">
@@ -165,7 +165,8 @@
 
                                                     <tr>
                                                         <td class="text-center">
-                                                            <form action="{{path('olimtutor_resultTutores')}}" >
+                                                            <form action="{{path('olimtutor_updateDataTutor')}}" >
+                                                                <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
                                                                 <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
                                                                 <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
                                                                 <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
@@ -175,8 +176,15 @@
                                                             </form>
                                                         </td>
                                                         <td class="text-center">
-                                                            <a href="#" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times"></i></a>
-                                                            
+                                                            <form action="{{path('olimtutor_listTutorBySie')}}" method="post" style="display: inline-block">
+                                                                    <input type="hidden" id="form_deletetutor" name="form[deletetutor]" value="{{entity.olimtutorid}}">
+                                                                    <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
+                                                                    <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
+                                                                    <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
+                                                                    <input type="hidden" name="form[sie]" id="form_sie" value="{{entity.institucioneducativa_id}}">                                   
+                                                                    <input type="hidden" name="form[gestion]" id="form_gestion" value="{{entity.gestion_tipo_id}}">
+                                                                <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times"></i></button>
+                                                            </form>                                                           
                                                         </td>
                                                         <td class="text-center">
                                                             <form action="{{path('oliminscriptions_selectInscription')}}" method="POST" >
