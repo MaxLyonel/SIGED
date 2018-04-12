@@ -5497,6 +5497,7 @@ public function registrar_cursoAction(Request $request){
                 $materias = array('2000','2002','2006','2007');
          
         }
+        
         $em->getConnection()->beginTransaction();
         try {
             //Maestro Inscripcion
