@@ -1,88 +1,59 @@
-{% extends '::base.html.twig' %}
+{% extends 'layoutOlimpiadas.html.twig' %}
 
-{% block body -%}
-    <h1>OlimReglasOlimpiadasTipo</h1>
+{% block contentoption %}
+    <style type="text/css">
+        .datos{
+            font-size: 1.1em;
+        }
+        .datos label{
+            font-weight: bold;
+            color: #546DA7;
+        }
+    </style>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="panel rounded shadow">
+            <div class="heading">
+                <h4>Datos de la regla</h4>
+                <div class="clearfix"></div>
+            </div>
+            <div class="row panel-body datos">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>Materia:</label> {{ regla.olimMateriaTipo.materia }}<br>
+                    <label>Categoría:</label> {{ regla.categoria }}<br>
+                    <label>Modalidad:</label> {{ regla.modalidadParticipacionTipo.modalidad }}
+                </div>
 
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-            <tr>
-                <th>Cantidadequipos</th>
-                <td>{{ entity.cantidadEquipos }}</td>
-            </tr>
-            <tr>
-                <th>Cantidadinscritosgrado</th>
-                <td>{{ entity.cantidadInscritosGrado }}</td>
-            </tr>
-            <tr>
-                <th>Edadinicial</th>
-                <td>{{ entity.edadInicial }}</td>
-            </tr>
-            <tr>
-                <th>Edadfinal</th>
-                <td>{{ entity.edadFinal }}</td>
-            </tr>
-            <tr>
-                <th>Fechacomparacion</th>
-                <td>{{ entity.fechaComparacion|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Sisubirdocumento</th>
-                <td>{{ entity.siSubirDocumento }}</td>
-            </tr>
-            <tr>
-                <th>Sinombreequipo</th>
-                <td>{{ entity.siNombreEquipo }}</td>
-            </tr>
-            <tr>
-                <th>Sinombreproyecto</th>
-                <td>{{ entity.siNombreProyecto }}</td>
-            </tr>
-            <tr>
-                <th>Gestiontipoid</th>
-                <td>{{ entity.gestionTipoId }}</td>
-            </tr>
-            <tr>
-                <th>Periodotipoid</th>
-                <td>{{ entity.periodoTipoId }}</td>
-            </tr>
-            <tr>
-                <th>Fecharegistro</th>
-                <td>{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Fechamodificacion</th>
-                <td>{{ entity.fechaModificacion|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Usuarioregistroid</th>
-                <td>{{ entity.usuarioRegistroId }}</td>
-            </tr>
-            <tr>
-                <th>Usuariomodificacionid</th>
-                <td>{{ entity.usuarioModificacionId }}</td>
-            </tr>
-            <tr>
-                <th>Categoria</th>
-                <td>{{ entity.categoria }}</td>
-            </tr>
-        </tbody>
-    </table>
+                {% if regla.modalidadParticipacionTipo.id == 1 %}
+                    {# INDIVIDUAL #}
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <label>Cantidad de inscritos:</label> {{ regla.cantidadInscritosGrado }}<br>
+                        <label>¿Subir documento?:</label> {% if regla.siSubirDocumento %} Si {% else %} No {% endif %}
+                    </div>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('olimreglasolimpiadastipo') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('olimreglasolimpiadastipo_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <label>Edad inicial:</label> {{ regla.edadInicial }} años<br>
+                        <label>Edad final:</label> {{ regla.edadFinal }} años<br>
+                        <label>Fecha de comparación:</label> {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                    </div>
+                {% else %}
+                    {# GRUPO #}
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <label>Cantidad por equipo:</label> {{ regla.modalidadNumeroIntegrantesTipo.condicion }} {{ regla.modalidadNumeroIntegrantesTipo.cantidadMiembros }}<br>
+                        <label>Cantidad de equipos:</label> {{ regla.cantidadEquipos }}<br>
+                        <label>¿Nombre equipo?:</label> {% if regla.siNombreEquipo %} Si {% else %} No {% endif %}<br>
+                        <label>¿Nombre proyecto?:</label> {% if regla.siNombreProyecto %} Si {% else %} No {% endif %}
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <label>Edad inicial:</label> {{ regla.edadInicial }} años<br>
+                        <label>Edad final:</label> {{ regla.edadFinal }} años<br>
+                        <label>Fecha de comparación:</label> {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                        <label>¿Subir documento?:</label> {% if regla.siSubirDocumento %} Si {% else %} No {% endif %}
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
+

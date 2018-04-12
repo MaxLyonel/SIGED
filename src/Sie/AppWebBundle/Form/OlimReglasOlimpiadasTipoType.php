@@ -35,6 +35,11 @@ class OlimReglasOlimpiadasTipoType extends AbstractType
                 'expanded'=>true,
                 'multiple'=>false
             ))
+            ->add('siInsExterna','choice', array(
+                'choices'=>array('1'=>'Si', '0'=>'No'),
+                'expanded'=>true,
+                'multiple'=>false
+            ))
             // ->add('gestionTipoId')
             // ->add('periodoTipoId')
             // ->add('fechaRegistro')

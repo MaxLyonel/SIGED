@@ -72,6 +72,7 @@
                                     {# <th>Periodo</th> #}
                                     {# <th>Fecha registro</th> #}
                                     {# <th>Fecha modificacion</th> #}
+                                    <th>Si inscripción externa</th>
                                     <th>Niveles</th>
                                     <th>Opciones</th>
                                 </tr>
@@ -129,6 +130,13 @@
                                             {% else %}
                                                 No        
                                             {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entity.entidad.siInsExterna == 1 %}
+                                            Si
+                                        {% else %}
+                                            No        
                                         {% endif %}
                                     </td>
                                     {# <td>{{ entity.gestionTipoId }}</td> #}
