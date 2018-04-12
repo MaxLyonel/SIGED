@@ -456,7 +456,17 @@ class OlimEstudianteInscripcionController extends Controller{
         return $response->setData(array('agrados' => $arrGrados));
     }
 
-  
+    public function listInscriptionAction(Request $request){
+        // get the send values
+        $form = $request->get('form');
+        
+        $objTutorSelected = $this->get('olimfunctions')->getTutor2($form);
+        
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscription.html.twig', array(
+            'form' => $this->selectInscriptionForm($form)->createView(),
+            'tutor' => $objTutorSelected
+        ));
+    }
 
 
 

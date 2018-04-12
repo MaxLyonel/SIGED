@@ -158,3 +158,7 @@ oliminscriptions_lookForOlimStudent:
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:lookForOlimStudent" }
     options:
         expose: true         
+        
+oliminscriptions_listInscription:
+    path:     /listInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscription" }

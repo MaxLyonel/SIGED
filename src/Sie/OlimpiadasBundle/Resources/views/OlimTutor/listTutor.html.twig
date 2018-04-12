@@ -196,6 +196,16 @@
                                                                 <button href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Inscripciones"><i class="fa fa-list"></i></button>
                                                             </form>
                                                         </td>
+                                                        <td class="text-center">
+                                                            <form action="{{path('oliminscriptions_listInscription')}}" method="POST" >
+                                                                <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
+                                                                <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
+                                                                <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
+                                                                <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
+                                                                <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
+                                                                <button href="#" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Inscripciones"><i class="fa fa-eye"></i></button>
+                                                            </form>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
