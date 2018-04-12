@@ -979,13 +979,37 @@ class OlimEstudianteInscripcionController extends Controller{
         $jsonDataInscription = $request->get('jsonDataInscription');
         $arrData = json_decode($jsonDataInscription, true);
         $arrData['groupId']= $groupId;
+        $arrData['roboticaOption']= $roboticaOption;
+
         $jsonDataInscription = json_encode($arrData);
 
-        $objStudentsInGroup = $this->get('olimfunctions')->getStudentsInGroup($groupId);
+        // dump($jsonDataInscription);die;
+        //create the db conexion
+        return $this->redirectToRoute('oliminscriptions_viewListInscritosGroup', array('jsonDataInscription'=>$jsonDataInscription));
+      
+    }
+
+    public function viewListInscritosGroupAction(Request $request){
         
+        //get the send values
+        $jsonDataInscription = $request->get('jsonDataInscription');
+        $arrData = json_decode($jsonDataInscription, true);
+        
+        $groupId = $arrData['groupId'];
+        $roboticaOption = $arrData['roboticaOption'];
+
+        $em = $this->getDoctrine()->getManager();
+        //get the studens
+        $objStudentsInGroup = $this->get('olimfunctions')->getStudentsInGroup($groupId);
+        // dump($objStudentsInGroup);die;
+        //get the group info
+        $objGroup = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($groupId);
+
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscritosGroup.html.twig', array(
             'objStudentsInGroup' => $objStudentsInGroup,
-            'roboticaOption' => $roboticaOption,
+            'roboticaOption'     => $roboticaOption,
+            'objGroup'           => $objGroup,
+            'jsonDataInscription'=> $jsonDataInscription,
             'roboticaOptionForm' => $this->roboticaOptionForm($jsonDataInscription)->createView(),
         ));
     }
@@ -1011,6 +1035,128 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->getForm()
                 ;
     }
+
+
+    public function deleteInscriptionOlimpiadaAction(Request $request){
+        //get the send values 
+        $olimEstudianteInscripcionId = $request->get('olimEstudianteInscripcionId');
+        $jsonDataInscription = $request->get('jsonDataInscription');
+        $arrData = json_decode($jsonDataInscription,true);
+        $arrData['olimEstudianteInscripcionId'] = $olimEstudianteInscripcionId;
+        $jsonDataInscription = json_encode($arrData);
+        $olimEstudianteInscripcionId = $request->get('olimEstudianteInscripcionId');
+        try {
+            // $em = $this->getDoctrine()->getManager();
+            // $em->getConnection()->beginTransaction();
+            //get rule inscription
+            $objRuleInscription = $this->get('olimfunctions')->getDataRule($arrData);
+            switch ($objRuleInscription->getModalidadNumeroIntegrantesTipo()->getId()) {
+                case '1':
+                    # individual
+                    
+                    break;
+                case '2':
+                    # hasta
+                    # delete the students inscription
+                    $this->deleteStudentInscription($jsonDataInscription);
+                    
+                    break;
+                case '3':
+                    # igual a
+                    # delete all students and group
+                    $this->deleteAllStudentInscription($jsonDataInscription);
+                    // dump($objRuleInscription->getModalidadNumeroIntegrantesTipo()->getId());die;
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+
+            // $objGrupoInfo = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')
+
+            // $em->getConnection()->commit();
+            return $this->redirectToRoute('oliminscriptions_viewListInscritosGroup', array('jsonDataInscription'=>$jsonDataInscription));
+        } catch (Exception $e) {
+            // $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
+        /*$arrData = json_decode($jsonDataInscription, true);
+        $arrData['groupId']= $groupId;
+        $arrData['roboticaOption']= $roboticaOption;
+        $jsonDataInscription = json_encode($arrData);*/
+        // dump($jsonDataInscription);die;
+        //create the db conexion
+ 
+    }
+    private function deleteStudentInscription($jsonDataInscription){
+
+        // dump($jsonDataInscription);
+        $arrDataInscription = json_decode($jsonDataInscription,true);
+        // dump($arrDataInscription);
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            // remove the inscription into the group
+            $objInscriptionGrupoProyecto = $em->getRepository('SieAppWebBundle:OlimInscripcionGrupoProyecto')->findOneBy(array(
+                'olimEstudianteInscripcion' => $arrDataInscription['olimEstudianteInscripcionId'],
+                'olimGrupoProyecto' => $arrDataInscription['groupId'],
+            ));
+            $em->remove($objInscriptionGrupoProyecto);     
+            //remove the inscription
+            $objStudentInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->find($arrDataInscription['olimEstudianteInscripcionId']);
+            $em->remove($objStudentInscription);
+            $em->flush();
+
+            $em->getConnection()->commit();
+
+            // dump($objStudentInscription);die;
+            // dump($objInscriptionGrupoProyecto);
+            // die;
+        return 1; 
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
+        
+    }
+
+    private function deleteAllStudentInscription($jsonDataInscription){
+
+        // dump($jsonDataInscription);
+        $arrDataInscription = json_decode($jsonDataInscription,true);
+        // dump($arrDataInscription);die;
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            // remove the inscription into the group
+            $objInscriptionGrupoProyecto = $em->getRepository('SieAppWebBundle:OlimInscripcionGrupoProyecto')->findBy(array(
+                'olimGrupoProyecto' => $arrDataInscription['groupId'],
+            ));
+            foreach ($objInscriptionGrupoProyecto as $value) {
+                // dump($value->getOlimEstudianteInscripcion()->getId());
+                
+                $objStudentInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->find($value->getOlimEstudianteInscripcion()->getId());
+                $em->remove($objStudentInscription);
+
+                $em->remove($value);     
+                $em->flush();
+            }
+
+            $em->getConnection()->commit();
+
+        return 1; 
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
+        
+    }
+
+
+
 
 
 }

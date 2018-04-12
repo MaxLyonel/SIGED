@@ -9,7 +9,7 @@ use JMS\Serializer\SerializerBuilder;
 
 /**
  * Author: krlos pacha <pckrlos@gmail.com>
- * Description:This is a class for load all additional connections; if exist in a particular proccess
+ * Description:This is a class for load all additional functionalities; if exist in a particular proccess
  * Date: 18-02-2018
  *
  *
@@ -423,6 +423,33 @@ class Olimfunctions {
    
      return $objTutores;
     // return 'krlos';
+  }
+
+  public function getDataRule($data){
+// dump($data);die;
+/*    $sql = "
+            select * from olim_reglas_olimpiadas_tipo  
+            where id = ". $data['categoryId'] ." and olim_materia_tipo_id = ".$data['materiaId']
+            ;
+    
+    $query = $this->em->getConnection()->prepare($sql);
+    
+    $query->execute();
+    return $query->fetchAll();*/
+
+      $query = $this->em->createQueryBuilder()
+                ->select('orot')
+                ->from('SieAppWebBundle:OlimReglasOlimpiadasTipo', 'orot')
+                ->where('orot.id = :categoryId')
+                ->andWhere('orot.olimMateriaTipo = :materiaId')
+                ->setParameter('categoryId',$data['categoryId'])
+                ->setParameter('materiaId',$data['materiaId'])
+                ->getQuery()
+                ;
+                
+                
+      $objRuleInscription = $query->getResult();
+      return $objRuleInscription[0];
   }
  
 

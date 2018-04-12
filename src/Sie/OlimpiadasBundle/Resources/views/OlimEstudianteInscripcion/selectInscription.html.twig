@@ -618,6 +618,43 @@ var studentsRegister = function(){
 
 
 
+
+    var deleteInscriptionOlimpiada = function(jsonDataInscription, olimEstudianteInscripcionId){
+
+      if(confirm('... esta seguro de Eliminar la inscripcion?')){
+        $.ajax({
+                    type: 'post',
+                    data: {'jsonDataInscription':jsonDataInscription, 'olimEstudianteInscripcionId':olimEstudianteInscripcionId},
+                    url: "{{ path('oliminscriptions_deleteInscriptionOlimpiada') }}",
+                    beforeSend: function () {
+                        
+                        $('#optionIdGroup').empty();
+                        $("#optionIdGroup").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                    },
+                    success: function (data) {
+                        
+                        $('#optionIdGroup').empty();
+                        $('#optionIdGroup').append(data);
+
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+            });
+      }else{
+        return false;
+      }
+
+           
+    };
+
+
+
     </script>
 
     

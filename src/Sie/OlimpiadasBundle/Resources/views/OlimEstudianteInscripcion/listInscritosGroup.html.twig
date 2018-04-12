@@ -1,7 +1,9 @@
 <small>
 <div class="row">
     <div class="col-md-12">
-        <p class="lead">Lista de Estudiantes</p>
+        <p class="lead">Lista de Estudiantes <span class="label label-info">{{objGroup.nombre}}</span></p>
+
+
         {% if roboticaOption %}
          <div align="right">
           {{form_start(roboticaOptionForm, {'attr':{ 'id':'roboticaOptionFormId' }})}}
@@ -37,7 +39,7 @@
                         <td class="text-center">
                             <!-- <a href="#" onclick=""><i class="fa fa-eye"></i></a>
                             <a href="#" onclick=""><i class="fa fa-edit"></i></a> -->
-                            <a href="#" onclick=""><i class="fa fa-trash-o"></i></a>
+                            <a href="#" onclick="deleteInscriptionOlimpiada('{{jsonDataInscription}}', {{student.olim_estudiante_inscripcion_id}});"><i class="fa fa-trash-o"></i></a>
                         </td>
                     </tr>
                     {% endfor %}

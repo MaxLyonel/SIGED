@@ -60,8 +60,8 @@ class OlimTutorController extends Controller{
                 // get the send data
                 $form = $request->get('form');
                 // dump($form);die;
-                $institucioneducativa = $form['sie'];
-                $gestion = $form['gestion'];
+                // $institucioneducativa = $form['sie'];
+                // $gestion = $form['gestion'];
                     if(isset($form['newtutor'])){
                                 $arrSendData = json_decode($form['newtutor'],true);
                                 // dump($arrSendData);die;
@@ -88,7 +88,17 @@ class OlimTutorController extends Controller{
                             $em->persist($entity);
                             $em->flush();
                     }
-        
+                    $formDirector = $request->get('sie_appwebbundle_olimdirectorinscripciondatos');
+                    if(is_array($formDirector)){
+                        //udpate the director info
+                        $form = $formDirector;
+                        
+                    }
+
+
+                    $institucioneducativa = $form['sie'];
+                    $gestion = $form['gestion'];
+                         
         }else{
             //set teh institucioneducativa variable
             $institucioneducativa = $this->session->get('ie_id');
@@ -99,7 +109,7 @@ class OlimTutorController extends Controller{
 
         $em = $this->getDoctrine()->getManager();
         $objOlimRegistroOlimpiada = $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->findOneBy(array(
-            'gestionTipoId'=>$gestion
+            'gestionTipoId'=>$form['gestion']
         ));
         // dump($objOlimRegistroOlimpiada);
         // $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findBy(array(
@@ -120,7 +130,8 @@ class OlimTutorController extends Controller{
             'entities' => $entities,
             'formNewTutor' => $this->formNewTutor(json_encode($form))->createView(),
             'director' => $director,
-            'institucion' => $institucion
+            'institucion' => $institucion,
+            'jsonData' => json_encode($form) 
         ));
     }
 
@@ -169,7 +180,7 @@ class OlimTutorController extends Controller{
             ->add('carnet', 'text', array('label'=>'CI:'))
             ->add('complemento', 'text', array('label'=>'Complemento:'))
             ->add('fechanacimiento', 'text', array('label'=>'Fecha Nacimiento:'))
-            ->add('data', 'text', array('attr'=>array('value'=>$data)))
+            ->add('data', 'hidden', array('attr'=>array('value'=>$data)))
             ->add('buscar', 'button', array('label'=>'Buscar', 'attr'=>array('onclick'=>'lookForTutor()')))
             ->getForm()
             ;
@@ -206,7 +217,7 @@ class OlimTutorController extends Controller{
             ->add('correoElectronico', 'text')
             ->add('sie', 'hidden', array('attr'=>array('value'=>$arrData['sie'])))
             ->add('gestion', 'hidden', array('attr'=>array('value'=>$arrData['gestion'])))
-            ->add('newtutor', 'text', array('data'=>$data))
+            ->add('newtutor', 'hidden', array('data'=>$data))
             ->add('registrar', 'submit')
 
             ->getForm()

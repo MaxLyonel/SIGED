@@ -338,7 +338,7 @@ class OlimDirectorInscripcionDatosController extends Controller
             return $this->redirect($this->generateUrl('olimtutor_listTutorBySie'));
         }
 
-        $editForm = $this->createEditManualForm($entity);
+        $editForm = $this->createEditManualForm($entity, $form['jsonData']);
 
         return $this->render('SieOlimpiadasBundle:OlimDirectorInscripcionDatos:edit.html.twig', array(
             'entity'      => $entity,
@@ -353,13 +353,20 @@ class OlimDirectorInscripcionDatosController extends Controller
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditManualForm(OlimDirectorInscripcionDatos $entity)
-    {
+    private function createEditManualForm(OlimDirectorInscripcionDatos $entity,$jsonData){
+        
+        $arrData = json_decode($jsonData, true);
+        // dump($arrData);die;
         $form = $this->createForm(new OlimDirectorInscripcionDatosType(), $entity, array(
-            'action' => $this->generateUrl('olimdirectordata_manual_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
+            'action' => $this->generateUrl('olimtutor_listTutorBySie'),
+            // 'method' => 'PUT',
         ));
 
+        $form->add('sie', 'text', array('data'=>$arrData['sie'] , 'mapped'=>false));
+        $form->add('gestion', 'text', array('data'=>$arrData['gestion'] , 'mapped'=>false));
+        $form->add('editDirector', 'text', array('data'=>$entity->getId(), 'mapped'=>false));
+        $form->add('jsonData', 'text', array('data'=>$jsonData, 'mapped'=>false));
+        
         $form->add('submit', 'submit', array('label' => 'Actualizar'));
 
         return $form;
@@ -369,8 +376,8 @@ class OlimDirectorInscripcionDatosController extends Controller
      * Edits an existing OlimDirectorInscripcionDatos entity.
      *
      */
-    public function updateManualAction(Request $request, $id)
-    {
+    public function updateManualAction(Request $request, $id){
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('SieAppWebBundle:OlimDirectorInscripcionDatos')->find($id);
