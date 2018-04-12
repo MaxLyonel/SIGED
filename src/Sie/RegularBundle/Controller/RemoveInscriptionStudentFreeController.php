@@ -83,6 +83,22 @@ class RemoveInscriptionStudentFreeController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
 
+         /**
+         * add validation QA
+         * @var [type]
+         */
+        $objObservation = $this->get('seguimiento')->getStudentObservationQA($form);
+        // dump($objObservation);die;
+        if($objObservation){
+  
+            $message = "Estudiante observado - rude " . $form['codigoRude'] . " :";
+            $this->addFlash('notiremovest', $message);
+            
+            $observaionMessage = 'Estudiante presenta inconsistencia, se sugiere corregirlos por las opciones de calidad...';
+            $this->addFlash('studentObservation', $observaionMessage);
+            return $this->redirectToRoute('remove_inscription_student_free_index');
+        }
+
         if ($this->session->get('removeinscription')) {
             $form['codigoRude'] = $this->session->get('removeCodigoRude');
             $form['gestion'] = $this->session->get('removeGestion');
@@ -170,9 +186,9 @@ class RemoveInscriptionStudentFreeController extends Controller {
       // $arrEstados = array('4'=>'Efectivo', '10'=>'Abandono');
       $rolesAllowed = array(7,8,10);
       if(in_array($rolUser,$rolesAllowed)){
-        $arrEstados = array('4'=>'EFECTIVO','6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO');
+        $arrEstados = array('4'=>'EFECTIVO','6'=>'NO INCORPORADO',/*'9'=>'RETIRADO TRASLADO'*/);
       }else{
-        $arrEstados = array('6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO');
+        $arrEstados = array('6'=>'NO INCORPORADO',/*'9'=>'RETIRADO TRASLADO'*/);
       }
 
       return $this->createFormBuilder()
@@ -181,8 +197,34 @@ class RemoveInscriptionStudentFreeController extends Controller {
         ->getForm();
     }
     /**
-    *
-    */
+     * [validateNotas description]
+     * @param  [type] $notas [description]
+     * @param  [type] $state [description]
+     * @return [type]        [description]
+     */
+    private function validateNotas($notas, $state){
+      // set the parameters
+      $notasComplete = array();
+      $swChangeStatus = false;
+        foreach ($notas['cuantitativas'] as $key => $value) {
+          if(isset($value['nota'])){
+            $notasComplete[]=$value['nota'];
+          }
+        }
+        // dump($notasComplete);die;
+        if($state==6 || $state==10){
+          if(sizeof($notasComplete)>1){
+            $swChangeStatus=true;
+          }
+        }
+        //return the validate info
+        return $swChangeStatus;
+    }
+    /**
+     * [verificarCambioAction description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function verificarCambioAction(Request $request){
       //cretae the db conexion
       $em = $this->getDoctrine()->getManager();
@@ -191,7 +233,9 @@ class RemoveInscriptionStudentFreeController extends Controller {
       $dataInfo = $request->get('dataInfo');
       $estadoNew = $request->get('estadonew');
       $arrDataInfo = json_decode($dataInfo,true);
-      // dump($dataInfo);      die;
+      // dump($arrDataInfo);      die;
+      
+
       //get the operativo information
       $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent($arrDataInfo)-1;
       $this->operativo = $this->get('funciones')->obtenerOperativo($arrDataInfo['sie'],$arrDataInfo['gestion']);
@@ -205,33 +249,40 @@ class RemoveInscriptionStudentFreeController extends Controller {
         $message = 'No realizado, esta intentando cambiar al mismo estado... ';
         $this->addFlash('changestate', $message);
       }
+
+      // add validation about tuicion of user
+      $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
+      $query->bindValue(':user_id', $this->session->get('userId'));
+      $query->bindValue(':sie', $arrDataInfo['sie']);
+      $query->bindValue(':roluser', $this->session->get('roluser'));
+      $query->execute();
+      $aTuicion = $query->fetchAll();
+            //check if the user has the tuicion
+      if (!$aTuicion[0]['get_ue_tuicion']) {
+        $swverification = false;
+        $message = "Usuario no tiene tuición para realizar la operación";
+        $this->addFlash('changestate', $message);
+      }
       // dump($estadoNew);die;
       //ge notas to do the changeMatricula to Retiro Abandono
       $swChangeStatus = false;
-      $notas = $this->get('notas')->regular($arrDataInfo['estInsId'],$this->operativo);
-      if($estadoNew==6){
-        if(sizeof($notas)>1){
-          $swChangeStatus=true;
-        }
-      }
-      if($swChangeStatus && $estadoNew==6){
-        $swverification = false;
-        $message = 'No realizado, Estudidante cuenta con calificaciones. ';
-        $this->addFlash('changestate', $message);
-      }
+      
+      /*validation abuot the NOTAS*/
+      if($this->operativo > 0 ){
+        $notas = $this->get('notas')->regular($arrDataInfo['estInsId'],$this->operativo);
+        $swChangeStatus = $this->validateNotas($notas, $estadoNew);
 
-      //ge notas to do the changeMatricula to no INCORPORADO
-      $swChangeStatus = true;
-      $notas = $this->get('notas')->regular($arrDataInfo['estInsId'],$this->operativo);
-      if($estadoNew==10){
-        if(sizeof($notas)>1){
-          $swChangeStatus=false;
+        if($swChangeStatus && $estadoNew==6){
+          $swverification = false;
+          $message = 'No realizado, Estudidante cuenta con calificaciones. ';
+          $this->addFlash('changestate', $message);
         }
-      }
-      if($swChangeStatus && $estadoNew==10){
-        $swverification = false;
-        $message = 'No realizado, Estudidante no cuenta con calificaciones. ';
-        $this->addFlash('changestate', $message);
+
+        if($swChangeStatus && $estadoNew==10){
+          $swverification = false;
+          $message = 'No realizado, Estudidante no cuenta con calificaciones. ';
+          $this->addFlash('changestate', $message);
+        }
       }
 
       //get the students inscriptions
@@ -269,7 +320,8 @@ class RemoveInscriptionStudentFreeController extends Controller {
     }
 // dump($arrDataInfo);die;
     return $this->render($this->session->get('pathSystem') . ':RemoveInscriptionStudentFree:verificarcambio.html.twig', array(
-              'swverification' => $swverification,'operativo'=>$operativo,
+              'swverification' => $swverification,
+              'operativo'=>$operativo,
               'dataInfo'  => $dataInfo ,
               'estadoNew' => $estadoNew
               ));
@@ -497,11 +549,23 @@ class RemoveInscriptionStudentFreeController extends Controller {
 
           //find the estudent's inscription to do the change
           $inscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInfo['estInsId']);
+          $oldInscriptionStudent = clone $inscriptionStudent;
           $inscriptionStudent->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($form['estadoNew']));
           $em->persist($inscriptionStudent);
           $em->flush();
-
+          
           $em->getConnection()->commit();
+          // added set log info data
+          /*$this->get('funciones')->setLogTransaccion(
+                               $inscriptionStudent->getId(),
+                                'estudiante_inscripcion',
+                                'U',
+                                '',
+                                $inscriptionStudent,
+                                $oldInscriptionStudent,
+                                'SIGED',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+          );     */
 
           $message = "Proceso realizado exitosamente.";
           $this->addFlash('okchange', $message);
