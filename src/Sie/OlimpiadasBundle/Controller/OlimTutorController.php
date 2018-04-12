@@ -88,13 +88,18 @@ class OlimTutorController extends Controller{
                             $em->persist($entity);
                             $em->flush();
                     }
+                    if(isset($form['editutor'])) {
+                        $this->saveUpdateDataTutor($form);
+                    }
+                    if(isset($form['deletetutor'])) {
+                        $this->deleteDataTutor($form);
+                    }
                     $formDirector = $request->get('sie_appwebbundle_olimdirectorinscripciondatos');
                     if(is_array($formDirector)){
                         //udpate the director info
                         $form = $formDirector;
                         
                     }
-
 
                     $institucioneducativa = $form['sie'];
                     $gestion = $form['gestion'];
@@ -404,72 +409,97 @@ class OlimTutorController extends Controller{
     }
 
     public function updateDataTutorAction(Request $request){
+        $em = $this->getDoctrine()->getManager();                                                                                                                                                  
         //get the send data
-        $jsonDataInscription = $request->get('jsonDataInscription');
-        $tutorid = $request->get('tutorid');
-        $arrDataInscription = json_decode($jsonDataInscription,true);
-        $arrDataInscription['tutorid'] = $tutorid;
-        // dump($arrDataInscription);die;
-        $dataTutorToUpdate = $this->get('olimfunctions')->getTutor($arrDataInscription);
-        // dump($dataTutorToUpdate);die;
+        $form = $request->get('form');
+        
+        $personaid = $form['personaid'];
+        $olimtutorid = $form['olimtutorid'];
+        $olimregistroolimpiadaid = $form['olimregistroolimpiadaid'];
 
+        $olimTutor = $em->getRepository('SieAppWebBundle:OlimTutor')->find($olimtutorid);
+        $dataTutorPersona = $em->getRepository('SieAppWebBundle:Persona')->find($personaid);
+        
         return $this->render('SieOlimpiadasBundle:OlimTutor:updateDataTutor.html.twig', array(
-            'form'=> $this->updateDataTutorForm($dataTutorToUpdate,$jsonDataInscription)->createView(),
-            'dataTutorToUpdate'=>$dataTutorToUpdate,
+            'form'=> $this->updateDataTutorForm($olimTutor, $form['jsonData'])->createView(),
+            'dataTutorPersona'=>$dataTutorPersona,
         ));
 
     }
 
-    private function updateDataTutorForm($dataTutorToUpdate, $jsonDataInscription){
-        // dump($jsonDataInscription);
-        // die;
+    private function updateDataTutorForm($olimTutor, $jsonData){
+        $arrData = json_decode($jsonData, true);
+
         return $this->createFormBuilder()
-            ->add('telefono1', 'text', array('data'=>$dataTutorToUpdate['telefono1']))
-            ->add('telefono2', 'text', array('data'=>$dataTutorToUpdate['telefono2']))
-            ->add('correoElectronico', 'text', array('data'=>$dataTutorToUpdate['correo_electronico']))
-            ->add('persona', 'hidden', array('data'=>$dataTutorToUpdate['personadid']))
-            ->add('id', 'hidden', array('data'=>$dataTutorToUpdate['id']))
-            ->add('data', 'hidden', array('data'=>$jsonDataInscription))
-            ->add('update','button', array('label'=>'Actualizar', 'attr'=>array('onclick'=>'saveUpdateDataTutor()')))
+            ->setAction($this->generateUrl('olimtutor_listTutorBySie'))
+            ->add('telefono1', 'text', array('data'=>$olimTutor->getTelefono1()))
+            ->add('telefono2', 'text', array('data'=>$olimTutor->getTelefono2()))
+            ->add('correoElectronico', 'text', array('data'=>$olimTutor->getCorreoElectronico()))
+            ->add('editutor', 'hidden', array('data'=>$olimTutor->getId()))
+            ->add('olimtutorid', 'hidden', array('data'=>$olimTutor->getId()))
+            ->add('sie', 'text', array('data'=>$arrData['sie'] , 'mapped'=>false))
+            ->add('gestion', 'text', array('data'=>$arrData['gestion'] , 'mapped'=>false))
+            ->add('jsonData', 'text', array('data'=>$jsonData, 'mapped'=>false))
+            ->add('update','submit', array('label'=>'Actualizar'))
             ->getForm();
 
     }
 
-     public function saveUpdateDataTutorAction(Request $request){
-        //get the send values
-        $form = $request->get('form');
-        // $data = json_decode($form['data'],true);
-        // dump($data);
-        // dump($form);
-        // die;
+     private function saveUpdateDataTutor($form){
         //create db conexion 
         $em = $this->getDoctrine()->getManager();
-        // udpate the indice
-        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_tutor');");
-        $query->execute();
-        // create the object to do the save
-        $entity = $em->getRepository('SieAppWebBundle:OlimTutor')->find($form['id']);
-        // $entity->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($form['personaid']));
-        $entity->setTelefono1($form['telefono1']);
-        $entity->setTelefono2($form['telefono2']);
-        $entity->setCorreoElectronico($form['correoElectronico']);
-        $entity->setFechaModificacion(new \Datetime('now'));
-       
-        $em->persist($entity);
-        $em->flush();
+        $em->getConnection()->beginTransaction();
+        try {
+            // create the object to do the save
+            $entity = $em->getRepository('SieAppWebBundle:OlimTutor')->find($form['olimtutorid']);
 
-        //get values to todo the view
-        $jsonDataInscription = $form['data'];
-        $arrDataInscription = json_decode($jsonDataInscription, true);
-        //get tutores
-        $entities =  $this->get('olimfunctions')->getTutores($arrDataInscription);
+            $entity->setTelefono1($form['telefono1']);
+            $entity->setTelefono2($form['telefono2']);
+            $entity->setCorreoElectronico($form['correoElectronico']);
+            $entity->setFechaModificacion(new \Datetime('now'));
+
+            $em->persist($entity);
+            $em->flush();
+            $em->getConnection()->commit();
+            return true;
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+        }
         
-        return $this->render('SieOlimpiadasBundle:OlimTutor:listTutor.html.twig', array(
-            'entities' => $entities,
-            'jsonDataInscription' => $jsonDataInscription,
-        ));
+        return false;
     }
 
+    /**
+     * Deletes a OlimTutor entity.
+     *
+     */
+    public function deleteDataTutor($form)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            
+            $olimTutor = $em->getRepository('SieAppWebBundle:OlimTutor')->find($form['olimtutorid']);
+
+            if ($olimTutor) {
+                $olimEstudianteInscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array('olimTutor' => $olimTutor->getId()));
+                if ($olimEstudianteInscripcion) {
+                    return false;
+                }
+
+                $em->remove($olimTutor);
+                $em->flush();
+                $em->getConnection()->commit();
+                return true;
+            }
+            
+            return false;
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+        }
+        
+        return false;
+    }
 
 
 

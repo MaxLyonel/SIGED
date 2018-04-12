@@ -62,14 +62,16 @@ olimtutor_selectTypeInscription:
 olimtutor_updateDataTutor:
     path:     /updateDataTutor
     defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:updateDataTutor" }
-    options:
-        expose: true
         
 olimtutor_saveUpdateDataTutor:
     path:     /saveUpdateDataTutor
     defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:saveUpdateDataTutor" }
-    options:
-        expose: true
+    methods:  [POST, PUT]
+
+olimtutor_deleteDataTutor:
+    path:     /delete
+    defaults: { _controller: "SieOlimpiadasBundle:OlimTutor:deleteDataTutor" }
+    methods:  [POST, DELETE]
 
 olimtutor_listTutorBySie:
     path:     /listTutorBySie
