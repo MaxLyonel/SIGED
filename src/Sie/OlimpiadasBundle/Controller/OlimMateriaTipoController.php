@@ -59,7 +59,8 @@ class OlimMateriaTipoController extends Controller
                 foreach ($categorias as $ca) {
                     $array[$cont]['categorias'][] = array(
                         'id'=>$ca->getId(),
-                        'categoria'=>$ca->getCategoria()
+                        'categoria'=>$ca->getCategoria(),
+                        'modalidad'=>$ca->getModalidadParticipacionTipo()->getModalidad()
                     );
                     
                     

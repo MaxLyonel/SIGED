@@ -75,3 +75,16 @@
     </div>
 
 {% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+
+        $(function(){
+            // aplicamos las mascaras para las fechas
+            $("#sie_appwebbundle_olimmateriatipo_fechaInsIni").inputmask({ "alias": "dd-mm-yyyy" });
+            $("#sie_appwebbundle_olimmateriatipo_fechaInsFin").inputmask({ "alias": "dd-mm-yyyy" });
+        });
+        
+    </script>
+{% endblock %}

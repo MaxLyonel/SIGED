@@ -53,7 +53,7 @@
 
                         
 
-                        <table class="table table-bordered table-condensed records_list">
+                        <table class="table table-bordered table-condensed records_list table-striped">
                             <thead>
                                 <tr>
                                     {# <th>Id</th> #}
@@ -149,13 +149,13 @@
                                             {% for pri in entity.primaria %}
                                                 {# {{ pri.gradoTipo.grado }} #}
                                                 {# {% if loop.index != (entity.primaria|length)  %} , {% endif %} #}
-                                                <div> {{ pri.gradoTipo.grado }} </div>
+                                                <span class="badge badge-inverse badge-stroke"> {{ pri.gradoTipo.id }} </span>
                                             {% endfor %}
                                         {% endif %}
                                         {% if entity.secundaria|length > 0 %}
                                             <p style="padding-top: 10px;"><strong>Secundara</strong></p>
                                             {% for sec in entity.secundaria %}
-                                                <div> {{ sec.gradoTipo.grado }} </div>
+                                                <span class="badge badge-inverse badge-stroke"> {{ sec.gradoTipo.id }} </span>
                                             {% endfor %}
                                         {% endif %}
                                     </td>

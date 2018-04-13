@@ -46,10 +46,10 @@
                                     {# <th>Id</th> #}
                                     <th>Materia</th>
                                     {# <th>Fecharegistro</th> #}
-                                    <th>Fecha insini</th>
-                                    <th>Fecha insfin</th>
+                                    <th>Fecha inicio inscripción</th>
+                                    <th>Fecha final inscripción</th>
                                     {# <th>Descripcion</th> #}
-                                    <th>Categorías</th>
+                                    <th>Categoría - Modalidad</th>
                                     {# <th>Reglas</th> #}
                                     <th>Actions</th>
                                 </tr>
@@ -84,7 +84,7 @@
                                         </div>
                                         {% for cate in entity.categorias %}
                                             <div style="border-bottom: 1px solid #EEEEEE; padding: 2px">
-                                                {{ cate.categoria }}
+                                                {{ cate.categoria }} - <span class="badge badge-default">{{ cate.modalidad }}</span>
                                             </div>
                                         {% endfor %}
 

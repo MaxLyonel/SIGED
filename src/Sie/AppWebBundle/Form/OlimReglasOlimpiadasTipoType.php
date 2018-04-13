@@ -19,7 +19,7 @@ class OlimReglasOlimpiadasTipoType extends AbstractType
             ->add('cantidadInscritosGrado')
             ->add('edadInicial')
             ->add('edadFinal')
-            ->add('fechaComparacion')
+            ->add('fechaComparacion', null, array('widget'=>'single_text', 'format'=>'dd-MM-yyyy'))
             ->add('siSubirDocumento','choice', array(
                 'choices'=>array('1'=>'Si', '0'=>'No'),
                 'expanded'=>true,
