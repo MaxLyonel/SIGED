@@ -30,13 +30,10 @@ class OlimRegistroOlimpiada
     private $fechaFin;
 
     /**
-     * @var integer
+     * @var \Sie\AppWebBundle\Entity\GestionTipo
      */
-    private $gestionTipoId;
+    private $gestionTipo;
 
-    public function __toString(){
-        return $this->nombreOlimpiada;
-    }
 
     /**
      * Get id
@@ -56,7 +53,7 @@ class OlimRegistroOlimpiada
      */
     public function setNombreOlimpiada($nombreOlimpiada)
     {
-        $this->nombreOlimpiada = mb_strtoupper($nombreOlimpiada,'utf-8');
+        $this->nombreOlimpiada = $nombreOlimpiada;
     
         return $this;
     }
@@ -116,34 +113,6 @@ class OlimRegistroOlimpiada
     {
         return $this->fechaFin;
     }
-
-    /**
-     * Set gestionTipoId
-     *
-     * @param integer $gestionTipoId
-     * @return OlimRegistroOlimpiada
-     */
-    public function setGestionTipoId($gestionTipoId)
-    {
-        $this->gestionTipoId = $gestionTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get gestionTipoId
-     *
-     * @return integer 
-     */
-    public function getGestionTipoId()
-    {
-        return $this->gestionTipoId;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\GestionTipo
-     */
-    private $gestionTipo;
-
 
     /**
      * Set gestionTipo
