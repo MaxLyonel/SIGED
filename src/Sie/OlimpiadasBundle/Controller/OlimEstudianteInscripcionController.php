@@ -468,7 +468,139 @@ class OlimEstudianteInscripcionController extends Controller{
         ));
     }
 
+    public function listTemplateInscriptionAction(Request $request){
+        
+        // get the send data
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        
+        //create db conexion 
+        $em = $this->getDoctrine()->getManager();
+        $objRuleSelected = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findOneBy(array(
+            'olimMateriaTipo'=> $materiaId,
+            'id' => $categoryId
+        ));
+        $arrDataInscription = array(
+            'materiaId' => $request->get('materiaId'),
+            'categoryId' => $request->get('categoryId'),
+            'institucioneducativaid' => $request->get('sie'),
+            'gestiontipoid' => $request->get('gestion'),
+            'olimtutorid' => $request->get('olimtutorId'),
+        );
+        // if the getModalidadParticipacionTipo == 2, then show the informacion about the group
+        if($objRuleSelected->getModalidadParticipacionTipo()->getId()==2){
+            return $this->redirectToRoute('olimgrupoproyecto_showGroup', array('datainscription'=>json_encode($arrDataInscription)));
+        }else{
+        //if not show the common inscription 
+            return $this->redirectToRoute('oliminscriptions_listInscriptionByTutor', array('datainscription'=>json_encode($arrDataInscription)));
+        }
 
+        // dump($objRuleSelected->getModalidadParticipacionTipo()->getId());die;
+    }
+
+    public function listInscriptionByTutorAction(Request $request){
+        
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        
+        //get the send values
+        $jsonDataInscription = $request->get('datainscription');
+        $arrDataInscription = json_decode($jsonDataInscription,true);
+        //find information about the group in case if exists
+        $objGroup = array();
+        $groupId = false;
+        if(isset($arrDataInscription['groupId'])){
+            $groupId = $arrDataInscription['groupId'];
+            $objGroup = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($groupId);
+        }
+        //get the rule data
+        $regla = $this->get('olimfunctions')->getDataRule($arrDataInscription);
+        
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscription.html.twig', array(
+               'form' => $this->CommonInscriptionForm($arrDataInscription)->createView(),
+               'groupId' => $groupId,
+               'objGroup' => $objGroup,
+               'regla' => $regla,
+
+        ));
+    }
+
+    public function getListStudentsAction(Request $request){
+        dump($request);die;
+        //create db conexino
+        $em = $this->getDoctrine()->getManager();
+         //get the send values
+        $turnoId = $request->get('turnoId');
+        $paraleloId = $request->get('paraleloId');
+        $gradoId = $request->get('gradoId');
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        $nivelId = $request->get('nivelId');
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');
+        $olimtutorid = $request->get('olimtutorid');
+        
+        $jsonData = $request->get('jsonData');
+        // dump($jsonData);die;
+
+        //look for the id of institucioneducativa_curso
+        $objInstitucionEducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy( array(
+             'nivelTipo' =>$nivelId,
+             'gradoTipo' => $gradoId,
+             'paraleloTipo'=> $paraleloId,
+             'turnoTipo' => $turnoId, 
+             'institucioneducativa' => $sie,
+             'gestionTipo' => $gestion
+        ));
+        
+        $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
+        // $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion);
+        
+        $arrCorrectStudent = array();
+        foreach ($objStudentsToOlimpiadas as $key => $value) {
+            
+            $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
+            $value['fecha_nacimiento'] = $newStudentDate;
+            $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, '30-6-2018');
+            $value['yearsOld'] = $studentYearsOld[0];
+
+            $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
+            // dump($objStudentsInOlimpiadas);
+            if($objStudentsInOlimpiadas){
+            }else{
+                $arrCorrectStudent[]=($value);    
+            }
+
+        }
+        //get the discapacidad
+        $objDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
+        
+        // dump($objDiscapacidad);
+        // die;
+        
+        // dump($objStudentsToOlimpiadas);die;
+        // get the data to do the inscription 
+        $jsonDataInscription = json_encode( array(
+
+                'turnoId' => $request->get('turnoId'),
+                'paraleloId' => $request->get('paraleloId'),
+                'gradoId' => $request->get('gradoId'),
+                'materiaId' => $request->get('materiaId'),
+                'categoryId' => $request->get('categoryId'),
+                'nivelId' => $request->get('nivelId'),
+                'sie' => $request->get('sie'),
+                'gestion' => $request->get('gestion'),
+                'olimtutorid' => $request->get('olimtutorid'),
+                'institucionEducativaCursoId' => $objInstitucionEducativaCurso->getId(),
+        ));
+        // dump($jsonDataInscription);die;
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
+            'objStudentsToOlimpiadas' => $arrCorrectStudent,
+            'form' => $this->studentsRegisterform($jsonDataInscription, $jsonData)->createView(),
+            'objDiscapacidad' => $objDiscapacidad,
+
+        ));
+    }
 
     public function selectInscriptionAction(Request $request){
         // get the send values

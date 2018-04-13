@@ -95,7 +95,7 @@
                                           </div>
                                           <div class="col-md-6">
                                             CATEGORIA:
-                                              {{form_widget(form.category, {'attr': {'class':'form-control', 'onchange':'selectTemplateInscription(this.value)'} } )}}
+                                              {{form_widget(form.category, {'attr': {'class':'form-control', 'onchange':'listTemplateInscription(this.value)'} } )}}
                                           </div>
                                          
                                       </div>
@@ -193,7 +193,7 @@
       
     };
 
-    var selectTemplateInscription = function(categoryId){
+    var listTemplateInscription = function(categoryId){
         
         materiaId = $('#form_olimMateria').val();
         sie = $('#form_institucionEducativa').val();
@@ -202,7 +202,7 @@
 
         $.ajax({
              type: 'post',
-             url: Routing.generate('oliminscriptions_selectTemplateInscription'),
+             url: Routing.generate('oliminscriptions_listTemplateInscription'),
              data: {'categoryId':categoryId, 'materiaId':materiaId, 'sie':sie, 'gestion':gestion, 'olimtutorId':olimtutorId},
              beforeSend: function () {
                  $("#templateId").empty();
@@ -331,7 +331,7 @@
         };
 
 
-      var getStudents = function(turnoId){
+      var getListStudents = function(turnoId){
        
        materiaId = $('#form_olimMateria').val();
        categoryId = $('#form_category').val();
@@ -345,7 +345,7 @@
 
         $.ajax({
              type: 'post',
-             url: Routing.generate('oliminscriptions_getStudents'),
+             url: Routing.generate('oliminscriptions_getListStudents'),
              data: {'turnoId':turnoId,'paraleloId':paraleloId,'gradoId': gradoId, 'materiaId': materiaId, 'categoryId': categoryId, 'nivelId':nivelId, 'sie':sie, 'gestion':gestion, 'olimtutorid':olimtutorid, 'jsonData':jsonData},
              beforeSend: function () {
                  $("#getStudentsId").empty();

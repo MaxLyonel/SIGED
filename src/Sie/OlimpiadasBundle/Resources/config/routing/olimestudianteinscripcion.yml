@@ -162,3 +162,19 @@ oliminscriptions_lookForOlimStudent:
 oliminscriptions_listInscription:
     path:     /listInscription
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscription" }
+
+oliminscriptions_listTemplateInscription:
+    path:     /listTemplateInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listTemplateInscription" }
+    options:
+        expose: true
+
+oliminscriptions_listInscriptionByTutor:
+    path:     /{datainscription}/listInscriptionByTutor
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscriptionByTutor" }
+
+oliminscriptions_getListStudents:
+    path:     /getListStudents
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getListStudents" }
+    options:
+        expose: true
