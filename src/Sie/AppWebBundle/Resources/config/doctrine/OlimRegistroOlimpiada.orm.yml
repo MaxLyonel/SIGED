@@ -1,6 +1,10 @@
 Sie\AppWebBundle\Entity\OlimRegistroOlimpiada:
     type: entity
     table: olim_registro_olimpiada
+    indexes:
+        IDX_8E281019179FF95:
+            columns:
+                - gestion_tipo_id
     id:
         id:
             type: integer
@@ -28,10 +32,14 @@ Sie\AppWebBundle\Entity\OlimRegistroOlimpiada:
             nullable: true
             comment: ''
             column: fecha_fin
-        gestionTipoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: gestion_tipo_id
+    manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
     lifecycleCallbacks: {  }
