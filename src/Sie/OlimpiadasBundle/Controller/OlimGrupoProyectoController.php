@@ -257,7 +257,7 @@ class OlimGrupoProyectoController extends Controller
 
         //get the rule to do the inscription
         $objRuleInscription = $this->get('olimfunctions')->getDataRule($arrDataInscription);
-        // dump($objRuleInscription->getSiInsExterna());die;
+        // dump($objRuleInscription);die;
 
         // dump($objTutorsGrupo);die;
         return $this->render('SieOlimpiadasBundle:OlimGrupoProyecto:showGroup.html.twig', array(
@@ -265,7 +265,7 @@ class OlimGrupoProyectoController extends Controller
             'objTutorsGrupo' => $objTutorsGrupo,
             'formGroup' => $this->newGroupForm($jsonDataInscription)->createView(),
             'jsonDataInscription' => $jsonDataInscription,
-            'inscriptionExterna' => $objRuleInscription->getSiInsExterna()
+            'inscriptionExterna' => $objRuleInscription
 
         ));
     }
