@@ -11,11 +11,10 @@
                                             <th>Rude</th>
                                             <th>Estudiante</th>
                                             <!-- <th>F. Nacimiento</th> -->
-                                            
-
                                             <th colspan="2">CI - complemento</th>
-                                            <th>Discapacidad</th>
+                                            <th colspan="2">F. Nacimiento - Edad</th>
                                             <th>tel&eacute;fono</th>
+                                            <th>Discapacidad</th>
                                             <th>Email</th>
                                             <th>&nbsp;</th>
                                             
@@ -39,6 +38,9 @@
                                                 
                                                 <td>{{item.carnet_identidad}}</td>
                                                 <td>{{item.complemento}}</td>
+                                                <td>{{item.fecha_nacimiento}}</td>
+                                                <td>{{item.yearsOld}}</td>
+
                                                 <td>
                                                      <select class="chosen-select mb-5" name="form[datasend_{{item.estinsid}}][discapacidad]">
                                                         {% for discapacidad in objDiscapacidad %}
@@ -56,18 +58,19 @@
                                                 
                                                     #}
                                                 <td>
+                                                    {% if item.carnet_identidad %}
 
                                                      <input type="checkbox" id="form_datasend_{{item.estinsid}}_studentInscription" name="form[datasend_{{item.estinsid}}][studentInscription]"   value='{{item.estinsid}}'>
                                                      {#
                                                         <input type="hidden" id="form_datasend_{{item.estinsid}}" name="form[datasend_{{item.estinsid}}][eInsId]"   value='{{item.estinsid}}'>
                                                         #}
-                                                    
+                                                    {% endif    %}
                                                 </td>
                                                 
                                                 </tr>    
                                             {% endfor %}
                                             <tr>
-                                                <td colspan="8" align="right">{{form_widget(form.register)}}</td>
+                                                <td colspan="10" align="right">{{form_widget(form.register)}}</td>
                                             </tr>
                                             
                                        
