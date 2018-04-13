@@ -206,6 +206,7 @@ class Olimfunctions {
             left join estudiante_inscripcion ei on ei.institucioneducativa_curso_id = iec.id
             left join estudiante e on ei.estudiante_id = e.id
             where iec.id = ".$institucionEducativaCursoId."
+            order by e.paterno, e.materno, e.nombre ASC
         "
             ;
     

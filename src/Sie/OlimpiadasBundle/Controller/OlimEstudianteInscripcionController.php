@@ -805,17 +805,21 @@ class OlimEstudianteInscripcionController extends Controller{
             $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, $fechaComparacion);
             $value['yearsOld'] = $studentYearsOld[0];
             $yearOldStudent = $value['yearsOld'];
-
+            //get students observation
+            $studentObs = $this->get('seguimiento')->getStudentObservationQA(array('codigoRude'=>$value['codigo_rude'], 'gestion'=>$gestion));
+            //get students registered
             $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
             // dump($objStudentsInOlimpiadas);
-            if($objStudentsInOlimpiadas){
+            if($objStudentsInOlimpiadas || sizeof($studentObs)>0){
             }else{
                 if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
                 $arrCorrectStudent[]=($value);    
                 }
             }
+            // dump($studentObs);
 
         }
+        // die;
         //get the discapacidad
         $objDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
         
