@@ -216,6 +216,14 @@
     <script type="text/javascript">
 
     	$(function(){
+            $("#sie_appwebbundle_olimreglasolimpiadastipo_cantidadInscritosGrado").numeric();
+            $("#sie_appwebbundle_olimreglasolimpiadastipo_edadInicial").numeric();
+            $("#sie_appwebbundle_olimreglasolimpiadastipo_edadFinal").numeric();
+
+            $("#sie_appwebbundle_olimreglasolimpiadastipo_cantidadEquipos").numeric();
+
+            $("#sie_appwebbundle_olimreglasolimpiadastipo_fechaComparacion").inputmask({ "alias": "dd-mm-yyyy" });
+
     		controles();
     	});
 
@@ -239,6 +247,9 @@
         	    $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreProyecto_1').prop('checked','checked');
 
         	    $('#cantidadInscritos').css('display','block');
+
+                $('#sie_appwebbundle_olimreglasolimpiadastipo_modalidadNumeroIntegrantesTipo').val('');
+                $('#sie_appwebbundle_olimreglasolimpiadastipo_cantidadEquipos').val('');
         	}else{
         	    console.log('grupal');
         	    $('#numeroIntegrantes').css('display','block');
@@ -254,6 +265,8 @@
         	    // $('#sie_appwebbundle_olimreglasolimpiadastipo_siNombreProyecto_1').removeAttr('checked');
         	    
         	    $('#cantidadInscritos').css('display','none');
+
+                $('#sie_appwebbundle_olimreglasolimpiadastipo_cantidadInscritosGrado').val('');
         	}
         }
     </script>

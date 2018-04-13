@@ -56,7 +56,7 @@
                                     <td>{{ entity.nombreOlimpiada }}</td>
                                     <td>{% if entity.fechaInicio %}{{ entity.fechaInicio|date('d-m-Y') }}{% endif %}</td>
                                     <td>{% if entity.fechaFin %}{{ entity.fechaFin|date('d-m-Y') }}{% endif %}</td>
-                                    <td>{{ entity.gestionTipoId }}</td>
+                                    <td>{{ entity.gestionTipo.id }}</td>
                                     <td>
                                     <ul>
                                         <a href="{{ path('olimregistroolimpiada_edit', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">

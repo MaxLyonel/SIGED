@@ -18,7 +18,7 @@ class OlimRegistroOlimpiadaType extends AbstractType
             ->add('nombreOlimpiada')
             ->add('fechaInicio', null, array('widget'=>'single_text', 'format'=>'dd-MM-yyyy'))
             ->add('fechaFin', null, array('widget'=>'single_text', 'format'=>'dd-MM-yyyy'))
-            ->add('gestionTipoId')
+            ->add('gestionTipo')
         ;
     }
     

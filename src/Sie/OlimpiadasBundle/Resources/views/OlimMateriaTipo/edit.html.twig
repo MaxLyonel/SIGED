@@ -84,6 +84,12 @@
 		var reglas = [];
 		var reglaEdit = null;
 
+		$(function(){
+            // aplicamos las mascaras para las fechas
+            $("#sie_appwebbundle_olimmateriatipo_fechaInsIni").inputmask({ "alias": "dd-mm-yyyy" });
+            $("#sie_appwebbundle_olimmateriatipo_fechaInsFin").inputmask({ "alias": "dd-mm-yyyy" });
+        });
+
 		function getReglas(){
 			$.ajax({
 				url: Routing.generate('olimmateriatipo_getReglas'),
