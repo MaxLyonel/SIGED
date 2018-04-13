@@ -265,7 +265,7 @@ class OlimGrupoProyectoController extends Controller
             'objTutorsGrupo' => $objTutorsGrupo,
             'formGroup' => $this->newGroupForm($jsonDataInscription)->createView(),
             'jsonDataInscription' => $jsonDataInscription,
-            'inscriptionExterna' => $objRuleInscription
+            'regla' => $objRuleInscription
 
         ));
     }
