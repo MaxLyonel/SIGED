@@ -14,13 +14,14 @@
                                     </div>
                                     <div class="media-body">
                                     	<div class="pull-right rounded">
-                                    		{{form(inscripForm)}}
+                                    		
+
                                     	</div>
                                         
                                         <h4>
                                         	
                                         	
-                                        	<b>C&oacute;digo Rude:</b> {{objStudentInscription.codigo_rude}} </br>
+                                        	<b>C&oacute;digo Rue:</b> {{objStudentInscription.codigo_rude}} </br>
                                         	<b>Estudiante:</b> {{objStudentInscription.nombre}} 
                                         	{{objStudentInscription.paterno}} 
                                         	{{objStudentInscription.materno}} </br>
@@ -30,24 +31,38 @@
                                         <small class="text-muted">---</small>
                                         <p>
                                         	<div class="row">
-                                        		<div class="col-md-6"><b>C&oacute;digo Rude:</b> {{objStudentInscription.sie}} </div>
-                                        		<div class="col-md-6"><b>Unidad Educativa:</b> {{objStudentInscription.institucioneducativa}} </div>
+                                        		<div class="col-md-6">
+                                        			
+													<div class="row">
+		                                        		<div class="col-md-6"><b>C&oacute;digo Rude:</b> {{objStudentInscription.sie}} </div>
+		                                        		<div class="col-md-6"><b>Unidad Educativa:</b> {{objStudentInscription.institucioneducativa}} </div>
+		                                        	</div>
+		                                        	</br>	
+		                                        	<div class="row">
+							                            <div class="col-md-3"><b>Nivel</b> </div>
+							                            <div class="col-md-3"><b>Grado</b> </div>
+							                            <div class="col-md-3"><b>Paralelo</b> </div>
+							                            <div class="col-md-3"><b>Turno</b> </div>
+							                            
+							                        </div>
+							                        <div class="row">
+							                            <div class="col-md-3">{{objStudentInscription.nivel}} </div>
+							                            <div class="col-md-3">{{objStudentInscription.grado}} </div>
+							                            <div class="col-md-3">{{objStudentInscription.paralelo}} </div>
+							                            <div class="col-md-3">{{objStudentInscription.turno}} </div>
+							                            
+							                        </div>
+
+                                        		</div>
+                                        		<div class="col-md-6">
+                                        			{{form_start(inscripForm, {'attr':{'id':'inscriptionExternaIdForm'}})}}
+		                                    		Tel&eacute;fono: {{form_widget(inscripForm.fono,{'attr':{'class':'form-control'}})}}
+		                                    		Correo Electronico: {{form_widget(inscripForm.email,{'attr':{'class':'form-control'}})}}
+		                                    		Discapacidad: {{form_widget(inscripForm.discapacidad,{'attr':{'class':'form-control'}})}}
+		                                    		{{form_widget(inscripForm.doInscription)}}
+		                                    		{{form_end(inscripForm)}}
+                                        		</div>
                                         	</div>
-                                        	</br>	
-                                        	<div class="row">
-					                            <div class="col-md-3"><b>Nivel</b> </div>
-					                            <div class="col-md-3"><b>Grado</b> </div>
-					                            <div class="col-md-3"><b>Paralelo</b> </div>
-					                            <div class="col-md-3"><b>Turno</b> </div>
-					                            
-					                        </div>
-					                        <div class="row">
-					                            <div class="col-md-3">{{objStudentInscription.nivel}} </div>
-					                            <div class="col-md-3">{{objStudentInscription.grado}} </div>
-					                            <div class="col-md-3">{{objStudentInscription.paralelo}} </div>
-					                            <div class="col-md-3">{{objStudentInscription.turno}} </div>
-					                            
-					                        </div>
                                     
                                     	</p>
                                     </div>

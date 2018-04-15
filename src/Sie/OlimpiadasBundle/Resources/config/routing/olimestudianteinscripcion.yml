@@ -162,3 +162,9 @@ oliminscriptions_lookForOlimStudent:
 oliminscriptions_listInscription:
     path:     /listInscription
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscription" }
+
+oliminscriptions_saveExternalInscription:
+    path:     /saveExternalInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:saveExternalInscription" }
+    options:
+        expose: true  
