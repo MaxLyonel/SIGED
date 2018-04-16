@@ -1,0 +1,11 @@
+olimarchivo_index:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimArchivo:index" }
+    options:
+        expose: true
+
+olimarchivo_upload:
+    path:     /upload
+    defaults: { _controller: "SieOlimpiadasBundle:OlimArchivo:upload" }
+    options:
+        expose: true

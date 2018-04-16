@@ -1,0 +1,85 @@
+<div class="modal-dialog">
+	<div class="modal-content">
+
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h4 class="modal-title"> <i class="fa fa-upload"></i> Subir archivo</h4>
+		</div>
+		<form onsubmit="guardarArchivo(); return false;" id="formArchivo">
+			<input type="hidden" name="id" value="{{id}}">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center text-primary">
+						<i class="fa fa-file-pdf-o fa-5x"></i><br>
+						<a class="text-primary" href="{{path('asset/uploads/olimpiadas/documentos/'  )}}">Ver archivo</a>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						<div class="form-group">
+							<label>Adjuntar documento del proyecto: </label>
+							<input type="file" id="archivo" name="archivo" class="form-control">	
+						</div>
+					</div>
+				</div>
+				{# <a href="{{ path }}" class="embed">Download file</a> #}
+				
+				<div id="mensajeArchivo">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				<button type="submit" class="btn btn-primary">Subir archivo</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$('a.embed').gdocsViewer();
+	})
+	function guardarArchivo(){
+
+		var formData = new FormData(document.getElementById("formArchivo"));
+		$.ajax({
+		    type: 'post',
+		    data: formData,
+		    dataType: 'html',
+		    cache: false,
+		    contentType: false,
+		    processData: false,
+		    url: Routing.generate('olimarchivo_upload'),
+		    beforeSend: function () {
+		    	$('#mensajeArchivo').removeClass('alert');
+		    	$('#mensajeArchivo').removeClass('alert-success');
+		    	$('#mensajeArchivo').removeClass('alert-info');
+		    	$('#mensajeArchivo').removeClass('alert-danger');
+		    	$('#mensajeArchivo').empty();
+		        $("#mensajeArchivo").append('<div class="text-center"><img src="{{asset('img/loading-sm.gif')}}" class="" /> Buscando...</div>');
+		    },
+		    success: function(data){
+		    	data = JSON.parse(data);
+		    	$('#mensajeArchivo').empty();
+
+		    	if(data.status == 201){
+		    		$('#mensajeArchivo').addClass('alert alert-success');
+		    		$('#mensajeArchivo').append('<p> <i class="fa fa-check"></i> '+data.msg+'</p>');
+		    	}
+		    	if(data.status == 404){
+		    		$('#mensajeArchivo').addClass('alert alert-info');
+		    		$('#mensajeArchivo').append('<p> <i class="fa fa-info-circle"></i>'+data.msg+'</p>');
+		    	}
+		    	
+		    	if(data.categoriaId != null){
+		    		selectTemplateInscription(data.categoriaId);
+		    	}
+		    },
+		    error: function(data){
+		    	$('#mensajeArchivo').empty();
+		    	$('#mensajeArchivo').addClass('alert alert-danger');
+		    	$('#mensajeArchivo').append('<p> <i class="fa fa-ban"></i> Error al subir el archivo</p>');
+		    }
+		});
+	}
+
+
+</script>
