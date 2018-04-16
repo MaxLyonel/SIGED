@@ -5439,7 +5439,7 @@ public function registrar_cursoAction(Request $request){
         $userId = $this->session->get('userId');
         $fecha_inicio= $form['fecha_inicio'];
         $fecha_fin= $form['fecha_fin'];
-        $gestion= substr($fecha_fin,-4);
+        $gestion= substr($fecha_inicio,-4);
         //buscar departamento codigo del curso
         switch ($form['departamento'])  {
             case 2: $ie=80480300; break;
@@ -5497,6 +5497,7 @@ public function registrar_cursoAction(Request $request){
                 $materias = array('2000','2002','2006','2007');
          
         }
+        
         $em->getConnection()->beginTransaction();
         try {
             //Maestro Inscripcion
