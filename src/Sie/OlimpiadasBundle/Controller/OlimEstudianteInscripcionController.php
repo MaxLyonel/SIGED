@@ -1352,12 +1352,69 @@ class OlimEstudianteInscripcionController extends Controller{
     
     private function doExternalInscriptionForm($jsonDataInscription){
         return $this->createFormBuilder()
-                ->add('jsonDataInscription','hidden', array('data'=>$jsonDataInscription) )
-                ->add('doInscription', 'button', array('label'=>'Inscribir','attr'=>array('class'=>'btn btn-warning btn-xs')))
+                ->add('fono', 'text')
+                ->add('email', 'text')
+                ->add('discapacidad', 'entity', array('class'=>'SieAppWebBundle:OlimDiscapacidadTipo', 'property'=>'discapacidad', 'empty_value'=>'Seleccionar...'))
+                ->add('jsonDataInscription','text', array('data'=>$jsonDataInscription) )
+                ->add('doInscription', 'button', array('label'=>'Inscribir','attr'=>array('class'=>'btn btn-warning btn-xs', 'onclick'=>'saveExternalInscription();')))
                 ->getForm()
                 ;
 
     }
+
+
+    public function saveExternalInscriptionAction (Request $request){
+        // create DB conexion
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        // get the send valuess
+        $form = $request->get('form');
+        
+        $jsonDataInscription = $form['jsonDataInscription'];
+        $arrDataInscription = json_decode($jsonDataInscription, true);
+        // dump($form);
+        // dump($arrDataInscription);
+        // die;
+        try {
+
+            $objOLimStudentInscription = new OlimEstudianteInscripcion();
+            $objOLimStudentInscription->setTelefonoEstudiante($form['fono']);
+            $objOLimStudentInscription->setCorreoEstudiante($form['email']);
+            $objOLimStudentInscription->setFechaRegistro(new \DateTime('now'));
+            $objOLimStudentInscription->setUsuarioRegistroId($this->session->get('userId'));
+            $objOLimStudentInscription->setOlimReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($arrDataInscription['categoryId']) );
+            // $objOLimStudentInscription->setCategoriaTipo($em->getRepository('SieAppWebBundle:OlimCategoriaTipo')->find($val['fono']));
+            $objOLimStudentInscription->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($arrDataInscription['materiaId']));
+            $objOLimStudentInscription->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->find($form['discapacidad']));
+            $objOLimStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInscription['estinsid']));
+            $objOLimStudentInscription->setOlimTutor($em->getRepository('SieAppWebBundle:OlimTutor')->find($arrDataInscription['olimtutorid']));
+            $objOLimStudentInscription->setGestionTipoId($arrDataInscription['gestiontipoid']);
+            
+            $em->persist($objOLimStudentInscription);
+            $em->flush();
+
+            //save in group info
+            $objGroup = new OlimInscripcionGrupoProyecto();
+            $objGroup->setFechaRegistro(new \DateTime('now'));
+            $objGroup->setOlimGrupoProyecto($em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($arrDataInscription['groupId']));
+            $objGroup->setOlimEstudianteInscripcion($em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->find($objOLimStudentInscription->getId()));
+
+            $em->persist($objGroup);
+            $em->flush();
+
+            $em->getConnection()->commit();
+            
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";     
+        }
+
+         return $this->redirectToRoute('oliminscriptions_viewListInscritosGroup', array('jsonDataInscription'=>$jsonDataInscription));
+      
+    }
+
+
+
 
 
 

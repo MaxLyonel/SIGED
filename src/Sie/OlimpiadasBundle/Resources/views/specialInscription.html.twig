@@ -678,35 +678,6 @@ var studentsRegister = function(){
     };
 
 
-  var saveExternalInscription = function(){
-      let formData =  $('#inscriptionExternaIdForm').serialize();
-           $.ajax({
-                    type: 'post',
-                    data: formData,
-                    url: "{{ path('oliminscriptions_saveExternalInscription') }}",
-                    beforeSend: function () {
-                        
-                        $('#optionIdGroup').empty();
-                        $("#optionIdGroup").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
-                    },
-                    success: function (data) {
-                        $('#modal').modal('hide');
-                        $('#optionIdGroup').empty();
-                        $('#optionIdGroup').append(data);
-
-                    },
-                    statusCode: {
-                        500: function () {
-
-                        },
-                        404: function () {
-
-                        }
-                    }
-            });
-    };
-
-
 
     </script>
 

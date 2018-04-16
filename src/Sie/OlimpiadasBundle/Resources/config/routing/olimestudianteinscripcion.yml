@@ -163,6 +163,13 @@ oliminscriptions_listInscription:
     path:     /listInscription
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscription" }
 
+
+oliminscriptions_saveExternalInscription:
+    path:     /saveExternalInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:saveExternalInscription" }
+    options:
+        expose: true  
+
 oliminscriptions_listTemplateInscription:
     path:     /listTemplateInscription
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listTemplateInscription" }
@@ -178,3 +185,4 @@ oliminscriptions_getListStudents:
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getListStudents" }
     options:
         expose: true
+
