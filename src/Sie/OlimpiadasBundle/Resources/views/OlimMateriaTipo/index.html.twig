@@ -58,7 +58,7 @@
                             {% for entity in entities %}
                                 <tr>
                                     {# <td><a href="{{ path('olimmateriatipo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
-                                    <td>{{ entity.materia }}</td>
+                                    <td><strong style="font-size: 1.1em;">{{ entity.materia }}</strong></td>
                                     {# <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td> #}
                                     <td>{% if entity.fechaInsIni %}{{ entity.fechaInsIni|date('d-m-Y') }}{% endif %}</td>
                                     <td>{% if entity.fechaInsFin %}{{ entity.fechaInsFin|date('d-m-Y') }}{% endif %}</td>
@@ -92,19 +92,17 @@
                                     {# <td></td> #}
                                     <td>
                                         <a href="{{ path('olimmateriatipo_edit', { 'id': entity.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
-                                            <i class="fa fa-edit"></i> 
+                                            <i class="fa fa-pencil"></i> 
                                         </a>
-
+                                        <form action="{{ path('olimmateriatipo_delete') }}" method="post" style="display:inline-block; margin-left:-5px;" onsubmit="return confirm('¿Realmente desea eliminar el registro?'); ">
+                                            <input type="hidden" name="id" value="{{ entity.id }}">
+                                            <button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                                                <i class="fa fa-times"></i>    
+                                            </button>
+                                        </form>
                                         <a href="{{ path('olimreglasolimpiadastipo', { 'idMateria': entity.id }) }}" class="btn btn-success btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Categorias y reglas">
                                             <i class="fa fa-list"></i> 
                                         </a>
-
-                                        <form action="{{ path('olimmateriatipo_delete') }}" method="post" style="display:inline-block" onsubmit="return confirm('¿Realmente desea eliminar el registro?'); ">
-                                            <input type="hidden" name="id" value="{{ entity.id }}">
-                                            <button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                                <i class="fa fa-trash"></i>    
-                                            </button>
-                                        </form>
                                     </td>
                                 </tr>
                             {% endfor %}

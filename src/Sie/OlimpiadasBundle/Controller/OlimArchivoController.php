@@ -19,10 +19,14 @@ class OlimArchivoController extends Controller {
 
 		$loader = $this->get('kernel')->getRootDir() . '/web/manual_olimpiadas.pdf';
 
+		$em = $this->getDoctrine()->getManager();
+		$grupo = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($id);
+
 		return $this->render('SieOlimpiadasBundle:OlimArchivo:index.html.twig', array(
 			'id'=>$id,
 			// 'path'=> $this->get('kernel')->getRootDir() . '/../web/manual_olimpiadas.pdf'
-			'path'=> $loader
+			'path'=> $loader,
+			'grupo'=> $grupo
 		));
 	}
 
@@ -50,7 +54,8 @@ class OlimArchivoController extends Controller {
 		    return $response->setData(array(
 		    	'status'=>201,
 		    	'msg'=>'Archivo subido correctamente',
-		    	'categoriaId'=>$grupo->getOlimReglasOlimpiadasTipo()->getId()
+		    	'categoriaId'=>$grupo->getOlimReglasOlimpiadasTipo()->getId(),
+		    	'archivo'=>$nombre_archivo
 		    ));
 
 		}

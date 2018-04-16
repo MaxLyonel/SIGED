@@ -9,16 +9,27 @@
 			<input type="hidden" name="id" value="{{id}}">
 			<div class="modal-body">
 				<div class="row">
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center text-primary">
-						<i class="fa fa-file-pdf-o fa-5x"></i><br>
-						<a class="text-primary" href="{{path('asset/uploads/olimpiadas/documentos/'  )}}">Ver archivo</a>
-					</div>
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-						<div class="form-group">
-							<label>Adjuntar documento del proyecto: </label>
-							<input type="file" id="archivo" name="archivo" class="form-control">	
-						</div>
-					</div>
+					{% if grupo.documentoPdf1 is null or grupo.documentoPdf1 == "" %}
+					    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					    	<div class="form-group">
+					    		<label>Adjuntar documento del proyecto: </label>
+					    		<input type="file" id="archivo" name="archivo" class="form-control">	
+					    	</div>
+					    </div>
+					{% else %}
+					    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center text-primary">
+					    	<a id="archivo" class="text-primary" target="_blank" href="{{asset('uploads/olimpiadas/documentos/' ~ grupo.documentoPdf1 )}}">
+					    		<i class="fa fa-file-pdf-o fa-5x"></i><br>
+					    		Ver archivo
+					    	</a>
+					    </div>
+					    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					    	<div class="form-group">
+					    		<label>Actualizar documento: </label>
+					    		<input type="file" id="archivo" name="archivo" class="form-control">	
+					    	</div>
+					    </div>
+					{% endif %}
 				</div>
 				{# <a href="{{ path }}" class="embed">Download file</a> #}
 				
@@ -27,7 +38,13 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<button type="submit" class="btn btn-primary">Subir archivo</button>
+				<button type="submit" class="btn btn-primary">
+					{% if grupo.documentoPdf1 is null or grupo.documentoPdf1 == "" %}
+					    Subir archivo
+					{% else %}
+					    Guardar cambios
+					{% endif %}					
+				</button>
 			</div>
 		</form>
 	</div>
@@ -54,7 +71,7 @@
 		    	$('#mensajeArchivo').removeClass('alert-info');
 		    	$('#mensajeArchivo').removeClass('alert-danger');
 		    	$('#mensajeArchivo').empty();
-		        $("#mensajeArchivo").append('<div class="text-center"><img src="{{asset('img/loading-sm.gif')}}" class="" /> Buscando...</div>');
+		        $("#mensajeArchivo").append('<div class="text-center"><img src="{{asset('img/loading-sm.gif')}}" class="" /> Subiendo archivo...</div>');
 		    },
 		    success: function(data){
 		    	data = JSON.parse(data);
@@ -63,6 +80,10 @@
 		    	if(data.status == 201){
 		    		$('#mensajeArchivo').addClass('alert alert-success');
 		    		$('#mensajeArchivo').append('<p> <i class="fa fa-check"></i> '+data.msg+'</p>');
+
+		    		var ruta = "{{ asset('uploads/olimpiadas/documentos/') }}";
+
+		    		$('#archivo').attr('href', ruta + data.archivo);
 		    	}
 		    	if(data.status == 404){
 		    		$('#mensajeArchivo').addClass('alert alert-info');
@@ -72,11 +93,19 @@
 		    	if(data.categoriaId != null){
 		    		selectTemplateInscription(data.categoriaId);
 		    	}
+
+		    	setTimeout(function(){
+		    		$('#mensajeArchivo').removeClass('alert');
+			    	$('#mensajeArchivo').removeClass('alert-success');
+			    	$('#mensajeArchivo').removeClass('alert-info');
+			    	$('#mensajeArchivo').removeClass('alert-danger');
+			    	$('#mensajeArchivo').empty();
+		    	}, 2000);
 		    },
 		    error: function(data){
 		    	$('#mensajeArchivo').empty();
 		    	$('#mensajeArchivo').addClass('alert alert-danger');
-		    	$('#mensajeArchivo').append('<p> <i class="fa fa-ban"></i> Error al subir el archivo</p>');
+		    	$('#mensajeArchivo').append('<p> <i class="fa fa-ban"></i> Debe seleccionar un archivo válido</p>');
 		    }
 		});
 	}

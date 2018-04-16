@@ -161,13 +161,13 @@
                                     </td>
                                     <td>
                                         <a href="{{ path('olimreglasolimpiadastipo_edit', { 'id': entity.entidad.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
-                                            <i class="fa fa-edit"></i> 
+                                            <i class="fa fa-pencil"></i> 
                                         </a>
 
-                                        <form action="{{ path('olimreglasolimpiadastipo_delete') }}" method="post" style="display:inline-block" onsubmit="return confirm('¿Realmente desea eliminar el registro?'); ">
+                                        <form action="{{ path('olimreglasolimpiadastipo_delete') }}" method="post" style="display:inline-block; margin-left: -5px" onsubmit="return confirm('¿Realmente desea eliminar el registro?'); ">
                                             <input type="hidden" name="id" value="{{ entity.entidad.id }}">
                                             <button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                                <i class="fa fa-trash"></i>    
+                                                <i class="fa fa-times"></i>    
                                             </button>
                                         </form>
                                     </td>

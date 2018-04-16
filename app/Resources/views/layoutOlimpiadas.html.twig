@@ -44,7 +44,7 @@
             <link href="{{asset('webolimpiadas/assets/global/plugins/bower_components/datatables/css/datatables.responsive.css')}}" rel="stylesheet">
             <link href="{{asset('webolimpiadas/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
 
-            <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet">
+            {# <link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet"> #}
             <link rel="stylesheet" type="text/css" href="{{asset('webolimpiadas/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css')}}">
             <!--/ END PAGE LEVEL STYLES -->
 
@@ -272,34 +272,30 @@
                         </a>
                     </li>
 
-                   <li class="submenu">
-                        <a href="javascript:void(0);">
-                            <span class="icon"><i class="fa fa-globe"></i></span>
-                            <span class="text">Gestionar</span>
-                            <span class="arrow"></span>
-                        </a>
-                        <ul>
-                            <li><a href="{{ path('olimregistroolimpiada')}}">Olimpiada</a></li>
-                        </ul>
-                    </li>
-                    
-                   <li class="submenu">
-                        <a href="javascript:void(0);">
-                            <span class="icon"><i class="fa fa-globe"></i></span>
-                            <span class="text">Inscripciones</span>
-                            <span class="arrow"></span>
-                        </a>
-                        <ul>
-                            
-                            <li><a href="{{ path('olimtutor')}}">Inscripci&oacute;n Olimpiadas</a></li>
-                        </ul>
-                    </li>
-
-
-
-
-                  
-
+                    {% if app.session.get('roluser') in [35] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-globe"></i></span>
+                                <span class="text">Gestionar</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('olimregistroolimpiada')}}">Olimpiada</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if app.session.get('roluser') in [35,8,7,10,9,2] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-globe"></i></span>
+                                <span class="text">Inscripciones</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('olimtutor')}}">Inscripci&oacute;n Olimpiadas</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
 
                     <!-- Start navigation - dashboard -->
 
@@ -1074,7 +1070,8 @@
             <script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/jquery-easing-original/jquery.easing.1.3.min.js')}}"></script>
             <script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script>
             <script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/bootbox/bootbox.js')}}"></script>
-            <script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/retina.js/dist/retina.min.js')}}"></script>
+            {#<script src="{{asset('webolimpiadas/assets/global/plugins/bower_components/retina.js/dist/retina.min.js')}}"></script>#}
+
             <!--/ END CORE PLUGINS -->
 
             <script src="{{asset('webolimpiadas/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js')}}"></script>
