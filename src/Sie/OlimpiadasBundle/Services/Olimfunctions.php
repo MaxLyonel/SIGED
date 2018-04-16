@@ -482,6 +482,23 @@ class Olimfunctions {
      return $objInscriptionStudent;
     // return 'krlos';
   }
+
+   public function validateStudent($data){
+// dump($arrDataInscription);die;
+    $query = $this->em->getConnection()->prepare(
+      
+      "
+         select * from estudiante e
+          where (pais_tipo_id = 1 or es_doble_nacionalidad = 't') and carnet_identidad is not null and e.codigo_rude = '".$data['codigoRude']."'
+      "
+    );
+    
+    $query->execute();
+    $objStudent = $query->fetch();
+   
+     return $objStudent;
+    // return 'krlos';
+  }
  
 
 }
