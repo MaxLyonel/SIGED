@@ -706,6 +706,25 @@ var studentsRegister = function(){
             });
     };
 
+    function olimArchivo(id){
+        $.ajax({
+            type: 'post',
+            url: "{{ path('olimarchivo_index') }}",
+            data: {id: id},
+            beforeSend: function () {
+                $('#modal').empty();
+                $("#modal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+            },
+            success: function (data) {
+              $('#modal').empty();
+                $('#modal').append(data);
+                $('#modal').modal('show');
+            },
+            error: function(){
+               
+            }
+        });
+    };
 
 
     </script>
