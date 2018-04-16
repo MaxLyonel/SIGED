@@ -55,7 +55,13 @@ class InscriptionExtranjerosController extends Controller {
 
     private function chooseIncriptionForm(){
 
-      $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria'/*, '100'=>'Incial/Primaria333'*/ );
+    if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8){
+        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', '100'=>'Incial/Primaria R.M. No 2378/2017' );
+    }else{
+        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria' );
+    }
+
+      
       $form = $this->createFormBuilder()
               ->setAction($this->generateUrl('inscription_extranjeros_main'))
               ->add('optionInscription', 'choice', array('mapped' => false, 'label' => 'Inscripción', 'choices' => $arrOptionInscription, 'attr' => array('class' => 'form-control')))
@@ -72,7 +78,7 @@ class InscriptionExtranjerosController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         //define the options
-        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', '100'=>'Incial/Primaria333');
+        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria', '100'=>'Incial/Primaria R.M. No 2378/2017');
         //get the data send
         $formData = $request->get('form');//dump($formData);die;
         $this->labelOption = array('label'=> $arrOptionInscription[$formData['optionInscription']], 'id'=>$formData['optionInscription']);
@@ -479,7 +485,7 @@ class InscriptionExtranjerosController extends Controller {
             $gestion = $request->get('gestion');
         }
         //define the options
-        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria','100'=>'Incial/Primaria333');
+        $arrOptionInscription = array('19' => 'Extranjero', '59'=>'Incial/Primaria','100'=>'Incial/Primaria RM No 2378/2017');
 //dump($form);
         $formData = json_decode($form['dataOption'],true);
         //$labelInscription = $
@@ -695,90 +701,105 @@ class InscriptionExtranjerosController extends Controller {
                 return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
               }
             }
+
+            switch ($aDataOption['optionInscription']) {
+                case 19:
+                case 100:
+                        $oFile = $request->files->get('siefile');
+                        //get the name of file upload
+                        $originalName = $oFile->getClientOriginalName();
+                        //get the extension
+                        $aName = explode('.', $originalName);
+                        $fileType = $aName[sizeof($aName) - 1];
+                        //validate the allows extensions
+                        $aValidTypes = array('png, jpg');
+
+                        if (in_array(strtolower($fileType), $aValidTypes)) {
+                            $this->session->getFlashBag()->add('notiext', 'El archivo que intenta subir No tiene la extension correcta');
+                            return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+                        }
+                        //validate the files weight
+                        if (!( 10001 < $oFile->getSize()) && !($oFile->getSize() < 2000000000)) {
+                            $this->session->getFlashBag()->add('notiext', 'El archivo que intenta subir no tiene el tamaño correcto');
+                            return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+                        }
+
+                    break;
+                case 59:  
+                        //validate the year of student
+                        $idStudent = $form ['idStudent'];
+                        $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($idStudent);
+                        $tiempo = $this->tiempo_transcurrido($objStudent->getFechaNacimiento()->format('d-m-Y'), '30-6-2018');
+
+                        switch ($tiempo[0]) {
+                          case 3:
+                            # code...
+                            if($form['nivel']=='11' && $form['grado']=='0'){
+                              //good
+                            }else{
+                              $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
+                              return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+
+                            }
+                            break;
+                          case 4:
+
+                            # code...
+                            if($form['nivel']=='11' && $form['grado']=='1'){
+                              //good
+                            }else{
+                              $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
+                              return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+
+                            }
+                            break;
+                          case 5:
+                            # code...
+                            if($form['nivel']=='11' && $form['grado']=='2'){
+                              //good
+                            }else{
+                              $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
+                              return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+                            }
+                            break;
+                          case 6:
+                            # code...
+                            if($form['nivel']=='12' && $form['grado']=='1'){
+                              //good
+                            }else{
+                              $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
+                              return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+                            }
+                            break;
+                          case 7 or 15:
+                            if($form['nivel']=='12' && $form['grado']=='1'){
+                              //good
+                            }else{
+                              $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
+                              return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+                            }
+                            break;
+
+                          default:
+                            # code...
+                            $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
+                            return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+                            break;
+                        }
+
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+
           //check if the inscription is extranjero
-          if($aDataOption['optionInscription']==19){    
-            $oFile = $request->files->get('siefile');
-            //get the name of file upload
-            $originalName = $oFile->getClientOriginalName();
-            //get the extension
-            $aName = explode('.', $originalName);
-            $fileType = $aName[sizeof($aName) - 1];
-            //validate the allows extensions
-            $aValidTypes = array('png, jpg');
+          // if($aDataOption['optionInscription']==19){    
+           
+          // }else{
 
-            if (in_array(strtolower($fileType), $aValidTypes)) {
-                $this->session->getFlashBag()->add('notiext', 'El archivo que intenta subir No tiene la extension correcta');
-                return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
-            }
-            //validate the files weight
-            if (!( 10001 < $oFile->getSize()) && !($oFile->getSize() < 2000000000)) {
-                $this->session->getFlashBag()->add('notiext', 'El archivo que intenta subir no tiene el tamaño correcto');
-                return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
-            }
-
-          }else{
-            //validate the year of student
-            $idStudent = $form ['idStudent'];
-            $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($idStudent);
-            $tiempo = $this->tiempo_transcurrido($objStudent->getFechaNacimiento()->format('d-m-Y'), '30-6-2018');
-
-            switch ($tiempo[0]) {
-              case 3:
-                # code...
-                if($form['nivel']=='11' && $form['grado']=='0'){
-                  //good
-                }else{
-                  $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
-                  return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
-
-                }
-                break;
-              case 4:
-
-                # code...
-                if($form['nivel']=='11' && $form['grado']=='1'){
-                  //good
-                }else{
-                  $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
-                  return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
-
-                }
-                break;
-              case 5:
-                # code...
-                if($form['nivel']=='11' && $form['grado']=='2'){
-                  //good
-                }else{
-                  $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
-                  return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
-                }
-                break;
-              case 6:
-                # code...
-                if($form['nivel']=='12' && $form['grado']=='1'){
-                  //good
-                }else{
-                  $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
-                  return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
-                }
-                break;
-              case 7 or 15:
-                if($form['nivel']=='12' && $form['grado']=='1'){
-                  //good
-                }else{
-                  $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
-                  return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
-                }
-                break;
-
-              default:
-                # code...
-                $this->session->getFlashBag()->add('notiext', 'El estudiante no cumple con lo requerido en edad');
-                return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
-                break;
-            }
-
-          }
+          // }
 
             //insert a new record with the new selected variables and put matriculaFinID like 5
             $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
@@ -801,38 +822,69 @@ class InscriptionExtranjerosController extends Controller {
             $studentInscription->setFechaInscripcion(new \DateTime('now'));
             $studentInscription->setFechaRegistro(new \DateTime('now'));
             $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
-            $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($aDataOption['optionInscription']));
+            if($aDataOption['optionInscription']==19){
+                $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($aDataOption['optionInscription']));
+            }else{
+                $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(59));
+            }
             $em->persist($studentInscription);
             $em->flush();
             //add the areas to the student
             $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(),$form['gestion']);
-
-            if($aDataOption['optionInscription']==19){
-              $dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/insExtranjeros/';
-              if (!file_exists($dirtmp)) {
-                  mkdir($dirtmp, 0777);
-              }
-              //move the file emp to the directory temp
-              // $file = $oFile->move($dirtmp, $originalName);
-              $file = $oFile->move($dirtmp, $form['idStudent'].'_'.$form['gestion']);
-              //save info extranjero inscription
-              $objEstudianteInscripcionExtranjero = new EstudianteInscripcionExtranjero();
-              $objEstudianteInscripcionExtranjero->setInstitucioneducativaOrigen($form['institucionEducativaDe']);
-              $objEstudianteInscripcionExtranjero->setCursoVencido($form['cursoVencido']);
-              $objEstudianteInscripcionExtranjero->setRutaImagen($dirtmp.$form['idStudent'].'_'.$form['gestion']);
-              $objEstudianteInscripcionExtranjero->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscription->getId()));
-              $objEstudianteInscripcionExtranjero->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($form['pais']));
-              $em->persist($objEstudianteInscripcionExtranjero);
-              $em->flush();
+            // save the file and register into DB
+            switch ($aDataOption['optionInscription']) {
+                case 19:                           
+                      $dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/insExtranjeros/';
+                      if (!file_exists($dirtmp)) {
+                          mkdir($dirtmp, 0777);
+                      }
+                      //move the file emp to the directory temp
+                      // $file = $oFile->move($dirtmp, $originalName);
+                      $file = $oFile->move($dirtmp, $studentInscription->getId().'_'.$form['gestion']);
+                      //save info extranjero inscription
+                      $objEstudianteInscripcionExtranjero = new EstudianteInscripcionExtranjero();
+                      $objEstudianteInscripcionExtranjero->setInstitucioneducativaOrigen($form['institucionEducativaDe']);
+                      $objEstudianteInscripcionExtranjero->setCursoVencido($form['cursoVencido']);
+                      $objEstudianteInscripcionExtranjero->setRutaImagen($dirtmp.$studentInscription->getId().'_'.$form['gestion']);
+                      $objEstudianteInscripcionExtranjero->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscription->getId()));
+                      $objEstudianteInscripcionExtranjero->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($form['pais']));
+                      $em->persist($objEstudianteInscripcionExtranjero);
+                      $em->flush();
+                    break;
+                case 100:                           
+                      $dirtmp = $this->get('kernel')->getRootDir() . '/../web/empfiles/insExtranjeros/';
+                      if (!file_exists($dirtmp)) {
+                          mkdir($dirtmp, 0777);
+                      }
+                      //move the file emp to the directory temp
+                      // $file = $oFile->move($dirtmp, $originalName);
+                      $file = $oFile->move($dirtmp, $studentInscription->getId().'_'.$form['gestion']);
+                      //save info extranjero inscription
+                      $objEstudianteInscripcionExtranjero = new EstudianteInscripcionExtranjero();
+                      $objEstudianteInscripcionExtranjero->setInstitucioneducativaOrigen('rm2378/2017');
+                      $objEstudianteInscripcionExtranjero->setCursoVencido('rm2378/2017');
+                      $objEstudianteInscripcionExtranjero->setRutaImagen($dirtmp.$studentInscription->getId().'_'.$form['gestion']);
+                      $objEstudianteInscripcionExtranjero->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscription->getId()));
+                      $objEstudianteInscripcionExtranjero->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find(1));
+                      $em->persist($objEstudianteInscripcionExtranjero);
+                      $em->flush();
+                    break;
+                
+                
+                default:
+                    # code...
+                    break;
             }
+            // if($aDataOption['optionInscription']==19){
+            // }
 
             // obtenemos las notas
             // $arrayNotas = $em->getRepository('SieAppWebBundle:EstudianteNota')->getArrayNotas($studentInscription->getId());
             //dump($arrayNotas);die;
 
             // Registro de materia curso oferta en el log
-            /*$this->get('funciones')->setLogTransaccion(
-                $newArea->getId(),
+            $this->get('funciones')->setLogTransaccion(
+                $studentInscription->getId(),
                 'estudiante_inscripcion',
                 'C',
                 '',
@@ -840,7 +892,7 @@ class InscriptionExtranjerosController extends Controller {
                 '',
                 'SIGED',
                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-            );*/
+            );
             // Try and commit the transaction
             $em->getConnection()->commit();
 
