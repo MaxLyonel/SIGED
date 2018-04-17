@@ -1206,7 +1206,7 @@ class OlimEstudianteInscripcionController extends Controller{
         }
         // die;
         //get the discapacidad
-        $objDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
+         $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
         
         // get the data to do the inscription 
         $jsonDataInscription = json_encode( array(

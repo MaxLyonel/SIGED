@@ -371,6 +371,18 @@
 
 var studentsRegister = function(){
 
+    //validate form and values 
+    var elem = document.getElementById('studentsRegisterId').elements;
+    var sw = true;
+    for (var i = 0; i < elem.length; i++) {
+        if (elem[i].type == 'checkbox')
+            if ((elem[i].checked))
+                sw = false;
+    }
+    if (sw) {
+        alert('Tiene que Seleccionar por lo menos una Inscripción...');
+        return flase;
+    }
       formData = $('#studentsRegisterId').serialize();
 
         $.ajax({

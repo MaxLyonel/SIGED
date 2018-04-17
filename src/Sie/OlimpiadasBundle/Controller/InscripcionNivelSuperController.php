@@ -247,7 +247,7 @@ class InscripcionNivelSuperController extends Controller{
         );
         $jsonInfoToDoInscription  = json_encode($arrInfoToDoInscription);
         //get the discapacidad
-        $objDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
+        $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
         return $this->render('SieOlimpiadasBundle:InscripcionNivelSuper:selectInscriptionIndividual.html.twig', array(
             'entities' => $entities,
             'tutor' => $objTutorSelected,
