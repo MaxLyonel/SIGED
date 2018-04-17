@@ -14,7 +14,8 @@
                         <th>Teléfono</th>
                         <th>Correo</th>
                         <th>Discapacidad</th>
-                        <th>Acciones</th>
+                        <th>Cambiar Discapacidad</th>
+                        <th>Cambiar Tutor</th>
                     </tr>
                 </thead>
                 {% for inscrito in inscritos %}
@@ -30,7 +31,8 @@
                         <td>{{inscrito.correoEstudiante}}</td>
                         <td>{{inscrito.discapacidad}}</td>
                         <td>
-                            <form id="studentDeleteId_{{inscrito.olimestudianteid}}" method="post" style="display: inline-block">
+                            {{dump(discapacidadArray)}}
+                            {#<form id="studentDeleteId_{{inscrito.olimestudianteid}}" method="post" style="display: inline-block">
                                 <input type="hidden" name="form[categoryId]" id="form_categoryId" value="{{categoryId}}">
                                 <input type="hidden" name="form[materiaId]" id="form_materiaId" value="{{materiaId}}">
                                 <input type="hidden" name="form[nivelId]" id="form_nivelId" value="{{nivelId}}">
@@ -38,8 +40,9 @@
                                 <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{olimtutorid}}">
                                 <input type="hidden" name="form[olimestudianteid]" id="form_olimestudianteid" value="{{inscrito.olimestudianteid}}">
                                 <button type="button" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-trash"></i> Eliminar</button>
-                            </form>
+                            </form>#}
                         </td>
+                        <td>Tutores</td>
                     </tr>
                 {% endfor %}
             </table>

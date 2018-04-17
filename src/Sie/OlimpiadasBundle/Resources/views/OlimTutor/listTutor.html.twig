@@ -165,29 +165,29 @@
 
                                                     <tr>
                                                         <td class="text-center">
-                                                            <form action="{{path('olimtutor_updateDataTutor')}}" >
+                                                            <form action="{{path('olimtutor_updateDataTutor')}}">
                                                                 <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
                                                                 <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
                                                                 <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
                                                                 <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
                                                                 <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
                                                                 <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
-                                                                <button href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar"><i class="fa fa-pencil"></i></button>
+                                                                <button href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar Tutor"><i class="fa fa-pencil"></i></button>
                                                             </form>
                                                         </td>
                                                         <td class="text-center">
-                                                            <form action="{{path('olimtutor_listTutorBySie')}}" method="post" style="display: inline-block">
+                                                            <form action="{{path('olimtutor_listTutorBySie')}}" method="post">
                                                                     <input type="hidden" id="form_deletetutor" name="form[deletetutor]" value="{{entity.olimtutorid}}">
                                                                     <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
                                                                     <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
                                                                     <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
                                                                     <input type="hidden" name="form[sie]" id="form_sie" value="{{entity.institucioneducativa_id}}">                                   
                                                                     <input type="hidden" name="form[gestion]" id="form_gestion" value="{{entity.gestion_tipo_id}}">
-                                                                <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar"><i class="fa fa-times"></i></button>
+                                                                <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('¡Se eliminará el registro! ¿Desea continuar?');" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar Tutor"><i class="fa fa-times"></i></button>
                                                             </form>                                                           
                                                         </td>
                                                         <td class="text-center">
-                                                            <form action="{{path('oliminscriptions_selectInscription')}}" method="POST" >
+                                                            <form action="{{path('oliminscriptions_selectInscription')}}" method="POST">
                                                                 <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
                                                                 <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
                                                                 <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
@@ -197,17 +197,27 @@
                                                             </form>
                                                         </td>
                                                         <td class="text-center">
-                                                            <form action="{{path('oliminscriptions_listInscription')}}" method="POST" >
+                                                            <form action="{{path('oliminscriptions_listInscription')}}" method="POST">
                                                                 <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
                                                                 <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
                                                                 <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
                                                                 <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
                                                                 <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
-                                                                <button href="#" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Inscripciones"><i class="fa fa-eye"></i></button>
+                                                                <button href="#" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Lista de Inscritos"><i class="fa fa-eye"></i></button>
                                                             </form>
                                                         </td>
                                                         <td class="text-center">
-                                                            <form action="{{path('oliminscriptionsnivelsuperior_index')}}" method="POST" >
+                                                            <form action="{{path('oliminscriptions_changeTutor')}}" method="POST">
+                                                                <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
+                                                                <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
+                                                                <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
+                                                                <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
+                                                                <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
+                                                                <button href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Cambio de Tutor"><i class="fa fa-exchange"></i></button>
+                                                            </form>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <form action="{{path('oliminscriptionsnivelsuperior_index')}}" method="POST">
                                                                 <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
                                                                 <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
                                                                 <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
