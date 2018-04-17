@@ -10,25 +10,25 @@
                         <th>Paterno</th>
                         <th>Materno</th>
                         <th>Nombre(s)</th>
-                        <th>Paralelo</th>
                         <th>Teléfono</th>
                         <th>Correo</th>
                         <th>Discapacidad</th>
+                        <th>Observación</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 {% for inscrito in inscritos %}
                     <tr>
                         <td>{{loop.index}}</td>
-                        <td>{{inscrito.codigoRude}}</td>
-                        <td>{{inscrito.carnetIdentidad}}</td>
+                        <td>{{inscrito.codigo_rude}}</td>
+                        <td>{{inscrito.carnet_identidad}}</td>
                         <td>{{inscrito.paterno}}</td>
                         <td>{{inscrito.materno}}</td>
                         <td>{{inscrito.nombre}}</td>
-                        <td>{{inscrito.paralelo}}</td>
-                        <td>{{inscrito.telefonoEstudiante}}</td>
-                        <td>{{inscrito.correoEstudiante}}</td>
+                        <td>{{inscrito.telefono_estudiante}}</td>
+                        <td>{{inscrito.correo_estudiante}}</td>
                         <td>{{inscrito.discapacidad}}</td>
+                        <td>{{inscrito.obs}}</td>
                         <td>
                             <form id="studentDeleteId_{{inscrito.olimestudianteid}}" method="post" style="display: inline-block">
                                 <input type="hidden" name="form[categoryId]" id="form_categoryId" value="{{categoryId}}">

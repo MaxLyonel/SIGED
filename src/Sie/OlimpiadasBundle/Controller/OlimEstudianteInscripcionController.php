@@ -638,7 +638,7 @@ class OlimEstudianteInscripcionController extends Controller{
 
         //create db conexion
         $em = $this->getDoctrine()->getManager();        
-        $entity = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion');
+        /*$entity = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion');
         $query = $entity->createQueryBuilder('oei')
             ->select('oei.id olimestudianteid, oei.telefonoEstudiante, oei.correoEstudiante, e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, odt.discapacidad, pt.paralelo')
             ->innerjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = oei.estudianteInscripcion')
@@ -656,8 +656,37 @@ class OlimEstudianteInscripcionController extends Controller{
             ->setParameter('gradoTipo', $gradoId)
             ->addOrderBy('e.paterno, e.materno, e.nombre')
             ->getQuery();
-            
-        $inscritos = $query->getResult();
+
+        $inscritos = $query->getResult();*/
+
+        $query = $em->getConnection()->prepare("
+            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, odt.discapacidad, 'Grado regular' obs
+            from olim_estudiante_inscripcion oei
+            inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+            inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+            inner join estudiante e on e.id = ei.estudiante_id
+            inner join olim_discapacidad_tipo odt on odt.id = oei.discapacidad_tipo_id
+            where oei.olim_tutor_id = :olimTutor and
+            oei.materia_tipo_id = :materiaTipo and
+            iec.nivel_tipo_id = :nivelTipo and
+            iec.grado_tipo_id = :gradoTipo)
+            union all
+            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, odt.discapacidad, 'Grado superior' obs
+            from olim_estudiante_inscripcion oei
+            inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+            inner join olim_estudiante_inscripcion_curso_superior oeis on oei.id = oeis.olim_estudiante_inscripcion_id
+            inner join estudiante e on e.id = ei.estudiante_id
+            inner join olim_discapacidad_tipo odt on odt.id = oei.discapacidad_tipo_id
+            where oeis.nivel_tipo_id = :nivelTipo and
+            oeis.grado_tipo_id = :gradoTipo)
+        ");
+        $query->bindValue(':olimTutor', $olimtutorid);
+        $query->bindValue(':materiaTipo', $materiaId);
+        $query->bindValue(':nivelTipo', $nivelId);
+        $query->bindValue(':gradoTipo', $gradoId);
+        $query->execute();
+        $inscritos = $query->fetchAll();
+        
         
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscritos.html.twig', array(
             'inscritos' => $inscritos,
@@ -768,7 +797,7 @@ class OlimEstudianteInscripcionController extends Controller{
             }
         }
         
-        $entity = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion');
+        /*$entity = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion');
         $query = $entity->createQueryBuilder('oei')
             ->select('oei.id olimestudianteid, oei.telefonoEstudiante, oei.correoEstudiante, e.codigoRude, e.carnetIdentidad, e.paterno, e.materno, e.nombre, odt.discapacidad, pt.paralelo')
             ->innerjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.id = oei.estudianteInscripcion')
@@ -786,7 +815,35 @@ class OlimEstudianteInscripcionController extends Controller{
             ->setParameter('gradoTipo', $gradoId)
             ->addOrderBy('e.paterno, e.materno, e.nombre')
             ->getQuery();
-        $inscritos = $query->getResult();
+        $inscritos = $query->getResult();*/
+
+        $query = $em->getConnection()->prepare("
+            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, odt.discapacidad, 'Grado regular' obs
+            from olim_estudiante_inscripcion oei
+            inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+            inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+            inner join estudiante e on e.id = ei.estudiante_id
+            inner join olim_discapacidad_tipo odt on odt.id = oei.discapacidad_tipo_id
+            where oei.olim_tutor_id = :olimTutor and
+            oei.materia_tipo_id = :materiaTipo and
+            iec.nivel_tipo_id = :nivelTipo and
+            iec.grado_tipo_id = :gradoTipo)
+            union all
+            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, odt.discapacidad, 'Grado superior' obs
+            from olim_estudiante_inscripcion oei
+            inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+            inner join olim_estudiante_inscripcion_curso_superior oeis on oei.id = oeis.olim_estudiante_inscripcion_id
+            inner join estudiante e on e.id = ei.estudiante_id
+            inner join olim_discapacidad_tipo odt on odt.id = oei.discapacidad_tipo_id
+            where oeis.nivel_tipo_id = :nivelTipo and
+            oeis.grado_tipo_id = :gradoTipo)
+        ");
+        $query->bindValue(':olimTutor', $olimtutorid);
+        $query->bindValue(':materiaTipo', $materiaId);
+        $query->bindValue(':nivelTipo', $nivelId);
+        $query->bindValue(':gradoTipo', $gradoId);
+        $query->execute();
+        $inscritos = $query->fetchAll();
         
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscritos.html.twig', array(
             'inscritos' => $inscritos,
