@@ -3,31 +3,52 @@
 
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h4 class="modal-title"> <i class="fa fa-upload"></i> Subir archivo</h4>
+			<h4 class="modal-title"> <i class="fa fa-upload"></i> Documento del proyecto</h4>
 		</div>
 		<form onsubmit="guardarArchivo(); return false;" id="formArchivo">
 			<input type="hidden" name="id" value="{{id}}">
 			<div class="modal-body">
 				<div class="row">
 					{% if grupo.documentoPdf1 is null or grupo.documentoPdf1 == "" %}
+						<div class="alert alert-info">
+							<i class="fa fa-info-circle"></i> Debe seleccionar un archivo en formato <span class="badge badge-info">pdf</span> con el contenido del proyecto.
+						</div>
 					    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					    	<div class="form-group">
-					    		<label>Adjuntar documento del proyecto: </label>
-					    		<input type="file" id="archivo" name="archivo" class="form-control">	
+					    	<div class="panel panel-default">
+					    		<div class="panel-heading">
+					    			<h3 class="panel-title">Adjuntar documento del proyecto</h3>
+					    		</div>
+					    		<div class="panel-body">
+					    			<input type="file" id="archivo" name="archivo" class="form-control">
+					    		</div>
 					    	</div>
 					    </div>
 					{% else %}
 					    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center text-primary">
-					    	<a id="archivo" class="text-primary" target="_blank" href="{{asset('uploads/olimpiadas/documentos/' ~ grupo.documentoPdf1 )}}">
-					    		<i class="fa fa-file-pdf-o fa-5x"></i><br>
-					    		Ver archivo
-					    	</a>
+							
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title">Documento</h3>
+								</div>
+								<div class="panel-body">
+									<a id="rutaArchivo" class="text-primary" target="_blank" href="{{asset('uploads/olimpiadas/documentos/' ~ grupo.documentoPdf1 )}}">
+							    		<i class="fa fa-file-pdf-o fa-5x"></i><br>
+							    		Ver documento...
+							    	</a>
+								</div>
+							</div>
+					    	
 					    </div>
 					    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-					    	<div class="form-group">
-					    		<label>Actualizar documento: </label>
-					    		<input type="file" id="archivo" name="archivo" class="form-control">	
+					    	<div class="panel panel-default">
+					    		<div class="panel-heading">
+					    			<h3 class="panel-title">Actualizar</h3>
+					    		</div>
+					    		<div class="panel-body">
+					    			<input type="file" id="archivo" name="archivo" class="form-control">
+					    		</div>
 					    	</div>
+					    	
 					    </div>
 					{% endif %}
 				</div>
@@ -52,7 +73,38 @@
 
 <script type="text/javascript">
 	$(function(){
-		$('a.embed').gdocsViewer();
+		// $('a.embed').gdocsViewer();
+		$('#archivo').change(function(){
+		    var archivo = $('#archivo').val();
+		    var extensionesPermitidas = new Array('.pdf');
+		    miError = "";
+		    if(!archivo){
+
+		    }else{
+		        extension = (archivo.substring(archivo.lastIndexOf("."))).toLowerCase();
+		        permitida = false;
+		        var mensaje = 'El archivo no es válido, debe seleccionar un archivo en formato .pdf';
+		        for(var i = 0; i < extensionesPermitidas.length; i++){
+		            if(extensionesPermitidas[i] == extension){
+		                // Verificamos el tamño
+		                var fileSize = $('#archivo')[0].files[0].size;
+		                console.log(fileSize);
+		                var sizeKiloByte = parseInt(fileSize / 1024);
+		                console.log(sizeKiloByte);
+		                if(sizeKiloByte < 1024){
+		                    permitida = true
+		                }else{
+		                    var mensaje = 'El tamaño del archivo supera el límite permitido!\n(Tamaño máximo permitido 1024 KB)';
+		                }
+		                break;
+		            }
+		        }
+		        if(!permitida){
+		            alert(mensaje);
+		            $('#archivo').val('');
+		        }
+		    }
+		});
 	})
 	function guardarArchivo(){
 
@@ -81,9 +133,11 @@
 		    		$('#mensajeArchivo').addClass('alert alert-success');
 		    		$('#mensajeArchivo').append('<p> <i class="fa fa-check"></i> '+data.msg+'</p>');
 
-		    		var ruta = "{{ asset('uploads/olimpiadas/documentos/') }}";
+		    		olimArchivo(data.grupoId);
 
-		    		$('#archivo').attr('href', ruta + data.archivo);
+		    		// var ruta = "{{ asset('uploads/olimpiadas/documentos/') }}";
+
+		    		// $('#rutaArchivo').attr('href', ruta + data.archivo);
 		    	}
 		    	if(data.status == 404){
 		    		$('#mensajeArchivo').addClass('alert alert-info');
@@ -109,6 +163,5 @@
 		    }
 		});
 	}
-
 
 </script>

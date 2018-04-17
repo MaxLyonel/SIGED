@@ -63,7 +63,8 @@ class OlimArchivoController extends Controller {
 		return $response->setData(array(
 			'status'=>404,
 			'msg'=>'Debe seleccionar un archivo PDF',
-			'categoriaId'=>null
+			'categoriaId'=>null,
+			'grupoId'=>$grupo->getId()
 		));
 
 	}
