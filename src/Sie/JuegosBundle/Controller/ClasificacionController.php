@@ -65,38 +65,38 @@ class ClasificacionController extends Controller {
             $sie = $request->get('sie');
         }
 
-        
+
         //die("$sie");
-        
+
         $sesion = $request->getSession();
-        $id_usuario = $this->session->get('userId');  
+        $id_usuario = $this->session->get('userId');
 
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        
+
         $em = $this->getDoctrine()->getManager();
 
         $entidadUsuario = $this->buscaEntidadFase(3,$id_usuario);
 
-       
+
         $queryEntidad = $em->getConnection()->prepare("
-                select ie.id, ie.institucioneducativa as nombre 
-                from institucioneducativa as ie                 
+                select ie.id, ie.institucioneducativa as nombre
+                from institucioneducativa as ie
                 inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                 where ie.id = ".$sie." and cast(left(cast(jg.distrito_tipo_id as varchar),1) as integer) = ".$entidadUsuario[0]['id']."
             ");
         $queryEntidad->execute();
-        $objEntidad = $queryEntidad->fetchAll(); 
+        $objEntidad = $queryEntidad->fetchAll();
 
         if (count($objEntidad) > 0){
-            $sie = $objEntidad[0]['id']; 
+            $sie = $objEntidad[0]['id'];
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No existe el código SIE, o no tiene tuición sobre la misma'));
             return $this->redirect($this->generateUrl('sie_juegos_representacion_cultural_index'));
         }
-        
+
         $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $sie));
 
         $exist = true;
@@ -131,8 +131,8 @@ class ClasificacionController extends Controller {
         } else {
             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No existe información de la Unidad Educativa ó Código SIE no existe '));
             return $this->redirect($this->generateUrl('sie_juegos_representacion_cultural_index'));
-        }        
-                
+        }
+
         return $this->render($this->session->get('pathSystem') . ':Clasificacion:indexCultural.html.twig', array(
                     'infoUnidadEducativa' => $objUeducativa,
                     'infoNiveles' => $aInfoUnidadEductiva,
@@ -148,16 +148,16 @@ class ClasificacionController extends Controller {
      * @param type $generoId
      * return list of pruebas
      */
-    public function buscaInscritosCulturalAction(Request $request) {     
+    public function buscaInscritosCulturalAction(Request $request) {
         date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));   
+        $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
 
         $em = $this->getDoctrine()->getManager();
         $fase = $request->get('form_fase');
         $ue = $request->get('form_ue');
         $cultural = $request->get('form_representacion');
-        
+
         $entity = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos');
         $query = $entity->createQueryBuilder('eij')
                 ->innerJoin('SieAppWebBundle:PruebaTipo', 'pt', 'WITH', 'pt.id = eij.pruebaTipo')
@@ -202,7 +202,7 @@ class ClasificacionController extends Controller {
         $fechaActual = new \DateTime(date('Y-m-d'));
 
         $sesion = $request->getSession();
-        $id_usuario = $this->session->get('userId');  
+        $id_usuario = $this->session->get('userId');
 
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -238,7 +238,7 @@ class ClasificacionController extends Controller {
             $this->addFlash('warninsueall', $message);
             $exist = false;
         }
-        
+
         $forma = $this->creaFormularioRegistroCultural('sie_juegos_representacion_cultural_lista_estudiante_registro', $sie, $gestion, $nivelId, $gradoId, $generoId, 0)->createView();
 
 
@@ -314,7 +314,7 @@ class ClasificacionController extends Controller {
             return $this->redirect($this->generateUrl('sie_juegos_homepage'));
         }
 
-        $objEstudiantesRegistrados = $this->buscaInscritosDistrito($codigoEntidad,2);   
+        $objEstudiantesRegistrados = $this->buscaInscritosDistrito($codigoEntidad,2);
 
         return $this->render($this->session->get('pathSystem') . ':Clasificacion:index.html.twig', array(
                     'infoEntidad' => $objEntidad,
@@ -382,7 +382,7 @@ class ClasificacionController extends Controller {
             return $this->redirect($this->generateUrl('sie_juegos_inscripcion_index'));
         }
 
-        $objEstudiantesRegistrados = $this->buscaInscritosCircunscripcion($codigoEntidad,3);   
+        $objEstudiantesRegistrados = $this->buscaInscritosCircunscripcion($codigoEntidad,3);
 
         return $this->render($this->session->get('pathSystem') . ':Clasificacion:index.html.twig', array(
                     'infoEntidad' => $objEntidad,
@@ -452,7 +452,7 @@ class ClasificacionController extends Controller {
             return $this->redirect($this->generateUrl('sie_juegos_inscripcion_index'));
         }
 
-        $objEstudiantesRegistrados = $this->buscaInscritosDepartamento($codigoEntidad,4); 
+        $objEstudiantesRegistrados = $this->buscaInscritosDepartamento($codigoEntidad,4);
 
         return $this->render($this->session->get('pathSystem') . ':Clasificacion:index.html.twig', array(
                     'infoEntidad' => $objEntidad,
@@ -636,24 +636,24 @@ class ClasificacionController extends Controller {
      */
     public function representacionCulturalListaEstudiantesRegistroAction(Request $request) {
         date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));   
+        $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
         $this->session->set('save', false);
 
         $fase = 4;
-        
+
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("select * from fase_tipo where id = 4");
         $query->execute();
         $faseTipoEntity = $query->fetchAll();
 
-        if (!$faseTipoEntity[0]['esactivo_secundaria']){            
-            $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
+        if (!$faseTipoEntity[0]['esactivo_secundaria']){
+            $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron"));
             return $this->redirectToRoute('sie_juegos_representacion_cultural_index');
         }
 
         $sesion = $request->getSession();
-        $id_usuario = $this->session->get('userId');  
+        $id_usuario = $this->session->get('userId');
 
         //validation if the user is logged
         if (!isset($id_usuario)) {
@@ -681,8 +681,8 @@ class ClasificacionController extends Controller {
                     }
                 } else {
                     $listaDeportistas = "Sin deportistas";
-                }   
-                    
+                }
+
                 try {
                     $pruebaEntity = $em->getRepository('SieAppWebBundle:PruebaTipo')->findOneBy(array('id' => 0));
                     $gestionEntity = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestionActual));
@@ -691,7 +691,7 @@ class ClasificacionController extends Controller {
                     $entidadUsuario = $this->buscaEntidadFase(3,$id_usuario);
                     $msgEstudiantesRegistrados = "";
                     $msgEstudiantesObservados = "";
-                    foreach($deportistas as $deportista){   
+                    foreach($deportistas as $deportista){
                         $msg = $this->validaInscripcionCulturalJuegos($deportista,$gestionActual,0,$fase,13,$entidadUsuario[0]["id"]); //validaInscripcionCulturalJuegos
                         if($msg[0]){
                             $estudianteInscripcionEntity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $deportista));
@@ -705,13 +705,13 @@ class ClasificacionController extends Controller {
                             $estudianteInscripcionJuegos->setUsuarioId($id_usuario);
                             $estudianteInscripcionJuegos->setObs($comisionEntity->getComision());
                             $em->persist($estudianteInscripcionJuegos);
-                            $em->flush();   
-                            $estudianteInscripcionJuegosId = $estudianteInscripcionJuegos->getId(); 
+                            $em->flush();
+                            $estudianteInscripcionJuegosId = $estudianteInscripcionJuegos->getId();
                             if ($msgEstudiantesRegistrados == ""){
                                 $msgEstudiantesRegistrados = $msg[1];
                             } else {
                                 $msgEstudiantesRegistrados = $msgEstudiantesRegistrados.' - '.$msg[1];
-                            }     
+                            }
                         } else {
                             if ($msgEstudiantesObservados == ""){
                                 $msgEstudiantesObservados = $msg[1];
@@ -719,12 +719,12 @@ class ClasificacionController extends Controller {
                                 $msgEstudiantesObservados = $msgEstudiantesObservados.' - '.$msg[1];
                             }
                         }
-                    }           
+                    }
                     if ($msgEstudiantesRegistrados != ""){
-                        $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Estudiante (".$msgEstudiantesRegistrados.") registrado en la Prueba y Fase seleccionada")); 
+                        $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Estudiante (".$msgEstudiantesRegistrados.") registrado en la Prueba y Fase seleccionada"));
                     }
                     if ($msgEstudiantesObservados != ""){
-                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => "Estudiante (".$msgEstudiantesObservados.") registrado en la Prueba y Fase seleccionada"));        
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => "Estudiante (".$msgEstudiantesObservados.") registrado en la Prueba y Fase seleccionada"));
                     }
 
                     $em->getConnection()->commit();
@@ -733,21 +733,21 @@ class ClasificacionController extends Controller {
                     return $this->redirectToRoute('sie_juegos_representacion_cultural_busca_ue');
                 } catch (Exception $e) {
                     $em->getConnection()->rollback();
-                    $msg = "Error al registrar, intente nuevamente"; 
-                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msg));   
+                    $msg = "Error al registrar, intente nuevamente";
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msg));
                     $this->session->set('datosBusqueda', array('sie' => $sie));
-                    $this->session->set('save', true);                   
+                    $this->session->set('save', true);
                     return $this->redirectToRoute('sie_juegos_representacion_cultural_busca_ue');
-                } 
+                }
             } else {
                 $em->getConnection()->rollback();
-                $msg = "Datos no validos, intente nuevamente"; 
-                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msg));  
+                $msg = "Datos no validos, intente nuevamente";
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msg));
                 return $this->redirectToRoute('sie_juegos_representacion_cultural_index');
             }
         } else {
-            $msg = "Datos no validos, intente nuevamente"; 
-            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msg)); 
+            $msg = "Datos no validos, intente nuevamente";
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msg));
             return $this->redirectToRoute('sie_juegos_representacion_cultural_index');
         }
         //return $this->render($this->session->get('pathSystem') . ':Inscripcion:seeStudents.html.twig');
@@ -788,7 +788,7 @@ class ClasificacionController extends Controller {
                 $faseTipoEntity = $query->fetchAll();
 
                 if(count($faseTipoEntity)<1){
-                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "No se cuenta habilitado la inscripcion de deportistas para la Primera Fase")); 
+                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "No se cuenta habilitado la inscripcion de deportistas para la Primera Fase"));
                     return $this->redirectToRoute('sie_juegos_clasificacion_f'.$fase .'_index');
                 }
 
@@ -796,11 +796,11 @@ class ClasificacionController extends Controller {
                 $nivel = $entityDatos->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
 
                 if($nivel == 12 and !$faseTipoEntity[0]['esactivo_primaria']){
-                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron")); 
+                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Primario concluyeron"));
                     return $this->redirectToRoute('sie_juegos_clasificacion_f'.$fase .'_index');
                 }
                 if($nivel == 13 and !$faseTipoEntity[0]['esactivo_secundaria']){
-                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron")); 
+                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las inscripciones para el Nivel Secundaria concluyeron"));
                     return $this->redirectToRoute('sie_juegos_clasificacion_f'.$fase .'_index');
                 }
 
@@ -831,7 +831,7 @@ class ClasificacionController extends Controller {
                         $entidadUsuarioId =  $entidadUsuario[0]['id'];
                         $estadoEstudianteInscripcion = $this->verificaEstadoInscripcionEstudiante($deportistaEstudianteInscripcion);
                         $nivel = $estudianteInscripcionJuegosEntity->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
-                        
+
                         if($estadoEstudianteInscripcion){
                             $msg = $this->validaInscripcionJuegos($deportistaEstudianteInscripcion,$deportistaGestion,$deportistaPrueba,$faseClasificacion,$deportistaNivel,$posicion,$entidadUsuarioId);
                             if($msg[0]){
@@ -866,7 +866,7 @@ class ClasificacionController extends Controller {
                         } else {
                             $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => "El estudiante ya no se encuentra con el estado efectivo, favor de verificar la información actual del estudiante"));
                         }
-                        
+
                     }
                     if ($msgEstudiantesRegistrados != ""){
                         $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Estudiante (".$msgEstudiantesRegistrados.")"));
@@ -1086,7 +1086,7 @@ class ClasificacionController extends Controller {
             if ($entidadUsuarioId == 31564  ){
                 $xCupo = 2;
             }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+
             if ($entidadUsuarioId == 31458  ){
                 $xCupo = 2;
             }
@@ -1098,13 +1098,13 @@ class ClasificacionController extends Controller {
             }
             if ($entidadUsuarioId == 31508  ){
                 $xCupo = 3;
-            }          
+            }
             if ($entidadUsuarioId == 31622  ){ // SANTA CRUZ 1
                 $xCupo = 7;
             }
             if ($entidadUsuarioId == 31623  ){ // SANTA CRUZ 2
                 $xCupo = 6;
-            }      
+            }
             if ($entidadUsuarioId == 31624  ){ // SANTA CRUZ 3
                 $xCupo = 5;
             }
@@ -1241,7 +1241,7 @@ class ClasificacionController extends Controller {
                 }
                 if ($tipoDisciplinaPrueba["idDisciplina"] == 6){ //ciclismo
                     if (count($inscripcionEstudianteEntity) > 0){
-                        if($inscripcionEstudianteGestionDisciplinaFase[0]){  
+                        if($inscripcionEstudianteGestionDisciplinaFase[0]){
                             if ($prueba == 47 or $prueba == 48 or $prueba == 49 or $prueba == 50){ // rutera
                                 $inscripcion110 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,110,$fase);
                                 if ($inscripcion110[0]){
@@ -1291,17 +1291,17 @@ class ClasificacionController extends Controller {
                         if ($nivel == 12){
                             /**
                              ** Validación de nivel primario
-                             */                            
+                             */
 
-                            if($tipoDisciplinaPrueba["tipoDisciplina"] == 'Individual'){                                
+                            if($tipoDisciplinaPrueba["tipoDisciplina"] == 'Individual'){
                                 if($inscripcionEstudianteEntity[0]["cant_dis_indi"] > 0){
                                     switch ($tipoDisciplinaPrueba["idDisciplina"]) {
                                         case 18: //natacion
-                                            if($inscripcionEstudianteGestionDisciplinaFase[0]){  
+                                            if($inscripcionEstudianteGestionDisciplinaFase[0]){
                                                 $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                                             } else {
                                                 $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya registrado en una disciplina individual)');
-                                            } 
+                                            }
                                             break;
                                         default : //otros
                                             $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya registrado en una disciplina individual)');
@@ -1339,9 +1339,9 @@ class ClasificacionController extends Controller {
                             /**
                              ** Validación de nivel secundario
                              */
-                            if($tipoDisciplinaPrueba["tipoDisciplina"] == 'Individual'){                                
+                            if($tipoDisciplinaPrueba["tipoDisciplina"] == 'Individual'){
                                 if($inscripcionEstudianteEntity[0]["cant_dis_indi"] > 0){
-                                    if($inscripcionEstudianteGestionDisciplinaFase[0]){  
+                                    if($inscripcionEstudianteGestionDisciplinaFase[0]){
                                         switch ($tipoDisciplinaPrueba["idDisciplina"]) {
                                             case 2: //atletismo
                                                 if($tipoDisciplinaPrueba["tipoPrueba"] == 'Individual'){
@@ -1414,14 +1414,14 @@ class ClasificacionController extends Controller {
                                 if ($tipoDisciplinaPrueba["idDisciplina"] == 6){ //ciclismo
                                     if (count($inscripcionEstudianteEntity) > 0){
                                         if ($prueba == 47 or $prueba == 48 or $prueba == 49 or $prueba == 50){ // rutera
-                                            if($inscripcionEstudianteGestionDisciplinaFase[0]){   
+                                            if($inscripcionEstudianteGestionDisciplinaFase[0]){
                                                 $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                                             } else {
                                                 $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en montañera)');
                                             }
                                         }
                                         if ($prueba == 110 or $prueba == 111 or $prueba == 112 or $prueba == 113){ // montañera
-                                            if($inscripcionEstudianteGestionDisciplinaFase[0]){  
+                                            if($inscripcionEstudianteGestionDisciplinaFase[0]){
                                                 $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                                             } else {
                                                 $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en rutera)');
@@ -1458,7 +1458,7 @@ class ClasificacionController extends Controller {
      * @param type $generoId
      * return list of pruebas
      */
-    public function validaInscripcionCulturalJuegos($inscripcionEstudiante,$gestion,$prueba,$fase,$nivel,$entidadUsuarioId) {      
+    public function validaInscripcionCulturalJuegos($inscripcionEstudiante,$gestion,$prueba,$fase,$nivel,$entidadUsuarioId) {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
             select * from estudiante_inscripcion_juegos as eij
@@ -1468,7 +1468,7 @@ class ClasificacionController extends Controller {
         $inscripcionEstudianteEntity = $query->fetchAll();
 
 
-        $query = $em->getConnection()->prepare("            
+        $query = $em->getConnection()->prepare("
             select eij.* as cantidad from estudiante_inscripcion_juegos as eij
             inner join estudiante_inscripcion as ei on ei.id = eij.estudiante_inscripcion_id
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
@@ -1496,23 +1496,23 @@ class ClasificacionController extends Controller {
         if(count($inscripcionEstudianteEntity) > 0){
             $msg = array('0'=>false, '1'=>$arrayEstudiante["nombre"].' (ya registrado');
             $valida = false;
-        } 
+        }
 
-        if($nivel == 12) {       
-            $msg = array('0'=>false, '1'=>$arrayEstudiante["nombre"].' no puede registrarse por pertenecer a educación Primaria');     
+        if($nivel == 12) {
+            $msg = array('0'=>false, '1'=>$arrayEstudiante["nombre"].' no puede registrarse por pertenecer a educación Primaria');
             $valida = false;
         }
 
         if(count($inscripcionEstudianteComisionEntity) >= $cupo){
             $msg = array('0'=>false, '1'=>$arrayEstudiante["nombre"].' (cupo completo');
             $valida = false;
-        } 
+        }
 
         if($valida){
             $valida = true;
             $msg = array('0'=>true, '1'=>$arrayEstudiante["nombre"]);
         }
-       
+
         return $msg;
     }
 
@@ -1563,8 +1563,8 @@ class ClasificacionController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $objEntidad = $em->getRepository('SieAppWebBundle:PruebaTipo')->findOneBy(array('id' => $prueba));
         $disciplina = $objEntidad->getDisciplinaTipo()->getId();
-        $repositoryVerInsPru = $this->getDoctrine()->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos');        
-        $queryVerInsPru = $repositoryVerInsPru->createQueryBuilder('eij')  
+        $repositoryVerInsPru = $this->getDoctrine()->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos');
+        $queryVerInsPru = $repositoryVerInsPru->createQueryBuilder('eij')
             ->select('eij.id as inscripcionId, pt.id as pruebaId, dt.id as disciplinaId, e.paterno, e.materno, e.nombre')
             ->leftJoin('SieAppWebBundle:PruebaTipo','pt','WITH','pt.id = eij.pruebaTipo')
             ->leftJoin('SieAppWebBundle:DisciplinaTipo','dt','WITH','dt.id = pt.disciplinaTipo')
@@ -1787,7 +1787,7 @@ class ClasificacionController extends Controller {
     }
 
 
-    
+
     public function listaDeportistasClasificadosNacionalDescargaPdfAction($fase,$usuario) {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
@@ -1916,10 +1916,10 @@ class ClasificacionController extends Controller {
                     $em->flush();
                     $em->getConnection()->commit();
                     $respuesta = array('0'=>true);
-                    $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Estudiante ".$estudiante." eliminado")); 
+                    $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Estudiante ".$estudiante." eliminado"));
                 } else {
-                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las listas estan cerradas, no puede eliminar estudiantes")); 
-                }   
+                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las listas estan cerradas, no puede eliminar estudiantes"));
+                }
             }
         } catch (Exception $e) {
             $em->getConnection()->rollback();
@@ -2023,16 +2023,18 @@ class ClasificacionController extends Controller {
         $gestionActual = date_format($fechaActual,'Y');
         $em = $this->getDoctrine()->getManager();
 
-        $objEntidad = $this->buscaEntidadFase($fase,$usuario);
+        // $objEntidad = $this->buscaEntidadFase($fase,$usuario);
 
-        $codigoEntidad = $objEntidad[0]['id'];
+        // $codigoEntidad = $objEntidad[0]['id'];
+
+        $codigoEntidad = $_POST['id'];
 
         $arch = $codigoEntidad.'_'.$gestionActual.'_JUEGOS_F'.$fase.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         if($fase == 1){
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f1_v1.rptdesign&__format=pdf&coddis='.$codigoEntidad.'&codges='.$gestionActual));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f1_v2.rptdesign&__format=pdf&codue='.$codigoEntidad.'&codges='.$gestionActual));
         }
         if($fase == 2){
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f2_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
@@ -2115,13 +2117,13 @@ class ClasificacionController extends Controller {
      * @param type $generoId
      * return list of pruebas
      */
-    public function buscaInscritosDistrito($distrito,$fase) {     
+    public function buscaInscritosDistrito($distrito,$fase) {
         date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));   
+        $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
 
         $em = $this->getDoctrine()->getManager();
-        
+
         $entity = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos');
         $query = $entity->createQueryBuilder('eij')
                 ->select('eij.id as eInsId, pat.paralelo, pt.prueba as prueba, dt.disciplina as disciplina, e.paterno, e.materno, e.nombre, e.fechaNacimiento, e.codigoRude, e.carnetIdentidad, e.complemento, lt6.id as distritoId, lt6.lugar as distrito, ie.institucioneducativa, get.genero')
@@ -2131,16 +2133,16 @@ class ClasificacionController extends Controller {
                 ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.id = eij.estudianteInscripcion')
                 ->leftJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
                 ->leftJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
-                ->leftJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica') 
+                ->leftJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica')
                 ->innerJoin('SieAppWebBundle:ParaleloTipo','pat','WITH','pat.id = iec.paraleloTipo')
                 ->innerJoin('SieAppWebBundle:Estudiante','e','WITH','e.id = ei.estudiante')
                 ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = eij.gestionTipo')
                 ->innerJoin('SieAppWebBundle:FaseTipo', 'ft', 'WITH', 'ft.id = eij.faseTipo')
-                //->leftJoin('SieAppWebBundle:LugarTipo','lt1','WITH','lt1.id = jg.lugarTipoLocalidad')        
-                //->leftJoin('SieAppWebBundle:LugarTipo','lt2','WITH','lt2.id = lt1.lugarTipo')        
-                //->leftJoin('SieAppWebBundle:LugarTipo','lt3','WITH','lt3.id = lt2.lugarTipo')       
-                //->leftJoin('SieAppWebBundle:LugarTipo','lt4','WITH','lt4.id = lt3.lugarTipo')       
-                //->leftJoin('SieAppWebBundle:LugarTipo','lt5','WITH','lt5.id = lt4.lugarTipo') 
+                //->leftJoin('SieAppWebBundle:LugarTipo','lt1','WITH','lt1.id = jg.lugarTipoLocalidad')
+                //->leftJoin('SieAppWebBundle:LugarTipo','lt2','WITH','lt2.id = lt1.lugarTipo')
+                //->leftJoin('SieAppWebBundle:LugarTipo','lt3','WITH','lt3.id = lt2.lugarTipo')
+                //->leftJoin('SieAppWebBundle:LugarTipo','lt4','WITH','lt4.id = lt3.lugarTipo')
+                //->leftJoin('SieAppWebBundle:LugarTipo','lt5','WITH','lt5.id = lt4.lugarTipo')
                 ->leftJoin('SieAppWebBundle:LugarTipo','lt6','WITH','lt6.id = jg.lugarTipoIdDistrito')
                 ->andWhere('gt.id = :gestionId')
                 ->andWhere('ft.id = :faseId')
@@ -2169,13 +2171,13 @@ class ClasificacionController extends Controller {
      * @param type $generoId
      * return list of pruebas
      */
-    public function buscaInscritosCircunscripcion($circunscripcion,$fase) {     
+    public function buscaInscritosCircunscripcion($circunscripcion,$fase) {
         date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));   
+        $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
 
         $em = $this->getDoctrine()->getManager();
-        
+
         $entity = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos');
         $query = $entity->createQueryBuilder('eij')
                 ->select('eij.id as eInsId, pat.paralelo, pt.prueba as prueba, dt.disciplina as disciplina, e.paterno, e.materno, e.nombre, e.fechaNacimiento, e.codigoRude, e.carnetIdentidad, e.complemento, ct.id as circunscripcionId, ct.circunscripcion as circunscripcion, ie.institucioneducativa, get.genero')
@@ -2185,7 +2187,7 @@ class ClasificacionController extends Controller {
                 ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.id = eij.estudianteInscripcion')
                 ->leftJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
                 ->leftJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
-                ->leftJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica') 
+                ->leftJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica')
                 ->leftJoin('SieAppWebBundle:CircunscripcionTipo','ct','WITH','ct.id = jg.circunscripcionTipo')
                 ->innerJoin('SieAppWebBundle:ParaleloTipo','pat','WITH','pat.id = iec.paraleloTipo')
                 ->innerJoin('SieAppWebBundle:Estudiante','e','WITH','e.id = ei.estudiante')
@@ -2218,13 +2220,13 @@ class ClasificacionController extends Controller {
      * @param type $generoId
      * return list of pruebas
      */
-    public function buscaInscritosDepartamento($departamento,$fase) {     
+    public function buscaInscritosDepartamento($departamento,$fase) {
         date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));   
+        $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
 
         $em = $this->getDoctrine()->getManager();
-        
+
         $entity = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos');
         $query = $entity->createQueryBuilder('eij')
                 ->select('eij.id as eInsId, pat.paralelo, pt.prueba as prueba, dt.disciplina as disciplina, e.paterno, e.materno, e.nombre, e.fechaNacimiento, e.codigoRude, e.carnetIdentidad, e.complemento, lt5.id as departamentoId, lt5.lugar as departamento, ie.institucioneducativa, get.genero')
@@ -2234,12 +2236,12 @@ class ClasificacionController extends Controller {
                 ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.id = eij.estudianteInscripcion')
                 ->leftJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')
                 ->leftJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
-                ->leftJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica') 
-                ->leftJoin('SieAppWebBundle:LugarTipo','lt1','WITH','lt1.id = jg.lugarTipoLocalidad')        
-                ->leftJoin('SieAppWebBundle:LugarTipo','lt2','WITH','lt2.id = lt1.lugarTipo')        
-                ->leftJoin('SieAppWebBundle:LugarTipo','lt3','WITH','lt3.id = lt2.lugarTipo')       
-                ->leftJoin('SieAppWebBundle:LugarTipo','lt4','WITH','lt4.id = lt3.lugarTipo')       
-                ->leftJoin('SieAppWebBundle:LugarTipo','lt5','WITH','lt5.id = lt4.lugarTipo') 
+                ->leftJoin('SieAppWebBundle:JurisdiccionGeografica','jg','WITH','jg.id = ie.leJuridicciongeografica')
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt1','WITH','lt1.id = jg.lugarTipoLocalidad')
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt2','WITH','lt2.id = lt1.lugarTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt3','WITH','lt3.id = lt2.lugarTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt4','WITH','lt4.id = lt3.lugarTipo')
+                ->leftJoin('SieAppWebBundle:LugarTipo','lt5','WITH','lt5.id = lt4.lugarTipo')
                 ->innerJoin('SieAppWebBundle:ParaleloTipo','pat','WITH','pat.id = iec.paraleloTipo')
                 ->innerJoin('SieAppWebBundle:Estudiante','e','WITH','e.id = ei.estudiante')
                 ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = eij.gestionTipo')
@@ -2267,7 +2269,7 @@ class ClasificacionController extends Controller {
 
     public function eliminaInscripcionAction(Request $request) {
         date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));   
+        $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
@@ -2278,7 +2280,7 @@ class ClasificacionController extends Controller {
         $fase = $request->get('fase');
 
         try{
-            $entityDatos = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->findOneBy(array('id'=>$inscripcion));            
+            $entityDatos = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->findOneBy(array('id'=>$inscripcion));
             if ($entityDatos) {
 
                 $nivel = $entityDatos->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
@@ -2305,23 +2307,23 @@ class ClasificacionController extends Controller {
                         $em->remove($entityDatos);
                         $em->flush();
                         $em->getConnection()->commit();
-                        $respuesta = array('0'=>true);    
-                        $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Estudiante ".$estudiante." eliminado"));                    
-                    } else {                        
-                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Estudiante ".$estudiante." no puede ser eliminado debido a que se encuentra clasificado en la fase ".$fase)); 
+                        $respuesta = array('0'=>true);
+                        $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Estudiante ".$estudiante." eliminado"));
+                    } else {
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Estudiante ".$estudiante." no puede ser eliminado debido a que se encuentra clasificado en la fase ".$fase));
                     }
                 } else {
-                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las listas estan cerradas, no puede eliminar estudiantes")); 
+                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las listas estan cerradas, no puede eliminar estudiantes"));
                 }
                 return $this->redirectToRoute('sie_juegos_clasificacion_f'.($fase-1).'_index');
             } else {
                 $em->getConnection()->rollback();
-                $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "No se puede eliminar la inscripcion del estudiante")); 
+                $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "No se puede eliminar la inscripcion del estudiante"));
                 return $this->redirectToRoute('sie_juegos_clasificacion_f'.($fase).'_index');
             }
         } catch (Exception $e) {
             $em->getConnection()->rollback();
-            $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "No se puede eliminar la inscripcion del estudiante")); 
+            $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "No se puede eliminar la inscripcion del estudiante"));
             return $this->redirectToRoute('sie_juegos_clasificacion_f'.($fase).'_index');
         }
     }

@@ -6,22 +6,26 @@ sie_juegos_inscripcion:
     resource: "@SieJuegosBundle/Resources/config/routing/inscripcion.yml"
     prefix:   /inscripcion
 
+sie_juegos_registro:
+    resource: "@SieJuegosBundle/Resources/config/routing/registro.yml"
+    prefix:   /registro
+
 sie_juegos_clasificacion:
     resource: "@SieJuegosBundle/Resources/config/routing/clasificacion.yml"
     prefix:   /clasificacion
 
 sie_juegos_reporte:
     resource: "@SieJuegosBundle/Resources/config/routing/reporte.yml"
-    prefix:   /reporte   
+    prefix:   /reporte
 
 sie_juegos_comision:
     resource: "@SieJuegosBundle/Resources/config/routing/comision.yml"
-    prefix:   /comision   
+    prefix:   /comision
 
 sie_juegos_seguimiento:
     resource: "@SieJuegosBundle/Resources/config/routing/seguimiento.yml"
-    prefix:   /seguimiento  
+    prefix:   /seguimiento
 
 sie_juegos_fixture:
     resource: "@SieJuegosBundle/Resources/config/routing/fixture.yml"
-    prefix:   /fixture   
+    prefix:   /fixture
