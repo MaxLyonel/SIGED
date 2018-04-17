@@ -2,11 +2,11 @@
 {% if exist == true %}
 <small>
     <div class="row">
-        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="panel panel-primary shadow">
                 <div class="panel-heading">
                     <div class="pull-left">
-                        <h3 class="panel-title">Estudiantes - Listado</h3>
+                        <h3 class="panel-title">{{ nivel }} / {{ grado }} / {{ genero }}</h3>
                     </div><!-- /.pull-left -->
                     <div class="pull-right">
 
@@ -14,14 +14,9 @@
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
                 <div class="panel-body">
-                    <!-- Start project overview -->
-                    <ol class="breadcrumb">
-                        <li>{{ nivel }}</li>
-                        <li>{{ grado }}</li>
-                        <li>{{ genero }}</li>
-                    </ol>
+                  <div class="row">
                     <!-- Start datatable -->
-                    <table id="datatable-estudiantes" class="table table-striped table-info">
+                    <table id="datatable-estudiantes" class="table table-striped table-default">
                         <thead>
                             <tr>
                                 <th data-class="expand">#</th>
@@ -41,6 +36,7 @@
                                 {% set jsnInfoStudent = objInfoStudent|json_encode() %}
                                 {% set nombre = data.paterno~' '~data.materno~' '~data.nombre %}
                                 {% set rude = data.codigoRude %}
+                                {% set estadoId = data.estadomatriculaId %}
                                 {% set paralelo = data.paralelo %}
                                 {% if data.complemento == "" %}
                                     {% set ci = data.carnetIdentidad %}
@@ -54,10 +50,15 @@
                                     <td align="">{{rude}}</td>
                                     <td align="">{{nombre}}</td>
                                     <td align="">
-                                        <div class="ckbox ckbox-primary">
-                                            <input id="id{{data.eInsId}}" name="estudiantes[]" type="checkbox" value="{{data.eInsId}}" onclick="setDeportistas(this,'{{nombre}}')">
-                                            <label for="id{{data.eInsId}}"></label>
-                                        </div>
+                                        {% if estadoId == 4 or estadoId == 5 or estadoId == 55 %}
+                                            <div class="ckbox ckbox-primary">
+                                                <input id="id{{data.eInsId|base64_encode}}" name="estudiantes[]" type="checkbox" value="{{data.eInsId|base64_encode}}" onclick="listar_selecionado(this,'{{nombre}}')">
+                                                <label for="id{{data.eInsId|base64_encode}}"></label>
+                                            </div>
+                                        {% else %}
+                                            <span class="label label-danger rounded">{{ data.estadomatricula }}</span>
+                                        {% endif %}
+
                                     </td>
                                 </tr>
                             {%endfor%}
@@ -80,81 +81,12 @@
                     </div>
                     <!-- /.portlet -->
                     <!--/ End project overview -->
+                  </div>
                 </div><!-- /.panel-body -->
             </div>
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-            <div class="row">
-                <div class="panel panel-primary shadow">
-                    <div class="panel-heading">
-                        <div class="pull-left">
-                            <h3 class="panel-title">Registro</h3>
-                        </div><!-- /.pull-left -->
-                        <div class="pull-right">
-
-                        </div><!-- /.pull-right -->
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <!-- Start project overview -->
-                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'class':'form-horizontal form-bordered', 'onsubmit':'return habilitarBotonSubmit()'} } )}}
-                        {{form_widget(form.sie)}}
-                        {{form_widget(form.gestion)}}
-                        {{form_widget(form.nivel)}}
-                        {{form_widget(form.grado)}}
-                        {{form_widget(form.genero)}}
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    {{form_label(form.disciplina)}}
-                                    {{form_widget(form.disciplina,{'attr':{'onchange':'getPruebas(this.value)'} })}}
-                                </div>
-                                <div class="col-md-12">
-                                    {{form_label(form.prueba)}}
-                                    {{form_widget(form.prueba,{'attr':{'onchange':'getInscritos(this.value)'} })}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label class="required">Deportistas: </label>
-                                    <div id="listaDeportistas"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    {{ form_widget(form.submit,{ 'attr':{'class':'btn btn-default col-sm-12' } } ) }}
-                                </div>
-                            </div>
-                        </div>
-                        {{form_end(form)}}
-                        <!--/ End project overview -->
-                    </div><!-- /.panel-body -->
-                </div>
-            </div>
-            <div class="row">
-                <div class="panel panel-teal shadow">
-                    <div class="panel-heading">
-                        <div class="pull-left">
-                            <h3 class="panel-title">Deportistas Registrados</h3>
-                        </div><!-- /.pull-left -->
-                        <div class="pull-right">
-                        </div><!-- /.pull-right -->
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-body">
-                        <ul class="list-unstyled list-real-estate">
-                            <div id="listaInscritos"></div>
-                        </ul>
-                    </div><!-- /.panel-body -->
-                </div>
-            </div>
-        </div>
-        <!-- /.row -->
     </div>
+
 </small>
 {% else %}
 
@@ -170,6 +102,9 @@
         </div>
     </div>
 {% endif %}
+
+
+
     <script>
 
     function getPruebas(es) {

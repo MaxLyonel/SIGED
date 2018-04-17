@@ -1,0 +1,61 @@
+sie_juegos_registro_f1_index:
+    path:    /registro/f1/index
+    defaults: { _controller: SieJuegosBundle:Registro:index }
+
+sie_juegos_registro_f1_busqueda:
+    path:    /registro/f1/busqueda
+    defaults: { _controller: SieJuegosBundle:Registro:busqueda }
+
+sie_juegos_registro_f1_busqueda_nivel:
+    path:    /registro/f1/busqueda/nivel
+    defaults: { _controller: SieJuegosBundle:Registro:busquedaNivel }
+    options:
+         expose: true
+
+sie_juegos_registro_f1_busqueda_genero:
+    path:    /registro/f1/busqueda/genero
+    defaults: { _controller: SieJuegosBundle:Registro:busquedaGenero }
+    options:
+         expose: true
+
+sie_juegos_registro_f1_busqueda_grado_disciplina:
+   path:    /registro/f1/busqueda/grado/disciplina
+   defaults: { _controller: SieJuegosBundle:Registro:busquedaGradoDisciplina }
+   options:
+        expose: true
+
+sie_juegos_registro_f1_busqueda_disciplina_prueba:
+    path:    /registro/f1/busqueda/disciplina/prueba
+    defaults: { _controller: SieJuegosBundle:Registro:busquedaDisciplinaPrueba }
+    options:
+         expose: true
+
+sie_juegos_registro_f1_busqueda_posicion:
+   path:    /registro/f1/busqueda/posicion
+   defaults: { _controller: SieJuegosBundle:Registro:busquedaPosicion }
+   options:
+        expose: true
+
+sie_juegos_registro_f1_busqueda_grado_estudiante:
+    path:    /registro/f1/busqueda/grado/estudiante
+    defaults: { _controller: SieJuegosBundle:Registro:busquedaGradoEstudiante }
+    options:
+         expose: true
+
+sie_juegos_registro_f1_busqueda_grado_estudiante_save:
+   path:    /registro/f1/busqueda/grado/estudiante/save
+   defaults: { _controller: SieJuegosBundle:Registro:busquedaGradoEstudianteSave }
+   options:
+        expose: true
+
+sie_juegos_registro_f1_busqueda_unidadeducativa_prueba_deportista:
+   path:    /registro/f1/busqueda/unidadeducativa/prueba/deportista
+   defaults: { _controller: SieJuegosBundle:Registro:busquedaUnidadeducativaPruebaDeportista }
+   options:
+        expose: true
+
+sie_juegos_eliminacion_f1_inscripcion:
+    path:    /eliminacion/f1/inscripcion
+    defaults: { _controller: SieJuegosBundle:Registro:eliminaInscripcion }
+    options:
+         expose: true
