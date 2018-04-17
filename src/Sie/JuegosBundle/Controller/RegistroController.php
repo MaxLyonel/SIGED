@@ -618,141 +618,151 @@ class RegistroController extends Controller {
             }
         }
 
-        if ($edadValida){
-            if($inscripcionEstudianteGestionPruebaFase[0]){
-                $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya registrado en: '.$tipoDisciplinaPrueba["prueba"].')');
-            } else {
-                $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
-                if ($cantidadIncritosGestionPruebaFase >= $tipoDisciplinaPrueba["cupo"]){
-                  $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible registrar a mas estudiantes del cupo permitido)');
+        $query = $em->getConnection()->prepare("
+            select * from validacion_proceso where gestion_tipo_id = ".$gestion." and es_activo = 'f' and validacion_regla_tipo_id in (2,3,6,7,8,11,12,13) and obs like '%".$estudiante['codigo_rude']."%'
+        ");
+        $query->execute();
+        $estudianteObservado = $query->fetchAll();
+
+        if (count($estudianteObservado) <= 0){
+            if ($edadValida){
+                if($inscripcionEstudianteGestionPruebaFase[0]){
+                    $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya registrado en: '.$tipoDisciplinaPrueba["prueba"].')');
                 } else {
-                    if (count($inscripcionEstudianteEntity) > 0){
-                        if ($tipoDisciplinaPrueba['tipoDisciplina'] == 'Individual'){
-                            if($inscripcionEstudianteGestionDisciplinaFase[0] and $inscripcionEstudianteEntity[0]['cant_dis_indi'] >= 1){
-                                if ($nivel == 12){
-                                    if ($tipoDisciplinaPrueba["idDisciplina"] == 19){ //gimnasia artistica
-                                        if ($prueba == 103 or $prueba == 104){ // nivel I
-                                            if ($estudiante["edad_gestion"] >= 6 and $estudiante["edad_gestion"]<=9){
-                                                $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
-                                            } else {
-                                                $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 6 a 9 años)');
+                    $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
+                    if ($cantidadIncritosGestionPruebaFase >= $tipoDisciplinaPrueba["cupo"]){
+                      $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible registrar a mas estudiantes del cupo permitido)');
+                    } else {
+                        if (count($inscripcionEstudianteEntity) > 0){
+                            if ($tipoDisciplinaPrueba['tipoDisciplina'] == 'Individual'){
+                                if($inscripcionEstudianteGestionDisciplinaFase[0] and $inscripcionEstudianteEntity[0]['cant_dis_indi'] >= 1){
+                                    if ($nivel == 12){
+                                        if ($tipoDisciplinaPrueba["idDisciplina"] == 19){ //gimnasia artistica
+                                            if ($prueba == 103 or $prueba == 104){ // nivel I
+                                                if ($estudiante["edad_gestion"] >= 6 and $estudiante["edad_gestion"]<=9){
+                                                    $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
+                                                } else {
+                                                    $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 6 a 9 años)');
+                                                }
+                                            }
+                                            if ($prueba == 105 or $prueba == 106){ // nivel II
+                                                if ($estudiante["edad_gestion"] >= 10 and $estudiante["edad_gestion"]<=12){
+                                                    $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
+                                                } else {
+                                                    $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 10 a 12 años)');
+                                                }
                                             }
                                         }
-                                        if ($prueba == 105 or $prueba == 106){ // nivel II
-                                            if ($estudiante["edad_gestion"] >= 10 and $estudiante["edad_gestion"]<=12){
-                                                $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
-                                            } else {
-                                                $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 10 a 12 años)');
+                                    } else {
+                                        if ($tipoDisciplinaPrueba["idDisciplina"] == 2){ //atletismo
+                                                    if ($prueba == 148 or $prueba == 149 or $prueba == 150 or $prueba == 151 or $prueba == 152 or $prueba == 153 or $prueba == 154 or $prueba == 155 or $prueba == 156 or $prueba == 157 or $prueba == 158 or $prueba == 159 or $prueba == 160 or $prueba == 161 or $prueba == 162 or $prueba == 163 or $prueba == 164 or $prueba == 165 or $prueba == 166 or $prueba == 167 or $prueba == 168 or $prueba == 169 or $prueba == 170 or $prueba == 171 or $prueba == 172 or $prueba == 173 or $prueba == 174 or $prueba == 175 or $prueba == 176 or $prueba == 177){ // 12-14
+                                                        if ($estudiante["gestion_nacimiento"] >= 2004 and $estudiante["gestion_nacimiento"]<=2006){
+                                                            $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
+                                                        } else {
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2004 a 2006 en el año de nacimiento)');
+                                                        }
+                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_atle_1214'] >= 2){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 2 pruebas individuales)');
+                                                        }
+                                                    }
+                                                    if ($prueba == 178 or $prueba == 179 or $prueba == 180 or $prueba == 181 or $prueba == 182 or $prueba == 183 or $prueba == 184 or $prueba == 185 or $prueba == 186 or $prueba == 187 or $prueba == 188 or $prueba == 189 or $prueba == 190 or $prueba == 191 or $prueba == 192 or $prueba == 193 or $prueba == 194 or $prueba == 195 or $prueba == 196 or $prueba == 197 or $prueba == 198 or $prueba == 199 or $prueba == 200 or $prueba == 201 or $prueba == 202 or $prueba == 203 or $prueba == 204 or $prueba == 205 or $prueba == 206 or $prueba == 207 or $prueba == 208 or $prueba == 209 or $prueba == 210 or $prueba == 211 or $prueba == 212 or $prueba == 213){ // 15-19
+                                                        if ($estudiante["gestion_nacimiento"] >= 1999 and $estudiante["gestion_nacimiento"]<=2003){
+                                                            $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
+                                                        } else {
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 15 a 19 años y 1999 a 2003 en el año de nacimiento)');
+                                                        }
+                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_atle_1519'] >= 2){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 2 pruebas individuales)');
+                                                        }
+                                                    }
+                                                    if ($cantidadIncritosGestionPruebaFase >= 3){
+                                                      $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (solo se permite 3 estudiantes por prueba individual en la disciplina de Atletismo)');
+                                                    }
+                                        }
+                                        if ($tipoDisciplinaPrueba["idDisciplina"] == 8){ //natacion
+                                                    if ($prueba == 65 or $prueba == 66 or $prueba == 67 or $prueba == 68 or $prueba == 69 or $prueba == 70 or $prueba == 71 or $prueba == 72 or $prueba == 73 or $prueba == 74 or $prueba == 124 or $prueba == 125 or $prueba == 126 or $prueba == 127 or $prueba == 128 or $prueba == 129 or $prueba == 130 or $prueba == 131 or $prueba == 132 or $prueba == 133){ // promocional
+                                                        if ($estudiante["gestion_nacimiento"] >= 2004 and $estudiante["gestion_nacimiento"]<=2006){
+                                                            $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
+                                                        } else {
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2003 a 2005 en el año de nacimiento)');
+                                                        }
+                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_nat_1214'] >= 3){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 3 pruebas individuales)');
+                                                        }
+                                                    }
+                                                    if ($prueba == 114 or $prueba == 115 or $prueba == 116 or $prueba == 117 or $prueba == 118 or $prueba == 119 or $prueba == 120 or $prueba == 121 or $prueba == 122 or $prueba == 123 or $prueba == 138 or $prueba == 139 or $prueba == 140 or $prueba == 141 or $prueba == 142 or $prueba == 143 or $prueba == 144 or $prueba == 145 or $prueba == 146 or $prueba == 147){ // avanzado
+                                                        if ($estudiante["gestion_nacimiento"] >= 1999 and $estudiante["gestion_nacimiento"]<=2003){
+                                                            $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
+                                                        } else {
+                                                            $$inscripcionEstudianteEntitymsg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 10 a 12 años y 1998 a 2002 en el año de nacimiento)');
+                                                        }
+                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_nat_1519'] >= 3){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 3 pruebas individuales)');
+                                                        }
+                                                    }
+                                        }
+                                        if ($tipoDisciplinaPrueba["idDisciplina"] == 6){ //ciclismo
+                                            if (count($inscripcionEstudianteEntity) > 0){
+                                                if($inscripcionEstudianteGestionDisciplinaFase[0]){
+                                                    if ($prueba == 47 or $prueba == 48 or $prueba == 49 or $prueba == 50){ // rutera
+                                                        $inscripcion110 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,110,$fase);
+                                                        if ($inscripcion110[0]){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en montañera)');
+                                                        }
+                                                        $inscripcion111 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,111,$fase);
+                                                        if ($inscripcion111[0]){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en montañera)');
+                                                        }
+                                                        $inscripcion112 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,112,$fase);
+                                                        if ($inscripcion112[0]){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en montañera)');
+                                                        }
+                                                        $inscripcion113 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,113,$fase);
+                                                        if ($inscripcion113[0]){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en montañera)');
+                                                        }
+                                                    }
+                                                    if ($prueba == 110 or $prueba == 111 or $prueba == 112 or $prueba == 113){ // montañera
+                                                        $inscripcion47 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,47,$fase);
+                                                        if ($inscripcion47[0]){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en rutera)');
+                                                        }
+                                                        $inscripcion48 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,48,$fase);
+                                                        if ($inscripcion48[0]){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en rutera)');
+                                                        }
+                                                        $inscripcion49 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,49,$fase);
+                                                        if ($inscripcion49[0]){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en rutera)');
+                                                        }
+                                                        $inscripcion50 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,50,$fase);
+                                                        if ($inscripcion50[0]){
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en rutera)');
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
                                 } else {
-                                    if ($tipoDisciplinaPrueba["idDisciplina"] == 2){ //atletismo
-                                                if ($prueba == 148 or $prueba == 149 or $prueba == 150 or $prueba == 151 or $prueba == 152 or $prueba == 153 or $prueba == 154 or $prueba == 155 or $prueba == 156 or $prueba == 157 or $prueba == 158 or $prueba == 159 or $prueba == 160 or $prueba == 161 or $prueba == 162 or $prueba == 163 or $prueba == 164 or $prueba == 165 or $prueba == 166 or $prueba == 167 or $prueba == 168 or $prueba == 169 or $prueba == 170 or $prueba == 171 or $prueba == 172 or $prueba == 173 or $prueba == 174 or $prueba == 175 or $prueba == 176 or $prueba == 177){ // 12-14
-                                                    if ($estudiante["gestion_nacimiento"] >= 2004 and $estudiante["gestion_nacimiento"]<=2006){
-                                                        $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
-                                                    } else {
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2004 a 2006 en el año de nacimiento)');
-                                                    }
-                                                    if($inscripcionEstudianteEntity[0]['cant_pru_indi_atle_1214'] >= 2){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 2 pruebas individuales)');
-                                                    }
-                                                }
-                                                if ($prueba == 178 or $prueba == 179 or $prueba == 180 or $prueba == 181 or $prueba == 182 or $prueba == 183 or $prueba == 184 or $prueba == 185 or $prueba == 186 or $prueba == 187 or $prueba == 188 or $prueba == 189 or $prueba == 190 or $prueba == 191 or $prueba == 192 or $prueba == 193 or $prueba == 194 or $prueba == 195 or $prueba == 196 or $prueba == 197 or $prueba == 198 or $prueba == 199 or $prueba == 200 or $prueba == 201 or $prueba == 202 or $prueba == 203 or $prueba == 204 or $prueba == 205 or $prueba == 206 or $prueba == 207 or $prueba == 208 or $prueba == 209 or $prueba == 210 or $prueba == 211 or $prueba == 212 or $prueba == 213){ // 15-19
-                                                    if ($estudiante["gestion_nacimiento"] >= 1999 and $estudiante["gestion_nacimiento"]<=2003){
-                                                        $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
-                                                    } else {
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 15 a 19 años y 1999 a 2003 en el año de nacimiento)');
-                                                    }
-                                                    if($inscripcionEstudianteEntity[0]['cant_pru_indi_atle_1519'] >= 2){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 2 pruebas individuales)');
-                                                    }
-                                                }
-                                                if ($cantidadIncritosGestionPruebaFase >= 3){
-                                                  $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (solo se permite 3 estudiantes por prueba individual en la disciplina de Atletismo)');
-                                                }
-                                    }
-                                    if ($tipoDisciplinaPrueba["idDisciplina"] == 8){ //natacion
-                                                if ($prueba == 65 or $prueba == 66 or $prueba == 67 or $prueba == 68 or $prueba == 69 or $prueba == 70 or $prueba == 71 or $prueba == 72 or $prueba == 73 or $prueba == 74 or $prueba == 124 or $prueba == 125 or $prueba == 126 or $prueba == 127 or $prueba == 128 or $prueba == 129 or $prueba == 130 or $prueba == 131 or $prueba == 132 or $prueba == 133){ // promocional
-                                                    if ($estudiante["gestion_nacimiento"] >= 2004 and $estudiante["gestion_nacimiento"]<=2006){
-                                                        $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
-                                                    } else {
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2003 a 2005 en el año de nacimiento)');
-                                                    }
-                                                    if($inscripcionEstudianteEntity[0]['cant_pru_indi_nat_1214'] >= 3){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 3 pruebas individuales)');
-                                                    }
-                                                }
-                                                if ($prueba == 114 or $prueba == 115 or $prueba == 116 or $prueba == 117 or $prueba == 118 or $prueba == 119 or $prueba == 120 or $prueba == 121 or $prueba == 122 or $prueba == 123 or $prueba == 138 or $prueba == 139 or $prueba == 140 or $prueba == 141 or $prueba == 142 or $prueba == 143 or $prueba == 144 or $prueba == 145 or $prueba == 146 or $prueba == 147){ // avanzado
-                                                    if ($estudiante["gestion_nacimiento"] >= 1999 and $estudiante["gestion_nacimiento"]<=2003){
-                                                        $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
-                                                    } else {
-                                                        $$inscripcionEstudianteEntitymsg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 10 a 12 años y 1998 a 2002 en el año de nacimiento)');
-                                                    }
-                                                    if($inscripcionEstudianteEntity[0]['cant_pru_indi_nat_1519'] >= 3){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 3 pruebas individuales)');
-                                                    }
-                                                }
-                                    }
-                                    if ($tipoDisciplinaPrueba["idDisciplina"] == 6){ //ciclismo
-                                        if (count($inscripcionEstudianteEntity) > 0){
-                                            if($inscripcionEstudianteGestionDisciplinaFase[0]){
-                                                if ($prueba == 47 or $prueba == 48 or $prueba == 49 or $prueba == 50){ // rutera
-                                                    $inscripcion110 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,110,$fase);
-                                                    if ($inscripcion110[0]){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en montañera)');
-                                                    }
-                                                    $inscripcion111 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,111,$fase);
-                                                    if ($inscripcion111[0]){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en montañera)');
-                                                    }
-                                                    $inscripcion112 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,112,$fase);
-                                                    if ($inscripcion112[0]){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en montañera)');
-                                                    }
-                                                    $inscripcion113 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,113,$fase);
-                                                    if ($inscripcion113[0]){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en montañera)');
-                                                    }
-                                                }
-                                                if ($prueba == 110 or $prueba == 111 or $prueba == 112 or $prueba == 113){ // montañera
-                                                    $inscripcion47 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,47,$fase);
-                                                    if ($inscripcion47[0]){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en rutera)');
-                                                    }
-                                                    $inscripcion48 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,48,$fase);
-                                                    if ($inscripcion48[0]){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en rutera)');
-                                                    }
-                                                    $inscripcion49 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,49,$fase);
-                                                    if ($inscripcion49[0]){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en rutera)');
-                                                    }
-                                                    $inscripcion50 = $this->verificaInscripcionEstudianteGestionPruebaFase($inscripcionEstudiante,$gestion,50,$fase);
-                                                    if ($inscripcion50[0]){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (ya cuenta se encuentra participando en rutera)');
-                                                    }
-                                                }
-                                            }
-                                        }
+                                    if ($inscripcionEstudianteEntity[0]['cant_dis_indi'] >= 1){
+                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 1 disciplina individual)');
                                     }
                                 }
                             } else {
-                                if ($inscripcionEstudianteEntity[0]['cant_dis_indi'] >= 1){
-                                    $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 1 disciplina individual)');
+                                if ($inscripcionEstudianteEntity[0]['cant_dis_conj'] >= 1){
+                                    $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 1 disciplina de conjunto)');
                                 }
-                            }
-                        } else {
-                            if ($inscripcionEstudianteEntity[0]['cant_dis_conj'] >= 1){
-                                $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 1 disciplina de conjunto)');
                             }
                         }
                     }
                 }
+            } else {
+                $msg = array('0'=>false, '1'=>$estudiante["nombre"]." (Edad y/o gestión del estudiante no válida para inscripción)");
             }
-        } else {
-            $msg = array('0'=>false, '1'=>$estudiante["nombre"]." (Edad y/o gestión del estudiante no válida para inscripción)");
-        }
+          } else {
+              $msg = array('0'=>false, '1'=>$estudiante["nombre"]." (".$estudianteObservado[0]['obs'].", solucione la observación en el SIGED)");
+          }
         return $msg;
     }
 
@@ -1482,7 +1492,7 @@ class RegistroController extends Controller {
     public function verificaInscripcionEstudiante($inscripcionEstudiante){
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
-            select e.paterno, e.materno, e.nombre, e.carnet_identidad, e.complemento, ie.id as sie, ie.institucioneducativa, to_char(e.fecha_nacimiento, 'yyyy') as gestion_nacimiento, to_char(e.fecha_nacimiento, 'MM') as mes_nacimiento, to_char(e.fecha_nacimiento, 'dd') as dia_nacimiento, (cast(to_char(cast('2017-06-30' as date),'yyyyMMdd') as integer) - cast(to_char(e.fecha_nacimiento,'yyyyMMdd') as integer))/10000 as edad, (cast(to_char(now(),'yyyy') as integer) - cast(to_char(e.fecha_nacimiento,'yyyy') as integer)) as edad_gestion
+            select e.paterno, e.materno, e.nombre, e.codigo_rude, e.carnet_identidad, e.complemento, ie.id as sie, ie.institucioneducativa, to_char(e.fecha_nacimiento, 'yyyy') as gestion_nacimiento, to_char(e.fecha_nacimiento, 'MM') as mes_nacimiento, to_char(e.fecha_nacimiento, 'dd') as dia_nacimiento, (cast(to_char(cast('2017-06-30' as date),'yyyyMMdd') as integer) - cast(to_char(e.fecha_nacimiento,'yyyyMMdd') as integer))/10000 as edad, (cast(to_char(now(),'yyyy') as integer) - cast(to_char(e.fecha_nacimiento,'yyyy') as integer)) as edad_gestion
             from estudiante_inscripcion as ei
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
             inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
@@ -1493,7 +1503,7 @@ class RegistroController extends Controller {
         $verInsPru = $query->fetchAll();
 
         if (count($verInsPru) > 0){
-            return array('gestion_nacimiento'=>$verInsPru[0]["gestion_nacimiento"], 'edad'=>$verInsPru[0]["edad"], 'edad_gestion'=>$verInsPru[0]["edad_gestion"],'sie'=>$verInsPru[0]["sie"],'ue'=>$verInsPru[0]["institucioneducativa"],'nombre'=>$verInsPru[0]["nombre"].' '.$verInsPru[0]["paterno"].' '.$verInsPru[0]["materno"], 'ci'=>$verInsPru[0]["carnet_identidad"].(($verInsPru[0]["complemento"] == "") ? "-".$verInsPru[0]["complemento"] : ""));
+            return array('codigo_rude'=>$verInsPru[0]["codigo_rude"], 'gestion_nacimiento'=>$verInsPru[0]["gestion_nacimiento"], 'edad'=>$verInsPru[0]["edad"], 'edad_gestion'=>$verInsPru[0]["edad_gestion"],'sie'=>$verInsPru[0]["sie"],'ue'=>$verInsPru[0]["institucioneducativa"],'nombre'=>$verInsPru[0]["nombre"].' '.$verInsPru[0]["paterno"].' '.$verInsPru[0]["materno"], 'ci'=>$verInsPru[0]["carnet_identidad"].(($verInsPru[0]["complemento"] == "") ? "-".$verInsPru[0]["complemento"] : ""));
         } else {
             return '';
         }
