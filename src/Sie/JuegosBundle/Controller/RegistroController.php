@@ -93,7 +93,7 @@ class RegistroController extends Controller {
         $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
         $query->bindValue(':user_id', $id_usuario);
         $query->bindValue(':sie', $_POST['sie']);
-        $query->bindValue(':rolId', 8);
+        $query->bindValue(':rolId', $id_rol);
         $query->execute();
         $aTuicion = $query->fetchAll();
 

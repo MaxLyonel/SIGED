@@ -262,6 +262,20 @@
                                 <span class="selected"></span>
                             </a>
                         </li>
+                        {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 10 or app.session.get('roluser') == 6 or app.session.get('roluser') == 7 or app.session.get('roluser') == 28 or app.session.get('roluser') == 8 %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-pencil"></i></span>
+                                    <span class="text">Registro</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul>
+                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 8 %}
+                                        <li><a href="{{path('sie_juegos_registro_f1_index')}}">Primera Fase</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endif %}
                     {% for item in app.session.get('roluser') %}
                         {% if item.id == 9 or item.id == 10 or item.id == 6 or item.id == 7 or item.id == 28 or item.id == 8 %}
                             <li class="submenu">

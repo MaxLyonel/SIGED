@@ -30,20 +30,20 @@ class DefaultController extends Controller
 
     	$sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
-        
+
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
         //get the roles info
-        $aRoles = $this->getUserRoles($id_usuario);
-        $this->session->set('roluser', $aRoles);
-        
+        //$aRoles = $this->getUserRoles($id_usuario);
+        //$this->session->set('roluser', $aRoles);
+
 
         $em = $this->getDoctrine()->getManager();
 
-        return $this->render($this->session->get('pathSystem') . ':Default:index.html.twig', array(
-                    
+        return $this->render($this->session->get('pathSystem') . ':Principal:index.html.twig', array(
+
         ));
     }
     /**
