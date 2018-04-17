@@ -640,8 +640,33 @@ var studentsRegister = function(){
             });
     }
 
+    var deleteInscriptionStudent = function(id){
+        if(confirm('¡Se eliminará el registro! ¿Desea continuar?')){
+            formData = $('#studentDeleteId_'+id).serialize();
+            
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('oliminscriptions_deleteInscriptionStudent'),
+                data: formData,
+                beforeSend: function () {
+                    $("#getStudentsId").empty();
+                    $("#getStudentsId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                },
+                success: function (data) {
+                    $("#getStudentsId").empty();
+                    $("#getStudentsId").append(data);
+                },
+                statusCode: {
+                    500: function () {
 
+                    },
+                    404: function () {
 
+                    }
+                }
+            });
+        }
+    }
 
     var deleteInscriptionOlimpiada = function(jsonDataInscription, olimEstudianteInscripcionId){
 

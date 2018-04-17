@@ -186,3 +186,8 @@ oliminscriptions_getListStudents:
     options:
         expose: true
 
+oliminscriptions_deleteInscriptionStudent:
+    path:     /deleteInscriptionStudent
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:deleteInscriptionStudent" }
+    options:
+        expose: true

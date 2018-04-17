@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-lg-12">
+        {% if inscritos %}
+            <table class="table table-primary table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Código Rude</th>
+                        <th>Carnet de Identidad</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Nombre(s)</th>
+                        <th>Paralelo</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Discapacidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                {% for inscrito in inscritos %}
+                    <tr>
+                        <td>1</td>
+                        <td>{{inscrito.codigoRude}}</td>
+                        <td>{{inscrito.carnetIdentidad}}</td>
+                        <td>{{inscrito.paterno}}</td>
+                        <td>{{inscrito.materno}}</td>
+                        <td>{{inscrito.nombre}}</td>
+                        <td>{{inscrito.paralelo}}</td>
+                        <td>{{inscrito.telefonoEstudiante}}</td>
+                        <td>{{inscrito.correoEstudiante}}</td>
+                        <td>{{inscrito.discapacidad}}</td>
+                        <td>
+                            <form id="studentDeleteId_{{inscrito.olimestudianteid}}" method="post" style="display: inline-block">
+                                <input type="hidden" name="form[categoryId]" id="form_categoryId" value="{{categoryId}}">
+                                <input type="hidden" name="form[materiaId]" id="form_materiaId" value="{{materiaId}}">
+                                <input type="hidden" name="form[nivelId]" id="form_nivelId" value="{{nivelId}}">
+                                <input type="hidden" name="form[gradoId]" id="form_gradoId" value="{{gradoId}}">
+                                <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{olimtutorid}}">
+                                <input type="hidden" name="form[olimestudianteid]" id="form_olimestudianteid" value="{{inscrito.olimestudianteid}}">
+                                <button type="button" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar" onclick="deleteInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-trash"></i> Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            No existen registros
+        {% endif %}
+    </div>
+</div>
+{#oliminscriptions_getListStudents#}
