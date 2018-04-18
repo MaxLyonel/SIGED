@@ -380,9 +380,25 @@ var studentsRegister = function(){
     var i =0;
     var countnoselected = 0;
     
+    re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    
     while (i < elem.length && sw == true){
      
       if(elem[i].type == 'text' && elem[i].value !=''){
+        typeInput = elem[i].name.split("][");
+        if(typeInput[1] == 'fono]'){
+          if(isNaN(elem[i].value)){
+            countele =countele-1;
+          }
+          
+        }
+        if(typeInput[1] == 'email]'){
+          //validate email
+          if(!re.test(elem[i].value)){
+           countele =countele-1; 
+          }
+        }
+        // ?alert(elem[i].name + ' '+typeInput.length+' '+typeInput[1]);
         countele = countele + 1;
       }
       
@@ -446,8 +462,90 @@ var studentsRegister = function(){
 
   var studentsRegisterGroup = function(){
 
-      formData = $('#studentsRegisterId').serialize();
+     //validate form and values 
+    var elem = document.getElementById('studentsRegisterId').elements;
+    var sw = true;
+    var countElement;
+    var dataInsc = [];
+     var countele = 0;
+    var i =0;
+    var countnoselected = 0;
+    var inscriptionSelected =0;
+    re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    
+    while (i < elem.length && sw == true){
+     
+      if(elem[i].type == 'text' && elem[i].value !=''){
+        typeInput = elem[i].name.split("][");
+        if(typeInput[1] == 'fono]'){
+          if(isNaN(elem[i].value)){
+            countele =countele-1;
+          }
+          
+        }
+        if(typeInput[1] == 'email]'){
+          //validate email
+          if(!re.test(elem[i].value)){
+           countele =countele-1; 
+          }
+        }
+        // ?alert(elem[i].name + ' '+typeInput.length+' '+typeInput[1]);
+        countele = countele + 1;
+      }
+      
+      if ((elem[i].checked)){
+        
+        if (countele == 2){
+          sw = true;
+        }else{
+          sw = false;
+        }
+         countele = 0;  
+         inscriptionSelected = inscriptionSelected+1;
+      }else{
+        countnoselected =countnoselected+1;
+      }
+      i++;
+    }
 
+    var ruleCondition = $('#form_condicion').val();
+    var ruleCantidad = $('#form_cantidad').val();
+    //valdation number of inscription
+    switch($('#form_condicion').val()){
+      case 'Hasta:':
+        if(inscriptionSelected <= ruleCantidad){
+        }else{
+           alert('El numero de estudinates seleccionados excede con la condicion...');
+           return false;
+        }
+
+      break;
+      case 'Igual a:':
+        if(inscriptionSelected == ruleCantidad){
+        }else{
+           alert('El numero de estudinates seleccionados no cumple con la condicion...');
+           return false;
+        }
+      break;
+    }
+
+
+    if (i == countnoselected) {
+        alert('Tiene que Seleccionar por lo menos una Inscripción y completar la informacion requerida...');
+        return false;
+    }
+   
+    if (!sw) {
+        alert('Tiene que Seleccionar por lo menos una Inscripción y completar la informacion requerida...');
+        return false;
+    }
+
+
+
+
+      formData = $('#studentsRegisterId').serialize();
+      
+      if(confirm('Esta seguro de Realizar la inscripcion?')){
         $.ajax({
              type: 'post',
              url: Routing.generate('oliminscriptions_studentsRegisterGroup'),
@@ -473,6 +571,9 @@ var studentsRegister = function(){
           });
 
     };
+      }
+
+        
 
 
 

@@ -1140,6 +1140,7 @@ class OlimEstudianteInscripcionController extends Controller{
             // dump($studentObs);
 
         }
+        
         // die;
         //get the discapacidad
          $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
@@ -1161,13 +1162,13 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($jsonDataInscription);die;
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
             'objStudentsToOlimpiadas' => $arrCorrectStudent,
-            'form' => $this->studentsRegisterform($jsonDataInscription, $jsonData)->createView(),
+            'form' => $this->studentsRegisterform($jsonDataInscription, $jsonData, $objRules)->createView(),
             'objDiscapacidad' => $objDiscapacidad,
 
         ));
     }
 
-    private function studentsRegisterform($jsonDataInscription, $jsonData){
+    private function studentsRegisterform($jsonDataInscription, $jsonData, $objRules){
         $arrData = json_decode($jsonData,true);
         // dump($arrData);
         // dump($arrData['groupId']);
@@ -1178,7 +1179,13 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->add('jsonData','hidden', array('data'=>$jsonData));
         
         if(isset($arrData['groupId'])){
+        //     dump($objRules->getModalidadNumeroIntegrantesTipo()->getId());
+        // dump($objRules->getModalidadNumeroIntegrantesTipo()->getCondicion());
+        // dump($objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros());
+        // dump($objRules);die;
             $form = $form ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegisterGroup()')));
+            $form = $form->add('condicion', 'hidden', array('data'=>$objRules->getModalidadNumeroIntegrantesTipo()->getCondicion()));
+            $form = $form->add('cantidad', 'hidden', array('data'=>$objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros()));
         }else{
             $form = $form ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegister()')));
         }
@@ -1425,6 +1432,7 @@ class OlimEstudianteInscripcionController extends Controller{
                     
                     break;
                 case '3':
+                case '4':
                     # igual a
                     # delete all students and group
                     $this->deleteAllStudentInscription($jsonDataInscription);
