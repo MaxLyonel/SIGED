@@ -753,6 +753,7 @@ class OlimEstudianteInscripcionController extends Controller{
     public function updateInscriptionStudentAction(Request $request){
         dump($request);die;
         //create db conexion
+        
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         //get the send values
@@ -770,18 +771,17 @@ class OlimEstudianteInscripcionController extends Controller{
         if($olimEstudianteInscripcion){
             $em->getConnection()->beginTransaction();
             try {
-                //actualizar campos
-                /*$em->persist($olimEstudianteInscripcion);
+                $em->persist($olimEstudianteInscripcion);
                 $em->flush();
-                $em->getConnection()->commit();*/
+                $em->getConnection()->commit();
             } catch (Exception $ex) {
-                //$em->getConnection()->rollback();
+                $em->getConnection()->rollback();
             }
         }
         
         $inscritos = $this->getListStudents($materiaId, $olimtutorid, $nivelId, $gradoId);
         
-        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscritos.html.twig', array(
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscritosTutor.html.twig', array(
             'inscritos' => $inscritos,
             'categoryId' => $categoryId,
             'materiaId'=> $materiaId,

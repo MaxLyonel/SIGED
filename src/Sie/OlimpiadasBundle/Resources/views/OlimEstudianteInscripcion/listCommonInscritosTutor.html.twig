@@ -17,7 +17,8 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                {% for inscrito in inscritos %}
+                <tbody>
+                    {% for inscrito in inscritos %}
                     <form id="studentUpdateId_{{inscrito.olimestudianteid}}" method="post">
                         <input type="hidden" name="form[categoryId]" id="form_categoryId" value="{{categoryId}}">
                         <input type="hidden" name="form[materiaId]" id="form_materiaId" value="{{materiaId}}">
@@ -48,10 +49,11 @@
                                     {% endfor %}
                                 </select>
                             </td>
-                            <td><button type="button" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-save"></i> Guardar</button></td>
+                            <td><button type="button" class="btn btn-success btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-save"></i> Guardar</button></td>
                         </tr>
                     </form>
-                {% endfor %}
+                    {% endfor %}
+                </tbody>
             </table>
         {% else %}
             No existen registros
