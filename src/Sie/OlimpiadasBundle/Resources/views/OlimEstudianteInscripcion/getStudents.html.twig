@@ -1,3 +1,4 @@
+ {% include 'SieOlimpiadasBundle:OlimEstudianteInscripcion:messageListInscription.html.twig' %}
 <div class="row">
     <div class="col-md-12">
             {{form_start(form, { 'attr':{'id':'studentsRegisterId' }} )}}
@@ -14,8 +15,8 @@
                                             <th colspan="2">CI - complemento</th>
                                             <th colspan="2">F. Nacimiento - Edad</th>
                                             <th>Discapacidad</th>
-                                            <th>tel&eacute;fono</th>
-                                            <th>Email</th>
+                                            <th>tel&eacute;fono <b style="color:#FF0000;">*</b></th>
+                                            <th>Email <b style="color:#FF0000;">*</b ></th>
                                             <th>&nbsp;</th>
                                             
                                         </tr>
@@ -42,9 +43,9 @@
                                                 <td>{{item.yearsOld}}</td>
 
                                                 <td>
-                                                     <select class="chosen-select mb-5" name="form[datasend_{{item.estinsid}}][discapacidad]">
+                                                     <select class="chosen-select mb-5 form-control" name="form[datasend_{{item.estinsid}}][discapacidad]">
                                                         {% for discapacidad in objDiscapacidad %}
-                                                            <option value="{{discapacidad.id}}">{{discapacidad.origendiscapacidad}}</option>       
+                                                            <option value="{{discapacidad.id}}">{{discapacidad.discapacidad}}</option>       
                                                         {% endfor %}
                                                     </select>
                                                 </td>

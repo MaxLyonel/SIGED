@@ -42,7 +42,7 @@
 
                                         <a href="#" class="media">
                                             <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
-                                            {#
+                                            
 
                                               <div class="media-body">
                                                 <span class="media-heading">
@@ -61,7 +61,7 @@
                                                 <!--/ End meta icon -->
                                             </div><!-- /.media-body -->
 
-                                              #}
+                                              
                                             
 
                                         </a><!-- /.media -->
@@ -144,10 +144,6 @@
                                 <tr>
                                     {# <th>Id</th> #}
                                     <th>Materia</th>
-                                    {# <th>Fecharegistro</th> #}
-                                    <th>Fecha inicio inscripción</th>
-                                    <th>Fecha final inscripción</th>
-                                    {# <th>Descripcion</th> #}
                                     <th>Categoría - Modalidad</th>
                                     {# <th>Reglas</th> #}
                                     <th>Actions</th>
@@ -159,8 +155,7 @@
                                     {# <td><a href="{{ path('olimmateriatipo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
                                     <td>{{ entity.materia }}</td>
                                     {# <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td> #}
-                                    <td>{% if entity.fechaInsIni %}{{ entity.fechaInsIni|date('d-m-Y') }}{% endif %}</td>
-                                    <td>{% if entity.fechaInsFin %}{{ entity.fechaInsFin|date('d-m-Y') }}{% endif %}</td>
+                                    
                                     {# <td>{{ entity.descripcion }}</td> #}
                                     <td>
                                         <div class="pull-right" style="display:none">
@@ -190,10 +185,17 @@
                                     </td>
                                     {# <td></td> #}
                                     <td>
+                                         <form action="{{path('oliminscriptionsnivelsuperior_selectInscriptionIndividual')}}" method="post" style="display: inline-block">
+                                        <input type="hidden" id="form_idMateria" name="form[idMateria]" value="{{entity.id}}">
+                                        <input type="hidden" id="form_jsondata" name="form[jsondata]" value="{{dataOlimpiadas.jsondata}}">                                        
+                                        <input type="hidden" id="form_objStudentInscription" name="form[cpyobjStudentInscription]" value="{{cpyobjStudentInscription}}">        
                                         
-                                        <a href="{{ path('olimreglasolimpiadastipo', { 'idMateria': entity.id }) }}" class="btn btn-info btn-xs " data-toggle="tooltip" data-placement="top" title="inscripcion">
-                                            selecionar Inscripci&oacute;n
-                                        </a>
+
+
+                                        <button type="submit" class="btn btn-info btn-xs"  data-toggle="tooltip" data-placement="top" data-original-title="Inscribir">selecionar Inscripci&oacute;n</button>
+                                        </form>
+                                        
+                                        
 
                                     </td>
                                 </tr>

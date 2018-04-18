@@ -186,3 +186,34 @@ oliminscriptions_getListStudents:
     options:
         expose: true
 
+oliminscriptions_deleteInscriptionStudent:
+    path:     /deleteInscriptionStudent
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:deleteInscriptionStudent" }
+    options:
+        expose: true
+
+oliminscriptions_changeTutor:
+    path:     /changeTutor
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:changeTutor" }
+
+oliminscriptions_changeTutorTemplate:
+    path:     /changeTutorTemplate
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:changeTutorTemplate" }
+    options:
+        expose: true
+
+oliminscriptions_listInscriptionByTutorChange:
+    path:     /{datainscription}/listInscriptionByTutorChange
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscriptionByTutorChange" }
+
+oliminscriptions_getListStudentsTutor:
+    path:     /getListStudentsTutor
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getListStudentsTutor" }
+    options:
+        expose: true
+
+oliminscriptions_updateInscriptionStudent:
+    path:     /updateInscriptionStudent
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:updateInscriptionStudent" }
+    options:
+        expose: true

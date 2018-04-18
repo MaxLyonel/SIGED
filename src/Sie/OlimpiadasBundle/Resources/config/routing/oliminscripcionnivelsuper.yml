@@ -15,4 +15,12 @@ oliminscriptionsnivelsuperior_findStudentRule:
     path:     /findStudentRule
     defaults: { _controller: "SieOlimpiadasBundle:InscripcionNivelSuper:findStudentRule" }
     options:
-        expose: true       
+        expose: true  
+
+oliminscriptionsnivelsuperior_selectInscriptionIndividual:
+    path:     /selectInscriptionIndividual
+    defaults: { _controller: "SieOlimpiadasBundle:InscripcionNivelSuper:selectInscriptionIndividual" }            
+
+oliminscriptionsnivelsuperior_inscripcionsavesuperior:
+    path:     /inscripcionsavesuperior
+    defaults: { _controller: "SieOlimpiadasBundle:InscripcionNivelSuper:inscripcionsavesuperior" }

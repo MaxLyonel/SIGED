@@ -11,7 +11,7 @@
                 <li>
                     <i class="fa fa-pencil"></i>
                     <a href="{{path('infra_list_index')}}">
-                       Inscripciones
+                       Cambio de Tutor
                     </a>
                     <i class="fa fa-angle-right"></i>
                 </li>
@@ -95,7 +95,7 @@
                                           </div>
                                           <div class="col-md-6">
                                             CATEGORIA:
-                                              {{form_widget(form.category, {'attr': {'class':'form-control', 'onchange':'listTemplateInscription(this.value)'} } )}}
+                                              {{form_widget(form.category, {'attr': {'class':'form-control', 'onchange':'changeTutorTemplate(this.value)'} } )}}
                                           </div>
                                          
                                       </div>
@@ -225,6 +225,38 @@
           });
     }
 
+    var changeTutorTemplate = function(categoryId){
+        
+        materiaId = $('#form_olimMateria').val();
+        sie = $('#form_institucionEducativa').val();
+        gestion = $('#form_gestion').val();
+        olimtutorId = $('#form_olimtutorid').val();
+
+        $.ajax({
+             type: 'post',
+             url: Routing.generate('oliminscriptions_changeTutorTemplate'),
+             data: {'categoryId':categoryId, 'materiaId':materiaId, 'sie':sie, 'gestion':gestion, 'olimtutorId':olimtutorId},
+             beforeSend: function () {
+                 $("#templateId").empty();
+                 $("#templateId").empty();
+                 $("#templateId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#templateId").empty();
+                 $("#templateId").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+    }
+
     var getNiveles = function(categoryId){
       materiaId = $('#form_olimMateria').val();
       
@@ -331,7 +363,7 @@
         };
 
 
-      var getListStudents = function(turnoId){
+      var getListStudentsTutor = function(turnoId){
        
        materiaId = $('#form_olimMateria').val();
        categoryId = $('#form_category').val();
@@ -345,7 +377,7 @@
 
         $.ajax({
              type: 'post',
-             url: Routing.generate('oliminscriptions_getListStudents'),
+             url: Routing.generate('oliminscriptions_getListStudentsTutor'),
              data: {'turnoId':turnoId,'paraleloId':paraleloId,'gradoId': gradoId, 'materiaId': materiaId, 'categoryId': categoryId, 'nivelId':nivelId, 'sie':sie, 'gestion':gestion, 'olimtutorid':olimtutorid, 'jsonData':jsonData},
              beforeSend: function () {
                  $("#getStudentsId").empty();
@@ -647,6 +679,34 @@ var studentsRegister = function(){
             $.ajax({
                 type: 'post',
                 url: Routing.generate('oliminscriptions_deleteInscriptionStudent'),
+                data: formData,
+                beforeSend: function () {
+                    $("#getStudentsId").empty();
+                    $("#getStudentsId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                },
+                success: function (data) {
+                    $("#getStudentsId").empty();
+                    $("#getStudentsId").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+    }
+
+    var updateInscriptionStudent = function(id){
+        if(confirm('¡Se actualizará el registro! ¿Desea continuar?')){
+            formData = $('#studentUpdateId_'+id).serialize();
+            
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('oliminscriptions_updateInscriptionStudent'),
                 data: formData,
                 beforeSend: function () {
                     $("#getStudentsId").empty();

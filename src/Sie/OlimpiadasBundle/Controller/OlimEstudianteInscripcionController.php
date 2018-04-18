@@ -468,6 +468,18 @@ class OlimEstudianteInscripcionController extends Controller{
         ));
     }
 
+    public function changeTutorAction(Request $request){
+        // get the send values
+        $form = $request->get('form');
+        
+        $objTutorSelected = $this->get('olimfunctions')->getTutor2($form);
+        
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:changeTutor.html.twig', array(
+            'form' => $this->selectInscriptionForm($form)->createView(),
+            'tutor' => $objTutorSelected
+        ));
+    }
+
     public function listTemplateInscriptionAction(Request $request){
         
         // get the send data
@@ -498,6 +510,63 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($objRuleSelected->getModalidadParticipacionTipo()->getId());die;
     }
 
+    public function changeTutorTemplateAction(Request $request){
+        
+        // get the send data
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        
+        //create db conexion 
+        $em = $this->getDoctrine()->getManager();
+        $objRuleSelected = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findOneBy(array(
+            'olimMateriaTipo'=> $materiaId,
+            'id' => $categoryId
+        ));
+        $arrDataInscription = array(
+            'materiaId' => $request->get('materiaId'),
+            'categoryId' => $request->get('categoryId'),
+            'institucioneducativaid' => $request->get('sie'),
+            'gestiontipoid' => $request->get('gestion'),
+            'olimtutorid' => $request->get('olimtutorId'),
+        );
+        // if the getModalidadParticipacionTipo == 2, then show the informacion about the group
+        if($objRuleSelected->getModalidadParticipacionTipo()->getId()==2){
+            return $this->redirectToRoute('olimgrupoproyecto_showGroup', array('datainscription'=>json_encode($arrDataInscription)));
+        }else{
+        //if not show the common inscription 
+            return $this->redirectToRoute('oliminscriptions_listInscriptionByTutorChange', array('datainscription'=>json_encode($arrDataInscription)));
+        }
+
+        // dump($objRuleSelected->getModalidadParticipacionTipo()->getId());die;
+    }
+
+    public function listInscriptionByTutorChangeAction(Request $request){
+        
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        
+        //get the send values
+        $jsonDataInscription = $request->get('datainscription');
+        $arrDataInscription = json_decode($jsonDataInscription,true);
+        //find information about the group in case if exists
+        $objGroup = array();
+        $groupId = false;
+        if(isset($arrDataInscription['groupId'])){
+            $groupId = $arrDataInscription['groupId'];
+            $objGroup = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($groupId);
+        }
+        //get the rule data
+        $regla = $this->get('olimfunctions')->getDataRule($arrDataInscription);
+        
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscriptionTutor.html.twig', array(
+               'form' => $this->CommonInscriptionListForm($arrDataInscription)->createView(),
+               'groupId' => $groupId,
+               'objGroup' => $objGroup,
+               'regla' => $regla,
+
+        ));
+    }
+
     public function listInscriptionByTutorAction(Request $request){
         
         //create db conexion
@@ -517,7 +586,7 @@ class OlimEstudianteInscripcionController extends Controller{
         $regla = $this->get('olimfunctions')->getDataRule($arrDataInscription);
         
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscription.html.twig', array(
-               'form' => $this->CommonInscriptionForm($arrDataInscription)->createView(),
+               'form' => $this->CommonInscriptionListForm($arrDataInscription)->createView(),
                'groupId' => $groupId,
                'objGroup' => $objGroup,
                'regla' => $regla,
@@ -525,80 +594,200 @@ class OlimEstudianteInscripcionController extends Controller{
         ));
     }
 
+    private function CommonInscriptionListForm($data){
+        // dump($data);die;
+        // $arrAreas = $this->get('olimfunctions')->getAllowedAreasByOlim();
+        // dump($arrAreas);die;
+        $arrNiveles = $this->getNivelesByCategory($data['categoryId']);
+        $newform = $this->createFormBuilder()
+                
+                ->add('jsonData', 'hidden', array('data'=>json_encode($data),))
+                ->add('olimMateria', 'hidden', array('data'=>$data['materiaId'],))
+                ->add('category', 'hidden', array('data'=>$data['categoryId'], ))
+                ->add('nivel', 'choice', array('label'=>'Nivel','choices'=>$arrNiveles,  'empty_value' => 'Seleccionar Nivel'))
+                // ->add('nivel', 'choice', array('label'=>'Nivel', ))
+                ->add('grado', 'choice', array('label'=>'Grado', ))
+                // ->add('paralelo', 'choice', array('label'=>'Paralelo', ))
+                // ->add('turno', 'choice', array('label'=>'Turno', ))
+                ->add('olimtutorid', 'hidden', array('data'=>$data['olimtutorid']))
+                ->add('gestion', 'hidden', array('mapped' => false, 'label' => 'Gestion', 'attr' => array('class' => 'form-control', 'value'=>$data['gestiontipoid'])))
+                // ->add('buscar', 'button', array('label'=>'Cancelar', 'attr'=>array('onclick'=>'openInscriptinoOlimpiadas();'), )) 
+                ;
+        
+            $newform = $newform
+                ->add('institucionEducativa', 'hidden', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control', 'value'=>$data['institucioneducativaid'])))
+                ;
+        
+
+        $newform = $newform->getForm();
+        return $newform;
+
+    }
+
     public function getListStudentsAction(Request $request){
-        dump($request);die;
-        //create db conexino
-        $em = $this->getDoctrine()->getManager();
-         //get the send values
-        $turnoId = $request->get('turnoId');
-        $paraleloId = $request->get('paraleloId');
+        
+        //get the send values
         $gradoId = $request->get('gradoId');
         $materiaId = $request->get('materiaId');
         $categoryId = $request->get('categoryId');
         $nivelId = $request->get('nivelId');
         $sie = $request->get('sie');
         $gestion = $request->get('gestion');
-        $olimtutorid = $request->get('olimtutorid');
-        
+        $olimtutorid = $request->get('olimtutorid');        
         $jsonData = $request->get('jsonData');
-        // dump($jsonData);die;
 
-        //look for the id of institucioneducativa_curso
-        $objInstitucionEducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy( array(
-             'nivelTipo' =>$nivelId,
-             'gradoTipo' => $gradoId,
-             'paraleloTipo'=> $paraleloId,
-             'turnoTipo' => $turnoId, 
-             'institucioneducativa' => $sie,
-             'gestionTipo' => $gestion
+        $inscritos = $this->getListStudents($materiaId, $olimtutorid, $nivelId, $gradoId);
+        
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscritos.html.twig', array(
+            'inscritos' => $inscritos,
+            'categoryId' => $categoryId,
+            'materiaId'=> $materiaId,
+            'nivelId' => $nivelId,
+            'gradoId' => $gradoId,
+            'olimtutorid' => $olimtutorid
         ));
-        
-        $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
-        // $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion);
-        
-        $arrCorrectStudent = array();
-        foreach ($objStudentsToOlimpiadas as $key => $value) {
-            
-            $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
-            $value['fecha_nacimiento'] = $newStudentDate;
-            $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, '30-6-2018');
-            $value['yearsOld'] = $studentYearsOld[0];
+    }
 
-            $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
-            // dump($objStudentsInOlimpiadas);
-            if($objStudentsInOlimpiadas){
-            }else{
-                $arrCorrectStudent[]=($value);    
+    public function deleteInscriptionStudentAction(Request $request){
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+        //get the send values
+        $gradoId = $form['gradoId'];
+        $materiaId = $form['materiaId'];
+        $categoryId = $form['categoryId'];
+        $nivelId = $form['nivelId'];
+        $olimtutorid = $form['olimtutorid'];
+        $olimestudianteid = $form['olimestudianteid'];
+
+        $olimEstudianteInscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findOneBy(array(
+            'id' => $olimestudianteid
+        ));
+
+        if($olimEstudianteInscripcion){
+            $em->getConnection()->beginTransaction();
+            try {
+                $olimEstudianteInscripcionSuperior = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcionCursoSuperior')->findBy(array(
+                    'olimEstudianteInscripcion' => $olimEstudianteInscripcion
+                ));
+                if($olimEstudianteInscripcionSuperior){
+                    foreach($olimEstudianteInscripcionSuperior as $value){
+                        $em->remove($value);
+                        $em->flush();
+                    }
+                }
+                
+                $olimInscripcionGrupoProyecto = $em->getRepository('SieAppWebBundle:OlimInscripcionGrupoProyecto')->findBy(array(
+                    'olimEstudianteInscripcion' => $olimEstudianteInscripcion
+                ));
+                if($olimInscripcionGrupoProyecto){
+                    foreach($olimInscripcionGrupoProyecto as $value){
+                        $em->remove($value);
+                        $em->flush();
+                    }
+                }
+                $em->remove($olimEstudianteInscripcion);
+                $em->flush();
+                $em->getConnection()->commit();
+            } catch (Exception $ex) {
+                $em->getConnection()->rollback();
             }
-
         }
-        //get the discapacidad
-        $objDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
         
-        // dump($objDiscapacidad);
-        // die;
+        $inscritos = $this->getListStudents($materiaId, $olimtutorid, $nivelId, $gradoId);
         
-        // dump($objStudentsToOlimpiadas);die;
-        // get the data to do the inscription 
-        $jsonDataInscription = json_encode( array(
-
-                'turnoId' => $request->get('turnoId'),
-                'paraleloId' => $request->get('paraleloId'),
-                'gradoId' => $request->get('gradoId'),
-                'materiaId' => $request->get('materiaId'),
-                'categoryId' => $request->get('categoryId'),
-                'nivelId' => $request->get('nivelId'),
-                'sie' => $request->get('sie'),
-                'gestion' => $request->get('gestion'),
-                'olimtutorid' => $request->get('olimtutorid'),
-                'institucionEducativaCursoId' => $objInstitucionEducativaCurso->getId(),
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscritos.html.twig', array(
+            'inscritos' => $inscritos,
+            'categoryId' => $categoryId,
+            'materiaId'=> $materiaId,
+            'nivelId' => $nivelId,
+            'gradoId' => $gradoId,
+            'olimtutorid' => $olimtutorid
         ));
-        // dump($jsonDataInscription);die;
-        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
-            'objStudentsToOlimpiadas' => $arrCorrectStudent,
-            'form' => $this->studentsRegisterform($jsonDataInscription, $jsonData)->createView(),
-            'objDiscapacidad' => $objDiscapacidad,
+    }
 
+    public function getListStudentsTutorAction(Request $request){
+        
+        //get the send values
+        $gradoId = $request->get('gradoId');
+        $materiaId = $request->get('materiaId');
+        $categoryId = $request->get('categoryId');
+        $nivelId = $request->get('nivelId');
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');
+        $olimtutorid = $request->get('olimtutorid');        
+        $jsonData = $request->get('jsonData');
+
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        
+        $inscritos = $this->getListStudents($materiaId, $olimtutorid, $nivelId, $gradoId);
+
+        $discapacidades = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+
+        $entity = $em->getRepository('SieAppWebBundle:OlimTutor');
+        $query = $entity->createQueryBuilder('ot')
+                ->select('ot.id tutorid, p.carnet, p.paterno, p.materno, p.nombre')
+                ->innerjoin('SieAppWebBundle:Persona', 'p', 'WITH', 'p.id = ot.persona')
+                ->where('ot.institucioneducativa = :sie')
+                ->andWhere('ot.gestionTipoId = :gestion')
+                ->setParameter('sie', $sie)
+                ->setParameter('gestion', $gestion)
+                ->distinct()
+                ->orderBy('p.paterno, p.materno, p.nombre')
+                ->getQuery();
+        $tutores = $query->getResult();
+        
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscritosTutor.html.twig', array(
+            'inscritos' => $inscritos,
+            'categoryId' => $categoryId,
+            'materiaId'=> $materiaId,
+            'nivelId' => $nivelId,
+            'gradoId' => $gradoId,
+            'olimtutorid' => $olimtutorid,
+            'discapacidades' => $discapacidades,
+            'tutores' => $tutores,
+        ));
+    }
+
+    public function updateInscriptionStudentAction(Request $request){
+        dump($request);die;
+        //create db conexion
+        
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+        //get the send values
+        $gradoId = $form['gradoId'];
+        $materiaId = $form['materiaId'];
+        $categoryId = $form['categoryId'];
+        $nivelId = $form['nivelId'];
+        $olimtutorid = $form['olimtutorid'];
+        $olimestudianteid = $form['olimestudianteid'];
+
+        $olimEstudianteInscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findOneBy(array(
+            'id' => $olimestudianteid
+        ));
+
+        if($olimEstudianteInscripcion){
+            $em->getConnection()->beginTransaction();
+            try {
+                $em->persist($olimEstudianteInscripcion);
+                $em->flush();
+                $em->getConnection()->commit();
+            } catch (Exception $ex) {
+                $em->getConnection()->rollback();
+            }
+        }
+        
+        $inscritos = $this->getListStudents($materiaId, $olimtutorid, $nivelId, $gradoId);
+        
+        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscritosTutor.html.twig', array(
+            'inscritos' => $inscritos,
+            'categoryId' => $categoryId,
+            'materiaId'=> $materiaId,
+            'nivelId' => $nivelId,
+            'gradoId' => $gradoId,
+            'olimtutorid' => $olimtutorid
         ));
     }
 
@@ -953,7 +1142,7 @@ class OlimEstudianteInscripcionController extends Controller{
         }
         // die;
         //get the discapacidad
-        $objDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findAll();
+         $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
         
         // get the data to do the inscription 
         $jsonDataInscription = json_encode( array(
@@ -1413,10 +1602,44 @@ class OlimEstudianteInscripcionController extends Controller{
       
     }
 
+    private function getListStudents($materiaId, $olimtutorid, $nivelId, $gradoId){
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
 
-
-
-
-
-
+        $query = $em->getConnection()->prepare("
+            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, odt.id dscpid, odt.discapacidad, ot.id tutorid, p.carnet carnet1, p.paterno paterno1, p.materno materno1, p.nombre nombre1, 'Grado regular' obs
+            from olim_estudiante_inscripcion oei
+            inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+            inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+            inner join estudiante e on e.id = ei.estudiante_id
+            inner join olim_discapacidad_tipo odt on odt.id = oei.discapacidad_tipo_id
+            inner join olim_tutor ot on ot.id = oei.olim_tutor_id
+            inner join persona p on p.id = ot.persona_id
+            where ot.id = :olimTutor and
+            oei.materia_tipo_id = :materiaTipo and
+            iec.nivel_tipo_id = :nivelTipo and
+            iec.grado_tipo_id = :gradoTipo
+            order by e.paterno, e.materno, e.nombre)
+            union all
+            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, odt.id dscpid, odt.discapacidad, ot.id tutorid, p.carnet carnet1, p.paterno paterno1, p.materno materno1, p.nombre nombre1, 'Grado superior' obs
+            from olim_estudiante_inscripcion oei
+            inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+            inner join olim_estudiante_inscripcion_curso_superior oeis on oei.id = oeis.olim_estudiante_inscripcion_id
+            inner join estudiante e on e.id = ei.estudiante_id
+            inner join olim_discapacidad_tipo odt on odt.id = oei.discapacidad_tipo_id
+            inner join olim_tutor ot on ot.id = oei.olim_tutor_id
+            inner join persona p on p.id = ot.persona_id
+            where ot.id = :olimTutor and
+            oeis.nivel_tipo_id = :nivelTipo and
+            oeis.grado_tipo_id = :gradoTipo
+            order by e.paterno, e.materno, e.nombre)
+        ");
+        $query->bindValue(':olimTutor', $olimtutorid);
+        $query->bindValue(':materiaTipo', $materiaId);
+        $query->bindValue(':nivelTipo', $nivelId);
+        $query->bindValue(':gradoTipo', $gradoId);
+        $query->execute();
+        $inscritos = $query->fetchAll();
+        return $inscritos;
+    }
 }
