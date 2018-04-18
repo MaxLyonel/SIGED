@@ -374,16 +374,44 @@ var studentsRegister = function(){
     //validate form and values 
     var elem = document.getElementById('studentsRegisterId').elements;
     var sw = true;
-    for (var i = 0; i < elem.length; i++) {
-        if (elem[i].type == 'checkbox')
-            if ((elem[i].checked))
-                sw = false;
+    var countElement;
+    var dataInsc = [];
+     var countele = 0;
+    var i =0;
+    var countnoselected = 0;
+    
+    while (i < elem.length && sw == true){
+     
+      if(elem[i].type == 'text' && elem[i].value !=''){
+        countele = countele + 1;
+      }
+      
+      if ((elem[i].checked)){
+        
+        if (countele == 2){
+          sw = true;
+        }else{
+          sw = false;
+        }
+         countele = 0;  
+      }else{
+        countnoselected =countnoselected+1;
+      }
+      i++;
     }
-    if (sw) {
-        alert('Tiene que Seleccionar por lo menos una Inscripción...');
-        return flase;
+
+    if (i == countnoselected) {
+        alert('Tiene que Seleccionar por lo menos una Inscripción y completar la informacion requerida...');
+        return false;
     }
+   
+    if (!sw) {
+        alert('Tiene que Seleccionar por lo menos una Inscripción y completar la informacion requerida...');
+        return false;
+    }
+
       formData = $('#studentsRegisterId').serialize();
+      if(confirm('esta seguro de realizar la inscripcion ... ?')){
 
         $.ajax({
              type: 'post',
@@ -409,6 +437,10 @@ var studentsRegister = function(){
              }
           });
 
+
+      }
+
+        
     };
 
 
