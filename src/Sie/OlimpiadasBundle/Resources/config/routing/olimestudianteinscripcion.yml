@@ -211,3 +211,9 @@ oliminscriptions_getListStudentsTutor:
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getListStudentsTutor" }
     options:
         expose: true
+
+oliminscriptions_updateInscriptionStudent:
+    path:     /updateInscriptionStudent
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:updateInscriptionStudent" }
+    options:
+        expose: true
