@@ -1607,7 +1607,7 @@ class OlimEstudianteInscripcionController extends Controller{
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->getConnection()->prepare("
-            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, odt.id dscpid, odt.discapacidad, ot.id tutorid, p.carnet carnet1, p.paterno paterno1, p.materno materno1, p.nombre nombre1, 'Grado regular' obs
+            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, odt.id dscpid, odt.discapacidad, ot.id tutorid, p.carnet carnet1, p.paterno paterno1, p.materno materno1, p.nombre nombre1, 'Grado regular' obs
             from olim_estudiante_inscripcion oei
             inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
             inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
@@ -1621,7 +1621,7 @@ class OlimEstudianteInscripcionController extends Controller{
             iec.grado_tipo_id = :gradoTipo
             order by e.paterno, e.materno, e.nombre)
             union all
-            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, odt.id dscpid, odt.discapacidad, ot.id tutorid, p.carnet carnet1, p.paterno paterno1, p.materno materno1, p.nombre nombre1, 'Grado superior' obs
+            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, odt.id dscpid, odt.discapacidad, ot.id tutorid, p.carnet carnet1, p.paterno paterno1, p.materno materno1, p.nombre nombre1, 'Grado superior' obs
             from olim_estudiante_inscripcion oei
             inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
             inner join olim_estudiante_inscripcion_curso_superior oeis on oei.id = oeis.olim_estudiante_inscripcion_id

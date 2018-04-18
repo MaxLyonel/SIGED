@@ -10,11 +10,12 @@
                         <th>Paterno</th>
                         <th>Materno</th>
                         <th>Nombre(s)</th>
+                        <th>F. Nacimiento</th>
                         <th>Teléfono</th>
                         <th>Correo</th>
                         <th>Discapacidad</th>
-                        <th>Observación</th>
-                        <th>Tutor(a)</th>
+                        {#<th>Observación</th>
+                        <th>Tutor(a)</th>#}
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -26,11 +27,12 @@
                         <td>{{inscrito.paterno}}</td>
                         <td>{{inscrito.materno}}</td>
                         <td>{{inscrito.nombre}}</td>
+                        <td>{{inscrito.fecha_nacimiento}}</td>
                         <td>{{inscrito.telefono_estudiante}}</td>
                         <td>{{inscrito.correo_estudiante}}</td>
                         <td>{{inscrito.discapacidad}}</td>
-                        <td>{{inscrito.obs}}</td>
-                        <td>{{inscrito.carnet1}} - {{inscrito.paterno1}} {{inscrito.materno1}} {{inscrito.nombre1}}</td>
+                        {#<td>{{inscrito.obs}}</td>
+                        <td>{{inscrito.carnet1}} - {{inscrito.paterno1}} {{inscrito.materno1}} {{inscrito.nombre1}}</td>#}
                         <td>
                             <form id="studentDeleteId_{{inscrito.olimestudianteid}}" method="post" style="display: inline-block">
                                 <input type="hidden" name="form[categoryId]" id="form_categoryId" value="{{categoryId}}">

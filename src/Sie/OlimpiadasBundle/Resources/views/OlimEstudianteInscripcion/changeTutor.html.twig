@@ -702,6 +702,16 @@ var studentsRegister = function(){
 
     var updateInscriptionStudent = function(id){
         if(confirm('¡Se actualizará el registro! ¿Desea continuar?')){
+            telefono = $('#form_telefono_'+id).val();
+            correo = $('#form_correo_'+id).val();
+            discapacidad = $('#form_discapacidad_'+id).val();
+            tutor = $('#form_tutor_'+id).val();
+
+            if(telefono == '' || correo == ''){
+                alert('Ingrese datos en los campos requeridos');
+                return false;
+            }
+
             formData = $('#studentUpdateId_'+id).serialize();
             
             $.ajax({
