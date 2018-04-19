@@ -25,13 +25,15 @@
     <div class="body-content animated fadeIn">
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-info shadow">
+                <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <div class="pull-left">
                                         <h3 class="panel-title">Tutor</h3>
                                     </div>
                                     <div class="pull-right">
-                                        <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                        {{form(cancelform)}}
+                                        
+                                        
                                     </div>
                                     <div class="clearfix"></div>
                                 </div><!-- /.panel-heading -->
@@ -285,6 +287,27 @@
 
 
 
+
+var validateFields = function(){
+    fono = $('#form_fono').val();
+    email = $('#form_email').val();
+    re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+alert(fono +' '+email);return false;
+    if(isNaN(fono)){
+      alert('ingrese un numero de telefono valido');
+      return false;
+    }
+    if(!re.test(email)){
+      alert('ingrese un correo valido ...');
+      return false;
+    }
+   if(confirm('Se realizara la inscripcion del estudiante!. ¿Desea continuar?')){
+
+   }else{
+    return false;
+   }
+
+}
 
     var specialInscription = function(){
 

@@ -4,14 +4,14 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-pencil"></i> Tutores <span></span></h2>
+        <h2><i class="fa fa-pencil"></i> Informaci&oacute;n de la Unidad Educativa <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-pencil"></i>
                     <a href="{{path('infra_list_index')}}">
-                       Inscripciones
+                        Informaci&oacute;n de la Unidad Educativa
                     </a>
                     <i class="fa fa-angle-right"></i>
                 </li>
@@ -28,7 +28,7 @@
                 <div class="panel panel-info shadow">
                     <div class="panel-heading">
                         <div class="pull-left">
-                            <h3 class="panel-title">Datos Institución Educativa</h3>
+                            <h3 class="panel-title">Unidad Educativa: {{institucion.institucioneducativa}}</h3>
                         </div>
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
@@ -39,10 +39,10 @@
                                 <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/25.png')}}" class="media-object img-circle" alt="..."></div>
                                 <div class="media-body">
                                     <span class="media-heading">
-                                        {{institucion.id}} - {{institucion.institucioneducativa}}
+                                        SIE: {{institucion.id}}
                                     </span>
                                     <span class="media-text">
-                                        <b>Código LE:</b> {{institucion.leJuridicciongeografica.id}} <br />
+                                        <b>Código Local Educativo:</b> {{institucion.leJuridicciongeografica.id}} <br />
                                         <b>Subsistema:</b> {{institucion.orgcurricularTipo.orgcurricula}} <br />
                                         <b>Dependencia:</b> {{institucion.dependenciaTipo.dependencia}} <br />
                                     </span>
@@ -86,7 +86,7 @@
                                     <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
                                     <div class="media-body">
                                         <span class="media-heading">
-                                            {{director.nombre}}
+                                            Nombre: {{director.nombre}}
                                             {{director.paterno}}
                                             {{director.materno}}
                                         </span>
@@ -121,7 +121,7 @@
                         <div class="panel ">
                             <div class="panel-heading">
                                 <div class="pull-right">
-                                    <p class="panel-title"><a href="#"  data-toggle="tooltip" data-placement="top" data-original-title="Descargar Lista de Inscritos">Descargar lista de Inscritos <i class="fa fa-file"> </i></a></p>
+                                    <p class="panel-title"><a href="#"  data-toggle="tooltip" data-placement="top" data-original-title="Descargar Lista de Inscritos"><i class="fa fa-file"> </i></a></p>
                                     
                                 </div>
                                 <div class="clearfix"></div>
@@ -138,13 +138,13 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>nombre</th>
-                                        <th>paterno</th>
-                                        <th>materno</th>
-                                        <th>Telefono1</th>
-                                        <th>Telefono2</th>
-                                        <th>Correoelectronico</th>
-                                        <th>Acciones</th>
+                                        <th>NOMBRE</th>
+                                        <th>PATERNO</th>
+                                        <th>MATERNO</th>
+                                        <th>TEL&Eacute;FONO 1</th>
+                                        <th>TEL&Eacute;FONO 2</th>
+                                        <th>CORREO ELECTR&Oacute;NICO</th>
+                                        <th>ACCIONES</th>
                                         
                                     </tr>
                                 </thead>
@@ -188,7 +188,7 @@
                                                                 <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
                                                                 <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
                                                                 <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
-                                                                <button href="#" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Lista de Inscritos"><i class="fa fa-eye"></i></button>
+                                                                <button href="#" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Ver lista de Inscritos"><i class="fa fa-eye"></i></button>
                                                             </form>
                                                         </td>
                                                         <td class="text-center">
@@ -198,7 +198,7 @@
                                                                 <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
                                                                 <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
                                                                 <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
-                                                                <button href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Cambio de Tutor"><i class="fa fa-exchange"></i></button>
+                                                                <button href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Modificar Inscripción"><i class="fa fa-exchange"></i></button>
                                                             </form>
                                                         </td>
                                                     {% endif %}

@@ -4,14 +4,14 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-pencil"></i> Inscripciones <span></span></h2>
+        <h2><i class="fa fa-pencil"></i> Inscripci&oacute;n curso superior <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-pencil"></i>
                     <a href="{{path('infra_list_index')}}">
-                       Inscripciones
+                       Inscripci&oacute;n curso superior 
                     </a>
                     <i class="fa fa-angle-right"></i>
                 </li>
@@ -43,13 +43,13 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-info shadow">
+                <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <div class="pull-left">
                                         <h3 class="panel-title">Tutor</h3>
                                     </div>
                                     <div class="pull-right">
-                                        <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                        {{form(cancelform)}}
                                     </div>
                                     <div class="clearfix"></div>
                                 </div><!-- /.panel-heading -->

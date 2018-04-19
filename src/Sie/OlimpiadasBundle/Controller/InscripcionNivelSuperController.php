@@ -73,7 +73,8 @@ class InscripcionNivelSuperController extends Controller{
         // dump($objTutorSelected);die;
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:specialInscription.html.twig', array(
             'form' => $this->specialInscriptionForm($form)->createView(),
-            'tutor' => $objTutorSelected
+            'tutor' => $objTutorSelected,
+            'cancelform' => $this->cancelForm($form)->createView(),
 
         ));
     }
@@ -111,8 +112,9 @@ class InscripcionNivelSuperController extends Controller{
         $em = $this->getDoctrine()->getManager();
         // get the send data
         $form = $request->get('form');
+        // dump($form);die;
         $form['gestiontipoid']= $form['gestion'];
-
+        $arrData = array('institucioneducativaid' => $form['institucionEducativa'], 'gestiontipoid'=> $form['gestion']);
         // validate the student, if is bolivian or doble_nacionalidad
         $objStudent = $this->get('olimfunctions')->validateStudent($form);
         if(!$objStudent){
@@ -124,7 +126,8 @@ class InscripcionNivelSuperController extends Controller{
             $this->addFlash('warningInscriptionSuperior', $message);
             return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:specialInscription.html.twig', array(
                 'form' => $this->specialInscriptionForm($form)->createView(),
-                'tutor' => $objTutorSelected
+                'tutor' => $objTutorSelected,
+                'cancelform' => $this->cancelForm($arrData)->createView(),
 
             ));
 
@@ -154,6 +157,7 @@ class InscripcionNivelSuperController extends Controller{
             'tutor' => $objTutorSelected,
             'dataOlimpiadas' => $form,
             'cpyobjStudentInscription' => json_encode($objStudentInscription) ,
+            'cancelform' => $this->cancelForm($arrData)->createView(),
         ));
     }
 
@@ -195,7 +199,7 @@ class InscripcionNivelSuperController extends Controller{
     public function selectInscriptionIndividualAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         // get the send values
-        $form = $request->get('form');
+        $form = $request->get('form'); 
         // dump($request);die;
         $idMateria = $form['idMateria'];
         $jsondata = $form['jsondata'];
@@ -254,10 +258,26 @@ class InscripcionNivelSuperController extends Controller{
             'jsonInfoToDoInscription' => $jsonInfoToDoInscription,
             'objStudentInscription' => json_decode($form['cpyobjStudentInscription'],true) ,
             'objDiscapacidad' => $objDiscapacidad,
+            'cancelform' => $this->cancelForm($arrData)->createView(),
             // 'olimpiada' => $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->find($arrData['olimregistroolimpiadaid']),
             // 'materia' => $em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($this->session->get('idMateria'))
         ));
     }
+
+
+    private function cancelForm($data){
+        
+        return $this->createFormBuilder()
+                ->setAction($this->generateUrl('olimtutor_listTutorBySie'))                
+                ->add('sie', 'hidden', array('data'=>$data['institucioneducativaid'] , 'mapped'=>false))
+                ->add('gestion', 'hidden', array('data'=>$data['gestiontipoid'] , 'mapped'=>false))
+                ->add('submit', 'submit', array('label' => 'Cancelar', 'attr'=>array('class'=>'btn btn-danger btn-xs')))
+                ->getForm()
+                ;          
+    }
+
+
+
 
     public function inscripcionsavesuperiorAction(Request $request){
         // create db conexion
@@ -267,8 +287,8 @@ class InscripcionNivelSuperController extends Controller{
         $form = $request->get('form');
         $arrInfoToDoInscription = json_decode($form['jsonInfoToDoInscription'], true);
         // dump($arrInfoToDoInscription);
-        // dump($form);
-        // die;
+        dump($form);
+        die;
 
         try {
 

@@ -840,11 +840,21 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($objTutorSelected);die;
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:selectInscription.html.twig', array(
             'form' => $this->selectInscriptionForm($form)->createView(),
-            'tutor' => $objTutorSelected
-
+            'tutor' => $objTutorSelected,
+            'cancelform' => $this->cancelForm($form)->createView(),
         ));
     }
 
+    private function cancelForm($data){
+        
+        return $this->createFormBuilder()
+                ->setAction($this->generateUrl('olimtutor_listTutorBySie'))                
+                ->add('sie', 'hidden', array('data'=>$data['institucioneducativaid'] , 'mapped'=>false))
+                ->add('gestion', 'hidden', array('data'=>$data['gestiontipoid'] , 'mapped'=>false))
+                ->add('submit', 'submit', array('label' => 'Cancelar', 'attr'=>array('class'=>'btn btn-danger btn-xs')))
+                ->getForm()
+                ;          
+    }
 
 
     private function selectInscriptionForm($data){
@@ -852,7 +862,7 @@ class OlimEstudianteInscripcionController extends Controller{
         $arrAreas = $this->get('olimfunctions')->getAllowedAreasByOlim();
         // dump($arrAreas);die;
         $newform = $this->createFormBuilder()
-                ->add('olimMateria', 'choice', array('label'=>'materias','choices'=>$arrAreas,  'empty_value' => 'Seleccionar Materia'))
+                ->add('olimMateria', 'choice', array('label'=>'materias','choices'=>$arrAreas,  'empty_value' => 'Seleccionar Área'))
                 ->add('category', 'choice', array('label'=>'categoria', ))
                 // ->add('nivel', 'choice', array('label'=>'Nivel', ))
                 // ->add('grado', 'choice', array('label'=>'Grado', ))
@@ -940,7 +950,7 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->add('jsonData', 'hidden', array('data'=>json_encode($data),))
                 ->add('olimMateria', 'hidden', array('data'=>$data['materiaId'],))
                 ->add('category', 'hidden', array('data'=>$data['categoryId'], ))
-                ->add('nivel', 'choice', array('label'=>'Nivel','choices'=>$arrNiveles,  'empty_value' => 'Seleccionar Materia'))
+                ->add('nivel', 'choice', array('label'=>'Nivel','choices'=>$arrNiveles,  'empty_value' => 'Seleccionar Nivel'))
                 // ->add('nivel', 'choice', array('label'=>'Nivel', ))
                 ->add('grado', 'choice', array('label'=>'Grado', ))
                 ->add('paralelo', 'choice', array('label'=>'Paralelo', ))
@@ -1283,7 +1293,7 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($form);
 
         // dump(sizeof($form));die;
-        echo('inscription DONE!!!!');die;
+        echo('inscripcion realizada...!!!!');die;
     }
 
     public function studentsRegisterGroupAction(Request $request){
