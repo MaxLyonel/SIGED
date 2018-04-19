@@ -119,94 +119,145 @@
                     </div>
                     <div class="panel-body" style="background: #FFFFFF;">
                         {% if array|length > 0 %}
-                            {% for item in array %}
-                                <div class="tarjeta">
-                                    <h4>{{ item.regla.olimMateriaTipo.olimRegistroOlimpiada.nombreOlimpiada }} - <span style="font-size: 0.9em" class="badge badge-success">{{ item.regla.olimMateriaTipo.materia }}</span></h4>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                                            <div class="panel panel-success card">
-                                                <div class="panel-body">
-                                                    <h4 class="titulo">Datos generales</h4>
-                                                    <label>Categoria: </label> {{ item.regla.categoria }}<br>
-                                                    <label>Modalidad: </label> <span class="badge badge-default">{{ item.regla.modalidadParticipacionTipo.modalidad }}</span><br>
-                                                    <label>Niveles: </label><br>
-                                                    {% if item.primaria|length > 0 %}
-                                                        Primaria: 
-                                                        {% for pri in item.primaria %}
-                                                            <span class="badge badge-inverse">{{ pri.gradoTipo.id }}</span>
-                                                        {% endfor %}
-                                                        <br>
-                                                    {% endif %}
-                                                    {% if item.secundaria|length > 0 %}
-                                                        Secundaria: 
-                                                        {% for sec in item.secundaria %}
-                                                            <span class="badge badge-inverse">{{ sec.gradoTipo.id }}</span>
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
+                            <table class="table table-default">
+                                <thead>
+                                    <tr>
+                                        <th>Área</th>
+                                        <th>Año de escolaridad</th>
+                                        <th>Categoría</th>
+                                        <th>Equipo</th>
+                                        <th>Discapacidad del estudiante</th>
+                                        <th>Tutor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in array %}
 
-                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                                            <div class="panel panel-info card">
-                                                <div class="panel-body">
-                                                    <h4 class="titulo">Nivel y grado actual</h4>
-
-                                                    {% if inscripcionActual[0].institucioneducativaCurso.nivelTipo.id == 12 %}
-                                                        Primaria 
-                                                    {% else %}
-                                                        Secundaria
-                                                    {% endif %}
-                                                    <span class="badge badge-inverse">{{ inscripcionActual[0].institucioneducativaCurso.gradoTipo.id }}</span>
-
-
-                                                    {% if item.superior != null %}
-                                                        <h4 class="titulo">Nivel y grado de participación</h4>
-                                                        {% if item.superior.nivelTipo.id == 12 %}
-                                                            Primaria
-                                                        {% else %}
-                                                            Secundaria
-                                                        {% endif %}
-                                                        <span class="badge badge-inverse">{{ item.superior.gradoTipo.id }}</span>
-                                                    {% endif %}
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {% if item.tipo == 'Grupo' %}
-                                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                                                <div class="panel panel-info card">
-                                                    <div class="panel-body">
-                                                        <h4 class="titulo">Datos del equipo y tutor</h4>
-                                                        <label>Nombre equipo: </label> {{ item.grupo[0].nombre }}<br>
-                                                        <label>Tutor: </label>
-                                                        {% if item.grupo[0].olimTutor != null %}
-                                                            {{ item.grupo[0].olimTutor.persona.nombre }} {{ item.grupo[0].olimTutor.persona.paterno }} {{ item.grupo[0].olimTutor.persona.materno }}
-                                                        {% else %}
-                                                            No asignado
-                                                        {% endif %}
+                                        {# <div class="tarjeta" style="display: none">
+                                            <h4>{{ item.regla.olimMateriaTipo.olimRegistroOlimpiada.nombreOlimpiada }} - <span style="font-size: 0.9em" class="badge badge-success">{{ item.regla.olimMateriaTipo.materia }}</span></h4>
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                                                    <div class="panel panel-success card">
+                                                        <div class="panel-body">
+                                                            <h4 class="titulo">Datos generales</h4>
+                                                            <label>Categoria: </label> {{ item.regla.categoria }}<br>
+                                                            <label>Modalidad: </label> <span class="badge badge-default">{{ item.regla.modalidadParticipacionTipo.modalidad }}</span><br>
+                                                            <label>Niveles: </label><br>
+                                                            {% if item.primaria|length > 0 %}
+                                                                Primaria: 
+                                                                {% for pri in item.primaria %}
+                                                                    <span class="badge badge-inverse">{{ pri.gradoTipo.id }}</span>
+                                                                {% endfor %}
+                                                                <br>
+                                                            {% endif %}
+                                                            {% if item.secundaria|length > 0 %}
+                                                                Secundaria: 
+                                                                {% for sec in item.secundaria %}
+                                                                    <span class="badge badge-inverse">{{ sec.gradoTipo.id }}</span>
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        {% else %}    
-                                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                                                <div class="panel panel-info card">
-                                                    <div class="panel-body">
-                                                        <h4 class="titulo">Datos del tutor</h4>
-                                                        <label>Tutor: </label> 
-                                                        {% if item.tutor != null %}
-                                                            {{ item.tutor.persona.nombre }} {{ item.tutor.persona.paterno }} {{ item.tutor.persona.materno }}    
-                                                        {% else %}
-                                                            No asignado
-                                                        {% endif %}
+
+                                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                                                    <div class="panel panel-info card">
+                                                        <div class="panel-body">
+                                                            <h4 class="titulo">Nivel y grado actual</h4>
+
+                                                            {% if inscripcionActual[0].institucioneducativaCurso.nivelTipo.id == 12 %}
+                                                                Primaria 
+                                                            {% else %}
+                                                                Secundaria
+                                                            {% endif %}
+                                                            <span class="badge badge-inverse">{{ inscripcionActual[0].institucioneducativaCurso.gradoTipo.id }}</span>
+
+
+                                                            {% if item.superior != null %}
+                                                                <h4 class="titulo">Nivel y grado de participación</h4>
+                                                                {% if item.superior.nivelTipo.id == 12 %}
+                                                                    Primaria
+                                                                {% else %}
+                                                                    Secundaria
+                                                                {% endif %}
+                                                                <span class="badge badge-inverse">{{ item.superior.gradoTipo.id }}</span>
+                                                            {% endif %}
+
+                                                        </div>
                                                     </div>
                                                 </div>
+
+                                                {% if item.tipo == 'Grupo' %}
+                                                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                                                        <div class="panel panel-info card">
+                                                            <div class="panel-body">
+                                                                <h4 class="titulo">Datos del equipo y tutor</h4>
+                                                                <label>Nombre equipo: </label> {{ item.grupo[0].nombre }}<br>
+                                                                <label>Tutor: </label>
+                                                                {% if item.grupo[0].olimTutor != null %}
+                                                                    {{ item.grupo[0].olimTutor.persona.nombre }} {{ item.grupo[0].olimTutor.persona.paterno }} {{ item.grupo[0].olimTutor.persona.materno }}
+                                                                {% else %}
+                                                                    No asignado
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% else %}    
+                                                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                                                        <div class="panel panel-info card">
+                                                            <div class="panel-body">
+                                                                <h4 class="titulo">Datos del tutor</h4>
+                                                                <label>Tutor: </label> 
+                                                                {% if item.tutor != null %}
+                                                                    {{ item.tutor.persona.nombre }} {{ item.tutor.persona.paterno }} {{ item.tutor.persona.materno }}    
+                                                                {% else %}
+                                                                    No asignado
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
                                             </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            {% endfor %}
+                                        </div> #}
+                                        <tr>
+                                            <td><strong>{{ item.regla.olimMateriaTipo.materia }}</strong></td>
+                                            <td>
+                                                {{ item.inscripcion.estudianteInscripcion.institucioneducativaCurso.gradoTipo.id }}  
+                                                {% if item.inscripcion.estudianteInscripcion.institucioneducativaCurso.nivelTipo.id == 12 %}
+                                                    Primaria
+                                                {% else %}
+                                                    Secundaria
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ item.regla.categoria }}</td>
+                                            <td>
+                                                {% if item.tipo == 'Grupo' %}
+                                                    {{ item.grupo[0].nombre }}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if item.inscripcion.discapacidadTipo %}
+                                                    {{ item.inscripcion.discapacidadTipo.discapacidad }}
+                                                {% else %}
+                                                    Ninguna
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if item.tipo == 'Grupo' %}
+                                                    {% if item.grupo[0].olimTutor != null %}
+                                                        {{ item.grupo[0].olimTutor.persona.nombre }} {{ item.grupo[0].olimTutor.persona.paterno }} {{ item.grupo[0].olimTutor.persona.materno }}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if item.tutor != null %}
+                                                        {{ item.tutor.persona.nombre }} {{ item.tutor.persona.paterno }} {{ item.tutor.persona.materno }}    
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            
                         {% else %}
                             <div class="alert alert-info">
                                 <i class="fa fa-info-circle"></i> El estudiante no cuenta con inscripciones, en la gestión actual

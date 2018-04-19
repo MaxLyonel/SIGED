@@ -65,6 +65,7 @@ class OlimReporteController extends Controller{
 
 					$cont = 0;
 					foreach ($inscripcionesOlim as $io) {
+						$array[$cont]['inscripcion'] = $io;
 						$array[$cont]['regla'] = $io->getOlimReglasOlimpiadasTipo();
 						// NIVELES
 						$primaria = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasNivelGradoTipo')->findBy(array(

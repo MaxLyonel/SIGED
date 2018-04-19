@@ -39,14 +39,21 @@ class OlimArchivoController extends Controller {
 
 		if($file){
 
+			$em = $this->getDoctrine()->getManager();
+		    $grupo = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($id);
+		    $sie = $grupo->getOlimTutor()->getInstitucioneducativa()->getId();
+		    $gestion = $grupo->getGestionTipoId();
+		    $grupoId = $grupo->getId();
+
 		    $ruta = $this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/documentos';
 		    $tipo = explode('/',$_FILES['archivo']['type']);
-		    $nombre_archivo = md5(uniqid()).'.'.$tipo[1];
+		    // $nombre_archivo = md5(uniqid()).'.'.$tipo[1];
+		    $nombre_archivo = $sie.'_'.$gestion.'_'.$grupoId.'.'.$tipo[1];
 		    $archivador = $ruta.'/'.$nombre_archivo;
+		    //unlink($archivador);
 		    move_uploaded_file($_FILES['archivo']['tmp_name'], $archivador);
 
-		    $em = $this->getDoctrine()->getManager();
-		    $grupo = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($id);
+
 		    $grupo->setDocumentoPdf1($nombre_archivo);
 		    $em->persist($grupo);
 		    $em->flush();
@@ -55,7 +62,8 @@ class OlimArchivoController extends Controller {
 		    	'status'=>201,
 		    	'msg'=>'Archivo subido correctamente',
 		    	'categoriaId'=>$grupo->getOlimReglasOlimpiadasTipo()->getId(),
-		    	'archivo'=>$nombre_archivo
+		    	'archivo'=>$nombre_archivo,
+		    	'grupoId'=>$grupo->getId()
 		    ));
 
 		}
@@ -64,7 +72,8 @@ class OlimArchivoController extends Controller {
 			'status'=>404,
 			'msg'=>'Debe seleccionar un archivo PDF',
 			'categoriaId'=>null,
-			'grupoId'=>$grupo->getId()
+			'archivo'=>'',
+			'grupoId'=>''
 		));
 
 	}
