@@ -169,14 +169,14 @@ class DefaultController extends Controller {
                 $layout = 'layoutCertification.html.twig';
                 $this->session->set('pathSystem', "SieTramitesBundle");
                 break;
-            case '172.20.16.239a':
+            case '172.20.196.17':
                 $sysname = 'JUEGOS';
                 $sysporlet = 'jdp';
                 $sysbutton = false;
                 $layout = 'layoutJuegos.html.twig';
                 $this->session->set('pathSystem', "SieJuegosBundle");
                 break;
-            case '172.20.196.17':
+            case '172.20.196.17a':
                 $sysname = 'TRAMITES';
                 $sysporlet = 'green';
                 $sysbutton = false;
@@ -468,7 +468,6 @@ class DefaultController extends Controller {
                 //*****CONFIGURACIONES PARA OTROS SUBSISTEMAS
                 //*****CONFIGURACIONES PARA OTROS SUBSISTEMAS
                 if  ( ($this->session->get('pathSystem') === 'SieDiplomaBundle')
-                   || ($this->session->get('pathSystem') === 'SieJuegosBundle')
                    || ($this->session->get('pathSystem') === 'SieTramitesBundle')
                    || ($this->session->get('sysname') === 'REPORTES') ){
                         //review if the system is Diplomas
@@ -496,10 +495,7 @@ class DefaultController extends Controller {
                         if ($this->session->get('pathSystem') === 'SieDiplomaBundle') {
                             return $this->redirect($this->generateUrl('sie_diploma_homepage', array('name' => 'asd')));
                         }
-                        //review if the system is Juegos
-                        if ($this->session->get('pathSystem') === 'SieJuegosBundle') {
-                            return $this->redirect($this->generateUrl('sie_juegos_homepage'));
-                        }
+
                         if ($this->session->get('pathSystem') === 'SieTramitesBundle') {
                             return $this->redirect($this->generateUrl('tramite_homepage'));
                         }

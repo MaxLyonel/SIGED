@@ -883,7 +883,7 @@ class InscriptionExtranjerosController extends Controller {
             //dump($arrayNotas);die;
 
             // Registro de materia curso oferta en el log
-            $this->get('funciones')->setLogTransaccion(
+            /*$this->get('funciones')->setLogTransaccion(
                 $studentInscription->getId(),
                 'estudiante_inscripcion',
                 'C',
@@ -892,7 +892,7 @@ class InscriptionExtranjerosController extends Controller {
                 '',
                 'SIGED',
                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-            );
+            );*/
             // Try and commit the transaction
             $em->getConnection()->commit();
 

@@ -134,7 +134,7 @@
 
                         <!-- Start brand -->
                         <a class="navbar-brand" href="dashboard.html">
-                            Juegos 2017
+                            Juegos {{ "now"|date("Y") }}
                         </a><!-- /.navbar-brand -->
                         <!--/ End brand -->
 
@@ -254,16 +254,15 @@
                 <!--/ End left navigation -  profile shortcut -->
 
                 <!-- Start left navigation - menu -->
-                <ul class="sidebar-menu">             
+                <ul class="sidebar-menu">
                         <li class="submenu">
                             <a href="{{path('sie_juegos_homepage')}}">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Información</span>
                                 <span class="selected"></span>
                             </a>
-                        </li>  
-                    {% for item in app.session.get('roluser') %}         
-                        {% if item.id == 9 or item.id == 10 or item.id == 6 or item.id == 7 or item.id == 28 or item.id == 8 %}   
+                        </li>
+                        {% if app.session.get('roluser') == 9 or app.session.get('roluser') == 10 or app.session.get('roluser') == 6 or app.session.get('roluser') == 7 or app.session.get('roluser') == 28 or app.session.get('roluser') == 8 %}
                             <li class="submenu">
                                 <a href="javascript:void(0);">
                                     <span class="icon"><i class="fa fa-pencil"></i></span>
@@ -271,19 +270,42 @@
                                     <span class="arrow"></span>
                                 </a>
                                 <ul>
-                                    {% if item.id == 9 %} 
+                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 8 %}
+                                        <li><a href="{{path('sie_juegos_registro_f1_index')}}">Primera Fase</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endif %}
+                    {% for item in app.session.get('roluser') %}
+                        {% if item.id == 9 or item.id == 10 or item.id == 6 or item.id == 7 or item.id == 28 or item.id == 8 %}
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-pencil"></i></span>
+                                    <span class="text">Registro</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul>
+                                    {# if item.id == 9 #}
+                                    {% if 1 != 1 %}
                                         <li><a href="{{path('sie_juegos_inscripcion_fp_busqueda')}}">Fase Previa</a></li>
                                     {% endif %}
-                                    {% if item.id == 10 %} 
-                                        <li><a href="{{path('sie_juegos_clasificacion_f1_index')}}">Primera Fase</a></li>
-                                        <li><a href="{{path('sie_juegos_comision_entrenador_f1_lista_index')}}">Registro Entrenadores</a></li>
+                                    {% if item.id == 10 or item.id == 9 or item.id == 8 %}
+                                        <li><a href="{{path('sie_juegos_registro_f1_index')}}">Primera Fase</a></li>
                                     {% endif %}
-                                    {% if item.id == 6 %} 
-                                        <li><a href="{{path('sie_juegos_clasificacion_f2_index')}}">Segunda Fase</a></li>                                          
-                                        <li><a href="{{path('sie_juegos_comision_entrenador_f2_lista_index')}}">Clasificacion Entrenadores</a></li>        
+                                    {% if 1 > 1 %}
+                                    <li><a href="{{path('sie_juegos_clasificacion_f1_index')}}">Primera Fase</a></li>
+                                    {% endif %}
+                                    {% if 1 > 1 %}
+                                    <li><a href="{{path('sie_juegos_comision_entrenador_f1_lista_index')}}">Registro Entrenadores</a></li>
+                                    {% endif %}
+                                    {# if item.id == 6 #}
+                                    {% if 1 != 1 %}
+                                        <li><a href="{{path('sie_juegos_clasificacion_f2_index')}}">Segunda Fase</a></li>
+                                        <li><a href="{{path('sie_juegos_comision_entrenador_f2_lista_index')}}">Clasificacion Entrenadores</a></li>
                                         <li><a href="{{path('estudiantedatopersonal_juegos_deportistas_fase2')}}">Deportistas Datos Personales</a></li>
                                     {% endif %}
-                                    {% if item.id == 7 or item.id == 28 %}                                    
+                                    {# if item.id == 7 or item.id == 28 #}
+                                    {% if 1 != 1 %}
                                         <li><a href="{{path('sie_juegos_clasificacion_f3_index')}}">Tercera Fase</a></li>
                                         <li><a href="{{path('estudiantedatopersonal_juegos_deportistas_fase3')}}">Deportistas Datos Personales</a></li>
                                         <!--<li><a href="{{path('sie_juegos_comision_acompanante_lista_index')}}">Registro Acompañante</a></li>-->
@@ -291,13 +313,14 @@
                                         <li><a href="{{path('sie_juegos_comision_departamental_lista_index')}}">Registro Delegados</a></li>
                                         <li><a href="{{path('sie_juegos_representacion_cultural_index')}}">Registro Rep. Cultural</a></li>
                                     {% endif %}
-                                    {% if item.id == 8 %} 
-                                        <li><a href="{{path('sie_juegos_comision_nacional_lista_index')}}">Registro Delegados</a></li>                                
+                                    {# if item.id == 8 #}
+                                    {% if 1 != 1 %}
+                                        <li><a href="{{path('sie_juegos_comision_nacional_lista_index')}}">Registro Delegados</a></li>
                                     {% endif %}
                                 </ul>
                             </li>
                         {% endif %}
-                        {% if item.id == 10 or item.id == 11  or item.id == 6 or item.id == 7 or item.id == 8 or item.id == 20 or item.id == 28 %}   
+                        {% if item.id == 10 or item.id == 11  or item.id == 6 or item.id == 7 or item.id == 8 or item.id == 20 or item.id == 28 %}
                             <!-- Start navigation - dashboard -->
                             <li class="submenu">
                                 <a href="javascript:void(0);">
@@ -306,26 +329,26 @@
                                     <span class="arrow"></span>
                                 </a>
                                 <ul>
-                                    {% if item.id == 10 %} 
+                                    {% if item.id == 10 %}
                                         <li><a href="{{path('sie_juegos_clasificacion_estadistica_ue_fp_distrito_pdf')}}">Seguimiento FP - UE's</a></li>
-                                    {% endif %} 
+                                    {% endif %}
                                     <!-- <li><a href="{{path('sie_juegos_reporte_fp')}}">Registrados Fase Previa</a></li> -->
-                                    {% if item.id == 6 or item.id == 7 or item.id == 8 or item.id == 20 %}                                         
+                                    {% if item.id == 6 or item.id == 7 or item.id == 8 or item.id == 20 %}
                                         <!-- <li><a href="{{path('sie_juegos_reporte_f1')}}">Registrados Primera Fase</a></li> -->
-                                    {% endif %} 
-                                    {% if item.id == 7 or item.id == 8 or item.id == 20  or item.id == 28 %} 
-                                        {% if item.id == 7 or item.id == 20  or item.id == 28 %} 
+                                    {% endif %}
+                                    {% if item.id == 7 or item.id == 8 or item.id == 20  or item.id == 28 %}
+                                        {% if item.id == 7 or item.id == 20  or item.id == 28 %}
                                             <li><a href="{{path('sie_juegos_clasificacion_estadistica_ue_fp_departamento_pdf')}}">Seguimiento FP - UE's</a></li>
-                                        {% endif %} 
+                                        {% endif %}
                                         <!-- <li><a href="{{path('sie_juegos_reporte_f2')}}">Registrados Segunda Fase</a></li> -->
-                                    {% endif %} 
-                                    {% if item.id == 8 or item.id == 20 %} 
+                                    {% endif %}
+                                    {% if item.id == 8 or item.id == 20 %}
                                        <!--  <li><a href="{{path('sie_juegos_reporte_f3')}}">Registrados Tercera Fase</a></li> -->
-                                    {% endif %} 
+                                    {% endif %}
                                 </ul>
                             </li>
-                        {% endif %}  
-                    {% endfor %} 
+                        {% endif %}
+                    {% endfor %}
                     <!-- Start navigation - dashboard -->
                     <!--<li class="submenu">
                         <a href="javascript:void(0);">
@@ -355,10 +378,10 @@
 
             </aside><!-- /#sidebar-left -->
             <!--/ END SIDEBAR LEFT -->
-          
+
 
             <!-- START @PAGE CONTENT -->
-            <section id="page-content">   
+            <section id="page-content">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="page-content">
@@ -374,7 +397,7 @@
                                 </div>
                             {% endfor %}
                         </div>
-                    </div>        
+                    </div>
                 </div>
                 {% block contentoption %}
                     <!-- here the iptions content -->

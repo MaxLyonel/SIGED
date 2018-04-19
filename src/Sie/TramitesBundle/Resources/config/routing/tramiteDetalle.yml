@@ -94,6 +94,22 @@ tramite_detalle_certificado_tecnico_entrega_guarda:
 
 # DIPLOMA HUMANISTICO
 
+tramite_detalle_diploma_humanistico_recepcion_busca:
+    path:     /diploma/humanistico/recepcion/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumRecepcionBusca }
+
+tramite_detalle_diploma_humanistico_recepcion_lista:
+    path:     /diploma/humanistico/recepcion/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumRecepcionLista }
+
+tramite_detalle_diploma_humanistico_recepcion_lista_pdf:
+    path:     /diploma/humanistico/recepcion/lista/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumRecepcionListaPdf }
+
+tramite_detalle_diploma_humanistico_recepcion_guarda:
+    path:     /diploma/humanistico/recepcion/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumRecepcionGuarda }
+
 tramite_detalle_diploma_humanistico_autorizacion_busca:
     path:     /diploma/humanistico/autorizacion/busca
     defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumAutorizacionBusca }
@@ -129,6 +145,22 @@ tramite_detalle_diploma_humanistico_impresion_carton_pdf:
 tramite_detalle_diploma_humanistico_impresion_guarda:
     path:     /diploma/humanistico/impresion/guarda
     defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumImpresionGuarda }
+
+tramite_detalle_diploma_humanistico_envio_busca:
+    path:     /diploma/humanistico/envio/busca
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumEnvioBusca }
+
+tramite_detalle_diploma_humanistico_envio_lista:
+    path:     /diploma/humanistico/envio/lista
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumEnvioLista }
+
+tramite_detalle_diploma_humanistico_envio_lista_pdf:
+    path:     /diploma/humanistico/envio/lista/pdf
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumEnvioListaPdf }
+
+tramite_detalle_diploma_humanistico_envio_guarda:
+    path:     /diploma/humanistico/envio/guarda
+    defaults: { _controller: SieTramitesBundle:TramiteDetalle:dipHumEnvioGuarda }
 
 tramite_detalle_diploma_humanistico_entrega_busca:
     path:     /diploma/humanistico/entrega/busca
