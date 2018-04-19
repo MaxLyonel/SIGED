@@ -1592,8 +1592,8 @@ class OlimEstudianteInscripcionController extends Controller{
         return $this->createFormBuilder()
                 ->add('fono', 'text')
                 ->add('email', 'text')
-                ->add('discapacidad', 'entity', array('class'=>'SieAppWebBundle:OlimDiscapacidadTipo', 'property'=>'discapacidad', 'empty_value'=>'Seleccionar...'))
-                ->add('jsonDataInscription','text', array('data'=>$jsonDataInscription) )
+                ->add('discapacidad', 'entity', array('class'=>'SieAppWebBundle:OlimDiscapacidadTipo', 'property'=>'discapacidad'/*, 'empty_value'=>'Seleccionar...'*/))
+                ->add('jsonDataInscription','hidden', array('data'=>$jsonDataInscription) )
                 ->add('doInscription', 'button', array('label'=>'Inscribir','attr'=>array('class'=>'btn btn-warning btn-xs', 'onclick'=>'saveExternalInscription();')))
                 ->getForm()
                 ;
