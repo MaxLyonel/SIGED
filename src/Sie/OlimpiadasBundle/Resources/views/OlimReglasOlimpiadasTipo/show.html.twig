@@ -21,7 +21,7 @@
     <div class="panel rounded shadow">
         <div class="panel-heading">
             <div class="pull-left">
-                <h4 class="panel-title">Datos de la regla</h4>
+                <h4 class="panel-title">Requisitos para la inscripci&oacute;n: </h4>
             </div>
             <div class="pull-right">
                 <button type="button" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
@@ -30,7 +30,7 @@
         </div>
         <div class="panel-body datos">
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                <label>Materia:</label> {{ regla.olimMateriaTipo.materia }}<br>
+                <label>&Aacute;rea:</label> {{ regla.olimMateriaTipo.materia }}<br>
                 <label>Categoría:</label> {{ regla.categoria }}<br>
                 <label>Modalidad:</label> {{ regla.modalidadParticipacionTipo.modalidad }}
             </div>
@@ -63,6 +63,19 @@
                     <label>¿Subir documento?:</label> {% if regla.siSubirDocumento %} Si {% else %} No {% endif %}
                 </div>
             {% endif %}
+             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <label>Nacionalidad:</label> Boliviana<br>
+               
+               
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+             <label>Participar:</label> en 2 &aacute;reas<br>
+            </div>
+             
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+             <label>N&uacutemero de CI en SIGED:</label> Si <br>
+            </div>
         </div>
     </div>
 </div>

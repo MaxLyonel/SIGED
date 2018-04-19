@@ -28,7 +28,7 @@
                 <div class="panel panel-info shadow">
                                 <div class="panel-heading">
                                     <div class="pull-left">
-                                        <h3 class="panel-title">Tutor</h3>
+                                        <h3 class="panel-title">Tutor(a)</h3>
                                     </div>
                                     <div class="pull-right">
                                         <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
@@ -44,7 +44,7 @@
                                             <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
                                             <div class="media-body">
                                                 <span class="media-heading">
-                                                    {{tutor.nombre}}
+                                                    Nombre: {{tutor.nombre}}
                                                     {{tutor.paterno}}
                                                     {{tutor.materno}}
                                                 </span>
@@ -74,7 +74,7 @@
             <div class="panel rounded shadow">
                                 <div class="panel-heading">
                                     <div class="pull-left">
-                                        <h3 class="panel-title">Datos de inscripci&oacute;n</h3>
+                                        <h3 class="panel-title">Seleccione datos para la inscripci&oacute;n</h3>
                                     </div>
                                     <div class="pull-right">
                                         {{form(cancelform)}}
@@ -90,11 +90,11 @@
                                       <div class="row">
                                           
                                           <div class="col-md-6">
-                                            MATERIA:
+                                            ÁREA:
                                               {{form_widget(form.olimMateria, {'attr': {'class':'form-control', 'onchange':'getCategory(this.value)'} } )}}
                                           </div>
                                           <div class="col-md-6">
-                                            CATEGORIA:
+                                            CATEGOR&Iacute;A:
                                               {{form_widget(form.category, {'attr': {'class':'form-control', 'onchange':'selectTemplateInscription(this.value)'} } )}}
                                           </div>
                                          
@@ -422,7 +422,7 @@ var studentsRegister = function(){
     }
    
     if (!sw) {
-        alert('Tiene que Seleccionar por lo menos una Inscripción y completar la informacion requerida...');
+        alert('Observacion en la inscripcion:\nrevise el numero de telefono\nrevise el correo electronico');
         return false;
     }
 
@@ -536,7 +536,7 @@ var studentsRegister = function(){
     }
    
     if (!sw) {
-        alert('Tiene que Seleccionar por lo menos una Inscripción y completar la informacion requerida...');
+        alert('Observacion en la inscripcion:\nrevise el numero de telefono\nrevise el correo electronico');
         return false;
     }
 

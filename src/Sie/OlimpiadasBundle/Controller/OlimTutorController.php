@@ -48,7 +48,7 @@ class OlimTutorController extends Controller{
             ->setMethod('POST')
             ->add('sie', 'text', array('attr'=>array('value'=>$this->session->get('ie_id'))))
             ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($this->session->get('currentyear')=>$this->session->get('currentyear')), 'attr' => array()))
-            ->add('sendData', 'submit', array('label'=>'Enviar'))
+            ->add('sendData', 'submit', array('label'=>'Continuar'))
             ->getForm()
         ;
     }
