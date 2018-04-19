@@ -69,7 +69,7 @@
                             <div class="pull-right">
                             {% if app.session.get('roluser') in [35,9] %}
                                 <form method="post" action="{{path('olimdirectordata_manual_edit')}}">
-                                    <input type="text" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
+                                    <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
                                     <input type="hidden" id="form_datosId" name="form[datosId]" value="{{director.datosid}}">
                                     <input type="hidden" id="form_personaId" name="form[personaId]" value="{{director.personaid}}">
                                     <input type="hidden" id="form_maestroId" name="form[maestroId]" value="{{director.maestroid}}">
@@ -120,8 +120,9 @@
                                     <!-- Start select fields - basic form -->
                         <div class="panel ">
                             <div class="panel-heading">
-                                <div class="pull-left">
-                                    <h3 class="panel-title"></h3>
+                                <div class="pull-right">
+                                    <p class="panel-title"><a href="#"  data-toggle="tooltip" data-placement="top" data-original-title="Descargar Lista de Inscritos">Descargar lista de Inscritos <i class="fa fa-file"> </i></a></p>
+                                    
                                 </div>
                                 <div class="clearfix"></div>
                             </div><!-- /.panel-heading -->

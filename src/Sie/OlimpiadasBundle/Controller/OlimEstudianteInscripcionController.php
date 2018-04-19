@@ -747,15 +747,18 @@ class OlimEstudianteInscripcionController extends Controller{
             'olimtutorid' => $olimtutorid,
             'discapacidades' => $discapacidades,
             'tutores' => $tutores,
+            'sie' => $sie,
+            'gestion' => $gestion
         ));
     }
 
     public function updateInscriptionStudentAction(Request $request){
-        dump($request);die;
+        
         //create db conexion
         
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+        
         //get the send values
         $gradoId = $form['gradoId'];
         $materiaId = $form['materiaId'];
@@ -763,6 +766,12 @@ class OlimEstudianteInscripcionController extends Controller{
         $nivelId = $form['nivelId'];
         $olimtutorid = $form['olimtutorid'];
         $olimestudianteid = $form['olimestudianteid'];
+        $telefono = $form['telefono'];
+        $correo = $form['correo'];
+        $discapacidadid = $form['discapacidadid'];
+        $tutorid = $form['tutorid'];
+        $sie = $form['sie'];
+        $gestion = $form['gestion'];
 
         $olimEstudianteInscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findOneBy(array(
             'id' => $olimestudianteid
@@ -771,6 +780,19 @@ class OlimEstudianteInscripcionController extends Controller{
         if($olimEstudianteInscripcion){
             $em->getConnection()->beginTransaction();
             try {
+                $olimDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findOneBy(array(
+                    'id' => $discapacidadid
+                ));
+                
+                $olimTutor = $em->getRepository('SieAppWebBundle:OlimTutor')->findOneBy(array(
+                    'id' => $tutorid
+                ));
+
+                $olimEstudianteInscripcion->setTelefonoEstudiante($telefono);
+                $olimEstudianteInscripcion->setCorreoEstudiante($correo);
+                $olimEstudianteInscripcion->setDiscapacidadTipo($olimDiscapacidad);
+                $olimEstudianteInscripcion->setolimTutor($olimTutor);
+
                 $em->persist($olimEstudianteInscripcion);
                 $em->flush();
                 $em->getConnection()->commit();
@@ -780,6 +802,21 @@ class OlimEstudianteInscripcionController extends Controller{
         }
         
         $inscritos = $this->getListStudents($materiaId, $olimtutorid, $nivelId, $gradoId);
+
+        $discapacidades = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+
+        $entity = $em->getRepository('SieAppWebBundle:OlimTutor');
+        $query = $entity->createQueryBuilder('ot')
+                ->select('ot.id tutorid, p.carnet, p.paterno, p.materno, p.nombre')
+                ->innerjoin('SieAppWebBundle:Persona', 'p', 'WITH', 'p.id = ot.persona')
+                ->where('ot.institucioneducativa = :sie')
+                ->andWhere('ot.gestionTipoId = :gestion')
+                ->setParameter('sie', $sie)
+                ->setParameter('gestion', $gestion)
+                ->distinct()
+                ->orderBy('p.paterno, p.materno, p.nombre')
+                ->getQuery();
+        $tutores = $query->getResult();
         
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:listCommonInscritosTutor.html.twig', array(
             'inscritos' => $inscritos,
@@ -787,7 +824,11 @@ class OlimEstudianteInscripcionController extends Controller{
             'materiaId'=> $materiaId,
             'nivelId' => $nivelId,
             'gradoId' => $gradoId,
-            'olimtutorid' => $olimtutorid
+            'olimtutorid' => $olimtutorid,
+            'discapacidades' => $discapacidades,
+            'tutores' => $tutores,
+            'sie' => $sie,
+            'gestion' => $gestion
         ));
     }
 
@@ -1140,6 +1181,7 @@ class OlimEstudianteInscripcionController extends Controller{
             // dump($studentObs);
 
         }
+        
         // die;
         //get the discapacidad
          $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
@@ -1161,13 +1203,13 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($jsonDataInscription);die;
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
             'objStudentsToOlimpiadas' => $arrCorrectStudent,
-            'form' => $this->studentsRegisterform($jsonDataInscription, $jsonData)->createView(),
+            'form' => $this->studentsRegisterform($jsonDataInscription, $jsonData, $objRules)->createView(),
             'objDiscapacidad' => $objDiscapacidad,
 
         ));
     }
 
-    private function studentsRegisterform($jsonDataInscription, $jsonData){
+    private function studentsRegisterform($jsonDataInscription, $jsonData, $objRules){
         $arrData = json_decode($jsonData,true);
         // dump($arrData);
         // dump($arrData['groupId']);
@@ -1178,7 +1220,13 @@ class OlimEstudianteInscripcionController extends Controller{
                 ->add('jsonData','hidden', array('data'=>$jsonData));
         
         if(isset($arrData['groupId'])){
+        //     dump($objRules->getModalidadNumeroIntegrantesTipo()->getId());
+        // dump($objRules->getModalidadNumeroIntegrantesTipo()->getCondicion());
+        // dump($objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros());
+        // dump($objRules);die;
             $form = $form ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegisterGroup()')));
+            $form = $form->add('condicion', 'hidden', array('data'=>$objRules->getModalidadNumeroIntegrantesTipo()->getCondicion()));
+            $form = $form->add('cantidad', 'hidden', array('data'=>$objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros()));
         }else{
             $form = $form ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegister()')));
         }
@@ -1425,6 +1473,7 @@ class OlimEstudianteInscripcionController extends Controller{
                     
                     break;
                 case '3':
+                case '4':
                     # igual a
                     # delete all students and group
                     $this->deleteAllStudentInscription($jsonDataInscription);
@@ -1543,8 +1592,8 @@ class OlimEstudianteInscripcionController extends Controller{
         return $this->createFormBuilder()
                 ->add('fono', 'text')
                 ->add('email', 'text')
-                ->add('discapacidad', 'entity', array('class'=>'SieAppWebBundle:OlimDiscapacidadTipo', 'property'=>'discapacidad', 'empty_value'=>'Seleccionar...'))
-                ->add('jsonDataInscription','text', array('data'=>$jsonDataInscription) )
+                ->add('discapacidad', 'entity', array('class'=>'SieAppWebBundle:OlimDiscapacidadTipo', 'property'=>'discapacidad'/*, 'empty_value'=>'Seleccionar...'*/))
+                ->add('jsonDataInscription','hidden', array('data'=>$jsonDataInscription) )
                 ->add('doInscription', 'button', array('label'=>'Inscribir','attr'=>array('class'=>'btn btn-warning btn-xs', 'onclick'=>'saveExternalInscription();')))
                 ->getForm()
                 ;
@@ -1607,7 +1656,7 @@ class OlimEstudianteInscripcionController extends Controller{
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->getConnection()->prepare("
-            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, odt.id dscpid, odt.discapacidad, ot.id tutorid, p.carnet carnet1, p.paterno paterno1, p.materno materno1, p.nombre nombre1, 'Grado regular' obs
+            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, odt.id dscpid, odt.discapacidad, ot.id tutorid, p.carnet carnet1, p.paterno paterno1, p.materno materno1, p.nombre nombre1, 'Grado regular' obs
             from olim_estudiante_inscripcion oei
             inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
             inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
@@ -1621,7 +1670,7 @@ class OlimEstudianteInscripcionController extends Controller{
             iec.grado_tipo_id = :gradoTipo
             order by e.paterno, e.materno, e.nombre)
             union all
-            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, odt.id dscpid, odt.discapacidad, ot.id tutorid, p.carnet carnet1, p.paterno paterno1, p.materno materno1, p.nombre nombre1, 'Grado superior' obs
+            (select oei.id olimestudianteid, oei.telefono_estudiante, oei.correo_estudiante, e.codigo_rude, e.carnet_identidad, e.paterno, e.materno, e.nombre, e.fecha_nacimiento, odt.id dscpid, odt.discapacidad, ot.id tutorid, p.carnet carnet1, p.paterno paterno1, p.materno materno1, p.nombre nombre1, 'Grado superior' obs
             from olim_estudiante_inscripcion oei
             inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
             inner join olim_estudiante_inscripcion_curso_superior oeis on oei.id = oeis.olim_estudiante_inscripcion_id

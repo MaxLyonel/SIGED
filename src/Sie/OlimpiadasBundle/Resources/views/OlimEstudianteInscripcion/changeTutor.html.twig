@@ -701,8 +701,25 @@ var studentsRegister = function(){
     }
 
     var updateInscriptionStudent = function(id){
-        if(confirm('¡Se actualizará el registro! ¿Desea continuar?')){
-            formData = $('#studentUpdateId_'+id).serialize();
+        //if(confirm('¡Se actualizará el registro! ¿Desea continuar?')){
+            telefono = $('#form_telefono_'+id).val();
+            correo = $('#form_correo_'+id).val();
+            discapacidadid = $('#form_discapacidad_'+id+' option:selected').val();
+            tutorid = $('#form_tutor_'+id+' option:selected').val();
+
+            emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+            if(telefono == '' || correo == '' || !emailRegex.test(correo)){
+                alert('Ingrese datos en los campos requeridos o ajuste a los formatos válidos');
+                return false;
+            }
+            
+            formData = $('#studentUpdateId_'+id)
+            .append('<input type="hidden" name="form[telefono]" id="form_telefono" value="'+telefono+'">')
+            .append('<input type="hidden" name="form[correo]" id="form_correo" value="'+correo+'">')
+            .append('<input type="hidden" name="form[discapacidadid]" id="form_discapacidadid" value="'+discapacidadid+'">')
+            .append('<input type="hidden" name="form[tutorid]" id="form_tutorid" value="'+tutorid+'">')
+            .serialize();
             
             $.ajax({
                 type: 'post',
@@ -725,7 +742,7 @@ var studentsRegister = function(){
                     }
                 }
             });
-        }
+        //}
     }
 
     var deleteInscriptionOlimpiada = function(jsonDataInscription, olimEstudianteInscripcionId){

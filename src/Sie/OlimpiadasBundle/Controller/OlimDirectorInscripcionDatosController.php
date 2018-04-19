@@ -331,19 +331,51 @@ class OlimDirectorInscripcionDatosController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
-
-        $entity = $em->getRepository('SieAppWebBundle:OlimDirectorInscripcionDatos')->find($form['datosId']);
+        // dump($form);die;
         
-        if (!$entity) {
-            return $this->redirect($this->generateUrl('olimtutor_listTutorBySie'));
+        
+        if(($form['datosId'] > 0)){
+            $entity = $em->getRepository('SieAppWebBundle:OlimDirectorInscripcionDatos')->find($form['datosId']);    
+            if (!$entity) {
+                return $this->redirect($this->generateUrl('olimtutor_listTutorBySie'));
+            }
         }
-
-        $editForm = $this->createEditManualForm($entity, $form['jsonData']);
+        
+        // $editForm = $this->createEditManualForm($entity, $form['jsonData']);
 
         return $this->render('SieOlimpiadasBundle:OlimDirectorInscripcionDatos:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            // 'entity'      => $entity,
+             // 'edit_form'   => $editForm->createView(),
+            'edit_form'   => $this->editManualForm($form,$form['jsonData'])->createView(),
+            'cancel_form'   => $this->editManualCancelForm($form['jsonData'])->createView(),
         ));
+    }
+
+    private function editManualForm($data,$jsonData){
+        $arrData = json_decode($jsonData, true);
+        return $this->createFormBuilder()
+                ->setAction($this->generateUrl('olimtutor_listTutorBySie'))
+                ->add('telefono1', 'text',array('data'=>''))
+                ->add('telefono2', 'text',array('data'=>''))
+                ->add('correoElectronico')
+                ->add('sie', 'hidden', array('data'=>$arrData['sie'] , 'mapped'=>false))
+                ->add('gestion', 'hidden', array('data'=>$arrData['gestion'] , 'mapped'=>false))
+                // ->add('editDirector', 'text', array('data'=>$entity->getId(), 'mapped'=>false))
+                ->add('jsonData', 'hidden', array('data'=>$jsonData, 'mapped'=>false))
+                ->add('submit', 'submit', array('label' => 'Guardar'))
+                ->getForm()
+                ;          
+    }
+     private function editManualCancelForm($jsonData){
+        $arrData = json_decode($jsonData, true);
+        return $this->createFormBuilder()
+                ->setAction($this->generateUrl('olimtutor_listTutorBySie'))                
+                ->add('sie', 'hidden', array('data'=>$arrData['sie'] , 'mapped'=>false))
+                ->add('gestion', 'hidden', array('data'=>$arrData['gestion'] , 'mapped'=>false))
+                ->add('jsonData', 'hidden', array('data'=>$jsonData, 'mapped'=>false))
+                ->add('submit', 'submit', array('label' => 'Cancelar', 'attr'=>array('class'=>'btn btn-default btn-xs')))
+                ->getForm()
+                ;          
     }
 
     /**

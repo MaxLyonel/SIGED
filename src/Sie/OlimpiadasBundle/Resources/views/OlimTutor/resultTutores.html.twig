@@ -8,7 +8,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                       <th>#</th>
+                       
                         <th>CI</th>
                         <th>Datos Tutor</th>
                         
@@ -16,9 +16,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for entity in resultTutores %}
-                        <tr>
-                            <td>{{ loop.index }}</td>
+                    <tr>
+                    {# for entity in resultTutores %}
+                        
+                            <td>{{ loop.index }}</td> #}
                             <td><b>{{ entity.carnet }}</b> </td>
                             <td>{{ entity.nombre }}
                             {{ entity.paterno }}
@@ -57,7 +58,7 @@
                             </td>
                            
                         </tr>
-                    {% endfor %}
+                    {# endfor #}
                 </tbody>
             </table>
         </div><!-- /.table-responsive -->
