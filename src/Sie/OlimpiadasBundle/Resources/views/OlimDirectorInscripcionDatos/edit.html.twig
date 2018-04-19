@@ -27,8 +27,9 @@
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-info shadow">
                     <div class="panel-heading">
-                        <div class="pull-left">
-                            <h3 class="panel-title">Datos Director(a)</h3>
+                         <h3 class="panel-title">Datos Director(a)</h3>
+                        <div class="pull-right">
+                           {{form(cancel_form)}}
                         </div>
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
@@ -52,7 +53,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-6 col-md-6">
                                     {{ form_widget(edit_form.submit, { 'attr': {'class': 'btn btn-success'} }) }}
-                                    <a href="{{ path('olimtutor_listTutorBySie') }}" class="btn btn-default">Cancelar</a>
+                                    {# <a href="{{ path('olimtutor_listTutorBySie') }}" class="btn btn-default">Cancelar</a> #}
                                 </div>
                             </div>
                         </div>

@@ -196,14 +196,18 @@ class OlimTutorController extends Controller{
         
         //get the send data
         $form = $request->get('form');
-        
+        $em = $this->getDoctrine()->getManager();
         $arrForm = json_decode($form['data'],true);
-        // dump($arrForm);die;
-
-        $resultTutores = $this->get('olimfunctions')->lookForTutores($form);
+        
+        // $resultTutores = $this->get('olimfunctions')->lookForTutores($form);
+        $resultTutores = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                'carnet'=> $form['carnet'],
+                'complemento'=>$form['complemento'],
+                'fechaNacimiento'=> new \DateTime($form['fechanacimiento'])
+            ));
         
         return $this->render('SieOlimpiadasBundle:OlimTutor:resultTutores.html.twig', array(
-            'resultTutores'       => $resultTutores,
+            'entity'       => $resultTutores,
             'jsonDataInscription' => $form['data'],
             'sieSelected' => $arrForm['sie'],
             'gestionSelected' => $arrForm['gestion'],
