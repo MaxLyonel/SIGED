@@ -1,6 +1,22 @@
 {% extends 'SieOlimpiadasBundle:OlimReporte:template.html.twig' %}
 {% block body %}
-    
+    <style type="text/css">
+        label{
+            font-weight: bold;
+            color: #3A6FA3;
+        }
+        .titulo{
+            color: #5299E1;
+        }
+        .tarjeta{
+            padding: 15px;
+            border: 2px solid #EEEEEE;
+            margin-bottom: 15px;
+        }
+        .card{
+            box-shadow: 5px 5px #EEEEEE;
+        }
+    </style>
     <div class="container">
         <br>
         <h3 class="text-primary"> <i class="fa fa-file-o"></i> Verificar inscripción</h3>
@@ -25,26 +41,37 @@
                     </ul>
                     {{ form_start(form, {'attr':{'class':'navbar-form navbar-left', 'role':'search'} }) }}
                         <div class="form-group">
-                            {{ form_widget(form.carnet, {'attr':{'class':'form-control','placeholder':'Carnet','autocomplete':'off'} }) }}
-                            {{ form_widget(form.complemento, {'attr':{'class':'form-control','placeholder':'Complemento','autocomplete':'off'} }) }}
+                            {{ form_widget(form.carnet, {'attr':{'class':'form-control','placeholder':'Carnet o RUDE','autocomplete':'off'} }) }}
+                            {{ form_widget(form.complemento, {'attr':{'class':'form-control','placeholder':'Complemento','autocomplete':'off','data-toggle':'tooltip','data-placement':'top', 'data-original-title':'Complemento'} }) }}
                             {{ form_widget(form.fechaNacimiento, {'attr':{'class':'form-control','placeholder':'Fecha Nac.','autocomplete':'off'} }) }}
-                            <button type="submit" class="btn btn-primary"> <i class="fa fa-search"></i> </button>
+                            <button id="btnBuscar" type="submit" class="btn btn-primary" onclick="cargar()"> <i id="buscar" class="fa fa-search"></i> </button>
                         </div>
                     {{ form_end(form) }}
 
+
+
                     <ul class="nav navbar-nav navbar-right">
-                        {# <li><a href="{{ path('') }}">Ingresar</a></li> #}
+                        <a href="{{ path('login') }}" class="btn btn-link" style="padding-top: 15px;">Ingresar al sistema</a>
                     </ul>
 
                 </div><!-- /.navbar-collapse -->
             </div>
         </nav>
 
+
 	    {% if estudiante is defined %}
 			{% if estudiante is null %}
-				<div class="alert alert-info">
-					<i class="fa fa-info-circle"></i> Los datos ingresados son incorrectos.
-				</div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"> <i class="fa fa-search"></i> Resultado de la busqueda</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-warning">
+                            <i class="fa fa-warning"></i> Los datos ingresados son incorrectos, verifique la información e intente nuevamente
+                        </div>
+                    </div>
+                </div>
+				
 			{% else %}
                 
 				<div class="row">
@@ -84,65 +111,109 @@
                     </div>
 				</div>
 
-                {% if inscripciones|length > 0 %}
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel panel-default shadow">
-                                <div class="panel-heading">
-                                    <div class="pull-left">
-                                        <h3 class="panel-title"> <i class="fa fa-list"></i> Registro de inscripciones</h3>
-                                    </div>
-                                    <div class="pull-right">
-                                        <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div><!-- /.panel-heading -->
-                                <div class="panel-body">
-                                    <!--/ End list message -->
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            {% if inscripciones|length > 0 %}
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Gestion</th>
-                                                            <th>Olimpiada</th>
-                                                            <th>Materia</th>
-                                                            <th>Categoría</th>
-                                                            <th>Nivel</th>
-                                                            <th>Grado</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for item in inscripciones %}
-                                                            <tr>
-                                                                <td>{{ item.gestion }}</td>
-                                                                <td>{{ item.nombreOlimpiada }}</td>
-                                                                <td>{{ item.materia }}</td>
-                                                                <td>{{ item.categoria }}</td>
-                                                                <td>{{ item.nivel }}</td>
-                                                                <td>{{ item.grado }}</td>
-                                                            </tr>
-                                                        {% endfor %}
-                                                        
-                                                    </tbody>
-                                                </table>    
-                                            {% else %}
-                                                <div class="alert alert-info">
-                                                    <i class="fa fa-info"></i> No tiene inscripciones en olimpiadas
-                                                </div>
-                                            {% endif %}
+                {# {{ dump(array) }} #}
 
-                                            
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"> <i class="fa fa-list"></i> Inscripción olimpiada</h3>
+                    </div>
+                    <div class="panel-body" style="background: #FFFFFF;">
+                        {% if array|length > 0 %}
+                            {% for item in array %}
+                                <div class="tarjeta">
+                                    <h4>{{ item.regla.olimMateriaTipo.olimRegistroOlimpiada.nombreOlimpiada }} - <span style="font-size: 0.9em" class="badge badge-success">{{ item.regla.olimMateriaTipo.materia }}</span></h4>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                                            <div class="panel panel-success card">
+                                                <div class="panel-body">
+                                                    <h4 class="titulo">Datos generales</h4>
+                                                    <label>Categoria: </label> {{ item.regla.categoria }}<br>
+                                                    <label>Modalidad: </label> <span class="badge badge-default">{{ item.regla.modalidadParticipacionTipo.modalidad }}</span><br>
+                                                    <label>Niveles: </label><br>
+                                                    {% if item.primaria|length > 0 %}
+                                                        Primaria: 
+                                                        {% for pri in item.primaria %}
+                                                            <span class="badge badge-inverse">{{ pri.gradoTipo.id }}</span>
+                                                        {% endfor %}
+                                                        <br>
+                                                    {% endif %}
+                                                    {% if item.secundaria|length > 0 %}
+                                                        Secundaria: 
+                                                        {% for sec in item.secundaria %}
+                                                            <span class="badge badge-inverse">{{ sec.gradoTipo.id }}</span>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
                                         </div>
+
+                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                                            <div class="panel panel-info card">
+                                                <div class="panel-body">
+                                                    <h4 class="titulo">Nivel y grado actual</h4>
+
+                                                    {% if inscripcionActual[0].institucioneducativaCurso.nivelTipo.id == 12 %}
+                                                        Primaria 
+                                                    {% else %}
+                                                        Secundaria
+                                                    {% endif %}
+                                                    <span class="badge badge-inverse">{{ inscripcionActual[0].institucioneducativaCurso.gradoTipo.id }}</span>
+
+
+                                                    {% if item.superior != null %}
+                                                        <h4 class="titulo">Nivel y grado de participación</h4>
+                                                        {% if item.superior.nivelTipo.id == 12 %}
+                                                            Primaria
+                                                        {% else %}
+                                                            Secundaria
+                                                        {% endif %}
+                                                        <span class="badge badge-inverse">{{ item.superior.gradoTipo.id }}</span>
+                                                    {% endif %}
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% if item.tipo == 'Grupo' %}
+                                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                                                <div class="panel panel-info card">
+                                                    <div class="panel-body">
+                                                        <h4 class="titulo">Datos del equipo y tutor</h4>
+                                                        <label>Nombre equipo: </label> {{ item.grupo[0].nombre }}<br>
+                                                        <label>Tutor: </label>
+                                                        {% if item.grupo[0].olimTutor != null %}
+                                                            {{ item.grupo[0].olimTutor.persona.nombre }} {{ item.grupo[0].olimTutor.persona.paterno }} {{ item.grupo[0].olimTutor.persona.materno }}
+                                                        {% else %}
+                                                            No asignado
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% else %}    
+                                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                                                <div class="panel panel-info card">
+                                                    <div class="panel-body">
+                                                        <h4 class="titulo">Datos del tutor</h4>
+                                                        <label>Tutor: </label> 
+                                                        {% if item.tutor != null %}
+                                                            {{ item.tutor.persona.nombre }} {{ item.tutor.persona.paterno }} {{ item.tutor.persona.materno }}    
+                                                        {% else %}
+                                                            No asignado
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle"></i> El estudiante no cuenta con inscripciones, en la gestión actual
                             </div>
-                        </div>
+                        {% endif %}  
                     </div>
-                {% endif %}
-
-
+                </div>
 			{% endif %}
 			
 	    {% endif %}
@@ -161,7 +232,14 @@
             // aplicamos las mascaras para las fechas
             $("#form_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" });
             $("#form_complemento").inputmask({mask: "9a"});
+
         });
+
+        function cargar(){
+            $('#buscar').removeClass('fa-search');
+            $('#buscar').addClass('fa-spinner fa-spin');
+            $('#btnBuscar').append('Buscando...');
+        }
         
     </script>
 {% endblock %}
