@@ -91,10 +91,10 @@
 		                console.log(fileSize);
 		                var sizeKiloByte = parseInt(fileSize / 1024);
 		                console.log(sizeKiloByte);
-		                if(sizeKiloByte < 1024){
+		                if(sizeKiloByte < 5120){
 		                    permitida = true
 		                }else{
-		                    var mensaje = 'El tamaño del archivo supera el límite permitido!\n(Tamaño máximo permitido 1024 KB)';
+		                    var mensaje = 'El tamaño del archivo supera el límite permitido!\n(Tamaño máximo permitido 5 MB)';
 		                }
 		                break;
 		            }
