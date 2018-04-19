@@ -840,11 +840,21 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($objTutorSelected);die;
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:selectInscription.html.twig', array(
             'form' => $this->selectInscriptionForm($form)->createView(),
-            'tutor' => $objTutorSelected
-
+            'tutor' => $objTutorSelected,
+            'cancelform' => $this->cancelForm($form)->createView(),
         ));
     }
 
+    private function cancelForm($data){
+        
+        return $this->createFormBuilder()
+                ->setAction($this->generateUrl('olimtutor_listTutorBySie'))                
+                ->add('sie', 'hidden', array('data'=>$data['institucioneducativaid'] , 'mapped'=>false))
+                ->add('gestion', 'hidden', array('data'=>$data['gestiontipoid'] , 'mapped'=>false))
+                ->add('submit', 'submit', array('label' => 'Cancelar', 'attr'=>array('class'=>'btn btn-danger btn-xs')))
+                ->getForm()
+                ;          
+    }
 
 
     private function selectInscriptionForm($data){
