@@ -137,6 +137,7 @@ class OlimTutorController extends Controller{
             'formNewTutor' => $this->formNewTutor(json_encode($form))->createView(),
             'director' => $director,
             'institucion' => $institucion,
+            'gestion' => $gestion,
             'jsonData' => json_encode($form) 
         ));
     }

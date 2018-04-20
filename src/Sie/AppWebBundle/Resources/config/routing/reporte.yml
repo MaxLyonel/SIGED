@@ -61,3 +61,7 @@ reporte_regular_directorio_institucioneducativa_detalle:
 reporte_regular_juegos_plurinacionales_nacional_pdf:
     path:    /informacion/general/regular/juegos/nacional/fase/{fase}
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralJuegosNacionalFasePdf } 
+
+reporte_olimpiada_reporteOlimUE_pdf:
+    path:    /reporteOlimUE
+    defaults: { _controller: SieAppWebBundle:Reporte:reporteOlimUE } 
