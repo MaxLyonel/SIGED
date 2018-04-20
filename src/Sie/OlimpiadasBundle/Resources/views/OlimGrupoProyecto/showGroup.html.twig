@@ -2,10 +2,10 @@
 <div class="row">
 {% include 'SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:show.html.twig' with {'regla': regla} %}
 	<div class="col-md-12">
-                            <p class="lead">Lista de grupos</p>
+                            <p class="lead">Lista de Equipos</p>
                             {{form_start(formGroup, {'attr':{ 'id':'showGroupFormId' }})}}
 							<button type="button" class="btn btn-inverse btn-danger btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="createGroup();">
-							Agregar Grupo
+							Agregar Equipo
 							</button>
                             {{form_end(formGroup)}}
                             <!-- Start vertical tabs with animation -->
@@ -19,7 +19,7 @@
                                     <thead>
                                         <tr>
                                             <th class="text-center">#</th>
-                                            <th>Grupo</th>
+                                            <th>Equipo</th>
                                             <th class="text-center" style="min-width: 15%">Acciones</th>
                                         </tr>
                                     </thead>
