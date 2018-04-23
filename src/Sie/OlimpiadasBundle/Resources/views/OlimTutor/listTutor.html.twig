@@ -125,7 +125,7 @@
                                         <form method ="POST" action="{{path('reporte_olimpiada_reporteOlimUE_pdf')}}" name="form" id="form" style="display:inline-block" onsubmit="return validaDatos()">
                                             <input type="hidden" id="reporteOlim_sie" name="reporteOlim[sie]" value="{{institucion.id}}">
                                             <input type="hidden" id="reporteOlim_gestion" name="reporteOlim[gestion]" value="{{gestion}}">
-                                            <button type="submit" class="btn btn-danger" ><i class='fa fa-file-pdf-o fa-3x'></i></button>
+                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="left" data-original-title="Descargar lista de inscritos"><i class='fa fa-file-pdf-o fa-2x'></i></button>
                                         </form>
                                         <!--a href="#"  data-toggle="tooltip" data-placement="top" data-original-title="Descargar Lista de Inscritos"></a-->
                                     </p>

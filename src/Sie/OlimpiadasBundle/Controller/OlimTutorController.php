@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sie\AppWebBundle\Entity\OlimTutor;
 use Sie\AppWebBundle\Form\OlimTutorType;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Sie\AppWebBundle\Entity\OlimDirectorInscripcionDatos;
 
 /**
  * OlimTutor controller.
@@ -54,18 +55,18 @@ class OlimTutorController extends Controller{
     }
 
     public function listTutorBySieAction(Request $request){
-
+        $em = $this->getDoctrine()->getManager();
         //data ue
         if($request->getMethod()=='POST'){
                 // get the send data
                 $form = $request->get('form');
+                
                 // dump($form);die;
                 // $institucioneducativa = $form['sie'];
                 // $gestion = $form['gestion'];
                     if(isset($form['newtutor'])){
                                 $arrSendData = json_decode($form['newtutor'],true);
                                 // dump($arrSendData);die;
-                            $em = $this->getDoctrine()->getManager();
                             // udpate the indice
                             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_tutor');");
                             $query->execute();
@@ -94,6 +95,28 @@ class OlimTutorController extends Controller{
                     if(isset($form['deletetutor'])) {
                         $this->deleteDataTutor($form);
                     }
+                    if(isset($form['datosId'])) {
+                        if($form['datosId'] > 0){
+                            $datosId = $form['datosId'];
+                            $datosDirector = $em->getRepository('SieAppWebBundle:OlimDirectorInscripcionDatos')->findOneById($datosId);
+                        }
+                        else{
+                            $maestroId = $form['maestroId'];
+                            $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneById($maestroId);
+                            $datosDirector = new OlimDirectorInscripcionDatos();
+                            $datosDirector->setMaestroInscripcion($maestroInscripcion);
+                            $datosDirector->setFechaRegistro(new \Datetime('now'));
+                        }
+                        
+                        $datosDirector->setEsVigente(true);
+                        $datosDirector->setTelefono1($form['telefono1']);
+                        $datosDirector->setTelefono2($form['telefono2']);
+                        $datosDirector->setCorreoElectronico($form['correoElectronico']);
+                        
+                        $em->persist($datosDirector);
+                        $em->flush();
+                    }
+                    
                     $formDirector = $request->get('sie_appwebbundle_olimdirectorinscripciondatos');
                     if(is_array($formDirector)){
                         //udpate the director info
@@ -131,7 +154,7 @@ class OlimTutorController extends Controller{
         $director = $this->get('olimfunctions')->getDirectorInfo($form);
         // dump($director);die;
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucioneducativa);
-
+        //dump($director);die;
         return $this->render('SieOlimpiadasBundle:OlimTutor:listTutor.html.twig', array(
             'entities' => $entities,
             'formNewTutor' => $this->formNewTutor(json_encode($form))->createView(),

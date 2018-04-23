@@ -11,7 +11,7 @@
                 <li>
                     <i class="fa fa-pencil"></i>
                     <a href="{{path('infra_list_index')}}">
-                       Inscripciones
+                       Actualizar datos
                     </a>
                     <i class="fa fa-angle-right"></i>
                 </li>
@@ -38,16 +38,21 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label class="control-label">Teléfono 1:</label>
-                                    {{ form_widget(edit_form.telefono1, { 'attr': {'class': 'form-control'} }) }}
+                                    <label class="control-label">Teléfono 1 <span class="text-danger">(*)</span>:</label>
+                                    {{ form_widget(edit_form.telefono1, { 'attr': {'class': 'form-control', 'maxlength': '8'} }) }}
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label class="control-label">Teléfono 2:</label>
-                                    {{ form_widget(edit_form.telefono2, { 'attr': {'class': 'form-control'} }) }}
+                                    {{ form_widget(edit_form.telefono2, { 'attr': {'class': 'form-control', 'maxlength': '8'} }) }}
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label class="control-label">Correo Electrónico:</label>
+                                    <label class="control-label">Correo Electrónico <span class="text-danger">(*)</span>:</label>
                                     {{ form_widget(edit_form.correoElectronico, { 'attr': {'class': 'form-control'} }) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 text-danger">
+                                    (*) Campos obligatorios
                                 </div>
                             </div>
                             <div class="row">
@@ -63,4 +68,9 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    </script>
 {% endblock %}
