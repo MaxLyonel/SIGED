@@ -373,6 +373,7 @@ var studentsRegister = function(){
 
     //validate form and values 
     var ruleCantidad = $('#form_cantidad').val();
+    var takeit = $('#form_takeit').val();
     var elem = document.getElementById('studentsRegisterId').elements;
     var sw = true;
     var countElement;
@@ -418,6 +419,7 @@ var studentsRegister = function(){
       i++;
     }
 
+    inscriptionSelected = inscriptionSelected + parseInt(takeit,10) ;
 
   if(inscriptionSelected <= ruleCantidad){
   }else{

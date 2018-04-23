@@ -1146,62 +1146,28 @@ class OlimEstudianteInscripcionController extends Controller{
         $sie = $request->get('sie');
         $gestion = $request->get('gestion');
         $olimtutorid = $request->get('olimtutorid');
-        
+        $limitInscription = true;
         $jsonData = $request->get('jsonData');
         // dump($jsonData);die;
-
-        //look for the id of institucioneducativa_curso
-        $objInstitucionEducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy( array(
+        $arrConditionInstEducaCurso = array(
              'nivelTipo' =>$nivelId,
              'gradoTipo' => $gradoId,
              'paraleloTipo'=> $paraleloId,
              'turnoTipo' => $turnoId, 
              'institucioneducativa' => $sie,
              'gestionTipo' => $gestion
-        ));
+        );
+        //look for the id of institucioneducativa_curso
+        $objInstitucionEducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($arrConditionInstEducaCurso);
         
         $objStudentsToOlimpiadas = $this->get('olimfunctions')->getStudentsToOlimpiadas($objInstitucionEducativaCurso->getId());
         // $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion);
         
         $objRules = $this->get('olimfunctions')->getDataRule(array('materiaId'=>$materiaId, 'categoryId'=>$categoryId));
-        // dump($objRules);die;
-        $fechaComparacion = $objRules->getFechaComparacion()->format('d-m-Y');
-        $edadInicial = $objRules->getEdadInicial();
-        $edadFinal = $objRules->getEdadFinal();
-
-        $arrCorrectStudent = array();
-        foreach ($objStudentsToOlimpiadas as $key => $value) {
-            // dump($value['codigo_rude']);
-            $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
-            $value['fecha_nacimiento'] = $newStudentDate;
-            $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, $fechaComparacion);
-            $value['yearsOld'] = $studentYearsOld[0];
-            $yearOldStudent = $value['yearsOld'];
-            //get students observation
-            $studentObs = $this->get('seguimiento')->getStudentObservationQA(array('codigoRude'=>$value['codigo_rude'], 'gestion'=>$gestion));
-            $studentsInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array(
-                'estudianteInscripcion'=>$value['estinsid']
-            ));
-            // dump(sizeof($studentsInscription));
-            //get students registered
-            $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
-            // dump($objStudentsInOlimpiadas);
-            if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) == 2){
-            }else{
-                if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
-                $arrCorrectStudent[]=($value);    
-                }
-            }
-            // dump($studentObs);
-
-        }
         
-        // die;
-        //get the discapacidad
-         $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
-        
-        // get the data to do the inscription 
-        $jsonDataInscription = json_encode( array(
+
+         // get the data to do the inscription 
+        $jsonDataInscription = ( array(
 
                 'turnoId' => $request->get('turnoId'),
                 'paraleloId' => $request->get('paraleloId'),
@@ -1214,18 +1180,66 @@ class OlimEstudianteInscripcionController extends Controller{
                 'olimtutorid' => $request->get('olimtutorid'),
                 'institucionEducativaCursoId' => $objInstitucionEducativaCurso->getId(),
         ));
+
+        $objStudentsInscriptions = $this->get('olimfunctions')->getStudentsInscription($jsonDataInscription);
+        $jsonDataInscription['takeit']=$objStudentsInscriptions['takeit'];
+        $jsonDataInscription = json_encode($jsonDataInscription);
+        $arrCorrectStudent = array();
+        //
+        if($objStudentsInscriptions['takeit'] == $objRules->getCantidadInscritosGrado()){
+            $limitInscription = false;
+        }else{
+
+            $fechaComparacion = $objRules->getFechaComparacion()->format('d-m-Y');
+            $edadInicial = $objRules->getEdadInicial();
+            $edadFinal = $objRules->getEdadFinal();
+
+            $arrCorrectStudent = array();
+            foreach ($objStudentsToOlimpiadas as $key => $value) {
+                // dump($value['codigo_rude']);
+                $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
+                $value['fecha_nacimiento'] = $newStudentDate;
+                $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, $fechaComparacion);
+                $value['yearsOld'] = $studentYearsOld[0];
+                $yearOldStudent = $value['yearsOld'];
+                //get students observation
+                $studentObs = $this->get('seguimiento')->getStudentObservationQA(array('codigoRude'=>$value['codigo_rude'], 'gestion'=>$gestion));
+                $studentsInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array(
+                    'estudianteInscripcion'=>$value['estinsid']
+                ));
+                // dump(sizeof($studentsInscription));
+                //get students registered
+                $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
+                // dump($objStudentsInOlimpiadas);
+                if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) == 2){
+                }else{
+                    if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
+                    $arrCorrectStudent[]=($value);    
+                    }
+                }
+
+            }
+
+        }
+     
+        
+        // die;
+        //get the discapacidad
+         $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+        
+       
         // dump($jsonDataInscription);die;
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
             'objStudentsToOlimpiadas' => $arrCorrectStudent,
             'form' => $this->studentsRegisterform($jsonDataInscription, $jsonData, $objRules)->createView(),
             'objDiscapacidad' => $objDiscapacidad,
+            'limitInscription' => $limitInscription,
 
         ));
     }
 
     private function studentsRegisterform($jsonDataInscription, $jsonData, $objRules){
         $arrData = json_decode($jsonData,true);
-        // dump($arrData);
         // dump($arrData['groupId']);
         // die;
         // dump($objRules);die;
@@ -1242,8 +1256,10 @@ class OlimEstudianteInscripcionController extends Controller{
             $form = $form->add('condicion', 'hidden', array('data'=>$objRules->getModalidadNumeroIntegrantesTipo()->getCondicion()));
             $form = $form->add('cantidad', 'hidden', array('data'=>$objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros()));
         }else{
+            $arrDataInscription = json_decode($jsonDataInscription,true);
             $form = $form ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegister()')));
             $form = $form->add('cantidad', 'hidden', array('data'=>$objRules->getCantidadInscritosGrado()));
+            $form = $form->add('takeit', 'hidden', array('data'=>$arrDataInscription['takeit']));
         }
 
         

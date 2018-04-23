@@ -499,6 +499,44 @@ class Olimfunctions {
      return $objStudent;
     // return 'krlos';
   }
+
+
+   public function getStudentsInscription($data){
+    // $data = json_decode($jsonDataInscription, true);
+    
+// dump($arrDataInscription);die;
+    $query = $this->em->getConnection()->prepare(
+      
+      "
+        select count(oei.id) as takeit
+            from olim_estudiante_inscripcion oei
+            inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+            inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+            inner join estudiante e on e.id = ei.estudiante_id
+            inner join olim_discapacidad_tipo odt on odt.id = oei.discapacidad_tipo_id
+            inner join olim_tutor ot on ot.id = oei.olim_tutor_id
+            inner join persona p on p.id = ot.persona_id
+            where ot.id = ".$data['olimtutorid']." and
+            oei.materia_tipo_id = ".$data['materiaId']." and
+            iec.nivel_tipo_id = ".$data['nivelId']." and
+            iec.grado_tipo_id = ".$data['gradoId']." and
+            iec.paralelo_tipo_id ='".$data['paraleloId']."' and
+            iec.turno_tipo_id = ".$data['turnoId']."
+            
+
+      "
+    );
+    
+    $query->execute();
+    $objStudent = $query->fetch();
+   
+     return $objStudent;
+    // return 'krlos';
+  }
+
+
+
+
  
 
 }
