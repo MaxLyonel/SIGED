@@ -1,6 +1,8 @@
 <small>
+
 <div class="row">
     <div class="col-md-12">
+    {% if tutorFound %}        
         <!-- Start bordered table -->
         <h4 class="no-margin">Resultado Busqueda</h4>
                 
@@ -66,7 +68,13 @@
 
     </div>
     <!--/ End hover table -->
-</div>    
+    {% else %}
+        <div class="alert alert-warning">
+            <strong>Atención!</strong> Tutor no encontrado...
+        </div>
+    {% endif %}
+</div>   
+
 </small>
 
 

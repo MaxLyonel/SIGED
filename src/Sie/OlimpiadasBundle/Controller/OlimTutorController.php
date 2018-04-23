@@ -199,6 +199,7 @@ class OlimTutorController extends Controller{
         $form = $request->get('form');
         $em = $this->getDoctrine()->getManager();
         $arrForm = json_decode($form['data'],true);
+        $tutorFound = true;
         
         // $resultTutores = $this->get('olimfunctions')->lookForTutores($form);
         $resultTutores = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
@@ -206,13 +207,17 @@ class OlimTutorController extends Controller{
                 'complemento'=>$form['complemento'],
                 'fechaNacimiento'=> new \DateTime($form['fechanacimiento'])
             ));
-        
+        if(!$resultTutores){
+            $tutorFound = false;
+        }
+        // dump($resultTutores);die;
         return $this->render('SieOlimpiadasBundle:OlimTutor:resultTutores.html.twig', array(
             'entity'       => $resultTutores,
             'jsonDataInscription' => $form['data'],
             'sieSelected' => $arrForm['sie'],
             'gestionSelected' => $arrForm['gestion'],
-            'form' => $this->formResultTutor($form['data'])->createView()
+            'form' => $this->formResultTutor($form['data'])->createView(),
+            'tutorFound' => $tutorFound
         ));
     }
 

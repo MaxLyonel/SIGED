@@ -1164,14 +1164,14 @@ class OlimEstudianteInscripcionController extends Controller{
         // $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion);
         
         $objRules = $this->get('olimfunctions')->getDataRule(array('materiaId'=>$materiaId, 'categoryId'=>$categoryId));
-        
+        // dump($objRules);die;
         $fechaComparacion = $objRules->getFechaComparacion()->format('d-m-Y');
         $edadInicial = $objRules->getEdadInicial();
         $edadFinal = $objRules->getEdadFinal();
 
         $arrCorrectStudent = array();
         foreach ($objStudentsToOlimpiadas as $key => $value) {
-            
+            // dump($value['codigo_rude']);
             $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
             $value['fecha_nacimiento'] = $newStudentDate;
             $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, $fechaComparacion);
@@ -1179,10 +1179,14 @@ class OlimEstudianteInscripcionController extends Controller{
             $yearOldStudent = $value['yearsOld'];
             //get students observation
             $studentObs = $this->get('seguimiento')->getStudentObservationQA(array('codigoRude'=>$value['codigo_rude'], 'gestion'=>$gestion));
+            $studentsInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array(
+                'estudianteInscripcion'=>$value['estinsid']
+            ));
+            // dump(sizeof($studentsInscription));
             //get students registered
             $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
             // dump($objStudentsInOlimpiadas);
-            if($objStudentsInOlimpiadas || sizeof($studentObs)>0){
+            if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) == 2){
             }else{
                 if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
                 $arrCorrectStudent[]=($value);    
@@ -1224,7 +1228,7 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($arrData);
         // dump($arrData['groupId']);
         // die;
-
+        // dump($objRules);die;
         $form = $this->createFormBuilder()
                 ->add('jsonDataInscription','hidden', array('data'=>$jsonDataInscription))
                 ->add('jsonData','hidden', array('data'=>$jsonData));
@@ -1239,6 +1243,7 @@ class OlimEstudianteInscripcionController extends Controller{
             $form = $form->add('cantidad', 'hidden', array('data'=>$objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros()));
         }else{
             $form = $form ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegister()')));
+            $form = $form->add('cantidad', 'hidden', array('data'=>$objRules->getCantidadInscritosGrado()));
         }
 
         
@@ -1293,7 +1298,7 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($form);
 
         // dump(sizeof($form));die;
-        echo('inscripcion realizada...!!!!');die;
+        echo('Inscripción realizada...!!!!');die;
     }
 
     public function studentsRegisterGroupAction(Request $request){
@@ -1359,7 +1364,7 @@ class OlimEstudianteInscripcionController extends Controller{
             // dump($form);
 
             // dump(sizeof($form));die;
-            echo('inscription DONE!!!!');die;
+            echo('Inscripción realizada!!!!');die;
                         
         } catch (Exception $e) {
              $em->getConnection()->rollback();

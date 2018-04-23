@@ -351,7 +351,8 @@ class OlimGrupoProyectoController extends Controller
             $em->getConnection()->commit();
 
         }else{
-            echo'Grupo no creado, nombre de grupo ya existe...';
+            $message = 'Grupo no creado, nombre de grupo ya existe...';
+            $this->addFlash('noGroupCreate', $message);
         }
             
         } catch (Exception $e) {
@@ -366,16 +367,31 @@ class OlimGrupoProyectoController extends Controller
 
         $jsonDataInscription = $request->get('jsonDataInscription');
         $id = $request->get('groupId');
-        
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($id);
-        if ($entity) {
-            $em->remove($entity);
-            $em->flush();
-        }else{
-            throw $this->createNotFoundException('Unable to find OlimGrupoProyecto entity.');
-        }
 
+        $em = $this->getDoctrine()->getManager();
+
+                // check if the group has students
+        $studentsGroup = $em->getRepository('SieAppWebBundle:OlimInscripcionGrupoProyecto')->findBy(array(
+            'olimGrupoProyecto'=>$id
+        ));
+        // dump(sizeof($studentsGroup) );die;
+        $entity = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($id);
+        // dump(sizeof($studentsGroup));die;
+        if(sizeof($studentsGroup)>0){
+            $message = 'Grupo no eliminado, el grupo tiene inscritos...';
+            $this->addFlash('noGroupCreate', $message);
+
+        }else{
+              
+            if ($entity) {
+                $message = 'Grupo Eliminado correctamente...';
+                $this->addFlash('yesGroupDelete', $message);
+                $em->remove($entity);
+                $em->flush();
+            }else{
+                throw $this->createNotFoundException('Unable to find OlimGrupoProyecto entity.');
+            }
+        }
 
         return $this->redirectToRoute('olimgrupoproyecto_showGroup', array('datainscription'=>$jsonDataInscription));
 

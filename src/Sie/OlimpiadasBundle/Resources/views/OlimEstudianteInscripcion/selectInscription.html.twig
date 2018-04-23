@@ -372,6 +372,7 @@
 var studentsRegister = function(){
 
     //validate form and values 
+    var ruleCantidad = $('#form_cantidad').val();
     var elem = document.getElementById('studentsRegisterId').elements;
     var sw = true;
     var countElement;
@@ -379,7 +380,7 @@ var studentsRegister = function(){
      var countele = 0;
     var i =0;
     var countnoselected = 0;
-    
+    var inscriptionSelected = 0;
     re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     
     while (i < elem.length && sw == true){
@@ -410,11 +411,19 @@ var studentsRegister = function(){
           sw = false;
         }
          countele = 0;  
+         inscriptionSelected = inscriptionSelected+1;
       }else{
         countnoselected =countnoselected+1;
       }
       i++;
     }
+
+
+  if(inscriptionSelected <= ruleCantidad){
+  }else{
+     alert('El número de estudiantes seleccionados excede la cantidad permitida...');
+     return false;
+  }
 
     if (i == countnoselected) {
         alert('Tiene que Seleccionar por lo menos una Inscripción y completar la informacion requerida...');
@@ -694,7 +703,7 @@ var studentsRegister = function(){
 
     var deleteGroup = function(jsonDataInscription, groupId){
 
-      if(confirm('Eliminar?')){
+      if(confirm('Esta seguro que desea eliminar el equipo o grupo?')){
          $.ajax({
                     type: 'post',
                     data: {'jsonDataInscription':jsonDataInscription, 'groupId':groupId},
