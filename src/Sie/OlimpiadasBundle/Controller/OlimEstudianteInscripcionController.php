@@ -1181,46 +1181,104 @@ class OlimEstudianteInscripcionController extends Controller{
                 'institucionEducativaCursoId' => $objInstitucionEducativaCurso->getId(),
         ));
 
-        $objStudentsInscriptions = $this->get('olimfunctions')->getStudentsInscription($jsonDataInscription);
-        $jsonDataInscription['takeit']=$objStudentsInscriptions['takeit'];
-        $jsonDataInscription = json_encode($jsonDataInscription);
-        $arrCorrectStudent = array();
-        //
-        if($objStudentsInscriptions['takeit'] == $objRules->getCantidadInscritosGrado()){
-            $limitInscription = false;
+        $arrDataSend = json_decode($jsonData,true);
+        
+
+        if(isset($arrDataSend['groupId'])){
+
+            $objStudentsInscriptions = $this->get('olimfunctions')->getStudentsInscriptionGroup($jsonDataInscription);
+                // dump($objStudentsInscriptions);die;
+                // $jsonDataInscription['takeit']=$objStudentsInscriptions['takeit'];
+
+            $jsonDataInscription = json_encode($jsonDataInscription);
+            $arrCorrectStudent = array();
+            if($objStudentsInscriptions['takeitgroup'] == $objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros()){
+                $limitInscription = false;
+            }else{
+
+
+                $fechaComparacion = $objRules->getFechaComparacion()->format('d-m-Y');
+                $edadInicial = $objRules->getEdadInicial();
+                $edadFinal = $objRules->getEdadFinal();
+
+                
+                foreach ($objStudentsToOlimpiadas as $key => $value) {
+                    // dump($value['codigo_rude']);
+                    $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
+                    $value['fecha_nacimiento'] = $newStudentDate;
+                    $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, $fechaComparacion);
+                    $value['yearsOld'] = $studentYearsOld[0];
+                    $yearOldStudent = $value['yearsOld'];
+                    //get students observation
+                    $studentObs = $this->get('seguimiento')->getStudentObservationQA(array('codigoRude'=>$value['codigo_rude'], 'gestion'=>$gestion));
+                    $studentsInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array(
+                        'estudianteInscripcion'=>$value['estinsid']
+                    ));
+                    // dump(sizeof($studentsInscription));
+                    //get students registered
+                    $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
+                    // dump($objStudentsInOlimpiadas);
+                    if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) == 2){
+                    }else{
+                        if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
+                        $arrCorrectStudent[]=($value);    
+                        }
+                    }
+
+                }
+
+            }
+
         }else{
 
-            $fechaComparacion = $objRules->getFechaComparacion()->format('d-m-Y');
-            $edadInicial = $objRules->getEdadInicial();
-            $edadFinal = $objRules->getEdadFinal();
-
+            $objStudentsInscriptions = $this->get('olimfunctions')->getStudentsInscription($jsonDataInscription);
+            $jsonDataInscription['takeit']=$objStudentsInscriptions['takeit'];
+            $jsonDataInscription = json_encode($jsonDataInscription);
             $arrCorrectStudent = array();
-            foreach ($objStudentsToOlimpiadas as $key => $value) {
-                // dump($value['codigo_rude']);
-                $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
-                $value['fecha_nacimiento'] = $newStudentDate;
-                $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, $fechaComparacion);
-                $value['yearsOld'] = $studentYearsOld[0];
-                $yearOldStudent = $value['yearsOld'];
-                //get students observation
-                $studentObs = $this->get('seguimiento')->getStudentObservationQA(array('codigoRude'=>$value['codigo_rude'], 'gestion'=>$gestion));
-                $studentsInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array(
-                    'estudianteInscripcion'=>$value['estinsid']
-                ));
-                // dump(sizeof($studentsInscription));
-                //get students registered
-                $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
-                // dump($objStudentsInOlimpiadas);
-                if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) == 2){
-                }else{
-                    if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
-                    $arrCorrectStudent[]=($value);    
+            // dump($objStudentsInscriptions);
+            // dump($objRules->getCantidadInscritosGrado());
+           
+            // die;
+            //
+            if($objStudentsInscriptions['takeit'] == $objRules->getCantidadInscritosGrado()){
+                $limitInscription = false;
+            }else{
+
+                $fechaComparacion = $objRules->getFechaComparacion()->format('d-m-Y');
+                $edadInicial = $objRules->getEdadInicial();
+                $edadFinal = $objRules->getEdadFinal();
+
+                $arrCorrectStudent = array();
+                foreach ($objStudentsToOlimpiadas as $key => $value) {
+                    // dump($value['codigo_rude']);
+                    $newStudentDate = date('d-m-Y', strtotime($value['fecha_nacimiento']) );
+                    $value['fecha_nacimiento'] = $newStudentDate;
+                    $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, $fechaComparacion);
+                    $value['yearsOld'] = $studentYearsOld[0];
+                    $yearOldStudent = $value['yearsOld'];
+                    //get students observation
+                    $studentObs = $this->get('seguimiento')->getStudentObservationQA(array('codigoRude'=>$value['codigo_rude'], 'gestion'=>$gestion));
+                    $studentsInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array(
+                        'estudianteInscripcion'=>$value['estinsid']
+                    ));
+                    // dump(sizeof($studentsInscription));
+                    //get students registered
+                    $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
+                    // dump($objStudentsInOlimpiadas);
+                    if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) == 2){
+                    }else{
+                        if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
+                        $arrCorrectStudent[]=($value);    
+                        }
                     }
+
                 }
 
             }
 
         }
+
+ 
      
         
         // die;

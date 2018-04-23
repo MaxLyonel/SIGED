@@ -513,7 +513,7 @@ class Olimfunctions {
             inner join olim_discapacidad_tipo odt on odt.id = oei.discapacidad_tipo_id
             inner join olim_tutor ot on ot.id = oei.olim_tutor_id
             inner join persona p on p.id = ot.persona_id
-            where ot.id = ".$data['olimtutorid']." and
+            where iec.institucioneducativa_id = ".$data['sie']." and
             oei.materia_tipo_id = ".$data['materiaId']." and
             iec.nivel_tipo_id = ".$data['nivelId']." and
             iec.grado_tipo_id = ".$data['gradoId']." and
@@ -548,6 +548,33 @@ class Olimfunctions {
     $objGropNumber = $query->fetch();
    
      return $objGropNumber;
+    // return 'krlos';
+  }
+
+
+
+  public function getStudentsInscriptionGroup($data){
+    $query = $this->em->getConnection()->prepare(
+      
+      "
+        select count(e.codigo_rude) as takeitgroup
+            from olim_inscripcion_grupo_proyecto oigp
+              left join olim_estudiante_inscripcion oei on oigp.olim_estudiante_inscripcion_id = oei.id
+                left join estudiante_inscripcion ei on oei.estudiante_inscripcion_id = ei.id
+                  left join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+                    left join estudiante e on ei.estudiante_id = e.id
+            where iec.institucioneducativa_id = ".$data['sie']." and
+            oei.materia_tipo_id = ".$data['materiaId']." and
+            iec.nivel_tipo_id = ".$data['nivelId']." and
+            iec.grado_tipo_id = ".$data['gradoId']." 
+         
+      "
+    );
+    
+    $query->execute();
+    $objStudent = $query->fetch();
+   
+     return $objStudent;
     // return 'krlos';
   }
 
