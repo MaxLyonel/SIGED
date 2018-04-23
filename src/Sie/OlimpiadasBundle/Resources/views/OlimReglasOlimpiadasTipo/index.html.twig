@@ -57,7 +57,7 @@
                             <thead>
                                 <tr>
                                     {# <th>Id</th> #}
-                                    <th>Categoria</th>
+                                    <th>Categoría</th>
                                     <th>Modalidad</th>
                                     <th>Cantidad por equipo</th>
                                     <th>Cantidad equipos</th>
@@ -65,16 +65,16 @@
                                     <th>Edad inicial</th>
                                     <th>Edad final</th>
                                     <th>Fecha comparacion</th>
-                                    <th>Si subir documento</th>
-                                    <th>Si nombre equipo</th>
-                                    <th>Si nombre proyecto</th>
+                                    <th>¿Subir documento?</th>
+                                    <th>Nombre de equipo</th>
+                                    <th>Nombre de proyecto</th>
                                     {# <th>Gestion</th> #}
                                     {# <th>Periodo</th> #}
                                     {# <th>Fecha registro</th> #}
                                     {# <th>Fecha modificacion</th> #}
-                                    <th>Si inscripción externa</th>
+                                    <th>¿Inscripción externa?</th>
                                     <th>Niveles</th>
-                                    <th>Opciones</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -153,7 +153,7 @@
                                             {% endfor %}
                                         {% endif %}
                                         {% if entity.secundaria|length > 0 %}
-                                            <p style="padding-top: 10px;"><strong>Secundara</strong></p>
+                                            <p style="padding-top: 10px;"><strong>Secundaria</strong></p>
                                             {% for sec in entity.secundaria %}
                                                 <span class="badge badge-inverse badge-stroke"> {{ sec.gradoTipo.id }} </span>
                                             {% endfor %}
