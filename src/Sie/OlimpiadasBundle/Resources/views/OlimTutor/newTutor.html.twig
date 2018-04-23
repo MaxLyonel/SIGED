@@ -90,6 +90,17 @@
     {{parent()}}
     <script type="text/javascript" charset="utf-8" >
 
+      $(function(){
+            //$("#form_carnet").numeric("positiveInteger");
+            $("#form_carnet").attr("maxlength",'20');
+
+            // aplicamos las mascaras para las fechas
+            $("#form_fechanacimiento").inputmask({ "alias": "dd-mm-yyyy" });
+            $("#form_complemento").inputmask({mask: "9a"});
+
+        });
+
+
       var lookForTutor = function(){
         
         formData = $('#formNewTutorId').serialize();

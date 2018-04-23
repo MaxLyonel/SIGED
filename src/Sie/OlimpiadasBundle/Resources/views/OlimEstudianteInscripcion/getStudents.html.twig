@@ -17,7 +17,7 @@
                                             <th>Discapacidad</th>
                                             <th>Tel&eacute;fono <b style="color:#FF0000;">*</b></th>
                                             <th>Email <b style="color:#FF0000;">*</b ></th>
-                                            <th>i</th>
+                                            <th>Elegir</th>
                                             
                                         </tr>
                                     </thead>
@@ -42,7 +42,7 @@
                                                 <td>{{item.fecha_nacimiento}}</td>
                                                 <td>{{item.yearsOld}}</td>
 
-                                                <td>
+                                                <td align="center">
                                                      <select class="chosen-select mb-5 form-control" name="form[datasend_{{item.estinsid}}][discapacidad]">
                                                         {% for discapacidad in objDiscapacidad %}
                                                             <option value="{{discapacidad.id}}">{{discapacidad.discapacidad}}</option>       
@@ -58,7 +58,7 @@
                                                   
                                                 
                                                     #}
-                                                <td>
+                                                <td align="center">
                                                     {% if item.carnet_identidad %}
 
                                                      <input type="checkbox" id="form_datasend_{{item.estinsid}}_studentInscription" name="form[datasend_{{item.estinsid}}][studentInscription]"   value='{{item.estinsid}}'>
