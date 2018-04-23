@@ -471,9 +471,9 @@ class OlimTutorController extends Controller{
             ->add('correoElectronico', 'text', array('data'=>$olimTutor->getCorreoElectronico()))
             ->add('editutor', 'hidden', array('data'=>$olimTutor->getId()))
             ->add('olimtutorid', 'hidden', array('data'=>$olimTutor->getId()))
-            ->add('sie', 'text', array('data'=>$arrData['sie'] , 'mapped'=>false))
-            ->add('gestion', 'text', array('data'=>$arrData['gestion'] , 'mapped'=>false))
-            ->add('jsonData', 'text', array('data'=>$jsonData, 'mapped'=>false))
+            ->add('sie', 'hidden', array('data'=>$arrData['sie'] , 'mapped'=>false))
+            ->add('gestion', 'hidden', array('data'=>$arrData['gestion'] , 'mapped'=>false))
+            ->add('jsonData', 'hidden', array('data'=>$jsonData, 'mapped'=>false))
             ->add('update','submit', array('label'=>'Actualizar'))
             ->getForm();
 

@@ -41,8 +41,8 @@
                                     <span class="media-heading">{{dataTutorPersona.nombre}} {{dataTutorPersona.paterno}} {{dataTutorPersona.materno}} </span>
                                     {{form_start(form, {'attr':{'id':'updateDataTutorId', 'class':'form-inline'} })}}
                                         <div class="form-group mx-sm-3 mb-2">
-                                            {{ form_widget(form.telefono1, {'attr':{'class':'form-control', 'placeholder':'Teléfono 1', 'pattern':'[0-9]{4,9}'} })}}
-                                            {{ form_widget(form.telefono2, {'attr':{'class':'form-control', 'placeholder':'Teléfono 2', 'pattern':'[0-9]{4,9}'} })}}
+                                            {{ form_widget(form.telefono1, {'attr':{'class':'form-control', 'placeholder':'Teléfono 1', 'pattern':'[0-9]{4,9}', 'maxlength': '8'} })}}
+                                            {{ form_widget(form.telefono2, {'attr':{'class':'form-control', 'placeholder':'Teléfono 2', 'pattern':'[0-9]{4,9}', 'maxlength': '8'} })}}
                                             {{ form_widget(form.correoElectronico, {'attr':{'class':'form-control', 'placeholder':'Email'} })}}
                                         </div>
                                         {{form_widget(form.update, {'attr':{'class':'btn btn-md btn-primary'} })}}
