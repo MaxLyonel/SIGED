@@ -331,11 +331,10 @@ class OlimDirectorInscripcionDatosController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
-        // dump($form);die;
-        
+        $entity = null;
         
         if(($form['datosId'] > 0)){
-            $entity = $em->getRepository('SieAppWebBundle:OlimDirectorInscripcionDatos')->find($form['datosId']);    
+            $entity = $em->getRepository('SieAppWebBundle:OlimDirectorInscripcionDatos')->findOneById($form['datosId']);
             if (!$entity) {
                 return $this->redirect($this->generateUrl('olimtutor_listTutorBySie'));
             }
@@ -346,21 +345,23 @@ class OlimDirectorInscripcionDatosController extends Controller
         return $this->render('SieOlimpiadasBundle:OlimDirectorInscripcionDatos:edit.html.twig', array(
             // 'entity'      => $entity,
              // 'edit_form'   => $editForm->createView(),
-            'edit_form'   => $this->editManualForm($form,$form['jsonData'])->createView(),
+            'edit_form'   => $this->editManualForm($entity,$form,$form['jsonData'])->createView(),
             'cancel_form'   => $this->editManualCancelForm($form['jsonData'])->createView(),
         ));
     }
 
-    private function editManualForm($data,$jsonData){
+    private function editManualForm($entity,$data,$jsonData){
         $arrData = json_decode($jsonData, true);
+
         return $this->createFormBuilder()
                 ->setAction($this->generateUrl('olimtutor_listTutorBySie'))
-                ->add('telefono1', 'text',array('data'=>''))
-                ->add('telefono2', 'text',array('data'=>''))
-                ->add('correoElectronico')
+                ->add('telefono1', 'text',array('data'=> $entity ? $entity->getTelefono1() : ""))
+                ->add('telefono2', 'text',array('data'=> $entity ? $entity->getTelefono2() : ""))
+                ->add('correoElectronico', 'text',array('data'=> $entity ? $entity->getCorreoElectronico() : ""))
                 ->add('sie', 'hidden', array('data'=>$arrData['sie'] , 'mapped'=>false))
                 ->add('gestion', 'hidden', array('data'=>$arrData['gestion'] , 'mapped'=>false))
-                // ->add('editDirector', 'text', array('data'=>$entity->getId(), 'mapped'=>false))
+                ->add('datosId', 'hidden', array('data'=>$data['datosId'], 'mapped'=>false))
+                ->add('maestroId', 'hidden', array('data'=>$data['maestroId'], 'mapped'=>false))
                 ->add('jsonData', 'hidden', array('data'=>$jsonData, 'mapped'=>false))
                 ->add('submit', 'submit', array('label' => 'Guardar'))
                 ->getForm()
@@ -373,7 +374,7 @@ class OlimDirectorInscripcionDatosController extends Controller
                 ->add('sie', 'hidden', array('data'=>$arrData['sie'] , 'mapped'=>false))
                 ->add('gestion', 'hidden', array('data'=>$arrData['gestion'] , 'mapped'=>false))
                 ->add('jsonData', 'hidden', array('data'=>$jsonData, 'mapped'=>false))
-                ->add('submit', 'submit', array('label' => 'Cancelar', 'attr'=>array('class'=>'btn btn-default btn-xs')))
+                ->add('submit', 'submit', array('label' => 'Cancelar', 'attr'=>array('class'=>'btn btn-default btn-md')))
                 ->getForm()
                 ;          
     }
