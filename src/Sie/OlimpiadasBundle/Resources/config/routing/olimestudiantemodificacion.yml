@@ -1,0 +1,51 @@
+oliminscriptions_listInscription:
+  path:     /listInscription
+  defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteModificacion:listInscription" }
+
+oliminscriptions_listTemplateInscription:
+  path:     /listTemplateInscription
+  defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteModificacion:listTemplateInscription" }
+  options:
+    expose: true
+
+oliminscriptions_listInscriptionByTutor:
+  path:     /{datainscription}/listInscriptionByTutor
+  defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteModificacion:listInscriptionByTutor" }
+
+oliminscriptions_getListStudents:
+  path:     /getListStudents
+  defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteModificacion:getListStudents" }
+  options:
+    expose: true
+
+oliminscriptions_deleteInscriptionStudent:
+  path:     /deleteInscriptionStudent
+  defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteModificacion:deleteInscriptionStudent" }
+  options:
+    expose: true
+
+oliminscriptions_changeTutor:
+  path:     /changeTutor
+  defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteModificacion:changeTutor" }
+
+oliminscriptions_changeTutorTemplate:
+  path:     /changeTutorTemplate
+  defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteModificacion:changeTutorTemplate" }
+  options:
+    expose: true
+
+oliminscriptions_listInscriptionByTutorChange:
+  path:     /{datainscription}/listInscriptionByTutorChange
+  defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteModificacion:listInscriptionByTutorChange" }
+
+oliminscriptions_getListStudentsTutor:
+  path:     /getListStudentsTutor
+  defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteModificacion:getListStudentsTutor" }
+  options:
+    expose: true
+
+oliminscriptions_updateInscriptionStudent:
+  path:     /updateInscriptionStudent
+  defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteModificacion:updateInscriptionStudent" }
+  options:
+    expose: true

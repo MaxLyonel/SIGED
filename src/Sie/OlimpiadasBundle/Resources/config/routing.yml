@@ -45,3 +45,7 @@ sie_app_web_olimgrupoproyecto:
 sie_app_web_oliminscriptions_nivelsuperior:
     resource: "@SieOlimpiadasBundle/Resources/config/routing/oliminscripcionnivelsuper.yml"
     prefix:   /oliminscripcionnivelsuper
+
+sie_app_web_olimestudiantemodificacion:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimestudiantemodificacion.yml"
+    prefix:   /olimestudiantemodificacion

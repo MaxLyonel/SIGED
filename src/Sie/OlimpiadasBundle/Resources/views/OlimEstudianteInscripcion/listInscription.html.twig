@@ -4,14 +4,14 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-pencil"></i> Inscripciones <span></span></h2>
+        <h2><i class="fa fa-pencil"></i> Lista de inscritos <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-pencil"></i>
                     <a href="{{path('infra_list_index')}}">
-                       Inscripciones
+                       Lista de Inscritos
                     </a>
                     <i class="fa fa-angle-right"></i>
                 </li>
@@ -25,46 +25,46 @@
     <div class="body-content animated fadeIn">
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-info shadow">
-                                <div class="panel-heading">
-                                    <div class="pull-left">
-                                        <h3 class="panel-title">Tutor</h3>
-                                    </div>
-                                    <div class="pull-right">
-                                        <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div><!-- /.panel-heading -->
-                                <div class="panel-body no-padding">
+                <div class="panel panel-teal shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Tutor</h3>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding">
 
-                                    <!-- Start list message -->
-                                    <div class="media-list">
+                        <!-- Start list message -->
+                        <div class="media-list">
 
-                                        <div class="media">
-                                            <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
-                                            <div class="media-body">
-                                                <span class="media-heading">
-                                                    {{tutor.nombre}}
-                                                    {{tutor.paterno}}
-                                                    {{tutor.materno}}
-                                                </span>
-                                                <span class="media-text">
-                                                    <b>Tel&eacute;fono 1:</b> {{tutor.telefono1}} </br>
-                                                    <b>Tel&eacute;fono 2:</b> {{tutor.telefono2}} </br>
-                                                    <b>email:</b> {{tutor.correo_electronico}}
-                    
-                                                </span>
-                                                <!-- Start meta icon -->
-                                                
-                                                <!--/ End meta icon -->
-                                            </div><!-- /.media-body -->
-                                        </div><!-- /.media -->
+                            <div class="media">
+                                <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
+                                <div class="media-body">
+                                    <span class="media-heading">
+                                        {{tutor.nombre}}
+                                        {{tutor.paterno}}
+                                        {{tutor.materno}}
+                                    </span>
+                                    <span class="media-text">
+                                        <b>Tel&eacute;fono 1:</b> {{tutor.telefono1}} </br>
+                                        <b>Tel&eacute;fono 2:</b> {{tutor.telefono2}} </br>
+                                        <b>email:</b> {{tutor.correo_electronico}}
+        
+                                    </span>
+                                    <!-- Start meta icon -->
+                                    
+                                    <!--/ End meta icon -->
+                                </div><!-- /.media-body -->
+                            </div><!-- /.media -->
 
-                                    </div>
-                                    <!--/ End list message -->
+                        </div>
+                        <!--/ End list message -->
 
-                                </div><!-- /.panel-body -->
-                            </div>
+                    </div><!-- /.panel-body -->
+                </div>
             </div>
             
         </div>
@@ -72,83 +72,61 @@
           <div class="col-md-12 col-md-offset-0">
            
             <div class="panel rounded shadow">
-                                <div class="panel-heading">
-                                    <div class="pull-left">
-                                        <h3 class="panel-title">Datos de inscripci&oacute;n</h3>
-                                    </div>
-                                    <div class="pull-right">
-                                        <button class="btn btn-danger mr-5">Cancelar</button>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div><!-- /.panel-heading -->
-                                <div class="panel-body no-padding">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Datos de inscripción</h3>
+                        </div>
+                        <div class="pull-right">
+                            {{form_start(cancelform)}}
+                                {{form_widget(cancelform.submit, { 'attr':{'class':'btn btn-md bg-teal'} })}}
+                            {{form_end(cancelform)}}
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding">
 
 
-                                       {{form_start(form, { 'attr':{'id':'idForminscriptionOlim'} })}}
-                                    <div class="form-body">
-                                          
-                                      <div class="row">
-                                          
-                                          <div class="col-md-6">
-                                            MATERIA:
-                                              {{form_widget(form.olimMateria, {'attr': {'class':'form-control', 'onchange':'getCategory(this.value)'} } )}}
-                                          </div>
-                                          <div class="col-md-6">
-                                            CATEGORIA:
-                                              {{form_widget(form.category, {'attr': {'class':'form-control', 'onchange':'listTemplateInscription(this.value)'} } )}}
-                                          </div>
-                                         
-                                      </div>
-                                      <div class="row">
-                                        <div class="col-md-12">
-                                            <div id="templateId">
-                                                
-                                            </div>
-                                        </div>
-                                          
-                                      </div>
-
-
-                                    {#
-                                        <div class="row">
-                                         <div class="col-md-3">
-                                            NIVEL:
-                                              {{form_widget(form.nivel, {'attr': {'class':'form-control', 'onchange':'getGrados(this.value)'} } )}}
-                                          </div>
-                                          <div class="col-md-3">
-                                            GRADO:
-                                              {{form_widget(form.grado, {'attr': {'class':'form-control', 'onchange':'getParalelo(this.value)'} } )}}
-                                          </div>
-                                          <div class="col-md-3">
-                                            PARALELO:
-                                              {{form_widget(form.paralelo, {'attr': {'class':'form-control', 'onchange':'getTurnos(this.value)'} } )}}
-                                          </div>
-                                          <div class="col-md-3">
-                                            TURNO:
-                                              {{form_widget(form.turno, {'attr': {'class':'form-control', 'onchange':'getStudents(this.value)'} } )}}
-                                          </div>
-                                          
-                                      </div>
-                                        #}
-                                      
-
-                                    </div><!-- /.form-body -->
-                                    <div class="form-footer">
-                                        <div class="pull-right">
-                                            <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
-                                            {#
-                                             {{form_widget(form.buscar, {'attr': {'class':'btn btn-danger'} } )}}
-                                            #}
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </div><!-- /.form-footer -->
-                                          
-                                {{form_end(form)}}
-    
+                            {{form_start(form, { 'attr':{'id':'idForminscriptionOlim'} })}}
+                        <div class="form-body">
                                 
-
-                                </div><!-- /.panel-body -->
+                            <div class="row">
+                                
+                                <div class="col-md-6">
+                                MATERIA:
+                                    {{form_widget(form.olimMateria, {'attr': {'class':'form-control', 'onchange':'getCategory(this.value)'} } )}}
+                                </div>
+                                <div class="col-md-6">
+                                CATEGORIA:
+                                    {{form_widget(form.category, {'attr': {'class':'form-control', 'onchange':'listTemplateInscription(this.value)'} } )}}
+                                </div>
+                                
                             </div>
+                            <div class="row">
+                            <div class="col-md-12">
+                                <div id="templateId">
+                                    
+                                </div>
+                            </div>
+                                
+                            </div>                         
+
+                        </div><!-- /.form-body -->
+                        <div class="form-footer">
+                            <div class="pull-right">
+                                <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
+                                {#
+                                    {{form_widget(form.buscar, {'attr': {'class':'btn btn-danger'} } )}}
+                                #}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.form-footer -->
+                                
+                    {{form_end(form)}}
+
+                    
+
+                    </div><!-- /.panel-body -->
+                </div>
 
           </div>
       </div>
