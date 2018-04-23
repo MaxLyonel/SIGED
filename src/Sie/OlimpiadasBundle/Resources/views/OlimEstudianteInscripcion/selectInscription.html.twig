@@ -260,6 +260,9 @@
                 data: {'nivelId': nivelId, 'materiaId': materiaId, 'categoryId':categoryId},
                 beforeSend: function () {
                   $("#form_grado").empty();
+                  $("#form_paralelo").empty();
+                  $("#form_turno").empty();
+                  $("#getStudentsId").empty();
                 },
                 success: function (data) {
                     $("#form_grado").empty();
@@ -289,6 +292,8 @@
                 url: Routing.generate('oliminscriptions_getParalelo'),
                 data: {'gradoId': gradoId, 'materiaId': materiaId, 'categoryId': categoryId, 'nivelId':nivelId, 'sie':sie, 'gestion':gestion},
                 beforeSend: function () {
+                  $("#form_paralelo").empty();
+                  $("#form_turno").empty();
                   $("#getStudentsId").empty();
                 },
                 success: function (data) {
@@ -317,6 +322,7 @@
                 url: Routing.generate('oliminscriptions_getTurno'),
                 data: {'paraleloId':paraleloId,'gradoId': gradoId, 'materiaId': materiaId, 'categoryId': categoryId, 'nivelId':nivelId, 'sie':sie, 'gestion':gestion},
                 beforeSend: function () {
+                  $("#form_turno").empty();
                   $("#getStudentsId").empty();
                 },
                 success: function (data) {
@@ -348,7 +354,6 @@
              url: Routing.generate('oliminscriptions_getStudents'),
              data: {'turnoId':turnoId,'paraleloId':paraleloId,'gradoId': gradoId, 'materiaId': materiaId, 'categoryId': categoryId, 'nivelId':nivelId, 'sie':sie, 'gestion':gestion, 'olimtutorid':olimtutorid, 'jsonData':jsonData},
              beforeSend: function () {
-                 $("#getStudentsId").empty();
                  $("#getStudentsId").empty();
                  $("#getStudentsId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
              },
