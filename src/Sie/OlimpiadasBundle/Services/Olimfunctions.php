@@ -502,9 +502,6 @@ class Olimfunctions {
 
 
    public function getStudentsInscription($data){
-    // $data = json_decode($jsonDataInscription, true);
-    
-// dump($arrDataInscription);die;
     $query = $this->em->getConnection()->prepare(
       
       "
@@ -531,6 +528,26 @@ class Olimfunctions {
     $objStudent = $query->fetch();
    
      return $objStudent;
+    // return 'krlos';
+  }
+
+
+  public function getGroupsNumber($data){
+    $query = $this->em->getConnection()->prepare(
+      
+      "
+        select  count(*) as groupnumber from olim_grupo_proyecto 
+        where materia_tipo_id = ".$data['materiaId']." and
+        olim_reglas_olimpiadas_tipo_id = ".$data['categoryId']."  and
+        olim_tutor_id = ".$data['olimtutorid']."
+           
+      "
+    );
+    
+    $query->execute();
+    $objGropNumber = $query->fetch();
+   
+     return $objGropNumber;
     // return 'krlos';
   }
 

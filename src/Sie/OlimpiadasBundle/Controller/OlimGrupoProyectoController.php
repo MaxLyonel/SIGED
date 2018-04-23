@@ -309,51 +309,67 @@ class OlimGrupoProyectoController extends Controller
     public function createGroupSaveAction(Request $request){
         
         try {
-        //create db conexino
-        $em = $this->getDoctrine()->getManager();
-        $em->getConnection()->beginTransaction();
-        //get the send data
-        $form = $request->get('sie_appwebbundle_olimgrupoproyecto');
-        $jsonDataInscription = $form['jsonDataInscription'];
-        $arrDataInscription = json_decode($jsonDataInscription, true);
-        // dump($arrDataInscription);die;
-        // create condition to find
-        $nameGroup = trim(mb_strtoupper($form['nombre'], 'utf8'));
-        // dump($nameGroup);die;
-        $arrCondition = array(
-            'nombre'                   => $nameGroup,
-            'olimTutor'                => $arrDataInscription['olimtutorid'],
-            'olimReglasOlimpiadasTipo' => $arrDataInscription['categoryId']
-        );
-        
-                //check if the groups name exist
-        $objGroup = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->findBy($arrCondition);
-        if(!$objGroup){           
+            //create db conexino
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            //get the send data
+            $form = $request->get('sie_appwebbundle_olimgrupoproyecto');
+            $jsonDataInscription = $form['jsonDataInscription'];
+            $arrDataInscription = json_decode($jsonDataInscription, true);
 
-            // dump($arrDataInscription);die;
-            // restart the key table
-            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_grupo_proyecto');");
-            $query->execute();
-            //save the group information
-            $entity = new OlimGrupoProyecto();
-            $entity->setNombre($nameGroup);
-            $entity->setFechaRegistro(new \DateTime('now'));
-            $entity->setUsuarioRegistroId($this->session->get('userId'));
-            $entity->setGestionTipoId($arrDataInscription['gestiontipoid']);
-            $entity->setOlimTutor($em->getRepository('SieAppWebBundle:OlimTutor')->find($arrDataInscription['olimtutorid']));
-            $entity->setOlimReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($arrDataInscription['categoryId']));
-            $entity->setPeriodoTipo($em->getRepository('SieAppWebBundle:OlimPeriodoTipo')->find(1));
-            $entity->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($arrDataInscription['materiaId']));
-            $entity->setOlimGrupoProyectoTipo($em->getRepository('SieAppWebBundle:OlimGrupoProyectoTipo')->find(1));
-            $em->persist($entity);
-            $em->flush();
+            $objRules = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findOneBy(array(
+                'olimMateriaTipo'=> $arrDataInscription['materiaId'],
+                'id' => $arrDataInscription['categoryId']
+            ));
+
+
+            $arrGroupNumber = $this->get('olimfunctions')->getGroupsNumber($arrDataInscription);
+
+            if($arrGroupNumber['groupnumber']<$objRules->getCantidadEquipos()){
+                // create condition to find
+                $nameGroup = trim(mb_strtoupper($form['nombre'], 'utf8'));
+                // dump($nameGroup);die;
+                $arrCondition = array(
+                    'nombre'                   => $nameGroup,
+                    'olimTutor'                => $arrDataInscription['olimtutorid'],
+                    'olimReglasOlimpiadasTipo' => $arrDataInscription['categoryId']
+                );
+                
+                        //check if the groups name exist
+                $objGroup = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->findBy($arrCondition);
+                if(!$objGroup){           
+
+                    // dump($arrDataInscription);die;
+                    // restart the key table
+                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('olim_grupo_proyecto');");
+                    $query->execute();
+                    //save the group information
+                    $entity = new OlimGrupoProyecto();
+                    $entity->setNombre($nameGroup);
+                    $entity->setFechaRegistro(new \DateTime('now'));
+                    $entity->setUsuarioRegistroId($this->session->get('userId'));
+                    $entity->setGestionTipoId($arrDataInscription['gestiontipoid']);
+                    $entity->setOlimTutor($em->getRepository('SieAppWebBundle:OlimTutor')->find($arrDataInscription['olimtutorid']));
+                    $entity->setOlimReglasOlimpiadasTipo($em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->find($arrDataInscription['categoryId']));
+                    $entity->setPeriodoTipo($em->getRepository('SieAppWebBundle:OlimPeriodoTipo')->find(1));
+                    $entity->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($arrDataInscription['materiaId']));
+                    $entity->setOlimGrupoProyectoTipo($em->getRepository('SieAppWebBundle:OlimGrupoProyectoTipo')->find(1));
+                    $em->persist($entity);
+                    $em->flush();
+                    
+                    $em->getConnection()->commit();
+
+                }else{
+                    $message = 'Grupo no creado, nombre de grupo ya existe...';
+                    $this->addFlash('noGroupCreate', $message);
+                }
+
+            }else{
+
+                 $message = 'Grupo no creado, excede al limite permitido...';
+                 $this->addFlash('noGroupCreate', $message);
+            }
             
-            $em->getConnection()->commit();
-
-        }else{
-            $message = 'Grupo no creado, nombre de grupo ya existe...';
-            $this->addFlash('noGroupCreate', $message);
-        }
             
         } catch (Exception $e) {
             $em->getConnection()->rollback();
