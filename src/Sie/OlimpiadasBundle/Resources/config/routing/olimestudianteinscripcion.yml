@@ -159,61 +159,8 @@ oliminscriptions_lookForOlimStudent:
     options:
         expose: true         
         
-oliminscriptions_listInscription:
-    path:     /listInscription
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscription" }
-
-
 oliminscriptions_saveExternalInscription:
     path:     /saveExternalInscription
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:saveExternalInscription" }
     options:
         expose: true  
-
-oliminscriptions_listTemplateInscription:
-    path:     /listTemplateInscription
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listTemplateInscription" }
-    options:
-        expose: true
-
-oliminscriptions_listInscriptionByTutor:
-    path:     /{datainscription}/listInscriptionByTutor
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscriptionByTutor" }
-
-oliminscriptions_getListStudents:
-    path:     /getListStudents
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getListStudents" }
-    options:
-        expose: true
-
-oliminscriptions_deleteInscriptionStudent:
-    path:     /deleteInscriptionStudent
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:deleteInscriptionStudent" }
-    options:
-        expose: true
-
-oliminscriptions_changeTutor:
-    path:     /changeTutor
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:changeTutor" }
-
-oliminscriptions_changeTutorTemplate:
-    path:     /changeTutorTemplate
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:changeTutorTemplate" }
-    options:
-        expose: true
-
-oliminscriptions_listInscriptionByTutorChange:
-    path:     /{datainscription}/listInscriptionByTutorChange
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscriptionByTutorChange" }
-
-oliminscriptions_getListStudentsTutor:
-    path:     /getListStudentsTutor
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getListStudentsTutor" }
-    options:
-        expose: true
-
-oliminscriptions_updateInscriptionStudent:
-    path:     /updateInscriptionStudent
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:updateInscriptionStudent" }
-    options:
-        expose: true

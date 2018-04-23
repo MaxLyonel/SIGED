@@ -1,7 +1,16 @@
+{% if mensaje != "" %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-{{estado}}">
+                <i class="fa fa-info-circle fa-fw"></i> {{mensaje}}
+            </div>        
+        </div>
+    </div>
+{% endif %}
 <div class="row">
     <div class="col-lg-12">
         {% if inscritos %}
-            <table class="table table-default table-bordered table-striped">
+            <table class="table table-warning table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -10,8 +19,8 @@
                         <th>Paterno</th>
                         <th>Materno</th>
                         <th>Nombre(s)</th>
-                        <th>Actualizar Teléfono <span class="text-danger"><strong>(*)</strong></span></th>
-                        <th>Actualizar Correo <span class="text-danger"><strong>(*)</strong></span></th>
+                        <th>Actualizar Teléfono <span><strong>(*)</strong></span></th>
+                        <th>Actualizar Correo <span><strong>(*)</strong></span></th>
                         <th>Actualizar Discapacidad</th>
                         <th>Actualizar Tutor</th>
                         <th>Acciones</th>
@@ -26,7 +35,7 @@
                             <td>{{inscrito.paterno}}</td>
                             <td>{{inscrito.materno}}</td>
                             <td>{{inscrito.nombre}}</td>
-                            <td><input id="form_telefono_{{inscrito.olimestudianteid}}" name="form[telefono][{{inscrito.olimestudianteid}}]" type="text" value="{{inscrito.telefono_estudiante}}" class="form-control"/></td>
+                            <td><input id="form_telefono_{{inscrito.olimestudianteid}}" name="form[telefono][{{inscrito.olimestudianteid}}]" type="text" value="{{inscrito.telefono_estudiante}}" class="form-control" maxlength="8" /></td>
                             <td><input id="form_correo_{{inscrito.olimestudianteid}}" name="form[correo][{{inscrito.olimestudianteid}}]" type="text" value="{{inscrito.correo_estudiante}}" class="form-control" /></td>
                             <td>
                                 <select id="form_discapacidad_{{inscrito.olimestudianteid}}" name="form[discapacidad][{{inscrito.olimestudianteid}}]" class="form-control">
@@ -52,7 +61,7 @@
                                     <input type="hidden" name="form[gradoId]" id="form_gradoId" value="{{gradoId}}">
                                     <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{olimtutorid}}">
                                     <input type="hidden" name="form[olimestudianteid]" id="form_olimestudianteid" value="{{inscrito.olimestudianteid}}">
-                                    <button type="button" class="btn btn-success btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-save"></i> Guardar</button>
+                                    <button type="button" class="btn btn-warning btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-save"></i> Guardar</button>
                                 </form>
                             </td>
                         </tr>
@@ -60,7 +69,9 @@
                 </tbody>
             </table>
         {% else %}
-            No existen registros
+        <div class="alert alert-warning">
+            <i class="fa fa-info-circle fa-fw"></i> No existen registros.
+        </div>
         {% endif %}
     </div>
 </div>
