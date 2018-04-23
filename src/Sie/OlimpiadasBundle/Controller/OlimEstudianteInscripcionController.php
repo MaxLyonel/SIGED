@@ -1599,6 +1599,9 @@ class OlimEstudianteInscripcionController extends Controller{
     }
 
     public function lookForOlimStudentAction(Request $request){
+        //create db conexion
+        $em = $this->getDoctrine()->getManager();
+        $studentExist = true;
         //get the send data
         $form = $request->get('form');
         $jsonDataInscription = $form['jsonDataInscription'];
@@ -1606,14 +1609,33 @@ class OlimEstudianteInscripcionController extends Controller{
         $arrDataInscription['codigoRude'] = $form['codigoRude'];
         // dump($arrDataInscription);die;
         $objStudentInscription = $this->get('olimfunctions')->lookForOlimStudentByRudeGestion($arrDataInscription);
-        $arrDataInscription['estinsid'] = $objStudentInscription['estinsid'];
-        // dump($arrDataInscription);
-        // dump($objStudentInscription);
-        // die;
+        if($objStudentInscription){
+            //get the students number inscription
+            $studentsInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array(
+                'estudianteInscripcion'=>$objStudentInscription['estinsid']
+            ));
+            //validate the number of inscription 
+            if(sizeof($studentsInscription) == 2){
+                $studentExist = false;
+                $message = 'limite de inscripciones excedida... ';
+                $this->addFlash('noExternal', $message);
+            }
+            // save the data estinsid
+            $arrDataInscription['estinsid'] = $objStudentInscription['estinsid'];
+
+            
+        }else{
+            $studentExist = false;
+            $message = 'Estudiante no existe ... ';
+            $this->addFlash('noExternal', $message);
+        }
+
+        
         $jsonDataInscription = json_encode($arrDataInscription);
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:lookForOlimStudent.html.twig', array(
             'inscripForm' => $this->doExternalInscriptionForm($jsonDataInscription)->createView(),
             'objStudentInscription' => $objStudentInscription,
+            'studentExist' => $studentExist,
         ));
         // die;
     }
