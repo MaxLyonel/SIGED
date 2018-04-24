@@ -287,8 +287,8 @@ class InscripcionNivelSuperController extends Controller{
         $form = $request->get('form');
         $arrInfoToDoInscription = json_decode($form['jsonInfoToDoInscription'], true);
         // dump($arrInfoToDoInscription);
-        dump($form);
-        die;
+        // dump($form);
+        // die;
 
         try {
 

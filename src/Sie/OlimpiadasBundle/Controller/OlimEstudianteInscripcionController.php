@@ -1188,11 +1188,12 @@ class OlimEstudianteInscripcionController extends Controller{
 
             $objStudentsInscriptions = $this->get('olimfunctions')->getStudentsInscriptionGroup($jsonDataInscription);
                 // dump($objStudentsInscriptions);die;
-                // $jsonDataInscription['takeit']=$objStudentsInscriptions['takeit'];
+            $jsonDataInscription['takeitgroup']=$objStudentsInscriptions['takeitgroup'];
 
             $jsonDataInscription = json_encode($jsonDataInscription);
             $arrCorrectStudent = array();
-            if($objStudentsInscriptions['takeitgroup'] == $objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros()){
+          
+            if($objStudentsInscriptions['takeitgroup'] == $objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros() * $objRules->getCantidadEquipos()){
                 $limitInscription = false;
             }else{
 
