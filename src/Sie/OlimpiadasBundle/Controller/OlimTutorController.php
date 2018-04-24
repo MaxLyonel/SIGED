@@ -539,6 +539,11 @@ class OlimTutorController extends Controller{
                     return false;
                 }
 
+                $olimGrupoProyecto = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->findBy(array('olimTutor' => $olimTutor->getId()));
+                if ($olimGrupoProyecto) {
+                    return false;
+                }
+
                 $em->remove($olimTutor);
                 $em->flush();
                 $em->getConnection()->commit();
