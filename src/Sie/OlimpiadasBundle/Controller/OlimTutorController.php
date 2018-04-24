@@ -460,6 +460,16 @@ class OlimTutorController extends Controller{
 
     }
 
+    private function cancelForm($data){
+        
+        return $this->createFormBuilder()
+                ->setAction($this->generateUrl('olimtutor_listTutorBySie'))                
+                ->add('sie', 'hidden', array('data'=>$data['institucioneducativaid'] , 'mapped'=>false))
+                ->add('gestion', 'hidden', array('data'=>$data['gestiontipoid'] , 'mapped'=>false))
+                ->add('submit', 'submit', array('label' => 'Cancelar'))
+                ->getForm();          
+    }
+
     public function updateDataTutorAction(Request $request){
         $em = $this->getDoctrine()->getManager();                                                                                                                                                  
         //get the send data
@@ -475,6 +485,7 @@ class OlimTutorController extends Controller{
         return $this->render('SieOlimpiadasBundle:OlimTutor:updateDataTutor.html.twig', array(
             'form'=> $this->updateDataTutorForm($olimTutor, $form['jsonData'])->createView(),
             'dataTutorPersona'=>$dataTutorPersona,
+            'cancel_form' => $this->cancelForm($form)->createView(),
         ));
 
     }
