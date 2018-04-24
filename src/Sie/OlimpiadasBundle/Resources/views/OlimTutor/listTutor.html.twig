@@ -249,10 +249,18 @@
                                                             </form>
                                                         </td>
                                                     {% endif %}
-                                                    
+                                                        <td class="text-center">
+                                                            <form action="{{path('reporte_olimpiada_reporteOlimUE_pdf')}}" method="POST">
+                                                                <input type="hidden" name="reporteOlim[sie]" id="" value="{{entity.institucioneducativa_id}}">                                   
+                                                                <input type="hidden" name="reporteOlim[gestion]" id="" value="{{entity.gestion_tipo_id}}">
+                                                                <input type="hidden" name="reporteOlim[tutor]" id="" value="{{entity.olimtutorid}}">
+                                                                <button href="#" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Descargar lista de inscritos del tutor(a)"><i class="fa fa-file-pdf-o"></i></button>
+                                                            </form>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
+
                                             {#
                                                 <ul>
                                             <li>
