@@ -197,7 +197,7 @@ class OlimTutorController extends Controller{
             ->setAction($this->generateUrl('olimtutor_newTutor'))
             ->setMethod('POST')
             ->add('data', 'hidden', array('attr'=>array('value'=>$data)))
-            ->add('newTutor', 'submit', array('label'=> 'Nuevo Tutor', 'attr'=>array('class'=>'btn btn-info btn-xs')))
+            ->add('newTutor', 'submit', array('label'=> 'Nuevo Tutor', 'attr'=>array('class'=>'btn btn-info btn-md')))
             ->getForm()
             ;
     }
