@@ -1674,7 +1674,7 @@ class OlimEstudianteInscripcionController extends Controller{
                 'estudianteInscripcion'=>$objStudentInscription['estinsid']
             ));
             //validate the number of inscription 
-            if(sizeof($studentsInscription) == 2){
+            if(sizeof($studentsInscription) > 2){
                 $studentExist = false;
                 $message = 'limite de inscripciones excedida... ';
                 $this->addFlash('noExternal', $message);

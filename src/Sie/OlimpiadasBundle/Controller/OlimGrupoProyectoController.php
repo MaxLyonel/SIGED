@@ -283,6 +283,9 @@ class OlimGrupoProyectoController extends Controller
         //get the send values
         $formjson = $request->get('form');
         $jsonDataInscription =  $formjson['jsonDataInscription'];
+
+        $arrDataInscription = json_decode($jsonDataInscription,true);
+        $objRules = $this->get('olimfunctions')->getDataRule(array('materiaId'=>$arrDataInscription['materiaId'], 'categoryId'=>$arrDataInscription['categoryId']));
         // dump($jsonDataInscription);die;
         $entity = new OlimGrupoProyecto();
         $form   = $this->createCreateGroupForm($entity, $jsonDataInscription);
@@ -290,15 +293,25 @@ class OlimGrupoProyectoController extends Controller
         return $this->render('SieOlimpiadasBundle:OlimGrupoProyecto:createGroup.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'siNombreProyecto'   => $objRules->getSiNombreProyecto(),
         ));
 
     }
 
     private function createCreateGroupForm(OlimGrupoProyecto $entity, $jsonDataInscription){
+        $arrDataInscription = json_decode($jsonDataInscription,true);
+        $objRules = $this->get('olimfunctions')->getDataRule(array('materiaId'=>$arrDataInscription['materiaId'], 'categoryId'=>$arrDataInscription['categoryId']));
+        // dump($objRules->getSiNombreEquipo());
+        // dump($objRules);
+        // die;
         $form = $this->createForm(new OlimGrupoProyectoType(), $entity, array(
             // 'action' => $this->generateUrl('olimgrupoproyecto_create'),
             'method' => 'POST',
         ));
+        if($objRules->getSiNombreProyecto()){
+            $form->add('nombreProyecto', 'text',array('mapped'=>false));
+        }
+        $form->add('siNombreProyecto', 'hidden', array('mapped'=>false,'data'=>$objRules->getSiNombreProyecto()));
         $form->add('jsonDataInscription', 'hidden', array('mapped'=>false,'data'=>$jsonDataInscription));
         // $form->add('savegroup', 'button', array('label' => 'Create', 'attr'=>array('onclick'=>'createGroupSave()')));
 
@@ -314,6 +327,7 @@ class OlimGrupoProyectoController extends Controller
             $em->getConnection()->beginTransaction();
             //get the send data
             $form = $request->get('sie_appwebbundle_olimgrupoproyecto');
+            // dump($form);die;
             $jsonDataInscription = $form['jsonDataInscription'];
             $arrDataInscription = json_decode($jsonDataInscription, true);
 
@@ -354,6 +368,10 @@ class OlimGrupoProyectoController extends Controller
                     $entity->setPeriodoTipo($em->getRepository('SieAppWebBundle:OlimPeriodoTipo')->find(1));
                     $entity->setMateriaTipo($em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($arrDataInscription['materiaId']));
                     $entity->setOlimGrupoProyectoTipo($em->getRepository('SieAppWebBundle:OlimGrupoProyectoTipo')->find(1));
+                    if($form['siNombreProyecto']){
+                        $nameProyect = trim(mb_strtoupper($form['nombreProyecto'], 'utf8'));
+                        $entity->setNombreProyecto($nameProyect);
+                    }
                     $em->persist($entity);
                     $em->flush();
                     

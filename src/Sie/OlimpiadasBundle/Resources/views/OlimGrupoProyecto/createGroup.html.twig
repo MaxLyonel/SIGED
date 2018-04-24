@@ -1,5 +1,5 @@
 <div class="modal-dialog modal-lg">
-{{form_start(form, {'attr':{'id':'createGroupFormId', 'class':'form-inline'} })}}
+{{form_start(form, {'attr':{'id':'createGroupFormId', 'class':'form'} })}}
     <div class="modal-content">
         <div class="panel panel-info">
             <div class="panel-heading">
@@ -15,16 +15,39 @@
 
 
               <div class="row">
-                <div class="col-md-8 col-md-offset-3">
-                  
+                <div class="col-md-5 col-md-offset-3">
+
+                  <div class="form-body">
+                      <div class="form-group">
                         <div class="form-group mx-sm-3 mb-2">
                           Nombre de equipo:
                           {{ form_widget(form.nombre, {'attr':{'class':'form-control', 'placeholder':'', 'pattern':'[0-9]{4,9}'} })}}
-
                         </div>
-                        
+                      </div>
+                  </div>
+                {% if siNombreProyecto %}
+                  <div class="form-body">
+                      <div class="form-group">
+                        <div class="form-group mx-sm-3 mb-2">
+                          Nombre de proyecto:
+                          {{ form_widget(form.nombreProyecto, {'attr':{'class':'form-control', 'placeholder':'', 'pattern':'[0-9]{4,9}'} })}}
+                        </div>
+                      </div>
+                  </div>
+
+                {% endif %}
                 </div>
               </div>
+
+                           
+
+              {# end option #}
+
+
+
+
+
+              
                   
             <div class="row">
               <div class="col-md-12">
