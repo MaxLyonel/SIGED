@@ -565,8 +565,8 @@ class Olimfunctions {
                     left join estudiante e on ei.estudiante_id = e.id
             where iec.institucioneducativa_id = ".$data['sie']." and
             oei.materia_tipo_id = ".$data['materiaId']." and
-            iec.nivel_tipo_id = ".$data['nivelId']." and
-            iec.grado_tipo_id = ".$data['gradoId']." 
+            oei.olim_reglas_olimpiadas_tipo_id = ".$data['categoryId']."
+            
          
       "
     );
