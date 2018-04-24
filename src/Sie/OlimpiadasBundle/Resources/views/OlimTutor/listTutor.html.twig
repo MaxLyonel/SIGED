@@ -10,9 +10,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-pencil"></i>
-                    <a href="{{path('infra_list_index')}}">
                         Informaci&oacute;n de la Unidad Educativa
-                    </a>
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -113,8 +111,18 @@
                 </div>
         </div>
 
-    <div class="row">
-          <div class="col-md-10 col-md-offset-1">
+        {% if mensaje != "" %}
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="alert alert-{{estado}}">
+                        <i class="fa fa-info-circle fa-fw"></i> {{mensaje}}
+                    </div>        
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
               <!-- this is the beginner -->
 
                                     <!-- Start select fields - basic form -->
@@ -205,7 +213,7 @@
                                                     {% if app.session.get('roluser') in [35,9] %}
 
                                                         <td class="text-center">
-                                                            <form action="{{path('olimtutor_listTutorBySie')}}" method="post">
+                                                            <form action="{{path('olimtutor_listTutorBySie')}}" method="POST">
                                                                     <input type="hidden" id="form_deletetutor" name="form[deletetutor]" value="{{entity.olimtutorid}}">
                                                                     <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
                                                                     <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
@@ -217,7 +225,7 @@
                                                         </td>
                                                       
                                                         <td class="text-center">
-                                                            <form action="{{path('olimtutor_updateDataTutor')}}">
+                                                            <form action="{{path('olimtutor_updateDataTutor')}}" method="POST">
                                                                 <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
                                                                 <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
                                                                 <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">

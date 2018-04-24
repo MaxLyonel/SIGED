@@ -4,15 +4,13 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-pencil"></i> Tutores <span></span></h2>
+        <h2><i class="fa fa-pencil"></i> Modificar datos<span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-pencil"></i>
-                    <a href="{{path('infra_list_index')}}">
-                       Inscripciones
-                    </a>
+                        Modificar datos
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -23,37 +21,69 @@
     <!--/ End page header -->
 
     <div class="body-content animated fadeIn">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <div class="pull-left">
-                    <h3 class="panel-title">Modificar datos tutor</h3>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">Modificar datos tutor: {{dataTutorPersona.nombre}} {{dataTutorPersona.paterno}} {{dataTutorPersona.materno}}</h3>
+                    </div>
+                    <div class="clearfix"></div>
                 </div>
-                <div class="clearfix"></div>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <!-- Start list message -->
-                        <div class="media-list">
-                            <div class="media">
-                                <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
-                                <div class="media-body">
-                                    <span class="media-heading">{{dataTutorPersona.nombre}} {{dataTutorPersona.paterno}} {{dataTutorPersona.materno}} </span>
-                                    {{form_start(form, {'attr':{'id':'updateDataTutorId', 'class':'form-inline'} })}}
-                                        <div class="form-group mx-sm-3 mb-2">
-                                            {{ form_widget(form.telefono1, {'attr':{'class':'form-control', 'placeholder':'Teléfono 1', 'pattern':'[0-9]{4,9}', 'maxlength': '8'} })}}
-                                            {{ form_widget(form.telefono2, {'attr':{'class':'form-control', 'placeholder':'Teléfono 2', 'pattern':'[0-9]{4,9}', 'maxlength': '8'} })}}
-                                            {{ form_widget(form.correoElectronico, {'attr':{'class':'form-control', 'placeholder':'Email'} })}}
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel-body">
+                                {{form_start(form, { 'attr': {'id':'updateDataTutorId', 'data-toggle': 'validator','role': 'form', 'style': 'display:inline-block', 'onsubmit': 'return validarDatos();'} } )}}
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="form-group col-md-3">
+                                            <label class="control-label">Teléfono 1 <span class="text-danger">(*)</span>:</label>
+                                            {{ form_widget(form.telefono1, { 'attr': {'class': 'form-control', 'maxlength': '8'} }) }}
                                         </div>
-                                        {{form_widget(form.update, {'attr':{'class':'btn btn-md btn-primary'} })}}
-                                    {{form_end(form)}}
-                                </div><!-- /.media-body -->
-                            </div><!-- /.media -->
+                                        <div class="form-group col-md-3">
+                                            <label class="control-label">Teléfono 2:</label>
+                                            {{ form_widget(form.telefono2, { 'attr': {'class': 'form-control', 'maxlength': '8'} }) }}
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label">Correo Electrónico <span class="text-danger">(*)</span>:</label>
+                                            {{ form_widget(form.correoElectronico, { 'attr': {'class': 'form-control'} }) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 text-danger">
+                                            (*) Campos obligatorios
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-lg-6 col-md-6">
+                                            {{ form_widget(form.update, { 'attr': {'class': 'btn btn-md btn-success'} }) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {{form_end(form)}}
+                            </div><!-- /.panel-body -->
                         </div>
-                        <!--/ End list message -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var validarDatos = function(){
+            telefono1 = $('#form_telefono1').val();
+            telefono2 = $('#form_telefono2').val();
+            correo = $('#form_correoElectronico').val();
+            
+            emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+            fonoRegex = /^([0-9])*$/;
+
+            if(telefono1 == '' || correo == '' || !emailRegex.test(correo) || !fonoRegex.test(telefono1) || !fonoRegex.test(telefono2)){
+                alert('Ingrese datos en los campos requeridos o ajuste a los formatos válidos');
+                return false;
+            }
+        }
+    </script>
 {% endblock %}

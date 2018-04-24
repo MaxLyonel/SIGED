@@ -56,14 +56,13 @@ class OlimTutorController extends Controller{
 
     public function listTutorBySieAction(Request $request){
         $em = $this->getDoctrine()->getManager();
+        $mensaje = "";
+        $estado = "";
         //data ue
         if($request->getMethod()=='POST'){
                 // get the send data
                 $form = $request->get('form');
-                
-                // dump($form);die;
-                // $institucioneducativa = $form['sie'];
-                // $gestion = $form['gestion'];
+                //dump($form);die;
                     if(isset($form['newtutor'])){
                                 $arrSendData = json_decode($form['newtutor'],true);
                                 // dump($arrSendData);die;
@@ -93,9 +92,17 @@ class OlimTutorController extends Controller{
                         $this->saveUpdateDataTutor($form);
                     }
                     if(isset($form['deletetutor'])) {
-                        $this->deleteDataTutor($form);
+                        if($this->deleteDataTutor($form)){
+                            $mensaje = "Registro eliminado satisfactoriamente.";
+                            $estado = "success";
+                        }
+                        else {
+                            $mensaje = "No se puede eliminar al tutor debido a que tiene estudiantes inscritos.";
+                            $estado = "danger";
+                        }
                     }
                     if(isset($form['datosId'])) {
+                        
                         if($form['datosId'] > 0){
                             $datosId = $form['datosId'];
                             $datosDirector = $em->getRepository('SieAppWebBundle:OlimDirectorInscripcionDatos')->findOneById($datosId);
@@ -163,7 +170,9 @@ class OlimTutorController extends Controller{
                 'director' => $director,
                 'institucion' => $institucion,
                 'gestion' => $gestion,
-                'jsonData' => json_encode($form) 
+                'jsonData' => json_encode($form),
+                'mensaje' => $mensaje,
+                'estado' => $estado
             ));
 
         }else{
@@ -475,9 +484,9 @@ class OlimTutorController extends Controller{
 
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('olimtutor_listTutorBySie'))
-            ->add('telefono1', 'text', array('data'=>$olimTutor->getTelefono1()))
-            ->add('telefono2', 'text', array('data'=>$olimTutor->getTelefono2()))
-            ->add('correoElectronico', 'text', array('data'=>$olimTutor->getCorreoElectronico()))
+            ->add('telefono1', 'text', array('required' => true, 'data'=>$olimTutor->getTelefono1()))
+            ->add('telefono2', 'text', array('required' => false, 'data'=>$olimTutor->getTelefono2()))
+            ->add('correoElectronico', 'text', array('required' => true, 'data'=>$olimTutor->getCorreoElectronico()))
             ->add('editutor', 'hidden', array('data'=>$olimTutor->getId()))
             ->add('olimtutorid', 'hidden', array('data'=>$olimTutor->getId()))
             ->add('sie', 'hidden', array('data'=>$arrData['sie'] , 'mapped'=>false))
