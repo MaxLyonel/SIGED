@@ -205,7 +205,7 @@
                                                     {% if app.session.get('roluser') in [35,9] %}
 
                                                         <td class="text-center">
-                                                            <form action="{{path('olimtutor_listTutorBySie')}}" method="post">
+                                                            <form action="{{path('olimtutor_listTutorBySie')}}" method="POST">
                                                                     <input type="hidden" id="form_deletetutor" name="form[deletetutor]" value="{{entity.olimtutorid}}">
                                                                     <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
                                                                     <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
@@ -217,7 +217,7 @@
                                                         </td>
                                                       
                                                         <td class="text-center">
-                                                            <form action="{{path('olimtutor_updateDataTutor')}}">
+                                                            <form action="{{path('olimtutor_updateDataTutor')}}" method="POST">
                                                                 <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
                                                                 <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
                                                                 <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
