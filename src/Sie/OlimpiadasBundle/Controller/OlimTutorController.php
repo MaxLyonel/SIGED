@@ -56,6 +56,8 @@ class OlimTutorController extends Controller{
 
     public function listTutorBySieAction(Request $request){
         $em = $this->getDoctrine()->getManager();
+        $mensaje = "";
+        $estado = "";
         //data ue
         if($request->getMethod()=='POST'){
                 // get the send data
@@ -90,7 +92,14 @@ class OlimTutorController extends Controller{
                         $this->saveUpdateDataTutor($form);
                     }
                     if(isset($form['deletetutor'])) {
-                        $this->deleteDataTutor($form);
+                        if($this->deleteDataTutor($form)){
+                            $mensaje = "Registro eliminado satisfactoriamente.";
+                            $estado = "success";
+                        }
+                        else {
+                            $mensaje = "No se puede eliminar al tutor debido a que tiene estudiantes inscritos.";
+                            $estado = "danger";
+                        }
                     }
                     if(isset($form['datosId'])) {
                         
@@ -161,7 +170,9 @@ class OlimTutorController extends Controller{
                 'director' => $director,
                 'institucion' => $institucion,
                 'gestion' => $gestion,
-                'jsonData' => json_encode($form) 
+                'jsonData' => json_encode($form),
+                'mensaje' => $mensaje,
+                'estado' => $estado
             ));
 
         }else{

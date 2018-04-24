@@ -10,9 +10,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-pencil"></i>
-                    <a href="{{path('infra_list_index')}}">
                         Informaci&oacute;n de la Unidad Educativa
-                    </a>
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -113,8 +111,18 @@
                 </div>
         </div>
 
-    <div class="row">
-          <div class="col-md-10 col-md-offset-1">
+        {% if mensaje != "" %}
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="alert alert-{{estado}}">
+                        <i class="fa fa-info-circle fa-fw"></i> {{mensaje}}
+                    </div>        
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
               <!-- this is the beginner -->
 
                                     <!-- Start select fields - basic form -->
