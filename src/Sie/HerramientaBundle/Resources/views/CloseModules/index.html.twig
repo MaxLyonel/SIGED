@@ -31,5 +31,25 @@
                 </div>
             </div>
         </div>
+        
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-4 text-center">
+                <strong>Descargar reportes: "{{operativo.notaTipo}} - {{gestion}}"</strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 text-center">
+                <form method ="POST" action="{{path('herramienta_info_personal_adm_ddjj')}}" name="form" id="form" style="display:inline-block">
+                    <input type="hidden" id="ddjjMaestro_sie" name="ddjjMaestro[sie]" value="{{institucion.id}}">
+                    <input type="hidden" id="ddjjMaestro_gestion" name="ddjjMaestro[gestion]" value="{{gestion}}">
+                    <button type="submit" class="btn btn-md btn-warning"><i class="fa fa-save fa-fw"></i>Lista de Administrativos</button>
+                </form>
+                <form method ="POST" action="{{path('herramienta_info_maestro_ddjj')}}" name="form" id="form" style="display:inline-block">
+                    <input type="hidden" id="ddjjMaestro_sie" name="ddjjMaestro[sie]" value="{{institucion.id}}">
+                    <input type="hidden" id="ddjjMaestro_gestion" name="ddjjMaestro[gestion]" value="{{gestion}}">
+                    <button type="submit" class="btn btn-md btn-danger"><i class="fa fa-save fa-fw"></i>Lista de Maestros</button>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}

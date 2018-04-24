@@ -25,7 +25,12 @@
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <div class="pull-left">
-                        <h3 class="panel-title">Modificar datos tutor: {{dataTutorPersona.nombre}} {{dataTutorPersona.paterno}} {{dataTutorPersona.materno}}</h3>
+                        <h3 class="panel-title">Modificar datos del tutor<br />{{dataTutorPersona.nombre}} {{dataTutorPersona.paterno}} {{dataTutorPersona.materno}}</h3>
+                    </div>
+                    <div class="pull-right">
+                        {{form_start(cancel_form, { 'attr': {'style': 'display:inline-block'} })}}
+                            {{form_widget(cancel_form.submit, { 'attr': {'class': 'btn btn-default btn-md'} })}}
+                        {{form_end(cancel_form)}}
                     </div>
                     <div class="clearfix"></div>
                 </div>
