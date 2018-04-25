@@ -360,7 +360,8 @@ class RegistroInstitucionEducativaController extends Controller {
     		$entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($form['leJuridicciongeograficaId']));
     		$entity->setOrgcurricularTipo($ieducativatipo->getOrgcurricularTipo());
             $entity->setInstitucioneducativaAcreditacionTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaAcreditacionTipo')->find(1));
-
+            $entity->setFechaCreacion(new \DateTime('now'));
+            
     		$em->persist($entity);
     		$em->flush();
 
