@@ -1,0 +1,9 @@
+oliminscriptions_robotica:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcionRobotica:index" }
+
+oliminscriptions_robotica_findEstudiante:
+    path:     /findEstudiante
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcionRobotica:findEstudiante" }
+    options:
+        expose: true

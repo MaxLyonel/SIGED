@@ -183,6 +183,8 @@ class LocalEducativoController extends Controller {
 
     public function createAction(Request $request) {
     	try {
+            $sesion = $request->getSession();
+            $id_usuario = $sesion->get('userId');
     		$em = $this->getDoctrine()->getManager();
     		$form = $request->get('form');
 
@@ -206,14 +208,16 @@ class LocalEducativoController extends Controller {
             // Registramos el local
     		$entity = new JurisdiccionGeografica();
             $entity->setId($codigolocal[0]["get_genera_codigo_le"]);
-//             dump($entity);die;
 
             $entity->setLugarTipoLocalidad($em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($form['localidad']));
             $entity->setLugarTipoIdDistrito($distrito->getId());
             $entity->setDistritoTipo($dis);
+            $entity->setValidacionGeograficaTipo($em->getRepository('SieAppWebBundle:ValidacionGeograficaTipo')->findOneById(0));
             $entity->setZona(mb_strtoupper($form['zona'], 'utf-8'));
             $entity->setDireccion(mb_strtoupper($form['direccion'], 'utf-8'));
             $entity->setJuridiccionAcreditacionTipo($em->getRepository('SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo')->find(1));
+            $entity->setUsuarioId($id_usuario);
+            $entity->setFechaRegistro(new \DateTime('now'));
 //             $mensaje = 'El local educativo fue registrada correctamente  con el codigo:  ' .  $entity->getId();
 //             dump($mensaje);die;
 
@@ -391,7 +395,9 @@ class LocalEducativoController extends Controller {
 
     public function updateAction(Request $request) {
     	try {
-    	$this->session = new Session();
+        $this->session = new Session();
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
     	$form = $request->get('form');
     	/*
     	 * Actualizacion de datos local educativo
@@ -410,6 +416,9 @@ class LocalEducativoController extends Controller {
     	$entity->setDistritoTipo($dis);
     	$entity->setZona(mb_strtoupper($form['zona'], 'utf-8'));
         $entity->setDireccion(mb_strtoupper($form['direccion'], 'utf-8'));
+        $entity->setUsuarioId($id_usuario);
+        $entity->setFechaModificacion(new \DateTime('now'));
+        
     	//             $mensaje = 'El local educativo fue registrada correctamente  con el codigo:  ' .  $entity->getId();
     	//             dump($mensaje);die;
 

@@ -57,7 +57,7 @@
                         <h4>Solicitudes</h4>
                     </div>
                     <div class="portlet-widgets">
-                        {% if app.session.get('roluser') == 5 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 %}
+                        {% if app.session.get('roluser') == 5 or app.session.get('roluser') == 8 or app.session.get('roluser') == 9 or app.session.get('userName') == '8955627' %} {# USERNAME DEL DEPARTAMENTO DE SANTA CRUZ A PEDIDO DE ROGELIA PARA UES CERRADAS #}
                         <a href="{{path('solicitudModificacionCalificaciones_search',{'op':'search'})}}" class="btn btn-xs btn-red"><i class="fa fa-pencil"></i> Nueva Solicitud </a>
                         {% endif %}
                         <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelsolicitudes"><i class="fa fa-chevron-down"></i></a>

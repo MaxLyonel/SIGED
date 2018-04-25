@@ -1,0 +1,57 @@
+Sie\AppWebBundle\Entity\OlimDirectorInscripcionDatos:
+    type: entity
+    table: olim_director_inscripcion_datos
+    indexes:
+        IDX_ACDE4E11A4B6FF2:
+            columns:
+                - maestro_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        telefono1:
+            type: string
+            nullable: true
+            length: 60
+            fixed: false
+            comment: ''
+        telefono2:
+            type: string
+            nullable: true
+            length: 60
+            fixed: false
+            comment: ''
+        correoElectronico:
+            type: string
+            nullable: true
+            length: 60
+            fixed: false
+            comment: ''
+            column: correo_electronico
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        esVigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_vigente
+    manyToOne:
+        maestroInscripcion:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestro_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

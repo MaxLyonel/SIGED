@@ -1,0 +1,184 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+    <style type="text/css">
+        .item{
+            border: 1px solid #CCCCCC;
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-book"></i> Categorias <span>Reglas</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    <a href="{{ path('olimregistroolimpiada')}}"> Olimpiadas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{{ path('olimmateriatipo')}}"> Materias</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    Categorias
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-12">
+                
+                {% include 'SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:materiaDatos.html.twig' %}
+
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Categorias</h3>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{{ path('olimreglasolimpiadastipo_new') }}" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> Crear
+                            </a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+
+                        
+
+                        <table class="table table-bordered table-condensed records_list table-striped">
+                            <thead>
+                                <tr>
+                                    {# <th>Id</th> #}
+                                    <th>Categoría</th>
+                                    <th>Modalidad</th>
+                                    <th>Cantidad por equipo</th>
+                                    <th>Cantidad equipos</th>
+                                    <th>Cantidad inscritos</th>
+                                    <th>Edad inicial</th>
+                                    <th>Edad final</th>
+                                    <th>Fecha comparacion</th>
+                                    <th>¿Subir documento?</th>
+                                    <th>Nombre de equipo</th>
+                                    <th>Nombre de proyecto</th>
+                                    {# <th>Gestion</th> #}
+                                    {# <th>Periodo</th> #}
+                                    {# <th>Fecha registro</th> #}
+                                    {# <th>Fecha modificacion</th> #}
+                                    <th>¿Inscripción externa?</th>
+                                    <th>Niveles</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for entity in entities %}
+                                <tr>
+                                    {# <td><a href="{{ path('olimreglasolimpiadastipo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td> #}
+                                    <td><strong>{{ entity.entidad.categoria }}</strong></td>
+                                    <td>
+                                        {% if entity.entidad.modalidadParticipacionTipo.id == 1 %}
+                                            <span class="badge badge-primary">
+                                                {{ entity.entidad.modalidadParticipacionTipo.modalidad }}        
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-lilac">
+                                                {{ entity.entidad.modalidadParticipacionTipo.modalidad }}        
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entity.entidad.modalidadParticipacionTipo.id == 2 %}
+                                            {{ entity.entidad.modalidadNumeroIntegrantesTipo.condicion }} {{ entity.entidad.modalidadNumeroIntegrantesTipo.cantidadMiembros }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ entity.entidad.cantidadEquipos }}</td>
+                                    <td>
+                                        {% if entity.entidad.modalidadParticipacionTipo.id == 1 %}
+                                            {{ entity.entidad.cantidadInscritosGrado }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ entity.entidad.edadInicial }}</td>
+                                    <td>{{ entity.entidad.edadFinal }}</td>
+                                    <td>{% if entity.entidad.fechaComparacion %}{{ entity.entidad.fechaComparacion|date('d-m-Y') }}{% endif %}</td>
+                                    <td>
+                                        {% if entity.entidad.siSubirDocumento == 1 %}
+                                            Si
+                                        {% else %}
+                                            No        
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entity.entidad.modalidadParticipacionTipo.id != 1 %}
+                                            {% if entity.entidad.siNombreEquipo == 1 %}
+                                                Si
+                                            {% else %}
+                                                No        
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entity.entidad.modalidadParticipacionTipo.id != 1 %}
+                                            {% if entity.entidad.siNombreProyecto == 1 %}
+                                                Si
+                                            {% else %}
+                                                No        
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entity.entidad.siInsExterna == 1 %}
+                                            Si
+                                        {% else %}
+                                            No        
+                                        {% endif %}
+                                    </td>
+                                    {# <td>{{ entity.gestionTipoId }}</td> #}
+                                    {# <td>{{ entity.periodoTipoId }}</td> #}
+                                    {# <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('d-m-Y') }}{% endif %}</td> #}
+                                    {# <td>{% if entity.fechaModificacion %}{{ entity.fechaModificacion|date('d-m-Y') }}{% endif %}</td> #}
+                                    <td>
+                                        {% if entity.primaria|length > 0 %}
+                                            <p><strong>Primaria</strong></p>
+                                            {% for pri in entity.primaria %}
+                                                {# {{ pri.gradoTipo.grado }} #}
+                                                {# {% if loop.index != (entity.primaria|length)  %} , {% endif %} #}
+                                                <span class="badge badge-inverse badge-stroke"> {{ pri.gradoTipo.id }} </span>
+                                            {% endfor %}
+                                        {% endif %}
+                                        {% if entity.secundaria|length > 0 %}
+                                            <p style="padding-top: 10px;"><strong>Secundaria</strong></p>
+                                            {% for sec in entity.secundaria %}
+                                                <span class="badge badge-inverse badge-stroke"> {{ sec.gradoTipo.id }} </span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('olimreglasolimpiadastipo_edit', { 'id': entity.entidad.id }) }}" class="btn btn-primary btn-xs text-primary" data-toggle="tooltip" data-placement="top" title="Editar">
+                                            <i class="fa fa-pencil"></i> 
+                                        </a>
+
+                                        <form action="{{ path('olimreglasolimpiadastipo_delete') }}" method="post" style="display:inline-block; margin-left: -5px" onsubmit="return confirm('¿Realmente desea eliminar el registro?'); ">
+                                            <input type="hidden" name="id" value="{{ entity.entidad.id }}">
+                                            <button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                                                <i class="fa fa-times"></i>    
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

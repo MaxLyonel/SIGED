@@ -1,0 +1,77 @@
+{% if mensaje != "" %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-{{estado}}">
+                <i class="fa fa-info-circle fa-fw"></i> {{mensaje}}
+            </div>        
+        </div>
+    </div>
+{% endif %}
+<div class="row">
+    <div class="col-lg-12">
+        {% if inscritos %}
+            <table class="table table-warning table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Código Rude</th>
+                        <th>Carnet de Identidad</th>
+                        <th>Paterno</th>
+                        <th>Materno</th>
+                        <th>Nombre(s)</th>
+                        <th>Actualizar Teléfono <span><strong>(*)</strong></span></th>
+                        <th>Actualizar Correo <span><strong>(*)</strong></span></th>
+                        <th>Actualizar Discapacidad</th>
+                        <th>Actualizar Tutor</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inscrito in inscritos %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{inscrito.codigo_rude}}</td>
+                            <td>{{inscrito.carnet_identidad}}</td>
+                            <td>{{inscrito.paterno}}</td>
+                            <td>{{inscrito.materno}}</td>
+                            <td>{{inscrito.nombre}}</td>
+                            <td><input id="form_telefono_{{inscrito.olimestudianteid}}" name="form[telefono][{{inscrito.olimestudianteid}}]" type="text" value="{{inscrito.telefono_estudiante}}" class="form-control" maxlength="8" /></td>
+                            <td><input id="form_correo_{{inscrito.olimestudianteid}}" name="form[correo][{{inscrito.olimestudianteid}}]" type="text" value="{{inscrito.correo_estudiante}}" class="form-control" /></td>
+                            <td>
+                                <select id="form_discapacidad_{{inscrito.olimestudianteid}}" name="form[discapacidad][{{inscrito.olimestudianteid}}]" class="form-control">
+                                    {% for discapacidad in discapacidades %}
+                                        <option value="{{discapacidad.id}}" {% if inscrito.dscpid == discapacidad.id %}selected{% endif %}>{{discapacidad.discapacidad}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select id="form_tutor_{{inscrito.olimestudianteid}}" name="form[tutor][{{inscrito.olimestudianteid}}]" class="form-control">
+                                    {% for tutor in tutores %}
+                                        <option value="{{tutor.tutorid}}" {% if inscrito.tutorid == tutor.tutorid %}selected{% endif %}>{{tutor.carnet}} - {{tutor.paterno}} {{tutor.materno}} {{tutor.nombre}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <form id="studentUpdateId_{{inscrito.olimestudianteid}}" method="post">
+                                    <input type="hidden" name="form[sie]" id="form_sie" value="{{sie}}">
+                                    <input type="hidden" name="form[gestion]" id="form_gestion" value="{{gestion}}">
+                                    <input type="hidden" name="form[categoryId]" id="form_categoryId" value="{{categoryId}}">
+                                    <input type="hidden" name="form[materiaId]" id="form_materiaId" value="{{materiaId}}">
+                                    <input type="hidden" name="form[nivelId]" id="form_nivelId" value="{{nivelId}}">
+                                    <input type="hidden" name="form[gradoId]" id="form_gradoId" value="{{gradoId}}">
+                                    <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{olimtutorid}}">
+                                    <input type="hidden" name="form[olimestudianteid]" id="form_olimestudianteid" value="{{inscrito.olimestudianteid}}">
+                                    <button type="button" class="btn btn-warning btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-save"></i> Guardar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+        <div class="alert alert-warning">
+            <i class="fa fa-info-circle fa-fw"></i> No existen registros.
+        </div>
+        {% endif %}
+    </div>
+</div>

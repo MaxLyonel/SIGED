@@ -1,0 +1,169 @@
+Sie\AppWebBundle\Entity\OlimEstudianteInscripcion:
+    type: entity
+    table: olim_estudiante_inscripcion
+    indexes:
+        IDX_3F5715E9EC697A22:
+            columns:
+                - olim_tutor_id
+        IDX_3F5715E93C52DD18:
+            columns:
+                - olim_reglas_olimpiadas_tipo_id
+        IDX_3F5715E996157FA0:
+            columns:
+                - periodo_tipo_id
+        IDX_3F5715E9AB4891C2:
+            columns:
+                - categoria_tipo_id
+        IDX_3F5715E9CA64564A:
+            columns:
+                - materia_tipo_id
+        IDX_3F5715E939ED8040:
+            columns:
+                - discapacidad_tipo_id
+        IDX_3F5715E9A1104027:
+            columns:
+                - estudiante_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        telefonoEstudiante:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: telefono_estudiante
+        correoEstudiante:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: correo_estudiante
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        carnetCodepedis:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+            column: carnet_codepedis
+        carnetIbc:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+            column: carnet_ibc
+        navegador:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+        fotoEstudiante:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: foto_estudiante
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioRegistroId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_registro_id
+        usuarioModificacionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_modificacion_id
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+    manyToOne:
+        olimTutor:
+            targetEntity: OlimTutor
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_tutor_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimReglasOlimpiadasTipo:
+            targetEntity: OlimReglasOlimpiadasTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_reglas_olimpiadas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        periodoTipo:
+            targetEntity: OlimPeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        categoriaTipo:
+            targetEntity: OlimCategoriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                categoria_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        materiaTipo:
+            targetEntity: OlimMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        discapacidadTipo:
+            targetEntity: OlimDiscapacidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                discapacidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

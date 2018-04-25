@@ -70,3 +70,9 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             router: "@router"
+
+    olimfunctions:
+        class: Sie\OlimpiadasBundle\Services\Olimfunctions
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"

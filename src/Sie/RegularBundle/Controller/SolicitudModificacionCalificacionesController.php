@@ -250,6 +250,17 @@ class SolicitudModificacionCalificacionesController extends Controller {
             $this->session = new Session();
             $tipoSistema = $request->getSession()->get('sysname');
 
+            // Validamos que el usuario sea director o tecnico nacional o administrativo
+            $rolUsuario = $request->getSession()->get('roluser');
+            $userName = $request->getSession()->get('userName');
+            if($rolUsuario != 5 and $rolUsuario != 9 and $rolUsuario != 8){
+                if($rolUsuario == 7 and $userName == '8955627'){
+
+                }else{
+                    return $this->redirectToRoute('solicitudModificacionCalificaciones');
+                }
+            }
+
             ////////////////////////////////////////////////////
             $rolUsuario = $this->session->get('roluser');
 

@@ -1,0 +1,53 @@
+<small>
+<div class="row">
+    <div class="col-md-12">
+        <p class="lead">Lista de Estudiantes <span class="label label-info">{{objGroup.nombre}}</span></p>
+
+
+        {% if roboticaOption %}
+         <div align="right">
+          {{form_start(roboticaOptionForm, {'attr':{ 'id':'roboticaOptionFormId' }})}}
+            <button type="button" class="btn btn-inverse btn-danger btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="inscriptionExterna();">
+            Inscripci&oacute;n Robotica
+            </button>
+            {{form_end(roboticaOptionForm)}}
+        </div> 
+          
+        {% endif %}
+
+
+          <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>C&oacute;digo Rude</th>
+                        <th>CI - Complemento</th>
+                        <th>Estudiante</th>
+                        
+                        <th class="text-center" style="min-width: 15%">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in objStudentsInGroup %}
+                    <tr>
+                        <td class="text-center">{{loop.index}}</td>
+                        <td>{{student.codigo_rude}}</td>
+                        <td>{{student.carnet_identidad}} {{student.complemento}}</td>
+                        <td>
+                            {{student.paterno}}
+                            {{student.materno}}
+                            {{student.nombre}}
+                        </td>                        
+                        <td class="text-center">
+                            <!-- <a href="#" onclick=""><i class="fa fa-eye"></i></a>
+                            <a href="#" onclick=""><i class="fa fa-edit"></i></a> -->
+                            <a href="#" onclick="deleteInscriptionOlimpiada('{{jsonDataInscription}}', {{student.olim_estudiante_inscripcion_id}});"><i class="fa fa-trash-o"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                 
+                </tbody>
+            </table>
+    </div>
+</div>    
+</small>

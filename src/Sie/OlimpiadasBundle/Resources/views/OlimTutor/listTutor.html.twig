@@ -1,0 +1,321 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Informaci&oacute;n de la Unidad Educativa <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-pencil"></i>
+                        Informaci&oacute;n de la Unidad Educativa
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-5 col-md-offset-1">
+                <div class="panel panel-info shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Unidad Educativa: {{institucion.institucioneducativa}}</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding">
+                        <!-- Start list message -->
+                        <div class="media-list">
+                            <div class="media">
+                                <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/25.png')}}" class="media-object img-circle" alt="..."></div>
+                                <div class="media-body">
+                                    <span class="media-heading">
+                                        SIE: {{institucion.id}}
+                                    </span>
+                                    <span class="media-text">
+                                        <b>Código Local Educativo:</b> {{institucion.leJuridicciongeografica.id}} <br />
+                                        <b>Subsistema:</b> {{institucion.orgcurricularTipo.orgcurricula}} <br />
+                                        <b>Dependencia:</b> {{institucion.dependenciaTipo.dependencia}} <br />
+                                    </span>
+                                    <!-- Start meta icon -->
+                                    
+                                    <!--/ End meta icon -->
+                                </div><!-- /.media-body -->
+                            </div><!-- /.media -->
+
+                        </div>
+                        <!--/ End list message -->
+
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                    <div class="panel panel-info shadow">
+                        {% if director %}
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">Datos Director(a)</h3>
+                            </div>
+                            <div class="pull-right">
+                            {% if app.session.get('roluser') in [35,9] %}
+                                <form method="post" action="{{path('olimdirectordata_manual_edit')}}">
+                                    <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
+                                    <input type="hidden" id="form_datosId" name="form[datosId]" value="{{director.datosid}}">
+                                    <input type="hidden" id="form_personaId" name="form[personaId]" value="{{director.personaid}}">
+                                    <input type="hidden" id="form_maestroId" name="form[maestroId]" value="{{director.maestroid}}">
+                                    <button type="submit" class="btn btn-sm btn-primary">Editar</button>
+                                </form>
+                            {% endif %}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body no-padding">
+                            <!-- Start list message -->
+                            <div class="media-list">
+                                <div class="media">
+                                    <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
+                                    <div class="media-body">
+                                        <span class="media-heading">
+                                            Nombre: {{director.nombre}}
+                                            {{director.paterno}}
+                                            {{director.materno}}
+                                        </span>
+                                        <span class="media-text">
+                                            <b>Teléfono 1:</b> {{director.telefono1}} </br>
+                                            <b>Teléfono 2:</b> {{director.telefono2}} </br>
+                                            <b>Correo Electrónico:</b> {{director.correo_electronico}}
+                                        </span>
+                                        <!-- Start meta icon -->
+                                        
+                                        <!--/ End meta icon -->
+                                    </div><!-- /.media-body -->
+                                </div><!-- /.media -->
+    
+                            </div>
+                            <!--/ End list message -->
+    
+                        </div><!-- /.panel-body -->
+                        {% else %}
+                        DIRECTOR NO REGISTRADO...
+                        {% endif %}
+                    </div>
+                    <!-- end panel -->
+                </div>
+        </div>
+
+        {% if mensaje != "" %}
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="alert alert-{{estado}}">
+                        <i class="fa fa-info-circle fa-fw"></i> {{mensaje}}
+                    </div>        
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+              <!-- this is the beginner -->
+
+                                    <!-- Start select fields - basic form -->
+                        <div class="panel ">
+                            <div class="panel-body no-padding">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="pull-right">
+                                        {% if app.session.get('roluser') in [35,8,7,10,9,2] %}
+                                            {{form(formNewTutor, { 'attr': {'role': 'form', 'style': 'display:inline-block'} })}}
+                                        {% endif %}
+                                        <form method ="POST" action="{{path('reporte_olimpiada_reporteOlimUE_pdf')}}" name="form" id="form" style="display:inline-block">
+                                            <input type="hidden" id="reporteOlim_sie" name="reporteOlim[sie]" value="{{institucion.id}}">
+                                            <input type="hidden" id="reporteOlim_gestion" name="reporteOlim[gestion]" value="{{gestion}}">
+                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="left" data-original-title="Descargar lista de inscritos"><i class='fa fa-save'></i> Descargar lista de inscritos</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>NOMBRE</th>
+                                        <th>PATERNO</th>
+                                        <th>MATERNO</th>
+                                        <th>TEL&Eacute;FONO 1</th>
+                                        <th>TEL&Eacute;FONO 2</th>
+                                        <th>CORREO ELECTR&Oacute;NICO</th>
+                                        <th>ACCIONES</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for entity in entities %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ entity.nombre }}</td>
+                                        <td>{{ entity.paterno }}</td>
+                                        <td>{{ entity.materno }}</td>
+                                        <td>{{ entity.telefono1 }}</td>
+                                        <td>{{ entity.telefono2 }}</td>
+                                        <td>{{ entity.correo_electronico }}</td>
+                                        
+                                        <td>
+                                            <table>
+                                                <!-- <thead>
+                                                    <tr>
+                                                        <th>header</th>
+                                                    </tr>
+                                                </thead> -->
+                                                <tbody>
+
+                                                    <tr>
+                                                     {% if app.session.get('roluser') in [35,8,7,10,9,2] %}
+                                                        <td class="text-center">
+                                                            <form action="{{path('oliminscriptions_selectInscription')}}" method="POST">
+                                                                <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
+                                                                <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
+                                                                <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
+                                                                <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
+                                                                <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
+                                                                <button href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Inscribir"><i class="fa fa-list"></i></button>
+                                                            </form>
+                                                        </td>
+                                                        
+                                                        <td class="text-center">
+                                                            <form action="{{path('oliminscriptions_listInscription')}}" method="POST">
+                                                                <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
+                                                                <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
+                                                                <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
+                                                                <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
+                                                                <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
+                                                                <button href="#" class="btn btn-teal btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Ver lista de Inscritos"><i class="fa fa-eye"></i></button>
+                                                            </form>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <form action="{{path('oliminscriptions_changeTutor')}}" method="POST">
+                                                                <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
+                                                                <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
+                                                                <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
+                                                                <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
+                                                                <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
+                                                                <button href="#" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Modificar Inscripción"><i class="fa fa-exchange"></i></button>
+                                                            </form>
+                                                        </td>
+                                                    {% endif %}
+                                                    {% if app.session.get('roluser') in [35,9] %}
+
+                                                        <td class="text-center">
+                                                            <form action="{{path('olimtutor_listTutorBySie')}}" method="POST">
+                                                                    <input type="hidden" id="form_deletetutor" name="form[deletetutor]" value="{{entity.olimtutorid}}">
+                                                                    <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
+                                                                    <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
+                                                                    <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
+                                                                    <input type="hidden" name="form[sie]" id="form_sie" value="{{entity.institucioneducativa_id}}">                                   
+                                                                    <input type="hidden" name="form[gestion]" id="form_gestion" value="{{entity.gestion_tipo_id}}">
+                                                                <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('¡Se eliminará el registro! ¿Desea continuar?');" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar Tutor"><i class="fa fa-times"></i></button>
+                                                            </form>                                                           
+                                                        </td>
+                                                      
+                                                        <td class="text-center">
+                                                            <form action="{{path('olimtutor_updateDataTutor')}}" method="POST">
+                                                                <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
+                                                                <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
+                                                                <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
+                                                                <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
+                                                                <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
+                                                                <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
+                                                                <button href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Editar Tutor"><i class="fa fa-pencil"></i></button>
+                                                            </form>
+                                                        </td>
+                                                        {% endif %}
+                                                        {% if app.session.get('roluser') in [35] %}
+                                                        
+
+                                                          <td class="text-center">
+                                                            <form action="{{path('oliminscriptionsnivelsuperior_index')}}" method="POST">
+                                                                <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
+                                                                <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
+                                                                <input type="hidden" name="form[olimregistroolimpiadaid]" id="form_olimregistroolimpiadaid" value="{{entity.olimregistroolimpiadaid}}">                                    
+                                                                <input type="hidden" name="form[institucioneducativaid]" id="form_institucioneducativaid" value="{{entity.institucioneducativa_id}}">                                   
+                                                                <input type="hidden" name="form[gestiontipoid]" id="form_gestiontipoid" value="{{entity.gestion_tipo_id}}">
+                                                                <button href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Inscripcion curso superior"><i class="fa fa-list"></i></button>
+                                                            </form>
+                                                        </td>
+                                                    {% endif %}
+                                                        <td class="text-center">
+                                                            <form action="{{path('reporte_olimpiada_reporteOlimUE_pdf')}}" method="POST">
+                                                                <input type="hidden" name="reporteOlim[sie]" id="" value="{{entity.institucioneducativa_id}}">                                   
+                                                                <input type="hidden" name="reporteOlim[gestion]" id="" value="{{entity.gestion_tipo_id}}">
+                                                                <input type="hidden" name="reporteOlim[tutor]" id="" value="{{entity.olimtutorid}}">
+                                                                <button href="#" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Descargar lista de inscritos del tutor(a)"><i class="fa fa-file-pdf-o"></i></button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            {#
+                                                <ul>
+                                            <li>
+                                                <a href="{{ path('olimtutor_show', { 'id': entity.id }) }}">show</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ path('olimtutor_edit', { 'id': entity.id }) }}">edit</a>
+                                            </li>
+                                        </ul>
+
+                                                #}
+                                        
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                            </div><!-- /.panel-body -->
+                        </div><!-- /.panel -->
+                        <!--/ End select fields - basic form -->
+
+                        
+
+            <!-- this is the end -->
+            
+            
+
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div id="idResult">
+            
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">      
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+
+
+
+
+
+    </script>
+
+    
+    
+{% endblock %}

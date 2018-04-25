@@ -1,0 +1,33 @@
+<p></p>
+<div class="row">
+  {% if groupId %}
+    <div class="col-md-12">
+      <div class="alert bg-teal">
+        <i class="fa fa-info-circle fa-fw"></i> La categoría seleccionada corresponde a inscripción por grupos, por tanto, se debe gestionar esta información a través de los módulos de inscripción.
+      </div>
+    </div>
+  {% else %}
+    <div class="col-md-12">
+      {{form_start(form, { 'attr':{'id':'idForminscriptionOlim'} })}}
+        <div class="form-body">
+          <div class="row">
+            <div class="col-md-3">
+              NIVEL:
+                {{form_widget(form.nivel, {'attr': {'class':'form-control', 'onchange':'getGrados(this.value)'} } )}}
+            </div>
+            <div class="col-md-3">
+              GRADO:
+                {{form_widget(form.grado, {'attr': {'class':'form-control', 'onchange':'getListStudents(this.value)'} } )}}
+            </div>
+          </div>
+        </div><!-- /.form-body -->
+      {{form_end(form)}}
+    </div>
+  {% endif %}
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div id="getStudentsId"></div>
+  </div>
+</div>

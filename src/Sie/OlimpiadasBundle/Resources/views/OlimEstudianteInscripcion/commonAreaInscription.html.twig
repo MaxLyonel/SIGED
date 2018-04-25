@@ -1,0 +1,84 @@
+<table class="table" border="0">
+    <thead>
+        <tr>
+            <th><b class="">Tutor:</b>  
+                <b class="text-primary">  {{objPersona.nombre}} {{objPersona.paterno}} {{objPersona.materno}}</b></th>
+            <th><b>Tel&eacutefono(s):</b> 
+                    <b class="text-primary">    {{objOlimTutor.telefono1}}/{{objOlimTutor.telefono2}} 
+                    </b></th>
+            <th><b>Email:</b> <b class="text-primary">{{objOlimTutor.correoElectronico}} </b> </th>
+            <th>   <button class="btn btn-circle btn-danger btn-stroke" onclick="doInscriptionOStudent('{{jsonDataInscription}}');"><i class="fa fa-close"></i></button></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan="4"><button class="btn btn-circle btn-success btn" onclick="doInscriptionOStudent('{{jsonDataInscription}}');"><i class="fa fa-list"></i></button>
+        <button class="btn btn-circle btn-info btn" onclick="doInscriptionOStudent('{{jsonDataInscription}}');"><i class="fa fa-plus"></i></button></td>
+            <!-- <td></td>
+            <td></td>
+            <td></td> -->
+        </tr>
+    </tbody>
+</table>
+
+<div class="row">
+    
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="doInscriptionOStudentId">
+
+            <!-- Start vertical tabs with pagination -->
+            <div id="basic-wizard-vertical">
+                <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin mb-15 rounded shadow">
+                    <!-- Start tabs heading -->
+                    <div class="panel-heading no-padding col-lg-3 col-md-3 col-sm-3">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#tab4-1" data-toggle="tab" aria-expanded="true">
+                                    <div>
+                                        <span class="text-strong">Curso 1</span>
+                                        
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#tab4-2" data-toggle="tab" aria-expanded="false">
+                                    <div>
+                                        <span class="text-strong">Curso 2</span>
+                                    </div>
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div><!-- /.panel-heading -->
+                    <!--/ End tabs heading -->
+
+                    <!-- Start tabs content -->
+                    <div class="panel-body col-lg-9 col-md-9 col-sm-9">
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="tab4-1">
+                                <h4>Curso 1</h4>
+                                <p>....</p>
+                            </div>
+                            <div class="tab-pane fade " id="tab4-2">
+                                <h4>Curso 2</h4>
+                                <p>....</p>
+                            </div>
+                        </div>
+                        <!-- Start pagination -->
+                        <div class="panel-footer no-bg">
+                        </div>
+                        <!--/ End pagination -->
+                    </div><!-- /.panel-body -->
+                    <!--/ End tabs content -->
+                </div><!-- /.panel -->
+            </div>
+            <!--/ End vertical tabs with pagination -->
+        </div>
+    </div>
+</div>
+    
+</div>
+
+

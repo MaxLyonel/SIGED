@@ -1,0 +1,53 @@
+</br>
+<div class="row">
+
+	<div class="col-md-12">
+                            <p class="lead">Lista de grupos</p>
+							<button type="button" class="btn btn-inverse btn-danger btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="createGroup();">
+							Agregar Grupo
+							</button>
+                            <!-- Start vertical tabs with animation -->
+                            <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin mb-15 rounded shadow">
+                                <!-- Start tabs heading -->
+                                <div class="panel-heading no-padding col-lg-3 col-md-3 col-sm-3">
+                                    <ul class="nav nav-tabs" style="overflow-y: scroll; height: 300px">
+                                    	{% for group in objTutorsGrupo %}
+	                                    	<li class="active">
+	                                            <a href="#tab5-1" data-toggle="tab">
+	                                                Fade Out
+	                                            </a>
+	                                        </li>    
+                                    	{% endfor %}
+                                    </ul>
+                                </div><!-- /.panel-heading -->
+                                <!--/ End tabs heading -->
+
+                                <!-- Start tabs content -->
+                                <div class="panel-body col-lg-9 col-md-9 col-sm-9">
+                                    <div class="tab-content">
+                                        <!-- Fade Out -->
+                                        <div class="tab-pane fade in active" id="tab5-1">
+
+                                            <div id="js-grid-tabs-fadeout" class="cbp cbp-l-grid-tabs cbp-caption-active cbp-caption-pushTop cbp-ready" style="height: 96px;"><div class="cbp-wrapper-outer"><div class="cbp-wrapper">
+                                                <div class="cbp-item tab-1 text-left" style="left: 0px; top: 0px;"><div class="cbp-item-wrapper">
+                                                    Pellentesque ut nonummy elit et duis, ut aliquam morbi, lobortis dolor nec fusce consequat. Nec elit magna mauris orci mauris ac, sem duis, ante nibh mi, sed malesuada ultrices scelerisque augue convallis eget. Ac varius enim qui, quis pharetra ultricies velit ut auctor, suspendisse mattis viverra eget sed in, pellentesque enim felis turpis auctor amet. Dolor sit mauris dui augue, sed nullam urna commodo, arcu congue mi non suscipit.
+                                                </div></div>
+                                                <div class="cbp-item tab-2 text-left cbp-item-off"><div class="cbp-item-wrapper">
+                                                    Pede iaculis mauris lorem, non mi gravida risus metus, proin tempus pede rhoncus scelerisque ligula. Dignissim diam sodales egestas senectus elit nec, aliquam ante convallis proin pulvinar molestias vestibulum, leo felis, luctus id sed accumsan, nunc metus proin neque nulla ipsa. Ut fusce in aliquam amet arcu magna, amet nec nec orci pharetra vehicula sodales, nibh purus consectetuer aenean porttitor justo vivamus. Laoreet diam eu potenti, malesuada lacus et fermentum eget egestas.
+                                                </div></div>
+                                                <div class="cbp-item tab-3 text-left cbp-item-off"><div class="cbp-item-wrapper">
+                                                    Orci eros pulvinar metus. Taciti montes placerat nulla nonummy lacus, turpis et urna, eleifend aute condimentum eu, congue pede dapibus. Elit dis eros vulputate ultricies, ullamcorper egestas, turpis senectus tellus mi euismod erat mus, asperiores feugiat vitae lectus mi. Rerum integer dictumst, ligula blandit vestibulum nam consequat sed. Nulla fusce, blandit nec, sit ut in aliquam proin, netus sed magna lectus dolor, ipsum ac.
+                                                </div></div>
+                                            </div></div></div>
+
+                                        </div>
+                                     
+                                        
+                                    </div>
+                                </div><!-- /.panel-body -->
+                                <!--/ End tabs content -->
+                            </div><!-- /.panel -->
+                            <!--/ End vertical tabs with animation -->
+                        </div>
+	
+</div>

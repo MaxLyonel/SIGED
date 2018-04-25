@@ -1,0 +1,30 @@
+olimreglasolimpiadastipo:
+    path:     /reglas/{idMateria}
+    defaults: { _controller: "SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:index", idMateria: null }
+
+olimreglasolimpiadastipo_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:show" }
+
+olimreglasolimpiadastipo_new:
+    path:     /new
+    defaults: { _controller: "SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:new" }
+
+olimreglasolimpiadastipo_create:
+    path:     /create
+    defaults: { _controller: "SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:create" }
+    methods:  POST
+
+olimreglasolimpiadastipo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:edit" }
+
+olimreglasolimpiadastipo_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:update" }
+    methods:  [POST, PUT]
+
+olimreglasolimpiadastipo_delete:
+    path:     /delete
+    defaults: { _controller: "SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:delete" }
+    methods:  [POST, DELETE]

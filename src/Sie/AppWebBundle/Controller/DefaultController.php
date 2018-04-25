@@ -238,6 +238,15 @@ class DefaultController extends Controller {
                 $layout = 'layoutDgesttla.html.twig';
                 $this->session->set('pathSystem', "SieDgesttlaBundle");
                 break;
+            case '172.20.196.9:8030':
+            case '172.20.196.7':
+            case 'olimpiada.sie.gob.bo':
+                $sysname = 'olimpiadas';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutOlimpiadas.html.twig';
+                $this->session->set('pathSystem', "SieOlimpiadasBundle");
+                break;
             default :
                 $sysname = 'REGULAR';
                 $sysporlet = 'blue';
@@ -609,9 +618,72 @@ class DefaultController extends Controller {
                     }*/
                     //dump($mensaje->getMensaje());die;
 
+                    $sistema = $this->session->get('pathSystem');
+
+                    switch ($sistema) {
+                        case 'SieRegularBundle':
+                            $this->session->set('sysname', 'SIGED');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieHerramientaBundle':
+                            $this->session->set('sysname', 'ACADEMICO REGULAR');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieHerramientaAlternativaBundle':
+                            $this->session->set('sysname', 'ALTERNATIVA ADULTOS Y JOVENES');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieRueBundle':
+                            $this->session->set('sysname', 'RUE');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieDiplomaBundle':
+                            $this->session->set('sysname', 'DIPLOMAS');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieTramitesBundle':
+                            $this->session->set('sysname', 'TRAMITES');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieJuegosBundle':
+                            $this->session->set('sysname', 'JUEGOS');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieEspecialBundle':
+                            $this->session->set('sysname', 'ALTERNATIVA ESPECIAL');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieDgesttlaBundle':
+                            $this->session->set('sysname', 'FORMACIÓN TECNICA Y TECNOLOGICA');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieInfraestructuraBundle':
+                            $this->session->set('sysname', 'INFRAESTRUCTURA');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieBjpBundle':
+                            $this->session->set('sysname', 'BONO JUANCITO PINTO');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieGisBundle':
+                            $this->session->set('sysname', 'GIS');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        case 'SieOlimpiadasBundle':
+                            $this->session->set('sysname', 'OLIMPIADA CIENTÍFICA ESTUDIANTIL PURINACIONAL BOLIVIANA');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                        default:
+                            $this->session->set('sysname', 'SIGED');
+                            $this->session->set('sysporlet', '#0101DF');                            
+                            break;
+                    }
+
                     if (($exp == 'true') || ($carnetban == 'true') || ($mendir == 'true')){
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
                         array(
+                            'titulosubsistema' => $this->session->get('sysname'),
+                            'color' => $this->session->get('sysporlet'),
                             'user' => $this->session->get('userName'),
                             'carnet' => $carnet,
                             'roles' => $rolselected,
@@ -650,6 +722,8 @@ class DefaultController extends Controller {
                     if (count($rolselected) > 1) {
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
                         array(
+                            'titulosubsistema' => $this->session->get('sysname'),
+                            'color' => $this->session->get('sysporlet'),
                             'user' => $this->session->get('userName'),
                             'carnet' => $carnet,
                             'roles' => $rolselected,
@@ -666,6 +740,8 @@ class DefaultController extends Controller {
                         $this->session->getFlashBag()->add('error', '¡Usted no cuenta registro vigente en la presente gestión! Consulte con su técnico SIE en el módulo Gestión Administrativos.');
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
                         array(
+                            'titulosubsistema' => $this->session->get('sysname'),
+                            'color' => $this->session->get('sysporlet'),
                             'user' => $this->session->get('userName'),
                             'carnet' => $carnet,
                             'roles' => $rolselected,

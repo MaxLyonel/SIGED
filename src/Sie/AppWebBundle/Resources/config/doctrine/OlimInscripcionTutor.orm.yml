@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\OlimInscripcionTutor:
+    type: entity
+    table: olim_inscripcion_tutor
+    indexes:
+        IDX_4CDD9B93EC697A22:
+            columns:
+                - olim_tutor_id
+        IDX_4CDD9B932C80C63:
+            columns:
+                - olim_estudiante_inscripcion_id
+    uniqueConstraints:
+        uk_olim_inscripcion_tutor_id:
+            columns:
+                - olim_estudiante_inscripcion_id
+                - olim_tutor_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    manyToOne:
+        olimTutor:
+            targetEntity: OlimTutor
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_tutor_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimEstudianteInscripcion:
+            targetEntity: OlimEstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

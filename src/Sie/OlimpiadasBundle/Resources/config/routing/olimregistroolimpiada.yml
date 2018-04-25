@@ -1,0 +1,26 @@
+olimregistroolimpiada:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimRegistroOlimpiada:index" }
+
+olimregistroolimpiada_new:
+    path:     /new
+    defaults: { _controller: "SieOlimpiadasBundle:OlimRegistroOlimpiada:new" }
+
+olimregistroolimpiada_create:
+    path:     /create
+    defaults: { _controller: "SieOlimpiadasBundle:OlimRegistroOlimpiada:create" }
+    methods:  POST
+
+olimregistroolimpiada_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieOlimpiadasBundle:OlimRegistroOlimpiada:edit" }
+
+olimregistroolimpiada_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieOlimpiadasBundle:OlimRegistroOlimpiada:update" }
+    methods:  [POST, PUT]
+
+olimregistroolimpiada_delete:
+    path:     /delete
+    defaults: { _controller: "SieOlimpiadasBundle:OlimRegistroOlimpiada:delete" }
+    methods:  [POST, DELETE]

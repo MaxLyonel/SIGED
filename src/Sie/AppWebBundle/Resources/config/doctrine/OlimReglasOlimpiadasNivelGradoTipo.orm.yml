@@ -1,0 +1,69 @@
+Sie\AppWebBundle\Entity\OlimReglasOlimpiadasNivelGradoTipo:
+    type: entity
+    table: olim_reglas_olimpiadas_nivel_grado_tipo
+    indexes:
+        IDX_9CC8DB86F29C4FB8:
+            columns:
+                - olim_materia_tipo_id
+        IDX_9CC8DB86C6447610:
+            columns:
+                - grado_tipo_id
+        IDX_9CC8DB866DD9B3B9:
+            columns:
+                - nivel_tipo_id
+        IDX_9CC8DB863C52DD18:
+            columns:
+                - olim_reglas_olimpiadas_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esVigente:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: es_vigente
+    manyToOne:
+        olimMateriaTipo:
+            targetEntity: OlimMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gradoTipo:
+            targetEntity: GradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimReglasOlimpiadasTipo:
+            targetEntity: OlimReglasOlimpiadasTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_reglas_olimpiadas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

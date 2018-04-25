@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Siged Autenticación</title>
+        <title>{{ titulosubsistema }}</title>
 
         <!-- GLOBAL STYLES -->
         <link href="{{asset('css/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
@@ -31,18 +31,19 @@
 
     </head>
 
+    {#<body class="login" style="background-color:{{ color }} ;">#}
     <body class="login">
-
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="login-banner text-center">
-                        <h1><i class="fa fa-gears"></i> SIGED : AUTENTICACIÓN DE SUS ROLES.</h1>
+                        <h1><i class="fa fa-gears"></i> {{ titulosubsistema }}</h1>
+                        {#<h2><i class="fa fa-gears"></i> Gestión de Usuarios</h2>#}
                     </div>
                     
                     <div class="portlet portlet-blue">
                         <div class="portlet-heading login-heading">
-                            <div class="portlet-title">
+                            <div class="portlet-title">                                
                                 <h4><strong>NOMBRE DE USUARIO</strong> : {{ user }} -- <strong>NOMBRE Y APELLIDO</strong> : {{ persona }} <strong>CI</strong>  : {{ carnet }}</h4>
                             </div>
 

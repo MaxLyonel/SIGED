@@ -1,0 +1,624 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Incripciones <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-pencil"></i>
+                    <a href="{{path('infra_list_index')}}">
+                       Inscripciones
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+    <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+              <!-- this is the beginner -->
+
+                                    <!-- Start select fields - basic form -->
+                        <div class="panel rounded shadow no-overflow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"></h3>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body no-padding">
+                                {{form_start(form, { 'attr':{'id':'idForminscriptionOlim'} })}}
+                                    <div class="form-body">
+                                          
+                                      <div class="row">
+                                          <div class="col-md-2">
+                                              {% if app.session.get('roluser') == 8 %}
+                                                {% set modeview = true %} 
+                                                 SIE:
+                                                {{form_widget(form.institucionEducativa, {'attr': {'class':'form-control', } } )}}
+                                              {% else %}
+                                                {% set modeview = false %} 
+                                                 SIE:
+                                                {{form_widget(form.institucionEducativa, {'attr': {'class':'form-control', 'readonly':'true'} } )}}
+                                              <!-- <input type="text" readonly="true" value="{{app.session.get('ie_id')}}" class="form-control"> -->
+                                              
+                                              {% endif %}
+
+                                             
+                                          </div>
+                                          <div class="col-md-4">
+                                            MATERIA:
+                                              {{form_widget(form.olimMateria, {'attr': {'class':'form-control', 'onchange':'getCategory(this.value)'} } )}}
+                                          </div>
+                                          <div class="col-md-4">
+                                            CATEGORIA:
+                                              {{form_widget(form.category, {'attr': {'class':'form-control'} } )}}
+                                          </div>
+                                          <div class="col-md-2">
+                                            GESTION;
+                                              {{form_widget(form.gestion, {'attr': {'class':'form-control'} } )}}
+                                          </div>
+                                      </div>
+
+                                    </div><!-- /.form-body -->
+                                    <div class="form-footer">
+                                        <div class="pull-right">
+                                            <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
+                                             {{form_widget(form.buscar, {'attr': {'class':'btn btn-primary'} } )}}
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.form-footer -->
+                                          
+                                {{form_end(form)}}
+
+                            </div><!-- /.panel-body -->
+                        </div><!-- /.panel -->
+                        <!--/ End select fields - basic form -->
+
+                        
+
+            <!-- this is the end -->
+            
+            
+
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div id="idResult">
+            
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">      
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+
+    var getCategory = function(idmateria){
+
+        $.ajax({
+             type: 'post',
+             url: Routing.generate('oliminscriptions_getCategory'),
+             data: {idmateria: idmateria},
+             beforeSend: function () {
+                $("#form_category").empty();
+                $("#form_category").append('<option value="">Seleccionar</option>');
+             },
+             success: function (data) {
+                  $("#form_category").empty();
+                  $("#form_category").append('<option value="">Seleccionar</option>');
+                  $.each(data.arrCategory, function (i, value) {
+                      $("#form_category").append('<option value="' + i + '">' + value + '</option>');
+                  });
+                },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+      
+    }
+
+    var openInscriptinoOlimpiadas = function(){
+        
+      if( $('#form_institucionEducativa').val().length > 0){
+        
+      }else{
+        alert('Favor introducir codigo SIE');return false;
+      } 
+      if( $('#form_institucionEducativa').val().length <  8){
+        alert('el SIE introducido es incorrecto');return false;
+      }
+      
+      formData = $('#idForminscriptionOlim').serialize();
+       $.ajax({
+             type: 'post',
+             url: Routing.generate('oliminscriptions_openInscriptinoOlimpiadas'),
+             data: formData,
+             beforeSend: function () {
+                 $("#idResult").empty();
+                 $("#idResult").empty();
+                 $("#idResult").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idResult").empty();
+                 $("#idResult").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+      
+    };
+
+    var regDirector = function(datainscription){
+      
+         $.ajax({
+             type: 'post',
+             url: Routing.generate('olimdirectordata_regDirector'),
+             data: {datainscription: datainscription},
+             beforeSend: function () {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+    };
+
+
+    var saveDataDirector = function(){
+
+    formData = $('#idFormDirector').serialize();
+    // alert(formData);return false;
+       $.ajax({
+             type: 'post',
+             url: Routing.generate('olimdirectordata_saveDataDirector'),
+             data: formData,
+             beforeSend: function () {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+    };
+
+
+     var listTutor = function(datainscription){
+      
+         $.ajax({
+             type: 'post',
+             url: Routing.generate('olimtutor_listTutor'),
+             data: {datainscription: datainscription},
+             beforeSend: function () {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idOptionResult").empty();
+                 $("#idOptionResult").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+    };
+
+
+    var addTutor = function(jsonDataInscription){
+       $.ajax({
+                type: 'post',
+                data: ({jsonDataInscription: jsonDataInscription}),
+                // url: "{{ path('infrah6ambadmambiente_addnewh6ambiente') }}",
+                url: Routing.generate('olimtutor_addTutor'),
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    }
+
+    var buscarTutor = function (){
+
+
+    formData = $('#addTutorFormId').serialize();
+    // alert(formData);return false;
+       $.ajax({
+             type: 'post',
+             url: Routing.generate('olimtutor_buscarTutor'),
+             data: formData,
+             beforeSend: function () {
+                 $("#idanswerTutors").empty();
+                 $("#idanswerTutors").empty();
+                 $("#idanswerTutors").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idanswerTutors").empty();
+                 $("#idanswerTutors").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+    };
+
+
+
+    var registrarTutor = function(){
+
+      formData = $('#regTutorFormId').serialize();
+         $.ajax({
+                  type: 'post',
+                  data: formData,
+                  url: "{{ path('olimtutor_registrarTutor') }}",
+                  beforeSend: function () {
+                      $('#modal').modal('hide');
+                      $('#idanswerTutors').empty();
+                      $("#idanswerTutors").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                  },
+                  success: function (data) {
+                      $('#idOptionResult').empty();
+                      $('#idOptionResult').append(data);
+
+                  },
+                  statusCode: {
+                      500: function () {
+
+                      },
+                      404: function () {
+
+                      }
+                  }
+              });
+    };
+
+
+
+    var updateDataTutor = function(jsonDataInscription, tutorid){
+       $.ajax({
+                type: 'post',
+                data: ({jsonDataInscription: jsonDataInscription, tutorid:tutorid}),
+                // url: "{{ path('infrah6ambadmambiente_addnewh6ambiente') }}",
+                url: Routing.generate('olimtutor_updateDataTutor'),
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+    };
+
+
+    var saveUpdateDataTutor = function(){
+
+      formData = $('#updateDataTutorId').serialize();
+         $.ajax({
+                  type: 'post',
+                  data: formData,
+                  url: "{{ path('olimtutor_saveUpdateDataTutor') }}",
+                  beforeSend: function () {
+                      $('#modal').modal('hide');
+                      $('#idanswerTutors').empty();
+                      $("#idanswerTutors").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                  },
+                  success: function (data) {
+                      $('#idOptionResult').empty();
+                      $('#idOptionResult').append(data);
+
+                  },
+                  statusCode: {
+                      500: function () {
+
+                      },
+                      404: function () {
+
+                      }
+                  }
+              });
+    };
+
+  var removeDataTutor = function(jsonDataInscription, tutorid){
+
+    if(confirm('Esta seguro de eliminar el registro?')){
+      return false;
+    }else{
+      return false;
+    }
+
+  }
+
+
+
+
+    var selectTypeInscription = function(jsonDataInscription, tutorid){
+
+      $.ajax({
+             type: 'post',
+             url: Routing.generate('olimtutor_selectTypeInscription'),
+             data: {jsonDataInscription:jsonDataInscription, tutorid:tutorid},
+             beforeSend: function () {
+                 $("#typeInscriptionId").empty();
+                 $("#typeInscriptionId").empty();
+                 $("#typeInscriptionId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#typeInscriptionId").empty();
+                 $("#typeInscriptionId").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+      
+    };
+
+    var doInscriptionOStudent = function(jsonDataInscription){
+      
+
+        $.ajax({
+             type: 'post',
+             url: Routing.generate('oliminscriptions_doInscriptionOStudent'),
+             data: {jsonDataInscription:jsonDataInscription},
+             beforeSend: function () {
+                 $("#doInscriptionOStudentId").empty();
+                 $("#doInscriptionOStudentId").empty();
+                 $("#doInscriptionOStudentId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#doInscriptionOStudentId").empty();
+                 $("#doInscriptionOStudentId").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+
+    };
+
+
+
+    var getGradoAllowed = function(idnivel){
+      
+      
+      let jsonRule = $('#form_jsonRule').val();
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('oliminscriptions_getGradoAllowed'),
+                data: {'idnivel': idnivel, 'jsonRule': jsonRule},
+                beforeSend: function () {
+                  $("#getStudentsId").empty();
+                },
+                success: function (data) {
+                    $("#form_grado").empty();
+                    $("#form_grado").append('<option value="">Seleccionar</option>');
+                    $.each(data.agrados, function (i, value) {
+                        $("#form_grado").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $("#form_paralelo").empty();
+                    $("#form_turno").empty();
+                }
+            });
+    };
+
+    var  getParalelo = function(grado) {
+      
+            // sie = $('#form_institucionEducativa').val();
+            nivel = $('#form_nivel').val();
+            jsonRule = $('#form_jsonRule').val();
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('oliminscriptions_getParalelo'),
+                data: {'grado': grado, 'jsonRule': jsonRule, 'nivel': nivel},
+                beforeSend: function () {
+                  $("#getStudentsId").empty();
+                },
+                success: function (data) {
+                    $("#form_paralelo").empty();
+                    $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                    $.each(data.aparalelos, function (i, value) {
+                        $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        };
+
+
+        var getTurno = function(paralelo) {
+
+            jsonRule = $('#form_jsonRule').val();
+            nivel = $('#form_nivel').val();
+            grado = $('#form_grado').val();
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('oliminscriptions_getTurno'),
+                data: {'paralelo': paralelo, 'jsonRule': jsonRule, 'nivel': nivel, 'grado': grado},
+                beforeSend: function () {
+                  $("#getStudentsId").empty();
+                },
+                success: function (data) {
+                    $("#form_turno").empty();
+                    $("#form_turno").append('<option value="">Seleccionar</option>');
+                    $.each(data.aturnos, function (i, value) {
+                        $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+
+        };
+
+
+
+      var getStudents = function(turno){
+        jsonRule = $('#form_jsonRule').val();
+        nivel = $('#form_nivel').val();
+        grado = $('#form_grado').val();
+        paralelo = $('#form_paralelo').val();
+
+        $.ajax({
+             type: 'post',
+             url: Routing.generate('oliminscriptions_getStudents'),
+             data: {'turno':turno,'paralelo': paralelo, 'jsonRule': jsonRule, 'nivel': nivel, 'grado': grado},
+             beforeSend: function () {
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+
+    };
+
+ var studentsRegister = function(){
+
+      formData = $('#studentsRegisterId').serialize();
+
+        $.ajax({
+             type: 'post',
+             url: Routing.generate('oliminscriptions_studentsRegister'),
+             data: formData,
+             beforeSend: function () {
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#getStudentsId").empty();
+                 $("#getStudentsId").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+
+    };
+
+
+
+
+
+
+
+
+    </script>
+
+    
+    
+{% endblock %}

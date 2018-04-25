@@ -1,0 +1,166 @@
+oliminscriptions:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:index" }
+
+oliminscriptions_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:show" }
+
+oliminscriptions_new:
+    path:     /new
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:new" }
+
+oliminscriptions_create:
+    path:     /create
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:create" }
+    methods:  POST
+
+oliminscriptions_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:edit" }
+
+oliminscriptions_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:update" }
+    methods:  [POST, PUT]
+
+oliminscriptions_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:delete" }
+    methods:  [POST, DELETE]
+
+oliminscriptions_openInscriptinoOlimpiadas:
+    path:     /openInscriptinoOlimpiadas
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:openInscriptinoOlimpiadas" }
+    options:
+        expose: true
+        
+oliminscriptions_regDirector:
+    path:     /regDirector
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:regDirector" }
+    options:
+        expose: true
+
+oliminscriptions_commonareainscription:
+    path:     /commonareainscription/{jsonDataInscription}/{tutorid}
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:commonAreaInscription" }
+    options:
+        expose: true
+
+oliminscriptions_doInscriptionOStudent:
+    path:     /doInscriptionOStudent
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:doInscriptionOStudent" }
+    options:
+        expose: true
+
+oliminscriptions_getCategory:
+    path:     /getCategory
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getCategory" }
+    options:
+        expose: true
+
+oliminscriptions_getGradoAllowed:
+    path:     /getGradoAllowed
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getGradoAllowed" }
+    options:
+        expose: true
+
+oliminscriptions_getParalelo:
+    path:     /getParalelo
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getParalelo" }
+    options:
+        expose: true
+
+oliminscriptions_getTurno:
+    path:     /getTurno
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getTurno" }
+    options:
+        expose: true
+
+oliminscriptions_getStudents:
+    path:     /getStudents
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents" }
+    options:
+        expose: true
+
+oliminscriptions_studentsRegister:
+    path:     /studentsRegister
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:studentsRegister" }
+    options:
+        expose: true
+
+oliminscriptions_selectInscription:
+    path:     /selectInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:selectInscription" }
+
+oliminscriptions_getNiveles:
+    path:     /getNiveles
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getNiveles" }
+    options:
+        expose: true
+
+oliminscriptions_getGrados:
+    path:     /getGrados
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:getGrados" }
+    options:
+        expose: true
+
+oliminscriptions_selectTemplateInscription:
+    path:     /selectTemplateInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:selectTemplateInscription" }
+    options:
+        expose: true
+
+oliminscriptions_doInscriptionGroup:
+    path:     /doInscriptionGroup
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:doInscriptionGroup" }
+    options:
+        expose: true
+
+oliminscriptions_showOptionDoInscription:
+    path:     /{datainscription}/showOptionDoInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:showOptionDoInscription" }
+
+
+oliminscriptions_studentsRegisterGroup:
+    path:     /studentsRegisterGroup
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:studentsRegisterGroup" }
+    options:
+        expose: true    
+
+oliminscriptions_listInscritosGroup:
+    path:     /listInscritosGroup
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:listInscritosGroup" }
+    options:
+        expose: true    
+        
+olimgrupoproyecto_inscriptionExterna:
+    path:     /inscriptionExterna
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:inscriptionExterna" }
+    options:
+        expose: true
+
+
+oliminscriptions_deleteInscriptionOlimpiada:
+    path:     /deleteInscriptionOlimpiada
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:deleteInscriptionOlimpiada" }
+    options:
+        expose: true              
+
+
+oliminscriptions_viewListInscritosGroup:
+    path:     /{jsonDataInscription}/viewListInscritosGroup
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:viewListInscritosGroup" }
+
+
+oliminscriptions_lookForOlimStudent:
+    path:     /lookForOlimStudent
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:lookForOlimStudent" }
+    options:
+        expose: true         
+        
+oliminscriptions_saveExternalInscription:
+    path:     /saveExternalInscription
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstudianteInscripcion:saveExternalInscription" }
+    options:
+        expose: true  
