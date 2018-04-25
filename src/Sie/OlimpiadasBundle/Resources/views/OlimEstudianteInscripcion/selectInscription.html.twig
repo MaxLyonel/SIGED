@@ -807,7 +807,10 @@ var studentsRegister = function(){
 
     var deleteInscriptionOlimpiada = function(jsonDataInscription, olimEstudianteInscripcionId){
 
-      if(confirm('... esta seguro de Eliminar la inscripcion?')){
+      if(confirm('Anteción!!!\nAl eliminar un estudiante:\nSi la cantidad de integrantes de un equipo es IGUAL A..., se eliminará a todos los integrantes del equipo.\nSi la cantidad de integrantes de un equipo es HASTA..., se eliminará solo el estudainte seleccionado.\n ...desea continuar?')){
+
+
+
         $.ajax({
                     type: 'post',
                     data: {'jsonDataInscription':jsonDataInscription, 'olimEstudianteInscripcionId':olimEstudianteInscripcionId},

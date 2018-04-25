@@ -206,7 +206,7 @@ class OlimTutorController extends Controller{
             ->setAction($this->generateUrl('olimtutor_newTutor'))
             ->setMethod('POST')
             ->add('data', 'hidden', array('attr'=>array('value'=>$data)))
-            ->add('newTutor', 'submit', array('label'=> 'Nuevo Tutor', 'attr'=>array('class'=>'btn btn-info btn-md')))
+            ->add('newTutor', 'submit', array('label'=> 'Nuevo Tutor(a)', 'attr'=>array('class'=>'btn btn-info btn-md')))
             ->getForm()
             ;
     }
@@ -270,7 +270,7 @@ class OlimTutorController extends Controller{
             ->setAction($this->generateUrl('olimtutor_listTutorBySie'))
             ->setMethod('POST')
             ->add('telefono1', 'text')
-            ->add('telefono2', 'text')
+            ->add('telefono2', 'text', array('required'=>false))
             ->add('correoElectronico', 'text')
             ->add('sie', 'hidden', array('attr'=>array('value'=>$arrData['sie'])))
             ->add('gestion', 'hidden', array('attr'=>array('value'=>$arrData['gestion'])))

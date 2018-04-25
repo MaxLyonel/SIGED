@@ -384,7 +384,7 @@ class OlimGrupoProyectoController extends Controller
 
             }else{
 
-                 $message = 'Grupo no creado, excede al limite permitido...';
+                 $message = 'Grupo no creado, la Unidad Educativa ya cuenta con la cantidad de equipos permitidos ....';
                  $this->addFlash('noGroupCreate', $message);
             }
             
