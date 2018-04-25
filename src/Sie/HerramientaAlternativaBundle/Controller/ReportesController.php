@@ -393,6 +393,8 @@ class ReportesController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     } 
+
+
     ///********************************MARCELO */
     public function reportEspAction(Request $request, $dataInfo){
 
@@ -414,7 +416,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
        // dump($roluser);die;
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
@@ -468,7 +470,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         // dump($roluser);die;
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_soldado_o_marinero_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
@@ -523,7 +525,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/xlsx');
 
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_soldado_o_marinero_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
@@ -574,7 +576,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/xlsx');
 
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_soldado_o_marinero_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
@@ -627,7 +629,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         // dump($roluser);die;
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_persona_contexto_encierro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
@@ -675,7 +677,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         // dump($roluser);die;
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_persona_contexto_encierro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
@@ -724,7 +726,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/xlsx');
 
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_persona_contexto_encierro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
@@ -772,7 +774,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/xlsx');
 
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_persona_contexto_encierro_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
@@ -825,7 +827,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         // dump($roluser);die;
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_trabajador_del_hogar_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
@@ -873,7 +875,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         // dump($roluser);die;
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_trabajador_del_hogar_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
@@ -922,7 +924,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/xlsx');
 
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_esp_edudiv_trabajador_del_hogar_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
@@ -970,7 +972,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/xlsx');
 
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_edudiv_trabajador_del_hogar_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
@@ -1018,7 +1020,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         // dump($roluser);die;
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_edudiv_maestro_instructor_militar_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
@@ -1067,7 +1069,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/xlsx');
 
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_edudiv_maestro_instructor_militar_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
@@ -1116,7 +1118,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         // dump($roluser);die;
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.pdf'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_edudiv_maestro_recinto_penitenciario_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=pdf&'));
@@ -1164,7 +1166,7 @@ class ReportesController extends Controller {
         $response->headers->set('Content-type', 'application/xlsx');
 
 
-        if($roluser== 8)
+        if (($roluser== 8) || ($roluser==20))
         {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'NACIONAL'. $periodo . '_' . $gestion . '.xlsx'));
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_lst_edudiv_maestro_recinto_penitenciario_nacional_v1_ma.rptdesign&Gestion=' . $gestion .  '&Periodo=' . $periodo. '&&__format=xlsx&'));
