@@ -2023,25 +2023,45 @@ class ClasificacionController extends Controller {
         $gestionActual = date_format($fechaActual,'Y');
         $em = $this->getDoctrine()->getManager();
 
-        // $objEntidad = $this->buscaEntidadFase($fase,$usuario);
-
-        // $codigoEntidad = $objEntidad[0]['id'];
-
-        $codigoEntidad = $_POST['id'];
-
-        $arch = $codigoEntidad.'_'.$gestionActual.'_JUEGOS_F'.$fase.'_'.date('YmdHis').'.pdf';
-        $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        if($fase == 1){
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f1_v2.rptdesign&__format=pdf&codue='.$codigoEntidad.'&codges='.$gestionActual));
+        if (isset($_POST['id'])){
+          $codigoEntidad = $_POST['id'];
+        } else {
+          $objEntidad = $this->buscaEntidadFase($fase,$usuario);
+          $codigoEntidad = $objEntidad[0]['id'];
         }
-        if($fase == 2){
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f2_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
+
+
+        if (isset($_POST['id'])){
+            $arch = $codigoEntidad.'_'.$gestionActual.'_JUEGOS_F'.$fase.'_'.date('YmdHis').'.pdf';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            if($fase == 1){
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f1_v2.rptdesign&__format=pdf&codue='.$codigoEntidad.'&codges='.$gestionActual));
+            }
+            if($fase == 2){
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f2_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
+            }
+            if($fase == 3){
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJueogs_Participaciones_foto_v1.rptdesign&__format=pdf&depto='.$codigoEntidad.'&codges='.$gestionActual));
+            }
+        } else {
+            $arch = $codigoEntidad.'_'.$gestionActual.'_JUEGOS_F'.$fase.'_'.date('YmdHis').'.xls';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/vnd.ms-excel');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+
+            if($fase == 1){
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f1_distrito_v1.rptdesign&__format=pdf&coddis='.$codigoEntidad.'&codges='.$gestionActual));
+            }
+            if($fase == 2){
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f2_circunscripcion_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
+            }
+            if($fase == 3){
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f3_departamento_v1.rptdesign&__format=pdf&coddep='.$codigoEntidad.'&codges='.$gestionActual));
+            }
         }
-        if($fase == 3){
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJueogs_Participaciones_foto_v1.rptdesign&__format=pdf&depto='.$codigoEntidad.'&codges='.$gestionActual));
-        }
+
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
