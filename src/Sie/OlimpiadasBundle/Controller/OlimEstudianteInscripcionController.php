@@ -1389,7 +1389,7 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($form);
 
         // dump(sizeof($form));die;
-        echo('Inscripción realizada...!!!!');die;
+        echo('Inscripción realizada satisfactoriamente');die;
     }
 
     public function studentsRegisterGroupAction(Request $request){
@@ -1455,7 +1455,7 @@ class OlimEstudianteInscripcionController extends Controller{
             // dump($form);
 
             // dump(sizeof($form));die;
-            echo('Inscripción realizada!!!!');die;
+            echo('Inscripción realizada satisfactoriamente');die;
                         
         } catch (Exception $e) {
              $em->getConnection()->rollback();
