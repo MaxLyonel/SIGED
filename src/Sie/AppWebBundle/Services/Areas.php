@@ -371,6 +371,13 @@ class Areas {
                     $vista = 1;
                 }
 
+                /**
+                 * Se deshabilita la opcion de agregar materia para gestion 2018
+                 */
+                if ($gestion == 2018) {
+                    $vista = 0;
+                }
+
                 return array(
                     'asignaturas'=>$asignaturas,
                     'cursoOferta'=>$cursoOferta,
