@@ -31,7 +31,7 @@ class ChangestadoqaController extends Controller {
      * Muestra el listado de Menús
      */
     public function indexAction(Request $request) {
-
+      
         $id_usuario = $this->session->get('userId');
         $em = $this->getDoctrine()->getManager();
         if (!isset($id_usuario)) {
@@ -53,6 +53,10 @@ class ChangestadoqaController extends Controller {
         // dump($dataInscription);die;
         // $studentTwo = $this->getHistoryStudent($rudeTwo,$gestion,$institucioneducativa);
         //send the values to the twig
+        $eliminaRude = false;
+        if(isset($form['optionEliminaRude'])){
+          $eliminaRude = true;
+        }
         return $this->render($this->session->get('pathSystem') . ':Changestadoqa:index.html.twig', array(
                     // 'form' => $this->createSearchForm()->createView(),
                     'datastudent'     => $student,
@@ -60,8 +64,8 @@ class ChangestadoqaController extends Controller {
                     'sw'              => $sw,
                     'optionTodo'      => $optionTodo,
                     'idProceso'      => $idProceso,
-                    'gestionSel'     =>  $gestion
-
+                    'gestionSel'     =>  $gestion,
+                    'eliminaRude' => $eliminaRude
         ));
         // dump($request);die;
         // return $this->render('SieRegularBundle:Changestadoqa:index.html.twig', array(
@@ -290,14 +294,14 @@ class ChangestadoqaController extends Controller {
       * @return string
       */
       public function mainEliminarInscriptionAction(Request $request) {
-
-        // dump($request);
+        
           //get the send values
           $dataInfo = $request->get('dataInfo');
           $gestionSelected = $request->get('gestion');
           $idProceso = $request->get('idProceso');
+          $eliminaRude = $request->get('eliminaRude');
           $arrDataInfo = json_decode($dataInfo,true);
-
+          
           //create the DB conexion
           $em = $this->getDoctrine()->getManager();
           $em->getConnection()->beginTransaction();
@@ -344,8 +348,15 @@ class ChangestadoqaController extends Controller {
               $inscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInfo['estInsId']);
               $em->remove($inscriptionStudent);
               $em->flush();
-              // $em->persist($inscriptionStudent);
+              
+              $student = $em->getRepository('SieAppWebBundle:Estudiante')->findByCodigoRude($arrDataInfo['rude']);
 
+              //$em->remove($student);
+              //$em->flush();
+              if($eliminaRude == 1){
+                $em->remove($student);
+                $em->flush();
+              }
               //update the validation process table
               $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($idProceso);
               $vproceso->setEsActivo('t');
