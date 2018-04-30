@@ -780,7 +780,7 @@ class OlimEstudianteModificacionController extends Controller{
         $tutorid = $form['tutorid'];
         $sie = $form['sie'];
         $gestion = $form['gestion'];
-        $mensaje = "Registro actualizado satisfactoriamente.";
+        $mensaje = "Registro modificado satisfactoriamente.";
         $estado = "success";
 
         $olimEstudianteInscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findOneBy(array(

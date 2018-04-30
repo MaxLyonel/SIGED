@@ -378,13 +378,13 @@ class OlimGrupoProyectoController extends Controller
                     $em->getConnection()->commit();
 
                 }else{
-                    $message = 'Grupo no creado, nombre de grupo ya existe...';
+                    $message = 'Equipo no creado, el nombre del equipo ya existe';
                     $this->addFlash('noGroupCreate', $message);
                 }
 
             }else{
 
-                 $message = 'Grupo no creado, la Unidad Educativa ya cuenta con la cantidad de equipos permitidos ....';
+                 $message = 'Equipo no creado, la Unidad Educativa ya cuenta con la cantidad de equipos permitida';
                  $this->addFlash('noGroupCreate', $message);
             }
             
@@ -412,7 +412,7 @@ class OlimGrupoProyectoController extends Controller
         $entity = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($id);
         // dump(sizeof($studentsGroup));die;
         if(sizeof($studentsGroup)>0){
-            $message = 'Grupo no eliminado, el grupo tiene inscritos...';
+            $message = 'Equipo no eliminado. Para eliminar el equipo debe borrar el registro de estudiantes.';
             $this->addFlash('noGroupCreate', $message);
 
         }else{
