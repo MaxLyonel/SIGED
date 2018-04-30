@@ -480,6 +480,7 @@ var studentsRegister = function(){
 
      //validate form and values 
     var elem = document.getElementById('studentsRegisterId').elements;
+    var takeit = $('#form_takeitgroup').val();
     var sw = true;
     var countElement;
     var dataInsc = [];
@@ -524,8 +525,17 @@ var studentsRegister = function(){
       i++;
     }
 
+   
     var ruleCondition = $('#form_condicion').val();
     var ruleCantidad = $('#form_cantidad').val();
+
+    inscriptionSelected = inscriptionSelected + parseInt(takeit,10) ;
+    if(inscriptionSelected <= ruleCantidad){
+    }else{
+        alert('El número de estudiantes seleccionados para inscribir excede la cantidad permitida, revise su listado de inscritos');
+        return false;
+    }
+
     //valdation number of inscription
     switch($('#form_condicion').val()){
       case 'Hasta:':

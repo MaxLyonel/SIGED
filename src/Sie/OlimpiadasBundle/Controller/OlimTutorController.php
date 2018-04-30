@@ -213,11 +213,14 @@ class OlimTutorController extends Controller{
 
     public function newTutorAction (Request $request){
         //got the send data
-        $form = $request->get('form');
+	    $form = $request->get('form');
+	    $data = json_decode($form['data'],true);
+	    //dump($data);die;
         array_pop(($form));
         // dump($form['data']);die;
         return $this->render('SieOlimpiadasBundle:OlimTutor:newTutor.html.twig', array(
-            'form' => $this->formLookForTutor($form['data'])->createView(),
+		'form' => $this->formLookForTutor($form['data'])->createView(),
+		'cancel_form' => $this->cancelForm(array('institucioneducativaid'=>$data['sie'],'gestiontipoid'=>$data['gestion']))->createView(),
 
         ));
 

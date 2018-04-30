@@ -934,11 +934,14 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($regla->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros());
         // dump($studentsInGroup);
         // dump($regla);
+        //dump($regla->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros());
         // die;
         
-        if( $studentsInGroup['takeitgroup'] == $regla->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros() ) {
-            $allowInscription = false;
-        }
+            if( $studentsInGroup['takeitgroup'] <= $regla->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros() ) {
+                
+            }else{
+                $allowInscription = false;
+            }
         }
 
       
@@ -1321,7 +1324,8 @@ class OlimEstudianteInscripcionController extends Controller{
         $form = $this->createFormBuilder()
                 ->add('jsonDataInscription','hidden', array('data'=>$jsonDataInscription))
                 ->add('jsonData','hidden', array('data'=>$jsonData));
-        
+        $arrDataInscription = json_decode($jsonDataInscription,true);
+        //  dump($arrDataInscription);die;
         if(isset($arrData['groupId'])){
         //     dump($objRules->getModalidadNumeroIntegrantesTipo()->getId());
         // dump($objRules->getModalidadNumeroIntegrantesTipo()->getCondicion());
@@ -1330,8 +1334,9 @@ class OlimEstudianteInscripcionController extends Controller{
             $form = $form ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegisterGroup()')));
             $form = $form->add('condicion', 'hidden', array('data'=>$objRules->getModalidadNumeroIntegrantesTipo()->getCondicion()));
             $form = $form->add('cantidad', 'hidden', array('data'=>$objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros()));
+            $form = $form->add('takeitgroup', 'hidden', array('data'=>$arrDataInscription['takeitgroup']));
         }else{
-            $arrDataInscription = json_decode($jsonDataInscription,true);
+            
             $form = $form ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegister()')));
             $form = $form->add('cantidad', 'hidden', array('data'=>$objRules->getCantidadInscritosGrado()));
             $form = $form->add('takeit', 'hidden', array('data'=>$arrDataInscription['takeit']));
