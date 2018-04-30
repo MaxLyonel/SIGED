@@ -570,14 +570,14 @@ class RegistroController extends Controller {
                 select count(eij.id) as cant, eij.estudiante_inscripcion_id, COUNT(distinct disciplina) as cantdisc
                 , sum(case when dt.id = 3 or dt.id = 4 or dt.id = 5 or dt.id = 7 then 1 else 0 end)  as cant_dis_conj
                 , sum(case when dt.id <> 3 and dt.id <> 4 and dt.id <> 5 and dt.id <> 7 then 1 else 0 end)  as cant_dis_indi
-                , sum(case when dt.id = 2 and (pt.id = 27 or pt.id = 28) then 1 else 0 end)  as cant_pru_conj_atle_1214
-                , sum(case when dt.id = 2 and (pt.id <> 27 and pt.id <> 28) then 1 else 0 end)  as cant_pru_indi_atle_1214
-                , sum(case when dt.id = 2 and (pt.id = 27 or pt.id = 28) then 1 else 0 end)  as cant_pru_conj_atle_1519
-                , sum(case when dt.id = 2 and (pt.id <> 27 and pt.id <> 28) then 1 else 0 end)  as cant_pru_indi_atle_1519
-                , sum(case when dt.id = 8 and (pt.id = 63 or pt.id = 64 or pt.id = 75 or pt.id = 76) then 1 else 0 end)  as cant_pru_conj_nat_1214
-                , sum(case when dt.id = 8 and (pt.id <> 63 and pt.id <> 64 and pt.id <> 75 and pt.id <> 76) then 1 else 0 end)  as cant_pru_indi_nat_1214
-                , sum(case when dt.id = 8 and (pt.id = 63 or pt.id = 64 or pt.id = 75 or pt.id = 76) then 1 else 0 end)  as cant_pru_conj_nat_1519
-                , sum(case when dt.id = 8 and (pt.id <> 63 and pt.id <> 64 and pt.id <> 75 and pt.id <> 76) then 1 else 0 end)  as cant_pru_indi_nat_1519
+                , sum(case when dt.id = 2 and (pt.id = 174 or pt.id = 175) then 1 else 0 end)  as cant_pru_conj_atle_1214
+                , sum(case when dt.id = 2 and (pt.id <> 174 and pt.id <> 175) then 1 else 0 end)  as cant_pru_indi_atle_1214
+                , sum(case when dt.id = 2 and (pt.id = 200 or pt.id = 201) then 1 else 0 end)  as cant_pru_conj_atle_1519
+                , sum(case when dt.id = 2 and (pt.id <> 200 and pt.id <> 201) then 1 else 0 end)  as cant_pru_indi_atle_1519
+                , sum(case when dt.id = 8 and (pt.id = 75 or pt.id = 76) then 1 else 0 end)  as cant_pru_conj_nat_1214
+                , sum(case when dt.id = 8 and (pt.id <> 75 and pt.id <> 76) then 1 else 0 end)  as cant_pru_indi_nat_1214
+                , sum(case when dt.id = 8 and (pt.id = 63 or pt.id = 64) then 1 else 0 end)  as cant_pru_conj_nat_1519
+                , sum(case when dt.id = 8 and (pt.id <> 63 and pt.id <> 64) then 1 else 0 end)  as cant_pru_indi_nat_1519
                 , sum(case when dt.id = 6 then 1 else 0 end)  as cant_pru_cic
                 , sum(case when dt.id = 9 then 1 else 0 end)  as cant_pru_raqbol
                 , sum(case when dt.id = 10 then 1 else 0 end)  as cant_pru_raqfro
@@ -661,7 +661,7 @@ class RegistroController extends Controller {
                                                         } else {
                                                             $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2004 a 2006 en el año de nacimiento)');
                                                         }
-                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_atle_1214'] >= 2){
+                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_atle_1214'] >= 2 and $tipoDisciplinaPrueba['tipoPrueba'] == 'Individual'){
                                                             $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 2 pruebas individuales)');
                                                         }
                                                     }
@@ -671,7 +671,7 @@ class RegistroController extends Controller {
                                                         } else {
                                                             $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 15 a 19 años y 1999 a 2003 en el año de nacimiento)');
                                                         }
-                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_atle_1519'] >= 2){
+                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_atle_1519'] >= 2 and $tipoDisciplinaPrueba['tipoPrueba'] == 'Individual'){
                                                             $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 2 pruebas individuales)');
                                                         }
                                                     }
@@ -686,7 +686,7 @@ class RegistroController extends Controller {
                                                         } else {
                                                             $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2003 a 2005 en el año de nacimiento)');
                                                         }
-                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_nat_1214'] >= 3){
+                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_nat_1214'] >= 3 and $tipoDisciplinaPrueba['tipoPrueba'] == 'Individual'){
                                                             $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 3 pruebas individuales)');
                                                         }
                                                     }
@@ -696,7 +696,7 @@ class RegistroController extends Controller {
                                                         } else {
                                                             $$inscripcionEstudianteEntitymsg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 10 a 12 años y 1998 a 2002 en el año de nacimiento)');
                                                         }
-                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_nat_1519'] >= 3){
+                                                        if($inscripcionEstudianteEntity[0]['cant_pru_indi_nat_1519'] >= 3 and $tipoDisciplinaPrueba['tipoPrueba'] == 'Individual'){
                                                             $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 3 pruebas individuales)');
                                                         }
                                                     }

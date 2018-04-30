@@ -106,17 +106,16 @@ class DeclaracionJuradaController extends Controller {
                     $rolOpcionTramite = 13;
                 }
                 $query->bindValue(':roluser', $rolOpcionTramite);
-            } else {                
+            } else {
                 $query->bindValue(':roluser', $this->session->get('roluser'));
             }
             $query->execute();
             $aTuicion = $query->fetchAll();
 
-
-            if (!$aTuicion[0]['get_ue_tuicion']) {
+            if (!$aTuicion[0]['get_ue_tuicion'] and ($rolOpcionTramite != 14 and $rolOpcionTramite != 15 and $rolOpcionTramite != 16)) {
                 if($this->session->get('sysname') == 'DIPLOMAS' or $this->session->get('sysname') == 'TRAMITES'){
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No tiene tuición sobre la Unidad Educativa'));
-                } else {                
+                } else {
                     $this->session->getFlashBag()->add('noticeddjj', 'No tiene tuición sobre la Unidad Educativa');
                 }
                 return $this->redirectToRoute('declaracion_jurada_index');
@@ -177,9 +176,9 @@ class DeclaracionJuradaController extends Controller {
                         left join superior_acreditacion_tipo as sat on sat.id = sae.superior_acreditacion_tipo_id
                         left join institucioneducativa i on (iec.institucioneducativa_id = i.id)
                         where iec.gestion_tipo_id = ".$gestion." and i.id = ".$sie."
-                        and 
+                        and
                         case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id=15 and sat.codigo = 3 /*sat.id in (6,52)*/)
-                        when iec.gestion_tipo_id <= 2010 then (iec.nivel_tipo_id=3 and iec.grado_tipo_id=4) or (iec.nivel_tipo_id=15 and sat.codigo = 3 /*iec.grado_tipo_id=2*/) 
+                        when iec.gestion_tipo_id <= 2010 then (iec.nivel_tipo_id=3 and iec.grado_tipo_id=4) or (iec.nivel_tipo_id=15 and sat.codigo = 3 /*iec.grado_tipo_id=2*/)
                         else ((iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id=15 and sat.codigo = 3)) end
                         order by  e.paterno, e.materno
                       ");

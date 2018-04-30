@@ -21,7 +21,7 @@ class DeclaracionJuradaController extends Controller {
     }
 
     /**
-     * declaracion jurada Index 
+     * declaracion jurada Index
      * @param Request $request
      * @return type
      */
@@ -93,13 +93,13 @@ class DeclaracionJuradaController extends Controller {
     }
 
     /*
-     * select * 
+     * select *
       from institucioneducativa i
       left join estudiante_inscripcion ei on (i.id = ei.institucioneducativa_id)
       left join estudiante e on (ei.estudiante_id=e.id)
       where i.id = 80730200 and ei.nivel_tipo_id=13 and ei.grado_tipo_id=6 and ei.gestion_tipo_id=2015 */
 
-    private function getBachilleresPerSie($sie, $gestion) {        
+    private function getBachilleresPerSie($sie, $gestion) {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa');
         if ($gestion >= 2011){
