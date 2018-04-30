@@ -32,53 +32,44 @@
             <div class="clearfix"></div>
         </div>
         <div class="panel-body datos">
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                <label>&Aacute;rea:</label> {{ regla.olimMateriaTipo.materia }}<br>
-                <label>Categoría:</label> {{ regla.categoria }}<br>
-                <label>Modalidad:</label> {{ regla.modalidadParticipacionTipo.modalidad }}
-            </div>
 
             {% if regla.modalidadParticipacionTipo.id == 1 %}
-                {# INDIVIDUAL #}
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>Nacionalidad:</label> Boliviana<br>
+                    <label>Edad inicial:</label> {{ regla.edadInicial }} años hasta el {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                    <label>Edad final:</label> {{ regla.edadFinal }} años hasta el {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>N&uacutemero de CI en SIGED:</label> Si <br>
+                    <label>Participar:</label> en 2 &aacute;reas (m&aacute;ximo)<br>
+                    <label>Modalidad:</label> {{ regla.modalidadParticipacionTipo.modalidad }}
+                </div>
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                     <label>Cantidad de inscritos:</label> {{ regla.cantidadInscritosGrado }}<br>
                     <label>¿Subir documento?:</label> {% if regla.siSubirDocumento %} Si {% else %} No {% endif %}
                 </div>
-
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <label>Edad inicial:</label> {{ regla.edadInicial }} años<br>
-                    <label>Edad final:</label> {{ regla.edadFinal }} años<br>
-                    <label>Fecha de comparación:</label> {{ regla.fechaComparacion|date('d-m-Y') }}
-                </div>
             {% else %}
-                {# GRUPO #}
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>Nacionalidad:</label> Boliviana<br>
+                    <label>Edad inicial:</label> {{ regla.edadInicial }} años hasta el {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                    <label>Edad final:</label> {{ regla.edadFinal }} años hasta el {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                    <label>N&uacutemero de CI en SIGED:</label> Si <br>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>Participar:</label> en 2 &aacute;reas (m&aacute;ximo)<br>
+                    <label>Modalidad:</label> {{ regla.modalidadParticipacionTipo.modalidad }}<br>
                     <label>Cantidad por equipo:</label> {{ regla.modalidadNumeroIntegrantesTipo.condicion }} {{ regla.modalidadNumeroIntegrantesTipo.cantidadMiembros }}<br>
                     <label>Cantidad de equipos:</label> {{ regla.cantidadEquipos }}<br>
-                    <label>¿Nombre equipo?:</label> {% if regla.siNombreEquipo %} Si {% else %} No {% endif %}<br>
-                    <label>¿Nombre proyecto?:</label> {% if regla.siNombreProyecto %} Si {% else %} No {% endif %}
                 </div>
-
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                    <label>Edad inicial:</label> {{ regla.edadInicial }} años<br>
-                    <label>Edad final:</label> {{ regla.edadFinal }} años<br>
-                    <label>Fecha de comparación:</label> {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                    <label>¿Nombre equipo?:</label> {% if regla.siNombreEquipo %} Si {% else %} No {% endif %}<br>
+                    <label>¿Nombre proyecto?:</label> {% if regla.siNombreProyecto %} Si {% else %} No {% endif %}<br>
                     <label>¿Subir documento?:</label> {% if regla.siSubirDocumento %} Si {% else %} No {% endif %}
                 </div>
             {% endif %}
-             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                <label>Nacionalidad:</label> Boliviana<br>
-               
-               
-            </div>
-
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-             <label>Participar:</label> en 2 &aacute;reas<br>
-            </div>
-             
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-             <label>N&uacutemero de CI en SIGED:</label> Si <br>
-            </div>
+ 
+            
         </div>
     </div>
 </div>
