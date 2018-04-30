@@ -562,7 +562,7 @@ var studentsRegister = function(){
     }
    
     if (!sw) {
-        alert('Observacion en la inscripcion:\nrevise el numero de telefono\nrevise el correo electronico');
+        alert('Revise el número de teléfono\nRevise el correo electrónico');
         return false;
     }
 
@@ -571,7 +571,7 @@ var studentsRegister = function(){
 
       formData = $('#studentsRegisterId').serialize();
       
-      if(confirm('Esta seguro de Realizar la inscripcion?')){
+      if(confirm('¿Está seguro de realizar la inscripción?')){
         $.ajax({
              type: 'post',
              url: Routing.generate('oliminscriptions_studentsRegisterGroup'),
@@ -868,7 +868,7 @@ var studentsRegister = function(){
     }
 
     
-    if(confirm('Esta seguro de Realizar la inscripcion?\nLa inscripción no sera efectiva, si no cupmle con los requisitos para la inscripción')){
+    if(confirm('¿Está seguro de realizar la inscripción?\nLa inscripción no sera efectiva, si no cupmle con los requisitos para la inscripción')){
 
       let formData =  $('#inscriptionExternaIdForm').serialize();
            $.ajax({

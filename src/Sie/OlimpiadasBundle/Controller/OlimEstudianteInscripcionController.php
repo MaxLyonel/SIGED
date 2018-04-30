@@ -1740,10 +1740,11 @@ class OlimEstudianteInscripcionController extends Controller{
             $studentsInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array(
                 'estudianteInscripcion'=>$objStudentInscription['estinsid']
             ));
+            
             //validate the number of inscription 
-            if(sizeof($studentsInscription) > 2){
+            if(sizeof($studentsInscription) >= 2){
                 $studentExist = false;
-                $message = 'limite de inscripciones excedida... ';
+                $message = 'No se puede realizar la inscripción debido a que el Estudiante ya se encuentra regsitrado en dos áreas ';
                 $this->addFlash('noExternal', $message);
             }
             // save the data estinsid
