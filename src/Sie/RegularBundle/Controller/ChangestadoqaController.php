@@ -338,7 +338,7 @@ class ChangestadoqaController extends Controller {
                 $em->remove($value);
                 $em->flush();
               }
-
+              
               $inscriptionStudentAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
               foreach ($inscriptionStudentAsignatura as $key => $value) {
                 $em->remove($value);
@@ -354,9 +354,12 @@ class ChangestadoqaController extends Controller {
               //$em->remove($student);
               //$em->flush();
               if($eliminaRude == 1){
-                $em->remove($student);
-                $em->flush();
+                foreach ($student as $key => $value) {
+                  $em->remove($value);
+                  $em->flush();
+                }
               }
+              
               //update the validation process table
               $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($idProceso);
               $vproceso->setEsActivo('t');
