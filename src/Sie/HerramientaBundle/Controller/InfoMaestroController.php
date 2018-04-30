@@ -490,7 +490,7 @@ class InfoMaestroController extends Controller {
             $personaId = $persona->getId();
 
             // verificamos si el maestro esta registrado ya en tabla maestro inscripcion
-            $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'persona' => $personaId, 'gestionTipo' => $form['gestion'], 'rolTipo' => 2));
+            $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'persona' => $personaId, 'gestionTipo' => $form['gestion'], 'cargoTipo' => '0'));
             if ($maestroInscripcion) { // Si  el maestro ya esta inscrito
                 $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
