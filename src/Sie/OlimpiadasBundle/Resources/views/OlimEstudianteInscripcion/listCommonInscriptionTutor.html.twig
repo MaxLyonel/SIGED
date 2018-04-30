@@ -1,55 +1,32 @@
-
-  
-  <div class="row">
-    {% if groupId %}
-      <div class="col-md-12">
-        <p class="lead">Inscripción en <span class="label label-info">{{objGroup.nombre}}</span> </p>
-      </div>
-    {% endif %}
-
-    {% include 'SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:show.html.twig' with {'regla': regla} %}
-
+<p></p>
+<div class="row">
+  {% if groupId %}
     <div class="col-md-12">
-
-         {{form_start(form, { 'attr':{'id':'idForminscriptionOlim'} })}}
-              <div class="form-body">
-              
-                  <div class="row">
-                    <div class="col-md-3">
-                      NIVEL:
-                        {{form_widget(form.nivel, {'attr': {'class':'form-control', 'onchange':'getGrados(this.value)'} } )}}
-                    </div>
-                    <div class="col-md-3">
-                      GRADO:
-                        {{form_widget(form.grado, {'attr': {'class':'form-control', 'onchange':'getListStudentsTutor(this.value)'} } )}}
-                    </div>
-                    
-                </div>
-                  
-                
-
-              </div><!-- /.form-body -->
-              <div class="form-footer">
-                  <div class="pull-right">
-                      <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
-                      {#
-                        {{form_widget(form.buscar, {'attr': {'class':'btn btn-danger'} } )}}
-                      #}
-                  </div>
-                  <div class="clearfix"></div>
-              </div><!-- /.form-footer -->
-                    
-          {{form_end(form)}}
+      <div class="alert alert-warning">
+        <i class="fa fa-info-circle fa-fw"></i> La categoría seleccionada corresponde a inscripción por equipo, por tanto, para eliminar un registro debe hacerlo a través del módulo de inscripción.
       </div>
-  </div>
-
-
-
+    </div>
+  {% else %}
+    <div class="col-md-12">
+      {{form_start(form, { 'attr':{'id':'idForminscriptionOlim'} })}}
+        <div class="form-body">
+          <div class="row">
+            <div class="col-md-3">
+              NIVEL:
+              {{form_widget(form.nivel, {'attr': {'class':'form-control', 'onchange':'getGrados(this.value)'} } )}}
+            </div>
+            <div class="col-md-3">
+              GRADO:
+              {{form_widget(form.grado, {'attr': {'class':'form-control', 'onchange':'getListStudentsTutor(this.value)'} } )}}
+            </div>
+          </div>
+        </div><!-- /.form-body -->                   
+      {{form_end(form)}}
+    </div>
+  {% endif %}
+</div>
 <div class="row">
   <div class="col-md-12">
-    <div id="getStudentsId">
-      
-    </div>
+    <div id="getStudentsId"></div>
   </div>
-  
 </div>

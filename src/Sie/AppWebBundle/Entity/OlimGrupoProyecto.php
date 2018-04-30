@@ -474,4 +474,32 @@ class OlimGrupoProyecto
     {
         return $this->olimGrupoProyectoTipo;
     }
+    /**
+     * @var string
+     */
+    private $nombreProyecto;
+
+
+    /**
+     * Set nombreProyecto
+     *
+     * @param string $nombreProyecto
+     * @return OlimGrupoProyecto
+     */
+    public function setNombreProyecto($nombreProyecto)
+    {
+        $this->nombreProyecto = $nombreProyecto;
+    
+        return $this;
+    }
+
+    /**
+     * Get nombreProyecto
+     *
+     * @return string 
+     */
+    public function getNombreProyecto()
+    {
+        return $this->nombreProyecto;
+    }
 }

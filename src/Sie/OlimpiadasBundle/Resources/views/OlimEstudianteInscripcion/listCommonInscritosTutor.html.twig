@@ -14,16 +14,16 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Código Rude</th>
+                        <th>Código RUDE</th>
                         <th>Carnet de Identidad</th>
                         <th>Paterno</th>
                         <th>Materno</th>
                         <th>Nombre(s)</th>
                         <th>Actualizar Teléfono <span><strong>(*)</strong></span></th>
-                        <th>Actualizar Correo <span><strong>(*)</strong></span></th>
+                        <th>Actualizar Correo Electrónico <span><strong>(*)</strong></span></th>
                         <th>Actualizar Discapacidad</th>
-                        <th>Actualizar Tutor</th>
-                        <th>Acciones</th>
+                        <th>Actualizar Tutor(a)</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +61,7 @@
                                     <input type="hidden" name="form[gradoId]" id="form_gradoId" value="{{gradoId}}">
                                     <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{olimtutorid}}">
                                     <input type="hidden" name="form[olimestudianteid]" id="form_olimestudianteid" value="{{inscrito.olimestudianteid}}">
-                                    <button type="button" class="btn btn-warning btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-save"></i> Guardar</button>
+                                    <button type="button" class="btn btn-warning btn-md" data-toggle="tooltip" data-placement="top" data-original-title="Actualizar" onclick="updateInscriptionStudent({{inscrito.olimestudianteid}});"><i class="fa fa-save"></i> Modificar</button>
                                 </form>
                             </td>
                         </tr>

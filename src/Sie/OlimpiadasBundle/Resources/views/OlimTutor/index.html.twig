@@ -23,6 +23,16 @@
     <!--/ End page header -->
 
     <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                {% for flashMessage in app.session.flashbag.get('novalido') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Alerta!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
     <div class="row">
           <div class="col-md-6 col-md-offset-3">
            

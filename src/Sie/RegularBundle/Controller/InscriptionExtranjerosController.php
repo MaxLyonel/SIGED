@@ -512,10 +512,13 @@ class InscriptionExtranjerosController extends Controller {
             $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
             $query = $inscription2->createQueryBuilder('ei')
                     ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
+                    ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa=i.id')
                     ->where('ei.estudiante = :id')
                     ->andwhere('iec.gestionTipo = :gestion')
+                    ->andwhere('i.institucioneducativaTipo = :instTipo')
                     ->andwhere('ei.estadomatriculaTipo IN (:matricula)')
                     ->setParameter('id', $student->getId())
+                    ->setParameter('instTipo', 1)
                     ->setParameter('gestion', $gestion)
                     ->setParameter('matricula', array(4,5))
                     ->getQuery();
@@ -711,6 +714,7 @@ class InscriptionExtranjerosController extends Controller {
                         //get the extension
                         $aName = explode('.', $originalName);
                         $fileType = $aName[sizeof($aName) - 1];
+                        
                         //validate the allows extensions
                         $aValidTypes = array('png, jpg');
 
@@ -723,7 +727,7 @@ class InscriptionExtranjerosController extends Controller {
                             $this->session->getFlashBag()->add('notiext', 'El archivo que intenta subir no tiene el tamaño correcto');
                             return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
                         }
-
+// dump($fileType);die;
                     break;
                 case 59:  
                         //validate the year of student

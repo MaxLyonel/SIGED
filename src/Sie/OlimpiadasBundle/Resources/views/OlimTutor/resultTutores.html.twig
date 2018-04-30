@@ -45,7 +45,7 @@
                                     <input type="hidden" id="form__token" name="form[_token]" value="ZkRN9Kp-VjslhXafRKm76AhfT7ekMp2cDh0N9eMaS9o">
                                 </form>
                                     #}
-                                    {{form_start(form, {'attr':{'class':'form-inline', 'id':'regTutorFormId'}})}}
+                                    {{form_start(form, {'attr':{'data-toggle': 'validator','role': 'form', 'class':'form-inline', 'id':'regTutorFormId', 'onsubmit': 'return validarDatos();'}})}}
                                     <div class="form-group mx-sm-3 mb-2">
                                         {{form_widget(form.telefono1, {'attr':{'class':'form-control', 'placeholder':'telefono1'}})}}
                                         {{form_widget(form.telefono2, {'attr':{'class':'form-control', 'placeholder':'telefono2'}})}}
@@ -76,6 +76,25 @@
 </div>   
 
 </small>
+
+
+  <script>
+        var validarDatos = function(){
+            telefono1 = $('#form_telefono1').val();
+            telefono2 = $('#form_telefono2').val();
+            correo = $('#form_correoElectronico').val();
+            
+            emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+            fonoRegex = /^([0-9])*$/;
+
+            if(telefono1 == '' || correo == '' || !emailRegex.test(correo) || !fonoRegex.test(telefono1) || !fonoRegex.test(telefono2)){
+                alert('Ingrese datos en los campos requeridos o ajuste a los formatos válidos');
+                return false;
+            }
+        }
+    </script>
+
+
 
 
 

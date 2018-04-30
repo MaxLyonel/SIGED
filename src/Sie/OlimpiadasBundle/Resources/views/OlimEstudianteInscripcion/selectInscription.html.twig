@@ -428,22 +428,22 @@ var studentsRegister = function(){
 
   if(inscriptionSelected <= ruleCantidad){
   }else{
-     alert('El número de estudiantes seleccionados excede la cantidad permitida...');
+     alert('El número de estudiantes seleccionados para inscribir excede la cantidad permitida, revise su listado de inscritos');
      return false;
   }
 
     if (i == countnoselected) {
-        alert('Tiene que Seleccionar por lo menos una Inscripción y completar la informacion requerida...');
+        alert('Seleccione por lo menos a un estudiante del listado');
         return false;
     }
    
     if (!sw) {
-        alert('Observacion en la inscripcion:\nrevise el numero de telefono\nrevise el correo electronico');
+        alert('Revise el número de teléfono\nRevise el correo electrónico');
         return false;
     }
 
       formData = $('#studentsRegisterId').serialize();
-      if(confirm('esta seguro de realizar la inscripcion ... ?')){
+      if(confirm('¿Está seguro de realizar la inscripción?')){
 
         $.ajax({
              type: 'post',
@@ -531,7 +531,7 @@ var studentsRegister = function(){
       case 'Hasta:':
         if(inscriptionSelected <= ruleCantidad){
         }else{
-           alert('El numero de estudinates seleccionados excede con la condicion...');
+           alert('El número de estudiantes seleccionados excede con la cantidad permitida');
            return false;
         }
 
@@ -539,7 +539,7 @@ var studentsRegister = function(){
       case 'Igual a:':
         if(inscriptionSelected == ruleCantidad){
         }else{
-           alert('El numero de estudinates seleccionados no cumple con la condicion...');
+           alert('El número de estudiantes seleccionados no cumple con la condicion');
            return false;
         }
       break;
@@ -608,6 +608,7 @@ var studentsRegister = function(){
                       
                     $('#modal').empty();
                     $('#modal').append(data);
+                    $('.tooltips').tooltip();
 
                 },
                 statusCode: {
@@ -806,7 +807,10 @@ var studentsRegister = function(){
 
     var deleteInscriptionOlimpiada = function(jsonDataInscription, olimEstudianteInscripcionId){
 
-      if(confirm('... esta seguro de Eliminar la inscripcion?')){
+      if(confirm('Anteción!!!\nAl eliminar un estudiante:\nSi la cantidad de integrantes de un equipo es IGUAL A..., se eliminará a todos los integrantes del equipo.\nSi la cantidad de integrantes de un equipo es HASTA..., se eliminará solo el estudainte seleccionado.\n ...desea continuar?')){
+
+
+
         $.ajax({
                     type: 'post',
                     data: {'jsonDataInscription':jsonDataInscription, 'olimEstudianteInscripcionId':olimEstudianteInscripcionId},
@@ -854,7 +858,7 @@ var studentsRegister = function(){
     }
 
     
-    if(confirm('Esta seguro de Realizar la inscripcion?')){
+    if(confirm('Esta seguro de Realizar la inscripcion?\nLa inscripción no sera efectiva, si no cupmle con los requisitos para la inscripción')){
 
       let formData =  $('#inscriptionExternaIdForm').serialize();
            $.ajax({

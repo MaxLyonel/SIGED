@@ -503,13 +503,13 @@ class OlimEstudianteModificacionController extends Controller{
         );
         // if the getModalidadParticipacionTipo == 2, then show the informacion about the group
         if($objRuleSelected->getModalidadParticipacionTipo()->getId()==2){
-            return $this->redirectToRoute('oliminscriptions_listInscriptionByTutor', array('datainscription'=>json_encode($arrDataInscription)));
+            $arrDataInscription['groupId'] = true;
         }else{
         //if not show the common inscription 
-            return $this->redirectToRoute('oliminscriptions_listInscriptionByTutor', array('datainscription'=>json_encode($arrDataInscription)));
+            $arrDataInscription['groupId'] = false;
         }
-
-        // dump($objRuleSelected->getModalidadParticipacionTipo()->getId());die;
+        
+        return $this->redirectToRoute('oliminscriptions_listInscriptionByTutor', array('datainscription'=>json_encode($arrDataInscription)));
     }
 
     public function changeTutorTemplateAction(Request $request){
@@ -533,13 +533,14 @@ class OlimEstudianteModificacionController extends Controller{
         );
         // if the getModalidadParticipacionTipo == 2, then show the informacion about the group
         if($objRuleSelected->getModalidadParticipacionTipo()->getId()==2){
-            return $this->redirectToRoute('oliminscriptions_listInscriptionByTutorChange', array('datainscription'=>json_encode($arrDataInscription)));
+            $arrDataInscription['groupId'] = true;
         }else{
         //if not show the common inscription 
-            return $this->redirectToRoute('oliminscriptions_listInscriptionByTutorChange', array('datainscription'=>json_encode($arrDataInscription)));
+            $arrDataInscription['groupId'] = false;
         }
 
-        // dump($objRuleSelected->getModalidadParticipacionTipo()->getId());die;
+        return $this->redirectToRoute('oliminscriptions_listInscriptionByTutorChange', array('datainscription'=>json_encode($arrDataInscription)));
+
     }
 
     public function listInscriptionByTutorChangeAction(Request $request){
@@ -552,11 +553,8 @@ class OlimEstudianteModificacionController extends Controller{
         $arrDataInscription = json_decode($jsonDataInscription,true);
         //find information about the group in case if exists
         $objGroup = array();
-        $groupId = false;
-        if(isset($arrDataInscription['groupId'])){
-            $groupId = $arrDataInscription['groupId'];
-            $objGroup = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($groupId);
-        }
+        $groupId = $arrDataInscription['groupId'];
+        
         //get the rule data
         $regla = $this->get('olimfunctions')->getDataRule($arrDataInscription);
         
@@ -577,13 +575,11 @@ class OlimEstudianteModificacionController extends Controller{
         //get the send values
         $jsonDataInscription = $request->get('datainscription');
         $arrDataInscription = json_decode($jsonDataInscription,true);
+
         //find information about the group in case if exists
         $objGroup = array();
-        $groupId = false;
-        if(isset($arrDataInscription['groupId'])){
-            $groupId = $arrDataInscription['groupId'];
-            $objGroup = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($groupId);
-        }
+        $groupId = $arrDataInscription['groupId'];
+        
         //get the rule data
         $regla = $this->get('olimfunctions')->getDataRule($arrDataInscription);
         
@@ -784,7 +780,7 @@ class OlimEstudianteModificacionController extends Controller{
         $tutorid = $form['tutorid'];
         $sie = $form['sie'];
         $gestion = $form['gestion'];
-        $mensaje = "Registro actualizado satisfactoriamente.";
+        $mensaje = "Registro modificado satisfactoriamente.";
         $estado = "success";
 
         $olimEstudianteInscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findOneBy(array(

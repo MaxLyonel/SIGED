@@ -47,7 +47,7 @@ class OlimTutorController extends Controller{
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('olimtutor_listTutorBySie'))
             ->setMethod('POST')
-            ->add('sie', 'text', array('attr'=>array('value'=>$this->session->get('ie_id'))))
+            ->add('sie', 'text', array('attr'=>array('value'=>$this->session->get('ie_id'), 'maxlength'=>8)))
             ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($this->session->get('currentyear')=>$this->session->get('currentyear')), 'attr' => array()))
             ->add('sendData', 'submit', array('label'=>'Continuar'))
             ->getForm()
@@ -56,14 +56,13 @@ class OlimTutorController extends Controller{
 
     public function listTutorBySieAction(Request $request){
         $em = $this->getDoctrine()->getManager();
+        $mensaje = "";
+        $estado = "";
         //data ue
         if($request->getMethod()=='POST'){
                 // get the send data
                 $form = $request->get('form');
-                
-                // dump($form);die;
-                // $institucioneducativa = $form['sie'];
-                // $gestion = $form['gestion'];
+                //dump($form);die;
                     if(isset($form['newtutor'])){
                                 $arrSendData = json_decode($form['newtutor'],true);
                                 // dump($arrSendData);die;
@@ -93,9 +92,17 @@ class OlimTutorController extends Controller{
                         $this->saveUpdateDataTutor($form);
                     }
                     if(isset($form['deletetutor'])) {
-                        $this->deleteDataTutor($form);
+                        if($this->deleteDataTutor($form)){
+                            $mensaje = "Registro eliminado satisfactoriamente.";
+                            $estado = "success";
+                        }
+                        else {
+                            $mensaje = "No se puede eliminar al tutor debido a que tiene estudiantes inscritos.";
+                            $estado = "danger";
+                        }
                     }
                     if(isset($form['datosId'])) {
+                        
                         if($form['datosId'] > 0){
                             $datosId = $form['datosId'];
                             $datosDirector = $em->getRepository('SieAppWebBundle:OlimDirectorInscripcionDatos')->findOneById($datosId);
@@ -132,37 +139,48 @@ class OlimTutorController extends Controller{
             $institucioneducativa = $this->session->get('ie_id');
             $gestion = $this->session->get('currentyear');
         }
-
-        // array_pop($form);
-
+        //create db conexion
         $em = $this->getDoctrine()->getManager();
-        $objOlimRegistroOlimpiada = $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->findOneBy(array(
-            'gestionTipo'=>$form['gestion']
-        ));
-        
-        // dump($objOlimRegistroOlimpiada);
-        // $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findBy(array(
-        //     'institucioneducativa'  => $institucioneducativa,
-        //     'olimRegistroOlimpiada' => $objOlimRegistroOlimpiada->getId()
-        // ), array('id'=>'DESC'));
-        $form['olimRegistroOlimpiadaId'] = $objOlimRegistroOlimpiada->getId();
-        
-        $datainscription = array('sie'=>$institucioneducativa, 'OlimRegistroOlimpiadaId'=>$objOlimRegistroOlimpiada->getId());
-        $entities = $this->get('olimfunctions')->getTutores2($datainscription);
-                
-        // $director = $this->getDirectorInfo($form);
-        $director = $this->get('olimfunctions')->getDirectorInfo($form);
-        // dump($director);die;
-        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucioneducativa);
-        //dump($director);die;
-        return $this->render('SieOlimpiadasBundle:OlimTutor:listTutor.html.twig', array(
-            'entities' => $entities,
-            'formNewTutor' => $this->formNewTutor(json_encode($form))->createView(),
-            'director' => $director,
-            'institucion' => $institucion,
-            'gestion' => $gestion,
-            'jsonData' => json_encode($form) 
-        ));
+        // check if the UE existe
+        if($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucioneducativa)){
+                // array_pop($form);
+           
+            $objOlimRegistroOlimpiada = $em->getRepository('SieAppWebBundle:OlimRegistroOlimpiada')->findOneBy(array(
+                'gestionTipo'=>$form['gestion']
+            ));
+            
+            // dump($objOlimRegistroOlimpiada);
+            // $entities = $em->getRepository('SieAppWebBundle:OlimTutor')->findBy(array(
+            //     'institucioneducativa'  => $institucioneducativa,
+            //     'olimRegistroOlimpiada' => $objOlimRegistroOlimpiada->getId()
+            // ), array('id'=>'DESC'));
+            $form['olimRegistroOlimpiadaId'] = $objOlimRegistroOlimpiada->getId();
+            
+            $datainscription = array('sie'=>$institucioneducativa, 'OlimRegistroOlimpiadaId'=>$objOlimRegistroOlimpiada->getId());
+            $entities = $this->get('olimfunctions')->getTutores2($datainscription);
+                    
+            // $director = $this->getDirectorInfo($form);
+            $director = $this->get('olimfunctions')->getDirectorInfo($form);
+            // dump($director);die;
+            $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucioneducativa);
+            //dump($director);die;
+            return $this->render('SieOlimpiadasBundle:OlimTutor:listTutor.html.twig', array(
+                'entities' => $entities,
+                'formNewTutor' => $this->formNewTutor(json_encode($form))->createView(),
+                'director' => $director,
+                'institucion' => $institucion,
+                'gestion' => $gestion,
+                'jsonData' => json_encode($form),
+                'mensaje' => $mensaje,
+                'estado' => $estado
+            ));
+
+        }else{
+            $message = 'Código SIE no valido ... ';
+            $this->addFlash('novalido', $message);
+
+            return $this->redirectToRoute('olimtutor');
+        }
     }
 
 /*    private function getDirectorInfo($data){
@@ -188,7 +206,7 @@ class OlimTutorController extends Controller{
             ->setAction($this->generateUrl('olimtutor_newTutor'))
             ->setMethod('POST')
             ->add('data', 'hidden', array('attr'=>array('value'=>$data)))
-            ->add('newTutor', 'submit', array('label'=> 'Nuevo Tutor', 'attr'=>array('class'=>'btn btn-info btn-xs')))
+            ->add('newTutor', 'submit', array('label'=> 'Nuevo Tutor(a)', 'attr'=>array('class'=>'btn btn-info btn-md')))
             ->getForm()
             ;
     }
@@ -252,7 +270,7 @@ class OlimTutorController extends Controller{
             ->setAction($this->generateUrl('olimtutor_listTutorBySie'))
             ->setMethod('POST')
             ->add('telefono1', 'text')
-            ->add('telefono2', 'text')
+            ->add('telefono2', 'text', array('required'=>false))
             ->add('correoElectronico', 'text')
             ->add('sie', 'hidden', array('attr'=>array('value'=>$arrData['sie'])))
             ->add('gestion', 'hidden', array('attr'=>array('value'=>$arrData['gestion'])))
@@ -442,6 +460,16 @@ class OlimTutorController extends Controller{
 
     }
 
+    private function cancelForm($data){
+        
+        return $this->createFormBuilder()
+                ->setAction($this->generateUrl('olimtutor_listTutorBySie'))                
+                ->add('sie', 'hidden', array('data'=>$data['institucioneducativaid'] , 'mapped'=>false))
+                ->add('gestion', 'hidden', array('data'=>$data['gestiontipoid'] , 'mapped'=>false))
+                ->add('submit', 'submit', array('label' => 'Cancelar'))
+                ->getForm();          
+    }
+
     public function updateDataTutorAction(Request $request){
         $em = $this->getDoctrine()->getManager();                                                                                                                                                  
         //get the send data
@@ -457,6 +485,7 @@ class OlimTutorController extends Controller{
         return $this->render('SieOlimpiadasBundle:OlimTutor:updateDataTutor.html.twig', array(
             'form'=> $this->updateDataTutorForm($olimTutor, $form['jsonData'])->createView(),
             'dataTutorPersona'=>$dataTutorPersona,
+            'cancel_form' => $this->cancelForm($form)->createView(),
         ));
 
     }
@@ -466,9 +495,9 @@ class OlimTutorController extends Controller{
 
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('olimtutor_listTutorBySie'))
-            ->add('telefono1', 'text', array('data'=>$olimTutor->getTelefono1()))
-            ->add('telefono2', 'text', array('data'=>$olimTutor->getTelefono2()))
-            ->add('correoElectronico', 'text', array('data'=>$olimTutor->getCorreoElectronico()))
+            ->add('telefono1', 'text', array('required' => true, 'data'=>$olimTutor->getTelefono1()))
+            ->add('telefono2', 'text', array('required' => false, 'data'=>$olimTutor->getTelefono2()))
+            ->add('correoElectronico', 'text', array('required' => true, 'data'=>$olimTutor->getCorreoElectronico()))
             ->add('editutor', 'hidden', array('data'=>$olimTutor->getId()))
             ->add('olimtutorid', 'hidden', array('data'=>$olimTutor->getId()))
             ->add('sie', 'hidden', array('data'=>$arrData['sie'] , 'mapped'=>false))
@@ -518,6 +547,11 @@ class OlimTutorController extends Controller{
             if ($olimTutor) {
                 $olimEstudianteInscripcion = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array('olimTutor' => $olimTutor->getId()));
                 if ($olimEstudianteInscripcion) {
+                    return false;
+                }
+
+                $olimGrupoProyecto = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->findBy(array('olimTutor' => $olimTutor->getId()));
+                if ($olimGrupoProyecto) {
                     return false;
                 }
 

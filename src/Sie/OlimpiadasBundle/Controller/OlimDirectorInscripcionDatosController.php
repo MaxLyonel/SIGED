@@ -355,9 +355,9 @@ class OlimDirectorInscripcionDatosController extends Controller
 
         return $this->createFormBuilder()
                 ->setAction($this->generateUrl('olimtutor_listTutorBySie'))
-                ->add('telefono1', 'text',array('data'=> $entity ? $entity->getTelefono1() : ""))
-                ->add('telefono2', 'text',array('data'=> $entity ? $entity->getTelefono2() : ""))
-                ->add('correoElectronico', 'text',array('data'=> $entity ? $entity->getCorreoElectronico() : ""))
+                ->add('telefono1', 'text',array('required' => true, 'data'=> $entity ? $entity->getTelefono1() : ""))
+                ->add('telefono2', 'text',array('required' => false, 'data'=> $entity ? $entity->getTelefono2() : ""))
+                ->add('correoElectronico', 'text',array('required' => true, 'data'=> $entity ? $entity->getCorreoElectronico() : ""))
                 ->add('sie', 'hidden', array('data'=>$arrData['sie'] , 'mapped'=>false))
                 ->add('gestion', 'hidden', array('data'=>$arrData['gestion'] , 'mapped'=>false))
                 ->add('datosId', 'hidden', array('data'=>$data['datosId'], 'mapped'=>false))

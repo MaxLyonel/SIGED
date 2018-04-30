@@ -916,25 +916,40 @@ class OlimEstudianteInscripcionController extends Controller{
     public function showOptionDoInscriptionAction(Request $request){
         //create db conexion
         $em = $this->getDoctrine()->getManager();
-        
+        $allowInscription = true;
         //get the send values
         $jsonDataInscription = $request->get('datainscription');
         $arrDataInscription = json_decode($jsonDataInscription,true);
+
         //find information about the group in case if exists
         $objGroup = array();
         $groupId = false;
+        $regla = $this->get('olimfunctions')->getDataRule($arrDataInscription);
         if(isset($arrDataInscription['groupId'])){
             $groupId = $arrDataInscription['groupId'];
             $objGroup = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($groupId);
+          //get the rule data
+        
+        $studentsInGroup = $this->get('olimfunctions')->getNumberStudentsInGroup($arrDataInscription['groupId']);
+        // dump($regla->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros());
+        // dump($studentsInGroup);
+        // dump($regla);
+        // die;
+        
+        if( $studentsInGroup['takeitgroup'] == $regla->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros() ) {
+            $allowInscription = false;
         }
-        //get the rule data
-        $regla = $this->get('olimfunctions')->getDataRule($arrDataInscription);
+        }
+
+      
+
         
         return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:commonInscription.html.twig', array(
                'form' => $this->CommonInscriptionForm($arrDataInscription)->createView(),
                'groupId' => $groupId,
                'objGroup' => $objGroup,
                'regla' => $regla,
+               'allowInscription' => $allowInscription,
 
         ));
     }
@@ -1186,13 +1201,15 @@ class OlimEstudianteInscripcionController extends Controller{
 
         if(isset($arrDataSend['groupId'])){
 
-            $objStudentsInscriptions = $this->get('olimfunctions')->getStudentsInscriptionGroup($jsonDataInscription);
-                // dump($objStudentsInscriptions);die;
-                // $jsonDataInscription['takeit']=$objStudentsInscriptions['takeit'];
+            // $objStudentsInscriptions = $this->get('olimfunctions')->getStudentsInscriptionGroup($jsonDataInscription);
+            $objStudentsInscriptions = $this->get('olimfunctions')->getNumberStudentsInGroup($arrDataSend['groupId']);
+            // dump($objStudentsInscriptions);die;
+            $jsonDataInscription['takeitgroup']=$objStudentsInscriptions['takeitgroup'];
 
             $jsonDataInscription = json_encode($jsonDataInscription);
             $arrCorrectStudent = array();
-            if($objStudentsInscriptions['takeitgroup'] == $objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros()){
+          // * $objRules->getCantidadEquipos()
+            if($objStudentsInscriptions['takeitgroup'] == $objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros() ){
                 $limitInscription = false;
             }else{
 
@@ -1372,7 +1389,7 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($form);
 
         // dump(sizeof($form));die;
-        echo('Inscripción realizada...!!!!');die;
+        echo('Inscripción realizada satisfactoriamente');die;
     }
 
     public function studentsRegisterGroupAction(Request $request){
@@ -1438,7 +1455,7 @@ class OlimEstudianteInscripcionController extends Controller{
             // dump($form);
 
             // dump(sizeof($form));die;
-            echo('Inscripción realizada!!!!');die;
+            echo('Inscripción realizada satisfactoriamente');die;
                         
         } catch (Exception $e) {
              $em->getConnection()->rollback();
@@ -1665,15 +1682,61 @@ class OlimEstudianteInscripcionController extends Controller{
         $jsonDataInscription = $form['jsonDataInscription'];
         $arrDataInscription = json_decode($jsonDataInscription,true);
         $arrDataInscription['codigoRude'] = $form['codigoRude'];
-        // dump($arrDataInscription);die;
+        
         $objStudentInscription = $this->get('olimfunctions')->lookForOlimStudentByRudeGestion($arrDataInscription);
+
+
         if($objStudentInscription){
+            //get the rules
+            $regla = $this->get('olimfunctions')->getDataRule($arrDataInscription);
+
+            $fechaComparacion = $regla->getFechaComparacion()->format('d-m-Y');
+            $edadInicial = $regla->getEdadInicial();
+            $edadFinal = $regla->getEdadFinal();
+            $newStudentDate = date('d-m-Y', strtotime($objStudentInscription['fecha_nacimiento']) );
+            $value['fecha_nacimiento'] = $newStudentDate;
+            $studentYearsOld = $this->get('olimfunctions')->getYearsOldsStudent($newStudentDate, $fechaComparacion);
+            $value['yearsOld'] = $studentYearsOld[0];
+            $yearOldStudent = $value['yearsOld'];
+
+            //validate the year old
+            if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
+                
+            }else{
+                $studentExist = false;
+                $message = 'No se puede realizar la inscripción, debido a que el estudiante no cumple con la edad requerida.';
+                $this->addFlash('noExternal', $message);  
+            }
+
+           // dump($objStudentInscription);die;
+            $studentsInGroup = $this->get('olimfunctions')->getNumberStudentsInGroup($arrDataInscription['groupId']);
+            
+           // check if the limit is complete
+            if( $studentsInGroup['takeitgroup'] == $regla->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros() ) {
+                 $studentExist = false;
+                $message = 'No se puede realizar la inscripción, debido a que el equipo ya tiene la cantidad de inscritos permitido.';
+                $this->addFlash('noExternal', $message);
+            }
+
+            $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($arrDataInscription['materiaId'], $arrDataInscription['categoryId'], $arrDataInscription['gestiontipoid'], $objStudentInscription['estinsid']);
+            if(sizeof($objStudentsInOlimpiadas)>0 ){
+                $studentExist = false;
+                $message = 'No se puede realizar la inscripción debido a que el Estudiante ya se encuentra registrrado en esta área. ';
+                $this->addFlash('noExternal', $message);
+            }
+            
+            // check if the student has CI
+            if(!$objStudentInscription['carnet_identidad']){
+                $studentExist = false;
+                $message = 'No se puede realizar la inscripción debido a que el Estudiante no tiene registrado el número de carnet de identidad en el SIGED ';
+                $this->addFlash('noExternal', $message);
+            }
             //get the students number inscription
             $studentsInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array(
                 'estudianteInscripcion'=>$objStudentInscription['estinsid']
             ));
             //validate the number of inscription 
-            if(sizeof($studentsInscription) == 2){
+            if(sizeof($studentsInscription) > 2){
                 $studentExist = false;
                 $message = 'limite de inscripciones excedida... ';
                 $this->addFlash('noExternal', $message);

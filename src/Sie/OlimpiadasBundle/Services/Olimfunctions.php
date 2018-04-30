@@ -368,12 +368,11 @@ class Olimfunctions {
  
 
   public function getStudentsInOlimpiadas($materiaId, $ruleId, $gestion, $studentInscriptionId){
-
+// olim_reglas_olimpiadas_tipo_id = ".$ruleId." and 
     $sql = "
             
             select estudiante_inscripcion_id from olim_estudiante_inscripcion 
             where materia_tipo_id = ".$materiaId." and 
-            olim_reglas_olimpiadas_tipo_id = ".$ruleId." and 
             gestion_tipo_id = ".$gestion."  and
             estudiante_inscripcion_id = ".$studentInscriptionId." 
             "
@@ -460,7 +459,7 @@ class Olimfunctions {
     $query = $this->em->getConnection()->prepare(
       
       "
-          select e.codigo_rude, e.carnet_identidad,e.complemento, e.paterno, e.materno, e.nombre, ei.id as estinsid,ei.estadomatricula_tipo_id, ei.institucioneducativa_curso_id, 
+          select e.codigo_rude, e.carnet_identidad,e.complemento, e.paterno, e.materno, e.nombre,e.fecha_nacimiento ,ei.id as estinsid,ei.estadomatricula_tipo_id, ei.institucioneducativa_curso_id, 
           iec.nivel_tipo_id,iec.grado_tipo_id, iec.paralelo_tipo_id, iec.turno_tipo_id,
           nt.nivel,gt.grado, pt.paralelo, tt.turno, i.institucioneducativa, i.id as sie
           from estudiante e 
@@ -534,13 +533,20 @@ class Olimfunctions {
 
   public function getGroupsNumber($data){
     $query = $this->em->getConnection()->prepare(
-      
+      // select  count(*) as groupnumber from olim_grupo_proyecto 
+      //   where materia_tipo_id = ".$data['materiaId']." and
+      //   olim_reglas_olimpiadas_tipo_id = ".$data['categoryId']."  and
+      //   olim_tutor_id = ".$data['olimtutorid']."
       "
-        select  count(*) as groupnumber from olim_grupo_proyecto 
-        where materia_tipo_id = ".$data['materiaId']." and
-        olim_reglas_olimpiadas_tipo_id = ".$data['categoryId']."  and
-        olim_tutor_id = ".$data['olimtutorid']."
-           
+
+        select  count(*) as groupnumber 
+        from olim_grupo_proyecto  ogp
+        left join olim_tutor ot on (ogp.olim_tutor_id = ot.id)
+        where 
+        ogp.materia_tipo_id =  ".$data['materiaId']." and
+        ogp.olim_reglas_olimpiadas_tipo_id = ".$data['categoryId']."  and
+        ot.institucioneducativa_id = ".$data['institucioneducativaid']."
+        
       "
     );
     
@@ -565,8 +571,8 @@ class Olimfunctions {
                     left join estudiante e on ei.estudiante_id = e.id
             where iec.institucioneducativa_id = ".$data['sie']." and
             oei.materia_tipo_id = ".$data['materiaId']." and
-            iec.nivel_tipo_id = ".$data['nivelId']." and
-            iec.grado_tipo_id = ".$data['gradoId']." 
+            oei.olim_reglas_olimpiadas_tipo_id = ".$data['categoryId']."
+            
          
       "
     );
@@ -577,6 +583,23 @@ class Olimfunctions {
      return $objStudent;
     // return 'krlos';
   }
+
+
+
+   public function getNumberStudentsInGroup($groupId){
+
+    $sql = "
+            select count(*) as takeitgroup
+            from olim_inscripcion_grupo_proyecto oigp
+            where oigp.olim_grupo_proyecto_id = ".$groupId
+            ;
+    
+    $query = $this->em->getConnection()->prepare($sql);
+    
+    $query->execute();
+    return $query->fetch();
+
+   }
 
 
 

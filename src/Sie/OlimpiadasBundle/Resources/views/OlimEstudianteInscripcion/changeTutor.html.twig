@@ -10,9 +10,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-pencil"></i>
-                    <a href="{{path('infra_list_index')}}">
                        Modificar Inscripción
-                    </a>
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -28,7 +26,7 @@
                 <div class="panel panel-warning shadow">
                     <div class="panel-heading">
                         <div class="pull-left">
-                            <h3 class="panel-title">Tutor</h3>
+                            <h3 class="panel-title">Tutor(a)</h3>
                         </div>
                         <div class="pull-right">
                             <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
@@ -74,7 +72,7 @@
             <div class="panel rounded shadow">
                 <div class="panel-heading">
                     <div class="pull-left">
-                        <h3 class="panel-title">Datos de inscripción</h3>
+                        <h3 class="panel-title">Parámetros de búsqueda</h3>
                     </div>
                     <div class="pull-right">
                         {{form_start(cancelform)}}
@@ -92,11 +90,11 @@
                         <div class="row">
                             
                             <div class="col-md-6">
-                            MATERIA:
+                            ÁREA:
                                 {{form_widget(form.olimMateria, {'attr': {'class':'form-control', 'onchange':'getCategory(this.value)'} } )}}
                             </div>
                             <div class="col-md-6">
-                            CATEGORIA:
+                            CATEGORÍA:
                                 {{form_widget(form.category, {'attr': {'class':'form-control', 'onchange':'changeTutorTemplate(this.value)'} } )}}
                             </div>
                             

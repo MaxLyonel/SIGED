@@ -10,9 +10,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-pencil"></i>
-                    <a href="{{path('infra_list_index')}}">
                         Informaci&oacute;n de la Unidad Educativa
-                    </a>
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -113,32 +111,35 @@
                 </div>
         </div>
 
-    <div class="row">
-          <div class="col-md-10 col-md-offset-1">
+        {% if mensaje != "" %}
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="alert alert-{{estado}}">
+                        <i class="fa fa-info-circle fa-fw"></i> {{mensaje}}
+                    </div>        
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
               <!-- this is the beginner -->
 
                                     <!-- Start select fields - basic form -->
                         <div class="panel ">
-                            <div class="panel-heading">
-                                <div class="pull-right">
-                                    <p class="panel-title">
-                                        <form method ="POST" action="{{path('reporte_olimpiada_reporteOlimUE_pdf')}}" name="form" id="form" style="display:inline-block" onsubmit="return validaDatos()">
-                                            <input type="hidden" id="reporteOlim_sie" name="reporteOlim[sie]" value="{{institucion.id}}">
-                                            <input type="hidden" id="reporteOlim_gestion" name="reporteOlim[gestion]" value="{{gestion}}">
-                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="left" data-original-title="Descargar lista de inscritos"><i class='fa fa-file-pdf-o fa-2x'></i></button>
-                                        </form>
-                                        <!--a href="#"  data-toggle="tooltip" data-placement="top" data-original-title="Descargar Lista de Inscritos"></a-->
-                                    </p>
-                                    
-                                </div>
-                                <div class="clearfix"></div>
-                            </div><!-- /.panel-heading -->
                             <div class="panel-body no-padding">
                             <div class="row">
                                 <div class="col-md-12">
-                                {% if app.session.get('roluser') in [35,8,7,10,9,2] %}
-                                    {{form(formNewTutor)}}
-                                {% endif %}
+                                    <div class="pull-right">
+                                        {% if app.session.get('roluser') in [35,8,7,10,9,2] %}
+                                            {{form(formNewTutor, { 'attr': {'role': 'form', 'style': 'display:inline-block'} })}}
+                                        {% endif %}
+                                        <form method ="POST" action="{{path('reporte_olimpiada_reporteOlimUE_pdf')}}" name="form" id="form" style="display:inline-block">
+                                            <input type="hidden" id="reporteOlim_sie" name="reporteOlim[sie]" value="{{institucion.id}}">
+                                            <input type="hidden" id="reporteOlim_gestion" name="reporteOlim[gestion]" value="{{gestion}}">
+                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="left" data-original-title="Descargar lista de inscritos"><i class='fa fa-save'></i> Descargar lista de inscritos</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                             <table class="table">
@@ -212,7 +213,7 @@
                                                     {% if app.session.get('roluser') in [35,9] %}
 
                                                         <td class="text-center">
-                                                            <form action="{{path('olimtutor_listTutorBySie')}}" method="post">
+                                                            <form action="{{path('olimtutor_listTutorBySie')}}" method="POST">
                                                                     <input type="hidden" id="form_deletetutor" name="form[deletetutor]" value="{{entity.olimtutorid}}">
                                                                     <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
                                                                     <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">
@@ -224,7 +225,7 @@
                                                         </td>
                                                       
                                                         <td class="text-center">
-                                                            <form action="{{path('olimtutor_updateDataTutor')}}">
+                                                            <form action="{{path('olimtutor_updateDataTutor')}}" method="POST">
                                                                 <input type="hidden" id="form_jsonData" name="form[jsonData]" value="{{jsonData}}">
                                                                 <input type="hidden" name="form[personaid]" id="form_personaid" value="{{entity.personaid}}">
                                                                 <input type="hidden" name="form[olimtutorid]" id="form_olimtutorid" value="{{entity.olimtutorid}}">

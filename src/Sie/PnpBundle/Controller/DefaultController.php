@@ -2994,6 +2994,12 @@ GROUP BY depto
                 foreach ($result as $results) {
                     $estudiante_inscripcion_id[]=$results->getId();
                 }
+                // nuevo id de la tabla apodearado inscripcion
+                $result=$em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findByestudianteInscripcion($estudiante_inscripcion_id);
+                $estudiante_apoderado_inscripcion_id = array();
+                foreach ($result as $results) {
+                    $estudiante_apoderado_inscripcion_id[]=$results->getId();
+                }
                 // id de la tabla estudiante_asignatura
                 $result=$em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findByestudianteInscripcion($estudiante_inscripcion_id);
                 $estudiante_asignatura_id = array();
@@ -3015,6 +3021,12 @@ GROUP BY depto
                 $em->flush();
                 // Eliminar Asignaturas
                 $result=$em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findById($estudiante_asignatura_id);
+                foreach ($result as $element) {
+                    $em->remove($element);
+                }          
+                $em->flush();
+                // Eliminar Asignaturas
+                $result=$em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findById($estudiante_apoderado_inscripcion_id);
                 foreach ($result as $element) {
                     $em->remove($element);
                 }          
@@ -5323,6 +5335,12 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
         foreach ($result as $results) {
             $estudiante_nota_id[]=$results->getId();
         }
+        // nuevo id de la tabla apoderado inscripcion
+         $result=$em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findByestudianteInscripcion($estudiante_inscripcion_id);
+        $estudiante_apoderado_inscripcion_id = array();
+        foreach ($result as $results) {
+            $estudiante_apoderado_inscripcion_id[]=$results->getId();
+        }
         $em->getConnection()->beginTransaction();
         try {
             ////////////////ELMINANDO
@@ -5334,6 +5352,12 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             $em->flush();
             // Eliminar Asignaturas
             $result=$em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findById($estudiante_asignatura_id);
+            foreach ($result as $element) {
+                $em->remove($element);
+            }          
+            $em->flush();
+            // Eliminar Apoderado Inscripcion
+             $result=$em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findById($estudiante_apoderado_inscripcion_id);
             foreach ($result as $element) {
                 $em->remove($element);
             }          

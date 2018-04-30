@@ -619,7 +619,7 @@ class RegistroController extends Controller {
         }
 
         $query = $em->getConnection()->prepare("
-            select * from validacion_proceso where gestion_tipo_id = ".$gestion." and es_activo = 'f' and validacion_regla_tipo_id in (2,3,6,7,8,11,12,13) and obs like '%".$estudiante['codigo_rude']."%'
+            select * from validacion_proceso where gestion_tipo_id = ".$gestion." and es_activo = 'f' and validacion_regla_tipo_id in (2,3,6,7,8,11,12,13,16) and obs like '%".$estudiante['codigo_rude']."%'
         ");
         $query->execute();
         $estudianteObservado = $query->fetchAll();
@@ -675,9 +675,9 @@ class RegistroController extends Controller {
                                                             $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 2 pruebas individuales)');
                                                         }
                                                     }
-                                                    if ($cantidadIncritosGestionPruebaFase >= 3){
-                                                      $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (solo se permite 3 estudiantes por prueba individual en la disciplina de Atletismo)');
-                                                    }
+                                                    //if ($cantidadIncritosGestionPruebaFase >= 3){
+                                                    //  $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (solo se permite 3 estudiantes por prueba individual en la disciplina de Atletismo)');
+                                                    //}
                                         }
                                         if ($tipoDisciplinaPrueba["idDisciplina"] == 8){ //natacion
                                                     if ($prueba == 65 or $prueba == 66 or $prueba == 67 or $prueba == 68 or $prueba == 69 or $prueba == 70 or $prueba == 71 or $prueba == 72 or $prueba == 73 or $prueba == 74 or $prueba == 124 or $prueba == 125 or $prueba == 126 or $prueba == 127 or $prueba == 128 or $prueba == 129 or $prueba == 130 or $prueba == 131 or $prueba == 132 or $prueba == 133){ // promocional

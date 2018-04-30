@@ -10,9 +10,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-pencil"></i>
-                    <a href="{{path('infra_list_index')}}">
                        Actualizar datos
-                    </a>
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -27,14 +25,16 @@
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-info shadow">
                     <div class="panel-heading">
-                         <h3 class="panel-title">Datos Director(a)</h3>
+                        <div class="pull-left">
+                            <h3 class="panel-title">Datos Director(a)</h3>
+                        </div>
                         <div class="pull-right">
-                           {{form(cancel_form)}}
+                            {{form(cancel_form, { 'attr': {'style': 'display:inline-block'} })}}
                         </div>
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
-                    <div class="panel-body no-padding">
-                        {{form_start(edit_form, { 'attr': {'data-toggle': 'validator','role': 'form'} } )}}
+                    <div class="panel-body">
+                        {{form_start(edit_form, { 'attr': {'data-toggle': 'validator','role': 'form', 'style': 'display:inline-block', 'onsubmit': 'return validarDatos();'} } )}}
                         <div class="panel-body">
                             <div class="row">
                                 <div class="form-group col-md-3">
@@ -58,7 +58,6 @@
                             <div class="row">
                                 <div class="form-group col-lg-6 col-md-6">
                                     {{ form_widget(edit_form.submit, { 'attr': {'class': 'btn btn-success'} }) }}
-                                    {# <a href="{{ path('olimtutor_listTutorBySie') }}" class="btn btn-default">Cancelar</a> #}
                                 </div>
                             </div>
                         </div>
@@ -72,5 +71,18 @@
 {% block javascripts %}
     {{parent()}}
     <script>
+        var validarDatos = function(){
+            telefono1 = $('#form_telefono1').val();
+            telefono2 = $('#form_telefono2').val();
+            correo = $('#form_correoElectronico').val();
+            
+            emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+            fonoRegex = /^([0-9])*$/;
+
+            if(telefono1 == '' || correo == '' || !emailRegex.test(correo) || !fonoRegex.test(telefono1) || !fonoRegex.test(telefono2)){
+                alert('Ingrese datos en los campos requeridos o ajuste a los formatos válidos');
+                return false;
+            }
+        }
     </script>
 {% endblock %}
