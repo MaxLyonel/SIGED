@@ -37,6 +37,7 @@ class OlimArchivoController extends Controller {
 
 		$response = new JsonResponse();
 
+		// if($file and $_FILES['archivo']['error'] != 1){
 		if($file){
 
 			$em = $this->getDoctrine()->getManager();
@@ -47,12 +48,20 @@ class OlimArchivoController extends Controller {
 
 		    $ruta = $this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/documentos';
 		    $tipo = explode('/',$_FILES['archivo']['type']);
+
+
 		    // $nombre_archivo = md5(uniqid()).'.'.$tipo[1];
 		    $nombre_archivo = $sie.'_'.$gestion.'_'.$grupoId.'.'.$tipo[1];
 		    $archivador = $ruta.'/'.$nombre_archivo;
 		    //unlink($archivador);
 		    move_uploaded_file($_FILES['archivo']['tmp_name'], $archivador);
 
+		    $archivoAnterior = $grupo->getDocumentoPdf1();
+		    if($archivoAnterior == null or $archivoAnterior == ''){
+		    	$msg = 'Archivo subido correctamente';
+		    }else{
+		    	$msg = 'Archivo actualizado correctamente';
+		    }
 
 		    $grupo->setDocumentoPdf1($nombre_archivo);
 		    $em->persist($grupo);
@@ -60,7 +69,7 @@ class OlimArchivoController extends Controller {
 
 		    return $response->setData(array(
 		    	'status'=>201,
-		    	'msg'=>'Archivo subido correctamente',
+		    	'msg'=>$msg,
 		    	'categoriaId'=>$grupo->getOlimReglasOlimpiadasTipo()->getId(),
 		    	'archivo'=>$nombre_archivo,
 		    	'grupoId'=>$grupo->getId()
@@ -70,11 +79,19 @@ class OlimArchivoController extends Controller {
 
 		return $response->setData(array(
 			'status'=>404,
-			'msg'=>'Debe seleccionar un archivo PDF',
+			'msg'=>'Ocurrio un error al subir el archivo. Debe seleccionar un archivo PDF válido',
 			'categoriaId'=>null,
 			'archivo'=>'',
 			'grupoId'=>''
 		));
 
+	}
+
+	public function cargarPlantillaAction(Request $request){
+		$id = $request->get('id');
+		$em = $this->getDoctrine()->getManager();
+		$grupo = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($id);
+
+		return $this->render('SieOlimpiadasBundle:OlimArchivo:actualizar.html.twig', array('grupo'=>$grupo));
 	}
 }
