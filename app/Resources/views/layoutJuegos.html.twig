@@ -270,7 +270,7 @@
                                     <span class="arrow"></span>
                                 </a>
                                 <ul>
-                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 8 %}
+                                    {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 8 %}
                                         <li><a href="{{path('sie_juegos_registro_f1_index')}}">Primera Fase</a></li>
                                     {% endif %}
                                     {% if app.session.get('roluser') == 10 %}
