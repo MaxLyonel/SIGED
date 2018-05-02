@@ -721,7 +721,7 @@ var studentsRegister = function(){
 
     var deleteGroup = function(jsonDataInscription, groupId){
 
-      if(confirm('Esta seguro que desea eliminar el equipo o grupo?')){
+      if(confirm('¿Está seguro que desea eliminar el equipo o grupo?')){
          $.ajax({
                     type: 'post',
                     data: {'jsonDataInscription':jsonDataInscription, 'groupId':groupId},
@@ -854,21 +854,25 @@ var studentsRegister = function(){
 
 
   var saveExternalInscription = function(){
-    fono = $('#form_fono').val();
-    email = $('#form_email').val();
+    var fono = $('#form_fono').val();
+    var email = $('#form_email').val();
     re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+    if(!fono.replace(/^\s+/g, '').length){
+      alert('El número de telefono es requerido, favor ingresar un número de telefono válido');
+      return false;
+    }
     if(isNaN(fono)){
-      alert('ingrese un numero de telefono valido');
+      alert('Ingrese un número de telefono válido');
       return false;
     }
     if(!re.test(email)){
-      alert('ingrese un correo valido ...');
+      alert('Ingrese un correo válido');
       return false;
     }
 
     
-    if(confirm('¿Está seguro de realizar la inscripción?\nLa inscripción no sera efectiva, si no cupmle con los requisitos para la inscripción')){
+    if(confirm('¿Está seguro de realizar la inscripción?\nLa inscripción no sera efectiva, si no cumple con los requisitos para la inscripción')){
 
       let formData =  $('#inscriptionExternaIdForm').serialize();
            $.ajax({

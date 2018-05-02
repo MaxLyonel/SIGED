@@ -1553,7 +1553,7 @@ class OlimEstudianteInscripcionController extends Controller{
     private function inscriptionRoboticaForm($jsonDataInscription){
         return $this->createFormBuilder()
                 ->add('jsonDataInscription','hidden',array('data'=>$jsonDataInscription))
-                ->add('codigoRude', 'text', array('label'=>'Codigo Rude'))
+                ->add('codigoRude', 'text', array('label'=>'Codigo RUDE'))
                 ->getForm()
                 ;
     }
@@ -1726,7 +1726,7 @@ class OlimEstudianteInscripcionController extends Controller{
             $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($arrDataInscription['materiaId'], $arrDataInscription['categoryId'], $arrDataInscription['gestiontipoid'], $objStudentInscription['estinsid']);
             if(sizeof($objStudentsInOlimpiadas)>0 ){
                 $studentExist = false;
-                $message = 'No se puede realizar la inscripción debido a que el Estudiante ya se encuentra registrrado en esta área. ';
+                $message = 'No se puede realizar la inscripción debido a que el Estudiante ya se encuentra registrado en esta área. ';
                 $this->addFlash('noExternal', $message);
             }
             
@@ -1744,7 +1744,7 @@ class OlimEstudianteInscripcionController extends Controller{
             //validate the number of inscription 
             if(sizeof($studentsInscription) >= 2){
                 $studentExist = false;
-                $message = 'No se puede realizar la inscripción debido a que el Estudiante ya se encuentra regsitrado en dos áreas ';
+                $message = 'No se puede realizar la inscripción debido a que el Estudiante ya se encuentra registrado en dos áreas ';
                 $this->addFlash('noExternal', $message);
             }
             // save the data estinsid
@@ -1753,7 +1753,7 @@ class OlimEstudianteInscripcionController extends Controller{
             
         }else{
             $studentExist = false;
-            $message = 'Estudiante no existe ... ';
+            $message = 'RUDE del estuidante no encontrado, verifique e intente de nuevo.';
             $this->addFlash('noExternal', $message);
         }
 
