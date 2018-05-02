@@ -5,10 +5,10 @@
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h4 class="modal-title"> <i class="fa fa-upload"></i> Documento del proyecto</h4>
 		</div>
-		<form onsubmit="guardarArchivo(); return false;" id="formArchivo">
+		<form onsubmit="guardarArchivo(); return false;" id="formArchivo" enctype="multipart/form-data">
 			<input type="hidden" name="id" value="{{id}}">
 			<div class="modal-body">
-				<div class="row">
+				<div class="row" id="plantillaArchivo">
 					{% if grupo.documentoPdf1 is null or grupo.documentoPdf1 == "" %}
 						<div class="alert alert-info">
 							<i class="fa fa-info-circle"></i> Debe seleccionar un archivo en formato <span class="badge badge-info">PDF</span> con el contenido del proyecto.<br>
@@ -60,14 +60,13 @@
 					    </div>
 					{% endif %}
 				</div>
-				{# <a href="{{ path }}" class="embed">Download file</a> #}
 				
 				<div id="mensajeArchivo">
 				</div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<button type="submit" class="btn btn-primary">
+				<button type="submit" class="btn btn-primary" id="btnGuardar">
 					{% if grupo.documentoPdf1 is null or grupo.documentoPdf1 == "" %}
 					    Subir archivo
 					{% else %}
@@ -96,9 +95,9 @@
 		            if(extensionesPermitidas[i] == extension){
 		                // Verificamos el tamño
 		                var fileSize = $('#archivo')[0].files[0].size;
-		                console.log(fileSize);
+		                console.log('size:',fileSize);
 		                var sizeKiloByte = parseInt(fileSize / 1024);
-		                console.log(sizeKiloByte);
+		                console.log('sizekilo:',sizeKiloByte);
 		                if(sizeKiloByte < 5120){
 		                    permitida = true
 		                }else{
@@ -112,6 +111,7 @@
 		            $('#archivo').val('');
 		        }
 		    }
+		    console.log('archivo:',archivo);
 		});
 	})
 	function guardarArchivo(){
@@ -141,11 +141,24 @@
 		    		$('#mensajeArchivo').addClass('alert alert-success');
 		    		$('#mensajeArchivo').append('<p> <i class="fa fa-check"></i> '+data.msg+'</p>');
 
-		    		olimArchivo(data.grupoId);
+		    		// CARGA DE LA NUEVA PLANTILLA CON LA VISTA PREVIA DEL ARCHIVO SUBIDO
+		    		$.ajax({
+		    			url: Routing.generate('olimarchivo_cargar_plantilla'),
+		    			type: 'post',
+		    			data: {id: data.grupoId},
+		    			beforeSend: function(){
+		    				$("#plantillaArchivo").append('<div class="text-center"><img src="{{asset('img/loading-sm.gif')}}" class="" /></div>');
+		    			},
+		    			success: function(data){
+		    				$('#plantillaArchivo').empty();
+		    				$('#plantillaArchivo').append(data);
+		    			},
+		    			error: function(){
 
-		    		// var ruta = "{{ asset('uploads/olimpiadas/documentos/') }}";
+		    			}
+		    		});
 
-		    		// $('#rutaArchivo').attr('href', ruta + data.archivo);
+		    		$('#btnGuardar').text('Guardar cambios')
 		    	}
 		    	if(data.status == 404){
 		    		$('#mensajeArchivo').addClass('alert alert-info');
@@ -162,7 +175,7 @@
 			    	$('#mensajeArchivo').removeClass('alert-info');
 			    	$('#mensajeArchivo').removeClass('alert-danger');
 			    	$('#mensajeArchivo').empty();
-		    	}, 2000);
+		    	}, 10000);
 		    },
 		    error: function(data){
 		    	$('#mensajeArchivo').empty();

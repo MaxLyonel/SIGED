@@ -9,3 +9,9 @@ olimarchivo_upload:
     defaults: { _controller: "SieOlimpiadasBundle:OlimArchivo:upload" }
     options:
         expose: true
+
+olimarchivo_cargar_plantilla:
+    path:     /cargarPlantilla
+    defaults: { _controller: "SieOlimpiadasBundle:OlimArchivo:cargarPlantilla" }
+    options:
+        expose: true

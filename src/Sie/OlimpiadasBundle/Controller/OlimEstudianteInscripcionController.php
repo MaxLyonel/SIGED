@@ -934,11 +934,14 @@ class OlimEstudianteInscripcionController extends Controller{
         // dump($regla->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros());
         // dump($studentsInGroup);
         // dump($regla);
+        //dump($regla->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros());
         // die;
         
-        if( $studentsInGroup['takeitgroup'] == $regla->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros() ) {
-            $allowInscription = false;
-        }
+            if( $studentsInGroup['takeitgroup'] <= $regla->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros() ) {
+                
+            }else{
+                $allowInscription = false;
+            }
         }
 
       
@@ -1321,7 +1324,8 @@ class OlimEstudianteInscripcionController extends Controller{
         $form = $this->createFormBuilder()
                 ->add('jsonDataInscription','hidden', array('data'=>$jsonDataInscription))
                 ->add('jsonData','hidden', array('data'=>$jsonData));
-        
+        $arrDataInscription = json_decode($jsonDataInscription,true);
+        //  dump($arrDataInscription);die;
         if(isset($arrData['groupId'])){
         //     dump($objRules->getModalidadNumeroIntegrantesTipo()->getId());
         // dump($objRules->getModalidadNumeroIntegrantesTipo()->getCondicion());
@@ -1330,8 +1334,9 @@ class OlimEstudianteInscripcionController extends Controller{
             $form = $form ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegisterGroup()')));
             $form = $form->add('condicion', 'hidden', array('data'=>$objRules->getModalidadNumeroIntegrantesTipo()->getCondicion()));
             $form = $form->add('cantidad', 'hidden', array('data'=>$objRules->getModalidadNumeroIntegrantesTipo()->getCantidadMiembros()));
+            $form = $form->add('takeitgroup', 'hidden', array('data'=>$arrDataInscription['takeitgroup']));
         }else{
-            $arrDataInscription = json_decode($jsonDataInscription,true);
+            
             $form = $form ->add('register', 'button', array('label'=>'Registrar', 'attr'=>array('class'=>'btn btn-success btn-xs', 'onclick'=>'studentsRegister()')));
             $form = $form->add('cantidad', 'hidden', array('data'=>$objRules->getCantidadInscritosGrado()));
             $form = $form->add('takeit', 'hidden', array('data'=>$arrDataInscription['takeit']));
@@ -1548,7 +1553,7 @@ class OlimEstudianteInscripcionController extends Controller{
     private function inscriptionRoboticaForm($jsonDataInscription){
         return $this->createFormBuilder()
                 ->add('jsonDataInscription','hidden',array('data'=>$jsonDataInscription))
-                ->add('codigoRude', 'text', array('label'=>'Codigo Rude'))
+                ->add('codigoRude', 'text', array('label'=>'Codigo RUDE'))
                 ->getForm()
                 ;
     }
@@ -1721,7 +1726,7 @@ class OlimEstudianteInscripcionController extends Controller{
             $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($arrDataInscription['materiaId'], $arrDataInscription['categoryId'], $arrDataInscription['gestiontipoid'], $objStudentInscription['estinsid']);
             if(sizeof($objStudentsInOlimpiadas)>0 ){
                 $studentExist = false;
-                $message = 'No se puede realizar la inscripción debido a que el Estudiante ya se encuentra registrrado en esta área. ';
+                $message = 'No se puede realizar la inscripción debido a que el Estudiante ya se encuentra registrado en esta área. ';
                 $this->addFlash('noExternal', $message);
             }
             
@@ -1735,10 +1740,11 @@ class OlimEstudianteInscripcionController extends Controller{
             $studentsInscription = $em->getRepository('SieAppWebBundle:OlimEstudianteInscripcion')->findBy(array(
                 'estudianteInscripcion'=>$objStudentInscription['estinsid']
             ));
+            
             //validate the number of inscription 
-            if(sizeof($studentsInscription) > 2){
+            if(sizeof($studentsInscription) >= 2){
                 $studentExist = false;
-                $message = 'limite de inscripciones excedida... ';
+                $message = 'No se puede realizar la inscripción debido a que el Estudiante ya se encuentra registrado en dos áreas ';
                 $this->addFlash('noExternal', $message);
             }
             // save the data estinsid
@@ -1747,7 +1753,7 @@ class OlimEstudianteInscripcionController extends Controller{
             
         }else{
             $studentExist = false;
-            $message = 'Estudiante no existe ... ';
+            $message = 'RUDE del estuidante no encontrado, verifique e intente de nuevo.';
             $this->addFlash('noExternal', $message);
         }
 
