@@ -107,6 +107,7 @@ class DeclaracionJuradaController extends Controller {
                 }
                 $query->bindValue(':roluser', $rolOpcionTramite);
             } else {
+                $rolOpcionTramite = $this->session->get('roluser');
                 $query->bindValue(':roluser', $this->session->get('roluser'));
             }
             $query->execute();
