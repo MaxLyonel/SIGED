@@ -136,7 +136,7 @@ class DownloadFileSieController extends Controller {
           $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
           if($form['bimestre']>=1 && $form['gestion'] == $this->session->get('currentyear')){
           //the rule to donwload file with validations
-          $form['reglas'] = '2,3,8,12,13';
+          $form['reglas'] = '1,2,3,8,10,12,13,16';
 
           //first validations calidad
           /***********************************\
@@ -148,6 +148,7 @@ class DownloadFileSieController extends Controller {
           \************************************/
           $objObsQA = $this->getObservationQA($form);
           if ($objObsQA) {
+            
             $swCtrlMenu = false;
             // set the ctrol menu with false
             // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
@@ -180,6 +181,7 @@ class DownloadFileSieController extends Controller {
           $objAllowUE = $this->getObservationAllowUE($form);
 
           if ($objAllowUE) {
+            
             $swCtrlMenu = false;
             // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
             $em->getConnection()->commit();
@@ -222,6 +224,7 @@ class DownloadFileSieController extends Controller {
           // $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($form['sie']);
           // $errorValidation = $this->validateDownload($form);
           if ($inconsistencia) {
+
             $swCtrlMenu = false;
             // set the ctrol menu with false
             // $optionCtrlOpeMenu = $this->setCtrlOpeMenuInfo($form,$swCtrlMenu);
@@ -626,6 +629,7 @@ class DownloadFileSieController extends Controller {
     }
 
     private function getObservationQA($data){
+      
       //    and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
       $em = $this->getDoctrine()->getManager();
       $query = $em->getConnection()->prepare("

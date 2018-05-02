@@ -21,7 +21,7 @@ class DeclaracionJuradaController extends Controller {
     }
 
     /**
-     * declaracion jurada Index 
+     * declaracion jurada Index
      * @param Request $request
      * @return type
      */
@@ -32,6 +32,7 @@ class DeclaracionJuradaController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        die();
         return $this->render('SieAppWebBundle:DeclaracionJurada:find.html.twig', array(
                     'form' => $this->craeteformsearchsie()->createView()
         ));
@@ -83,7 +84,7 @@ class DeclaracionJuradaController extends Controller {
     }
 
     /*
-     * select * 
+     * select *
       from institucioneducativa i
       left join estudiante_inscripcion ei on (i.id = ei.institucioneducativa_id)
       left join estudiante e on (ei.estudiante_id=e.id)

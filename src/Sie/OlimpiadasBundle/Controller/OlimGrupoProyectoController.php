@@ -418,7 +418,7 @@ class OlimGrupoProyectoController extends Controller
         }else{
               
             if ($entity) {
-                $message = 'Grupo Eliminado correctamente...';
+                $message = 'Equipo Eliminado correctamente.';
                 $this->addFlash('yesGroupDelete', $message);
                 $em->remove($entity);
                 $em->flush();
