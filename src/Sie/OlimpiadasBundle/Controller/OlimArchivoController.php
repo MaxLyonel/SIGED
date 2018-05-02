@@ -47,6 +47,16 @@ class OlimArchivoController extends Controller {
 		    $grupoId = $grupo->getId();
 
 		    $ruta = $this->get('kernel')->getRootDir() . '/../web/uploads/olimpiadas/documentos';
+
+		    /**
+		     * Verificamos si existe el archivo para eliminarlo
+		     */
+		    if ($grupo->getDocumentoPdf1() != "" and $grupo->getDocumentoPdf1() != null) {
+		    	$nombreAnterior = $ruta.'/'.$grupo->getDocumentoPdf1();
+		    	unlink($nombreAnterior);	
+		    }
+
+
 		    $tipo = explode('/',$_FILES['archivo']['type']);
 
 
