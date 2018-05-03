@@ -842,7 +842,20 @@ class Notas{
                     if($tipo == 'Bimestre'){
                         $notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>5));
                         if($notaPromedio){
-                            $arrayPromedios[] = $notaPromedio->getNotaCuantitativa();
+                            /**
+                             * GESTION 2018 NO SE CONSIDERAN LAS MATERIAS DE
+                             * 1052 - CIENCIAS NATURALES: FISICA
+                             * 1053 - CIENCIAS NATURALES: QUIMICA
+                             * PARA LA PROMOCION DEL ESTUDIANTE
+                             */
+                            $codigoAsignatura = $a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId();
+                            if($gestion >= 2018){
+                                if($codigoAsignatura != 1052 and $codigoAsignatura != 1053){
+                                    $arrayPromedios[] = $notaPromedio->getNotaCuantitativa();    
+                                }
+                            }else{
+                                $arrayPromedios[] = $notaPromedio->getNotaCuantitativa();
+                            }
                         }
                     }
                     // Notas Trimestrales
@@ -860,7 +873,7 @@ class Notas{
                 }
 
 
-                if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($asignaturas) > 0 )){
+                if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($asignaturas) > 0 ) or ($gestion >= 2018 && count($asignaturas) == (count($arrayPromedios) - 2)) ){
                     $estadoAnterior = $inscripcion->getEstadomatriculaTipo()->getId();
                     $nuevoEstado = 5; // Aprobado
                     if($tipo == 'Bimestre'){
@@ -881,11 +894,18 @@ class Notas{
                     }
 
                     if(count($asignaturas) != count($arrayPromedios)){
-                        $nuevoEstado = 11;
+                        if($gestion >= 2018){
+
+                        }else{
+                            $nuevoEstado = 11;
+                        }
                     }
 
                     $tipoUE = $this->funciones->getTipoUE($sie,$gestion);
 
+                    /**
+                     * TipoUE = 3  ues modulares
+                     */
                     if($tipoUE['id'] != 3 or ($tipoUE['id'] == 3 and $nivel<13) or ($tipoUE['id'] == 3 and $nivel == 13 and $operativo >= 4 )){
                         if(in_array($estadoAnterior,$this->estadosActualizables)){
                             $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
