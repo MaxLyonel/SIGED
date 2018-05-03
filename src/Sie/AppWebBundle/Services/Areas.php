@@ -81,6 +81,7 @@ class Areas {
         $matsecc = array(1031, 1032, 1033, 1034, 1035, 1036, 1037, 1040, 1041, 1042, 1043, 1044);
 
         $matsecd = array(1031,1032,1033,1034,1035,1036,1037,1038,1040,1043,1044);
+
         $matsece = array(1031,1032,1033,1034,1035,1036,1037,1038,1040,1043,1044,1045);
         $matsecf = array(1031,1032,1033,1034,1035,1036,1037,1039,1040,1043,1044,1045);
 
@@ -89,6 +90,14 @@ class Areas {
         // Para unidades educativas nocturnas
         $matnocta = array(1031,1032,1033,1034,1035,1036,1037,1038,1040,1043,1044); // para 1 y 2
         $matnoctb = array(1031,1032,1033,1037,1040,1043,1044,1045); // para 3,4,5 y 6
+
+        /**
+         * Para gestion 2018 en adelante
+         */
+        $matsece2018 = array(1031,1032,1033,1034,1035,1036,1037,1038,1040,1043,1044,1051,1052,1053);
+        $matsecf2018 = array(1031,1032,1033,1034,1035,1036,1037,1039,1040,1043,1044,1051,1052,1053);
+        $matsecg2018 = array(1031,1032,1033,1034,1035,1036,1037,1040,1043,1044,1051,1052,1053);
+
 
 
         $idsAsignaturas = array();
@@ -220,7 +229,11 @@ class Areas {
                                     // Para unidades educativas nocturnas
                                     $idsAsignaturas = $matnoctb;
                                 }else{
-                                    $idsAsignaturas = $matsece;
+                                    if($gestion >= 2018){
+                                        $idsAsignaturas = $matsece2018;
+                                    }else{
+                                        $idsAsignaturas = $matsece;
+                                    }
                                 }
                                 break;
                             case 5:
@@ -230,10 +243,17 @@ class Areas {
                                     $idsAsignaturas = $matnoctb;
                                 }else{
                                     if($tipoUEId == 1 and $grado <= $gradoUEId){
-
-                                        $idsAsignaturas = $matsecf;
+                                        if($gestion >= 2018){
+                                            $idsAsignaturas = $matsecf2018;
+                                        }else{
+                                            $idsAsignaturas = $matsecf;
+                                        }
                                     }else{
-                                        $idsAsignaturas = $matsecg;
+                                        if($gestion >= 2018){
+                                            $idsAsignaturas = $matsecg2018;     
+                                        }else{
+                                            $idsAsignaturas = $matsecg;
+                                        }
                                     }
                                 }
                                 break;
@@ -374,9 +394,9 @@ class Areas {
                 /**
                  * Se deshabilita la opcion de agregar materia para gestion 2018
                  */
-                if ($gestion == 2018) {
-                    $vista = 0;
-                }
+                // if ($gestion == 2018) {
+                //     $vista = 0;
+                // }
 
                 return array(
                     'asignaturas'=>$asignaturas,
