@@ -42,7 +42,7 @@ class OlimMateriaTipoController extends Controller
 
         $entities = $em->getRepository('SieAppWebBundle:OlimMateriaTipo')->findBy(array(
             'olimRegistroOlimpiada'=>$id
-        ));
+        ), array('materia'=>'ASC'));
         $array = array();
         $cont = 0;
         foreach ($entities as $en) {
@@ -54,7 +54,10 @@ class OlimMateriaTipoController extends Controller
                 'fechaInsFin'=>$en->getFechaInsFin()->format('d-m-Y')
             );
 
-            $categorias = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findBy(array('olimMateriaTipo'=>$en->getId()));
+            $categorias = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findBy(
+                array('olimMateriaTipo'=>$en->getId()),
+                array('id'=>'ASC')
+            );
             if(count($categorias)>0){
                 foreach ($categorias as $ca) {
                     $array[$cont]['categorias'][] = array(
@@ -62,8 +65,6 @@ class OlimMateriaTipoController extends Controller
                         'categoria'=>$ca->getCategoria(),
                         'modalidad'=>$ca->getModalidadParticipacionTipo()->getModalidad()
                     );
-                    
-                    
                 }
             }else{
                 $array[$cont]['categorias'] = array();
