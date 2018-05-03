@@ -859,11 +859,11 @@ var studentsRegister = function(){
     re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if(!fono.replace(/^\s+/g, '').length){
-      alert('El número de telefono es requerido, favor ingresar un número de telefono válido');
+      alert('El número de teléfono es requerido, favor ingresar un número de teléfono válido');
       return false;
     }
     if(isNaN(fono)){
-      alert('Ingrese un número de telefono válido');
+      alert('Ingrese un número de teléfono válido');
       return false;
     }
     if(!re.test(email)){

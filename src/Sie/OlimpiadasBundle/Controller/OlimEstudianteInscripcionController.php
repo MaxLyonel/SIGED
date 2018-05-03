@@ -1753,7 +1753,7 @@ class OlimEstudianteInscripcionController extends Controller{
             
         }else{
             $studentExist = false;
-            $message = 'RUDE del estuidante no encontrado, verifique e intente de nuevo.';
+            $message = 'RUDE del estudiante no encontrado, verifique e intente de nuevo.';
             $this->addFlash('noExternal', $message);
         }
 
