@@ -684,7 +684,7 @@ class RegistroController extends Controller {
                                                         if ($estudiante["gestion_nacimiento"] >= 2004 and $estudiante["gestion_nacimiento"]<=2006){
                                                             $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                                                         } else {
-                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2003 a 2005 en el año de nacimiento)');
+                                                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2004 a 2006 en el año de nacimiento)');
                                                         }
                                                         if($inscripcionEstudianteEntity[0]['cant_pru_indi_nat_1214'] >= 3 and $tipoDisciplinaPrueba['tipoPrueba'] == 'Individual'){
                                                             $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 3 pruebas individuales)');
@@ -694,7 +694,7 @@ class RegistroController extends Controller {
                                                         if ($estudiante["gestion_nacimiento"] >= 1999 and $estudiante["gestion_nacimiento"]<=2003){
                                                             $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                                                         } else {
-                                                            $$inscripcionEstudianteEntitymsg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 10 a 12 años y 1998 a 2002 en el año de nacimiento)');
+                                                            $$inscripcionEstudianteEntitymsg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 15 a 19 años y 1999 a 2003 en el año de nacimiento)');
                                                         }
                                                         if($inscripcionEstudianteEntity[0]['cant_pru_indi_nat_1519'] >= 3 and $tipoDisciplinaPrueba['tipoPrueba'] == 'Individual'){
                                                             $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (No es posible participar en mas de 3 pruebas individuales)');
