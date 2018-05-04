@@ -126,7 +126,7 @@ class InscriptionIniPriTrueController extends Controller {
             $infoInscription=array();
             //look for the next level inscrption if it has
             while($sw &&  ($inscription = current($inscriptions))){
-                if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' || $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58' ){
+                if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' /*|| $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58'*/ ){
                   $infoInscription = $inscription;
                   $sw=false;
                 }

@@ -528,4 +528,32 @@ class OlimEstudianteInscripcion
     {
         return $this->olimTutor;
     }
+    /**
+     * @var string
+     */
+    private $transaccion;
+
+
+    /**
+     * Set transaccion
+     *
+     * @param string $transaccion
+     * @return OlimEstudianteInscripcion
+     */
+    public function setTransaccion($transaccion)
+    {
+        $this->transaccion = $transaccion;
+    
+        return $this;
+    }
+
+    /**
+     * Get transaccion
+     *
+     * @return string 
+     */
+    public function getTransaccion()
+    {
+        return $this->transaccion;
+    }
 }

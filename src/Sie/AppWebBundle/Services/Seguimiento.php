@@ -221,6 +221,26 @@ class Seguimiento {
     // dump($objStudentObservation);die;
   }
 
+
+  public function getAllObservationQA($data){
+      
+      //    and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
+      // $em = $this->getDoctrine()->getManager();
+      $query = $this->em->getConnection()->prepare("
+                                                select vp.*
+                                                from validacion_proceso vp
+                                                where vp.institucion_educativa_id = '".$data['sie']."' and vp.gestion_tipo_id = '".$data['gestion']."'
+                                                and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
+                                                and vp.es_activo = 'f'
+                                            ");
+          //
+      $query->execute();
+      $objobsQA = $query->fetchAll();
+
+
+      return $objobsQA;
+    }
+
 }
 
  ?>
