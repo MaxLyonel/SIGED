@@ -206,7 +206,7 @@ class OlimEstadisticaController extends Controller{
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'olim_est_Estudiantes_Participaciones_Nacional_f1_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Nacional_f1_v1_rcm.rptdesign&__format=pdf&codges='.$gestion));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -243,7 +243,7 @@ class OlimEstadisticaController extends Controller{
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'olim_est_Estudiantes_Participaciones_Nacional_f1_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Nacional_f1_v1_rcm.rptdesign&__format=xls&codges='.$gestion));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
