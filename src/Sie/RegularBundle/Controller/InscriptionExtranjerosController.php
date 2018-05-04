@@ -602,6 +602,7 @@ class InscriptionExtranjerosController extends Controller {
                 ->add('sw', 'hidden', array('data' => $sw))
                 ->add('newdata', 'hidden', array('data' => serialize($data)))
                 ->add('gestion', 'hidden', array('data'=>$gestion))
+                ->add('optionInscription', 'hidden', array('data'=>$aDataOption['optionInscription']))
                 ->add('save', 'hidden', array('label' => 'Verificar y Registrar', 'attr'=>array('onclick'=>'checkInscriptionExtranjero()')))
                 ;
                 if($aDataOption['optionInscription']==19){
@@ -1061,7 +1062,7 @@ class InscriptionExtranjerosController extends Controller {
      * @param type $g like grado
      * @return type
      */
-    public function findIEAction($id, $gestion) {
+    public function findIEAction($id, $gestion, $optionInscription) {
         $em = $this->getDoctrine()->getManager();
         //get the tuicion
         //select * from get_ue_tuicion(137746,82480002)
@@ -1073,6 +1074,11 @@ class InscriptionExtranjerosController extends Controller {
           $aTuicion = $query->fetchAll();
          */
         $aniveles = array();
+        if($optionInscription==19){
+            $arrCondition = array(1,2,3,11,12,13);
+        }else{
+            $arrCondition = array(1,2,11,12);
+        }
         // if ($aTuicion[0]['get_ue_tuicion']) {
         //get the IE
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
@@ -1086,8 +1092,8 @@ class InscriptionExtranjerosController extends Controller {
                 //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->where('iec.institucioneducativa = :sie')
                 ->andwhere('iec.gestionTipo = :gestion')
-                // ->andwhere('iec.nivelTipo in (:arrGrados)')
-                // ->setParameter('arrGrados', array(1,2,11,12))
+                ->andwhere('iec.nivelTipo in (:arrGrados)')
+                ->setParameter('arrGrados', $arrCondition)
                 ->setParameter('sie', $id)
                 ->setParameter('gestion', $gestion)
                 ->distinct()
@@ -1112,8 +1118,14 @@ class InscriptionExtranjerosController extends Controller {
      * @param type $sie
      * return list of grados
      */
-    public function findgradoAction($idnivel, $sie, $gestion) {
+    public function findgradoAction($idnivel, $sie, $gestion, $optionInscription) {
         $em = $this->getDoctrine()->getManager();
+
+        if($optionInscription==19){
+            $arrCondition = array(1,2,3,4,5,6);
+        }else{
+            $arrCondition = array(1,2);
+        }
         //get grado
         $agrados = array();
         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
@@ -1122,9 +1134,9 @@ class InscriptionExtranjerosController extends Controller {
                 //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->where('iec.institucioneducativa = :sie')
                 ->andWhere('iec.nivelTipo = :idnivel')
-                // ->andwhere('iec.gradoTipo in (:arrGrados)')
+                ->andwhere('iec.gradoTipo in (:arrGrados)')
                 ->andwhere('iec.gestionTipo = :gestion')
-                // ->setParameter('arrGrados', array(1,2))
+                ->setParameter('arrGrados', $arrCondition)
                 ->setParameter('sie', $sie)
                 ->setParameter('idnivel', $idnivel)
                 ->setParameter('gestion', $gestion)
@@ -1166,7 +1178,7 @@ class InscriptionExtranjerosController extends Controller {
                 ->orderBy('iec.paraleloTipo', 'ASC')
                 ->getQuery();
         $aParalelos = $query->getResult();
-        foreach ($aParalelos as $paralelo) {
+        foreach ($aParalelos as $paralelo) {    
             $aparalelos[$paralelo[1]] = $em->getRepository('SieAppWebBundle:ParaleloTipo')->find($paralelo[1])->getParalelo();
         }
 

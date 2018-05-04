@@ -398,12 +398,13 @@
     //call the ajax function by krlos
      function institucionEducativa(id) {
        gestion = $('#form_gestion').val();
+       optionInscription = $('#form_optionInscription').val();
 
          if (id.length > 7) {
 
              $.ajax({
                  type: 'get',
-                 url: Routing.generate('inscription_extranjeros_findIE', {'id': id, 'gestion':gestion}),
+                 url: Routing.generate('inscription_extranjeros_findIE', {'id': id, 'gestion':gestion, 'optionInscription':optionInscription}),
                  beforeSend: function () {
                  },
                  success: function (data) {
@@ -436,9 +437,10 @@
 
          sie = $('#form_institucionEducativa').val();
          gestion = $('#form_gestion').val();
+         optionInscription = $('#form_optionInscription').val();
          $.ajax({
              type: 'get',
-             url: Routing.generate('inscription_extranjeros_findgrado', {'idnivel': idnivel, 'sie': sie, 'gestion':gestion}),
+             url: Routing.generate('inscription_extranjeros_findgrado', {'idnivel': idnivel, 'sie': sie, 'gestion':gestion, 'optionInscription':optionInscription}),
              beforeSend: function () {
              },
              success: function (data) {
