@@ -150,10 +150,15 @@
                                     <div class="blog-sidebar">
                                         {# <h5 class="blog-subtitle">Acceso Directo Inscripciones</h5> #}
         {#                                 <p>Acceso Directo Inscripciones</p> #}
-
-                                        <div class="panel transparent">
-                                             <a href="{{ path('olimtutor')}}" class="btn btn-primary btn-lg btn-expand">Inscripciones OCEPB</a>
-                                        </div>
+                                        {% if app.session.get('roluser') == 20 %}
+                                            <div class="panel transparent">
+                                                 <a href="#" class="btn btn-primary btn-lg btn-expand">Inscripciones OCEPB</a>
+                                            </div>
+                                        {% else %}
+                                            <div class="panel transparent">
+                                                 <a href="{{ path('olimtutor')}}" class="btn btn-primary btn-lg btn-expand">Inscripciones OCEPB</a>
+                                            </div>
+                                        {% endif %}
 
                                     </div><!-- blog-sidebar -->
                                 </div>
