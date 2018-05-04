@@ -1,0 +1,89 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+    <div class="container">        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Departamento</h3>
+                        </div>
+                        <div class="pull-right">
+                            <form name="formEstadisticaPdf" id="formEstadisticaPdf"  action="{{ path('olimestadistica_nacional_pdf') }}" method="POST">  
+                                <button type="submit" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                    <i class="fa fa-file-pdf-o"></i>
+                                </button>
+                            </form> 
+                        </div>     
+                        <div class="pull-right">
+                            <form name="formEstadisticaXls" id="formEstadisticaXls"  action="{{ path('olimestadistica_nacional_xls') }}" method="POST">  
+                                <button type="submit" title="Descargar en formato XLS" class="btn btn-success">
+                                    <i class="fa fa-file-excel-o"></i>
+                                </button>
+                            </form> 
+                        </div>     
+                        <div class="clearfix"></div>
+                    </div>               
+                    <div class="panel-body">
+                        {% if estadistica is defined  %}
+                            {% set count = 0 %}
+                            {% set cantidadTotalGeneral = 0 %}
+                            {% for data in estadistica %}
+                                {% set count = count + 1 %}
+                                {% set id = data.id %}
+                                {% set codigo = data.codigo %}
+                                {% set lugar = data.nombre %}
+                                {% set cantidad = data.cantidad %}
+                                {% if id == 0 %}
+                                    {% set cantidadTotalGeneral = data.cantidad %}
+                                {% endif %}
+                                {% set porcentaje = (cantidad*100)/cantidadTotalGeneral %}
+
+                                {% if count == 1 %}
+                                    <span class="text-primary pull-right"><b>{{ cantidad }}</b></span><span class="text-primary"><b>{{ lugar }}</b></span>
+                                    {% if data.cantidad == 0 %}
+                                        <div class="progress progress-md">
+                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="0" title="0 Registrados" aria-valuemin="0" aria-valuemax="0" style="width: 0%">
+                                            </div>
+                                        </div><!-- /.progress -->
+                                    {% else %}
+                                        <div class="progress progress-md">
+                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" title="{{ porcentaje }}%" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                            </div>
+                                        </div><!-- /.progress -->
+                                    {% endif %}
+                                {% else %}
+                                    <span class="pull-right" style="width:150px; text-align:right"><b>{{ cantidad }}</b></span><span class="">{{ lugar }}</span>
+                                    {% if data.cantidad == 0 %}
+                                        <div class="progress progress-md">
+                                            <div class="progress-bar progress-bar-lilac" style="width: 0%" title="{{ cantidad|round(2,'floor') }}%">
+                                                <span class="sr-only">{{ porcentaje }}%</span>
+                                            </div><!-- /.progress -->
+                                        </div>
+                                    {% else %}
+                                        <div class="progress progress-md">
+                                            <div class="progress-bar progress-bar-lilac" style="width: {{ porcentaje }}%" title="{{ porcentaje|round(2,'floor') }}%">
+                                                <span class="sr-only">{{ porcentaje }}%</span>
+                                            </div><!-- /.progress -->
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+        $(function(){
+            
+        });        
+    </script>
+{% endblock %}

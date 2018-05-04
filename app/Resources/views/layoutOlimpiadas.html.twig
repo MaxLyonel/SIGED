@@ -296,7 +296,20 @@
                             </ul>
                         </li>
                     {% endif %}
+                    
 
+                    {% if app.session.get('roluser') in [8,35,20] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-bars"></i></span>
+                                <span class="text">Estadística</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('olimestadistica_nacional')}}">Nacional</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
                     <!-- Start navigation - dashboard -->
 
 
