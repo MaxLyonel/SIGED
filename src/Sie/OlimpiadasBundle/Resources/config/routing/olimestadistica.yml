@@ -1,0 +1,11 @@
+olimestadistica_nacional:
+    path:     /nacional
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:nacionalIndex" }
+
+olimestadistica_nacional_pdf:
+    path:     /nacional/pdf
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:nacionalPdf" }
+
+olimestadistica_nacional_xls:
+    path:     /nacional/xls
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:nacionalXls" }

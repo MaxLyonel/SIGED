@@ -29,6 +29,10 @@ class InfraestructuraH3SuspencionClasesTiempoTipo
      */
     private $gestionTipoId;
 
+    public function __toString(){
+        return $this->descripcion;
+    }
+
 
     /**
      * Get id

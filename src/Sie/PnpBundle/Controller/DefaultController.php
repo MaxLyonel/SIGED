@@ -23,6 +23,7 @@ use Sie\AppWebBundle\Entity\EstudianteNota;
 use Sie\AppWebBundle\Entity\PersonaCarnetControl;
 use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\PnpReconocimientoSaberes;
+use Sie\AppWebBundle\Entity\UsuarioRol;
 //use Sie\AppWebBundle\Entity\PnpSerialRude;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -2993,6 +2994,12 @@ GROUP BY depto
                 foreach ($result as $results) {
                     $estudiante_inscripcion_id[]=$results->getId();
                 }
+                // nuevo id de la tabla apodearado inscripcion
+                $result=$em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findByestudianteInscripcion($estudiante_inscripcion_id);
+                $estudiante_apoderado_inscripcion_id = array();
+                foreach ($result as $results) {
+                    $estudiante_apoderado_inscripcion_id[]=$results->getId();
+                }
                 // id de la tabla estudiante_asignatura
                 $result=$em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findByestudianteInscripcion($estudiante_inscripcion_id);
                 $estudiante_asignatura_id = array();
@@ -3014,6 +3021,12 @@ GROUP BY depto
                 $em->flush();
                 // Eliminar Asignaturas
                 $result=$em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findById($estudiante_asignatura_id);
+                foreach ($result as $element) {
+                    $em->remove($element);
+                }          
+                $em->flush();
+                // Eliminar Asignaturas
+                $result=$em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findById($estudiante_apoderado_inscripcion_id);
                 foreach ($result as $element) {
                     $em->remove($element);
                 }          
@@ -3107,11 +3120,13 @@ GROUP BY depto
                                 WHEN institucioneducativa_curso.institucioneducativa_id = 82480050 THEN
                                     'PANDO'                         
                               END AS depto,
-                         institucioneducativa_curso.lugar
+                         institucioneducativa_curso.lugar,icd.esactivo
 
                 from institucioneducativa_curso 
                 inner join maestro_inscripcion 
                 on institucioneducativa_curso.maestro_inscripcion_id_asesor = maestro_inscripcion .id
+                inner join institucioneducativa_curso_datos icd 
+                on icd.institucioneducativa_curso_id=institucioneducativa_curso.id
                 inner join persona 
                 on maestro_inscripcion .persona_id = persona.id
                                 inner join 
@@ -3178,6 +3193,7 @@ order by t2.fecha_inicio";
             $datos_filas["id"] = $p["id"];
             $datos_filas["depto"] = $p["depto"];
             $datos_filas["lugar"] = $p["lugar"];
+            $datos_filas["esactivo"] = $p["esactivo"];
             $filas[] = $datos_filas;
         } 
        
@@ -3798,10 +3814,12 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
      public function listararchivos_editnewAction($id,$gestion,Request $request)
     {
         $form = $this->createForm(new FacilitadorType());
-        
         $data = $form->getData();
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
+        $usuario_id = $this->session->get('userId');
+        $rol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneByUsuario($usuario_id);    
+        $rol=$rol->getRolTipo()->getId();
         /////SACAMOS LA GESTION INICIAL Y FINAL
         $query = "SELECT min((extract(year from ic.fecha_fin))) as gestion_ini,
                         max((extract(year from ic.fecha_fin))) as gestion_fin 
@@ -3817,14 +3835,18 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $gestion_fin_t = $p["gestion_fin"];
         } 
              
-
+        ///////MODOFICAR FECHA
 
         $userId = $this->session->get('userId');
         if($request->getMethod()=="POST") {
             $curso_id=$request->get("curso_id");
+            $fecha_inicio=$request->get("fecha_inicio");
             $fecha_fin=$request->get("fecha_fin");
+            $gestion_g= substr($fecha_fin,-4);
             $product = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($curso_id);
+            $product->setFechaInicio(\DateTime::createFromFormat('d/m/Y', $fecha_inicio));
             $product->setFechaFin(\DateTime::createFromFormat('d/m/Y', $fecha_fin));
+            $product->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion_g));
             $em->flush();
         }
 
@@ -3836,7 +3858,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $cant_est=0;
             $estudiantes = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findByinstitucioneducativaCurso($id);
             $cant_est=count($estudiantes);//cantidad de estudiantes
-            if($cant_est>=4)//probar deberia ser 8 CAMBIAR!!!!!!
+            if($cant_est>=4 or $rol=8 or $rol=21)//probar deberia ser 8 CAMBIAR!!!!!!
             // 2.- QUE SI UN ESTUDIANTE TIENE NOTA NO DEBE TONAR NOTA 0, OSEA TODO 0 O NADA DE NOTA 0
             {
                 //sacamos a todos los estudiantes_inscripcion_id
@@ -3889,12 +3911,23 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                     ); 
                         }
                         else{
-                            $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
-                            $obs_anterior=$result->getObs();
-                            $obs_nuevo=$obs_anterior."-".$userId;
-                            $result->setObs($obs_nuevo);
-                            $result->setEsactivo(true);
-                            $em->flush();
+                            
+                            if(strlen($userId)<2){
+                                $this->get('session')->getFlashBag()->add(
+                                'error',
+                                'Perdió su sesión por mucho tiempo de inactividad, vuelva a entrar al Sistema!!!.'
+                                );  
+                            }
+                            else{
+                                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($id);
+                                $obs_anterior=$result->getObs();
+                                $obsnew = explode("-", $obs_anterior);   
+                                $obsnew= $obsnew[0];
+                                $obs_nuevo=$obsnew."-".$userId;
+                                $result->setObs($obs_nuevo);
+                                $result->setEsactivo(true);
+                                $em->flush();
+                            }
                         }
                 }  
                 else
@@ -3948,6 +3981,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
 
         ////////CONOCER EL NOMBRE DE USUARIO Y EL ROL SI ES PEDAGOGO O CONSOLIDADOR
         $usu=$em->getRepository('SieAppWebBundle:Usuario')->findOneById($userId);
+        $usuario_idd=$usu->getId();
         $username = $usu->getUsername();        
         $roluser = $this->session->get('roluser');
 
@@ -4079,9 +4113,63 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $filas[] = $datos_filas;
             }
         }
+            ///////////////// SI GESTION ES 0 ENTONCES HACEMOS EL REPORTE
+        $reporte_c=array();
+        if ($gestion==0){
+            /////VEMOS EL ROL Y DEPENDIENDO HACEMOS EL QUERY///
+            $q1=$q1w="";
+            ///SI ES INFORMATICO DEPARTAMNTEA
+            if ($roluser==21){$q1="ic.institucioneducativa_id,";$q1w="where ic.institucioneducativa_id=$id";}
+            if ($roluser==29){$q1="ic.institucioneducativa_id,split_part(icd.obs, '-', 1),";$q1w="where ic.institucioneducativa_id=$id and split_part(icd.obs, '-', 1)='$usuario_idd'";}
+
+            $query = "
+            select $q1 extract(year from fecha_fin) as gestion,icd.esactivo,COUNT(*) as cantidad
+            from institucioneducativa_curso_datos icd
+            join institucioneducativa_curso ic on icd.institucioneducativa_curso_id=ic.id
+            join lugar_tipo lt1 on lt1.id=icd.lugar_tipo_id_seccion
+            $q1w
+            group by $q1 extract(year from fecha_fin),icd.esactivo
+            order by gestion,icd.esactivo
+                ";
+            $stmt = $db->prepare($query);
+            $params = array();
+            $stmt->execute($params);
+            $po = $stmt->fetchAll();
+            
+            $datos_filas = array();
+            $reporte=array();
+            
+            $cerrado=0;$abierto=0;$total_c=0;$abierto_t=0;$cerrado_t=0;$total_t=0;
+            
+            for($gg=$gestion_ini_t;$gg<=$gestion_fin_t;$gg++){
+                foreach ($po as $p) {
+                    if($gg==$p["gestion"]){
+                        if($p["esactivo"]==1) $cerrado=$p["cantidad"]; else $abierto=$p["cantidad"];
+                        $total_c=$cerrado+$abierto;
+                    }
+                }
+                $reporte["gestion"]=$gg;
+                $reporte["abierto"]=$abierto;
+                $abierto_t=$abierto_t+$abierto;
+                $reporte["cerrado"]=$cerrado;
+                $cerrado_t=$cerrado_t+$cerrado;
+                $reporte["total_c"]=$total_c;
+                $total_t=$total_t+$total_c;
+                if($total_c!=0)
+                    $reporte_c[]=$reporte;
+                $cerrado=0;$abierto=0;$total_c=0;
+            }
+            $reporte["gestion"]="Total";
+            $reporte["abierto"]=$abierto_t;
+            $reporte["cerrado"]=$cerrado_t;
+            $reporte["total_c"]=$total_t;
+            $reporte_c[]=$reporte;
+        }
+       
           
         return $this->render('SiePnpBundle:Default:listararchivos_editnew.html.twig', array(
             'totales' => $filas,
+            'reporte_c'=>$reporte_c,
             'idd'=>$id,
             'gestion_ini_t'=>$gestion_ini_t,
             'gestion_fin_t'=>$gestion_fin_t,
@@ -4481,8 +4569,11 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         $gestion_ini= $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($curso_id);
         $gestion_ini=$gestion_ini->getFechaInicio();
         $gestion_ini= date_format($gestion_ini,"Y");
-       
-        if($gestion_ini<=2015){////////como es 2009-2015 no debe entrar por los controles
+
+        $usuario_id = $this->session->get('userId');
+        $rol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneByUsuario($usuario_id);    
+        $rol=$rol->getRolTipo()->getId();
+        if($gestion_ini<=2015 or $rol==8){////////como es 2009-2015 no debe entrar por los controles o si mi usuario ingrsa
             $po = array();
             $po=$this->retornar_estudianteAction($where);
             $filas = array();
@@ -5212,14 +5303,14 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                     }  
                 }     
                 $this->get('session')->getFlashBag()->add(
-                    'notice',
+                    'success',
                     'Estudiante registrado con exito.'
                     );      
             $em->getConnection()->commit();
             }
             catch (Exception $e) {
                  $em->getConnection()->rollback();
-                 $this->get('session')->getFlashBag()->add(
+                 $this->get('error')->getFlashBag()->add(
                     'notice',
                     'Existio un problema al insertar al estudiante.'
                     );      
@@ -5244,6 +5335,12 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
         foreach ($result as $results) {
             $estudiante_nota_id[]=$results->getId();
         }
+        // nuevo id de la tabla apoderado inscripcion
+         $result=$em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findByestudianteInscripcion($estudiante_inscripcion_id);
+        $estudiante_apoderado_inscripcion_id = array();
+        foreach ($result as $results) {
+            $estudiante_apoderado_inscripcion_id[]=$results->getId();
+        }
         $em->getConnection()->beginTransaction();
         try {
             ////////////////ELMINANDO
@@ -5255,6 +5352,12 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             $em->flush();
             // Eliminar Asignaturas
             $result=$em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findById($estudiante_asignatura_id);
+            foreach ($result as $element) {
+                $em->remove($element);
+            }          
+            $em->flush();
+            // Eliminar Apoderado Inscripcion
+             $result=$em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findById($estudiante_apoderado_inscripcion_id);
             foreach ($result as $element) {
                 $em->remove($element);
             }          
@@ -5392,8 +5495,6 @@ public function registrar_cursoAction(Request $request){
         if($ciclo==2 and $grado==1){$nroMaterias=5;$modulo=3;};
         if($ciclo==2 and $grado==2){$nroMaterias=3;$modulo=4;};
         
-
-        
         ///sacando datos para gurdar        
         // id de la tabla maestro_inscripcion
         //$result=$em->getRepository('SieAppWebBundle:PersonaCarnetControl')->findOneByCarnet($ci);
@@ -5420,6 +5521,7 @@ public function registrar_cursoAction(Request $request){
                 $materias = array('2000','2002','2006','2007');
          
         }
+        
         $em->getConnection()->beginTransaction();
         try {
             //Maestro Inscripcion
@@ -6132,6 +6234,188 @@ public function crear_curso_automaticoAction(Request $request){
 
     }   
 }
+
+public function abrir_cursoAction(Request $request){
+    if($request->getMethod()=="POST") {
+        $cursos=$request->get("cursos");
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = "SELECT id,obs,esactivo
+                  FROM institucioneducativa_curso_datos 
+                  WHERE institucioneducativa_curso_id 
+                  IN ($cursos)";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $em->getConnection()->beginTransaction();
+        try{
+            foreach ($po as $p) {
+                $id = $p["id"];
+                $obs = $p["obs"];
+                $esactivo = $p["esactivo"];
+                $obsnew = explode("-", $obs);   
+                $obsnew= $obsnew[0];
+                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->find($id);
+                $result->setObs($obsnew);
+                $result->setEsactivo(false);
+                $em->flush();     
+                }
+                 $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    'Curso(s) Abierto(s) con Exito!.'
+                    ); 
+                $em->getConnection()->commit();
+            }
+            catch (Exception $e) {
+                $em->getConnection()->rollBack();
+                $this->get('session')->getFlashBag()->add(
+                    'error',
+                    'Existio un problema al Editar las notas.'
+                    );      
+                throw $e;
+                    return $this->render('SiePnpBundle:Default:abrir_curso.html.twig');
+            }
+    }
+
+     return $this->render('SiePnpBundle:Default:abrir_curso.html.twig');
+}
+
+public function cambiar_facilitadorAction(Request $request){
+    if($request->getMethod()=="POST") {
+        $curso_id=$request->get("curso_id");
+        $facilitador_id=$request->get("facilitador_id");
+        $facilitador_ci=$request->get("facilitador_ci");
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $em->getConnection()->beginTransaction();
+        try{
+            $curso=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($curso_id);
+            $maestroinscripcion_id=$curso->getMaestroInscripcionAsesor()->getId(); 
+            $maestroinscripcion=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroinscripcion_id);
+            $persona=$em->getRepository('SieAppWebBundle:Persona')->find($facilitador_id);
+            $curso->setFacilitador($facilitador_ci);
+            $maestroinscripcion->setPersona($persona);
+            $em->flush();     
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Cambio de facilitador a curso correcto!!!'
+                ); 
+                $em->getConnection()->commit();
+        }
+        catch (Exception $e) {
+            $em->getConnection()->rollBack();
+            $this->get('session')->getFlashBag()->add(
+                'error',
+                'Existio un problema al cambiar de facilitador al curso'
+                );      
+            throw $e;
+        }
+        return $this->render('SiePnpBundle:Default:cambiar_facilitador.html.twig');
+    }
+    return $this->render('SiePnpBundle:Default:cambiar_facilitador.html.twig');
+}
+
+public function cambiar_facilitador_encontradoAction(Request $request,$ci,$complemento,$curso_id){
+    $em = $this->getDoctrine()->getManager();
+    $db = $em->getConnection();
+    //BUSCAR USUARIO Y REVISAR SU DEPARTAMENTO PARA MIRAR SOLO SU DEPARTAMNETO
+    $userId = $this->session->get('userId');
+     $query = "
+           SELECT lt.lugar as lugar
+           FROM lugar_tipo lt,
+           usuario_rol ur 
+           WHERE ur.lugar_tipo_id=lt.id and ur.esactivo=true and ur.usuario_id=$userId";
+    $stmt = $db->prepare($query);
+    $params = array();
+    $stmt->execute($params);
+    $po = $stmt->fetchAll();
+    $filas = array();
+    $datos_filas = array();
+    foreach ($po as $p) {
+        $lugar_usuario = $p["lugar"];
+    }
+
+    $lugar_usuario=strtoupper($lugar_usuario);
+   
+    switch ($lugar_usuario) {
+        case 'CHUQUISACA': $id_dep=80480300; break;
+        case 'LA PAZ': $id_dep=80730794; break;
+        case 'COCHABAMBA': $id_dep=80980569; break;
+        case 'ORURO': $id_dep=81230297; break;
+        case 'POTOSI': $id_dep=81480201; break;
+        case 'TARIJA': $id_dep=81730264; break;
+        case 'SANTA CRUZ': $id_dep=81981501; break;
+        case 'BENI': $id_dep=82230130; break;
+        case 'PANDO': $id_dep=82480050; break;
+        default: $id_dep=0; break;
+    }
+    //BUSCAR CURSO
+    if($id_dep==0)$where="";else $where="and ic.institucioneducativa_id=$id_dep";
+    $curso_existe=0;
+
+    $query = "SELECT ic.id,lt3.lugar as depto,lt2.lugar as provincia,lt1.lugar as municipio,
+    icd.localidad,p.carnet,p.complemento,p.nombre,p.paterno,p.materno,
+    ic.fecha_inicio,ic.fecha_fin,ic.ciclo_tipo_id as bloque, 
+    ic.grado_tipo_id as parte,icd.esactivo
+    FROM institucioneducativa_curso ic
+    join institucioneducativa_curso_datos icd on icd.institucioneducativa_curso_id=ic.id
+    join maestro_inscripcion mi on ic.maestro_inscripcion_id_asesor=mi.id
+    join persona p on p.id=mi.persona_id
+    join lugar_tipo lt1 on lt1.id=icd.lugar_tipo_id_seccion
+    join lugar_tipo lt2 on lt2.id=lt1.lugar_tipo_id
+    join lugar_tipo lt3 on lt3.id=lt2.lugar_tipo_id
+    where icd.institucioneducativa_curso_id=$curso_id $where ";
+    $stmt = $db->prepare($query);
+    $params = array();
+    $stmt->execute($params);
+    $po = $stmt->fetchAll();
+    $curso = array();
+    foreach ($po as $p) {
+        $curso["carnet"] = $p["carnet"];
+        $curso["complemento"] = $p["complemento"];
+        $curso["nombre"] = $p["nombre"];
+        $curso["paterno"] = $p["paterno"];
+        $curso["materno"] = $p["materno"];
+        $curso["fecha_inicio"] = $p["fecha_inicio"];
+        $curso["fecha_fin"] = $p["fecha_fin"];
+        $curso["bloque"] = $p["bloque"];
+        $curso["parte"] = $p["parte"];
+        $curso["id"] = $p["id"];
+        $curso["depto"] = $p["depto"];
+        $curso["provincia"] = $p["provincia"];
+        $curso["municipio"] = $p["municipio"];
+        $curso["localidad"] = $p["localidad"];
+        $curso["esactivo"] = $p["esactivo"];
+      
+        $curso_existe=1;
+    }
+    //BUSCAR PERSONA
+    $servicioPersona = $this->get('sie_app_web.persona');
+    $persona = $servicioPersona->buscarPersona($ci,$complemento,0);  
+    $facilitador_existe=0; 
+    $facilitador = array(); 
+    if($persona->type_msg === "success"){   
+        $facilitador = array();
+        $facilitador['id'] = $persona->result[0]->id;
+        $facilitador['paterno'] = $persona->result[0]->paterno;
+        $facilitador['materno'] = $persona->result[0]->materno;
+        $facilitador['nombre'] = $persona->result[0]->nombre;
+        $fecha_nac=$persona->result[0]->fecha_nacimiento;
+        $facilitador['fecha_nac'] = $fecha_nac;
+        $facilitador['genero'] = $persona->result[0]->genero_tipo_id;
+        $facilitador['ci'] = $persona->result[0]->carnet;
+        $facilitador['complemento'] = $persona->result[0]->complemento;
+        $facilitador_existe=1;    
+    }
+    /*
+    else{
+        echo '<div class="alert alert-danger">'.$persona->msg.'</div>';die;
+    }
+    */
+    return $this->render('SiePnpBundle:Default:cambiar_facilitador_encontrado.html.twig',array('curso'=>$curso,'curso_existe'=>$curso_existe,'facilitador'=>$facilitador,'facilitador_existe'=>$facilitador_existe));
+}
+
 
 /////////////////////////////////busquedas//////////////////////
 // buscar datos estudiantes

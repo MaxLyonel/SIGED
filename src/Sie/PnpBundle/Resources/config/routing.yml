@@ -250,8 +250,20 @@ sie_pnp_reconocimiento_saberes_imprimir:
     options:
          expose: true
 
-sie_pnp_reporte_con_estadistica:
-    path:     /pnp/reporte_con_estadistica
-    defaults: { _controller: SiePnpBundle:Reporte:reporte_con_estadistica }
+sie_pnp_abrir_curso:
+    path:     /pnp/abrir_curso
+    defaults: { _controller: SiePnpBundle:Default:abrir_curso }
+    options:
+         expose: true
+         
+sie_pnp_cambiar_facilitador:
+    path:     /pnp/cambiar_facilitador
+    defaults: { _controller: SiePnpBundle:Default:cambiar_facilitador }
+    options:
+         expose: true
+
+sie_pnp_cambiar_facilitador_encontrado:
+    path:     /pnp/cambiar_facilitador_encontrado/{ci}/{complemento}/{curso_id}
+    defaults: { _controller: SiePnpBundle:Default:cambiar_facilitador_encontrado, ci:0, complemento:0,curso_id:0 }
     options:
          expose: true

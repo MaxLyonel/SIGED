@@ -1,0 +1,45 @@
+Sie\AppWebBundle\Entity\OlimCategoriaTipo:
+    type: entity
+    table: olim_categoria_tipo
+    indexes:
+        IDX_BC4EEEA4F29C4FB8:
+            columns:
+                - olim_materia_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        categoria:
+            type: string
+            nullable: true
+            length: 300
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        descripcion:
+            type: string
+            nullable: true
+            length: 1500
+            fixed: false
+            comment: ''
+    manyToOne:
+        olimMateriaTipo:
+            targetEntity: OlimMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

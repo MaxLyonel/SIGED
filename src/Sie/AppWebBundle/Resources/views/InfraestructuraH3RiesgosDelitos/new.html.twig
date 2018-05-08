@@ -1,0 +1,649 @@
+{% extends 'layoutInfra.html.twig' %}
+
+{% block contentoption %}
+	<style>
+		.fotografia{
+			background:#FFFFFF;
+			width: 100%;
+			height: 250px;
+			overflow: hidden;
+			text-align: center;
+		}
+
+		.fotografia img{
+			width: auto;
+			height: 100%;
+		}
+
+		input[type=text]{
+			text-transform: uppercase;
+		}
+
+		input[type=radio]{
+			margin-left: 15px;
+			margin-right: 5px;
+		}
+
+		.tabla tr{
+			border: 1px solid #CCCCCC;
+		}
+
+        #delitos{
+            margin-top: 10px;
+        }
+        textarea{
+            text-transform: uppercase;
+        }
+	</style>
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Riesgos y delitos <span>Hoja 3</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('infra_list_index')}}">
+                       Operativos
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">
+                  <form action="{{path('infra_list_open')}}" method="post" style="display: inline-block">
+                      <input type="hidden" id="form_gestion" name="form[gestion]" value="{{app.session.get('currentyear')}}">
+                      <input type="hidden" id="form_data" name="form[sie]" required="required" value="{{app.session.get('ie_id')}}">
+                       <input type="hidden" id="form_data" name="form[infraestructuraJuridiccionGeograficaId]" required="required" value="10303">
+                      <button class='btn btn-link'>Menu de Opciones</button>
+                  </form>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+    	{{ form_start(form) }}
+    	<div class="row">
+          <div class="col-md-12">
+              <!-- Start color horizontal tabs -->
+              <div class="panel panel-tab panel-tab-double shadow">
+                  <!-- Start tabs heading -->
+                  <div class="panel-heading no-padding">
+                      <ul class="nav nav-tabs">
+							<li class="nav-border nav-border-top-danger active">
+							  <a href="component-tabsaccordion.html#tab1-1" data-toggle="tab" class="text-center" aria-expanded="true">
+							      1. Riesgos y prevención de riesgos en el edificio educativo
+							  </a>
+							</li>
+							<li class="nav-border nav-border-top-primary">
+							  <a href="component-tabsaccordion.html#tab1-2" data-toggle="tab" class="text-center" aria-expanded="false">
+							      2. Delitos en el edificio educativo
+							  </a>
+							</li>
+                      </ul>
+                  </div><!-- /.panel-heading -->
+                  <!--/ End tabs heading -->
+
+                  <!-- Start tabs content -->
+                  <div class="panel-body">
+                      <div class="form-footer">
+                          <div class="pull-right">
+                            <button class="btn btn-success" type="submit">Guardar Cambios</button>
+                              <!-- <button class="btn btn-danger mr-5">Cancelar</button> -->
+                            <input value="Cancelar" class="btn btn-danger mr-5" onclick="history.back()" type="button">
+                              
+                          </div>
+                          <div class="clear-fix"></div>
+                      </div>
+                      <hr>
+                      <div class="tab-content">
+                        <!-- start tab1 -->
+                          <div class="tab-pane fade active in" id="tab1-1">
+                          	<div class="row">
+                          		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                          			<p>1.1 ¿En los últimos 10 años el Edificio Educativo ha sufrido algunos de estos eventos? Señale ademas los meses aproximados en los que suceden estos eventos</p>
+                          		</div>
+                          	</div>
+                        	<div class="row">
+                        		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        			<div class="row">
+                        				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">                        					
+                        					<div class="checkbox">
+                        						<label>
+                        							{{ form_widget(form.n11EsInundacion) }}
+                        							Inundación
+                        						</label>
+                        					</div>
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11InundacionFechainicial, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11InundacionFechafinal, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        			</div>
+                        			<div class="row">
+                        				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">                        					
+                        					<div class="checkbox">
+                        						<label>
+                        							{{ form_widget(form.n11EsIncendio) }}
+                        							Incendio
+                        						</label>
+                        					</div>
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11IncendioFechainicial, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11IncendioFechafinal, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        			</div>
+                        			<div class="row">
+                        				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">                        					
+                        					<div class="checkbox">
+                        						<label>
+                        							{{ form_widget(form.n11EsSequia) }}
+                        							Sequia
+                        						</label>
+                        					</div>
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11SequiaFechainicial, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11SequiaFechafinal, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        			</div>
+                        			<div class="row">
+                        				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">                        					
+                        					<div class="checkbox">
+                        						<label>
+                        							{{ form_widget(form.n11EsDeslizamiento) }}
+                        							Deslizamiento
+                        						</label>
+                        					</div>
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11DeslizamientoFechainicial, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11DeslizamientoFechafinal, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        			</div>
+                        			<div class="row">
+                        				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">                        					
+                        					<div class="checkbox">
+                        						<label>
+                        							{{ form_widget(form.n11EsRiada) }}
+                        							Riada
+                        						</label>
+                        					</div>
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11RiadaFechainicial, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11RiadaFechafinal, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        			</div>
+                        		</div>
+                        		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        			<div class="row">
+                        				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">                        					
+                        					<div class="checkbox">
+                        						<label>
+                        							{{ form_widget(form.n11EsSismo) }}
+                        							Sismo
+                        						</label>
+                        					</div>
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11SismoFechainicial, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11SismoFechafinal, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        			</div>
+									<div class="row">
+                        				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">                        					
+                        					<div class="checkbox">
+                        						<label>
+                        							{{ form_widget(form.n11EsViento) }}
+                        							Viento
+                        						</label>
+                        					</div>
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11VientoFechainicial, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11VientoFechafinal, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        			</div>
+                        			<div class="row">
+                        				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">                        					
+                        					<div class="checkbox">
+                        						<label>
+                        							{{ form_widget(form.n11EsGranizada) }}
+                        							Granizada
+                        						</label>
+                        					</div>
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11GranizadaFechainicial, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11GranizadaFechafinal, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        			</div>
+									<div class="row">
+                        				<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">                        					
+                        					<div class="checkbox">
+                        						<label>
+                        							{{ form_widget(form.n11EsHelada) }}
+                        							Helada
+                        						</label>
+                        					</div>
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11HeladaFechainicial, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        					{{ form_widget(form.n11HeladaFechafinal, {'attr': {'class':'form-control'} }) }}
+                        				</div>
+                        			</div>
+                        			<div class="row">
+                        				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">                        					
+                        					<div class="checkbox">
+                        						<label>
+                        							{{ form_widget(form.n11EsHundimiento) }}
+                        							Hundimiento
+                        						</label>
+                        					</div>
+                        				</div>
+                        			</div>
+                        		</div>
+                        	</div>
+                        	<div class="row">
+                        		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        			<p>1.2 El Edificio Educativo se encuentra próximo</p>
+                        		</div>
+                        	</div>
+                        	<div class="row">
+                        		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        			<div class="checkbox">
+                        				<label>
+                        					{{ form_widget(form.n12EsBarranco) }}
+                        					Barranco
+                        				</label>
+                        			</div>
+                        			<div class="checkbox">
+                        				<label>
+                        					{{ form_widget(form.n12EsBosque) }}
+                        					Bosque
+                        				</label>
+                        			</div>
+                        			<div class="checkbox">
+                        				<label>
+                        					{{ form_widget(form.n12EsRio) }}
+                        					Rio
+                        				</label>
+                        			</div>
+                        		</div>
+                        		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        			<div class="checkbox">
+                        				<label>
+                        					{{ form_widget(form.n12EsCerro) }}
+                        					Cerro
+                        				</label>
+                        			</div>
+                        			<div class="checkbox">
+                        				<label>
+                        					{{ form_widget(form.n12EsCentrominero) }}
+                        					Centrominero
+                        				</label>
+                        			</div>
+                        			<div class="checkbox">
+                        				<label>
+                        					{{ form_widget(form.n12EsBotadero) }}
+                        					Botadero
+                        				</label>
+                        			</div>
+                        		</div>
+                        		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        			<div class="checkbox">
+                        				<label>
+                        					{{ form_widget(form.n12EsFabrica) }}
+                        					Fabrica
+                        				</label>
+                        			</div>
+                        			<div class="checkbox">
+                        				<label>
+                        					{{ form_widget(form.n12EsPasofrontera) }}
+                        					Pasofrontera
+                        				</label>
+                        			</div>
+                        			<div class="checkbox">
+                        				<label>
+                        					{{ form_widget(form.n12EsBar) }}
+                        					Bar
+                        				</label>
+                        			</div>
+                        		</div>
+                        		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                        			<div class="checkbox">
+                        				<label>
+                        					{{ form_widget(form.n12EsEstacionelectrica) }}
+                        					Estacionelectrica
+                        				</label>
+                        			</div>
+                        			<div class="checkbox">
+                        				<label>
+                        					{{ form_widget(form.n12EsZonariezgo) }}
+                        					Zonariezgo
+                        				</label>
+                        			</div>
+                        		</div>
+                        	</div>
+
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+									<p>1.3 ¿En general, debido a la presencia de eventos extremos se suspendieron actividades?</p>
+									<div class="row">
+										<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+											{{ form_widget(form.n13SiSuspendieronclases) }}
+										</div>
+										<div class="col-xs-6 col-sm-6 col-md-9 col-lg-9">
+											¿Por cuanto tiempo?
+											{{ form_widget(form.n13InfraestructuraH3SuspencionClasesTiempoTipo) }}
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+									<p>1.4 ¿El edificio Educativo en los últimos 10 años ha sido utilizado como albergue?</p>
+									{{ form_widget(form.n14SiAlbergue) }}
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									<p>1.5 El Edificio Educativo cuenta con:</p>
+								</div>
+								<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+									<div class="row">
+									    <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
+                                            <div class="checkbox">
+                                                <label>
+                                                    {{ form_widget(form.n15EsTimbrepanico) }}
+                                                    Timbre de pánico
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    {{ form_widget(form.n15EsExtintor) }}
+                                                    Extintores
+                                                </label>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    {{ form_widget(form.n15EsSalidaemergencia) }}
+                                                    Salidas de emergencia
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        {{ form_widget(form.n15EsCamaraseguridad) }}
+                                                        Camaras de seguridad
+                                                    </label>
+                                                </div>
+                                                ¿En funcionamiento? {{ form_widget(form.n15SiFuncionaCamaraseguridad) }}
+                                            </div>
+                                        </div>
+                                    </div>
+								</div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="checkbox">
+                                                <label>
+                                                    {{ form_widget(form.n15EsSenaleticaevac) }}
+                                                    Señaletica de evacuación
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            {{ form_widget(form.n15InfraestructuraH3SenaleticaEvacTipo, { 'attr': {'class':'form-control'} }) }}
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <div class="checkbox">
+                                                <label>
+                                                    {{ form_widget(form.n15EsDepositoagua) }}
+                                                    Dépositos de agua
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+							</div>
+
+                            </div>
+                            <!-- end tab1 -->
+                            <div class="tab-pane fade" id="tab1-2">
+                                <p>1.1 ¿Hubo robo o hurto a integrantes de la comunidad educativa(asaltos) por terceros al ingreso o salida de clases?</p>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+                                        <br>
+                                        {{ form_widget(form.n21EsHuboAsalto) }}
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                                        ¿Cuantas veces? 
+                                        {{ form_widget(form.n21RoboCantidad, { 'attr': {'class':'form-control'} }) }}
+                                    </div>
+                                </div>
+                                <p>2.2 ¿En el edificio educativo se ha sucitado algun delito de robo o hurto?</p>
+                                <hr>
+                                <button type="button" class="btn btn-primary btn-xs" onclick="openModal()">Adicionar Detalle</button>
+                                <div id="delitos">
+                                    
+                                </div>
+                            </div>  <!-- end tab2 -->
+                      </div>
+                  </div><!-- /.panel-body -->
+                  <!--/ End tabs content -->
+              </div><!-- /.panel -->
+              <!--/ End color horizontal tabs -->
+          </div>
+      	</div>
+
+      	{{ form_widget(form) }}
+      	{{ form_end(form) }}
+    </div>
+
+    <div class="modal fade" id="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Detalle de delito</h4>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardar()">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+    <script type="text/javascript">
+        var delitos = [];
+        var delitoEdit = null;
+
+        $(function(){
+            getDelitos();
+        });
+
+        function openModal(){
+            var pos = arguments[0];
+            $.ajax({
+                url: Routing.generate('infra_createDelito'),
+                type: 'POST',
+                beforeSend: function(){
+                    $('.modal-body').empty();
+                }
+            })
+            .done(function(data) {
+                delitoEdit = null;
+                $('.modal-body').empty();
+                $('.modal-body').append(data);
+                if(pos !== undefined){
+
+                    $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22GestionTipo').val(delitos[pos].gestion);
+                    $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22CantVeces').val(delitos[pos].cantidad);
+                    $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22HorarioTipo').val(delitos[pos].horario);
+                    $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22AmbientesTipo').val(delitos[pos].ambiente);
+                    $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22MobiliarioTipo').val(delitos[pos].mobiliario);
+                    $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22EquipamientoTipo').val(delitos[pos].equipamiento);
+                    $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22ObsAcciones').val(delitos[pos].acciones);
+
+                    delitoEdit = pos;
+                }
+                console.log(delitoEdit);
+                $('#modal').modal('show');
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                
+            });
+        }
+
+        function guardar(){
+            if($('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22HorarioTipo]"] option:selected').text() == 'Seleccionar...'){ $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22HorarioTipo]"] option:selected').text(''); }
+            if($('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22AmbientesTipo]"] option:selected').text() == 'Seleccionar...'){ $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22AmbientesTipo]"] option:selected').text(''); }
+            if($('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22MobiliarioTipo]"] option:selected').text() == 'Seleccionar...'){ $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22MobiliarioTipo]"] option:selected').text(''); }
+            if($('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22EquipamientoTipo]"] option:selected').text() == 'Seleccionar...'){ $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22EquipamientoTipo]"] option:selected').text(''); }
+
+            if(delitoEdit == null){
+                var delito = {
+                    gestion: $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22GestionTipo').val(),
+                    cantidad: $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22CantVeces').val(),
+                    horario: $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22HorarioTipo').val(),
+                    horarioNombre: $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22HorarioTipo]"] option:selected').text(),
+                    ambiente: $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22AmbientesTipo').val(),
+                    ambienteNombre: $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22AmbientesTipo]"] option:selected').text(),
+                    mobiliario: $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22MobiliarioTipo').val(),
+                    mobiliarioNombre: $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22MobiliarioTipo]"] option:selected').text(),
+                    equipamiento: $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22EquipamientoTipo').val(),
+                    equipamientoNombre: $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22EquipamientoTipo]"] option:selected').text(),
+                    acciones: $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22ObsAcciones').val().toUpperCase()
+                }
+                delitos.push(delito);
+            }else{
+                delitos[delitoEdit].gestion = $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22GestionTipo').val();
+                delitos[delitoEdit].cantidad = $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22CantVeces').val();
+                delitos[delitoEdit].horario = $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22HorarioTipo').val();
+                delitos[delitoEdit].horarioNombre = $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22HorarioTipo]"] option:selected').text();
+                delitos[delitoEdit].ambiente = $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22AmbientesTipo').val();
+                delitos[delitoEdit].ambienteNombre = $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22AmbientesTipo]"] option:selected').text();
+                delitos[delitoEdit].mobiliario = $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22MobiliarioTipo').val();
+                delitos[delitoEdit].mobiliarioNombre = $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22MobiliarioTipo]"] option:selected').text();
+                delitos[delitoEdit].equipamiento = $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22EquipamientoTipo').val();
+                delitos[delitoEdit].equipamientoNombre = $('select[name="sie_appwebbundle_infraestructurah3delitosedificiodetalle[n22EquipamientoTipo]"] option:selected').text();
+                delitos[delitoEdit].acciones = $('#sie_appwebbundle_infraestructurah3delitosedificiodetalle_n22ObsAcciones').val().toUpperCase();
+            }
+            console.log(delitos);
+
+            viewDelitos();
+
+            $('#modal').modal('hide');
+        }
+
+        function getDelitos(){
+            $.ajax({
+                url: Routing.generate('infra_getDelitos'),
+                type: 'POST'
+            })
+            .done(function(data) {
+                console.log(data);
+                $.each(data, function(index, val) {
+                    var delito = {
+                        gestion: val.gestion,
+                        cantidad: val.cantidad,
+                        horario: val.horario,
+                        horarioNombre: val.horarioNombre,
+                        ambiente: val.ambiente,
+                        ambienteNombre: val.ambienteNombre,
+                        mobiliario: val.mobiliario,
+                        mobiliarioNombre: val.mobiliarioNombre,
+                        equipamiento: val.equipamiento,
+                        equipamientoNombre: val.equipamientoNombre,
+                        acciones: val.acciones
+                    };
+
+                    delitos.push(delito); 
+                });
+
+                viewDelitos();
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
+            
+        }
+
+        function viewDelitos(){
+            $('#delitos').empty();
+            var tabla = $('<table class="table table-bordered table-sm"><thead><tr><th>Gestion</th><th>¿Cuantas veces?</th><th>¿En que horario?</th><th>¿En que ambientes?</th><th>Mobiliario</th><th>Equipamiento</th><th>¿Que acciones se tomaron?</th><th>Acciones</th></tr></thead><tbody id="pisosFilas"></tbody></table>');
+            
+            $.each(delitos, function(index, val) {
+                var fila = $('<tr/>', { id: 'p_'+index });
+                fila.append('<td>'+
+                             '<input type="hidden" name="id[]" value="new">'+
+                             '<input type="hidden" name="gestion[]" value="'+ val.gestion +'">'+
+                             '<input type="hidden" name="cantidad[]" value="'+ val.cantidad +'">'+
+                             '<input type="hidden" name="horario[]" value="'+ val.horario +'">'+
+                             '<input type="hidden" name="ambiente[]" value="'+ val.ambiente +'">'+
+                             '<input type="hidden" name="mobiliario[]" value="'+ val.mobiliario +'">'+
+                             '<input type="hidden" name="equipamiento[]" value="'+ val.equipamiento +'">'+
+                             '<input type="hidden" name="acciones[]" value="'+ val.acciones +'">'+
+                             val.gestion +'</td>');
+                fila.append('<td>'+ val.cantidad +'</td>');
+                fila.append('<td>'+ val.horarioNombre +'</td>');
+                fila.append('<td>'+ val.ambienteNombre +'</td>');
+                fila.append('<td>'+ val.mobiliarioNombre +'</td>');
+                fila.append('<td>'+ val.equipamientoNombre +'</td>');
+                fila.append('<td>'+ val.acciones +'</td>');
+                fila.append('<td><i class="fa fa-edit" onclick="openModal('+index+')"></i>'+
+                                ' <i class="fa fa-trash" onclick="deleteDelito('+index+')"></i>'+
+                                ' </td>');
+                tabla.append(fila);
+            });
+
+            $('#delitos').append(tabla);
+        }
+
+        function deleteDelito(i){
+            if(confirm('¿Esta seguro de eliminar el registro?')){
+                delitos.splice(i,1);
+                $('#p_'+i).remove();
+
+                viewDelitos();
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,3 +1,7 @@
+sie_olimpiadas:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing.yml"
+    prefix:   /
+
 sie_infra:
     resource: "@SieInfraBundle/Resources/config/routing.yml"
     prefix:   /

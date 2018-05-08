@@ -1,0 +1,97 @@
+
+<div class="row">
+{% include 'SieOlimpiadasBundle:OlimReglasOlimpiadasTipo:show.html.twig' with {'regla': regla} %}
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+           {% for flashMessage in app.session.flashbag.get('noGroupCreate') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('yesGroupDelete') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+           
+
+    </div>
+</div>
+	<div class="col-md-12">
+                            <p class="lead">Lista de Equipos</p>
+                            {{form_start(formGroup, {'attr':{ 'id':'showGroupFormId' }})}}
+							<button type="button" class="btn btn-inverse btn-danger btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="createGroup();">
+							Agregar Equipo
+							</button>
+                            {{form_end(formGroup)}}
+                            <!-- Start vertical tabs with animation -->
+                            <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin mb-15 rounded shadow">
+                                <!-- Start tabs heading -->
+                                <div class="panel-heading no-padding col-lg-2 col-md-2 col-sm-2">
+
+                                <div class="table-responsive mb-20" >
+                                     <!-- <ul class="nav nav-tabs" style="overflow-y: scroll; height: 300px"> -->
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Equipo</th>
+                                            <th class="text-center" style="min-width: 15%">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for group in objTutorsGrupo %}
+                                        <tr>
+                                            <td class="text-center">{{loop.index}}</td>
+                                            <td>{{group.nombre}}</td>
+                                            
+                                            <td class="text-center">
+                                                <a href="#" onclick="listInscritosGroup('{{jsonDataInscription}}', {{group.id}}, 0);" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos"><i class="fa fa-eye"></i></a>
+                                                
+                                                <a href="#" onclick="deleteGroup('{{jsonDataInscription}}', {{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Equipo"><i class="fa fa-trash-o"></i></a>
+                                                {% if regla.siInsExterna %}
+                                                    <a href="#" onclick="listInscritosGroup('{{jsonDataInscription}}', {{group.id}}, 1);" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones"><i class="fa fa-group"></i></a>
+                                                {% else %}    
+                                                    <a href="#" onclick="doInscriptionGroup('{{jsonDataInscription}}', {{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones"><i class="fa fa-edit"></i></a>
+                                                {% endif %}
+                                                {% if regla.siSubirDocumento %}
+                                                    <a href="#" onclick="olimArchivo({{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Subir Documento"><i class="fa fa-upload"></i></a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                     
+                                    </tbody>
+                                </table>
+                            </div>                                    
+                                </div><!-- /.panel-heading -->
+                                <!--/ End tabs heading -->
+
+                                <!-- Start tabs content -->
+                                <div class="panel-body col-lg-10 col-md-10 col-sm-10">
+                                    <div class="tab-content">
+                                        <!-- Fade Out -->
+                                        <div class="tab-pane fade in active" id="tab5-1">
+                                            <div id="optionIdGroup"></div>
+
+                                        </div>
+                                     
+                                        
+                                    </div>
+                                </div><!-- /.panel-body -->
+                                <!--/ End tabs content -->
+                            </div><!-- /.panel -->
+                            <!--/ End vertical tabs with animation -->
+                        </div>
+	
+</div>
+<script>
+ $(document).ready( function(){
+        $(".tooltips").tooltip();
+    });   
+</script>
+
+ 

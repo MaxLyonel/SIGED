@@ -10,3 +10,9 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             router: "@router"
+    
+    sie_app_web.segip:
+        class: Sie\AppWebBundle\Services\Segip
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"

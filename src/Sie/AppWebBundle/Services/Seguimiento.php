@@ -197,6 +197,50 @@ class Seguimiento {
     }
   }
 
+  public function getStudentObservationQA($data){
+
+    $query = $this->em->getConnection()->prepare(
+      "
+           
+          SELECT
+          c.entidad,
+          b.descripcion,
+          a.obs,
+          a.institucion_educativa_id
+          FROM validacion_regla_entidad_tipo AS c
+          INNER JOIN validacion_regla_tipo AS b ON b.validacion_regla_entidad_tipo_id = c.id
+          INNER JOIN validacion_proceso AS a ON a.validacion_regla_tipo_id = b.id
+          WHERE
+          a.es_activo ='f' AND
+          a.llave = '".$data['codigoRude']."' AND
+          a.gestion_tipo_id = ".$data['gestion']
+    );
+    $query->execute();
+    $objStudentObservation = $query->fetchAll();
+    return $objStudentObservation;
+    // dump($objStudentObservation);die;
+  }
+
+
+  public function getAllObservationQA($data){
+      
+      //    and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
+      // $em = $this->getDoctrine()->getManager();
+      $query = $this->em->getConnection()->prepare("
+                                                select vp.*
+                                                from validacion_proceso vp
+                                                where vp.institucion_educativa_id = '".$data['sie']."' and vp.gestion_tipo_id = '".$data['gestion']."'
+                                                and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
+                                                and vp.es_activo = 'f'
+                                            ");
+          //
+      $query->execute();
+      $objobsQA = $query->fetchAll();
+
+
+      return $objobsQA;
+    }
+
 }
 
  ?>

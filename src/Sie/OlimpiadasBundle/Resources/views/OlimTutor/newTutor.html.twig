@@ -1,0 +1,152 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Tutores <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-pencil"></i>
+                    <a href="{{path('infra_list_index')}}">
+                       Inscripciones
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                
+            </div>
+        </div>
+    <div class="row">
+          <div class="col-md-6 col-md-offset-3">
+           
+            <div class="panel rounded shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">Buscar Tutor(a)</h3>
+                                    </div>
+                                    <div class="pull-right">
+					{{form_start(cancel_form)}}
+					  {{form_widget(cancel_form.submit, {'attr':{'class':'btn btn-default'} })}}
+					{{form_end(cancel_form)}}
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding">
+
+                                    {{form_start(form, {'attr':{'id':'formNewTutorId'}})}}
+                                        <div class="form-body">
+                                            
+                                            <div class="form-group">
+                                                <div class="row">
+
+                                                    <div class="col-md-4">CI:
+                                                        {{form_widget(form.carnet, {'attr': {'class':'form-control', } } )}}
+                                                    </div>
+                                                    <div class="col-md-4">Complemento:
+                                                        {{form_widget(form.complemento, {'attr':{'class':'form-control'} })}}
+                                                    </div>
+                                                    <div class="col-md-4">Fecha Nacimiento:
+                                                        {{form_widget(form.fechanacimiento, {'attr':{'class':'form-control'} })}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="alert alert-info">
+                                                <strong>Aclaraci&oacute;n! </strong><br>
+                                                <b>COMPLEMENTO</b> es el c&oacute;digo alfanumérico designado por el SEGIP en caso de duplicidad.
+                                            </div>
+
+                                          
+                                        </div><!-- /.form-body -->
+                                        <div class="form-footer">
+                                            <div class="pull-right">
+                                                <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
+                                                {{form_widget(form.buscar, {'attr':{'class':'btn btn-success'} })}}
+                                                
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div><!-- /.form-footer -->
+                                    {{form_end(form)}}
+
+                                </div><!-- /.panel-body -->
+                            </div>
+
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div id="idResultTutores">
+            
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+
+      $(function(){
+            //$("#form_carnet").numeric("positiveInteger");
+            $("#form_carnet").attr("maxlength",'20');
+
+            // aplicamos las mascaras para las fechas
+            $("#form_fechanacimiento").inputmask({ "alias": "dd-mm-yyyy" });
+            $("#form_complemento").inputmask({mask: "9a"});
+
+        });
+
+
+      var lookForTutor = function(){
+        
+        formData = $('#formNewTutorId').serialize();
+        // alert(formData);return false;
+           $.ajax({
+                 type: 'post',
+                 url: Routing.generate('olimtutor_resultTutores'),
+                 data: formData,
+                 beforeSend: function () {
+                     $("#idResultTutores").empty();
+                     $("#idResultTutores").empty();
+                     $("#idResultTutores").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+                 },
+                 success: function (data) {
+                     $("#idResultTutores").empty();
+                     $("#idResultTutores").append(data);
+                     //location.reload(true);
+                 },
+                 statusCode: {
+                     500: function () {
+
+                     },
+                     404: function () {
+
+                     }
+                 }
+              });
+    };
+
+
+
+
+
+    </script>
+
+    
+    
+{% endblock %}

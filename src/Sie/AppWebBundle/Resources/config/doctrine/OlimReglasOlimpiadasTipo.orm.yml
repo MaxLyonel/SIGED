@@ -1,0 +1,154 @@
+Sie\AppWebBundle\Entity\OlimReglasOlimpiadasTipo:
+    type: entity
+    table: olim_reglas_olimpiadas_tipo
+    indexes:
+        IDX_2D86862FF29C4FB8:
+            columns:
+                - olim_materia_tipo_id
+        IDX_2D86862FE9A982C5:
+            columns:
+                - olim_categoria_tipo_id
+        IDX_2D86862FFF8C3A35:
+            columns:
+                - modalidad_numero_integrantes_tipo_id
+        IDX_2D86862F7473DC9D:
+            columns:
+                - modalidad_participacion_tipo_id
+    id:
+        id:
+            type: bigint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: public.olim_reglas_olimpiadas_tipo_id_seq
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cantidadEquipos:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cantidad_equipos
+        cantidadInscritosGrado:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: cantidad_inscritos_grado
+        edadInicial:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: edad_inicial
+        edadFinal:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: edad_final
+        fechaComparacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_comparacion
+        siSubirDocumento:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: si_subir_documento
+        siNombreEquipo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: si_nombre_equipo
+        siNombreProyecto:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: si_nombre_proyecto
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        periodoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: periodo_tipo_id
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioRegistroId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_registro_id
+        usuarioModificacionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_modificacion_id
+        categoria:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        siInsExterna:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: si_ins_externa
+    manyToOne:
+        olimMateriaTipo:
+            targetEntity: OlimMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimCategoriaTipo:
+            targetEntity: OlimCategoriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_categoria_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modalidadNumeroIntegrantesTipo:
+            targetEntity: OlimModalidadNumeroIngrantesTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modalidad_numero_integrantes_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        modalidadParticipacionTipo:
+            targetEntity: OlimModalidadParticipacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modalidad_participacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

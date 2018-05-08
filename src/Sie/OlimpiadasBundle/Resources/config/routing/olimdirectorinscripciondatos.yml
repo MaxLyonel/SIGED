@@ -1,0 +1,51 @@
+olimdirectordata:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:index" }
+
+olimdirectordata_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:show" }
+
+olimdirectordata_new:
+    path:     /new
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:new" }
+
+olimdirectordata_create:
+    path:     /create
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:create" }
+    methods:  POST
+
+olimdirectordata_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:edit" }
+
+olimdirectordata_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:update" }
+    methods:  [POST, PUT]
+
+olimdirectordata_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:delete" }
+    methods:  [POST, DELETE]
+
+olimdirectordata_regDirector:
+    path:     /regDirector
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:regDirector" }
+    options:
+        expose: true
+
+olimdirectordata_saveDataDirector:
+    path:     /saveDataDirector
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:saveDataDirector" }
+    options:
+        expose: true
+
+olimdirectordata_manual_edit:
+    path:     /datosedit
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:editManual" }
+
+olimdirectordata_manual_update:
+    path:     /{id}/datosupdate
+    defaults: { _controller: "SieOlimpiadasBundle:OlimDirectorInscripcionDatos:updateManual" }
+    methods:  [POST, PUT]

@@ -29,6 +29,10 @@ class InfraestructuraH2SenalesTipo
      */
     private $gestionTipoId;
 
+    public function __toString(){
+        return $this->descripcion;
+    }
+
 
     /**
      * Get id

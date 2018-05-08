@@ -57,7 +57,7 @@
 
                                                             <tr class="border-primary">
                                                                 <td class="text-center border-right"><strong></strong></td>
-                                                                <td>{{ app.session.get('currentyear') }}</td>
+                                                                <td>{{ app.session.get('currentyear') - 1 }}</td>
                                                                 <td>{{ app.session.get('ie_id') }}</td>
                                                                 <td class="text-center">
                                                                     <form action="{{path('infra_list_open')}}" method="post" style="display: inline-block">

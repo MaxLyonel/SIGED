@@ -345,8 +345,14 @@ class InfoPersonalAdmController extends Controller {
             $personaId = $persona->getId();
 
             // verificamos si el personal administrativo esta registrado ya en tabla maestro inscripcion
-            $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'persona' => $personaId, 'gestionTipo' => $form['gestion'], 'rolTipo' => 9));
-            if ($maestroInscripcion) { // Si  el personalAdministrativo ya esta inscrito
+            $q = $em->createQuery('select a from SieAppWebBundle:MaestroInscripcion a where a.persona = :persona and a.gestionTipo = :gestion and a.cargoTipo <> :cargo and a.institucioneducativa = :sie')
+                ->setParameter('persona', $persona->getId())
+                ->setParameter('gestion', $form['gestion'])
+                ->setParameter('cargo', 0)
+                ->setParameter('sie', $form['institucionEducativa']);
+            $maestro_verificar = $q->getResult();
+            
+            if ($maestro_verificar) { // Si  el personalAdministrativo ya esta inscrito
                 $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
                 return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));

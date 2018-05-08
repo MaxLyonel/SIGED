@@ -15,10 +15,18 @@ class InfraestructuraH4ServicioType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('n11EsEnergiaelectrica')
+            ->add('n11EsEnergiaelectrica','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n12FuenteElectricaTipo')
             ->add('n12FuenteElectricaOtro')
-            ->add('n13EsTipoInstalacion')
+            ->add('n13EsTipoInstalacion','choice', array(
+               'choices'=>array('1'=>'Monofásico','0'=>'Trifásico'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n14DisponibilidadTipo')
             ->add('n15NumeroAmbientesPedagogicos')
             ->add('n15NumeroAmbientesNoPedagogicos')
@@ -27,10 +35,22 @@ class InfraestructuraH4ServicioType extends AbstractType
             // ->add('n16NumeroMedidoresFuncionan')
             // ->add('n16NumeroMedidoresNoFuncionan')
                                     
-            ->add('n21EsDiponeAgua')
+            ->add('n21EsDiponeAgua','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             // ->add('n22MedioAguaOtro')
-            ->add('n23EsCuentaTanqueAgua')
-            ->add('n24EsCuentaBombaAgua')
+            ->add('n23EsCuentaTanqueAgua','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n24EsCuentaBombaAgua','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             // ->add('n25EsCuentaRedAgua')
             ->add('n25NumeroAmbientesAgua')
             ->add('n29AmbientesConAgua')
@@ -38,40 +58,96 @@ class InfraestructuraH4ServicioType extends AbstractType
             ->add('n27UsoAguaTipo')
             ->add('n26AccesoAguaTipo')
             ->add('n22MedioAguaTipo')
-            // 
-            ->add('n31EsInstalacionSaneamiento')
+                        // 
+            ->add('n31EsInstalacionSaneamiento','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n32ExcretasEsAlcantarillado')
             ->add('n32ExcretasEsSeptica')
             ->add('n32ExcretasEsPozo')
             ->add('n32ExcretasEsCieloAbierto')
             ->add('n32ExcretasEsOtro')
             // ->add('n33ExcretasEsNosabe')
-            ->add('n34EsBuenascondiciones')
-            ->add('n34EsBuenasventilacion')
-            ->add('n34EsPrivacidad')
+            ->add('n34EsBuenascondiciones','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n34EsBuenasventilacion','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
+            ->add('n34EsPrivacidad','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n34PeriodicidadTipo')
             ->add('n33ElminacionBasuraTipo')
 
             // ->add('n41EliminacionBasuraOtro')
-            ->add('n41EsCentroSalud')
+            ->add('n41EsCentroSalud','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n41MetrosCentroSalud')
-            ->add('n42EsCentroPolicial')
+            ->add('n42EsCentroPolicial','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n42MetrosCentroPolicial')
-            ->add('n43EsServicioTelecentro')
+            ->add('n43EsServicioTelecentro','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n43MetrosServicioTelecentro')
-            ->add('n43EsDnaSlim')
+            ->add('n43EsDnaSlim','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n43MetrosDnaSlim')
-            ->add('n43EsUesProx')
+            ->add('n43EsUesProx','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n43MetrosUesProx')
-            ->add('n43EsEstBomberos')
+            ->add('n43EsEstBomberos','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n43MetrosEstBomberos')
-            ->add('n43EsMercadoProxim')
+            ->add('n43EsMercadoProxim','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n43MetrosMercadoProxim')
-            ->add('n43EsComunitariaProxim')
+            ->add('n43EsComunitariaProxim','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n43MetrosComunitariaProxim')
-            ->add('n43EsUniversidadProxim')
+            ->add('n43EsUniversidadProxim','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n43MetrosUniversidadProxim')
-            ->add('n43EsTecnologicoProxim')
+            ->add('n43EsTecnologicoProxim','choice', array(
+               'choices'=>array('1'=>'Si','0'=>'No'),
+               'multiple'=>false,
+               'expanded'=>true
+           ))
             ->add('n43MetrosTecnologicoProxim')
             
             // ->add('n53EsCentroEsparcimiento')

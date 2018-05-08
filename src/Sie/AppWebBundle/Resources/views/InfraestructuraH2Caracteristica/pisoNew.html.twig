@@ -1,0 +1,237 @@
+<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<form id="formPiso" onsubmit="createPiso(); return false;">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">Nuevo Piso</h4>
+			</div>
+			<div class="modal-body">
+				<p>1. Descripción del piso de un bloque</p>
+				<div class="form-group">
+					<label>1.1 Bloque Nro.:</label>
+					<input type="hidden" id="pisoId" name="">
+					<select id="bloqueNro" class="form-control" required></select>
+				</div>
+				<div class="row">
+					<div class="form-group col-xs-4 col-sm-4 col-md-2 col-lg-2">
+						<label>Número de pisos</label>
+						{{ form_widget(form.n11NroPisoTipo, {'attr':{'class':'form-control'} })}}
+					</div>
+					<div class="form-group col-xs-4 col-sm-4 col-md-2 col-lg-2">
+						<label>Área(m2)</label>
+						{{ form_widget(form.n12AreaM2, {'attr':{'class':'form-control'} })}}
+					</div>
+					<div class="form-group col-xs-4 col-sm-4 col-md-2 col-lg-2">
+						<label>Nro. Ambientes pedagógicos</label>
+						{{ form_widget(form.n13NroAmbPedagogicos, {'attr':{'class':'form-control'} })}}
+					</div>
+					<div class="form-group col-xs-4 col-sm-4 col-md-2 col-lg-2">
+						<label>Nro. Ambientes no pedagógicos</label>
+						{{ form_widget(form.n14NroAmbNoPedagogicos, {'attr':{'class':'form-control'} })}}
+					</div>
+					<div class="form-group col-xs-4 col-sm-4 col-md-2 col-lg-2">
+						<label>Nro. Baños</label>
+						{{ form_widget(form.n15TotalBanios, {'attr':{'class':'form-control'} })}}
+					</div>
+					<div class="form-group col-xs-4 col-sm-4 col-md-2 col-lg-2">
+						<label>Total Ambientes</label>
+						{{ form_widget(form.n16TotalAmbientes, {'attr':{'class':'form-control'} })}}
+					</div>
+				</div>
+				
+				<p>2.1 Estado del piso</p>
+
+				<div class="form-group row">
+					<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+					</div>
+					<div class="col-xs-3 col-sm-3 col-md-2 col-lg-2">
+					</div>
+					<div class="col-xs-9 col-sm-9 col-md-8 col-lg-8 text-center">
+						<label>Caracteristicas</label>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+						<label>¿Tiene cielo falso?</label>
+					</div>
+					<div class="col-xs-3 col-sm-3 col-md-2 col-lg-2">
+						{{ form_widget(form.n21SiCieloFalso, {'attr':{'class':''} })}}
+					</div>
+					<div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
+						{{ form_widget(form.n211CaracteristicasTipo, {'attr':{'class':'form-control'} })}}
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+						<label>¿Tiene puerta(s)?</label>
+					</div>
+					<div class="col-xs-3 col-sm-3 col-md-2 col-lg-2">
+						{{ form_widget(form.n22SiPuertas, {'attr':{'class':''} })}}
+					</div>
+					<div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n221SeguroTipo, {'attr':{'class':'form-control'} })}}
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n222AbreTipo, {'attr':{'class':'form-control'} })}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+						<label>¿Tiene ventana(s)?</label>
+					</div>
+					<div class="col-xs-3 col-sm-3 col-md-2 col-lg-2">
+						{{ form_widget(form.n23SiVentanas, {'attr':{'class':''} })}}
+					</div>
+					<div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
+						{{ form_widget(form.n231VidriosTipo, {'attr':{'class':'form-control'} })}}
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+						<label>¿Tiene techo?</label>
+					</div>
+					<div class="col-xs-3 col-sm-3 col-md-2 col-lg-2">
+						{{ form_widget(form.n24SiTecho, {'attr':{'class':''} })}}
+					</div>
+					<div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+					</div>
+					<div class="col-xs-3 col-sm-3 col-md-2 col-lg-2">
+					</div>
+					<div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center">
+								Material
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center">
+								Caracteristicas
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+						<label>¿Tiene muros?</label>
+					</div>
+					<div class="col-xs-3 col-sm-3 col-md-2 col-lg-2">
+						{{ form_widget(form.n25SiMuros, {'attr':{'class':''} })}}
+					</div>
+					<div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n251MurosMaterialTipo, {'attr':{'class':'form-control'} })}}
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n252MurosCaracteristicasTipo, {'attr':{'class':'form-control'} })}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+						<label>¿Tiene revestimiento?</label>
+					</div>
+					<div class="col-xs-3 col-sm-3 col-md-2 col-lg-2">
+						{{ form_widget(form.n26SiRevestimiento, {'attr':{'class':''} })}}
+					</div>
+					<div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n261RevestMaterialTipo, {'attr':{'class':'form-control'} })}}
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n262RevestCaracteristicasTipo, {'attr':{'class':'form-control'} })}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+						<label>¿Tiene piso?</label>
+					</div>
+					<div class="col-xs-3 col-sm-3 col-md-2 col-lg-2">
+						{{ form_widget(form.n27SiPiso, {'attr':{'class':''} })}}
+					</div>
+					<div class="col-xs-9 col-sm-9 col-md-8 col-lg-8">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n271PisoMaterialTipo, {'attr':{'class':'form-control'} })}}
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n272PisoCaracteristicasTipo, {'attr':{'class':'form-control'} })}}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<p>3.1 Criterios de accesibilidad</p>
+
+				<div class="row">
+					<div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								¿Tiene gradas?
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n31SiGradas, {'attr':{'class':''} })}}
+							</div><div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								Las gradas cuentan con:
+							</div>
+							<div class="check col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n32GradasTipo, {'attr':{'class':''} })}}
+							</div>
+						</div>
+					</div>
+					<div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								¿Tiene rampas?
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n33SiRampas, {'attr':{'class':''} })}}
+							</div><div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								Las rampas cuentan con:
+							</div>
+							<div class="check col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.estadoTipo, {'attr':{'class':''} })}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-xs-12 col-sm-12 col-md-6 col-lg-6">
+						<div class="row">
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								¿Tiene señaletica?
+							</div>
+							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n35SiSenaletica, {'attr':{'class':''} })}}
+							</div><div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								Tipo de señales:
+							</div>
+							<div class="check col-xs-12 col-sm-12 col-md-6 col-lg-6">
+								{{ form_widget(form.n31SenalesTipo, {'attr':{'class':''} })}}
+							</div>
+						</div>
+						
+					</div>
+				</div>
+
+
+				{{ form_widget(form)}}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				<button type="submit" class="btn btn-primary">Guardar cambios</button>
+			</div>
+		</form>
+	</div>
+</div>

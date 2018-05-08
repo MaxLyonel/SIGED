@@ -1,0 +1,52 @@
+
+{% if grupo.documentoPdf1 is null or grupo.documentoPdf1 == "" %}
+	<div class="alert alert-info">
+		<i class="fa fa-info-circle"></i> Debe seleccionar un archivo en formato <span class="badge badge-info">PDF</span> con el contenido del proyecto.<br>
+		<i class="fa fa-info-circle"></i> El nombre del archivo no debe contener puntos ni caracteres especiales.<br>
+		<i class="fa fa-info-circle"></i> Tamaño máximo permitido <span class="badge badge-info">5 MB</span>
+	</div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    	<div class="panel panel-default">
+    		<div class="panel-heading">
+    			<h3 class="panel-title">Adjuntar documento del proyecto</h3>
+    		</div>
+    		<div class="panel-body">
+    			<input type="file" id="archivo" name="archivo" class="form-control">
+    		</div>
+    	</div>
+    </div>
+{% else %}
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<div class="alert alert-info">
+			<i class="fa fa-info-circle"></i> Debe seleccionar un archivo en formato <span class="badge badge-info">PDF</span> con el contenido del proyecto. <br>
+			<i class="fa fa-info-circle"></i> El nombre del archivo no debe contener puntos ni caracteres especiales.<br>
+			<i class="fa fa-info-circle"></i> Tamaño máximo permitido <span class="badge badge-info">5 MB</span>
+		</div>
+	</div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center text-primary">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Documento</h3>
+			</div>
+			<div class="panel-body">
+                {# <embed src="{{asset('uploads/olimpiadas/documentos/' ~ grupo.documentoPdf1)}}" width="100%" height="250" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html"> #}
+				<a id="rutaArchivo" class="text-primary" target="_blank" href="{{asset('uploads/olimpiadas/documentos/' ~ grupo.documentoPdf1 )}}">
+		    		<i class="fa fa-file-pdf-o fa-5x"></i><br>
+		    		Ver documento...
+		    	</a>
+			</div>
+		</div>
+    	
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+    	<div class="panel panel-default">
+    		<div class="panel-heading">
+    			<h3 class="panel-title">Actualizar</h3>
+    		</div>
+    		<div class="panel-body">
+    			<input type="file" id="archivo" name="archivo" class="form-control">
+    		</div>
+    	</div>
+    	
+    </div>
+{% endif %}

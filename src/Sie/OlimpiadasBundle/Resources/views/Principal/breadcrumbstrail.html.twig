@@ -1,0 +1,31 @@
+{% set datajson = {
+    'id': sie,
+    'gestion': gestion
+    }
+%}
+{% set datamenu = datajson|json_encode() %}
+
+<div class="header-content">
+    <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aqui:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{ path('herramienta_inbox_index')}}">Recibidos</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+              <form name="form" method="post" action="{{ path('herramienta_inbox_open')}}">
+                <input type="hidden" id="form_data" name="form[data]" value="{{datamenu}}"><div>
+                  <button type="submit" id="form_goplena" name="form[goplena]" class="btn btn-link">
+                    <div style="color:black;">Menu</div>
+                  </button>
+              </form>
+                <i class="fa fa-angle-right"></i>
+            </li>
+
+            <li class="active">{{opcion}}</li>
+        </ol>
+    </div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->

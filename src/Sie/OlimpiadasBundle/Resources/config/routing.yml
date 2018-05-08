@@ -1,0 +1,55 @@
+sie_app_web_olimarchivo:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimarchivo.yml"
+    prefix:   /olimarchivo
+    
+sie_app_web_olimreporte:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimreporte.yml"
+    prefix:   /olimreporte
+    
+sie_app_web_olimestadistica:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimestadistica.yml"
+    prefix:   /olimestadistica
+
+sie_app_web_olimreglasolimpiadastipo:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimreglasolimpiadastipo.yml"
+    prefix:   /olimreglasolimpiadastipo
+    
+sie_app_web_olimmateriatipo:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimmateriatipo.yml"
+    prefix:   /olimmateriatipo
+
+sie_app_web_olimregistroolimpiada:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimregistroolimpiada.yml"
+    prefix:   /olimregistroolimpiada
+
+sie_olimpiadas_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SieOlimpiadasBundle:Default:index }
+
+sie_app_web_oliminscriptions:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimestudianteinscripcion.yml"
+    prefix:   /oliminscriptions
+
+sie_app_web_olimdirectordata:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimdirectorinscripciondatos.yml"
+    prefix:   /olimdirectordata
+
+sie_app_web_olimtutor:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimtutor.yml"
+    prefix:   /olimtutor
+
+sie_app_web_oliminscriptions_robot:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimestudianteinscripcionrobotica.yml"
+    prefix:   /oliminscriptionsrobot
+
+sie_app_web_olimgrupoproyecto:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimgrupoproyecto.yml"
+    prefix:   /olimgrupoproyecto
+
+sie_app_web_oliminscriptions_nivelsuperior:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/oliminscripcionnivelsuper.yml"
+    prefix:   /oliminscripcionnivelsuper
+
+sie_app_web_olimestudiantemodificacion:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimestudiantemodificacion.yml"
+    prefix:   /olimestudiantemodificacion

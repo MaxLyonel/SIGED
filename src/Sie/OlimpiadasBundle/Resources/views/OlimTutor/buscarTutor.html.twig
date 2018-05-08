@@ -1,0 +1,56 @@
+<small>
+<div class="row">
+    <div class="col-md-12">
+        <!-- Start bordered table -->
+        <h4 class="no-margin">Resultado Busqueda</h4>
+                
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                       <th>#</th>
+                        <th>CI</th>
+                        <th>Datos Tutor</th>
+                        
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entity in resultTutores %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><b>{{ entity.carnet }}</b> </td>
+                            <td>{{ entity.nombre }}
+                            {{ entity.paterno }}
+                            {{ entity.materno }}</td>
+                            <td>
+                                <form name="form" method="post" id="regTutorFormId" class="form-inline">
+                                      <div class="form-group mx-sm-3 mb-2">
+                                        <input type="text" id="form_telefono1" name="form[telefono1]" required="required" class="form-control" placeholder="Telefono1">
+                                        <input type="text" id="form_telefono2" name="form[telefono2]" required="required" class="form-control" placeholder="Telefono2">
+                                        <input type="text" id="form_correoElectronico" name="form[correoElectronico]" required="required" class="form-control" placeholder="correo electronico">
+                                      </div>
+                                      <button type="button" id="form_registrar" name="form[registrar]" onclick="registrarTutor()" class="btn btn-inverse btn-danger btn-stroke btn-xs">Registrar</button>
+                                      
+                                    <input type="hidden" id="form_personaid" name="form[personaid]" value="{{entity.id}}">
+                                    <input type="hidden" id="form_data" name="form[data]" value="{{jsonDataInscription}}">
+                                    <input type="hidden" id="form__token" name="form[_token]" value="ZkRN9Kp-VjslhXafRKm76AhfT7ekMp2cDh0N9eMaS9o">
+                                </form>
+                            </td>
+                           
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div><!-- /.table-responsive -->
+        <!--/ End bordered table -->
+
+    </div>
+    <!--/ End hover table -->
+</div>    
+</small>
+
+
+
+ 
+     

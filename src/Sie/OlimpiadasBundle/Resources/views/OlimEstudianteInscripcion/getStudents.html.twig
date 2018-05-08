@@ -1,0 +1,100 @@
+{% if limitInscription %}
+
+ {% include 'SieOlimpiadasBundle:OlimEstudianteInscripcion:messageListInscription.html.twig' %}
+<div class="row">
+    <div class="col-md-12">
+            {{form_start(form, { 'attr':{'id':'studentsRegisterId' }} )}}
+                            <!-- Start table with actions -->
+                            <h4 class="no-margin">Estudiantes</h4>
+                            <div class="table-responsive mb-20">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <!-- <th class="text-center">#</th> -->
+                                            <th>RUDE</th>
+                                            <th>Estudiante</th>
+                                            <!-- <th>F. Nacimiento</th> -->
+                                            <th colspan="2">CI - complemento</th>
+                                            <th colspan="2">F. Nacimiento - Edad</th>
+                                            <th>Discapacidad</th>
+                                            <th>Tel&eacute;fono <b style="color:#FF0000;">*</b></th>
+                                            <th>Email <b style="color:#FF0000;">*</b ></th>
+                                            <th>Elegir</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <small>
+                                        
+                                        
+                                            {% for item in objStudentsToOlimpiadas %}
+                                                <tr>
+                                                    {#<td class="text-center">{{loop.index}}</td>
+                                                        #}
+                                                
+                                                <td>{{item.codigo_rude}}</td>
+                                                <td>{{item.paterno}} {{item.materno}} {{item.nombre}}</td>
+                                                {#
+                                                    <td>{{item.fecha_nacimiento}}</td>
+                                                    #}
+                                                
+                                                
+                                                <td>{{item.carnet_identidad}}</td>
+                                                <td>{{item.complemento}}</td>
+                                                <td>{{item.fecha_nacimiento}}</td>
+                                                <td>{{item.yearsOld}}</td>
+
+                                                <td align="center">
+                                                     <select class="chosen-select mb-5 form-control" name="form[datasend_{{item.estinsid}}][discapacidad]">
+                                                        {% for discapacidad in objDiscapacidad %}
+                                                            <option value="{{discapacidad.id}}">{{discapacidad.discapacidad}}</option>       
+                                                        {% endfor %}
+                                                    </select>
+                                                </td>
+                                                <td><input class="form-control" type="text" id="form_datasend_{{item.estinsid}}" name="form[datasend_{{item.estinsid}}][fono]"></td>
+                                                <td><input class="form-control" type="text" id="form_datasend_{{item.estinsid}}" name="form[datasend_{{item.estinsid}}][email]"></td>
+                                                {# 
+                                                    <td><input type="text" id="form_ci" name="form[ci]" value={{item.carnet_identidad}} > </td> 
+                                                <td>
+                                                    <input type="text" id="form_complemento" name="form[complemento]" value="{{item.complemento}}" size='2'> </td>    
+                                                  
+                                                
+                                                    #}
+                                                <td align="center">
+                                                    {% if item.carnet_identidad %}
+
+                                                     <input type="checkbox" id="form_datasend_{{item.estinsid}}_studentInscription" name="form[datasend_{{item.estinsid}}][studentInscription]"   value='{{item.estinsid}}'>
+                                                     {#
+                                                        <input type="hidden" id="form_datasend_{{item.estinsid}}" name="form[datasend_{{item.estinsid}}][eInsId]"   value='{{item.estinsid}}'>
+                                                        #}
+                                                    {% endif    %}
+                                                </td>
+                                                
+                                                </tr>    
+                                            {% endfor %}
+                                            <tr>
+                                                <td colspan="10" align="right">{{form_widget(form.register)}}</td>
+                                            </tr>
+                                            
+                                       
+                                        </small>
+                                       
+                                    </tbody>
+                                </table>
+                            </div><!-- /.table-responsive -->
+                            <!--/ End table with actions -->
+                        {{form_end(form)}}
+                        </div>
+    
+</div>
+
+{% else %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="alert alert-lilac">
+                <strong>Atenci&oacute;n!</strong> cantidad de inscritos completa...
+            </div>
+        </div>
+    </div>
+
+{% endif %}

@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\OlimInscripcionGrupoProyecto:
+    type: entity
+    table: olim_inscripcion_grupo_proyecto
+    indexes:
+        IDX_613550C2A5C522A7:
+            columns:
+                - olim_grupo_proyecto_id
+        IDX_613550C22C80C63:
+            columns:
+                - olim_estudiante_inscripcion_id
+    uniqueConstraints:
+        uk_olim_inscripcion_grupo_proyecto_id:
+            columns:
+                - olim_estudiante_inscripcion_id
+                - olim_grupo_proyecto_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    manyToOne:
+        olimGrupoProyecto:
+            targetEntity: OlimGrupoProyecto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_grupo_proyecto_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimEstudianteInscripcion:
+            targetEntity: OlimEstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

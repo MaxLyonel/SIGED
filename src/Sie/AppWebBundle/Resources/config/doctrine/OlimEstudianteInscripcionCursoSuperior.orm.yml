@@ -1,0 +1,80 @@
+Sie\AppWebBundle\Entity\OlimEstudianteInscripcionCursoSuperior:
+    type: entity
+    table: olim_estudiante_inscripcion_curso_superior
+    indexes:
+        IDX_EEACB047C6447610:
+            columns:
+                - grado_tipo_id
+        IDX_EEACB0476DD9B3B9:
+            columns:
+                - nivel_tipo_id
+        IDX_EEACB0472C80C63:
+            columns:
+                - olim_estudiante_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        observarion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioRegistroId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_registro_id
+        usuarioModificacionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_modificacion_id
+    manyToOne:
+        gradoTipo:
+            targetEntity: GradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        nivelTipo:
+            targetEntity: NivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        olimEstudianteInscripcion:
+            targetEntity: OlimEstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

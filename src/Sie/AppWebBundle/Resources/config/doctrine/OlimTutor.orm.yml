@@ -1,0 +1,135 @@
+Sie\AppWebBundle\Entity\OlimTutor:
+    type: entity
+    table: olim_tutor
+    indexes:
+        IDX_FE09D8F9AC1E7EA:
+            columns:
+                - olim_registro_olimpiada_id
+        IDX_FE09D8F996157FA0:
+            columns:
+                - periodo_tipo_id
+        IDX_FE09D8F9AB4891C2:
+            columns:
+                - categoria_tipo_id
+        IDX_FE09D8F9CA64564A:
+            columns:
+                - materia_tipo_id
+        IDX_FE09D8F93AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_FE09D8F9F5F88DB9:
+            columns:
+                - persona_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        telefono1:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        telefono2:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        correoElectronico:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: correo_electronico
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioRegistroId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_registro_id
+        usuarioModificacionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_modificacion_id
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+    manyToOne:
+        olimRegistroOlimpiada:
+            targetEntity: OlimRegistroOlimpiada
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                olim_registro_olimpiada_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        periodoTipo:
+            targetEntity: OlimPeriodoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                periodo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        categoriaTipo:
+            targetEntity: OlimCategoriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                categoria_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        materiaTipo:
+            targetEntity: OlimMateriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                materia_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

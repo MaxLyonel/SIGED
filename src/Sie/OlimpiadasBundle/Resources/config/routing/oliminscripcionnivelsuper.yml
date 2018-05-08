@@ -1,0 +1,26 @@
+# index:
+#     path:     /index
+#     defaults: { _controller: SieOlimpiadasBundle:InscripcionNivelSuper:index }
+
+# find_sudent_inscription:
+#     path:     /findSudentInscription
+#     defaults: { _controller: SieOlimpiadasBundle:InscripcionNivelSuper:findSudentInscription }
+
+
+oliminscriptionsnivelsuperior_index:
+    path:     /index
+    defaults: { _controller: "SieOlimpiadasBundle:InscripcionNivelSuper:index" }
+
+oliminscriptionsnivelsuperior_findStudentRule:
+    path:     /findStudentRule
+    defaults: { _controller: "SieOlimpiadasBundle:InscripcionNivelSuper:findStudentRule" }
+    options:
+        expose: true  
+
+oliminscriptionsnivelsuperior_selectInscriptionIndividual:
+    path:     /selectInscriptionIndividual
+    defaults: { _controller: "SieOlimpiadasBundle:InscripcionNivelSuper:selectInscriptionIndividual" }            
+
+oliminscriptionsnivelsuperior_inscripcionsavesuperior:
+    path:     /inscripcionsavesuperior
+    defaults: { _controller: "SieOlimpiadasBundle:InscripcionNivelSuper:inscripcionsavesuperior" }

@@ -23,7 +23,7 @@
             {% for flashMessage in app.session.flashbag.get('notiext') %}
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Warning!</strong> {{ flashMessage }}
+                    <strong></strong> {{ flashMessage }}
                 </div>
             {% endfor %}
             {% for flashMessage in app.session.flashbag.get('goodext') %}
@@ -32,6 +32,19 @@
                     <strong>Bien!</strong> {{ flashMessage }}
                 </div>
             {% endfor %}
+             {% for flashMessage in app.session.flashbag.get('notiext') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Obs!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('studentObservation') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Observaci&oacute;n! {{ flashMessage }}</strong> 
+                </div>
+            {% endfor %}
+            
             <!-- Website Stats  Widget -->
             <div class="container-fluid">
                 <div class="row">

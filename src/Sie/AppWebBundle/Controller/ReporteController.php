@@ -4361,4 +4361,25 @@ class ReporteController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+    public function reporteOlimUEAction(Request $request) {
+        $form = $request->get('reporteOlim');
+        $sie = intval($form['sie']);
+        $gestion = intval($form['gestion']);
+        $tutor = 0;
+        if(isset($form['tutor'])){
+            $tutor = intval($form['tutor']);
+            if($tutor == '' or $tutor == null){ $tutor = 0; }
+        }
+        $arch = 'Reporte_Olimpiada_UE'. $sie .'_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_lst_Estudiantes_Participaciones_f1_v1.rptdesign&codue='. $sie .'&codges=' .$gestion. '&codtutor='.$tutor.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }

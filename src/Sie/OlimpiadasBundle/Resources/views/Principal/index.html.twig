@@ -1,0 +1,221 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Principal <span> Informaci&oacute;n</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Información Olimpiadas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            
+                <div class="panel panel-tab panel-tab-double rounded shadow">
+                                <!-- Start tabs heading -->
+                                <div class="panel-heading no-padding">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active">
+                                            <a href="#tab2-1" data-toggle="tab" aria-expanded="true">
+                                                <i class="fa fa-user"></i>
+                                                <div>
+                                                    <span class="text-strong">Sobre la OCEPB </span>
+                                                    <span></span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="#tab2-2" data-toggle="tab" aria-expanded="false">
+                                                <i class="fa fa-file-text"></i>
+                                                <div>
+                                                    <span class="text-strong">Manual de Usuario</span>
+                                                    <span></span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        
+                                    </ul>
+                                </div><!-- /.panel-heading -->
+                                <!--/ End tabs heading -->
+
+                                <!-- Start tabs content -->
+                                <div class="panel-body">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade active in" id="tab2-1">
+
+                                            <div class="row" id="blog-single">
+
+                        <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">
+
+                            <div class="panel panel-default panel-blog rounded shadow">
+                                <div class="panel-body">
+                                            {# <h3 class="blog-title">Olimpiada Científica Estudiantil Plurinacional Boliviana “OCEPB”</h3> #}
+                                              <h3>Olimpiada Científica Estudiantil Plurinacional Boliviana “OCEPB”</h3>
+                                                    <p>
+                                                        <b>Objetivo General</b>
+                                                        
+                                                    </br>
+                                                        Promover el desarrollo de pensamiento científico y destrezas de investigación en estudiantes del Subsistema de Educación Regular, impulsando su interés por el estudio de la Ciencia y la Tecnología para el fortalecimiento de talentos que contribuyan a la liberación científico – tecnológica del país.</br>
+                                                    </p>
+                                                    <p>
+                                                        <b>Participantes</b>
+                                                        </br>
+                                                        Estudiantes bolivianos del Subsistema de Educación Regular de todas las unidades educativas fiscales, privadas y de convenio del Estado Plurinacional de Bolivia; en las áreas de: 
+                                                        
+                                                            MATEMÁTICA,
+                                                            FÍSICA,
+                                                            QUÍMICA,
+                                                            BIOLOGÍA,
+                                                            GEOGRAFÍA,
+                                                            ASTRONOMÍA/ASTROFÍSICA,
+                                                            INFORMÁTICA,
+                                                            ROBÓTICA y
+                                                            FERIA CIENTÍFICA
+                                                        
+                                                        de acuerdo al siguiente detalle:
+                                                    </p>
+                                                    <table class="table col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                                                        <caption></caption>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>&Aacute;REA</th>
+                                                                <th>AÑO DE ESCOLARIDAD</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Matemática</td>
+                                                                <td>De 1ro a 6to de secundaria</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Biología</td>
+                                                                <td>De 2do a 6to de secundaria</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Química</td>
+                                                                <td>De 2do a 6to de secundaria</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Geografía</td>
+                                                                <td>De 3ro a 6to de secundaria</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Astronomía/Astrofísica</td>
+                                                                <td>De 1ro a 6to de secundaria</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Informática</td>
+                                                                <td>De 5to de primaria a 6to de secundaria</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Robótica</td>
+                                                                <td>De 1ro de primaria a 6to de secundaria</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>Feria Científica</td>
+                                                                <td>1ro, 2do, 5to y 6to de secundaria</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                          
+
+
+
+                                        </div><!-- panel-body -->
+                                    </div><!-- panel-blog -->
+
+                                    
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                                    <div class="blog-sidebar">
+                                        {# <h5 class="blog-subtitle">Acceso Directo Inscripciones</h5> #}
+        {#                                 <p>Acceso Directo Inscripciones</p> #}
+                                        {% if app.session.get('roluser') == 20 %}
+                                            <div class="panel transparent">
+                                                 <a href="#" class="btn btn-primary btn-lg btn-expand">Inscripciones OCEPB</a>
+                                            </div>
+                                        {% else %}
+                                            <div class="panel transparent">
+                                                 <a href="{{ path('olimtutor')}}" class="btn btn-primary btn-lg btn-expand">Inscripciones OCEPB</a>
+                                            </div>
+                                        {% endif %}
+
+                                    </div><!-- blog-sidebar -->
+                                </div>
+
+                            </div>
+
+
+                                            {# this is the end of the new #}
+                                          
+
+                                        </div>
+                                        <div class="tab-pane fade" id="tab2-2">
+
+                                            <div class="col-md-4 col-md-offset-4">
+
+                                            <!-- Start list bank table -->
+                                            <div class="panel">
+                                                <div class="panel-heading">
+                                                    <h3 class="panel-title text-center">Descarga del Manual - <b>OCEPB</b></h3>
+                                                </div><!-- /.panel-heading -->
+                                                <div class="panel-body no-padding">
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <span class="pull-left text-capitalize">Manual OCEPB 
+                                                                    </span>
+                                                                    <span class="pull-right text-strong fg-teals">
+                                                                        <a href="http://olimpiadas.educabolivia.bo/public/files/8va/manual_8vaocepb.pdf" class="text-primary" target="_blank"><i class="fa fa-file-pdf-o fa-2x"></i></a>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                          
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div><!-- /.panel-body -->
+                                            </div>
+                                            <!--/ End list bank table -->
+
+                                        </div>
+
+                                            <h4></h4>
+                                            <p></p>
+                                        </div>
+                                     
+                                    </div>
+                                </div><!-- /.panel-body -->
+                                <!--/ End tabs content -->
+                            </div>
+
+
+
+    
+
+        </div>
+
+    </div>
+{% endblock %}

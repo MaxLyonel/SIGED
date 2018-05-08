@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-title">
-                <h1>Cambio de Estado
+                <h1>Cambio de Estado / Eliminar Inscripción
                     <small></small>
                 </h1>
                 <ol class="breadcrumb">
@@ -145,7 +145,7 @@
                                                        <a href="#" onclick="seeNotaNew('{{data.eiid}}', '{{data.eid}}', '{{data.nivel_tipo_id}}', '{{data.grado_tipo_id}}', '{{data.pid}}', '{{data.turno_tipo_id}}', '{{data.gestion_tipo_id}}', '{{data.institucioneducativa_id}}','{{data.estadomatricula_tipo_id}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
                                                   </td>
                                                   <td data-title="VerNota" class="text-center">
-                                                    {% if (data.gestion_tipo_id == 2017)%}
+                                                    {% if (data.gestion_tipo_id == app.session.get('currentyear'))%}
                                                         {% set dataToChange = {
                                                                               'sie':data.institucioneducativa_id, 'rude':data.codigo_rude, 'gestion':data.gestion_tipo_id, 'nivelId':data.nivel_tipo_id,
                                                                               'gradoId':data.grado_tipo_id, 'paraleloId':data.pid,'turnoId':data.turno_tipo_id, 'estInsId':data.eiid,
@@ -157,7 +157,7 @@
                                                               Cambio de Estado
                                                           </a>
                                                         {% else %}
-                                                          <a href="#" class="" onclick = "mainEliminarInscription('{{dataToChange|json_encode}}', '{{data.gestion_tipo_id}}', {{idProceso}});" >
+                                                          <a href="#" class="" onclick = "mainEliminarInscription('{{dataToChange|json_encode}}', '{{data.gestion_tipo_id}}', {{idProceso}}, {{eliminaRude}});" >
                                                               Eliminar Inscripción
                                                           </a>
                                                         {% endif %}
@@ -278,14 +278,14 @@
              });
 
         };
-        var mainEliminarInscription = function(dataInfo, gestion,idProceso){
+        var mainEliminarInscription = function(dataInfo, gestion, idProceso, eliminaRude){
           var gestionTipo = gestion;
          // $('#myModalNotas').modal('show');
-         if(confirm('¿Esta seguro de eliminar la inscripcion? presione OK para continuar...')){
+         if(confirm('¿Esta seguro de eliminar la inscripción? Tome en cuenta que se eliminará toda la relación del estudiante con Asignaturas, Cursos, Calificaciones, etc. Presione "Aceptar" para continuar.')){
            $.ajax({
                   type: 'post',
                   url: Routing.generate('reg_changestadoqa_maineliminarInsc'),
-                  data: ({'dataInfo':dataInfo,'gestion':gestion,'idProceso':idProceso}),
+                  data: ({'dataInfo':dataInfo,'gestion':gestion,'idProceso':idProceso,'eliminaRude':eliminaRude}),
                   beforeSend: function () {
                       $("#answerVerfication").empty();
                       $("#idEliminado").empty();

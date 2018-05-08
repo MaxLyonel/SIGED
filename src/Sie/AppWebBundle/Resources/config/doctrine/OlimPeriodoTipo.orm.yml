@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\OlimPeriodoTipo:
+    type: entity
+    table: olim_periodo_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        perido:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

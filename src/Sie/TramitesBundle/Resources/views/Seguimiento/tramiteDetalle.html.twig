@@ -39,7 +39,7 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                 <div class="text-right">
-                                    <h3 class="mt-0 text-info"><strong>Trámite Nro.: </strong> {{listaDocumento.tramite}}</h3><br>
+                                    <h3 class="mt-0 text-info"><strong>Trámite Nro.: </strong> {{listaDocumento.tramite}}</h3>
                                     {% if listaDocumento.serie is not null and listaDocumento.serie != "" %}<h3 class="mt-0 text-primary"><strong>N° SERIE:</strong> {{listaDocumento.serie}}</h3>{% endif %}
                                     <address>
                                         {% if listaDocumento.documentoTipo is not null and listaDocumento.documentoTipo != "" %}<strong>Tipo documento: </strong>  {{listaDocumento.documentoTipo}}{% endif %}<br>

@@ -1,0 +1,99 @@
+{% if studentExist %}
+<div class="row" id="blog-single">
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="alert alert-danger">
+                                <strong>Atenci&oacute;n!</strong> La inscripción no sera efectiva, si no cumple con los requisitos para la inscripción
+                            </div>
+
+                            <h5 class="comment-count">Resultado de la b&uacute;squeda</h5>
+
+                            <ul class="media-list comment-list">
+
+                                <li class="media">
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img class="media-object thumbnail" src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" alt="...">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                    	<div class="pull-right rounded">
+                                    		
+
+                                    	</div>
+                                        
+                                        <h4>
+                                        	
+                                        	
+                                        	<b>C&oacute;digo RUDE:</b> {{objStudentInscription.codigo_rude}} </br>
+                                        	<b>Estudiante:</b> {{objStudentInscription.nombre}} 
+                                        	{{objStudentInscription.paterno}} 
+                                        	{{objStudentInscription.materno}} </br>
+                                        	<b>CI-Complemento:</b> {{objStudentInscription.carnet_identidad}} {{objStudentInscription.complemento}} </br>
+
+                                        </h4>
+                                        <small class="text-muted">---</small>
+                                        <p>
+                                        	<div class="row">
+                                        		<div class="col-md-6">
+                                        			
+													<div class="row">
+		                                        		<div class="col-md-6"><b>C&oacute;digo SIE:</b> {{objStudentInscription.sie}} </div>
+		                                        		<div class="col-md-6"><b>Unidad Educativa:</b> {{objStudentInscription.institucioneducativa}} </div>
+		                                        	</div>
+		                                        	</br>	
+		                                        	<div class="row">
+							                            <div class="col-md-3"><b>Nivel</b> </div>
+							                            <div class="col-md-3"><b>Grado</b> </div>
+							                            <div class="col-md-3"><b>Paralelo</b> </div>
+							                            <div class="col-md-3"><b>Turno</b> </div>
+							                            
+							                        </div>
+							                        <div class="row">
+							                            <div class="col-md-3">{{objStudentInscription.nivel}} </div>
+							                            <div class="col-md-3">{{objStudentInscription.grado}} </div>
+							                            <div class="col-md-3">{{objStudentInscription.paralelo}} </div>
+							                            <div class="col-md-3">{{objStudentInscription.turno}} </div>
+							                            
+							                        </div>
+
+                                        		</div>
+                                        		<div class="col-md-6">
+                                                    {% if objStudentInscription.carnet_identidad %}
+                                            			{{form_start(inscripForm, {'attr':{'id':'inscriptionExternaIdForm'}})}}
+    		                                    		Tel&eacute;fono: {{form_widget(inscripForm.fono,{'attr':{'class':'form-control'}})}}
+    		                                    		Correo Electronico: {{form_widget(inscripForm.email,{'attr':{'class':'form-control'}})}}
+    		                                    		Discapacidad: {{form_widget(inscripForm.discapacidad,{'attr':{'class':'form-control'}})}}
+    		                                    		{{form_widget(inscripForm.doInscription)}}
+    		                                    		{{form_end(inscripForm)}}
+                                                    {% else %}
+                                                         <div class="alert alert-lilac">
+                                                            <strong>Atenci&oacute;n!</strong> Estudiante no cuenta con n&uacute;mero de C.I. para realizar la inscripci&oacute;n...
+                                                        </div>
+                                                    {% endif %}
+                                        		</div>
+                                        	</div>
+                                    
+                                    	</p>
+                                    </div>
+                                </li><!-- media -->
+
+
+                            </ul><!-- comment-list -->
+                            <br>                           
+                        </div>
+                    </div>
+
+{% else %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            {% for flashMessage in app.session.flashbag.get('noExternal') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

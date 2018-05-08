@@ -1,0 +1,90 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-list-ul"></i> Crear materia <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    <a href="{{ path('olimregistroolimpiada')}}"> Olimpiadas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="{{ path('olimmateriatipo')}}"> Materias</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    Crear
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        
+        {% include 'SieOlimpiadasBundle:OlimRegistroOlimpiada:olimpiadaDatos.html.twig' %}
+
+    	<div class="panel rounded shadow">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Datos nueva materia</h3>
+                </div>
+                <div class="pull-right">
+                    
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+    		<div class="panel-body">
+    			{{ form_start(form) }}
+    				<div class="row">
+    					{# <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    						<label>Olimpiada</label>
+    						{{ form_widget(form.olimRegistroOlimpiada, {'attr':{'class':'form-control'} }) }}
+    					</div> #}
+    					<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    						<label>Nombre materia</label>
+    						{{ form_widget(form.materia, {'attr':{'class':'form-control'} }) }}
+    					</div>
+    					<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    						<label>Fecha inicio inscripción</label>
+    						{{ form_widget(form.fechaInsIni, {'attr':{'class':'form-control'} }) }}
+    					</div>
+    					<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+    						<label>Fecha final inscripción</label>
+    						{{ form_widget(form.fechaInsFin, {'attr':{'class':'form-control'} }) }}
+    					</div>
+    					<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+    						<label>Descripción</label>
+    						{{ form_widget(form.descripcion, {'attr':{'class':'form-control', 'rows':'5'} }) }}
+    					</div>
+    				</div>
+    				<div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <button type="submit" class="btn btn-primary"> <i class="fa fa-save"></i> Registrar </button>
+                            <a href="{{path('olimmateriatipo')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar </a>
+                        </div>
+    				</div>
+    			{{ form_end(form) }}
+    		</div>
+    	</div>
+		
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+
+        $(function(){
+            // aplicamos las mascaras para las fechas
+            $("#sie_appwebbundle_olimmateriatipo_fechaInsIni").inputmask({ "alias": "dd-mm-yyyy" });
+            $("#sie_appwebbundle_olimmateriatipo_fechaInsFin").inputmask({ "alias": "dd-mm-yyyy" });
+        });
+        
+    </script>
+{% endblock %}

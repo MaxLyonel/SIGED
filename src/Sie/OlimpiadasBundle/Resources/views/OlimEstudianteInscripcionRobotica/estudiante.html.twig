@@ -1,0 +1,22 @@
+{% if estudiante %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Código RUDE</th>
+                <th>Paterno</th>
+                <th>Materno</th>
+                <th>Nombre(s)</th>
+                <th>Fecha de Nacimiento</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{estudiante.codigoRude}}</td>
+                <td>{{estudiante.paterno}}</td>
+                <td>{{estudiante.materno}}</td>
+                <td>{{estudiante.nombre}}</td>
+                <td>{{estudiante.fechaNacimiento|date('d-m-Y')}}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endif %}

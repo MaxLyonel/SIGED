@@ -4,49 +4,58 @@
                 <div class="row">                                                
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
-                            <div class="form-group has-feedback">
-                                {#<input id="form_codigoRudeHistory" class="form-control" name="form[codigoRudeHistory]" required="required" maxlength="20" type="text" placeholder="¡Ingrese un rude para ver su historial!">#}
-                                <span class="form-control">1er Semestre 2017-Inscripciones</span>
+                            <div class="form-group has-feedback">                                
+                                <span class="form-control">1er Semestre 2018-Inscripciones</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="1" id="est1">
-                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="1er Semestre 2017-Inscripciones" id="val1">
-                                <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="1er Semestre 2018-Inscripciones" id="val1">
+                                <button type="submit" class="btn btn-theme fa fa-eye form-control-feedback rounded"></button>
                             </div>
                         </form>
                     </div>
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
-                            <div class="form-group has-feedback">
-                                {#<input id="form_codigoRudeHistory" class="form-control" name="form[codigoRudeHistory]" required="required" maxlength="20" type="text" placeholder="¡Ingrese un rude para ver su historial!">#}
-                                <span class="form-control">1er Semestre 2017-Notas</span>
+                            <div class="form-group has-feedback">                                
+                                <span class="form-control">1er Semestre 2018-Notas</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="2" id="est2">
-                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="1er Semestre 2017-Notas" id="val2">
-                                <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="1er Semestre 2018-Notas" id="val2">
+                                <button type="submit" class="btn btn-theme fa fa-eye form-control-feedback rounded"></button>
                             </div>
                         </form>
                     </div>
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
-                            <div class="form-group has-feedback">
-                                {#<input id="form_codigoRudeHistory" class="form-control" name="form[codigoRudeHistory]" required="required" maxlength="20" type="text" placeholder="¡Ingrese un rude para ver su historial!">#}
-                                <span class="form-control">2do Semestre 2017-Inscripciones</span>
+                            <div class="form-group has-feedback">                                
+                                <span class="form-control">2do Semestre 2018-Inscripciones</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="3" id="est3">
-                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="2do Semestre 2017-Inscripciones" id="val3">
-                                <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="2do Semestre 2018-Inscripciones" id="val3">
+                                <button type="submit" class="btn btn-theme fa fa-eye form-control-feedback rounded"></button>
                             </div>
                         </form>
                     </div>
                     <div class="col-lg-3">
                         <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
-                            <div class="form-group has-feedback">
-                                {#<input id="form_codigoRudeHistory" class="form-control" name="form[codigoRudeHistory]" required="required" maxlength="20" type="text" placeholder="¡Ingrese un rude para ver su historial!">#}
-                                <span class="form-control">2do Semestre 2017-Notas</span>
+                            <div class="form-group has-feedback">                                
+                                <span class="form-control">2do Semestre 2018-Notas</span>
                                 <hr>
                                 <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="4" id="est4">
-                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="2do Semestre 2017-Notas" id="val4">
-                                <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
+                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="2do Semestre 2018-Notas" id="val4">
+                                <button type="submit" class="btn btn-theme fa fa-eye form-control-feedback rounded"></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row" align="center">
+                    <div class="col-lg-12">
+                        <form action="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}" method="post" class="navbar-form">
+                            <div class="form-group has-feedback">                                
+                                <span class="form-control">Gestiones Pasadas</span>
+                                <hr>
+                                <input type="hidden" class="form-control typeahead rounded" name="form[val]" value="5" id="est5">
+                                <input type="hidden" class="form-control typeahead rounded" name="form[titulo]" value="Gestiones Pasadas" id="val4">
+                                <button type="submit" class="btn btn-theme fa fa-eye form-control-feedback rounded"></button>
                             </div>
                         </form>
                     </div>
@@ -75,11 +84,12 @@
                                 </div><!-- /.mini-stat-info -->
                             </div><!-- /.mini-stat -->
                         </div>
+                        {% set totconcl = entitiestot[0].tottecho - entitiestot[0].totfaltante %}                      
                         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                             <div class="mini-stat clearfix bg-bitbucket">
                                 <span class="mini-stat-icon"><i class="fa fa-flag-o fg-success"></i></span><!-- /.mini-stat-icon -->
                                 <div class="mini-stat-info">
-                                    <span class="counter">{{entitiestot[0].totconclu}}</span>
+                                    <span class="counter">{{entitiestot[0].tottecho - entitiestot[0].totfaltante}}</span>
                                     Ceas Concluidos
                                 </div><!-- /.mini-stat-info -->
                             </div><!-- /.mini-stat -->
@@ -88,7 +98,7 @@
                             <div class="mini-stat clearfix bg-bitbucket">
                                 <span class="mini-stat-icon"><i class="fa fa-times-circle-o fg-danger"></i></span><!-- /.mini-stat-icon -->
                                 <div class="mini-stat-info">
-                                    <span class="counter">{{entitiestot[0].tottecho - entitiestot[0].totconclu}}</span>
+                                    <span class="counter">{{entitiestot[0].totfaltante}}</span>
                                     Ceas Pendientes
                                 </div><!-- /.mini-stat-info -->
                             </div><!-- /.mini-stat -->
@@ -113,41 +123,37 @@
                                                             <b class="text-block">{{data.lugar}}</b>
                                                         </td>
                                                         <td>
-                                                            <b class="text-block">{{data.cantconclu}} de {{data.canttecho}}</b>
-                                                            <span class="text-block text-muted">ceas concluidos</span>
-                                                        </td>
-                                                        <td>
-                                                            {% set diff = data.canttecho - data.cantconclu %}
+                                                            {% set diff = data.canttecho - data.cantfaltante %}
                                                             {% if diff < 0 %}
                                                                 {% set diff = 0%}
                                                             {% endif %}
-                                                            <b class="text-block">{{diff}}</b>
+                                                            <b class="text-block">{{diff}} de {{data.canttecho}}</b>
+                                                            <span class="text-block text-muted">ceas concluidos</span>
+                                                        </td>
+                                                        <td>
+                                                            
+                                                            <b class="text-block">{{data.cantfaltante}}</b>
                                                             <span class="text-block text-muted">ceas pendientes</span>
                                                         </td> 
                                                         <td>
-                                                            {#<span class="text-block text-muted">total 100%</span>
-                                                            <div class="progress progress-xxs no-margin">
-                                                                <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                                            </div>#}
-
-                                                            {% set difftot = ((data.cantconclu * 100) / data.canttecho)|round %}
+                                                            {% set difftot = ((diff * 100) / data.canttecho)|round %}
                                                             {% if difftot > 100 %}
                                                                 {% set difftot = 100 %}
                                                             {% endif %}
 
                                                             <span class="text-block text-muted">concluidos {{difftot}}%</span>
                                                             <div class="progress progress-xxs no-margin">
-                                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{((data.cantconclu * 100) / data.canttecho)|round}}%"></div>
+                                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{((difftot * 100) / data.canttecho)|round}}%"></div>
                                                             </div>
 
-                                                            {% set diffpen = (((data.canttecho - data.cantconclu) * 100) / data.canttecho)|round %}
+                                                            {% set diffpen = (((data.cantfaltante) * 100) / data.canttecho)|round %}
                                                             {% if diffpen < 0 %}
                                                                 {% set diffpen = 0 %}
                                                             {% endif %}
                                                             
                                                             <span class="text-block text-muted">pendiente {{diffpen}}%</span>
                                                             <div class="progress progress-xxs no-margin">
-                                                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{(((data.canttecho - data.cantconclu) * 100) / data.canttecho)|round}}%"></div>
+                                                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{(((data.cantfaltante) * 100) / data.canttecho)|round}}%"></div>
                                                             </div>                                                                    
                                                         </td>                                                                                                                       
                                                     </tr> 
@@ -165,8 +171,8 @@
                                         <div class="panel-heading">&nbsp;</div>
                                         <div class="panel-body text-center">
                                             <div class="easy-pie-chart easy-pie-sm">
-                                                <div class="percentage" data-percent="{{ ((entitiestot[0].totconclu * 100) / entitiestot[0].tottecho)|round(1, 'floor')}}" data-size="100" data-bar-color="#00B1E1">
-                                                    <span> {{ ((entitiestot[0].totconclu * 100) / entitiestot[0].tottecho)|round(1, 'floor')}} </span> %
+                                                <div class="percentage" data-percent="{{ ((totconcl * 100) / entitiestot[0].tottecho)|round(1, 'floor')}}" data-size="100" data-bar-color="#00B1E1">
+                                                    <span> {{ ((totconcl * 100) / entitiestot[0].tottecho)|round(1, 'floor')}} </span> %
                                                 </div>
                                                 <a class="title" href="javascript:void(0);">
                                                     <i class="fa fa-flag-o"></i> Concluidos
@@ -182,8 +188,8 @@
                                         <div class="panel-heading">&nbsp;</div>
                                         <div class="panel-body text-center">
                                             <div class="easy-pie-chart easy-pie-sm">
-                                                <div class="percentage" data-percent="{{ (((entitiestot[0].tottecho - entitiestot[0].totconclu) * 100) / entitiestot[0].tottecho)|round(1, 'floor')}}" data-size="100" data-bar-color="#E9573F">
-                                                    <span> {{ (((entitiestot[0].tottecho - entitiestot[0].totconclu) * 100) / entitiestot[0].tottecho)|round(1, 'floor')}} </span> %
+                                                <div class="percentage" data-percent="{{ (((entitiestot[0].totfaltante) * 100) / entitiestot[0].tottecho)|round(1, 'floor')}}" data-size="100" data-bar-color="#E9573F">
+                                                    <span> {{ (((entitiestot[0].totfaltante) * 100) / entitiestot[0].tottecho)|round(1, 'floor')}} </span> %
                                                 </div>
                                                 <a class="title" href="javascript:void(0);">
                                                     <i class="fa fa-times-circle-o"></i> Pendiente
@@ -197,4 +203,4 @@
                     </div>                                               
                 </div><!-- /.body-content -->
                 <!--/ End body content -->
-{% endblock %}            
+{% endblock %} 

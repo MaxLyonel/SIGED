@@ -1,0 +1,118 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Inscripciones OCEPB <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-pencil"></i>
+                    <a href="#">
+                       Inscripciones OCEPB
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                {% for flashMessage in app.session.flashbag.get('novalido') %}
+                <div class="alert alert-warning alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Alerta!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    <div class="row">
+          <div class="col-md-6 col-md-offset-3">
+           
+            <div class="panel rounded shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title"></h3>
+                                    </div>
+                                    <div class="pull-right">
+                                      
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding">
+
+                                    {{form_start(form)}}
+                                        <div class="form-body">
+                                            
+                                            <div class="form-group">
+                                                <div class="row">
+
+                                                    <div class="col-md-6">SIE:
+                                                        
+                                                            
+                                                         {% if modeview  %}                                  
+                                                            {{form_widget(form.sie, {'attr': {'class':'form-control', } } )}}
+                                                        {% else %}
+                                                            {{form_widget(form.sie, {'attr': {'class':'form-control', 'readonly':'true'} } )}}
+                                                        {% endif %}
+                                                        
+                                                        
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        Gestion:
+                                                        {{form_widget(form.gestion, {'attr':{'class':'form-control'} })}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                          
+                                        </div><!-- /.form-body -->
+                                        <div class="form-footer">
+                                            <div class="pull-right">
+                                                <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
+                                                
+                                                        {{form_widget(form.sendData, {'attr':{'class':'btn btn-primary'} })}}
+                                                
+                                                
+                                                
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div><!-- /.form-footer -->
+                                    {{form_end(form)}}
+
+                                </div><!-- /.panel-body -->
+                            </div>
+
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div id="idResult">
+            
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+
+
+
+
+    </script>
+
+    
+    
+{% endblock %}

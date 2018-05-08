@@ -1,0 +1,77 @@
+{# {% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+    
+ #}
+<style type="text/css">
+    .datos{
+        font-size: 1em;
+    }
+    .datos label{
+        font-weight: bold;
+        color: #546DA7;
+        padding: 0px;
+        margin: 0px;
+    }
+    .datos div{
+        background: #FFFFFF;
+    }
+</style>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="panel rounded shadow">
+        <div class="panel-heading">
+            <div class="pull-left">
+                <h4 class="panel-title">Requisitos para la inscripci&oacute;n: 
+                    
+                </h4>
+            </div>
+            <div class="pull-right">
+                <small>Periodo de inscripción <span class="badge badge-success">{{regla.olimMateriaTipo.fechaInsIni|date('d-m-Y')}} al {{regla.olimMateriaTipo.fechaInsFin|date('d-m-Y')}} </span></small>
+                <button type="button" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="panel-body datos">
+
+            {% if regla.modalidadParticipacionTipo.id == 1 %}
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>Nacionalidad:</label> Boliviana<br>
+                    <label>Edad inicial:</label> {{ regla.edadInicial }} años hasta el {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                    <label>Edad final:</label> {{ regla.edadFinal }} años hasta el {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                </div>
+
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>N&uacutemero de CI en SIGED:</label> Si <br>
+                    <label>Participar:</label> en 2 &aacute;reas (m&aacute;ximo)<br>
+                    <label>Modalidad:</label> {{ regla.modalidadParticipacionTipo.modalidad }}
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>Cantidad de inscritos:</label> {{ regla.cantidadInscritosGrado }}<br>
+                    <label>¿Subir documento?:</label> {% if regla.siSubirDocumento %} Si {% else %} No {% endif %}
+                </div>
+            {% else %}
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>Nacionalidad:</label> Boliviana<br>
+                    <label>Edad inicial:</label> {{ regla.edadInicial }} años hasta el {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                    <label>Edad final:</label> {{ regla.edadFinal }} años hasta el {{ regla.fechaComparacion|date('d-m-Y') }}<br>
+                    <label>N&uacutemero de CI en SIGED:</label> Si <br>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>Participar:</label> en 2 &aacute;reas (m&aacute;ximo)<br>
+                    <label>Modalidad:</label> {{ regla.modalidadParticipacionTipo.modalidad }}<br>
+                    <label>Cantidad por equipo:</label> {{ regla.modalidadNumeroIntegrantesTipo.condicion }} {{ regla.modalidadNumeroIntegrantesTipo.cantidadMiembros }}<br>
+                    <label>Cantidad de equipos:</label> {{ regla.cantidadEquipos }}<br>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                    <label>¿Nombre equipo?:</label> {% if regla.siNombreEquipo %} Si {% else %} No {% endif %}<br>
+                    <label>¿Nombre proyecto?:</label> {% if regla.siNombreProyecto %} Si {% else %} No {% endif %}<br>
+                    <label>¿Subir documento?:</label> {% if regla.siSubirDocumento %} Si {% else %} No {% endif %}
+                </div>
+            {% endif %}
+ 
+            
+        </div>
+    </div>
+</div>
+    
+{# {% endblock %} #}

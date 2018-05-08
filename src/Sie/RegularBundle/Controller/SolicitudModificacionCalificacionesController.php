@@ -129,8 +129,10 @@ class SolicitudModificacionCalificacionesController extends Controller {
                                 ->innerJoin('SieAppWebBundle:ParaleloTipo','pt','WITH','iec.paraleloTipo = pt.id')
                                 ->innerJoin('SieAppWebBundle:Estudiante','e','WITH','ei.estudiante = e.id')
                                 ->where('enm.tipo = 1')
-                                ->andWhere('enm.usuarioId = :user')
-                                ->setParameter('user',$idUsuario)
+                                ->andWhere('ie.id = :idInstitucion')
+                                // ->andWhere('enm.usuarioId = :user')
+                                // ->setParameter('user',$idUsuario)
+                                ->setParameter('idInstitucion',$this->session->get('ie_id'))
                                 ->orderBy('enm.id','DESC')
                                 ->getQuery()
                                 ->getResult();
@@ -247,6 +249,17 @@ class SolicitudModificacionCalificacionesController extends Controller {
 
             $this->session = new Session();
             $tipoSistema = $request->getSession()->get('sysname');
+
+            // Validamos que el usuario sea director o tecnico nacional o administrativo
+            $rolUsuario = $request->getSession()->get('roluser');
+            $userName = $request->getSession()->get('userName');
+            if($rolUsuario != 5 and $rolUsuario != 9 and $rolUsuario != 8){
+                if($rolUsuario == 7 and $userName == '8955627'){
+
+                }else{
+                    return $this->redirectToRoute('solicitudModificacionCalificaciones');
+                }
+            }
 
             ////////////////////////////////////////////////////
             $rolUsuario = $this->session->get('roluser');
@@ -1077,7 +1090,9 @@ class SolicitudModificacionCalificacionesController extends Controller {
         if(!$responsable){
             $responsable[0] = array('paterno'=>'','materno'=>'','nombre'=>'');
         }
+
         $usuarioRoles = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneBy(array('usuario'=>$solicitud->getUsuarioIdResp(),'rolTipo'=>array(7,8,10)));
+
         if($usuarioRoles){
             $rol = $em->getRepository('SieAppWebBundle:RolTipo')->find($usuarioRoles->getRolTipo()->getId());
         }else{

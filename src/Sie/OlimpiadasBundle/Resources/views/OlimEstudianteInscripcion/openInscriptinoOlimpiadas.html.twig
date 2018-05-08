@@ -1,0 +1,87 @@
+<div class="row">
+  <div class="col-md-12">
+    
+      <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title text-center text-primary">SIE: {{objInstitucionEducativa.id}} - <b>{{objInstitucionEducativa.institucioneducativa}}</b>
+                  {{objInstitucionEducativa.institucioneducativaTipo}}
+                </h3>
+            </div><!-- /.panel-heading -->
+            <div class="panel-body no-padding">
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <h4 class="pull-left text-lilac">
+                                  Registro &aacute;rea :   <b>{{entity.materia}} </b> 
+                               </h4> 
+                            </td>
+                             <td>
+                                <h4 class="pull-left text-lilac">
+                                  Categoria : <b>{{category}} </b> 
+                               </h4>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div><!-- /.panel-body -->
+        </div>
+      
+    
+  </div>
+  
+</div>
+<div class="row">
+          <div class="col-md-12">
+
+              <!-- Start color horizontal tabs -->
+              <div class="panel panel-tab panel-tab-double shadow">
+                  <!-- Start tabs heading -->
+                  <div class="panel-heading no-padding">
+                      <ul class="nav nav-tabs">
+                          <li class="nav-border nav-border-top-primary active">
+                              <a href="component-tabsaccordion.html#tab1-1" data-toggle="tab" class="text-center" aria-expanded="true" onclick="regDirector('{{jsondataInscription}}')">
+                                  1. Registro Director
+                              </a>
+                          </li>
+                          <li class="nav-border nav-border-top-primary">
+                              <a href="component-tabsaccordion.html#tab1-1" data-toggle="tab" class="text-center" aria-expanded="false" onclick="listTutor('{{jsondataInscription}}')">
+                                  2. Lista Tutores y Registro de Inscripciones
+                              </a>
+                          </li>
+                          <!-- <li class="nav-border nav-border-top-primary">
+                              <a href="component-tabsaccordion.html#tab1-1" data-toggle="tab" class="text-center" aria-expanded="false" onclick="regInscriptions('{{jsondataInscription}}')">
+                                  3. 
+                              </a>
+                          </li> -->
+
+                      </ul>
+                  </div><!-- /.panel-heading -->
+                  <!--/ End tabs heading -->
+
+                  <!-- Start tabs content -->
+                  <div class="panel-body">
+                    <form action="#">
+                    
+                      <div class="tab-content">
+                        <!-- start tab1 -->
+                          <div class="tab-pane fade active in" id="tab1-1">
+                            <div id="idOptionResult">
+                              
+                            </div>
+
+                          
+                      </div>
+                    </form>
+                  </div><!-- /.panel-body -->
+                  <!--/ End tabs content -->
+              </div><!-- /.panel -->
+              <!--/ End color horizontal tabs -->
+
+          </div>
+      </div>
+    </div>
+
+    

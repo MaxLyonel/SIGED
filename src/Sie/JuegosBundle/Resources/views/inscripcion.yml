@@ -1,0 +1,51 @@
+sie_juegos_inscripcion_index:
+    path:    /informacion
+    defaults: { _controller: SieJuegosBundle:Inscripcion:index }
+
+sie_juegos_inscripcion_fp_busqueda:
+    path:    /fp/busqueda
+    defaults: { _controller: SieJuegosBundle:Inscripcion:fpBusqueda}
+
+sie_juegos_inscripcion_fp_index:
+    path:    /fp/registro
+    defaults: { _controller: SieJuegosBundle:Inscripcion:fpIndex }
+
+sie_juegos_inscripcion_lista_estudiantes:
+    path:    /lista/estudiantes
+    defaults: { _controller: SieJuegosBundle:Inscripcion:listaEstudiantes }
+    options:
+         expose: true  
+
+sie_juegos_inscripcion_lista_estudiantes_registro:
+    path:    /lista/estudiantes/registro
+    defaults: { _controller: SieJuegosBundle:Inscripcion:listaEstudiantesRegistro }
+
+sie_juegos_inscripcion_lista_estudiantes_registro_busca_pruebas:
+    path:    /lista/estudiantes/registro/busca/pruebas/{ue}/{disciplina}/{genero}
+    defaults: { _controller: SieJuegosBundle:Inscripcion:buscaPruebas }
+    options:
+         expose: true  
+
+sie_juegos_inscripcion_lista_estudiantes_inscritos_busca_pruebas:
+    path:    /lista/estudiantes/inscritos/busca/pruebas/{prueba}/{ue}
+    defaults: { _controller: SieJuegosBundle:Inscripcion:buscaInscritosPrueba }
+    options:
+         expose: true  
+
+sie_juegos_inscripcion_lista_estudiantes_inscritos_ue:
+    path:    /lista/estudiantes/inscritos/ue/{usuario}
+    defaults: { _controller: SieJuegosBundle:Inscripcion:listaEstudiantesInscritosUeDescargaPdf } 
+
+sie_juegos_inscripcion_lista_estudiantes_ue:
+    path:    /lista/estudiantes/ue/pdf
+    defaults: { _controller: SieJuegosBundle:Inscripcion:listaInscritosUeDescargaPdf } 
+
+sie_juegos_eliminacion_prueba_estudiantes:
+    path:    /eliminacion/prueba/estudiantes/{inscripcion}
+    defaults: { _controller: SieJuegosBundle:Inscripcion:eliminaPruebaInscripcion }
+    options:
+         expose: true 
+
+sie_juegos_eliminacion_inscripcion_estudiante:
+    path:    /eliminacion/estudiante
+    defaults: { _controller: SieJuegosBundle:Inscripcion:eliminaInscripcion }
