@@ -456,7 +456,7 @@ class RegistroController extends Controller {
         $pruebaId = $_POST['prueba'];
         //$posicionId = $_POST['posicion'];
         $posicionId = null;
-        $faseId = 2;
+        $faseId = 1;
         $ainscritos = array();
         $aInscritos = $this->getUnidadEducativaPruebaPosicion($sie,$gestionActual,$faseId,$pruebaId);
         foreach ($aInscritos as $inscrito) {
@@ -501,7 +501,7 @@ class RegistroController extends Controller {
         $deportistas = $_POST['deportistas'];
         $nivelId = $_POST['nivel'];
         //$posicionId = $_POST['posicion'];
-        $faseId = 2;
+        $faseId = 1;
         $posicionId = null;
 
         $msgEstudiantesRegistrados = '';
@@ -811,7 +811,7 @@ class RegistroController extends Controller {
 
         $sie = 0;
         $pruebaId = 0;
-        $faseId = 2;
+        $faseId = 1;
 
         $inscripcion = base64_decode($_POST['inscripcion']);
 
@@ -827,7 +827,7 @@ class RegistroController extends Controller {
 
                 $sie = $institucionEducativaId;
                 $pruebaId = $pruebaId;
-                $faseId = 2;
+                $faseId = 1;
 
                 $query = $em->getConnection()->prepare("select * from fase_tipo where id = ".$faseId);
                 $query->execute();
