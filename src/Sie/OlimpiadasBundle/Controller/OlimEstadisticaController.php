@@ -144,37 +144,146 @@ class OlimEstadisticaController extends Controller{
 		return $this->render('SieOlimpiadasBundle:OlimReporte:index.html.twig', array('form'=>$form->createView()));
 	}
 
-	public function nacionalIndexAction(Request $request){
+	public function registradosIndexAction(Request $request){
+		/*
+		* Define la zona horaria y halla la fecha actual
+		*/
+	   	date_default_timezone_set('America/La_Paz');
+	   	$fechaActual = new \DateTime(date('Y-m-d'));
+	   	$gestionActual = date_format($fechaActual,'Y');
+
+		$codigo = 0;
+		$nivel = 0;	
+		$nivelSiguiente = 0;
+
+		if ($request->isMethod('POST')) {
+            $codigo = base64_decode($request->get('codigo'));
+			$nivel = $request->get('nivel');
+			if ($nivel == 0){
+				$nivelSiguiente = 1;	
+			} else if($nivel == 1){
+				$nivelSiguiente = 7;	
+			} else {
+				$nivelSiguiente = 0;
+			}	
+        } else {
+            $codigo = 0;
+			$nivel = 0;	
+			$nivelSiguiente = 1;	
+		}
+		
+		$inscritos = $this->getRegistradosEtapa1($nivel,$codigo,$gestionActual);
+		//dump($nivel);die;
+
+		return $this->render('SieOlimpiadasBundle:OlimEstadistica:registrados.html.twig', array(
+			'estadistica'=>$inscritos,
+			'nivel'=>$nivel,
+			'nivelSiguiente'=>$nivelSiguiente,
+		));
+	}
+
+	private function getRegistradosEtapa1($nivel,$codigo,$gestion){
 		$em = $this->getDoctrine()->getManager();
-		$query = $em->getConnection()->prepare("
-			select dep.id, dep.codigo, dep.lugar as nombre, COALESCE(oli.cantidad,0) as cantidad
-			from (select * from lugar_tipo where lugar_nivel_id = 1) as dep
+
+		if($nivel == 0){
+			$query = $em->getConnection()->prepare("
+				select dep.id, dep.codigo, dep.lugar as nombre, COALESCE(oli.cantidad,0) as cantidad
+				from (select * from lugar_tipo where lugar_nivel_id = 1) as dep
+				left join (
+				select lt4.id, count(*) as cantidad from olim_estudiante_inscripcion oei
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+				left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+				left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by lt4.id
+				) as oli on oli.id = dep.id
+				union all 
+				select 1 as id, '0' as codigo, 'Bolivia' as nombre, count(*) as cantidad from olim_estudiante_inscripcion oei
+				where oei.gestion_tipo_id = :gestion::double precision
+				order by cantidad desc, nombre asc
+			");
+		}
+
+		if($nivel == 1){
+			$query = $em->getConnection()->prepare("
+				select dis.id, dis.codigo, UPPER(dis.lugar) as nombre, COALESCE(oli.cantidad,0) as cantidad
+				from (select lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
+				left join (
+				select lt5.id, count(*) as cantidad from olim_estudiante_inscripcion oei
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+				left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+				left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
+				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by lt5.id
+				) as oli on oli.id = dis.id
+				union all 
+				select lt4.id, lt4.codigo, UPPER(lt4.lugar) as nombre, count(*) as cantidad from olim_estudiante_inscripcion oei
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+				left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+				left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
+				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by lt4.id, lt4.codigo, lt4.lugar
+				order by cantidad desc, nombre asc
+			");
+		}
+
+		if($nivel == 7){
+			$query = $em->getConnection()->prepare("
+			select ue.id, ue.codigo, UPPER(ue.nombre) as nombre, COALESCE(oli.cantidad,0) as cantidad
+			from (
+			select ie.id, cast(ie.id as varchar) as codigo, ie.institucioneducativa as nombre from lugar_tipo as lt 
+			inner join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id
+			inner join institucioneducativa as ie on ie.le_juridicciongeografica_id = jg.id
+			where lt.codigo = '".$codigo."' and ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.orgcurricular_tipo_id = 1 and ie.id not in (1,2,3,4,5,6,7,8,9)
+			and ie.estadoinstitucion_tipo_id = 10
+			) as ue
 			left join (
-			select lt4.id, count(*) as cantidad from olim_estudiante_inscripcion oei
+			select ie.id, count(*) as cantidad from olim_estudiante_inscripcion oei
 			inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
 			inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
 			inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
 			inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
-			left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
-			left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
-			left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
-			left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
-			left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-			where oei.gestion_tipo_id = :gestion:: double precision and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
-			group by lt4.id
-			) as oli on oli.id = dep.id
+			left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
+			where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+			group by ie.id
+			) as oli on oli.id = ue.id
 			union all 
-			select 0 as id, '1' as codigo, 'Bolivia' as nombre, count(*) as cantidad from olim_estudiante_inscripcion oei
-			where oei.gestion_tipo_id = :gestion:: double precision
-			order by cantidad desc
-		");
-		$query->bindValue(':gestion', 2018);
+			select lt.id, lt.codigo, UPPER(lt.lugar) as nombre, count(*) as cantidad from olim_estudiante_inscripcion oei
+			inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+			inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+			inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+			inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+			left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
+			where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0			
+			group by lt.id, lt.codigo, lt.lugar
+			order by cantidad desc, nombre asc
+			");
+		}
+		
+		$query->bindValue(':gestion', $gestion);
 		$query->execute();
 		$inscritos = $query->fetchAll();
-
-		return $this->render('SieOlimpiadasBundle:OlimEstadistica:nacional.html.twig', array(
-			'estadistica'=>$inscritos,
-		));
+		return $inscritos;
 	}
 	
 	/**
@@ -183,7 +292,7 @@ class OlimEstadisticaController extends Controller{
      * @param Request $request
      * @return type
      */
-    public function nacionalPdfAction(Request $request) {
+    public function registradosPdfAction(Request $request) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -191,22 +300,32 @@ class OlimEstadisticaController extends Controller{
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
 
-        if ($request->isMethod('POST')) {
-            /*
-             * Recupera datos del formulario
-             */
+        $codigo = 0;
+		$nivel = 0;	
+		$nivelSiguiente = 0;
+
+		if ($request->isMethod('POST')) {
+            $codigo = base64_decode($request->get('codigo'));
+			$nivel = $request->get('nivel');
         } else {
-		}
-		
+            $codigo = 0;
+			$nivel = 0;	
+		}		
 		$gestion = $gestionActual;
 
-        $arch = 'Olim_Bolivia'.$gestion.'_'.date('YmdHis').'.pdf';
+        $arch = 'Olim_'.$gestion.'_'.date('YmdHis').'.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        
-        // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Nacional_f1_v1_rcm.rptdesign&__format=pdf&codges='.$gestion));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));        
+        if($nivel == 0){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Nacional_f1_v1_rcm.rptdesign&__format=pdf&codges='.$gestion));
+		} else if ($nivel == 1){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Departamental_f1_v1_rcm.rptdesign&__format=pdf&codges='.$gestion.'&coddep='.$codigo));
+		} else if ($nivel == 7){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Distrital_f1_v1_rcm.rptdesign&__format=pdf&codges='.$gestion.'&coddis='.$codigo));	
+		} else {
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Nacional_f1_v1_rcm.rptdesign&__format=pdf&codges='.$gestion));
+		}        
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -220,7 +339,7 @@ class OlimEstadisticaController extends Controller{
      * @param Request $request
      * @return type
      */
-    public function nacionalXlsAction(Request $request) {
+    public function registradosXlsAction(Request $request) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -228,22 +347,33 @@ class OlimEstadisticaController extends Controller{
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
 
-        if ($request->isMethod('POST')) {
-            /*
-             * Recupera datos del formulario
-             */
+        $codigo = 0;
+		$nivel = 0;	
+		$nivelSiguiente = 0;
+
+		if ($request->isMethod('POST')) {
+            $codigo = base64_decode($request->get('codigo'));
+			$nivel = $request->get('nivel');
         } else {
+            $codigo = 0;
+			$nivel = 0;	
 		}
 		
 		$gestion = $gestionActual;
 
-        $arch = 'Olim_Bolivia'.$gestion.'_'.date('YmdHis').'.xls';
+        $arch = 'Olim_'.$gestion.'_'.date('YmdHis').'.xls';
         $response = new Response();
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        
-        // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Nacional_f1_v1_rcm.rptdesign&__format=xls&codges='.$gestion));
+        if($nivel == 0){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Nacional_f1_v1_rcm.rptdesign&__format=xls&codges='.$gestion));
+		} else if ($nivel == 1){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Departamental_f1_v1_rcm.rptdesign&__format=xls&codges='.$gestion.'&coddep='.$codigo));
+		} else if ($nivel == 7){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Distrital_f1_v1_rcm.rptdesign&__format=xls&codges='.$gestion.'&coddis='.$codigo));	
+		} else {
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Nacional_f1_v1_rcm.rptdesign&__format=xls&codges='.$gestion));
+		}  
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

@@ -1,11 +1,11 @@
-olimestadistica_nacional:
-    path:     /nacional
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:nacionalIndex" }
+olimestadistica_registrados:
+    path:     /registrados
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosIndex" }
 
-olimestadistica_nacional_pdf:
-    path:     /nacional/pdf
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:nacionalPdf" }
+olimestadistica_registrados_pdf:
+    path:     /registrados/pdf
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosPdf" }
 
-olimestadistica_nacional_xls:
-    path:     /nacional/xls
-    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:nacionalXls" }
+olimestadistica_registrados_xls:
+    path:     /registrados/xls
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosXls" }
