@@ -163,7 +163,7 @@ class InscriptionRezagoController extends Controller {
             //get the notas of student
             $boolStudentCalification = $this->getStudentNotasValidation($studentInscription, $student->getId());
             //check if the student has calification
-            if(!$boolStudentCalification){
+            if($boolStudentCalification){
               $message = 'Estudiante con rude: ' . $form['codigoRude'] . ' no cuenta con calificaciones, no es posible realizar la operación ';
               $this->addFlash('warningrezago', $message);
               return $this->redirectToRoute('inscription_rezago_index');
@@ -666,10 +666,10 @@ class InscriptionRezagoController extends Controller {
                         ->add('currentInscription', 'hidden', array('data' => $currentInscription))
                         ->add('nextInscription', 'hidden', array('data' => $nextInscription))
                         ->add('idStudent', 'hidden', array('data' => $idStudent))
-                        ->add('notaCualitativa', 'textarea', array(
-                            'label' => 'Nota Cualitativa',
-                            'attr' => array('class'=>'form-control','style' => 'width:600px')
-                              ))
+                        // ->add('notaCualitativa', 'textarea', array(
+                        //     'label' => 'Nota Cualitativa',
+                        //     'attr' => array('class'=>'form-control','style' => 'width:600px')
+                        //       ))
                         ->add('save', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-default')))
                         ->getForm()
         ;
@@ -801,65 +801,65 @@ class InscriptionRezagoController extends Controller {
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');");
             $query->execute();
             //save notas primver Bim
-            reset($nextmaterias);
-            while ($val = current($nextmaterias)) {
-                //save the relation between student and asignaturas
-                $studentAsignatura = new EstudianteAsignatura();
-                $studentAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
-                $studentAsignatura->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscription->getId()));
-                $studentAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find(key($nextmaterias)));
-                $studentAsignatura->setFechaRegistro(new \DateTime('now'));
-                $em->persist($studentAsignatura);
-                $em->flush();
+            // reset($nextmaterias);
+            // while ($val = current($nextmaterias)) {
+            //     //save the relation between student and asignaturas
+            //     $studentAsignatura = new EstudianteAsignatura();
+            //     $studentAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
+            //     $studentAsignatura->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscription->getId()));
+            //     $studentAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find(key($nextmaterias)));
+            //     $studentAsignatura->setFechaRegistro(new \DateTime('now'));
+            //     $em->persist($studentAsignatura);
+            //     $em->flush();
 
-                //save the student nota
-                $studentnotas = new EstudianteNota();
-                $studentnotas->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(1));
-                $studentnotas->setEstudianteAsignatura($em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array(
-                            'estudianteInscripcion' => $studentInscription->getId(),
-                            //'gestionTipo' => $this->session->get('currentyear'),
-                            //'asignaturaTipo' => key($nextmaterias)
-                            'institucioneducativaCursoOferta' => key($nextmaterias)
-                )));
-                $studentnotas->setNotaCuantitativa(current($nextmaterias));
-                $studentnotas->setUsuarioId($userId);
-                $studentnotas->setFechaRegistro(new \DateTime('now'));
-                $studentnotas->setFechaModificacion(new \DateTime('now'));
-                $studentnotas->setNotaCualitativa('');
-                $studentnotas->setRecomendacion('');
-                $em->persist($studentnotas);
-                $em->flush();
-                next($nextmaterias);
-            }
+            //     //save the student nota
+            //     $studentnotas = new EstudianteNota();
+            //     $studentnotas->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(1));
+            //     $studentnotas->setEstudianteAsignatura($em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array(
+            //                 'estudianteInscripcion' => $studentInscription->getId(),
+            //                 //'gestionTipo' => $this->session->get('currentyear'),
+            //                 //'asignaturaTipo' => key($nextmaterias)
+            //                 'institucioneducativaCursoOferta' => key($nextmaterias)
+            //     )));
+            //     $studentnotas->setNotaCuantitativa(current($nextmaterias));
+            //     $studentnotas->setUsuarioId($userId);
+            //     $studentnotas->setFechaRegistro(new \DateTime('now'));
+            //     $studentnotas->setFechaModificacion(new \DateTime('now'));
+            //     $studentnotas->setNotaCualitativa('');
+            //     $studentnotas->setRecomendacion('');
+            //     $em->persist($studentnotas);
+            //     $em->flush();
+            //     next($nextmaterias);
+            // }
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota_cualitativa');");
             $query->execute();
             //set the cualitativas notas to the old inscription
-            $cualitativaOldInscription = new EstudianteNotaCualitativa();
-            $cualitativaOldInscription->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(5));
-            $cualitativaOldInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($objresultInscription[0]['inscriptionId']));
-            $cualitativaOldInscription->setNotaCuantitativa(0);
-            $cualitativaOldInscription->setNotaCualitativa(mb_strtoupper(trim($form['notaCualitativa']),'utf-8'));
-            $cualitativaOldInscription->setRecomendacion('');
-            $cualitativaOldInscription->setUsuarioId($this->session->get('userId'));
-            $cualitativaOldInscription->setFechaRegistro(new \DateTime('now'));
-            $cualitativaOldInscription->setFechaModificacion(new \DateTime('now'));
-            $cualitativaOldInscription->setObs('');
-            $em->persist($cualitativaOldInscription);
-            $em->flush();
+            // $cualitativaOldInscription = new EstudianteNotaCualitativa();
+            // $cualitativaOldInscription->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(5));
+            // $cualitativaOldInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($objresultInscription[0]['inscriptionId']));
+            // $cualitativaOldInscription->setNotaCuantitativa(0);
+            // $cualitativaOldInscription->setNotaCualitativa(mb_strtoupper(trim($form['notaCualitativa']),'utf-8'));
+            // $cualitativaOldInscription->setRecomendacion('');
+            // $cualitativaOldInscription->setUsuarioId($this->session->get('userId'));
+            // $cualitativaOldInscription->setFechaRegistro(new \DateTime('now'));
+            // $cualitativaOldInscription->setFechaModificacion(new \DateTime('now'));
+            // $cualitativaOldInscription->setObs('');
+            // $em->persist($cualitativaOldInscription);
+            // $em->flush();
 
             //set the cualitativas notas to the new inscription
-            $cualitativaNewInscription = new EstudianteNotaCualitativa();
-            $cualitativaNewInscription->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(1));
-            $cualitativaNewInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscription->getId()));
-            $cualitativaNewInscription->setNotaCuantitativa(0);
-            $cualitativaNewInscription->setNotaCualitativa(mb_strtoupper(trim($form['notaCualitativa']),'utf-8'));
-            $cualitativaNewInscription->setRecomendacion('');
-            $cualitativaNewInscription->setUsuarioId($this->session->get('userId'));
-            $cualitativaNewInscription->setFechaRegistro(new \DateTime('now'));
-            $cualitativaNewInscription->setFechaModificacion(new \DateTime('now'));
-            $cualitativaNewInscription->setObs('');
-            $em->persist($cualitativaNewInscription);
-            $em->flush();
+            // $cualitativaNewInscription = new EstudianteNotaCualitativa();
+            // $cualitativaNewInscription->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(1));
+            // $cualitativaNewInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscription->getId()));
+            // $cualitativaNewInscription->setNotaCuantitativa(0);
+            // $cualitativaNewInscription->setNotaCualitativa(mb_strtoupper(trim($form['notaCualitativa']),'utf-8'));
+            // $cualitativaNewInscription->setRecomendacion('');
+            // $cualitativaNewInscription->setUsuarioId($this->session->get('userId'));
+            // $cualitativaNewInscription->setFechaRegistro(new \DateTime('now'));
+            // $cualitativaNewInscription->setFechaModificacion(new \DateTime('now'));
+            // $cualitativaNewInscription->setObs('');
+            // $em->persist($cualitativaNewInscription);
+            // $em->flush();
             //commented by krlos
             //select * from sp_agrega_estudiante_asignatura(2015, 60630013, '6063001220119A', 12, 5, 8, '1');
 //            $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']);
