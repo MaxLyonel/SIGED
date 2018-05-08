@@ -271,7 +271,7 @@
                                 </a>
                                 <ul>
                                     {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 8 %}
-                                        <li><a href="{{path('sie_juegos_registro_f1_index')}}">Fase Previa</a></li>
+                                        <li><a href="{{path('sie_juegos_registro_fp_index')}}">Fase Previa</a></li>
                                     {% endif %}
                                     {% if app.session.get('roluser') == 10 %}
                                         <li><a href="{{path('sie_juegos_comision_entrenador_f1_lista_index')}}">Registro Entrenadores</a></li>

@@ -97,7 +97,7 @@
                             <h3 class="panel-title">Deportistas Registrados</h3>
                         </div><!-- /.pull-left -->
                         <div class="pull-right">
-                            <form name="formReport" id="formReport" role="form" action="{{ path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase',{'fase':1,'usuario':app.session.get('userId')}) }}" method="POST">
+                            <form name="formReport" id="formReport" role="form" action="{{ path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase',{'fase':0,'usuario':app.session.get('userId')}) }}" method="POST">
                                 <input type="hidden" name="id" id="id" value="" />
                                 <button id="botonLista" name="botonLista" type="submit" title="Descargar en formato PDF" class="btn btn-lilac" disabled="true">
                                     <i class="fa fa-1x fa-file-pdf-o" aria-hidden="true"></i> Listado
@@ -164,7 +164,7 @@
                 if (r == true) {
                     peticion = $.ajax({
                         type: 'POST',
-                        url: '{{ path('sie_juegos_registro_f1_busqueda_grado_estudiante_save')}}',
+                        url: '{{ path('sie_juegos_registro_fp_busqueda_grado_estudiante_save')}}',
                         data: {'sie': sie, 'prueba': prueba, 'deportistas': deportistas, 'nivel': nivel},
                         beforeSend: function () {
                             $("#form_nivel").attr('disabled', 'true');
@@ -195,7 +195,7 @@
                             }
 
                             $.each(data.registrados, function (i, value) {
-                                $("#listaParticipante").append('<li id="list' + i + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + i + '&#39;);"><span class="status"><i class="fa fa-arrow-circle-down fg-danger"></i></span></a></div></li>');
+                                $("#listaParticipante").append('<li id="list' + i + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + i + '&#39;);"><span class="status"><i class="fa fa-times-circle fg-danger"></i></span></a></div></li>');
                             });
                         },
                         statusCode: {
@@ -219,7 +219,7 @@
             if(sie.length>=8){
                 peticion = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_juegos_registro_f1_busqueda_nivel')}}',
+                    url: '{{ path('sie_juegos_registro_fp_busqueda_nivel')}}',
                     data: {'sie': sie},
                     beforeSend: function () {
                         $("#form_nivel").attr('disabled', 'true');
@@ -295,7 +295,7 @@
             if(nivel != "" && $("#form_sie").val() != ""){
                 peticion = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_juegos_registro_f1_busqueda_genero')}}',
+                    url: '{{ path('sie_juegos_registro_fp_busqueda_genero')}}',
                     data: {'sie': $("#form_sie").val(), 'nivel': nivel},
                     beforeSend: function () {
                         $("#form_genero").attr('disabled', 'true');
@@ -361,7 +361,7 @@
             if(genero != "" && $("#form_nivel").val() != "" && $("#form_sie").val() != ""){
                 peticion = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_juegos_registro_f1_busqueda_grado_disciplina')}}',
+                    url: '{{ path('sie_juegos_registro_fp_busqueda_grado_disciplina')}}',
                     data: {'sie': $("#form_sie").val(), 'nivel': $("#form_nivel").val(), 'genero': genero},
                     beforeSend: function () {
                         $("#form_disciplina").attr('disabled', 'true');
@@ -435,7 +435,7 @@
             if(disciplina != "" && $("#form_genero").val() != ""){
                 peticion = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_juegos_registro_f1_busqueda_disciplina_prueba')}}',
+                    url: '{{ path('sie_juegos_registro_fp_busqueda_disciplina_prueba')}}',
                     data: {'genero': $("#form_genero").val(), 'disciplina': disciplina},
                     beforeSend: function () {
                         $("#form_prueba").attr('disabled', 'true');
@@ -487,7 +487,7 @@
             if(prueba != ""){
                 peticion = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_juegos_registro_f1_busqueda_posicion')}}',
+                    url: '{{ path('sie_juegos_registro_fp_busqueda_posicion')}}',
                     data: {'prueba': prueba},
                     beforeSend: function () {
                         $("#form_posicion").attr('disabled', 'true');
@@ -527,7 +527,7 @@
             if(grado != "" && $("#form_nivel").val() != "" && $("#form_sie").val() != "" && $("#form_genero").val() != ""){
                 peticion = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_juegos_registro_f1_busqueda_grado_estudiante')}}',
+                    url: '{{ path('sie_juegos_registro_fp_busqueda_grado_estudiante')}}',
                     data: {'grado': grado, 'nivel': $("#form_nivel").val(), 'sie': $("#form_sie").val(), 'genero': $("#form_genero").val()},
                     beforeSend: function () {
                         $('#tab'+grado).empty();
@@ -561,7 +561,7 @@
             if(prueba != "" && $("#form_sie").val() != "" ){
                 peticion = $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_juegos_registro_f1_busqueda_unidadeducativa_prueba_deportista')}}',
+                    url: '{{ path('sie_juegos_registro_fp_busqueda_unidadeducativa_prueba_deportista')}}',
                     data: {'prueba': prueba, 'sie': $("#form_sie").val()},
                     beforeSend: function () {
                         $("#listaSeleccionado").empty();
@@ -575,7 +575,7 @@
                     success: function (data) {
                         $("#listaParticipante").empty();
                         $.each(data.participantes, function (i, value) {
-                            $("#listaParticipante").append('<li id="list' + i + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + i + '&#39;);"><span class="status"><i class="fa fa-arrow-circle-down fg-danger"></i></span></a></div></li>');
+                            $("#listaParticipante").append('<li id="list' + i + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + i + '&#39;);"><span class="status"><i class="fa fa-times-circle fg-danger"></i></span></a></div></li>');
                         });
                         $("#form_posicion").removeAttr('disabled');
                         $("#form_posicion").focus();
@@ -641,7 +641,7 @@
             if (r == true) {
                 $.ajax({
                     type: 'POST',
-                    url: '{{ path('sie_juegos_eliminacion_f1_inscripcion')}}',
+                    url: '{{ path('sie_juegos_eliminacion_fp_inscripcion')}}',
                     data: {'inscripcion': es},
                     beforeSend: function () {
                     },
@@ -650,7 +650,7 @@
                             $("#listaParticipante").empty();
                             $("#listaParticipante").append('<div class="alert alert-success"><strong>Correcto: </strong> '+data.registro[1]+'</div>');
                             $.each(data.participantes, function (i, value) {
-                                $("#listaParticipante").append('<li id="list' + i + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + i + '&#39;);"><span class="status"><i class="fa fa-arrow-circle-down fg-danger"></i></span></a></div></li>');
+                                $("#listaParticipante").append('<li id="list' + i + '" class="list-group-item">' + value + '<div class="pull-right"><a href="#" onclick="getEliminarInscripcion(&#39;' + i + '&#39;);"><span class="status"><i class="fa fa-times-circle fg-danger"></i></span></a></div></li>');
                             });
                         } else {
                             $("#listaParticipante").append('<div class="alert alert-danger"><strong>Error: </strong> '+data.registro[1]+'</div>');

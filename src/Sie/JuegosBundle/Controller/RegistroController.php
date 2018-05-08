@@ -43,14 +43,14 @@ class RegistroController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $faseId = 2;
+        $faseId = 1;
 
         $em = $this->getDoctrine()->getManager();
 
         return $this->render($this->session->get('pathSystem') . ':Registro:index.html.twig', array(
             'titulo' => 'REGISTRO',
-            'subtitulo' => 'Primera Fase',
-            'formBusqueda' => $this->creaFormularioBusqueda('sie_juegos_registro_f1_busqueda','',null,null,null,null,null)->createView(),
+            'subtitulo' => 'Fase Previa',
+            'formBusqueda' => $this->creaFormularioBusqueda('sie_juegos_registro_fp_busqueda','',null,null,null,null,null)->createView(),
         ));
     }
 
