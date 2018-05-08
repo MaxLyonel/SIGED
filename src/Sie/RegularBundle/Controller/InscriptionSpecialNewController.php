@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class InscriptionSpecialNewController extends Controller
 {
@@ -339,5 +341,94 @@ class InscriptionSpecialNewController extends Controller
         return $this->render('SieRegularBundle:InscriptionSpecialNew:result.html.twig', array(
                 // ...
             ));    }
+
+     /**
+     * get the paralelto, turno and sie name
+     * @param type $id like sie
+     * @param type $n like nivel
+     * @param type $g like grado
+     * @return type
+     */
+    public function findIEAction($id, $gestion) {
+      $em = $this->getDoctrine()->getManager();
+      //get the tuicion
+      //select * from get_ue_tuicion(137746,82480002)
+      /*
+        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT)');
+        $query->bindValue(':user_id', $this->session->get('userId'));
+        $query->bindValue(':sie', $id);
+        $query->execute();
+        $aTuicion = $query->fetchAll();
+       */
+     
+      // if ($aTuicion[0]['get_ue_tuicion']) {
+      //get the IE
+      $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
+      $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";
+      $em = $this->getDoctrine()->getManager();
+      //get the Niveles
+
+      $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+      $query = $entity->createQueryBuilder('iec')
+              ->select('(iec.nivelTipo)')
+              //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+              ->where('iec.institucioneducativa = :sie')
+              ->andwhere('iec.gestionTipo = :gestion')
+              // ->andwhere('iec.nivelTipo in (:arrGrados)')
+              // ->setParameter('arrGrados', $arrCondition)
+              ->setParameter('sie', $id)
+              ->setParameter('gestion', $gestion)
+              ->distinct()
+              ->getQuery();
+      $aNiveles = $query->getResult();
+      foreach ($aNiveles as $nivel) {
+          $aniveles[$nivel[1]] = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel();
+      }
+
+      /*     } else {
+        $nombreIE = 'No tiene Tuición';
+        } */
+
+      $response = new JsonResponse();
+
+      return $response->setData(array('nombre' => $nombreIE, 'aniveles' => $aniveles));
+  }
+
+  /**
+   * get grado
+   * @param type $idnivel
+   * @param type $sie
+   * return list of grados
+   */
+  public function findgradoAction($idnivel, $sie, $gestion) {
+      $em = $this->getDoctrine()->getManager();
+
+       //get grado
+      $agrados = array();
+      $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+      $query = $entity->createQueryBuilder('iec')
+              ->select('(iec.gradoTipo)')
+              //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+              ->where('iec.institucioneducativa = :sie')
+              ->andWhere('iec.nivelTipo = :idnivel')
+              // ->andwhere('iec.gradoTipo in (:arrGrados)')
+              ->andwhere('iec.gestionTipo = :gestion')
+              // ->setParameter('arrGrados', $arrCondition)
+              ->setParameter('sie', $sie)
+              ->setParameter('idnivel', $idnivel)
+              ->setParameter('gestion', $gestion)
+              ->distinct()
+              ->orderBy('iec.gradoTipo', 'ASC')
+              ->getQuery();
+      $aGrados = $query->getResult();
+      foreach ($aGrados as $grado) {
+          $agrados[$grado[1]] = $em->getRepository('SieAppWebBundle:GradoTipo')->find($grado[1])->getGrado();
+      }
+
+      $response = new JsonResponse();
+      return $response->setData(array('agrados' => $agrados));
+  }
+
+
 
 }
