@@ -20,7 +20,7 @@
             <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-114x114-precomposed.png" rel="apple-touch-icon-precomposed" sizes="114x114">
             <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-72x72-precomposed.png" rel="apple-touch-icon-precomposed" sizes="72x72">
             <link href="http://themes.djavaui.com/blankon-fullpack-admin-theme/img/ico/html/apple-touch-icon-57x57-precomposed.png" rel="apple-touch-icon-precomposed">
-            <link href="{{asset('webherramienta/img/ico/html/apple-touch-icon.png')}}" rel="shortcut icon">
+            <link href="{{asset('webPermanente/img/ico/html/apple-touch-icon.png')}}" rel="shortcut icon">
             <!--/ END FAVICONS -->
 
             <!-- START @FONT STYLES -->
@@ -140,7 +140,7 @@
                     <div class="navbar-header">
                         <!-- Start brand -->
                         <a class="navbar-brand" href="{{path('principal_web')}}">
-                            <img class="logo" src="{{asset('webherramienta/img/logo/html/logo-white.png')}}" alt="brand logo"/>
+                            <img class="logo" src="{{asset('webPermanente/img/logo/html/logo-white.png')}}" alt="brand logo"/>
                         </a><!-- /.navbar-brand -->
                         <!--/ End brand -->
                     </div><!-- /.navbar-header -->
@@ -245,21 +245,21 @@
                                             {%endif%}                                            #}
                                             {#{% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) %}#}
 
-
-                                            <a href="page-messages.html" class="media">
-                                                <div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>
-                                                <div class="media-body">
-                                                    <span class="media-heading">Victor Jimenez</span>
-                                                    <span class="media-text">
-                                                    A todos los usuarios del sistema de Alternativa:
-                                                    Se les informa que se acerca el plazo final para el cierre definitivo de gestiones pasadas, para tal propósito se ha publicado en la opción de “Panel de Control de Operativos” información de centros y periodos pendientes de finalización, con el cual se espera con urgencia el seguimiento y conclusión del operativo de regularización de gestiones pasadas.
-                                                    También se ha actualizado la lista de Centros pendientes de finalización gestión 2017 para su seguimiento y conclusión.
-                                                    ¡Agradeciéndoles los esfuerzos para concluir la presente gestión, el equipo del SIGED les desea felices fiestas!
-                                                    Atte. Administrador
-                                                    </span>
-                                                    <span class="media-meta pull-right">14/12/2017</span>
-                                                </div>
-                                            </a>
+                                        {#MENSAJEEEEE#}
+                                            {#<a href="page-messages.html" class="media">#}
+                                                {#<div class="pull-left"><img src="{{asset('images/3378239.jpg')}}" class="media-object img-circle" alt="vjimenez"/></div>#}
+                                                {#<div class="media-body">#}
+                                                    {#<span class="media-heading">Victor Jimenez</span>#}
+                                                    {#<span class="media-text">#}
+                                                    {#A todos los usuarios del sistema de Alternativa:#}
+                                                    {#Se les informa que se acerca el plazo final para el cierre definitivo de gestiones pasadas, para tal propósito se ha publicado en la opción de “Panel de Control de Operativos” información de centros y periodos pendientes de finalización, con el cual se espera con urgencia el seguimiento y conclusión del operativo de regularización de gestiones pasadas.#}
+                                                    {#También se ha actualizado la lista de Centros pendientes de finalización gestión 2017 para su seguimiento y conclusión.#}
+                                                    {#¡Agradeciéndoles los esfuerzos para concluir la presente gestión, el equipo del SIGED les desea felices fiestas!#}
+                                                    {#Atte. Administrador#}
+                                                    {#</span>#}
+                                                    {#<span class="media-meta pull-right">14/12/2017</span>#}
+                                                {#</div>#}
+                                            {#</a>#}
 
                                             {#<a href="form-element.html#" class="media indicator inline">
                                                 <span class="spinner">Leyendo mas notificaciones...</span>
@@ -397,7 +397,7 @@
                             <ul>
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {% if (app.session.get('ie_id') != -1) %}
-                                    <li><a href="{{path('sie_per_operativos')}}">Operativos </a></li>
+                                    <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
                                 {% endif %}
 
                                 <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
@@ -415,9 +415,11 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                <!--li><a href="{{path('history_new_inscription_index')}}">Historial Estudiante/Participante </a></li-->
-                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                {% if (app.session.get('ie_id') != -1) %}
+                                    <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
+                                {% endif %}
+
+                                <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                             </ul>
                         </li>
                     {% endif %}
@@ -431,12 +433,17 @@
                             </a>
                             <ul>
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
-                                <li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>
-                                <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
-                                <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
-                                <li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
+                                {#<li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>#}
+                                {#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}
+                                {#<li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>#}
+                                {#<li><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>#}
+                                {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
+                                {% if (app.session.get('ie_id') != -1) %}
+                                    <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
+                                {% endif %}
+
+                                <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                             </ul>
                         </li>
                         {#<li class="submenu">
@@ -458,13 +465,19 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                <li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>
+                                {#<li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>#}
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
-                                <li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>
-                                <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>
-                                <li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>
-                                <li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>
+                                {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
+                                {#<li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>#}
+                                {#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}
+                                {#<li><a onclick="getCeasPendientesShow();">Lista de CEAS Pendientes </a></li>#}
+                                {#<li><a href="{{path('herramientalt_ceducativa_estadistiscas_cierre')}}">Estadisticas del progreso del operativo </a></li>#}
+                                {% if (app.session.get('ie_id') != -1) %}
+                                    <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
+                                {% endif %}
+
+                                <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
+
                             </ul>
                         </li>
                     {% endif %}
@@ -538,7 +551,7 @@
 
                 <!-- Start footer content -->
                 <footer class="footer-content">
-                    <span id="copyright-year"></span> &copy; Vjimenez Admin. Creado por el: <a href="www.minedu.gob.bo" target="_blank">Ministerio de Educación</a> Estado Plurinacional de Bolivia
+                    <span id="copyright-year"></span> &copy; Malbis Admin. Creado por el: <a href="www.minedu.gob.bo" target="_blank">Ministerio de Educación</a> Estado Plurinacional de Bolivia
                     <span class="pull-right">0.01 GB(0%) of 15 GB used</span>
                 </footer><!-- /.footer-content -->
                 <!--/ End footer content -->
@@ -1194,6 +1207,18 @@
             </script>
             <script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
             <script src="{{ asset('js/jquery.alphanum.js') }}"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/locale/es.js"></script>
+            <script type="text/javascript">
+
+                $('.calendario').datepicker({
+
+                    format: 'dd-mm-yyyy',
+                    lang : 'es',
+                    todayBtn: 'linked'
+
+                });
+
+            </script>
         {%endblock%}
     </body>
     <!--/ END BODY -->

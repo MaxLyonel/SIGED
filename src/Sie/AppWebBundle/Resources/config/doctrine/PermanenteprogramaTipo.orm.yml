@@ -1,6 +1,6 @@
-Sie\AppWebBundle\Entity\PermanenteprogramaTipo:
+Sie\AppWebBundle\Entity\PermanenteProgramaTipo:
     type: entity
-    table: permanenteprograma_tipo
+    table: permanente_programa_tipo
     id:
         id:
             type: smallint
@@ -11,7 +11,7 @@ Sie\AppWebBundle\Entity\PermanenteprogramaTipo:
             generator:
                 strategy: SEQUENCE
     fields:
-        permanenteprograma:
+        programa:
             type: string
             nullable: false
             length: 80

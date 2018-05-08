@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PermanenteprogramaTipo
+ * PermanenteProgramaTipo
  */
-class PermanenteprogramaTipo
+class PermanenteProgramaTipo
 {
     /**
      * @var integer
@@ -17,7 +17,7 @@ class PermanenteprogramaTipo
     /**
      * @var string
      */
-    private $permanenteprograma;
+    private $programa;
 
     /**
      * @var string
@@ -36,38 +36,38 @@ class PermanenteprogramaTipo
     }
 
     /**
-     * Set permanenteprograma
+     * Set programa
      *
-     * @param string $permanenteprograma
-     * @return PermanenteprogramaTipo
+     * @param string $programa
+     * @return PermanenteProgramaTipo
      */
-    public function setPermanenteprograma($permanenteprograma)
+    public function setPrograma($programa)
     {
-        $this->permanenteprograma = $permanenteprograma;
-
+        $this->programa = $programa;
+    
         return $this;
     }
 
     /**
-     * Get permanenteprograma
+     * Get programa
      *
      * @return string 
      */
-    public function getPermanenteprograma()
+    public function getPrograma()
     {
-        return $this->permanenteprograma;
+        return $this->programa;
     }
 
     /**
      * Set obs
      *
      * @param string $obs
-     * @return PermanenteprogramaTipo
+     * @return PermanenteProgramaTipo
      */
     public function setObs($obs)
     {
         $this->obs = $obs;
-
+    
         return $this;
     }
 

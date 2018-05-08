@@ -241,7 +241,10 @@ class InstitucioneducativaController extends Controller {
     public function gessubsemAction() {
         $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipo($this->session->get('ie_id'));
         //dump($iesubsea);die;
-        return $this->render($this->session->get('pathSystem') . ':Centroeducativo:selgessubsem.html.twig', array('iesubsea' => $iesubsea));
+
+        $reversed = array_reverse($iesubsea);
+
+        return $this->render($this->session->get('pathSystem') . ':Principal:operativos.html.twig', array('iesubsea' => $reversed));
     }
 
     public function gessubsemopenAction(Request $request, $teid, $gestion, $subcea, $semestre, $idiesuc) {
@@ -964,6 +967,11 @@ class InstitucioneducativaController extends Controller {
     public function buscarceaAction(Request $request) {        
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+        $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipo($this->session->get('ie_id'));
+        //dump($iesubsea);die;
+
+
+
         /*
          * verificamos si tiene tuicion
          */        
@@ -986,7 +994,10 @@ class InstitucioneducativaController extends Controller {
                 $sesion->set('ie_nombre', $ie->getInstitucioneducativa());
                 $sesion->set('ie_per_estado', '3');
                 $sesion->set('ie_operativo', '¡En modo edición!');
-                return $this->redirect($this->generateUrl('principal_web'));
+                $reversed = array_reverse($iesubsea);
+         //       return $this->render($this->session->get('pathSystem') . ':Principal:operativos.html.twig', array('iesubsea' => $reversed));
+
+                  return $this->redirect($this->generateUrl('sie_per_ges_sub_sem'));
             }
             else{           
                 $this->session->getFlashBag()->add('notfound', 'El código de institución educativo no se encuentra.');
@@ -1671,5 +1682,192 @@ class InstitucioneducativaController extends Controller {
         ));
 
     }
+
+
+    public function manualesAction(Request $request){
+
+        $sesion = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getEntityManager();
+        $db = $em->getConnection();
+        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));
+        $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
+        // dump($idlugarusuario);die;
+
+
+        // dump($request);die;
+
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        //validationremoveInscriptionAction if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        //get and set the variables
+
+        $arrDataReport = array(
+            'roluser' => $this->session->get('roluser'),
+            'userId' => $this->session->get('userId'),
+            'sie' => $this->session->get('ie_id'),
+            'gestion' => $this->session->get('ie_gestion'),
+            'subcea' => $this->session->get('ie_subcea'),
+            'periodo' => $this->session->get('ie_per_cod'),
+            'lugarid'=> $idlugarusuario
+        );
+
+        return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:manuales.html.twig', array(
+            'dataReport' => $arrDataReport,
+            'dataInfo' => serialize($arrDataReport),
+        ));
+
+
+
+//        $em = $this->getDoctrine()->getManager();
+//        $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPer($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'));
+//        dump($objUeducativa);die;
+    }
+
+    public function listarprovinciasAction($dpto) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 2)
+                ->setParameter('lt1', $dpto + 1);
+            $provincias = $query->getResult();
+
+            $provinciasArray = array();
+            foreach ($provincias as $c) {
+                $provinciasArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listaprovincias' => $provinciasArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    public function listarmunicipiosAction($prov) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 3)
+                ->setParameter('lt1', $prov);
+            $municipios = $query->getResult();
+
+            $municipiosArray = array();
+            foreach ($municipios as $c) {
+                $municipiosArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listamunicipios' => $municipiosArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarcantonesAction($muni) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 4)
+                ->setParameter('lt1', $muni);
+            $cantones = $query->getResult();
+
+            $cantonesArray = array();
+            foreach ($cantones as $c) {
+                $cantonesArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listacantones' => $cantonesArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarlocalidadesAction($cantn) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 5)
+                ->setParameter('lt1', $cantn);
+            $localidades = $query->getResult();
+
+            $localidadesArray = array();
+            foreach ($localidades as $c) {
+                $localidadesArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listalocalidades' => $localidadesArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listardistritosAction($dpto) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT dt
+                    FROM SieAppWebBundle:DistritoTipo dt
+                    WHERE dt.id NOT IN (:ids)
+                    AND dt.departamentoTipo = :dpto
+                    ORDER BY dt.id')
+                ->setParameter('ids', array(1000,2000,3000,4000,5000,6000,7000,8000,9000))
+                ->setParameter('dpto', $dpto);
+            $distritos = $query->getResult();
+
+            $distritosArray = array();
+            foreach ($distritos as $c) {
+                $distritosArray[$c->getId()] = $c->getDistrito();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listadistritos' => $distritosArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
 
 }

@@ -793,7 +793,7 @@ class EstudianteInscripcion
     private $acreditacionnivelTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\PermanenteprogramaTipo
+     * @var \Sie\AppWebBundle\Entity\PermanenteProgramaTipo
      */
     private $permanenteprogramaTipo;
 

@@ -1,0 +1,126 @@
+{% extends 'layoutPermanente.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-users"></i> Cursos y alumnos <span>Lista de cursos y alumnos del centro de educación permanente.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-th-large"></i>
+                    <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-child"></i>
+                    Cursos y alumnos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+
+    </div>
+
+
+
+    <div class="col-md-12">
+
+        <!-- Start input fields - basic form -->
+        <div class="panel rounded shadow">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Estudiantes</h3>
+                </div>
+                <div class="pull-right">
+
+                </div>
+                <div class="clearfix"></div>
+            </div><!-- /.panel-heading -->
+            <div class="panel-sub-heading">
+
+            </div><!-- /.panel-subheading -->
+            <div class="panel-body no-padding">
+
+
+
+            </div><!-- /.panel-body -->
+        </div><!-- /.panel -->
+        <!--/ End input fields - basic form-->
+
+    </div>
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var peticion1;
+        //$('#form_turno').on('change',function(){
+        function listarProvincias(idDpto) {
+            if (peticion1 && peticion1.readyState != 4) {
+                peticion1.abort();
+            }
+
+            peticion1 = $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_alt_clistarprovincias', {'dpto': idDpto}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_provincia').empty();
+                    $('#form_municipio').empty();
+                    $('#form_canton').empty();
+                    $('#form_localidad').empty();
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listaprovincias, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        var peticion2;
+        //$('#form_turno').on('change',function(){
+        function listarMunicipios(idProv) {
+            if (peticion2 && peticion2.readyState != 4) {
+                peticion2.abort();
+            }
+
+            peticion2 = $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_alt_clistarmunicipios', {'prov': idProv}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_municipio').empty();
+                    $('#form_canton').empty();
+                    $('#form_localidad').empty();
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listamunicipios, function (i, value) {
+                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+    </script>
+
+{%endblock%}

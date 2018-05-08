@@ -91,7 +91,12 @@ class InfoMaestroController extends Controller {
          * obtenemos datos de la unidad educativa
          */
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($institucion);
-
+//        dump($maestro);
+//        dump($institucion);
+//        dump($gestion);
+//        dump($cargosArray);
+//        dump($periodo);
+//        dump($sucursal);die;
         return $this->render($this->session->get('pathSystem') . ':InfoMaestro:index.html.twig', array(
                     'maestro' => $maestro,
                     'institucion' => $institucion,

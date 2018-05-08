@@ -35,7 +35,7 @@ class Carreraespecialidad
     private $carreraTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\PermanenteprogramaTipo
+     * @var \Sie\AppWebBundle\Entity\PermanenteProgramaTipo
      */
     private $permanenteprogramaTipo;
 

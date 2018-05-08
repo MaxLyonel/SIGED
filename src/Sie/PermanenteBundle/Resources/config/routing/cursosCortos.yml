@@ -1,23 +1,109 @@
-
-    
 herramienta_per_cursos_cortos_index:
     path:    /index/
     defaults: { _controller: SiePermanenteBundle:CursosCortos:index}
 
 herramienta_per_cursos_cortos_new:
-    path:   /new/
+    path:   /new
     defaults: { _controller: SiePermanenteBundle:CursosCortos:newCursoCorto}
-    options:
-          expose: true
+
+herramienta_per_cursos_cortos_create:
+    path:     /create
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:createCursoCorto}
+    methods:  POST
 
 herramienta_per_cursos_cortos_edit:
     path:   /edit/
     defaults: { _controller: SiePermanenteBundle:CursosCortos:editCursoCorto}
     options:
-          expose: true
+      expose: true
+
+herramienta_per_cursos_cortos_update:
+    path:     /update/
+    defaults: { _controller: "SiePermanenteBundle:CursosCortos:updateCursoCorto" }
+    methods:  [POST, PUT]
 
 herramienta_per_cursos_cortos_delete:
     path:   /delete/
     defaults: { _controller: SiePermanenteBundle:CursosCortos:deleteCursoCorto}
     options:
           expose: true
+
+sie_per_clistarprovincias:
+    path:     /listarprovincias/{dpto}
+    defaults: { _controller: "SiePermanenteBundle:CursosCortos:listarprovincias" }
+    options:
+         expose: true
+
+sie_per_clistarmunicipios:
+    path:     /listarmunicipios/{prov}
+    defaults: { _controller: "SiePermanenteBundle:CursosCortos:listarmunicipios" }
+    options:
+         expose: true
+
+herramienta_per_cursos_cortos_show_maestro:
+    path:   /showma/
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:showMaestroCursoCorto}
+    options:
+          expose: true
+
+herramienta_per_cursos_cortos_add_maestro:
+    path:     /addm/
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:addMaestroCursoCorto}
+    methods:
+
+herramienta_per_cursos_cortos_delete_maestro:
+    path:     /delm/
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:deleteMaestroCursoCorto}
+    methods:
+
+herramienta_per_cursos_cortos_show_estudiante:
+    path:   /showes/
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:showEstudianteCursoCorto}
+    options:
+         expose: true
+
+herramienta_per_info_estudianterequest_see_students:
+    path:     /sie_per/seestudents/
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:seeStudents }
+    options:
+         expose: true
+
+herramienta_per_info_estudiante_inscriptions:
+    resource: "@SiePermanenteBundle/Resources/config/routing/studentInscriptions.yml"
+    prefix:   /sie/estudiante_inscriptions_per
+
+herramienta_per_estudianterequest_removeinscription:
+    path:     /sie/removeinscription/
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:removeStudents }
+    options:
+         expose: true
+herramienta_per_estudianterequest_closeinscription:
+    path:     /closeins/
+    defaults: { _controller: "SiePermanenteBundle:CursosCortos:closeInscription"}
+    options:
+         expose: true
+
+herramienta_per_cursocorto_delete:
+    path:     /deletecursoco
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:deleteCursoCorto }
+    options:
+         expose: true
+
+herramienta_per_estudiantechange_estado:
+    path:     /estado
+    defaults: { _controller: SiePermanenteBundle:CursosCortos:changeEstado }
+    options:
+         expose: true
+
+herramienta_per_show_curso_nuevo:
+    path:     /show_curso_nuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursosCortos:showCursoNuevo"}
+    options:
+         expose: true
+
+herramienta_per_add_curso_nuevo:
+    path:     /curso_nuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursosCortos:addCursoNuevo"}
+    options:
+         expose: true
+

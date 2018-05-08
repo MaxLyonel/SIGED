@@ -25,118 +25,130 @@
         </div><!-- /.breadcrumb-wrapper -->
     </div>
 
-
-    <div class="body-content animated fadeIn">
-
-        <!-- Start mail page -->
-        <div class="row">
-            <div class="col-sm-3">
-                <ul class="nav nav-pills nav-stacked nav-email shadow mb-10">
-                    <li class="active">
-                        <a href="mail-inbox.html">
-                            <i class="fa fa-inbox"></i> Area Tematica   <span class="label pull-right">7</span>
-                        </a>
-                    </li>
-
-                </ul><!-- /.nav -->
-                <ul class="list-group list-group-flush">
-                    {% for areatematic in areatematica %}
-
-
-                    <li class="list-group-item"><a href="mail-compose.html"><i class="fa fa-file-text-o"></i>     </a>
-                    </li>
-
+    {% if exist == 1 %}
+        <div class="body-content animated fadeIn">
+            <div class="row">
+                <div id= "mengestioncurso" class="col-md-12">
+                    {% for flashMessage in app.session.flashbag.get('deletecursomensaje') %}
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                        </div>
                     {% endfor %}
-                </ul>
-
-
-
-
-
-            </div>
-
-
-
-            <div class="col-sm-9">
-                <div>
-                    <a href="{{path('herramienta_per_cursos_cortos_new')}}" class="btn btn-primary btn-stroke">  <i class="fa fa-cloud-download"></i>Nuevo Curso</a>
                 </div>
-               <div class="panel rounded shadow panel-teal">
-                    <div class="panel-heading">
-
-                        <div class="pull-left">
-                            <h3 class="panel-title"> Listado de Cursos Cortos</h3>
-                        </div>
-                        <div class="pull-right">
-                            <form action="#" class="form-horizontal mr-5 mt-3">
-                                <div class="form-group no-margin no-padding has-feedback">
-                                    <input type="text" class="form-control no-border" placeholder="Buscar Curso">
-                                    <button type="submit" class="btn btn-theme fa fa-search form-control-feedback"></button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <div class="panel-sub-heading inner-all">
-
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-sub-heading -->
-                    <div class="panel-body no-padding">
-
-                        <div class="table-responsive">
-                            <table class="table table-hover table-email">
-                                <thead>
-                                <tr>
-                                    <th class="text-center" style="width: 1%;">No.</th>
-                                    <th>Name</th>
-                                    <th class="text-center" style="width: 12%;">Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for cursosCor in cursosCortos %}
-                                <tr>
-
-                                    <td class="text-center border-right">            </td>
-                                    <td>
-
-                                                        <h4 class="text-primary">           </h4>
-                                                        <p class="email-summary"><strong> Numero de Horas:</strong>          </p>
-                                                        <span class="media-meta">             hasta </span>
-
-
-                                    </td>
-                                    <td align="center">
-                                        <a href="#" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="View detail" aria-describedby="tooltip929810"><i class="fa fa-eye"></i></a><div class="tooltip fade top in" role="tooltip" id="tooltip929810" style="top: 15px; left: 763px; display: block;"><div class="tooltip-arrow" style="left: 48.6667%;"></div></div>
-                                        <a href="#" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a>
-                                        <a href="#" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-
-                                </tbody>
-                            </table>
-                        </div><!-- /.table-responsive -->
-
-                    </div><!-- /.panel-body -->
-                </div><!-- /.panel -->
-
-
-
-
-
             </div>
 
+            <div class="row">
+                <div id= "mengestioncurso" class="col-md-12">
+                    {% for flashMessage in app.session.flashbag.get('newOk') %}
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div id= "mengestioncurso" class="col-md-12">
+                    {% for flashMessage in app.session.flashbag.get('newError') %}
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <small>
+                        <div class="tree well">
+                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                    <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                        <i class="fa fa-cubes"></i> Nuevo Curso
+                                    </button>
+                                </div>
+                            {% endif%}
+                            {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+                                <ul>
+                                    <li>
+                                        <span><i class="icon-folder-open"></i>{{ subareaKey }}</span>
+                                        <ul>
+                                            {% for programaKey, dataPrograma in dataSubarea %}
+                                                <li>
+                                                    <span><i class="icon-minus-sign"></i>{{ programaKey }}</span>
+                                                    <ul>
+                                                        {% for areatematicaKey, dataAreatematica in dataPrograma %}
+                                                            <li>
+                                                                <span><i class="icon-minus-sign"></i>{{ areatematicaKey }}</span>
+                                                                <ul>
+                                                                    {% for cursocortoKey, dataCursocorto in dataAreatematica %}
+                                                                        <li>
+                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+                                                                                <a href="#" onclick="seeStudents('{{ dataCursocorto.infoUe }}');">
+
+                                                                                <span ><i class="icon-leaf"></i>
+                                                                                    {{ cursocortoKey }}
+                                                                                </span>
+                                                                                </a>
+                                                                            </div>
+                                                                            {#{% if (dataParalelo.nivelId == 15) and ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3'))%}#}
+                                                                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Curso">
+                                                                                    <button class="btn btn-circle btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCurso('{{ dataCursocorto.infoUe}} ');">
+                                                                                        <i class="fa fa-cube"></i>
+                                                                                    </button>
+                                                                                </div>
+                                                                            {% endif %}
+                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">
+                                                                                <button class="btn btn-circle btn-danger btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoMaestro( '{{ dataCursocorto.infoUe }}');">
+                                                                                    <i class="fa fa-group"></i>
+                                                                                </button>
+                                                                            </div>
+                                                                        </li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                </ul>
+                            {% endfor %}
+                        </div>
+                    </small>
+                </div>
+                <div class='col-md-8'>
+                    <div id="idstudents"></div>
+                </div>
+            </div>
+            <!--/div-->
+            <!--/ End mail page -->
+        </div>
+    {% else %}
+        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+            <div class="body-content animated fadeIn">
+                <div class="row">
+                    <div  class="col-md-12">
+                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                            <i class="fa fa-cubes"></i> Nuevo Curso
+                        </button>
+                    </div>
+                </div>
+            </div>
+        {% endif%}
+    {% endif%}
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+
+    </div><
 
 
 
-
-
-
-
-        </div><!-- /.row -->
-        <!--/ End mail page -->
-
-    </div>
 
 
 
@@ -147,8 +159,445 @@
 
 {% block javascripts %}
     {{parent()}}
-    <script src="../../../assets/admin/js/pages/blankon.mail.js"></script>
     <script>
+        /**
+         * this is to the tree menu option
+         * @returns {undefined}.
+         * 0
+         */
+        $(function () {
+            $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Contraer');
+            $('.tree li.parent_li > span').on('click', function (e) {
+                var children = $(this).parent('li.parent_li').find(' > ul > li');
+                if (children.is(":visible")) {
+                    children.hide('fast');
+                    $(this).attr('title', 'Ampliar').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+                } else {
+                    children.show('fast');
+                    $(this).attr('title', 'Contraer').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+                }
+                e.stopPropagation();
+            });
+        });
+
+        // New curso show
+        var nuevoCurso = function () {
+            $.ajax({
+                type: 'get',
+                url: "{{ path('herramienta_per_cursos_cortos_new') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+//
+        // New curso show
+        var nuevoMaestro = function (infoUe) {
+
+            $.ajax({
+                type: 'post',
+                data: {infoUe: infoUe},
+                url: "{{ path('herramienta_per_cursos_cortos_show_maestro') }}",
+
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                 //   $('#modal').modal('show');
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+        var editarCurso = function (infoUe) {
+
+            $.ajax({
+                type: 'post',
+                data: {infoUe: infoUe},
+                url: "{{ path('herramienta_per_cursos_cortos_edit') }}",
+
+                beforeSend: function () {
+                    $('#modal').empty();
+
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                 //   $('#modal').modal('show');
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+        var seeStudents = function (infoUe) {
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_per_info_estudianterequest_see_students'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getAreas = function (infoUe) {
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe}),
+                url: "{{ path('herramienta_alter_areas_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getStudents = function (infoUe) {
+            $.ajax({
+                type: 'get',
+                /*data: ({iecId: iecId, nivel: nivel, sie: sie, gestion: gestion, grado: grado, paralelo: paralelo, turno: turno, ciclo: ciclo}),*/
+                /*url: Routing.generate('inscription_ue_all_sie_get_students'),*/
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_alter_info_estudianterequest_get_students'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var doInscription = function () {
+            var elem = document.getElementById('formStudentInscription').elements;
+            var sw = true;
+            for (var i = 0; i < elem.length; i++) {
+                if (elem[i].type == 'checkbox')
+                    if ((elem[i].checked))
+                        sw = false;
+            }
+            if (sw) {
+                alert('Tiene que Seleccionar por lo menos una Inscripción...');
+                return flase;
+            }
+            if(confirm('Esta seguro de realizar la inscripcion?')){
+                var formIns = $('#formStudentInscription').serialize();
+                $.ajax({
+                    type: 'post',
+                    data: formIns,
+                    url: Routing.generate('herramienta_alter_info_estudianterequest_inscription'),
+                    beforeSend: function () {
+                        $("#idstudents").empty();
+                        $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $("#idstudents").empty();
+                        $("#idstudents").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }else{
+                return false;
+            }
+
+
+        };
+        var selectAllEle = function () {
+            $("#checkAll").on("change", function () {
+                $(this).closest("div").find("input:checkbox").prop("checked", $(this).prop("checked"));
+            });
+
+        };
+        var getTurnos = function (nivel, sie, gestion, nivelname, key) {
+            $.ajax({
+                type: 'post',
+                data: ({nivel: nivel, sie: sie, gestion: gestion, nivelname: nivelname}),
+                /*url: Routing.generate('inscription_ue_all_sie_get_turnos'),*/
+                url: "{{ path('herramienta_info_estudiante_get_turnos') }}",
+                beforeSend: function () {
+                    /* $("#idgrados").empty();
+                     $("#idparalelos").empty();
+                     $("#idstudents").empty();*/
+                    $("#idgrados_" + key).append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idgrados_" + key).empty();
+                    $("#idgrados_" + key).append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getParalelos = function (nivel, sie, gestion, turno, turnoname, nivelname, key) {
+
+            $.ajax({
+                type: 'post',
+                data: ({nivel: nivel, sie: sie, gestion: gestion, turno: turno, turnoname: turnoname, nivelname: nivelname}),
+                /*url: Routing.generate('inscription_ue_all_sie_get_paralelos'),*/
+                url: "{{ path('inscription_ue_all_sie_get_paralelos') }}",
+                beforeSend: function () {
+                    /* $("#idparalelos").empty();
+                     $("#idstudents").empty();*/
+                    $("#idparalelos_" + key).append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    /*$("#idstudents").empty();
+                     $("#idparalelos").empty();*/
+                    $("#idparalelos_" + key).append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+
+        var inscriptionWithRude = function (aData) {
+            //alert(aData);
+            //return false;
+            $.ajax({
+                type: 'post',
+                data: ({aData: aData}),
+                url: Routing.generate('herramienta_info_estudiante_with_rude'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+        var doRudeInscription = function () {
+            //get data send
+            rude = $('#form_rude').val();
+            dataInscription = $('#form_dataInscription').val();
+            if (rude.length <= 0) {
+                alert('Necesita introducir codigo Rude');
+                return false;
+            }
+
+            $.ajax({
+                type: 'post',
+                data: ({rude: rude, dataInscription: dataInscription}),
+                url: Routing.generate('herramienta_info_estudiante_rude_inscription'),
+                beforeSend: function () {
+                    $("#resultfindrude").empty();
+                    $("#resultfindrude").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+                },
+                success: function (data) {
+                    $("#resultfindrude").empty();
+                    $("#resultfindrude").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+
+        var exeInscription = function () {
+            //get data send
+            dataInscription = $('#form_dataInscription').val();
+            dataStudent = $('#form_dataStudent').val();
+
+            $.ajax({
+                type: 'post',
+                data: ({dataStudent: dataStudent, dataInscription: dataInscription}),
+                url: Routing.generate('inscription_ue_all_sie_exe_inscription'),
+                beforeSend: function () {
+                    $("#resultfindrude").empty();
+                    $("#resultfindrude").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#resultfindrude").empty();
+                    $("#resultfindrude").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+
+        };
+
+        var xhr5;
+        var addpop = function(idco){
+            if ($('#'+idco).is(':hidden')){
+                if (xhr5 && xhr5.readyState != 4) {
+                    xhr5.abort();
+                }
+                xhr5 = $.ajax({
+                    type: 'post',
+                    data: ({idco: idco}),
+                    url: "{{ path('herramienta_per_show_curso_nuevo') }}",
+                    beforeSend: function () {
+                        $('.divMaestros').hide();
+                        $('.arrow-before').hide();
+                        $('.arrow-after').hide();
+                        $("#"+idco).empty();
+                        $('#before'+idco).fadeIn();
+                        $('#after'+idco).fadeIn();
+                        $('#'+idco).fadeIn();
+                        $('#'+idco).append("<div style='background:#FFFFFF; text-align:center; color:#286AFB'><div style='padding:10px 0px 10px 0px;'>Cargando <br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
+                    },
+                    success: function (data) {
+                        $("#"+idco).empty();
+                        $("#"+idco).append(data);
+                        $('.chosen-select').chosen({allow_single_deselect: false});
+                        $('#'+idco).fadeIn();
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }else{
+                if (xhr5 && xhr5.readyState != 4) {
+                    xhr5.abort();
+                }
+                $('#'+idco).fadeOut();
+                $('#before'+idco).fadeOut();
+                $('#after'+idco).fadeOut();
+            }
+        }
+
+
+        var xhr6;
+        var asignarCurso = function(){
+            if (xhr6 && xhr6.readyState != 4) {
+                xhr6.abort();
+            }
+            var formData = $('#formCursos').serialize();
+            xhr6 = $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('herramienta_per_add_curso_nuevo') }}",
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    //$('#28030476'),append(data);
+                    var idco = data.ieco;
+
+                    $('#'+idco).empty();
+                    $('#'+idco).append("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>"+ data.mensaje +"</div>");
+                    setTimeout("cerrarMaestros('"+idco+"')",1000);
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
 
     </script>
 {%endblock%}
