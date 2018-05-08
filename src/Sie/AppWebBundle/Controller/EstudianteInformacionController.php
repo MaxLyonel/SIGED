@@ -114,13 +114,13 @@ class EstudianteInformacionController extends Controller {
                     ->andWhere('i.estadomatriculaTipo IN (:estados)')
                     ->setParameter('estudiante', $student)
                     ->setParameter('gestion', $gestion)
-                    ->setParameter('estados', array(4,5,11))
+                    ->setParameter('estados', array(4,5,11,55))
                     ->orderBy('i.id')
                     ->setMaxResults(1)
                     ->getQuery();
 
             $inscription = $query->getOneOrNullResult();
-
+            
             //Verifica si el estudiante cuenta con inscripción en la UE y n la gestión ingresada en el formulario de búsqueda
             if ($inscription) {
 
