@@ -903,7 +903,7 @@ class InscriptionRezagoController extends Controller {
                 $studentAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
                 $studentAsignatura->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscrId));
                 $studentAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($areas->getId()));
-                $studentAsignatura->setFerchaLastUpdate(new \DateTime('now'));
+                // $studentAsignatura->setFechaLastUpdate(new \DateTime('now'));
                 $em->persist($studentAsignatura);
                 $em->flush();
                 //echo "<hr>";
