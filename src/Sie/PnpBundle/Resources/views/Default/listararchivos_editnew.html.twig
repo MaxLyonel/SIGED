@@ -109,7 +109,9 @@
                                                     <th>Fecha Inicio</th>                            
                                                     <th>Fecha Fin</th>                            
                                                     <th>Bloque</th>                            
-                                                    <th>Parte</th>                            
+                                                    <th>Parte</th>
+                                                    <th>Cant Est.</th>
+                                                    <th>Estudiantes Aprob.</th>                           
                                                     <th>Departamento</th>  
                                                     <th>Provincia</th>
                                                     <th>Municipio</th>
@@ -134,6 +136,8 @@
                                                         <td>{{ fila.fecha_fin|date('d-m-Y') }}</td>
                                                         <td>{{ fila.ciclo_tipo_id }}</td>
                                                         <td>{{ fila.grado_tipo_id }}</td>
+                                                        <td>{{ fila.est }}</td>
+                                                        <td>{{ fila.est_aprob }}</td>
                                                         <td>{{ fila.depto }}</td>
                                                         <td>{{ fila.provincia }}</td>
                                                         <td>{{ fila.lugar }}</td>
