@@ -5,6 +5,10 @@ sie_app_web_olimarchivo:
 sie_app_web_olimreporte:
     resource: "@SieOlimpiadasBundle/Resources/config/routing/olimreporte.yml"
     prefix:   /olimreporte
+    
+sie_app_web_olimestadistica:
+    resource: "@SieOlimpiadasBundle/Resources/config/routing/olimestadistica.yml"
+    prefix:   /olimestadistica
 
 sie_app_web_olimreglasolimpiadastipo:
     resource: "@SieOlimpiadasBundle/Resources/config/routing/olimreglasolimpiadastipo.yml"

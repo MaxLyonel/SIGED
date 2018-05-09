@@ -2036,6 +2036,9 @@ class ClasificacionController extends Controller {
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            if($fase == 0){
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f0_v2.rptdesign&__format=pdf&codue='.$codigoEntidad.'&codges='.$gestionActual));
+            }
             if($fase == 1){
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f1_v2.rptdesign&__format=pdf&codue='.$codigoEntidad.'&codges='.$gestionActual));
             }
@@ -2051,14 +2054,14 @@ class ClasificacionController extends Controller {
             $response->headers->set('Content-type', 'application/vnd.ms-excel');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
+            if($fase == 0){
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f0_distrito_v1.rptdesign&__format=pdf&coddis='.$codigoEntidad.'&codges='.$gestionActual));
+            }
             if($fase == 1){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f1_distrito_v1.rptdesign&__format=pdf&coddis='.$codigoEntidad.'&codges='.$gestionActual));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f1_circunscripcion_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
             }
             if($fase == 2){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f2_circunscripcion_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
-            }
-            if($fase == 3){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f3_departamento_v1.rptdesign&__format=pdf&coddep='.$codigoEntidad.'&codges='.$gestionActual));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f2_departamento_v1.rptdesign&__format=pdf&coddep='.$codigoEntidad.'&codges='.$gestionActual));
             }
         }
 

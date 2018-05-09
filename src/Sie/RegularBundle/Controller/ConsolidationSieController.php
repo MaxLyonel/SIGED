@@ -318,6 +318,13 @@ class ConsolidationSieController extends Controller {
                 $aDataExtractFileUE = explode('|', $fileInfoContent[3]);
                 $aFileInfoSie = explode('|', $fileInfoContent[1]);
 
+                $objAllowUEQa = $this->get('seguimiento')->getAllObservationQA(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglas'=>'1,2,3,8,10,12,13,16'));
+                if($objAllowUEQa){
+                  $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' tiene observaciones de control de calidad, favor solucionar para poder descargar el archivo ');
+                  system('rm -fr ' . $dirtmp);
+                  return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                }
+
                 $objAllowUE = $this->getObservationAllowUE(array('sie'=>$aFileInfoSie[2], 'gestion'=>$aFileInfoSie[1],'reglasUE'=>'1,2,3,4,5'));
                 if($objAllowUE){
                   $session->getFlashBag()->add('warningcons', 'El archivo con código Sie ' . $aDataExtractFileUE[1] . ' no se puede subir,favor de trabajar directamente con el academico.sie.gob.bo');

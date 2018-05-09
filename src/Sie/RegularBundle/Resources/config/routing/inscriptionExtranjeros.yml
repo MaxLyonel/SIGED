@@ -22,13 +22,13 @@ inscription_extranjeros_save:
         expose: true
 
 inscription_extranjeros_findIE:
-     path:    /findIE/{id}/{gestion}
+     path:    /findIE/{id}/{gestion}/{optionInscription}
      defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:findIE }
      options:
          expose: true
 
 inscription_extranjeros_findgrado:
-     path:    /findgrado/{idnivel}/{sie}/{gestion}
+     path:    /findgrado/{idnivel}/{sie}/{gestion}/{optionInscription}
      defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:findgrado }
      options:
          expose: true

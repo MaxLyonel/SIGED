@@ -1,0 +1,11 @@
+olimestadistica_registrados:
+    path:     /registrados
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosIndex" }
+
+olimestadistica_registrados_pdf:
+    path:     /registrados/pdf
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosPdf" }
+
+olimestadistica_registrados_xls:
+    path:     /registrados/xls
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosXls" }

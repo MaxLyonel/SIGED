@@ -16,3 +16,27 @@ inscriptionSpecialNew_do_inscription:
     defaults: { _controller: SieRegularBundle:InscriptionSpecialNew:doInscription }
     options:
          expose: true
+
+inscriptionSpecialNew_findIE:
+     path:    /findIE/{id}/{gestion}
+     defaults: { _controller: SieRegularBundle:InscriptionSpecialNew:findIE }
+     options:
+         expose: true
+
+inscriptionSpecialNew_findgrado:
+     path:    /findgrado/{idnivel}/{sie}/{gestion}
+     defaults: { _controller: SieRegularBundle:InscriptionSpecialNew:findgrado }
+     options:
+         expose: true
+
+inscriptionSpecialNew_findparalelo:
+     path:    /findparalelo/{grado}/{sie}/{nivel}/{gestion}
+     defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:findparalelo }
+     options:
+         expose: true
+
+inscriptionSpecialNew_findturno:
+    path:    /findturno/{paralelo}/{sie}/{nivel}/{grado}/{gestion}
+    defaults: { _controller: SieRegularBundle:InscriptionExtranjeros:findturno }
+    options:
+        expose: true

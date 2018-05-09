@@ -1384,6 +1384,7 @@ class OlimEstudianteInscripcionController extends Controller{
                 $objOLimStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($val['studentInscription']));
                 $objOLimStudentInscription->setOlimTutor($em->getRepository('SieAppWebBundle:OlimTutor')->find($arrDataInscription['olimtutorid']));
                 $objOLimStudentInscription->setGestionTipoId($arrDataInscription['gestion']);
+                $objOLimStudentInscription->setTransaccion(json_encode(array('userId' => $this->session->get('userId'),'ip'=>$_SERVER['REMOTE_ADDR'])));
                 
                 $em->persist($objOLimStudentInscription);
                 $em->flush();
@@ -1438,6 +1439,7 @@ class OlimEstudianteInscripcionController extends Controller{
                     $objOLimStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($val['studentInscription']));
                     $objOLimStudentInscription->setOlimTutor($em->getRepository('SieAppWebBundle:OlimTutor')->find($arrDataInscription['olimtutorid']));
                     $objOLimStudentInscription->setGestionTipoId($arrDataInscription['gestion']);
+                    $objOLimStudentInscription->setTransaccion(json_encode(array('userId' => $this->session->get('userId'),'ip'=>$_SERVER['REMOTE_ADDR'])));
                     
                     $em->persist($objOLimStudentInscription);
                     $em->flush();
@@ -1807,6 +1809,7 @@ class OlimEstudianteInscripcionController extends Controller{
             $objOLimStudentInscription->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrDataInscription['estinsid']));
             $objOLimStudentInscription->setOlimTutor($em->getRepository('SieAppWebBundle:OlimTutor')->find($arrDataInscription['olimtutorid']));
             $objOLimStudentInscription->setGestionTipoId($arrDataInscription['gestiontipoid']);
+            $objOLimStudentInscription->setTransaccion(json_encode(array('userId' => $this->session->get('userId'),'ip'=>$_SERVER['REMOTE_ADDR'])));
             
             $em->persist($objOLimStudentInscription);
             $em->flush();

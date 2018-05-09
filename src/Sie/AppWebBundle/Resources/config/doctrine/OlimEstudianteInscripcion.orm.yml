@@ -2,6 +2,14 @@ Sie\AppWebBundle\Entity\OlimEstudianteInscripcion:
     type: entity
     table: olim_estudiante_inscripcion
     indexes:
+        idx_olim_estudiante_inscripcion:
+            columns:
+                - id
+                - estudiante_inscripcion_id
+                - materia_tipo_id
+                - gestion_tipo_id
+                - olim_reglas_olimpiadas_tipo_id
+                - olim_tutor_id
         IDX_3F5715E9EC697A22:
             columns:
                 - olim_tutor_id
@@ -23,6 +31,12 @@ Sie\AppWebBundle\Entity\OlimEstudianteInscripcion:
         IDX_3F5715E9A1104027:
             columns:
                 - estudiante_inscripcion_id
+    uniqueConstraints:
+        uq_olim_estudiante_inscripcion:
+            columns:
+                - estudiante_inscripcion_id
+                - materia_tipo_id
+                - gestion_tipo_id
     id:
         id:
             type: integer
@@ -80,7 +94,7 @@ Sie\AppWebBundle\Entity\OlimEstudianteInscripcion:
             comment: ''
             column: foto_estudiante
         fechaModificacion:
-            type: date
+            type: datetime
             nullable: true
             comment: ''
             column: fecha_modificacion
@@ -102,6 +116,12 @@ Sie\AppWebBundle\Entity\OlimEstudianteInscripcion:
             unsigned: false
             comment: ''
             column: gestion_tipo_id
+        transaccion:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
     manyToOne:
         olimTutor:
             targetEntity: OlimTutor
