@@ -331,7 +331,12 @@ class ChangestadoqaController extends Controller {
 
             }
             // dump($arrDataInfo);die;
-
+            $objJuegos = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->findOneBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
+            if ($objJuegos) {
+                $message = "No se puede eliminar por que el estudiante esta registrado en el sistema de Juegos Plurinacionales";
+                $this->addFlash('okchange', $message);
+                return new JsonResponse(array('message'=>$message, 'gestionSelected'=>$gestionSelected, 'typeMessage'=>0));
+            }
               //find the estudent's inscription to do the change
               $inscriptionStudentOBs = $em->getRepository('SieAppWebBundle:EstudianteInscripcionObservacion')->findBy(array('estudianteInscripcion' => $arrDataInfo['estInsId']));
               foreach ($inscriptionStudentOBs as $key => $value) {
@@ -349,17 +354,15 @@ class ChangestadoqaController extends Controller {
               $em->remove($inscriptionStudent);
               $em->flush();
               
-              $student = $em->getRepository('SieAppWebBundle:Estudiante')->findByCodigoRude($arrDataInfo['rude']);
-
-              //$em->remove($student);
-              //$em->flush();
-              if($eliminaRude == 1){
-                foreach ($student as $key => $value) {
-                  $em->remove($value);
-                  $em->flush();
-                }
-              }
               
+              $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneByCodigoRude($arrDataInfo['rude']);
+              if($eliminaRude == 1){
+                //foreach ($student as $value) {
+                  $em->remove($student);
+                  $em->flush();
+                //}
+              }
+
               //update the validation process table
               $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($idProceso);
               $vproceso->setEsActivo('t');
