@@ -3992,48 +3992,57 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
         //print_r($lugar_usuario); die;      
         //LISTA DE TOTALES POR GESTION DEPTO PARTE Y BLOQUE
                 $query = "
-               select persona.carnet,persona.complemento, persona.nombre, persona.paterno, persona.materno,
-                    institucioneducativa_curso.fecha_inicio, institucioneducativa_curso.fecha_fin,
-                    institucioneducativa_curso.ciclo_tipo_id, institucioneducativa_curso.grado_tipo_id,
-                    institucioneducativa_curso.id,
+               SELECT carnet, complemento,nombre,paterno,materno,fecha_inicio,fecha_fin,ciclo_tipo_id,grado_tipo_id,id,depto,provincia,lugar,localidad,obs,esactivo,count(*) as est,SUM(CASE WHEN estadomatricula_tipo_id=62
+            THEN 1
+            ELSE 0
+    END) as est_aprob
+from (
+select persona.carnet,persona.complemento, persona.nombre, persona.paterno, persona.materno,
+institucioneducativa_curso.fecha_inicio, institucioneducativa_curso.fecha_fin,
+institucioneducativa_curso.ciclo_tipo_id, institucioneducativa_curso.grado_tipo_id,
+institucioneducativa_curso.id,
 
-                    CASE
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80480300 THEN
-                                    'CHUQUISACA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80730794 THEN
-                                    'LA PAZ'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 80980569 THEN
-                                    'COCHABAMBA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81230297 THEN
-                                    'ORURO'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81480201 THEN
-                                    'POTOSI'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81730264 THEN
-                                    'TARIJA'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 81981501 THEN
-                                    'SANTA CRUZ'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 82230130 THEN
-                                    'BENI'
-                                WHEN institucioneducativa_curso.institucioneducativa_id = 82480050 THEN
-                                    'PANDO'                         
-                              END AS depto,
-                         institucioneducativa_curso.lugar as provincia,llt.lugar,iecd.localidad,iecd.obs,iecd.esactivo
+CASE
+        WHEN institucioneducativa_curso.institucioneducativa_id = 80480300 THEN
+                'CHUQUISACA'
+        WHEN institucioneducativa_curso.institucioneducativa_id = 80730794 THEN
+                'LA PAZ'
+        WHEN institucioneducativa_curso.institucioneducativa_id = 80980569 THEN
+                'COCHABAMBA'
+        WHEN institucioneducativa_curso.institucioneducativa_id = 81230297 THEN
+                'ORURO'
+        WHEN institucioneducativa_curso.institucioneducativa_id = 81480201 THEN
+                'POTOSI'
+        WHEN institucioneducativa_curso.institucioneducativa_id = 81730264 THEN
+                'TARIJA'
+        WHEN institucioneducativa_curso.institucioneducativa_id = 81981501 THEN
+                'SANTA CRUZ'
+        WHEN institucioneducativa_curso.institucioneducativa_id = 82230130 THEN
+                'BENI'
+        WHEN institucioneducativa_curso.institucioneducativa_id = 82480050 THEN
+                'PANDO'                         
+    END AS depto,
+institucioneducativa_curso.lugar as provincia,llt.lugar,iecd.localidad,iecd.obs,iecd.esactivo,ei.estadomatricula_tipo_id
 
-                from institucioneducativa_curso 
-                inner join maestro_inscripcion 
-                on institucioneducativa_curso.maestro_inscripcion_id_asesor = maestro_inscripcion .id
-                inner join persona 
-                on maestro_inscripcion .persona_id = persona.id
-                inner join institucioneducativa_curso_datos as iecd
-                on iecd.institucioneducativa_curso_id=institucioneducativa_curso.id
-                                inner join lugar_tipo as llt
-                                on llt.id=iecd.lugar_tipo_id_seccion
-                where 
-                date_part('year', institucioneducativa_curso.fecha_fin) = $gestion $consulta
+from institucioneducativa_curso 
+inner join maestro_inscripcion 
+on institucioneducativa_curso.maestro_inscripcion_id_asesor = maestro_inscripcion .id
+inner join persona 
+on maestro_inscripcion .persona_id = persona.id
+inner join institucioneducativa_curso_datos as iecd
+on iecd.institucioneducativa_curso_id=institucioneducativa_curso.id
+inner join lugar_tipo as llt
+on llt.id=iecd.lugar_tipo_id_seccion
+inner join estudiante_inscripcion ei
+on ei.institucioneducativa_curso_id=institucioneducativa_curso.id
+where 
+date_part('year', institucioneducativa_curso.fecha_fin) = $gestion $consulta
 
-                order by                 
-                institucioneducativa_curso.fecha_inicio,
-                institucioneducativa_curso.ciclo_tipo_id, institucioneducativa_curso.grado_tipo_id 
+) as t1
+GROUP BY carnet, complemento,nombre,paterno,materno,fecha_inicio,fecha_fin,ciclo_tipo_id,grado_tipo_id,id,depto,provincia,lugar,localidad,obs,esactivo
+order by                 
+fecha_inicio,
+ciclo_tipo_id, grado_tipo_id 
                 ";
         $stmt = $db->prepare($query);
         $params = array();
@@ -4074,6 +4083,8 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                     $datos_filas["usu_c"] = 0;
 
                 $datos_filas["esactivo"]=$p["esactivo"];
+                $datos_filas["est"]=$p["est"];
+                $datos_filas["est_aprob"]=$p["est_aprob"];
                 $filas[] = $datos_filas;
                 }
             }
@@ -4110,6 +4121,8 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                 $datos_filas["usu_c"] = 0;
 
             $datos_filas["esactivo"]=$p["esactivo"];
+            $datos_filas["est"]=$p["est"];
+            $datos_filas["est_aprob"]=$p["est_aprob"];
             $filas[] = $datos_filas;
             }
         }
