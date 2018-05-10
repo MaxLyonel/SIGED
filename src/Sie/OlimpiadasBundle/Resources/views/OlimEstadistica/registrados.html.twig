@@ -9,13 +9,13 @@
                         {% if estadistica is defined  %}
                             <div class="pull-left">
                                 {% if nivel == 0 %}
-                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Departamento</h3>
+                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Departamento según área</h3>
                                 {% endif %}
                                 {% if nivel == 1 %}
-                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Distrito Educativo</h3>
+                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Distrito Educativo según área</h3>
                                 {% endif %}
                                 {% if nivel == 7 %}
-                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Unidad Educativa</h3>
+                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Unidad Educativa según área</h3>
                                 {% endif %}
                             </div>
                             <div class="pull-right">
@@ -71,7 +71,7 @@
                                     {% if data.cantidad == 0 %}
                                         <span class="pull-right" style="width:150px; text-align:right"><b>{{ cantidad }}</b></span><span class="">{{ lugar }}</span>
                                         <div class="progress progress-md">
-                                            <div class="progress-bar progress-bar-lilac" style="width: 0%" title="{{ cantidad|round(2,'floor') }}%">
+                                            <div class="progress-bar progress-bar-lilac" style="width: 0%" title="{{ cantidad|number_format(1,'.',',') }}%">
                                                 <span class="sr-only">{{ porcentaje }}%</span>
                                             </div><!-- /.progress -->
                                         </div>
@@ -79,7 +79,7 @@
                                         {% if nivel == 7 %}
                                             <span class="pull-right" style="width:150px; text-align:right"><b>{{ cantidad }}</b></span><span class="">{{ lugar }}</span>
                                             <div class="progress progress-md">
-                                                <div class="progress-bar progress-bar-lilac" style="width: {{ porcentaje }}%" title="{{ porcentaje|round(2,'floor') }}%">
+                                                <div class="progress-bar progress-bar-lilac" style="width: {{ porcentaje }}%" title="{{ porcentaje|number_format(1,'.',',') }}%">
                                                     <span class="sr-only">{{ porcentaje }}%</span>
                                                 </div><!-- /.progress -->
                                             </div>
@@ -92,7 +92,7 @@
                                                     <span class="pull-right" style="width:150px; text-align:right"><b>{{ cantidad }}</b></span><span class="">{{ lugar }}</span>
                                                 </a>                                             
                                                 <div class="progress progress-md">
-                                                    <div class="progress-bar progress-bar-lilac" style="width: {{ porcentaje }}%" title="{{ porcentaje|round(2,'floor') }}%">
+                                                    <div class="progress-bar progress-bar-lilac" style="width: {{ porcentaje }}%" title="{{ porcentaje|number_format(1,'.',',') }}%">
                                                         <span class="sr-only">{{ porcentaje }}%</span>
                                                     </div><!-- /.progress -->
                                                 </div>

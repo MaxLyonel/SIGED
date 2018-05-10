@@ -9,3 +9,15 @@ olimestadistica_registrados_pdf:
 olimestadistica_registrados_xls:
     path:     /registrados/xls
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosXls" }
+
+olimestadistica_registrados_area:
+    path:     /registrados/area
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosAreaIndex" }
+
+olimestadistica_registrados_area_pdf:
+    path:     /registrados/area/pdf
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosAreaPdf" }
+
+olimestadistica_registrados_area_xls:
+    path:     /registrados/area/xls
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosAreaXls" }
