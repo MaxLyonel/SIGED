@@ -42,8 +42,9 @@ class ConsolidationSieController extends Controller {
         $aAccess = array(5, 2, 9);
         if (in_array($this->session->get('roluser'), $aAccess)) {
             $institutionData = $this->intitucioneducativaData($this->session->get('personaId'), $this->session->get('currentyear'));
-
-            $institutionData1 = $this->getDataUe($this->session->get('userName'));
+            
+            $institutionData1 = $this->getDataUe($this->session->get('ie_id'));
+            
             //verificar si es IE
             if ($institutionData1) {
                 $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($institutionData1[0]['id']);
