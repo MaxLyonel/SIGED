@@ -25,7 +25,14 @@ class OlimEstadisticaController extends Controller{
 		*/
 	   	date_default_timezone_set('America/La_Paz');
 	   	$fechaActual = new \DateTime(date('Y-m-d'));
-	   	$gestionActual = date_format($fechaActual,'Y');
+		$gestionActual = date_format($fechaActual,'Y');
+		   		
+		$sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
 
 		$codigo = 0;
 		$nivel = 0;	
@@ -179,7 +186,7 @@ class OlimEstadisticaController extends Controller{
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = date_format($fechaActual,'Y');
+		$gestionActual = date_format($fechaActual,'Y');
 
         $codigo = 0;
 		$nivel = 0;	
@@ -276,6 +283,13 @@ class OlimEstadisticaController extends Controller{
 	   	date_default_timezone_set('America/La_Paz');
 	   	$fechaActual = new \DateTime(date('Y-m-d'));
 	   	$gestionActual = date_format($fechaActual,'Y');
+
+		$sesion = $request->getSession();
+		$id_usuario = $sesion->get('userId');
+		//validation if the user is logged
+		if (!isset($id_usuario)) {
+			return $this->redirect($this->generateUrl('login'));
+		}
 
 		$codigo = 0;
 		$nivel = 0;	
