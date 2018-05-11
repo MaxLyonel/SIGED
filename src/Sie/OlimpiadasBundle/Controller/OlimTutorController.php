@@ -249,7 +249,7 @@ class OlimTutorController extends Controller{
         $resultTutores = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
                 'carnet'=> $form['carnet'],
                 'complemento'=>$form['complemento'],
-                'fechaNacimiento'=> new \DateTime($form['fechanacimiento'])
+                // 'fechaNacimiento'=> new \DateTime($form['fechanacimiento'])
             ));
         if(!$resultTutores){
             $tutorFound = false;
