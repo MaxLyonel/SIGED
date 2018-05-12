@@ -366,6 +366,8 @@ class InfoPersonalAdmController extends Controller {
             $em->persist($persona);
             $em->flush();
 
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
+
             // Registro Maestro inscripcion
             $maestroinscripcion = new MaestroInscripcion();
             $maestroinscripcion->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($form['funcion']));
@@ -412,7 +414,6 @@ class InfoPersonalAdmController extends Controller {
                 }
             }
             $em->getConnection()->commit();
-            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
             
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
             return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
