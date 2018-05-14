@@ -1185,15 +1185,15 @@ class ClasificacionController extends Controller {
         $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
 
         if($nivel == 13){
-            if($estudiante["gestion_nacimiento"] < 1998 or $estudiante["gestion_nacimiento"] > 2005){
+            if($estudiante["gestion_nacimiento"] < 1999 or $estudiante["gestion_nacimiento"] > 2006){
                 $msg = array('0'=>false, '1'=>$estudiante["nombre"]." (Edad y/o gestión del estudiante no válida para inscripción)");
-                $registroValido = false;
+                $edadValida = false;
             }
         }
         if($nivel == 12) {
-            if($estudiante["gestion_nacimiento"] < 2005 or $estudiante["gestion_nacimiento"] > 2011){
+            if($estudiante["gestion_nacimiento"] < 2006 or $estudiante["gestion_nacimiento"] > 2012){
                 $msg = array('0'=>false, '1'=>$estudiante["nombre"]." (Edad y/o gestión del estudiante no válida para inscripción)");
-                $registroValido = false;
+                $edadValida = false;
             }
         }
 
@@ -1225,20 +1225,38 @@ class ClasificacionController extends Controller {
             } else {
                 if ($tipoDisciplinaPrueba["idDisciplina"] == 8){ //natacion
                     if ($prueba == 65 or $prueba == 66 or $prueba == 67 or $prueba == 68 or $prueba == 69 or $prueba == 70 or $prueba == 71 or $prueba == 72 or $prueba == 73 or $prueba == 74 or $prueba == 124 or $prueba == 125 or $prueba == 126 or $prueba == 127 or $prueba == 128 or $prueba == 129 or $prueba == 130 or $prueba == 131 or $prueba == 132 or $prueba == 133){ // promocional
-                        if ($estudiante["gestion_nacimiento"] >= 2003 and $estudiante["gestion_nacimiento"]<=2005){
+                        if ($estudiante["gestion_nacimiento"] >= 2004 and $estudiante["gestion_nacimiento"]<=2006){
                             $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                         } else {
-                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2003 a 2005 en el año de nacimiento)');
+                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2004 a 2006 en el año de nacimiento)');
                         }
                     }
                     if ($prueba == 114 or $prueba == 115 or $prueba == 116 or $prueba == 117 or $prueba == 118 or $prueba == 119 or $prueba == 120 or $prueba == 121 or $prueba == 122 or $prueba == 123 or $prueba == 138 or $prueba == 139 or $prueba == 140 or $prueba == 141 or $prueba == 142 or $prueba == 143 or $prueba == 144 or $prueba == 145 or $prueba == 146 or $prueba == 147){ // avanzado
-                        if ($estudiante["gestion_nacimiento"] >= 1998 and $estudiante["gestion_nacimiento"]<=2002){
+                        if ($estudiante["gestion_nacimiento"] >= 1999 and $estudiante["gestion_nacimiento"]<=2003){
                             $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                         } else {
-                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 10 a 12 años y 1998 a 2002 en el año de nacimiento)');
+                            $$inscripcionEstudianteEntitymsg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 15 a 19 años y 1999 a 2003 en el año de nacimiento)');
                         }
                     }
                 }
+
+                if ($tipoDisciplinaPrueba["idDisciplina"] == 2){ //atletismo
+                    if ($prueba == 148 or $prueba == 149 or $prueba == 150 or $prueba == 151 or $prueba == 152 or $prueba == 153 or $prueba == 154 or $prueba == 155 or $prueba == 156 or $prueba == 157 or $prueba == 158 or $prueba == 159 or $prueba == 160 or $prueba == 161 or $prueba == 162 or $prueba == 163 or $prueba == 164 or $prueba == 165 or $prueba == 166 or $prueba == 167 or $prueba == 168 or $prueba == 169 or $prueba == 170 or $prueba == 171 or $prueba == 172 or $prueba == 173 or $prueba == 174 or $prueba == 175 or $prueba == 176 or $prueba == 177){ // 12-14
+                        if ($estudiante["gestion_nacimiento"] >= 2004 and $estudiante["gestion_nacimiento"]<=2006){
+                            $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
+                        } else {
+                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2004 a 2006 en el año de nacimiento)');
+                        }
+                    }
+                    if ($prueba == 178 or $prueba == 179 or $prueba == 180 or $prueba == 181 or $prueba == 182 or $prueba == 183 or $prueba == 184 or $prueba == 185 or $prueba == 186 or $prueba == 187 or $prueba == 188 or $prueba == 189 or $prueba == 190 or $prueba == 191 or $prueba == 192 or $prueba == 193 or $prueba == 194 or $prueba == 195 or $prueba == 196 or $prueba == 197 or $prueba == 198 or $prueba == 199 or $prueba == 200 or $prueba == 201 or $prueba == 202 or $prueba == 203 or $prueba == 204 or $prueba == 205 or $prueba == 206 or $prueba == 207 or $prueba == 208 or $prueba == 209 or $prueba == 210 or $prueba == 211 or $prueba == 212 or $prueba == 213){ // 15-19
+                        if ($estudiante["gestion_nacimiento"] >= 1999 and $estudiante["gestion_nacimiento"]<=2003){
+                            $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
+                        } else {
+                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 15 a 19 años y 1999 a 2003 en el año de nacimiento)');
+                        }
+                    }
+                }
+
                 if ($tipoDisciplinaPrueba["idDisciplina"] == 6){ //ciclismo
                     if (count($inscripcionEstudianteEntity) > 0){
                         if($inscripcionEstudianteGestionDisciplinaFase[0]){
@@ -2039,7 +2057,7 @@ class ClasificacionController extends Controller {
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f0_v2.rptdesign&__format=pdf&codue='.$codigoEntidad.'&codges='.$gestionActual));
             }
             if($fase == 1){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f1_v1.rptdesign&__format=pdf&coddis='.$codigoEntidad.'&codges='.$gestionActual));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f1_v1.rptdesign&__format=pdf&coddiseeee='.$codigoEntidad.'&codges='.$gestionActual));
             }
             if($fase == 2){
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f2_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
