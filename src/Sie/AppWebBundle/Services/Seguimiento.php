@@ -241,6 +241,286 @@ class Seguimiento {
       return $objobsQA;
     }
 
+    public function getSubSistemaInstitucionEducativa($institucionEducativaId){
+      
+      //    and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
+      // $em = $this->getDoctrine()->getManager();
+      $query = $this->em->getConnection()->prepare("
+                                select ie.id as codigo, ie.institucioneducativa as institucioneducativa, oct.id as orgcurricular_id, oct.orgcurricula
+                                , (case oct.id when 2 then (case iena.nivel_tipo_id when 6 then 'Especial' else oct.orgcurricula end) else oct.orgcurricula end) as subsistema
+                                from institucioneducativa as ie
+                                inner join orgcurricular_tipo as oct ON oct.id = ie.orgcurricular_tipo_id
+                                left join (select distinct institucioneducativa_id, nivel_tipo_id from institucioneducativa_nivel_autorizado where nivel_tipo_id = 6) as iena on iena.institucioneducativa_id = ie.id
+                                where ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.id = ".$institucionEducativaId." and ie.estadoinstitucion_tipo_id = 10
+  
+                                            ");
+          //
+      $query->execute();
+      $objIE = $query->fetch();
+
+
+      return $objIE;
+    }
+    public function getNotasHistorialRegular($participanteId){
+      // dump($participanteId);die;
+      //    and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
+      // $em = $this->getDoctrine()->getManager();
+      $query = $this->em->getConnection()->prepare("
+              SELECT
+              estudiante.codigo_rude,
+              cast(estudiante.carnet_identidad as varchar)||(case when estudiante.complemento is null then '' when estudiante.complemento = '' then '' else '-'||estudiante.complemento end) as carnet_identidad,
+              estudiante.paterno,
+              estudiante.materno,
+              estudiante.nombre,
+              institucioneducativa_curso.institucioneducativa_id,
+              institucioneducativa.institucioneducativa,
+              institucioneducativa_curso.grado_tipo_id,
+              grado_tipo.grado,
+              paralelo_tipo.paralelo,
+              institucioneducativa_curso.gestion_tipo_id,
+              estudiante_inscripcion.estadomatricula_tipo_id,
+              institucioneducativa_curso_oferta.asignatura_tipo_id,
+              -- asignatura_tipo.asignatura,
+              (case WHEN institucioneducativa_curso_oferta.asignatura_tipo_id = 1039 then upper(asignatura_tipo.asignatura ||' '||especialidad_tecnico_humanistico_tipo.especialidad) else asignatura_tipo.asignatura end) as asignatura,
+              asignatura_tipo.area_tipo_id,
+              UPPER(area_tipo.area) as area,
+              turno_tipo.turno,
+              Sum(case when estudiante_nota.nota_tipo_id = 1 then estudiante_nota.nota_cuantitativa end) AS b1,
+              Sum(case when estudiante_nota.nota_tipo_id = 2 then estudiante_nota.nota_cuantitativa end) AS b2,
+              Sum(case when estudiante_nota.nota_tipo_id = 3 then estudiante_nota.nota_cuantitativa end) AS b3,
+              Sum(case when estudiante_nota.nota_tipo_id = 4 then estudiante_nota.nota_cuantitativa end) AS b4,
+              Sum(case when estudiante_nota.nota_tipo_id = 5 then estudiante_nota.nota_cuantitativa end) AS b5,
+              Sum(case when estudiante_nota.nota_tipo_id = 6 then estudiante_nota.nota_cuantitativa end) AS t1,
+              Sum(case when estudiante_nota.nota_tipo_id = 7 then estudiante_nota.nota_cuantitativa end) AS t2,
+              Sum(case when estudiante_nota.nota_tipo_id = 8 then estudiante_nota.nota_cuantitativa end) AS t3,
+              Sum(case when estudiante_nota.nota_tipo_id = 9 then estudiante_nota.nota_cuantitativa end) AS t4,
+              Sum(case when estudiante_nota.nota_tipo_id = 10 then estudiante_nota.nota_cuantitativa end) AS t5,
+              Sum(case when estudiante_nota.nota_tipo_id = 11 then estudiante_nota.nota_cuantitativa end) AS t6
+              FROM
+              estudiante
+              INNER JOIN  estudiante_inscripcion ON  estudiante_inscripcion.estudiante_id =  estudiante.id
+              INNER JOIN  institucioneducativa_curso ON  estudiante_inscripcion.institucioneducativa_curso_id =  institucioneducativa_curso.id
+              INNER JOIN  estudiante_asignatura ON  estudiante_asignatura.estudiante_inscripcion_id =  estudiante_inscripcion.id
+              INNER JOIN  estudiante_nota ON  estudiante_nota.estudiante_asignatura_id =  estudiante_asignatura.id
+              INNER JOIN  institucioneducativa_curso_oferta ON  institucioneducativa_curso_oferta.insitucioneducativa_curso_id =  institucioneducativa_curso.id AND  estudiante_asignatura.institucioneducativa_curso_oferta_id =  institucioneducativa_curso_oferta.id
+              INNER JOIN  asignatura_tipo ON  institucioneducativa_curso_oferta.asignatura_tipo_id =  asignatura_tipo.id
+              INNER JOIN  area_tipo ON  asignatura_tipo.area_tipo_id =  area_tipo.id
+              INNER JOIN  grado_tipo ON  institucioneducativa_curso.grado_tipo_id =  grado_tipo.id
+              INNER JOIN  paralelo_tipo ON  institucioneducativa_curso.paralelo_tipo_id =  paralelo_tipo.id
+              INNER JOIN  turno_tipo ON turno_tipo.id = institucioneducativa_curso.turno_tipo_id
+              INNER JOIN  institucioneducativa ON  institucioneducativa_curso.institucioneducativa_id =  institucioneducativa.id
+              LEFT JOIN  estudiante_inscripcion_humnistico_tecnico ON estudiante_inscripcion_humnistico_tecnico.estudiante_inscripcion_id = estudiante_inscripcion.id
+              LEFT JOIN  especialidad_tecnico_humanistico_tipo ON estudiante_inscripcion_humnistico_tecnico.especialidad_tecnico_humanistico_tipo_id = especialidad_tecnico_humanistico_tipo.id
+              WHERE
+              estudiante_inscripcion.id = ".$participanteId." 
+              -- and estudiante_inscripcion.estadomatricula_tipo_id in (4,5,55) --and institucioneducativa_curso.nivel_tipo_id in (3,13)
+              --AND case when institucioneducativa_curso.gestion_tipo_id > 2010 then institucioneducativa_curso.ciclo_tipo_id in (2,3) else true end
+              -- AND case when institucioneducativa_curso.gestion_tipo_id > 2013 or (institucioneducativa_curso.gestion_tipo_id > 2013 and grado_tipo.id = 1) then grado_tipo.id in (3,4,5,6) else grado_tipo.id in (1,2,3,4) end
+              -- AND institucioneducativa_curso.nivel_tipo_id = (case when (2017 <= 2010) then 3 else 13 end)
+              -- AND (case when (2017 <= 2010) then (institucioneducativa_curso.grado_tipo_id in (1,2,3,4)) else (institucioneducativa_curso.grado_tipo_id in (3,4,5,6)) end)
+              GROUP BY
+              estudiante.codigo_rude,
+              estudiante.carnet_identidad,
+              estudiante.complemento,
+              estudiante.paterno,
+              estudiante.materno,
+              estudiante.nombre,
+              institucioneducativa_curso.institucioneducativa_id,
+              institucioneducativa.institucioneducativa,
+              institucioneducativa_curso.grado_tipo_id,
+              grado_tipo.grado,
+              paralelo_tipo.paralelo,
+              institucioneducativa_curso.gestion_tipo_id,
+              estudiante_inscripcion.estadomatricula_tipo_id,
+              institucioneducativa_curso_oferta.asignatura_tipo_id,
+              turno_tipo.turno,
+              asignatura_tipo.area_tipo_id,
+              area_tipo.area,
+              asignatura_tipo.asignatura,
+              especialidad_tecnico_humanistico_tipo.especialidad
+              ORDER BY
+              institucioneducativa_curso.grado_tipo_id desc,asignatura_tipo.area_tipo_id, institucioneducativa_curso_oferta.asignatura_tipo_id
+              
+                                            ");
+
+          //
+      $query->execute();
+      $entityInscripcion = $query->fetchAll();
+
+dump($entityInscripcion);die;
+      $gradoId = 0;
+      $i = 0;
+      $j = 0;
+      $listaHistorial=array();
+      foreach ($entityInscripcion as $registro)
+      {
+        if ($gradoId != $registro['grado_tipo_id']) {
+          $gradoId = $registro['grado_tipo_id'];
+          $i = 0;
+        }
+        if(($registro['gestion_tipo_id'] > 2013) or ($registro['gestion_tipo_id'] == 2013 and $registro['grado_tipo_id'] == 1)){
+          $listaHistorial[$registro['grado_tipo_id']][$i] = array(
+                                                                    'codigo_rude'=>$registro['codigo_rude'],
+                                                                    'paterno'=>$registro['paterno'],
+                                                                    'materno'=>$registro['materno'],
+                                                                    'nombre'=>$registro['nombre'],
+                                                                    'institucioneducativa_id'=>$registro['institucioneducativa_id'],
+                                                                    'institucioneducativa'=>$registro['institucioneducativa'],
+                                                                    'turno'=>$registro['turno'],
+                                                                    'grado_tipo_id'=>$registro['grado_tipo_id'],
+                                                                        'grado'=>$registro['grado'],
+                                                                    'paralelo'=>$registro['paralelo'],
+                                                                    'gestion_tipo_id'=>$registro['gestion_tipo_id'],
+                                                                    'estadomatricula_tipo_id'=>$registro['estadomatricula_tipo_id'],
+                                                                    'asignatura_tipo_id'=>$registro['asignatura_tipo_id'],
+                                                                    'asignatura'=>$registro['asignatura'],
+                                                                    'area_tipo_id'=>$registro['area_tipo_id'],
+                                                                    'area'=>$registro['area'],
+                                                                    'calendarioId'=>1,
+                                                                    'calendario'=>'Bimestral',
+                                                                    'n1'=>$registro['b1'],
+                                                                    'n2'=>$registro['b2'],
+                                                                    'n3'=>$registro['b3'],
+                                                                    'n4'=>$registro['b4'],
+                                                                    'n5'=>$registro['b5'],
+                                                                    'n6'=>null
+                                                                  );
+        } else {
+          $listaHistorial[$registro['grado_tipo_id']][$i] = array(
+                                                                    'codigo_rude'=>$registro['codigo_rude'],
+                                                                    'paterno'=>$registro['paterno'],
+                                                                    'materno'=>$registro['materno'],
+                                                                    'nombre'=>$registro['nombre'],
+                                                                    'institucioneducativa_id'=>$registro['institucioneducativa_id'],
+                                                                    'institucioneducativa'=>$registro['institucioneducativa'],
+                                                                    'turno'=>$registro['turno'],
+                                                                    'grado_tipo_id'=>$registro['grado_tipo_id'],
+                                                                    'grado'=>$registro['grado'],
+                                                                    'paralelo'=>$registro['paralelo'],
+                                                                    'gestion_tipo_id'=>$registro['gestion_tipo_id'],
+                                                                    'estadomatricula_tipo_id'=>$registro['estadomatricula_tipo_id'],
+                                                                    'asignatura_tipo_id'=>$registro['asignatura_tipo_id'],
+                                                                    'asignatura'=>$registro['asignatura'],
+                                                                    'area_tipo_id'=>$registro['area_tipo_id'],
+                                                                    'area'=>$registro['area'],
+                                                                    'calendarioId'=>2,
+                                                                    'calendario'=>'Trimestral',
+                                                                    'n1'=>$registro['t1'],
+                                                                    'n2'=>$registro['t2'],
+                                                                    'n3'=>$registro['t3'],
+                                                                    'n4'=>$registro['t4'],
+                                                                    'n5'=>$registro['t5'],
+                                                                    'n6'=>$registro['t6']
+                                                                  );
+        }
+
+        $i++;
+        // $listaHistorial[$i] = $entidadEspecialidadTipo['grado_tipo_id'];
+      }
+      //dump($listaHistorial);
+      //die;
+      return $listaHistorial;
+    }
+
+    public function getYearsOldsStudentByFecha($fecha_nacimiento, $fecha_control){
+
+      $fecha_actual = $fecha_control;
+
+      if (!strlen($fecha_actual)) {
+          $fecha_actual = date('d-m-Y');
+      }
+// dump($fecha_actual);
+      // separamos en partes las fechas
+      $array_nacimiento = explode("-", str_replace('/', '-', $fecha_nacimiento));
+      $array_actual = explode("-", $fecha_actual);
+
+      $anos = $array_actual[2] - $array_nacimiento[2]; // calculamos años
+      $meses = $array_actual[1] - $array_nacimiento[1]; // calculamos meses
+      $dias = $array_actual[0] - $array_nacimiento[0]; // calculamos días
+      //ajuste de posible negativo en $días
+      if ($dias < 0) {
+          --$meses;
+
+          //ahora hay que sumar a $dias los dias que tiene el mes anterior de la fecha actual
+          switch ($array_actual[1]) {
+              case 1:
+                  $dias_mes_anterior = 31;
+                  break;
+              case 2:
+                  $dias_mes_anterior = 31;
+                  break;
+              case 3:
+                  if (bisiesto($array_actual[2])) {
+                      $dias_mes_anterior = 29;
+                      break;
+                  } else {
+                      $dias_mes_anterior = 28;
+                      break;
+                  }
+              case 4:
+                  $dias_mes_anterior = 31;
+                  break;
+              case 5:
+                  $dias_mes_anterior = 30;
+                  break;
+              case 6:
+                  $dias_mes_anterior = 31;
+                  break;
+              case 7:
+                  $dias_mes_anterior = 30;
+                  break;
+              case 8:
+                  $dias_mes_anterior = 31;
+                  break;
+              case 9:
+                  $dias_mes_anterior = 31;
+                  break;
+              case 10:
+                  $dias_mes_anterior = 30;
+                  break;
+              case 11:
+                  $dias_mes_anterior = 31;
+                  break;
+              case 12:
+                  $dias_mes_anterior = 30;
+                  break;
+          }
+
+          $dias = $dias + $dias_mes_anterior;
+
+          if ($dias < 0) {
+              --$meses;
+              if ($dias == -1) {
+                  $dias = 30;
+              }
+              if ($dias == -2) {
+                  $dias = 29;
+              }
+          }
+      }
+
+      //ajuste de posible negativo en $meses
+      if ($meses < 0) {
+          --$anos;
+          $meses = $meses + 12;
+      }
+
+      $tiempo[0] = $anos;
+      $tiempo[1] = $meses;
+      $tiempo[2] = $dias;
+
+      return $tiempo;
+}
+
+function bisiesto($anio_actual) {
+  $bisiesto = false;
+  //probamos si el mes de febrero del año actual tiene 29 días
+  if (checkdate(2, 29, $anio_actual)) {
+      $bisiesto = true;
+  }
+  return $bisiesto;
+}
+
 }
 
  ?>
