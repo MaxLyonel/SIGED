@@ -120,6 +120,15 @@ class InscriptionRezagoController extends Controller {
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
         //verificamos si existe el estudiante y si es menor a 15
         if ($student) {
+            $yearsStudent = $this->get('seguimiento')->getYearsOldsStudentByFecha($student->getFechaNacimiento()->format('d-m-Y'), "30-06-2018");
+
+            if($yearsStudent[0]<=15){
+                // no thing to do
+            }else{
+                $message = 'Estudiante no cumple con la edad requerida';
+                $this->addFlash('warningrezago', $message);
+                return $this->redirectToRoute('inscription_rezago_index');
+            }
 
             //validate 2 times on rezago
             $conditionRezago = array('estudiante' => $student->getId(), 'estadomatriculaTipo' => '57');

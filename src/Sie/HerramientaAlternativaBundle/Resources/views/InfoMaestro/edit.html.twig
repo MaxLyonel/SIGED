@@ -76,8 +76,8 @@
                                         <input value="{{ persona.nombre }}" id="nombre" class="form-control" readonly="readonly" type="text">
                                     </div>
                                     <div class="form-group col-lg-3 col-md-6">
-                                        <label class="control-label" for="genero">Género</label>
-                                        <input value="{{ persona.generoTipo }}" id="genero" class="form-control" readonly="readonly" type="text">
+                                        {{ form_label(form.genero) }}
+                                        {{ form_widget(form.genero) }}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -85,20 +85,19 @@
                                         <label class="control-label" for="fechanac">Fecha de Nacimiento</label>
                                         <input value="{{ persona.fechaNacimiento|date('d-m-Y') }}" id="fechanac" class="form-control" readonly="readonly" type="text">
                                     </div>
-
                                     <div class="form-group col-lg-6 col-md-12">
-                                        <label class="control-label" for="direccion">Dirección de Domicilio</label>
-                                        <input value="{{ persona.direccion }}" id="direccion" class="form-control" readonly="readonly" type="text">
+                                        {{ form_label(form.direccion) }}
+                                        {{ form_widget(form.direccion) }}
                                     </div>
                                     <div class="form-group col-lg-3 col-md-6">
-                                        <label class="control-label" for="celular">Nro. de celular</label>
-                                        <input value="{{ persona.celular }}" id="celular" class="form-control" readonly="readonly" type="text">
+                                         {{ form_label(form.celular) }}
+                                        {{ form_widget(form.celular) }}
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-3 col-md-6">
-                                        <label class="control-label" for="correo">Correo Electrónico</label>
-                                        <input value="{{ persona.correo }}" id="correo" class="form-control" readonly="readonly" type="text">
+                                        {{ form_label(form.correo) }}
+                                        {{ form_widget(form.correo) }}
                                     </div>
                                     <div class="form-group col-lg-3 col-md-6">
                                         <label class="control-label" for="rda">RDA</label>
