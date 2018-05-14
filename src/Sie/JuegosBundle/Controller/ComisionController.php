@@ -1145,9 +1145,8 @@ class ComisionController extends Controller {
                 inner join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id 
                 inner join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id 
                 inner join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id 
-                where (case ".$fase." when 1 then  lt.id = ".$codigoEntidad." when 2 then jg.circunscripcion_tipo_id = ".$codigoEntidad." when 3 then det.id = ".$codigoEntidad." else true end) and ejd.gestion_tipo_id = ".$gestion." and pt.id = ".$pruebaId." and ejd.fase_tipo_id = ".($fase)."
+                where (case ".$fase." when 1 then  lt.id = ".$codigoEntidad." when 2 then jg.circunscripcion_tipo_id = ".$codigoEntidad." when 3 then det.id = ".$codigoEntidad." else true end) and ejd.gestion_tipo_id = ".$gestion." and pt.id = ".$pruebaId." and ejd.fase_tipo_id = ".($fase+1)."
                 order by dt.disciplina, pt.prueba, gtp.genero, nombre, paterno, materno
-
             ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();

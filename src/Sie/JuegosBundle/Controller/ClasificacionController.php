@@ -2030,7 +2030,6 @@ class ClasificacionController extends Controller {
           $codigoEntidad = $objEntidad[0]['id'];
         }
 
-
         if (isset($_POST['id'])){
             $arch = $codigoEntidad.'_'.$gestionActual.'_JUEGOS_F'.$fase.'_'.date('YmdHis').'.pdf';
             $response = new Response();
@@ -2040,7 +2039,7 @@ class ClasificacionController extends Controller {
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f0_v2.rptdesign&__format=pdf&codue='.$codigoEntidad.'&codges='.$gestionActual));
             }
             if($fase == 1){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f1_v2.rptdesign&__format=pdf&codue='.$codigoEntidad.'&codges='.$gestionActual));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f1_v1.rptdesign&__format=pdf&coddis='.$codigoEntidad.'&codges='.$gestionActual));
             }
             if($fase == 2){
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f2_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
