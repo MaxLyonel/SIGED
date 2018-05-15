@@ -498,7 +498,14 @@ class InfoMaestroController extends Controller {
                 $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
                 return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
             }
-            
+
+            //Actualizamos datos de la persona
+            $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));
+            $persona->setDireccion(mb_strtoupper($form['direccion']), 'utf-8');
+            $persona->setCelular($form['celular']);
+            $persona->setCorreo(mb_strtolower($form['correo']), 'utf-8');
+            $em->persist($persona);
+            $em->flush();            
 
             $edidm=$form['educacionDiversaTipo'];
 
