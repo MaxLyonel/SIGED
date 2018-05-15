@@ -332,14 +332,14 @@ class TrasladoController extends Controller {
             $message = "Traslado realizado.";
             $this->addFlash('estadoTraslado', $message);
 
-            $this->funciones->setLogTransaccion(
-                                $newNota->getId(),
+            $this->get('funciones')->setLogTransaccion(
+                                $arrInfoUeducativaFrom['estInsId'],
                                 'estudiante_inscripcion',
                                 'C',
                                 'traslado',
-                                $newNota,
+                                $arrInfoUeducativaFrom['estInsId'],
                                 '',
-                                'ACADEMICO',
+                                'siged',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
                             );
 
