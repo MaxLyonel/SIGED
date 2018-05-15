@@ -92,7 +92,7 @@
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
                             {% if(ieducativa) %}
-                                {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} }) }}
+                                {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form','onsubmit': 'return validarDatos();'} }) }}
                                 <div class="row">
                                     <div class="col-md-9 col-sm-9 col-xs-9">
                                         <div class="panel panel-lilac">
@@ -302,7 +302,7 @@
                                                                 Zona:
                                                             </div>
                                                             <div class="col-md-9">
-                                                                <input value="{{ iedusu.zona }}" class="form-control" readonly="readonly" type="text">
+                                                                <input value="{{ ubicacion['zona'] }}" class="form-control" readonly="readonly" type="text">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -316,7 +316,7 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['codigo_le'] }}" disabled>
+                                                                <input class="form-control" readonly="readonly" type="text" placeholder="{{ ubicacion['codigo_le'] }}" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -328,7 +328,7 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <input class="form-control" id="disabledInput" type="text" placeholder="{{ ubicacion['direccion'] }}" disabled>
+                                                                <input class="form-control" readonly="readonly" type="text" placeholder="{{ ubicacion['direccion'] }}" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -477,6 +477,19 @@
 {% block javascripts %}
     {{parent()}}
     <script>
+        var validarDatos = function(){
+            telefono1 = $('#form_telefono1').val();
+            telefono2 = $('#form_telefono2').val();
+            email = $('#form_email').val();
+            
+            emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+            fonoRegex = /^([0-9])*$/;
+
+            if(telefono2 == '' || email == '' || !emailRegex.test(email) || !fonoRegex.test(telefono1) || !fonoRegex.test(telefono2)){
+                alert('Ingrese datos en los campos requeridos o ajuste a los formatos válidos');
+                return false;
+            }
+        }
     </script>
 {% endblock %}
 
