@@ -1,7 +1,25 @@
 {% extends 'layoutOlimpiadas.html.twig' %}
 
-{% block contentoption %}
-    <div class="container">        
+{% block contentoption %} 
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Registrados<span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">         
+                {% if nivel == 0 %}
+                    <li><i class="fa fa-home"></i><a href="#">Nivel Nacional</a></li>
+                {% endif %}
+                {% if nivel == 1 %}
+                    <li><i class="fa fa-home"></i><a href="javascript:history.back()">Nivel Nacional</a><i class="fa fa-angle-right"></i></li><li><a href="#">Nivel Departamental</a></li>
+                {% endif %}
+                {% if nivel == 7 %}                        
+                    <li><i class="fa fa-home"></i><a href="javascript:history.go(-2)">Nivel Nacional</a><i class="fa fa-angle-right"></i></li><li><a href="javascript:history.back()">Nivel Departamental</a><i class="fa fa-angle-right"></i></li><li><a href="#">Nivel Distrital</a></li>
+                {% endif %}
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>  
+    
+    <div class="body-content animated fadeIn">        
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel shadow">

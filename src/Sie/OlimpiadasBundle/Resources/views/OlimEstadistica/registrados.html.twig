@@ -1,14 +1,32 @@
 {% extends 'layoutOlimpiadas.html.twig' %}
 
-{% block contentoption %}
-    <div class="container">        
+{% block contentoption %}     
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Registrados<span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">         
+                {% if nivel == 0 %}
+                    <li><i class="fa fa-home"></i><a href="#">Nivel Nacional</a></li>
+                {% endif %}
+                {% if nivel == 1 %}
+                    <li><i class="fa fa-home"></i><a href="javascript:history.back()">Nivel Nacional</a><i class="fa fa-angle-right"></i></li><li><a href="#">Nivel Departamental</a></li>
+                {% endif %}
+                {% if nivel == 7 %}                        
+                    <li><i class="fa fa-home"></i><a href="javascript:history.go(-2)">Nivel Nacional</a><i class="fa fa-angle-right"></i></li><li><a href="javascript:history.back()">Nivel Departamental</a><i class="fa fa-angle-right"></i></li><li><a href="#">Nivel Distrital</a></li>
+                {% endif %}
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>  
+
+    <div class="body-content animated fadeIn"> 
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel shadow">
                     <div class="panel-heading">
                         {% if estadistica is defined  %}
                             <div class="pull-left">
-                                    {% if nivel == 0 %}
+                                {% if nivel == 0 %}
                                     <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Departamento</h3>
                                 {% endif %}
                                 {% if nivel == 1 %}
@@ -35,10 +53,10 @@
                                         <i class="fa fa-file-excel-o"></i>
                                     </button>
                                 </form> 
-                            </div>     
+                            </div>      
                             <div class="clearfix"></div>
                         {% endif %}
-                    </div>               
+                    </div>         
                     <div class="panel-body">
                         {% if estadistica is defined  %}
                             {% set count = 0 %}
