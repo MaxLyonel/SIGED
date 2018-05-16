@@ -54,8 +54,16 @@
                                                 <a href="#" onclick="deleteGroup('{{jsonDataInscription}}', {{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Equipo"><i class="fa fa-trash-o"></i></a>
                                                 {% if regla.siInsExterna %}
                                                     <a href="#" onclick="listInscritosGroup('{{jsonDataInscription}}', {{group.id}}, 1);" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones"><i class="fa fa-group"></i></a>
-                                                {% else %}    
-                                                    <a href="#" onclick="doInscriptionGroup('{{jsonDataInscription}}', {{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones"><i class="fa fa-edit"></i></a>
+                                                {% else %}
+                                                    {% if regla.siSubirDocumento %}
+                                                        {% if group.documentoPdf1 %} 
+                                                            <a href="#" onclick="doInscriptionGroup('{{jsonDataInscription}}', {{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones"><i class="fa fa-edit"></i></a>
+                                                        {% else %} 
+                                                            <a  class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones deshabilitada" ><i style="  color:#ccc;" class="fa fa-edit"></i></a>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <a href="#" onclick="doInscriptionGroup('{{jsonDataInscription}}', {{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones"><i class="fa fa-edit"></i></a>     
+                                                    {% endif %}
                                                 {% endif %}
                                                 {% if regla.siSubirDocumento %}
                                                     <a href="#" onclick="olimArchivo({{group.id}});" class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Subir Documento"><i class="fa fa-upload"></i></a>
