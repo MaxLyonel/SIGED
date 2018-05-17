@@ -2072,13 +2072,13 @@ class ClasificacionController extends Controller {
             $response->headers->set('Content-type', 'application/vnd.ms-excel');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
-            if($fase == 0){
+            if($fase == 1){
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f0_distrito_v1.rptdesign&__format=pdf&coddis='.$codigoEntidad.'&codges='.$gestionActual));
             }
-            if($fase == 1){
+            if($fase == 2){
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f1_circunscripcion_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
             }
-            if($fase == 2){
+            if($fase == 3){
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f2_departamento_v1.rptdesign&__format=pdf&coddep='.$codigoEntidad.'&codges='.$gestionActual));
             }
         }
