@@ -172,7 +172,8 @@ class InscriptionRezagoController extends Controller {
             //get the notas of student
             $boolStudentCalification = $this->getStudentNotasValidation($studentInscription, $student->getId());
             //check if the student has calification
-            if($boolStudentCalification){
+            // if($boolStudentCalification){
+            if(false){
               $message = 'Estudiante con rude: ' . $form['codigoRude'] . ' no cuenta con calificaciones, no es posible realizar la operación ';
               $this->addFlash('warningrezago', $message);
               return $this->redirectToRoute('inscription_rezago_index');
