@@ -246,10 +246,24 @@ class OlimGrupoProyectoController extends Controller
         //get the send values
         $jsonDataInscription = $request->get('datainscription');
         $arrDataInscription = json_decode($jsonDataInscription,true);
+        $em = $this->getDoctrine()->getManager();
+        $objInfoMateria = $em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($arrDataInscription['materiaId']);
+        //get the start date and end date by materia
+        $dataStart = $objInfoMateria->getFechaInsIni()->format('d-m-Y H:i:s');
+        $dataEnd = $objInfoMateria->getFechaInsFin()->format('d-m-Y H:i:s');
+        $today    = date('d-m-Y H:i:s');
+        // check the limit date to do the inscription
+        if($dataStart <= $today && $today <= $dataEnd){
+            //nothing to do
+        }else{
+            $message = "No permitido, fecha de inscripción expirada";
+            $this->addFlash('closeInscription', $message);
+            return $this->render('SieOlimpiadasBundle:OlimGrupoProyecto:closeInscription.html.twig');
+        }
         
         // dump($arrDataInscription);die;
         //create dbconexion
-        $em = $this->getDoctrine()->getManager();
+        
         $objTutorsGrupo = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->findBy(array(
             'olimTutor' => $arrDataInscription['olimtutorid'],
             'olimReglasOlimpiadasTipo'=> $arrDataInscription['categoryId']
