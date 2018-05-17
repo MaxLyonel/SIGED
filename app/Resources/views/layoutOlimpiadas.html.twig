@@ -307,9 +307,8 @@
                             </a>
                             <ul>
                                 <li><a href="{{ path('olimestadistica_registrados')}}">Registrados</a></li>
-                            </ul>
-                            <ul>
                                 <li><a href="{{ path('olimestadistica_registrados_area')}}">Registrados por área</a></li>
+                                {% if 1 > 1 %}<li><a href="{{ path('olimestadistica_registrados_area_grado')}}">Registrados por área y grado de escolaridad</a></li>{% endif %}
                             </ul>
                         </li>
                     {% endif %}

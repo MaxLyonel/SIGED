@@ -2422,7 +2422,7 @@ class ComisionController extends Controller {
             $exist = true;
         }
         $entityDatos = new ComisionJuegosDatos();
-        $form = $this->createEntrenadorEstudianteForm($entityDatos,$nivelId);
+        $form = $this->createEntrenadorEstudianteForm($entityDatos,$nivelId,$disciplinaId);
 
         return $this->render($this->session->get('pathSystem') . ':Comision:seeEntrenadores.html.twig', array(
                     'form' => $form->createView(),
@@ -2502,7 +2502,7 @@ class ComisionController extends Controller {
             $exist = true;
         }
         $entityDatos = new ComisionJuegosDatos();
-        $form = $this->createEntrenadorEstudianteForm($entityDatos,$nivelId);
+        $form = $this->createEntrenadorEstudianteForm($entityDatos,$nivelId,$disciplinaId);
 
         return $this->render($this->session->get('pathSystem') . ':Comision:seeEntrenadoresClasificacion.html.twig', array(
                     'form' => $form->createView(),
@@ -2526,10 +2526,10 @@ class ComisionController extends Controller {
      * @param type $entity
      * return form
      */
-    private function createEntrenadorEstudianteForm(ComisionJuegosDatos $entity, $nivelId)
+    private function createEntrenadorEstudianteForm(ComisionJuegosDatos $entity, $nivelId, $disciplinaId)
     {         
         //$entity->setPruebaTipo();
-        $form = $this->createForm(new ComisionJuegosEntrenadorType(array('nivelId' => $nivelId)), $entity, array(
+        $form = $this->createForm(new ComisionJuegosEntrenadorType(array('nivelId' => $nivelId, 'disciplinaId' => $disciplinaId)), $entity, array(
             'action' => $this->generateUrl('sie_juegos_comision_entrenador_lista_registro_save'),
             'method' => 'POST', 
         ));
@@ -2604,7 +2604,7 @@ class ComisionController extends Controller {
 
         try {
             $entityComisionJuegosDatos = new ComisionJuegosDatos();                      
-            $form = $this->createEntrenadorEstudianteForm($entityComisionJuegosDatos,$nivelId);
+            $form = $this->createEntrenadorEstudianteForm($entityComisionJuegosDatos,$nivelId,$disciplinaId);
             $form->handleRequest($request);
             $comisionId = $entityComisionJuegosDatos->getComisionTipoId();
             $posicion = $entityComisionJuegosDatos->getPosicion();

@@ -605,5 +605,290 @@ class OlimEstadisticaController extends Controller{
         $response->headers->set('Expires', '0');
         return $response;
 	}
-	
+
+	/**
+     * Controlador que descarga la lista de registrados por área y grado de escolaridad según nivel de desagregación y código de lugar
+     * Autor: rcanaviri
+     * @param Request $request
+     * @return type
+     */
+	public function registradosAreaGradoIndexAction(Request $request){
+		/*
+		* Define la zona horaria y halla la fecha actual
+		*/
+	   	date_default_timezone_set('America/La_Paz');
+	   	$fechaActual = new \DateTime(date('Y-m-d'));
+	   	$gestionActual = date_format($fechaActual,'Y');
+
+		$sesion = $request->getSession();
+		$id_usuario = $sesion->get('userId');
+		//validation if the user is logged
+		if (!isset($id_usuario)) {
+			return $this->redirect($this->generateUrl('login'));
+		}
+
+		$codigo = 0;
+		$nivel = 0;	
+		$nivelSiguiente = 0;
+
+		if ($request->isMethod('POST')) {
+            $codigo = base64_decode($request->get('codigo'));
+			$nivel = $request->get('nivel');
+			if ($nivel == 0){
+				$nivelSiguiente = 1;	
+			} else if($nivel == 1){
+				$nivelSiguiente = 7;	
+			} else {
+				$nivelSiguiente = 0;
+			}	
+        } else {
+            $codigo = 0;
+			$nivel = 0;	
+			$nivelSiguiente = 1;	
+		}
+		
+		$entity = $this->getRegistradosAreaEtapa1($nivel,$codigo,$gestionActual);
+		$aInfo = array();
+		$aDato = array();
+		//foreach ($entity as $dato) {
+			//$aDato = array('pri1' => $dato['pri1'],'pri2' => $dato['pri2'],'pri3' => $dato['pri3'],'pri4' => $dato['pri4'],'pri5' => $dato['pri5'],'pri6' => $dato['pri6'],'pri' => $dato['pri'],'sec1' => $dato['sec1'],'sec2' => $dato['sec2'],'sec3' => $dato['sec3'],'sec4' => $dato['sec4'],'sec5' => $dato['sec5'],'sec6' => $dato['sec6'],'sec' => $dato['sec'],'cantidad' => $dato['cantidad']);
+			//send the values to the next steps
+			//$aInfo[$dato['codigo']][$dato['nombre']][$dato['materia']] = $aDato;
+			// $aInfo$aInfo['id'] = [$dato['codigo']][$dato['nombre']][$dato['materia']];
+		//}
+		//dump($aInfo);die;
+		$inscritos = $entity;
+		return $this->render('SieOlimpiadasBundle:OlimEstadistica:registradosAreaGrado.html.twig', array(
+			'estadistica'=>$inscritos,
+			'nivel'=>$nivel,
+			'nivelSiguiente'=>$nivelSiguiente,
+		));
+	}
+
+	/**
+     * Busca la cantidad de registros por área y grado de escolaridad de la etapa 1 según el nivel de desagregacion, codigo del lugar y la gestión
+     * Autor: rcanaviri
+     * @param $nivel,$codigo,$gestion
+     * @return $entity
+     */
+	private function getRegistradosAreaGradoEtapa1($nivel,$codigo,$gestion){
+		$em = $this->getDoctrine()->getManager();
+
+		if($nivel == 0){
+			$query = $em->getConnection()->prepare("				
+				select dep.id, dep.codigo, dep.lugar as nombre, omt.id as materia_id, omt.materia
+				, COALESCE(oli.pri1,0) as pri1, COALESCE(oli.pri2,0) as pri2, COALESCE(oli.pri3,0) as pri3, COALESCE(oli.pri4,0) as pri4, COALESCE(oli.pri5,0) as pri5, COALESCE(oli.pri6,0) as pri6, COALESCE(oli.pri,0) as pri
+				, COALESCE(oli.sec1,0) as sec1, COALESCE(oli.sec2,0) as sec2, COALESCE(oli.sec3,0) as sec3, COALESCE(oli.sec4,0) as sec4, COALESCE(oli.sec5,0) as sec5, COALESCE(oli.sec6,0) as sec6, COALESCE(oli.sec,0) as sec
+				, COALESCE(oli.cantidad,0) as cantidad
+				from (select * from lugar_tipo where lugar_nivel_id = 1) as dep
+				left join (
+				select lt4.id as departamento_id, omt.id as materia_id
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec
+				, COALESCE(count(*),0) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+				left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+				left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by lt4.id, omt.id
+				) as oli on oli.departamento_id = dep.id
+				inner join olim_materia_tipo as omt on omt.id = oli.materia_id
+				union all 
+				select 1 as id, '0' as codigo, 'Bolivia' as nombre, omt.id as materia_id, omt.materia
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec
+				, COALESCE(count(*),0) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				where oei.gestion_tipo_id = :gestion::double precision
+				group by omt.id
+				order by codigo asc, materia asc
+			");
+		}
+
+		if($nivel == 1){
+			$query = $em->getConnection()->prepare("	
+				select dis.id, dis.codigo, UPPER(dis.lugar) as nombre, omt.id as materia_id, omt.materia
+				, COALESCE(oli.pri1,0) as pri1, COALESCE(oli.pri2,0) as pri2, COALESCE(oli.pri3,0) as pri3, COALESCE(oli.pri4,0) as pri4, COALESCE(oli.pri5,0) as pri5, COALESCE(oli.pri6,0) as pri6, COALESCE(oli.pri,0) as pri
+				, COALESCE(oli.sec1,0) as sec1, COALESCE(oli.sec2,0) as sec2, COALESCE(oli.sec3,0) as sec3, COALESCE(oli.sec4,0) as sec4, COALESCE(oli.sec5,0) as sec5, COALESCE(oli.sec6,0) as sec6, COALESCE(oli.sec,0) as sec
+				, COALESCE(oli.cantidad,0) as cantidad
+				from (select lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
+				left join (
+				select lt5.id, omt.id as materia_id
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec
+				, COALESCE(count(*),0) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+				left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+				left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
+				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by lt5.id, omt.id
+				) as oli on oli.id = dis.id
+				left join olim_materia_tipo as omt on omt.id = oli.materia_id
+				union all 
+				select lt4.id, lt4.codigo, UPPER(lt4.lugar) as nombre, omt.id as materia_id, omt.materia
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec
+				, COALESCE(count(*),0) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+				left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+				left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
+				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by lt4.id, lt4.codigo, lt4.lugar, omt.id
+				order by codigo asc, materia asc	
+			");
+		}
+
+		if($nivel == 7){
+			$query = $em->getConnection()->prepare("
+				select ue.id, ue.codigo, UPPER(ue.nombre) as nombre, omt.id as materia_id, omt.materia
+				, COALESCE(oli.pri1,0) as pri1, COALESCE(oli.pri2,0) as pri2, COALESCE(oli.pri3,0) as pri3, COALESCE(oli.pri4,0) as pri4, COALESCE(oli.pri5,0) as pri5, COALESCE(oli.pri6,0) as pri6, COALESCE(oli.pri,0) as pri
+				, COALESCE(oli.sec1,0) as sec1, COALESCE(oli.sec2,0) as sec2, COALESCE(oli.sec3,0) as sec3, COALESCE(oli.sec4,0) as sec4, COALESCE(oli.sec5,0) as sec5, COALESCE(oli.sec6,0) as sec6, COALESCE(oli.sec,0) as sec
+				, COALESCE(oli.cantidad,0) as cantidad
+				from (
+				select ie.id, cast(ie.id as varchar) as codigo, ie.institucioneducativa as nombre from lugar_tipo as lt 
+				inner join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id
+				inner join institucioneducativa as ie on ie.le_juridicciongeografica_id = jg.id
+				where lt.codigo = '".$codigo."' and ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.orgcurricular_tipo_id = 1 and ie.id not in (1,2,3,4,5,6,7,8,9)
+				and ie.estadoinstitucion_tipo_id = 10
+				) as ue
+				left join (
+				select ie.id, omt.id as materia_id
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec
+				, COALESCE(count(*),0) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
+				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by ie.id, omt.id
+				) as oli on oli.id = ue.id
+				left join olim_materia_tipo as omt on omt.id = oli.materia_id
+				union all 
+				select lt.id, lt.codigo, UPPER(lt.lugar) as nombre, omt.id as materia_id, omt.materia
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when iec.nivel_tipo_id = 13 then 1 else 0 end),0) as sec
+				, COALESCE(count(*),0) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
+				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0			
+				group by lt.id, lt.codigo, lt.lugar, omt.id
+				order by codigo asc, materia asc	
+			");
+		}
+		
+		$query->bindValue(':gestion', $gestion);
+		$query->execute();
+		$inscritos = $query->fetchAll();
+		return $inscritos;
+	}
 }

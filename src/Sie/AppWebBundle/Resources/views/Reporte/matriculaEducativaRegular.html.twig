@@ -155,7 +155,7 @@
                             <div class="panel panel-default shadow">
                                 <div class="panel-heading">
                                     <div class="pull-left">
-                                        <h3 class="panel-title"><i class='fa fa-home'></i> Información</h3>
+                                        <h3 class="panel-title"><i class='fa fa-home'>1</i> Información</h3>
                                     </div><!-- /.pull-left -->
                                     <div class="pull-right">
                                         <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
@@ -190,7 +190,7 @@
                                             <form name="formInformacionEstadistica" id="formInformacionEstadistica" role="form" action="{{ path('sie_ue_informacion_general_impresion_informacionestadistica') }}" method="POST">
                                                 <input type="hidden" name="gestion" value="{{ gestion }}" />
                                                 <input type="hidden" name="sie" value="{{ infoEntidad.id }}" />  
-                                                <a class="btn btn-warning" onclick="document.forms['formInformacionEstadistica'].submit();">
+                                                <a href="#" class="btn btn-warning" onclick="document.forms['formInformacionEstadistica'].submit();">
                                                     <h4>Información</br>Estadística</br><i class="fa fa-download fa-2x"></i></h4>
                                                 </a>
                                             </form>
