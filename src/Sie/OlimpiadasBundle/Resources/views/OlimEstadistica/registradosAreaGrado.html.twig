@@ -2,7 +2,7 @@
 
 {% block contentoption %} 
     <div class="header-content">
-        <h2><i class="fa fa-pencil"></i> Registrados por área<span></span></h2>
+        <h2><i class="fa fa-pencil"></i> Registrados por área y grado de escolaridad<span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
             <ol class="breadcrumb">         
@@ -37,23 +37,23 @@
                                 {% endif %}
                             </div>
                             <div class="pull-right">
-                                <form name="formEstadisticaPdf" id="formEstadisticaPdf"  action="{{ path('olimestadistica_registrados_area_pdf') }}" method="POST">  
-                                    <input type="hidden" name="codigo" id="codigo" value="{{estadistica[0]['codigo']|base64_encode }}" />
-                                    <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
-                                    <button type="submit" title="Descargar en formato PDF" class="btn btn-googleplus">
-                                        <i class="fa fa-file-pdf-o"></i>
-                                    </button>
-                                </form> 
-                            </div>     
-                            <div class="pull-right">
-                                <form name="formEstadisticaXls" id="formEstadisticaXls"  action="{{ path('olimestadistica_registrados_area_xls') }}" method="POST">  
-                                    <input type="hidden" name="codigo" id="codigo" value="{{estadistica[0]['codigo']|base64_encode }}" />
-                                    <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
-                                    <button type="submit" title="Descargar en formato XLS" class="btn btn-success">
-                                        <i class="fa fa-file-excel-o"></i>
-                                    </button>
-                                </form> 
-                            </div>     
+                                    <form name="formEstadisticaPdf" id="formEstadisticaPdf"  action="{{ path('olimestadistica_registrados_area_pdf') }}" method="POST">  
+                                        <input type="hidden" name="codigo" id="codigo" value="{{estadistica[0]['codigo']|base64_encode }}" />
+                                        <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
+                                        <button type="submit" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                            <i class="fa fa-file-pdf-o"></i>
+                                        </button>
+                                    </form> 
+                                </div>     
+                                <div class="pull-right">
+                                    <form name="formEstadisticaXls" id="formEstadisticaXls"  action="{{ path('olimestadistica_registrados_area_xls') }}" method="POST">  
+                                        <input type="hidden" name="codigo" id="codigo" value="{{estadistica[0]['codigo']|base64_encode }}" />
+                                        <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
+                                        <button type="submit" title="Descargar en formato XLS" class="btn btn-success">
+                                            <i class="fa fa-file-excel-o"></i>
+                                        </button>
+                                    </form> 
+                                </div>        
                             <div class="clearfix"></div>
                         {% endif %}
                     </div>  
@@ -96,7 +96,7 @@
                         </small>
                     </div>             
                     <div class="panel-body">
-                        {% if estadistica is defined  %}
+                        {% if estadistica is defined and 1 > 1 %}
                             {% set count = 0 %}
                             {% set cantidadTotalGeneral = 0 %}
                             {% for data in estadistica %}

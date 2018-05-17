@@ -286,12 +286,12 @@ class ClasificacionController extends Controller {
         $codigoEntidad = $objEntidad[0]['id'];
 
         $exist = true;
-
         $query = $em->getConnection()->prepare("
                     select nt.id as nivelid, nt.nivel as nivel, dt.id as disciplinaid, dt.disciplina as disciplina, pt.id as pruebaid, pt.prueba as prueba, gt.id as generoid, gt.genero as genero from prueba_tipo as pt
                     inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
                     inner join genero_tipo as gt on gt.id = pt.genero_tipo_id
                     inner join nivel_tipo as nt on nt.id = dt.nivel_tipo_id
+                    where dt.estado = 't' and pt.esactivo = 't'
                     order by nt.id, dt.id, pt.id, gt.id
                 ");
         $query->execute();
@@ -360,6 +360,7 @@ class ClasificacionController extends Controller {
                     inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
                     inner join genero_tipo as gt on gt.id = pt.genero_tipo_id
                     inner join nivel_tipo as nt on nt.id = dt.nivel_tipo_id
+                    where dt.estado = 't' and pt.esactivo = 't'
                     order by nt.id, dt.id, pt.id, gt.id
                 ");
         $query->execute();
@@ -429,7 +430,7 @@ class ClasificacionController extends Controller {
                     inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
                     inner join genero_tipo as gt on gt.id = pt.genero_tipo_id
                     inner join nivel_tipo as nt on nt.id = dt.nivel_tipo_id
-                    where pt.esactivo = 't' --dt.nivel_tipo_id = 13
+                    where dt.estado = 't' and pt.esactivo = 't' --dt.nivel_tipo_id = 13
                     order by nt.id, dt.id, pt.id, gt.id
                 ");
         $query->execute();
@@ -520,7 +521,7 @@ class ClasificacionController extends Controller {
         }
 
         return $this->render($this->session->get('pathSystem') . ':Clasificacion:seeStudents.html.twig', array(
-                    'form' => $this->creaFormularioRegistro('sie_juegos_clasificacion_lista_deportistas_registro', $fase, $nivelId, 0, 0, 0, 0)->createView(),
+                    'form' => $this->creaFormularioRegistro('sie_juegos_clasificacion_lista_deportistas_registro', $fase, $nivelId, 0, $disciplinaId, 0, 0)->createView(),
                     'objStudents' => $objStudents,
                     'objDeportistasFase' => $objDeportistasFase,
                     'codigoEntidad' => $codigoEntidad,
@@ -594,7 +595,7 @@ class ClasificacionController extends Controller {
                 ->add('fase', 'hidden', array('attr' => array('value' => $value1)))
                 ->add('posicion','choice',
                       array('label' => 'Lugar Obtenido',
-                            'choices' => ($value2==12)?(array('1' => 'Primer Lugar')):(array('1' => 'Primer Lugar','2' => 'Segundo Lugar')),
+                            'choices' => ($value2==12 or $value4==2)?(array('1' => 'Primer Lugar')):(array('1' => 'Primer Lugar','2' => 'Segundo Lugar')),
                             'data' => $value3,
                             'attr' => array('class' => 'form-control')))
                 ->add('submit', 'submit', array('label' => 'Registrar', 'attr' => array('class' => 'btn btn-default')))
@@ -1747,7 +1748,7 @@ class ClasificacionController extends Controller {
                 $tipoPrueba = "Individual";
                 $tipoDisciplina = "Individual";
                 $cupo = 1;
-                if ($verInsDisPru[0]["prueba_id"] == 27 or $verInsDisPru[0]["prueba_id"] == 28 or $verInsDisPru[0]["prueba_id"] == 63 or $verInsDisPru[0]["prueba_id"] == 64 or $verInsDisPru[0]["prueba_id"] == 75 or $verInsDisPru[0]["prueba_id"] == 76){
+                if ($verInsDisPru[0]["prueba_id"] == 27 or $verInsDisPru[0]["prueba_id"] == 28 or $verInsDisPru[0]["prueba_id"] == 63 or $verInsDisPru[0]["prueba_id"] == 64 or $verInsDisPru[0]["prueba_id"] == 75 or $verInsDisPru[0]["prueba_id"] == 76 or $verInsDisPru[0]["prueba_id"] == 174 or $verInsDisPru[0]["prueba_id"] == 175 or $verInsDisPru[0]["prueba_id"] == 200 or $verInsDisPru[0]["prueba_id"] == 201){
                     $cupo = 5;
                 }
                 break;

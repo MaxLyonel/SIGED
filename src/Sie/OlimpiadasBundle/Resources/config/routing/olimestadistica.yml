@@ -21,3 +21,15 @@ olimestadistica_registrados_area_pdf:
 olimestadistica_registrados_area_xls:
     path:     /registrados/area/xls
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosAreaXls" }
+
+olimestadistica_registrados_area_grado:
+    path:     /registrados/area/grado
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosAreaGradoIndex" }
+
+olimestadistica_registrados_area_grado_pdf:
+    path:     /registrados/area/grado/pdf
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosAreaGradoPdf" }
+
+olimestadistica_registrados_area_grado_xls:
+    path:     /registrados/area/grado/xls
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosAreaGradoXls" }
