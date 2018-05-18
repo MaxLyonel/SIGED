@@ -254,7 +254,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
             $rolUsuario = $request->getSession()->get('roluser');
             $userName = $request->getSession()->get('userName');
             if($rolUsuario != 5 and $rolUsuario != 9 and $rolUsuario != 8){
-                if($rolUsuario == 7 and $userName == '8955627'){
+                if($rolUsuario == 7 and ($userName == '8955627' or $userName == '3468944')){
 
                 }else{
                     return $this->redirectToRoute('solicitudModificacionCalificaciones');
