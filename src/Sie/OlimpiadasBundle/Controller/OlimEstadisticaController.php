@@ -101,7 +101,7 @@ class OlimEstadisticaController extends Controller{
 		if($nivel == 1){
 			$query = $em->getConnection()->prepare("
 				select dis.id, dis.codigo, UPPER(dis.lugar) as nombre, COALESCE(oli.cantidad,0) as cantidad
-				from (select lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
+				from (select distinct lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id inner join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
 				left join (
 				select lt5.id, count(*) as cantidad from olim_estudiante_inscripcion oei
 				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
@@ -387,7 +387,7 @@ class OlimEstadisticaController extends Controller{
 				, COALESCE(oli.area1,0) as area1, COALESCE(oli.area2,0) as area2, COALESCE(oli.area3,0) as area3, COALESCE(oli.area4,0) as area4
 				, COALESCE(oli.area5,0) as area5, COALESCE(oli.area6,0) as area6, COALESCE(oli.area7,0) as area7, COALESCE(oli.area8,0) as area8
 				, COALESCE(oli.area9,0) as area9, COALESCE(oli.cantidad,0) as cantidad
-				from (select lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
+				from (select distinct lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id inner join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
 				left join (
 				select lt5.id
 				, SUM(case omt.id when 1 then 1 else 0 end) as area1
@@ -647,17 +647,19 @@ class OlimEstadisticaController extends Controller{
 			$nivelSiguiente = 1;	
 		}
 		
-		$entity = $this->getRegistradosAreaEtapa1($nivel,$codigo,$gestionActual);
+		//dump($codigo);die;
+		$entity = $this->getRegistradosAreaGradoEtapa1($nivel,$codigo,$gestionActual);
 		$aInfo = array();
+		$dDato = array();
 		$aDato = array();
-		//foreach ($entity as $dato) {
-			//$aDato = array('pri1' => $dato['pri1'],'pri2' => $dato['pri2'],'pri3' => $dato['pri3'],'pri4' => $dato['pri4'],'pri5' => $dato['pri5'],'pri6' => $dato['pri6'],'pri' => $dato['pri'],'sec1' => $dato['sec1'],'sec2' => $dato['sec2'],'sec3' => $dato['sec3'],'sec4' => $dato['sec4'],'sec5' => $dato['sec5'],'sec6' => $dato['sec6'],'sec' => $dato['sec'],'cantidad' => $dato['cantidad']);
+		foreach ($entity as $key => $dato) {
+			$aDato = array('pri1' => $dato['pri1'],'pri2' => $dato['pri2'],'pri3' => $dato['pri3'],'pri4' => $dato['pri4'],'pri5' => $dato['pri5'],'pri6' => $dato['pri6'],'pri' => $dato['pri'],'sec1' => $dato['sec1'],'sec2' => $dato['sec2'],'sec3' => $dato['sec3'],'sec4' => $dato['sec4'],'sec5' => $dato['sec5'],'sec6' => $dato['sec6'],'sec' => $dato['sec'],'cantidad' => $dato['cantidad']);
 			//send the values to the next steps
-			//$aInfo[$dato['codigo']][$dato['nombre']][$dato['materia']] = $aDato;
-			// $aInfo$aInfo['id'] = [$dato['codigo']][$dato['nombre']][$dato['materia']];
-		//}
+			$aInfo[$dato['codigo']]['codigo'] = $dato['codigo'];
+			$aInfo[$dato['codigo']]['dato'][$dato['nombre']][$dato['materia']] = $aDato;
+		}
 		//dump($aInfo);die;
-		$inscritos = $entity;
+		$inscritos = $aInfo;
 		return $this->render('SieOlimpiadasBundle:OlimEstadistica:registradosAreaGrado.html.twig', array(
 			'estadistica'=>$inscritos,
 			'nivel'=>$nivel,
@@ -676,7 +678,7 @@ class OlimEstadisticaController extends Controller{
 
 		if($nivel == 0){
 			$query = $em->getConnection()->prepare("				
-				select dep.id, dep.codigo, dep.lugar as nombre, omt.id as materia_id, omt.materia
+				select dep.id, dep.codigo, UPPER(dep.lugar) as nombre, omt.id as materia_id, omt.materia
 				, COALESCE(oli.pri1,0) as pri1, COALESCE(oli.pri2,0) as pri2, COALESCE(oli.pri3,0) as pri3, COALESCE(oli.pri4,0) as pri4, COALESCE(oli.pri5,0) as pri5, COALESCE(oli.pri6,0) as pri6, COALESCE(oli.pri,0) as pri
 				, COALESCE(oli.sec1,0) as sec1, COALESCE(oli.sec2,0) as sec2, COALESCE(oli.sec3,0) as sec3, COALESCE(oli.sec4,0) as sec4, COALESCE(oli.sec5,0) as sec5, COALESCE(oli.sec6,0) as sec6, COALESCE(oli.sec,0) as sec
 				, COALESCE(oli.cantidad,0) as cantidad
@@ -714,7 +716,7 @@ class OlimEstadisticaController extends Controller{
 				) as oli on oli.departamento_id = dep.id
 				inner join olim_materia_tipo as omt on omt.id = oli.materia_id
 				union all 
-				select 1 as id, '0' as codigo, 'Bolivia' as nombre, omt.id as materia_id, omt.materia
+				select 1 as id, '0' as codigo, upper('Bolivia') as nombre, omt.id as materia_id, omt.materia
 				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
 				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri2
 				, COALESCE(SUM(case when iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri3
@@ -746,7 +748,7 @@ class OlimEstadisticaController extends Controller{
 				, COALESCE(oli.pri1,0) as pri1, COALESCE(oli.pri2,0) as pri2, COALESCE(oli.pri3,0) as pri3, COALESCE(oli.pri4,0) as pri4, COALESCE(oli.pri5,0) as pri5, COALESCE(oli.pri6,0) as pri6, COALESCE(oli.pri,0) as pri
 				, COALESCE(oli.sec1,0) as sec1, COALESCE(oli.sec2,0) as sec2, COALESCE(oli.sec3,0) as sec3, COALESCE(oli.sec4,0) as sec4, COALESCE(oli.sec5,0) as sec5, COALESCE(oli.sec6,0) as sec6, COALESCE(oli.sec,0) as sec
 				, COALESCE(oli.cantidad,0) as cantidad
-				from (select lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
+				from (select distinct lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id inner join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
 				left join (
 				select lt5.id, omt.id as materia_id
 				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1

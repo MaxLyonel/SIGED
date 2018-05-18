@@ -27,6 +27,11 @@ class ComisionJuegosEntrenadorType extends AbstractType
         } else {
             $lugar = array( '1' => 'Primer Lugar', '2' => 'Segundo Lugar');
         }
+        if ($this->values['nivelId'] == 12) {
+            $comision = array('139' => 'Acompañante Entrenador', '12' => 'Acompañante Maestro', '13' => 'Acompañante Padre de Familia', '102' => 'Acompañante Delegado');
+        } else {
+            $comision = array('140' => 'Acompañante Entrenador', '143' => 'Acompañante Maestro', '141' => 'Acompañante Padre de Familia', '142' => 'Acompañante Delegado');
+        }
         $builder
         ->add('carnetIdentidad','text', array('label' => 'Carnet de Identidad','required' => true))
         ->add('nombre','text', array('label' => 'Nombre','required' => true))
@@ -39,11 +44,7 @@ class ComisionJuegosEntrenadorType extends AbstractType
         ->add('comisionTipoId',
                     'choice',  
                     array('label' => 'Comisión Tipo',
-                        'choices' => array( '140' => 'Acompañante Entrenador'
-                                            ,'143' => 'Acompañante Maestro'
-                                            ,'141' => 'Acompañante Padre de Familia'
-                                            ,'142' => 'Acompañante Delegado'
-                                            ),
+                        'choices' => $comision,
                         )
             )
         ->add('posicion',
