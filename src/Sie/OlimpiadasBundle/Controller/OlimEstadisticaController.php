@@ -683,7 +683,7 @@ class OlimEstadisticaController extends Controller{
 				, COALESCE(oli.sec1,0) as sec1, COALESCE(oli.sec2,0) as sec2, COALESCE(oli.sec3,0) as sec3, COALESCE(oli.sec4,0) as sec4, COALESCE(oli.sec5,0) as sec5, COALESCE(oli.sec6,0) as sec6, COALESCE(oli.sec,0) as sec
 				, COALESCE(oli.cantidad,0) as cantidad
 				from (select * from lugar_tipo where lugar_nivel_id = 1) as dep
-				left join (
+				inner join (
 				select lt4.id as departamento_id, omt.id as materia_id
 				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
 				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri2
@@ -738,7 +738,7 @@ class OlimEstadisticaController extends Controller{
 				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
 				where oei.gestion_tipo_id = :gestion::double precision
 				group by omt.id
-				order by codigo asc, materia asc
+				order by nombre asc, materia asc
 			");
 		}
 
@@ -749,7 +749,7 @@ class OlimEstadisticaController extends Controller{
 				, COALESCE(oli.sec1,0) as sec1, COALESCE(oli.sec2,0) as sec2, COALESCE(oli.sec3,0) as sec3, COALESCE(oli.sec4,0) as sec4, COALESCE(oli.sec5,0) as sec5, COALESCE(oli.sec6,0) as sec6, COALESCE(oli.sec,0) as sec
 				, COALESCE(oli.cantidad,0) as cantidad
 				from (select distinct lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id inner join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
-				left join (
+				inner join (
 				select lt5.id, omt.id as materia_id
 				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
 				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri2
@@ -781,7 +781,7 @@ class OlimEstadisticaController extends Controller{
 				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
 				group by lt5.id, omt.id
 				) as oli on oli.id = dis.id
-				left join olim_materia_tipo as omt on omt.id = oli.materia_id
+				inner join olim_materia_tipo as omt on omt.id = oli.materia_id
 				union all 
 				select lt4.id, lt4.codigo, UPPER(lt4.lugar) as nombre, omt.id as materia_id, omt.materia
 				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
@@ -813,7 +813,7 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
 				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
 				group by lt4.id, lt4.codigo, lt4.lugar, omt.id
-				order by codigo asc, materia asc	
+				order by nombre asc, materia asc	
 			");
 		}
 
@@ -830,7 +830,7 @@ class OlimEstadisticaController extends Controller{
 				where lt.codigo = '".$codigo."' and ie.institucioneducativa_acreditacion_tipo_id = 1 and ie.orgcurricular_tipo_id = 1 and ie.id not in (1,2,3,4,5,6,7,8,9)
 				and ie.estadoinstitucion_tipo_id = 10
 				) as ue
-				left join (
+				inner join (
 				select ie.id, omt.id as materia_id
 				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
 				, COALESCE(SUM(case when iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri2
@@ -853,11 +853,11 @@ class OlimEstadisticaController extends Controller{
 				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
 				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
 				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
-				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
+				inner join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
 				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
 				group by ie.id, omt.id
 				) as oli on oli.id = ue.id
-				left join olim_materia_tipo as omt on omt.id = oli.materia_id
+				inner join olim_materia_tipo as omt on omt.id = oli.materia_id
 				union all 
 				select lt.id, lt.codigo, UPPER(lt.lugar) as nombre, omt.id as materia_id, omt.materia
 				, COALESCE(SUM(case when iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 then 1 else 0 end),0) as pri1
@@ -881,10 +881,10 @@ class OlimEstadisticaController extends Controller{
 				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
 				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
 				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
-				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
+				inner join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
 				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0			
 				group by lt.id, lt.codigo, lt.lugar, omt.id
-				order by codigo asc, materia asc	
+				order by nombre asc, materia asc	
 			");
 		}
 		
@@ -892,5 +892,100 @@ class OlimEstadisticaController extends Controller{
 		$query->execute();
 		$inscritos = $query->fetchAll();
 		return $inscritos;
+	}
+
+		/**
+     * Imprime reportes estadisticos por área y grado de escolaridad segun nivel de desagregación y codigo de lugar en formato PDF
+     * Autor: rcanaviri
+     * @param Request $request
+     * @return type
+     */
+    public function registradosAreaGradoPdfAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        $codigo = 0;
+		$nivel = 0;	
+		$nivelSiguiente = 0;
+
+		if ($request->isMethod('POST')) {
+            $codigo = base64_decode($request->get('codigo'));
+			$nivel = $request->get('nivel');
+        } else {
+            $codigo = 0;
+			$nivel = 0;	
+		}		
+		$gestion = $gestionActual;
+
+        $arch = 'Olim_'.$gestion.'_'.date('YmdHis').'.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));        
+        if($nivel == 0){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Area_Grado_Nacional_f1_v1_rcm.rptdesign&__format=pdf&codges='.$gestion));
+		} else if ($nivel == 1){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Area_Grado_Departamental_f1_v1_rcm.rptdesign&__format=pdf&codges='.$gestion.'&coddep='.$codigo));
+		} else if ($nivel == 7){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Area_Grado_Distrital_f1_v1_rcm.rptdesign&__format=pdf&codges='.$gestion.'&coddis='.$codigo));	
+		} else {
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Area_Grado_Nacional_f1_v1_rcm.rptdesign&__format=pdf&codges='.$gestion));
+		}        
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
+	
+	/**
+     * Imprime reportes estadisticos por área y grado de escolaridad segun nivel de desagregación y codigo de lugar en formato XLS
+     * Autor: rcanaviri
+     * @param Request $request
+     * @return type
+     */
+    public function registradosAreaGradoXlsAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        $codigo = 0;
+		$nivel = 0;	
+		$nivelSiguiente = 0;
+
+		if ($request->isMethod('POST')) {
+            $codigo = base64_decode($request->get('codigo'));
+			$nivel = $request->get('nivel');
+        } else {
+            $codigo = 0;
+			$nivel = 0;	
+		}
+		
+		$gestion = $gestionActual;
+
+        $arch = 'Olim_'.$gestion.'_'.date('YmdHis').'.xls';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        if($nivel == 0){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Area_Grado_Nacional_f1_v1_rcm.rptdesign&__format=xls&codges='.$gestion));
+		} else if ($nivel == 1){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Area_Grado_Departamental_f1_v1_rcm.rptdesign&__format=xls&codges='.$gestion.'&coddep='.$codigo));
+		} else if ($nivel == 7){
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Area_Grado_Distrital_f1_v1_rcm.rptdesign&__format=xls&codges='.$gestion.'&coddis='.$codigo));	
+		} else {
+			$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'oli_est_Estudiantes_Participaciones_Area_Grado_Nacional_f1_v1_rcm.rptdesign&__format=xls&codges='.$gestion));
+		}  
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
 	}
 }
