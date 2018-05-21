@@ -1027,8 +1027,8 @@ class ClasificacionController extends Controller {
                 select count(eij.id) as cant, eij.estudiante_inscripcion_id, COUNT(distinct disciplina) as cantdisc
                 , sum(case when dt.id = 3 or dt.id = 4 or dt.id = 5 or dt.id = 7 then 1 else 0 end)  as cant_dis_conj
                 , sum(case when dt.id <> 3 and dt.id <> 4 and dt.id <> 5 and dt.id <> 7 then 1 else 0 end)  as cant_dis_indi
-                , sum(case when dt.id = 2 and (pt.id = 27 or pt.id = 28) then 1 else 0 end)  as cant_pru_conj_atle
-                , sum(case when dt.id = 2 and (pt.id <> 27 and pt.id <> 28) then 1 else 0 end)  as cant_pru_indi_atle
+                , sum(case when dt.id = 2 and (pt.id = 174 or pt.id = 175 or pt.id = 200 or pt.id = 201) then 1 else 0 end)  as cant_pru_conj_atle
+                , sum(case when dt.id = 2 and (pt.id <> 174 and pt.id <> 175 and pt.id <> 200 and pt.id <> 201) then 1 else 0 end)  as cant_pru_indi_atle
                 , sum(case when dt.id = 8 and (pt.id = 63 or pt.id = 64 or pt.id = 75 or pt.id = 76) then 1 else 0 end)  as cant_pru_conj_nat
                 , sum(case when dt.id = 8 and (pt.id <> 63 and pt.id <> 64 and pt.id <> 75 and pt.id <> 76) then 1 else 0 end)  as cant_pru_indi_nat
                 , sum(case when dt.id = 6 then 1 else 0 end)  as cant_pru_cic
@@ -1365,7 +1365,7 @@ class ClasificacionController extends Controller {
                                             case 2: //atletismo
                                                 if($tipoDisciplinaPrueba["tipoPrueba"] == 'Individual'){
                                                     if($inscripcionEstudianteEntity[0]["cant_pru_indi_atle"] >= 2){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (no puede registrarse en mas pruebas individuales)');
+                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (1 no puede registrarse en mas pruebas individuales)');
                                                     } else {
                                                         $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                                                     }
