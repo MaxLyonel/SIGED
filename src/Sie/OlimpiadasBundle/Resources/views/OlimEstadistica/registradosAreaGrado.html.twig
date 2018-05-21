@@ -25,7 +25,7 @@
                 <div class="panel shadow">
                     <div class="panel-heading">
                         {% if estadistica is defined  %}
-                            <div class="pull-left">                                
+                            <div class="pull-left">                             
                                 {% if nivel == 0 %}
                                     <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Departamento</h3>
                                 {% endif %}
@@ -37,8 +37,8 @@
                                 {% endif %}
                             </div>
                             <div class="pull-right">
-                                    <form name="formEstadisticaPdf" id="formEstadisticaPdf"  action="{{ path('olimestadistica_registrados_area_pdf') }}" method="POST">  
-                                        <input type="hidden" name="codigo" id="codigo" value="{{estadistica[0]['codigo']|base64_encode }}" />
+                                    <form name="formEstadisticaPdf" id="formEstadisticaPdf"  action="{{ path('olimestadistica_registrados_area_grado_pdf') }}" method="POST">  
+                                        <input type="hidden" name="codigo" id="codigo" value="{{estadistica|first.codigo|base64_encode }}" />
                                         <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
                                         <button type="submit" title="Descargar en formato PDF" class="btn btn-googleplus">
                                             <i class="fa fa-file-pdf-o"></i>
@@ -46,8 +46,8 @@
                                     </form> 
                                 </div>     
                                 <div class="pull-right">
-                                    <form name="formEstadisticaXls" id="formEstadisticaXls"  action="{{ path('olimestadistica_registrados_area_xls') }}" method="POST">  
-                                        <input type="hidden" name="codigo" id="codigo" value="{{estadistica[0]['codigo']|base64_encode }}" />
+                                    <form name="formEstadisticaXls" id="formEstadisticaXls"  action="{{ path('olimestadistica_registrados_area_grado_xls') }}" method="POST">  
+                                        <input type="hidden" name="codigo" id="codigo" value="{{estadistica|first.codigo|base64_encode }}" />
                                         <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
                                         <button type="submit" title="Descargar en formato XLS" class="btn btn-success">
                                             <i class="fa fa-file-excel-o"></i>
@@ -56,153 +56,76 @@
                                 </div>        
                             <div class="clearfix"></div>
                         {% endif %}
-                    </div>  
-                    <div class="panel-sub-heading inner-all">
-                        <small>
-                            {% if estadistica is defined  %}
-                                {% set porcentaje1 = (( estadistica[0]['area1'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje2 = (( estadistica[0]['area2'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje3 = (( estadistica[0]['area3'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje4 = (( estadistica[0]['area4'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje5 = (( estadistica[0]['area5'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje6 = (( estadistica[0]['area6'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje7 = (( estadistica[0]['area7'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje8 = (( estadistica[0]['area8'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                {% set porcentaje9 = (( estadistica[0]['area9'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
-                                <div class="row">
-                                    <div class="col-md-4"><span class="label label-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Matemática ({{estadistica[0]['area1']}} - {{porcentaje1}}%)</div>
-                                    <div class="col-md-4"><span class="label label-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Física ({{estadistica[0]['area2']}} - {{porcentaje2}}%)</div>
-                                    <div class="col-md-4"><span class="label label-warning">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Química ({{estadistica[0]['area3']}} - {{porcentaje3}}%)</div>
-                                    <div class="col-md-4"><span class="label label-danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Biología ({{estadistica[0]['area4']}} - {{porcentaje4}}%)</div>
-                                    <div class="col-md-4"><span class="label label-lilac">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Geografía ({{estadistica[0]['area5']}} - {{porcentaje5}}%)</div>
-                                    <div class="col-md-4"><span class="label label-teals">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Astronomía - Astrofísica ({{estadistica[0]['area6']}} - {{porcentaje6}}%)</div>
-                                    <div class="col-md-4"><span class="label label-inverse">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Informática ({{estadistica[0]['area7']}} - {{porcentaje7}}%)</div>
-                                    <div class="col-md-4"><span class="label label-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Robótica ({{estadistica[0]['area8']}} - {{porcentaje8}}%)</div>
-                                    <div class="col-md-4"><span class="label label-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Feria científica ({{estadistica[0]['area9']}} - {{porcentaje9}}%)</div>
-                                </div>
-                            {% else %}
-                                <div class="row">
-                                    <div class="col-md-4"><span class="label label-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Matemática</div>
-                                    <div class="col-md-4"><span class="label label-info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Física</div>
-                                    <div class="col-md-4"><span class="label label-warning">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Química</div>
-                                    <div class="col-md-4"><span class="label label-danger">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Biología</div>
-                                    <div class="col-md-4"><span class="label label-lilac">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Geografía</div>
-                                    <div class="col-md-4"><span class="label label-teals">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Astronomía - Astrofísica</div>
-                                    <div class="col-md-4"><span class="label label-inverse">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Informática</div>
-                                    <div class="col-md-4"><span class="label label-primary">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Robótica</div>
-                                    <div class="col-md-4"><span class="label label-success">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> Feria científica</div>
-                                </div>
-                            {% endif %}
-                        </small>
-                    </div>             
-                    <div class="panel-body">
-                        {% if estadistica is defined and 1 > 1 %}
+                    </div>            
+                    <div class="panel-body no-padding">
+                        {% if estadistica is defined %}
                             {% set count = 0 %}
-                            {% set cantidadTotalGeneral = 0 %}
-                            {% for data in estadistica %}
-                                {% set count = count + 1 %}
-                                {% set id = data.id %}
-                                {% set codigo = data.codigo %}
-                                {% set lugar = data.nombre %}
-                                {% set cantidad1 = data.area1 %}
-                                {% set cantidad2 = data.area2 %}
-                                {% set cantidad3 = data.area3 %}
-                                {% set cantidad4 = data.area4 %}
-                                {% set cantidad5 = data.area5 %}
-                                {% set cantidad6 = data.area6 %}
-                                {% set cantidad7 = data.area7 %}
-                                {% set cantidad8 = data.area8 %}
-                                {% set cantidad9 = data.area9 %}
-                                {% set cantidad = data.cantidad %}
-                                {% if count == 1 %}
-                                    {% set cantidadTotal1 = data.area1 %}
-                                    {% set cantidadTotal2 = data.area2 %}
-                                    {% set cantidadTotal3 = data.area3 %}
-                                    {% set cantidadTotal4 = data.area4 %}
-                                    {% set cantidadTotal5 = data.area5 %}
-                                    {% set cantidadTotal6 = data.area6 %}
-                                    {% set cantidadTotal7 = data.area7 %}
-                                    {% set cantidadTotal8 = data.area8 %}
-                                    {% set cantidadTotal9 = data.area9 %}
-                                    {% set cantidadTotalGeneral = data.cantidad %}
-                                {% endif %}
-                                {% set porcentaje1 = (( cantidad1 * 100 ) / cantidadTotalGeneral)|number_format(1,'.',',') %}
-                                {% set porcentaje2 = (( cantidad2 * 100 ) / cantidadTotalGeneral)|number_format(1,'.',',') %}
-                                {% set porcentaje3 = (( cantidad3 * 100 ) / cantidadTotalGeneral)|number_format(1,'.',',') %}
-                                {% set porcentaje4 = (( cantidad4 * 100 ) / cantidadTotalGeneral)|number_format(1,'.',',') %}
-                                {% set porcentaje5 = (( cantidad5 * 100 ) / cantidadTotalGeneral)|number_format(1,'.',',') %}
-                                {% set porcentaje6 = (( cantidad6 * 100 ) / cantidadTotalGeneral)|number_format(1,'.',',') %}
-                                {% set porcentaje7 = (( cantidad7 * 100 ) / cantidadTotalGeneral)|number_format(1,'.',',') %}
-                                {% set porcentaje8 = (( cantidad8 * 100 ) / cantidadTotalGeneral)|number_format(1,'.',',') %}
-                                {% set porcentaje9 = (( cantidad9 * 100 ) / cantidadTotalGeneral)|number_format(1,'.',',') %}
-                                {% set porcentaje = (( cantidad * 100 ) / cantidadTotalGeneral)|number_format(1,'.',',') %}
-
-                                {% if count == 1 %}
-                                    <span class="text-primary pull-right"><b>{{ cantidad }}</b></span><span class="text-primary"><b>{{ lugar }}</b></span>
-                                    {% if data.cantidad == 0 %}
-                                        <div class="progress progress-striped">
-                                            <div class="progress-bar progress-bar-primary hidden-ie" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                                <span class="sr-only">0%</span>
-                                            </div>
-                                        </div>                                        
-                                    {% else %}
-                                        <div class="progress progress-striped">
-                                            <div class="progress-bar progress-bar-primary hidden-ie" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                                                <span class="sr-only">100%</span>
-                                            </div>
-                                        </div>  
-                                    {% endif %}
-                                {% else %}
-                                    {% if data.cantidad == 0 %}
-                                        <span class="pull-right" style="width:150px; text-align:right"><b>{{ cantidad }}</b></span><span class="">{{ lugar }}</span>                                        
-                                        <div class="progress progress-md">
-                                            <div class="progress-bar progress-bar-success" title="0% Matemática" style="width: 0%"><span class="sr-only"></span></div>                                            
-                                            <div class="progress-bar progress-bar-info" title="0% Física" style="width: 0%"><span class="sr-only"></span></div>
-                                            <div class="progress-bar progress-bar-warning" title="0% Química" style="width: 0%"><span class="sr-only"></span></div>
-                                            <div class="progress-bar progress-bar-danger" title="0% Biología" style="width: 0%"><span class="sr-only"></span></div>
-                                            <div class="progress-bar progress-bar-lilac" title="0% Geografía" style="width: 0%"><span class="sr-only"></span></div>
-                                            <div class="progress-bar progress-bar-teals" title="0% Astronomía - Astrofísica" style="width: 0%"><span class="sr-only"></span></div>
-                                            <div class="progress-bar progress-bar-inverse" title="0% Informática" style="width: 0%"><span class="sr-only"></span></div>
-                                            <div class="progress-bar progress-bar-primary" title="0% Robótica" style="width: 0%"><span class="sr-only"></span></div>
-                                            <div class="progress-bar progress-bar-success" title="0% Feria científica" style="width: 0%"><span class="sr-only"></span></div>
-                                        </div>
-                                    {% else %}
-                                        {% if nivel == 7 %}
-                                            <span class="pull-right" style="width:150px; text-align:right"><b>{{ cantidad }}</b></span><span class="">{{ lugar }}</span>                                           
-                                            <div class="progress progress-md">
-                                                <div class="progress-bar progress-bar-success" title="{{ porcentaje1 }}% Matemática" style="width: {{ porcentaje1 }}%"><span class="sr-only"></span></div>                                            
-                                                <div class="progress-bar progress-bar-info" title="{{ porcentaje2 }}% Física" style="width: {{ porcentaje2 }}%"><span class="sr-only"></span></div>
-                                                <div class="progress-bar progress-bar-warning" title="{{ porcentaje3 }}% Química" style="width: {{ porcentaje3 }}%"><span class="sr-only"></span></div>
-                                                <div class="progress-bar progress-bar-danger" title="{{ porcentaje4 }}% Biología" style="width: {{ porcentaje4 }}%"><span class="sr-only"></span></div>
-                                                <div class="progress-bar progress-bar-lilac" title="{{ porcentaje5 }}% Geografía" style="width: {{ porcentaje5 }}%"><span class="sr-only"></span></div>
-                                                <div class="progress-bar progress-bar-teals" title="{{ porcentaje6 }}% Astronomía - Astrofísica" style="width: {{ porcentaje6 }}%"><span class="sr-only"></span></div>
-                                                <div class="progress-bar progress-bar-inverse" title="{{ porcentaje7 }}% Informática" style="width: {{ porcentaje7 }}%"><span class="sr-only"></span></div>
-                                                <div class="progress-bar progress-bar-primary" title="{{ porcentaje8 }}% Robótica" style="width: {{ porcentaje8 }}%"><span class="sr-only"></span></div>
-                                                <div class="progress-bar progress-bar-success" title="{{ porcentaje9 }}% Feria científica" style="width: {{ porcentaje9 }}%"><span class="sr-only"></span></div>
-                                            </div>
+                            {%for datoKey, datos in estadistica %}
+                                {% for lugarKey, lugares in datos['dato'] %}  
+                                    {% set count = count + 1 %}
+                                    <div class="inner-all no-margin">   
+                                        {% if count == 1 %}
+                                            <p class="badge badge-primary col-md-12 text-left">{{ lugarKey }}</p> 
                                         {% else %}
-                                            <form name="form" role="form" action="{{ path('olimestadistica_registrados_area') }}" method="POST"> 
-                                                <input type="hidden" name="codigo" id="codigo" value="{{codigo|base64_encode }}" />
+                                            <form name="form" role="form" action="{{ path('olimestadistica_registrados_area_grado') }}" method="POST"> 
+                                                <input type="hidden" name="codigo" id="codigo" value="{{datoKey|base64_encode }}" />
                                                 <input type="hidden" name="nivel" id="nivel" value="{{nivelSiguiente}}" />
-                                                <button type="submit" id="submit{{id}}" style="display:none;"></button>
-                                                <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{id}}').click();">
-                                                    <span class="pull-right" style="width:150px; text-align:right"><b>{{ cantidad }}</b></span><span class="">{{ lugar }}</span>
+                                                <button type="submit" id="submit{{datoKey}}" style="display:none;"></button>
+                                                <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{datoKey}}').click();">
+                                                    {% if nivel == 7 %}
+                                                        <p class="badge badge-lilac col-md-12 text-left">{{datoKey}} - {{ lugarKey }}</p> 
+                                                    {% else %}
+                                                        <p class="badge badge-lilac col-md-12 text-left">{{ lugarKey }}</p>  
+                                                    {% endif %}
                                                 </a>        
-                                                <div class="progress progress-md">
-                                                        <div class="progress-bar progress-bar-success" title="{{ porcentaje1 }}% Matemática" style="width: {{ porcentaje1 }}%"><span class="sr-only"></span></div>                                            
-                                                        <div class="progress-bar progress-bar-info" title="{{ porcentaje2 }}% Física" style="width: {{ porcentaje2 }}%"><span class="sr-only"></span></div>
-                                                        <div class="progress-bar progress-bar-warning" title="{{ porcentaje3 }}% Química" style="width: {{ porcentaje3 }}%"><span class="sr-only"></span></div>
-                                                        <div class="progress-bar progress-bar-danger" title="{{ porcentaje4 }}% Biología" style="width: {{ porcentaje4 }}%"><span class="sr-only"></span></div>
-                                                        <div class="progress-bar progress-bar-lilac" title="{{ porcentaje5 }}% Geografía" style="width: {{ porcentaje5 }}%"><span class="sr-only"></span></div>
-                                                        <div class="progress-bar progress-bar-teals" title="{{ porcentaje6 }}% Astronomía - Astrofísica" style="width: {{ porcentaje6 }}%"><span class="sr-only"></span></div>
-                                                        <div class="progress-bar progress-bar-inverse" title="{{ porcentaje7 }}% Informática" style="width: {{ porcentaje7 }}%"><span class="sr-only"></span></div>
-                                                        <div class="progress-bar progress-bar-primary" title="{{ porcentaje8 }}% Robótica" style="width: {{ porcentaje8 }}%"><span class="sr-only"></span></div>
-                                                        <div class="progress-bar progress-bar-success" title="{{ porcentaje9 }}% Feria científica" style="width: {{ porcentaje9 }}%"><span class="sr-only"></span></div>
-                                                    </div>
-                                            </form>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endif %}
+                                            </form>  
+                                        {% endif %}                                                                                                 
+                                        <table class="table table-middle">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Asignatura</th>
+                                                    <th class="text-center" colspan="6">Primaria Comunitaria Vocacional</th>
+                                                    <th class="text-center" colspan="6">Secundaria Comunitaria Productiva</th>
+                                                </tr> 
+                                                <tr>
+                                                    <th rowspan="2">Asignatura</th>
+                                                    <th class="text-center">1°</th>
+                                                    <th class="text-center">2°</th>
+                                                    <th class="text-center">3°</th>
+                                                    <th class="text-center">4°</th>
+                                                    <th class="text-center">5°</th>
+                                                    <th class="text-center">6°</th>
+                                                    <th class="text-center">1°</th>
+                                                    <th class="text-center">2°</th>
+                                                    <th class="text-center">3°</th>
+                                                    <th class="text-center">4°</th>
+                                                    <th class="text-center">5°</th>
+                                                    <th class="text-center">6°</th>
+                                                </tr> 
+                                            </thead>
+                                            {% for materiaKey, materias in lugares %}                                        
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{ materiaKey }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.pri1|number_format(0, '.', ',') }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.pri2|number_format(0, '.', ',') }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.pri3|number_format(0, '.', ',') }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.pri4|number_format(0, '.', ',') }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.pri5|number_format(0, '.', ',') }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.pri6|number_format(0, '.', ',') }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.sec1|number_format(0, '.', ',') }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.sec2|number_format(0, '.', ',') }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.sec3|number_format(0, '.', ',') }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.sec4|number_format(0, '.', ',') }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.sec5|number_format(0, '.', ',') }}</td>
+                                                        <td class="text-center" style="width:50px;">{{ materias.sec6|number_format(0, '.', ',') }}</td>
+                                                    </tr>                                           
+                                                </tbody>                                        
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                    <div class="line no-margin"></div>
+                                {% endfor %}
                             {% endfor %}
                         {% endif %}
                     </div><!-- /.panel-body -->

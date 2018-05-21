@@ -1027,8 +1027,8 @@ class ClasificacionController extends Controller {
                 select count(eij.id) as cant, eij.estudiante_inscripcion_id, COUNT(distinct disciplina) as cantdisc
                 , sum(case when dt.id = 3 or dt.id = 4 or dt.id = 5 or dt.id = 7 then 1 else 0 end)  as cant_dis_conj
                 , sum(case when dt.id <> 3 and dt.id <> 4 and dt.id <> 5 and dt.id <> 7 then 1 else 0 end)  as cant_dis_indi
-                , sum(case when dt.id = 2 and (pt.id = 27 or pt.id = 28) then 1 else 0 end)  as cant_pru_conj_atle
-                , sum(case when dt.id = 2 and (pt.id <> 27 and pt.id <> 28) then 1 else 0 end)  as cant_pru_indi_atle
+                , sum(case when dt.id = 2 and (pt.id = 174 or pt.id = 175 or pt.id = 200 or pt.id = 201) then 1 else 0 end)  as cant_pru_conj_atle
+                , sum(case when dt.id = 2 and (pt.id <> 174 and pt.id <> 175 and pt.id <> 200 and pt.id <> 201) then 1 else 0 end)  as cant_pru_indi_atle
                 , sum(case when dt.id = 8 and (pt.id = 63 or pt.id = 64 or pt.id = 75 or pt.id = 76) then 1 else 0 end)  as cant_pru_conj_nat
                 , sum(case when dt.id = 8 and (pt.id <> 63 and pt.id <> 64 and pt.id <> 75 and pt.id <> 76) then 1 else 0 end)  as cant_pru_indi_nat
                 , sum(case when dt.id = 6 then 1 else 0 end)  as cant_pru_cic
@@ -1049,7 +1049,7 @@ class ClasificacionController extends Controller {
         $xCupo = 1;
         if ($fase == 2){
           if ($entidadUsuarioId == 31642){ // MAGDALENA/ BAURES/ HUACARAJE
-                $xCupo = 1;
+                $xCupo = 3;
             }
             if ($entidadUsuarioId == 31637){
                 $xCupo = 2;
@@ -1365,7 +1365,7 @@ class ClasificacionController extends Controller {
                                             case 2: //atletismo
                                                 if($tipoDisciplinaPrueba["tipoPrueba"] == 'Individual'){
                                                     if($inscripcionEstudianteEntity[0]["cant_pru_indi_atle"] >= 2){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (no puede registrarse en mas pruebas individuales)');
+                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (1 no puede registrarse en mas pruebas individuales)');
                                                     } else {
                                                         $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                                                     }
@@ -1614,7 +1614,7 @@ class ClasificacionController extends Controller {
     public function verificaInscripcionEstudiante($inscripcionEstudiante){
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
-            select e.paterno, e.materno, e.nombre, e.carnet_identidad, case when e.carnet_identidad is null then '' when trim(e.carnet_identidad) = '' then '' when trim(e.complemento) = '0' then '' else e.complemento end as complemento, ie.id as sie, ie.institucioneducativa, to_char(e.fecha_nacimiento, 'yyyy') as gestion_nacimiento, to_char(e.fecha_nacimiento, 'MM') as mes_nacimiento, to_char(e.fecha_nacimiento, 'dd') as dia_nacimiento, (cast(to_char(cast('2017-06-30' as date),'yyyyMMdd') as integer) - cast(to_char(e.fecha_nacimiento,'yyyyMMdd') as integer))/10000 as edad, (cast(to_char(now(),'yyyy') as integer) - cast(to_char(e.fecha_nacimiento,'yyyy') as integer)) as edad_gestion
+            select e.paterno, e.materno, e.nombre, e.carnet_identidad, case when e.carnet_identidad is null then '' when trim(e.carnet_identidad) = '' then '' when trim(e.complemento) = '0' then '' else e.complemento end as complemento, ie.id as sie, ie.institucioneducativa, to_char(e.fecha_nacimiento, 'yyyy') as gestion_nacimiento, to_char(e.fecha_nacimiento, 'MM') as mes_nacimiento, to_char(e.fecha_nacimiento, 'dd') as dia_nacimiento, (cast(to_char(cast('2018-06-30' as date),'yyyyMMdd') as integer) - cast(to_char(e.fecha_nacimiento,'yyyyMMdd') as integer))/10000 as edad, (cast(to_char(now(),'yyyy') as integer) - cast(to_char(e.fecha_nacimiento,'yyyy') as integer)) as edad_gestion
             from estudiante_inscripcion as ei
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
             inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
