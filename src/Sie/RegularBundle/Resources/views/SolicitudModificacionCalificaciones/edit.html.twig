@@ -157,7 +157,7 @@
                                                     <div class="form-group">
                                                         {% if app.session.get('idNivel') == 11 %}
                                                             {% if n.idEstudianteNota != 'ninguno' %}
-                                                                <textarea name="nota[]" class="form-control jnumbersletters jupper" " style="resize:vertical; max-height:200px" cols="50" rows="50" maxlength="300">{{n.nota}}</textarea>
+                                                                <textarea name="nota[]" class="form-control jnumbersletters jupper" style="resize:vertical; max-height:200px" cols="50" rows="50" maxlength="300">{{n.nota}}</textarea>
                                                             {% else %}
                                                                 <input type="hidden" id="{{n.id}}" name="nota[]" value="0">
                                                                 <textarea disabled class="text-danger form-control" style="resize:none; max-height:50px" cols="50" rows="10">{{n.nota}}</textarea>
