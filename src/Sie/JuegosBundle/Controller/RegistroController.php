@@ -1492,7 +1492,7 @@ class RegistroController extends Controller {
     public function verificaInscripcionEstudiante($inscripcionEstudiante){
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
-            select e.paterno, e.materno, e.nombre, e.codigo_rude, e.carnet_identidad, e.complemento, ie.id as sie, ie.institucioneducativa, to_char(e.fecha_nacimiento, 'yyyy') as gestion_nacimiento, to_char(e.fecha_nacimiento, 'MM') as mes_nacimiento, to_char(e.fecha_nacimiento, 'dd') as dia_nacimiento, (cast(to_char(cast('2017-06-30' as date),'yyyyMMdd') as integer) - cast(to_char(e.fecha_nacimiento,'yyyyMMdd') as integer))/10000 as edad, (cast(to_char(now(),'yyyy') as integer) - cast(to_char(e.fecha_nacimiento,'yyyy') as integer)) as edad_gestion
+            select e.paterno, e.materno, e.nombre, e.codigo_rude, e.carnet_identidad, e.complemento, ie.id as sie, ie.institucioneducativa, to_char(e.fecha_nacimiento, 'yyyy') as gestion_nacimiento, to_char(e.fecha_nacimiento, 'MM') as mes_nacimiento, to_char(e.fecha_nacimiento, 'dd') as dia_nacimiento, (cast(to_char(cast('2018-06-30' as date),'yyyyMMdd') as integer) - cast(to_char(e.fecha_nacimiento,'yyyyMMdd') as integer))/10000 as edad, (cast(to_char(now(),'yyyy') as integer) - cast(to_char(e.fecha_nacimiento,'yyyy') as integer)) as edad_gestion
             from estudiante_inscripcion as ei
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
             inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
