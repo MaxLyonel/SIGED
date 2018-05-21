@@ -2897,7 +2897,7 @@ class ComisionController extends Controller {
         $xCupo = 1;
         if ($fase == 2){
           if ($entidadUsuarioId == 31642){ // MAGDALENA/ BAURES/ HUACARAJE
-                $xCupo = 1;
+                $xCupo = 3;
             }
             if ($entidadUsuarioId == 31637){
                 $xCupo = 2;
