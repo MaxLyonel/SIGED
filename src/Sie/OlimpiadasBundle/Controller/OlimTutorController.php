@@ -212,6 +212,12 @@ class OlimTutorController extends Controller{
     }
 
     public function newTutorAction (Request $request){
+         //get the session user
+         $id_usuario = $this->session->get('userId');
+         //validation if the user is logged
+         if (!isset($id_usuario)) {
+             return $this->redirect($this->generateUrl('login'));
+         }
         //got the send data
 	    $form = $request->get('form');
 	    $data = json_decode($form['data'],true);
@@ -238,7 +244,12 @@ class OlimTutorController extends Controller{
     }
 
     public function resultTutoresAction(Request $request){
-        
+         //get the session user
+         $id_usuario = $this->session->get('userId');
+         //validation if the user is logged
+         if (!isset($id_usuario)) {
+             return $this->redirect($this->generateUrl('login'));
+         }
         //get the send data
         $form = $request->get('form');
         $em = $this->getDoctrine()->getManager();
