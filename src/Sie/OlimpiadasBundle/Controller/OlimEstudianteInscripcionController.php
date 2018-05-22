@@ -923,9 +923,10 @@ class OlimEstudianteInscripcionController extends Controller{
 
         $objInfoMateria = $em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($arrDataInscription['materiaId']);
         //get the start date and end date by materia
-        $dataStart = $objInfoMateria->getFechaInsIni()->format('d-m-Y H:i:s');
-        $dataEnd = $objInfoMateria->getFechaInsFin()->format('d-m-Y H:i:s');
-        $today    = date('d-m-Y H:i:s');
+        $dataStart = $objInfoMateria->getFechaInsIni()->format('d-m-Y');
+        $dataEnd = $objInfoMateria->getFechaInsFin()->format('d-m-Y');
+        $today    = date('d-m-Y');
+      
         // check the limit date to do the inscription
         if($dataStart <= $today && $today <= $dataEnd){
             //nothing to do
