@@ -255,15 +255,32 @@ class OlimTutorController extends Controller{
         $em = $this->getDoctrine()->getManager();
         $arrForm = json_decode($form['data'],true);
         $tutorFound = true;
-        
+        $resultTutores = array();
         // $resultTutores = $this->get('olimfunctions')->lookForTutores($form);
-        $resultTutores = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
-                'carnet'=> $form['carnet'],
-                'complemento'=>$form['complemento'],
-                // 'fechaNacimiento'=> new \DateTime($form['fechanacimiento'])
-            ));
+        // $resultTutores = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+        //         'carnet'=> $form['carnet'],
+        //         'complemento'=>trim($form['complemento']),              
+        //         // 'fechaNacimiento'=> new \DateTime($form['fechanacimiento'])
+        //     ));
+            // new way to find the tutors
+        $entity = $em->getRepository('SieAppWebBundle:Persona');
+        $query = $entity->createQueryBuilder('p')
+        ->where('p.carnet = :carnet')
+        ->setParameter('carnet', $form['carnet']);
+        if($form['complemento']){
+            $query = $query->andwhere('p.complemento = :complemento');
+            $query = $query->setParameter('complemento', $form['complemento']);
+        } else{
+            $query = $query->andwhere('p.complemento IS NULL');
+        }
+        
+        $query = $query->getQuery();
+        $resultTutores = $query->getResult();    
+
         if(!$resultTutores){
             $tutorFound = false;
+        }else{
+            $resultTutores = $resultTutores[0];
         }
         // dump($resultTutores);die;
         return $this->render('SieOlimpiadasBundle:OlimTutor:resultTutores.html.twig', array(
