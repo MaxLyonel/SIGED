@@ -37,23 +37,23 @@
                                 {% endif %}
                             </div>
                             <div class="pull-right">
-                                    <form name="formEstadisticaPdf" id="formEstadisticaPdf"  action="{{ path('olimestadistica_registrados_area_grado_pdf') }}" method="POST">  
-                                        <input type="hidden" name="codigo" id="codigo" value="{{estadistica|first.codigo|base64_encode }}" />
-                                        <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
-                                        <button type="submit" title="Descargar en formato PDF" class="btn btn-googleplus">
-                                            <i class="fa fa-file-pdf-o"></i>
-                                        </button>
-                                    </form> 
-                                </div>     
-                                <div class="pull-right">
-                                    <form name="formEstadisticaXls" id="formEstadisticaXls"  action="{{ path('olimestadistica_registrados_area_grado_xls') }}" method="POST">  
-                                        <input type="hidden" name="codigo" id="codigo" value="{{estadistica|first.codigo|base64_encode }}" />
-                                        <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
-                                        <button type="submit" title="Descargar en formato XLS" class="btn btn-success">
-                                            <i class="fa fa-file-excel-o"></i>
-                                        </button>
-                                    </form> 
-                                </div>        
+                                <form name="formEstadisticaPdf" id="formEstadisticaPdf"  action="{{ path('olimestadistica_registrados_area_grado_pdf') }}" method="POST">  
+                                    <input type="hidden" name="codigo" id="codigo" value="{{estadistica|first.codigo|base64_encode }}" />
+                                    <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
+                                    <button type="submit" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                        <i class="fa fa-file-pdf-o"></i>
+                                    </button>
+                                </form> 
+                            </div>     
+                            <div class="pull-right">
+                                <form name="formEstadisticaXls" id="formEstadisticaXls"  action="{{ path('olimestadistica_registrados_area_grado_xls') }}" method="POST">  
+                                    <input type="hidden" name="codigo" id="codigo" value="{{estadistica|first.codigo|base64_encode }}" />
+                                    <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
+                                    <button type="submit" title="Descargar en formato XLS" class="btn btn-success">
+                                        <i class="fa fa-file-excel-o"></i>
+                                    </button>
+                                </form> 
+                            </div>        
                             <div class="clearfix"></div>
                         {% endif %}
                     </div>            
@@ -67,18 +67,18 @@
                                         {% if count == 1 %}
                                             <p class="badge badge-primary col-md-12 text-left">{{ lugarKey }}</p> 
                                         {% else %}
-                                            <form name="form" role="form" action="{{ path('olimestadistica_registrados_area_grado') }}" method="POST"> 
-                                                <input type="hidden" name="codigo" id="codigo" value="{{datoKey|base64_encode }}" />
-                                                <input type="hidden" name="nivel" id="nivel" value="{{nivelSiguiente}}" />
-                                                <button type="submit" id="submit{{datoKey}}" style="display:none;"></button>
-                                                <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{datoKey}}').click();">
-                                                    {% if nivel == 7 %}
-                                                        <p class="badge badge-lilac col-md-12 text-left">{{datoKey}} - {{ lugarKey }}</p> 
-                                                    {% else %}
-                                                        <p class="badge badge-lilac col-md-12 text-left">{{ lugarKey }}</p>  
-                                                    {% endif %}
-                                                </a>        
-                                            </form>  
+                                            {% if nivel == 7 %}
+                                                <p class="badge badge-lilac col-md-12 text-left">{{datoKey}} - {{ lugarKey }}</p>
+                                            {% else %}
+                                                <form name="form" role="form" action="{{ path('olimestadistica_registrados_area_grado') }}" method="POST"> 
+                                                    <input type="hidden" name="codigo" id="codigo" value="{{datoKey|base64_encode }}" />
+                                                    <input type="hidden" name="nivel" id="nivel" value="{{nivelSiguiente}}" />
+                                                    <button type="submit" id="submit{{datoKey}}" style="display:none;"></button>
+                                                    <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{datoKey}}').click();">
+                                                        <p class="badge badge-lilac col-md-12 text-left">{{ lugarKey }}</p>
+                                                    </a>        
+                                                </form> 
+                                            {% endif %}                                              
                                         {% endif %}                                                                                                 
                                         <table class="table table-middle">
                                             <thead>

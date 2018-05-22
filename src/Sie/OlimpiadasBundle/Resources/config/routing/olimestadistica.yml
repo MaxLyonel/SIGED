@@ -2,6 +2,10 @@ olimestadistica_registrados:
     path:     /registrados
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosIndex" }
 
+olimestadistica_registrados_departamental:
+    path:     /registrados/departamental
+    defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosDepartamentalIndex" }
+
 olimestadistica_registrados_pdf:
     path:     /registrados/pdf
     defaults: { _controller: "SieOlimpiadasBundle:OlimEstadistica:registradosPdf" }

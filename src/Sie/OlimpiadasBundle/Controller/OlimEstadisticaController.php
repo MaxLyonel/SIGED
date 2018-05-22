@@ -29,6 +29,7 @@ class OlimEstadisticaController extends Controller{
 		   		
 		$sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
+        $id_rol = $sesion->get('roluser');
         //validation if the user is logged
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -36,7 +37,7 @@ class OlimEstadisticaController extends Controller{
 
 		$codigo = 0;
 		$nivel = 0;	
-		$nivelSiguiente = 0;
+		$nivelSiguiente = 0;		
 
 		if ($request->isMethod('POST')) {
             $codigo = base64_decode($request->get('codigo'));
@@ -49,13 +50,31 @@ class OlimEstadisticaController extends Controller{
 				$nivelSiguiente = 0;
 			}	
         } else {
-            $codigo = 0;
-			$nivel = 0;	
-			$nivelSiguiente = 1;	
+			if ($id_rol == 8 or $id_rol == 35 or $id_rol == 20){
+				$nivel = 0;	
+				$nivelSiguiente = 1;
+			} else if($id_rol == 7){
+				$nivel = 1;
+				$nivelSiguiente = 7;
+			} else if($id_rol == 10){
+				$nivel = 7;	
+				$nivelSiguiente = 0;
+			} else {
+				$nivel = 0;
+				$nivelSiguiente = 1;
+			}	
+			$em = $this->getDoctrine()->getManager();
+			$entidadUsuario = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneBy(array('usuario' => $id_usuario, 'rolTipo' => $id_rol));
+			
+			if (count($entidadUsuario)>0){
+				$codigo = $entidadUsuario->getLugarTipo()->getCodigo();
+			} else {
+				$codigo = 0;
+			}         
 		}
 		
 		$inscritos = $this->getRegistradosEtapa1($nivel,$codigo,$gestionActual);
-		//dump($nivel);die;
+		//dump($inscritos);die;
 
 		return $this->render('SieOlimpiadasBundle:OlimEstadistica:registrados.html.twig', array(
 			'estadistica'=>$inscritos,
@@ -286,6 +305,7 @@ class OlimEstadisticaController extends Controller{
 
 		$sesion = $request->getSession();
 		$id_usuario = $sesion->get('userId');
+        $id_rol = $sesion->get('roluser');
 		//validation if the user is logged
 		if (!isset($id_usuario)) {
 			return $this->redirect($this->generateUrl('login'));
@@ -306,9 +326,27 @@ class OlimEstadisticaController extends Controller{
 				$nivelSiguiente = 0;
 			}	
         } else {
-            $codigo = 0;
-			$nivel = 0;	
-			$nivelSiguiente = 1;	
+            if ($id_rol == 8 or $id_rol == 35 or $id_rol == 20){
+				$nivel = 0;	
+				$nivelSiguiente = 1;
+			} else if($id_rol == 7){
+				$nivel = 1;
+				$nivelSiguiente = 7;
+			} else if($id_rol == 10){
+				$nivel = 7;	
+				$nivelSiguiente = 0;
+			} else {
+				$nivel = 0;
+				$nivelSiguiente = 1;
+			}	
+			$em = $this->getDoctrine()->getManager();
+			$entidadUsuario = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneBy(array('usuario' => $id_usuario, 'rolTipo' => $id_rol));
+			
+			if (count($entidadUsuario)>0){
+				$codigo = $entidadUsuario->getLugarTipo()->getCodigo();
+			} else {
+				$codigo = 0;
+			} 	
 		}
 		
 		$inscritos = $this->getRegistradosAreaEtapa1($nivel,$codigo,$gestionActual);
@@ -622,6 +660,7 @@ class OlimEstadisticaController extends Controller{
 
 		$sesion = $request->getSession();
 		$id_usuario = $sesion->get('userId');
+        $id_rol = $sesion->get('roluser');
 		//validation if the user is logged
 		if (!isset($id_usuario)) {
 			return $this->redirect($this->generateUrl('login'));
@@ -642,9 +681,27 @@ class OlimEstadisticaController extends Controller{
 				$nivelSiguiente = 0;
 			}	
         } else {
-            $codigo = 0;
-			$nivel = 0;	
-			$nivelSiguiente = 1;	
+            if ($id_rol == 8 or $id_rol == 35 or $id_rol == 20){
+				$nivel = 0;	
+				$nivelSiguiente = 1;
+			} else if($id_rol == 7){
+				$nivel = 1;
+				$nivelSiguiente = 7;
+			} else if($id_rol == 10){
+				$nivel = 7;	
+				$nivelSiguiente = 0;
+			} else {
+				$nivel = 0;
+				$nivelSiguiente = 1;
+			}	
+			$em = $this->getDoctrine()->getManager();
+			$entidadUsuario = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneBy(array('usuario' => $id_usuario, 'rolTipo' => $id_rol));
+			
+			if (count($entidadUsuario)>0){
+				$codigo = $entidadUsuario->getLugarTipo()->getCodigo();
+			} else {
+				$codigo = 0;
+			} 	
 		}
 		
 		//dump($codigo);die;
@@ -945,7 +1002,7 @@ class OlimEstadisticaController extends Controller{
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
-        return $response;
+		return $response;
     }
 	
 	/**
@@ -1012,6 +1069,7 @@ class OlimEstadisticaController extends Controller{
 
 		$sesion = $request->getSession();
 		$id_usuario = $sesion->get('userId');
+        $id_rol = $sesion->get('roluser');
 		//validation if the user is logged
 		if (!isset($id_usuario)) {
 			return $this->redirect($this->generateUrl('login'));
@@ -1032,9 +1090,27 @@ class OlimEstadisticaController extends Controller{
 				$nivelSiguiente = 0;
 			}	
         } else {
-            $codigo = 0;
-			$nivel = 0;	
-			$nivelSiguiente = 1;	
+            if ($id_rol == 8 or $id_rol == 35 or $id_rol == 20){
+				$nivel = 0;	
+				$nivelSiguiente = 1;
+			} else if($id_rol == 7){
+				$nivel = 1;
+				$nivelSiguiente = 7;
+			} else if($id_rol == 10){
+				$nivel = 7;	
+				$nivelSiguiente = 0;
+			} else {
+				$nivel = 0;
+				$nivelSiguiente = 1;
+			}	
+			$em = $this->getDoctrine()->getManager();
+			$entidadUsuario = $em->getRepository('SieAppWebBundle:UsuarioRol')->findOneBy(array('usuario' => $id_usuario, 'rolTipo' => $id_rol));
+			
+			if (count($entidadUsuario)>0){
+				$codigo = $entidadUsuario->getLugarTipo()->getCodigo();
+			} else {
+				$codigo = 0;
+			} 	
 		}
 		
 		//dump($codigo);die;
