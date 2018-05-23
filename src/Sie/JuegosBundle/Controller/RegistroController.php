@@ -507,6 +507,30 @@ class RegistroController extends Controller {
         $msgEstudiantesRegistrados = '';
         $msgEstudiantesObservados = '';
 
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select * from fase_tipo where id = ".($faseId));
+        $query->execute();
+        $faseTipoEntity = $query->fetchAll();
+
+        $response = new JsonResponse();
+
+        if(count($faseTipoEntity)<1){
+            return $response->setData(array(
+                'registrados' => array(), 'msg_correcto' => '', 'msg_incorrecto' => 'No se cuenta habilitado la inscripcion de deportistas para la Fase Previa'
+            ));
+        }
+
+        if($nivelId == 12 and !$faseTipoEntity[0]['esactivo_primaria']){
+            return $response->setData(array(
+                'registrados' => array(), 'msg_correcto' => '', 'msg_incorrecto' => 'Las inscripciones para el Nivel Primario concluyeron'
+            ));
+        }
+        if($nivelId == 13 and !$faseTipoEntity[0]['esactivo_secundaria']){
+            return $response->setData(array(
+                'registrados' => array(), 'msg_correcto' => '', 'msg_incorrecto' => 'Las inscripciones para el Nivel Secundaria concluyeron'
+            ));
+        }
+
         foreach($deportistas as $deportista){
             $estInsId = base64_decode($deportista);
 
@@ -536,7 +560,6 @@ class RegistroController extends Controller {
             $ainscritos[base64_encode($inscrito->getId())] = $inscrito->getEstudianteInscripcion()->getEstudiante()->getPaterno().' '.$inscrito->getEstudianteInscripcion()->getEstudiante()->getMaterno().' '.$inscrito->getEstudianteInscripcion()->getEstudiante()->getNombre();
         }
 
-        $response = new JsonResponse();
         try {
             return $response->setData(array(
                 'registrados' => $ainscritos, 'msg_correcto' => $msgEstudiantesRegistrados, 'msg_incorrecto' => $msgEstudiantesObservados
