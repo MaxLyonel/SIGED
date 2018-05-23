@@ -264,17 +264,21 @@ class OlimTutorController extends Controller{
         //     ));
             // new way to find the tutors
         $entity = $em->getRepository('SieAppWebBundle:Persona');
-        $query = $entity->createQueryBuilder('p')
-        ->where('p.carnet = :carnet')
-        ->setParameter('carnet', $form['carnet']);
+        $query = $entity->createQueryBuilder('p');
+        
         if($form['complemento']){
-            $query = $query->andwhere('p.complemento = :complemento');
+            $query = $query->where('p.complemento = :complemento');
             $query = $query->setParameter('complemento', $form['complemento']);
         } else{
-            $query = $query->andwhere('p.complemento IS NULL');
+            $query = $query->where('p.complemento IS NULL');   
+            $query = $query->orwhere('p.complemento = :complemento');
+            $query = $query->setParameter('complemento', '');
+
         }
-        
+        $query = $query->andwhere('p.carnet = :carnet');
+        $query = $query->setParameter('carnet', $form['carnet']);
         $query = $query->getQuery();
+        
         $resultTutores = $query->getResult();    
 
         if(!$resultTutores){
