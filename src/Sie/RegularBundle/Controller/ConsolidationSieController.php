@@ -340,6 +340,15 @@ class ConsolidationSieController extends Controller {
                   system('rm -fr ' . $dirtmp);
                   return $this->redirect($this->generateUrl('consolidation_sie_web'));
                 }
+                //validation STATE of UE
+                $obDataUE =  $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($aDataExtractFileUE[1]);
+                if($obDataUE->getEstadoinstitucionTipo()->getId()==10){
+                    // nothing to do 
+                }else{
+                    $session->getFlashBag()->add('warningcons', 'La Unidad Educativa con SIE ' . $aDataExtractFileUE[1] . ', se encuentra cerrada');
+                    system('rm -fr ' . $dirtmp);
+                    return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                }
 
                 //validate the correct sie send with the correct version in current year
                 if ((strcmp(preg_replace('/\s+/', '', $aFileInfoSie[1]), preg_replace('/\s+/', '', $this->session->get('currentyear')))) == 0) {
