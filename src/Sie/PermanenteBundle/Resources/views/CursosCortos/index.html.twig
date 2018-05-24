@@ -1,8 +1,11 @@
 {% extends 'layoutPermanente.html.twig' %}
 
 {% block contentoption %}
-    <div class="header-content">
-        <h2><i class="fa fa-users"></i> Cursos y alumnos <span>Lista de cursos y alumnos del centro de educación alternativa.</span></h2>
+
+    <div class="header-content" id="principal">
+
+
+        <h2><i class="fa fa-users"></i> Cursos y alumnos <span>Lista de cursos y alumnos del centro de educación permanente.</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
             <ol class="breadcrumb">
@@ -13,7 +16,7 @@
                 </li>
                 <li>
                     <i class="fa fa-th-large"></i>
-                    <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+                    <a href="{{path('herramienta_per_ceducativa_menu_principal')}}">Menu Principal</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li>
@@ -60,8 +63,18 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-4">
+
+            <div class="col-md-4">
+
+
+            <div class="tab">
+                <button class="tablinks" onclick="openCity(event, 'uno')" id="defaultOpen">Abiertos</button>
+                <button class="tablinks" onclick="openCity(event, 'dos')">Cerrados</button>
+                <button class="tablinks" onclick="openCity(event, 'tres')">Todos</button>
+            </div>
+
+            <div id="uno" class="tabcontent " >
+
                     <small>
                         <div class="tree well">
                             {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
@@ -70,65 +83,316 @@
                                         <i class="fa fa-cubes"></i> Nuevo Curso
                                     </button>
                                 </div>
+                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">
+                                    <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">
+                                        <i class="fa fa-list"></i> Listado de Cursos
+                                    </button>
+                                </div>
                             {% endif%}
-                            {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
-                                <ul>
-                                    <li>
-                                        <span><i class="icon-folder-open"></i>{{ subareaKey }}</span>
-                                        <ul>
-                                            {% for programaKey, dataPrograma in dataSubarea %}
-                                                <li>
-                                                    <span><i class="icon-minus-sign"></i>{{ programaKey }}</span>
-                                                    <ul>
-                                                        {% for areatematicaKey, dataAreatematica in dataPrograma %}
-                                                            <li>
-                                                                <span><i class="icon-minus-sign"></i>{{ areatematicaKey }}</span>
-                                                                <ul>
-                                                                    {% for cursocortoKey, dataCursocorto in dataAreatematica %}
-                                                                        <li>
-                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
-                                                                                <a href="#" onclick="seeStudents('{{ dataCursocorto.infoUe }}');">
 
-                                                                                <span ><i class="icon-leaf"></i>
-                                                                                    {{ cursocortoKey }}
-                                                                                </span>
-                                                                                </a>
-                                                                            </div>
-                                                                            {#{% if (dataParalelo.nivelId == 15) and ((app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3'))%}#}
-                                                                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Curso">
-                                                                                    <button class="btn btn-circle btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCurso('{{ dataCursocorto.infoUe}} ');">
-                                                                                        <i class="fa fa-cube"></i>
-                                                                                    </button>
-                                                                                </div>
-                                                                            {% endif %}
-                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">
-                                                                                <button class="btn btn-circle btn-danger btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoMaestro( '{{ dataCursocorto.infoUe }}');">
-                                                                                    <i class="fa fa-group"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </li>
-                                                                    {% endfor %}
-                                                                </ul>
-                                                            </li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
-                                </ul>
+                            {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+                            {% if (subareaKey==1) %}
+                                    <ul>
+                                                {% for programaKey, dataPrograma in dataSubarea %}
+                                                    <li>
+                                                        <span><i class="icon-minus-sign"></i>{{ programaKey }}</span>
+                                                        <ul>
+                                                            {% for areatematicaKey, dataAreatematica in dataPrograma %}
+                                                                <li>
+                                                                    <span><i class="icon-minus-sign"></i>{{ areatematicaKey }}</span>
+                                                                    <ul>
+                                                                        {% for cursocortoKey, dataCursocorto in dataAreatematica %}
+                                                                            <li>
+                                                                                <span><i class="icon-minus-sign"></i>{{ cursocortoKey }}</span>
+                                                                                <ul>
+                                                                                    {% for iecidKey, dataIecid in dataCursocorto %}
+                                                                                        <li>
+                                                                                            <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                                            <ul>
+                                                                                                {% for idcursoKey, dataIdcurso in dataIecid %}
+                                                                                                    <li>
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body">
+
+
+                                                                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar Curso">
+                                                                                                            <button class="btn btn-circle btn-success btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCurso('{{ dataIdcurso.infoUe}} ');">
+                                                                                                                <i class="fa fa-cube"></i>
+                                                                                                            </button>
+                                                                                                        </div>
+                                                                                                    {% endif %}
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">
+                                                                                                        <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoMaestro( '{{ dataIdcurso.infoUe }}');">
+                                                                                                            <i class="fa fa-graduation-cap"></i>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+
+                                                                                                        <button class="btn btn-circle btn-success btn-stroke"  onclick="seeStudents('{{ dataIdcurso.infoUe}} ');">
+                                                                                                            <i class="fa fa-group"></i>
+                                                                                                            {#{{ iecidKey }}#}
+                                                                                                        </button>
+                                                                                                    </div>
+
+
+                                                                                            </div>
+
+                                                                                                                                                                                   </li>
+                                                                                    {% endfor %}
+
+                                                                                </ul>
+                                                                            </li>
+                                                                                    {% endfor %}
+                                                                                </ul>
+                                                                            </li>
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </li>
+                                                {% endfor %}
+
+                                    </ul>
+                            {% endif %}
                             {% endfor %}
+
+
                         </div>
                     </small>
-                </div>
-                <div class='col-md-8'>
-                    <div id="idstudents"></div>
-                </div>
+
             </div>
+
+            <div id="dos" class="tabcontent">
+
+
+                <small>
+                    <div class="tree well">
+                        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                    <i class="fa fa-cubes"></i> Nuevo Curso
+                                </button>
+                            </div>
+
+                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">
+                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">
+                                    <i class="fa fa-list"></i> Listado de Cursos
+                                </button>
+                            </div>
+                        {% endif%}
+
+                        {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+                            {% if (subareaKey==0) %}
+                                <ul>
+                                    {% for programaKey, dataPrograma in dataSubarea %}
+                                        <li>
+                                            <span><i class="icon-minus-sign"></i>{{ programaKey }}</span>
+                                            <ul>
+                                                {% for areatematicaKey, dataAreatematica in dataPrograma %}
+                                                    <li>
+                                                        <span><i class="icon-minus-sign"></i>{{ areatematicaKey }}</span>
+                                                        <ul>
+                                                            {% for cursocortoKey, dataCursocorto in dataAreatematica %}
+                                                                <li>
+                                                                    <span><i class="icon-minus-sign"></i>{{ cursocortoKey }}</span>
+                                                                    <ul>
+                                                                        {% for iecidKey, dataIecid in dataCursocorto %}
+                                                                            <li>
+                                                                                <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                                <ul>
+                                                                                    {% for idcursoKey, dataIdcurso in dataIecid %}
+                                                                                        <li>
+                                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body">
+
+
+                                                                                                {#{% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}#}
+                                                                                                    {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar Curso">#}
+                                                                                                        {#<button disabled class="btn btn-circle btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCurso('{{ dataIdcurso.infoUe}} ');">#}
+                                                                                                            {#<i class="fa fa-cube"></i>#}
+                                                                                                        {#</button>#}
+                                                                                                    {#</div>#}
+                                                                                                {#{% endif %}#}
+                                                                                                {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">#}
+                                                                                                    {#<button disabled class="btn btn-circle btn-danger btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoMaestro( '{{ dataIdcurso.infoUe }}');">#}
+                                                                                                        {#<i class="fa fa-graduation-cap"></i>#}
+                                                                                                    {#</button>#}
+                                                                                                {#</div>#}
+                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+
+                                                                                                    <button class="btn btn-circle btn-danger btn-stroke"  onclick="seeStudents('{{ dataIdcurso.infoUe}} ');">
+                                                                                                        <i class="fa fa-group"></i>
+                                                                                                        {#{{ iecidKey }}#}
+                                                                                                    </button>
+                                                                                                </div>
+
+
+                                                                                            </div>
+
+                                                                                        </li>
+                                                                                    {% endfor %}
+
+                                                                                </ul>
+                                                                            </li>
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+                            {% endif %}
+                        {% endfor %}
+
+
+                    </div>
+                </small>
+            </div>
+
+            <div id="tres" class="tabcontent">
+
+                <small>
+                    <div class="tree well">
+                        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                    <i class="fa fa-cubes"></i> Nuevo Curso
+                                </button>
+                            </div>
+                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">
+                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">
+                                    <i class="fa fa-list"></i> Listado de Cursos
+                                </button>
+                            </div>
+                        {% endif%}
+
+                        {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+
+                                <ul>
+                                    {% for programaKey, dataPrograma in dataSubarea %}
+                                        <li>
+                                            <span><i class="icon-minus-sign"></i>{{ programaKey }}</span>
+                                            <ul>
+                                                {% for areatematicaKey, dataAreatematica in dataPrograma %}
+                                                    <li>
+                                                        <span><i class="icon-minus-sign"></i>{{ areatematicaKey }}</span>
+                                                        <ul>
+                                                            {% for cursocortoKey, dataCursocorto in dataAreatematica %}
+                                                                <li>
+                                                                    <span><i class="icon-minus-sign"></i>{{ cursocortoKey }}</span>
+                                                                    <ul>
+                                                                        {% for iecidKey, dataIecid in dataCursocorto %}
+                                                                            <li>
+                                                                                <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                                <ul>
+                                                                                    {% for idcursoKey, dataIdcurso in dataIecid %}
+                                                                                        <li>
+                                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body">
+
+                                                                                                {% if (dataIdcurso.esabierto) %}
+
+                                                                                                {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar Curso">
+                                                                                                        <button  class="btn btn-circle btn-success btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCurso('{{ dataIdcurso.infoUe}} ');">
+                                                                                                            <i class="fa fa-cube"></i>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                {% endif %}
+                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">
+                                                                                                    <button  class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoMaestro( '{{ dataIdcurso.infoUe }}');">
+                                                                                                        <i class="fa fa-graduation-cap"></i>
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+
+                                                                                                    <button class="btn btn-circle btn-success btn-stroke"  onclick="seeStudents('{{ dataIdcurso.infoUe}} ');">
+                                                                                                        <i class="fa fa-group"></i>
+                                                                                                        {#{{ iecidKey }}#}
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                                 {% else %}
+
+                                                                                                     {#{% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}#}
+                                                                                                         {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Editar Curso">#}
+                                                                                                             {#<button disabled class="btn btn-circle btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="editarCurso('{{ dataIdcurso.infoUe}} ');">#}
+                                                                                                                 {#<i class="fa fa-cube"></i>#}
+                                                                                                             {#</button>#}
+                                                                                                         {#</div>#}
+                                                                                                     {#{% endif %}#}
+                                                                                                     {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Facilitadores">#}
+                                                                                                         {#<button disabled class="btn btn-circle btn-danger btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoMaestro( '{{ dataIdcurso.infoUe }}');">#}
+                                                                                                             {#<i class="fa fa-graduation-cap"></i>#}
+                                                                                                         {#</button>#}
+                                                                                                     {#</div>#}
+                                                                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">
+
+                                                                                                         <button class="btn btn-circle btn-danger btn-stroke"  onclick="seeStudents('{{ dataIdcurso.infoUe}} ');">
+                                                                                                             <i class="fa fa-group"></i>
+                                                                                                             {#{{ iecidKey }}#}
+                                                                                                         </button>
+                                                                                                     </div>
+
+                                                                                                {% endif %}
+
+
+
+
+
+
+
+                                                                                            </div>
+
+                                                                                        </li>
+                                                                                    {% endfor %}
+
+                                                                                </ul>
+                                                                            </li>
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+
+                        {% endfor %}
+
+
+                    </div>
+                </small>
+
+            </div>
+
+            </div>
+
+            <div class='col-md-8'>
+                <div id="idstudents"></div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
             <!--/div-->
             <!--/ End mail page -->
-        </div>
+        {#</div>#}
     {% else %}
         {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
             <div class="body-content animated fadeIn">
@@ -191,7 +455,9 @@
                 success: function (data) {
                     $('#modal').empty();
                     $('#modal').append(data);
+                    $('.chosen-select').chosen({allow_single_deselect: false});
                 },
+
                 statusCode: {
                     500: function () {
 
@@ -203,7 +469,48 @@
             });
         };
 //
+        var listaCurso = function () {
+            $.ajax({
+                type: 'get',
+                url: "{{ path('herramienta_per_list_curso_corto') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
         // New curso show
+
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+
+
+        }
+        document.getElementById("defaultOpen").click();
+
+
+
         var nuevoMaestro = function (infoUe) {
 
             $.ajax({
@@ -582,9 +889,9 @@
                     //$('#28030476'),append(data);
                     var idco = data.ieco;
 
-                    $('#'+idco).empty();
-                    $('#'+idco).append("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>"+ data.mensaje +"</div>");
-                    setTimeout("cerrarMaestros('"+idco+"')",1000);
+//                    $('#'+idco).empty();
+                    $('#form_cursosCortos').append('<option value="' + data.curso.id + '">' + data.curso.nombre + '</option>');
+                    cerrarcurso(5);
 
                 },
                 statusCode: {
@@ -598,6 +905,64 @@
             });
         }
 
+        var cerrarcurso = function(idco){
+            $("#"+idco).empty();
+            $('#'+idco).fadeOut();
+//            $('#before'+idco).fadeOut();
+//            $('#after'+idco).fadeOut();
+        }
 
     </script>
+    <style>
+        body {font-family: Arial;}
+
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 13px 15px;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+
+            -webkit-animation: fadeEffect 1s;
+            animation: fadeEffect 1s;
+        }
+
+        /* Fade in tabs */
+        @-webkit-keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+    </style>
+
 {%endblock%}

@@ -3,7 +3,7 @@ herramienta_curso_permanente:
     defaults: { _controller: SiePermanenteBundle:CursoPermanente:index }
     options:
          expose: true
-         
+
 herramienta_per_areachange:
     path:     /{areacod}/areachange/
     defaults: { _controller: SiePermanenteBundle:CursoPermanente:areachange }
@@ -56,4 +56,6 @@ herramientalt_per_ceducativa_periododistinto:
     
 herramientalt_per_ceducativa_aux:
     path:     /auxuno
-    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:auxuno"}        
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:auxuno"}
+
+

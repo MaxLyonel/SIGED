@@ -31,11 +31,19 @@
                             <div class="row">
                                 <div class="form-group col-lg-4 col-md-6">
                                     <label> Curso</label>
-                                    <a class="btn" onclick="addpop(5)"><i class="fa fa-users text-lilac"></i></a>
-                                    <div class="arrow-before" style="display:none; margin-left:10px;" id="before5"></div>
-                                    <div class="arrow-after" style="display:none;margin-left:10px;" id="after5"></div>
-                                    <div id="5" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-350px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros"></div>
-                                    <strong>{{form_widget(form.cursosCortos)}}</strong>
+                                    {#<a class="btn" onclick="addpop(5)"><i class="fa fa-plus-square text-lilac"></i></a>#}
+                                    {#<div class="arrow-before" style="display:none; margin-left:10px;" id="before5"></div>#}
+                                    {#<div class="arrow-after" style="display:none;margin-left:10px;" id="after5"></div>#}
+                                    {#<div id="5" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-350px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros"></div>#}
+
+                                    {#<strong>{{form_widget(form.cursosCortos)}}</strong>#}
+                                    <select id="combocurso" class="chosen-select col-lg-10">
+                                        <option value="">Seleccionar...</option>
+                                        {% for at in cursos %}
+                                            <option value="{{at.id}}">{{at.cursocorto}}</option>
+                                        {% endfor %}
+                                    </select>
+
                                 </div>
                                 <div class="form-group col-lg-4 col-md-6">
                                     <label> Turno</label>
@@ -64,7 +72,7 @@
 
                             </div>
 
-                            <h3> Lugar Realizacion del curso</h3>
+                            <h3> Lugar Realización del curso</h3>
 
                             <div class="row">
                                 <div class="form-group col-lg-4 col-md-6">
@@ -79,7 +87,12 @@
                                     <label> Municipio</label>
                                     <strong>{{form_widget(form.municipio)}}</strong>
                                 </div>
+                                <div class="form-group col-lg-4 col-md-6">
+                                    <label> Ciudad, Pueblo o Comunidad</label>
+                                    <strong>{{form_widget(form.lugar)}}</strong>
+                                </div>
                             </div>
+
 
                     </small>
                 </div>
@@ -96,8 +109,8 @@
         </div>
     </div>
     {{ form_end(form) }}
-    </div>
 </div>
+
 
 <script>
     var peticion1;
@@ -109,7 +122,7 @@
 
         peticion1 = $.ajax({
             type: 'get',
-            url: Routing.generate('sie_alt_clistarprovincias', {'dpto': idDpto}),
+            url: Routing.generate('sie_per_clistarprovincias', {'dpto': idDpto}),
             beforeSend: function () {
 
             },
@@ -138,7 +151,7 @@
 
         peticion2 = $.ajax({
             type: 'get',
-            url: Routing.generate('sie_alt_clistarmunicipios', {'prov': idProv}),
+            url: Routing.generate('sie_per_clistarmunicipios', {'prov': idProv}),
             beforeSend: function () {
 
             },
@@ -168,5 +181,6 @@
         todayBtn: 'linked'
 
     });
+
 
 </script>

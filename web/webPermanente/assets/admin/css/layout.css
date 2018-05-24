@@ -690,7 +690,7 @@ body.page-footer-fixed #page-content .footer-content {
   #header .navbar-header .navbar-brand {
     width: 100%;
   }
-  #header .navbar-header .navbar-brand .logo {
+  #header .navbar-header .navbar-danger .logo {
     display: block !important;
     margin: 0px auto;
   }

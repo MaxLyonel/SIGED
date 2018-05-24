@@ -359,6 +359,7 @@ class InstitucioneducativaController extends Controller {
 //    }
     
     public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERRADOS
+      //  dump($request);die;
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -1017,18 +1018,18 @@ class InstitucioneducativaController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:GestionTipo');
         $query = $repository->createQueryBuilder('g')
             ->orderBy('g.id', 'DESC')
-            ->where('g.id < 2016 AND g.id > 2008')
+            ->where('g.id < 2019 AND g.id > 2013')
             ->getQuery();
         $gestiones = $query->getResult();
         $gestionesArray = array();
         foreach ($gestiones as $g) {
             $gestionesArray[$g->getId()] = $g->getId();
         }
-
+//dump($gestionesArray);die;
         $repository = $em->getRepository('SieAppWebBundle:PeriodoTipo');
         $query = $repository->createQueryBuilder('p')
             ->orderBy('p.id')
-            ->where('p.id in (2,3)')
+            ->where('p.id in (1)')
             ->getQuery();
         $periodos = $query->getResult();
         $periodosArray = array();
@@ -1047,10 +1048,10 @@ class InstitucioneducativaController extends Controller {
         }
 
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('herramientalt_ceducativa_crear_periodo_cea'))
+                ->setAction($this->generateUrl('herramienta_per_ceducativa_crear_periodo_cea'))
                 ->add('idInstitucion', 'text', array('label' => 'Código SIE del CEA', 'required' => true, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => 8, 'pattern' => '[0-9]{8}')))
                 ->add('gestion', 'choice', array('label' => 'Gestión', 'required' => true, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
-                ->add('periodo', 'choice', array('label' => 'Periodo', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
+                //->add('periodo', 'choice', array('label' => 'Periodo', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
                 ->add('subcea', 'choice', array('label' => 'Sub CEA', 'required' => true, 'choices' => $sucursalesArray, 'attr' => array('class' => 'form-control')))
                 ->add('crear', 'submit', array('label' => 'Crear Periodo', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
@@ -1067,7 +1068,7 @@ class InstitucioneducativaController extends Controller {
         $form = $request->get('form');
         $idInstitucion = $form['idInstitucion'];
         $gestion = $form['gestion'];
-        $periodo = $form['periodo'];
+        //$periodo = $form['periodo'];
         $subcea = $form['subcea'];
 
         /*dump($idInstitucion);
@@ -1086,7 +1087,7 @@ class InstitucioneducativaController extends Controller {
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $idInstitucion, 'institucioneducativaTipo' => 2));
         if (!$institucioneducativa) {
             $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! El código SIE ingresado no es válido.');
-            return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_periodo'));
+            return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
         }
 
         /*
@@ -1098,7 +1099,7 @@ class InstitucioneducativaController extends Controller {
         $query->bindValue(':rolId', $usuario_rol);
         $query->execute();
         $aTuicion = $query->fetchAll();
-        
+      //  dump($aTuicion);die;
 //        dump($usuario_id.' '.$idInstitucion.' '.$usuario_rol);
 //        die;
 
@@ -1126,11 +1127,12 @@ class InstitucioneducativaController extends Controller {
                 ->getQuery();
 
             $inscripciones = $query->getResult();
+//            dump($inscripciones);die;
 //            dump($inscripciones);
 //            die;
             if($inscripciones) {
                 $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! El CEA ya cuenta con el Perido seleccionado habilitado.');
-                return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_periodo'));
+                return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
             }
             else {
                 $query = $em->getConnection()->prepare('SELECT sp_genera_inicio_sgte_gestion_alternativa(:sie, :gestion, :periodo, :subcea)');
@@ -1139,7 +1141,8 @@ class InstitucioneducativaController extends Controller {
                 $query->bindValue(':periodo', $periodo);
                 $query->bindValue(':subcea', $subcea);
                 $query->execute();
-                $iesid = $query->fetchAll();            
+                $iesid = $query->fetchAll();
+              //  dump($iesid);die;
                 if (($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '0') and ($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '')){
 //                    $iesidnew = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"]);
 //                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();  
@@ -1166,15 +1169,15 @@ class InstitucioneducativaController extends Controller {
 //                    $em->flush();
 
                     $this->get('session')->getFlashBag()->add('successMsg', '¡Bien! Se ha habilitado el Periodo Seleccionado.');
-                    return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_periodo'));
+                    return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
                 }else{
                     $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! Ha ocurrido un problema en la generación del periodo.');
-                    return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_periodo'));                    
+                    return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
                 }
             }            
         } else {
             $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! No tiene tuición sobre la unidad educativa.');
-            return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_periodo'));
+            return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
         }
     }
     
@@ -1210,7 +1213,7 @@ class InstitucioneducativaController extends Controller {
                                                         inner join institucioneducativa_sucursal z on a.id = z.institucioneducativa_id 
                                                         inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
                                                     where a.orgcurricular_tipo_id = 2
-                                                    and a.institucioneducativa_tipo_id = 2
+                                                    and a.institucioneducativa_tipo_id = 5
                                                     and z.gestion_tipo_id = '2016'
                                                     and z.periodo_tipo_id = '3'
                                                     and w.tramite_estado_id in (8,14) 
@@ -1374,7 +1377,7 @@ class InstitucioneducativaController extends Controller {
                                         and w.tramite_estado_id in (8,14) 
                                         and k.id = '".$idlugarusuario."' 
                                         group by k.lugar, ie.id, ie.institucioneducativa
-                                        order by k.lugar, ie.id
+                                                                            order by k.lugar, ie.id
                                         )";            
         }        
         $stmt = $db->prepare($query);

@@ -1,277 +1,40 @@
-<div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        
-        <form id="formnuevocurso" onsubmit="newCurso(); return false;" method="post" style="">
-        <div class="panel panel-danger">
-            <div class="panel-heading">
-                <div class="pull-left">
-                    <h3 class="panel-title">Creación de curso</h3>
-                </div>
-                <div class="pull-right">
-                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse"><i class="fa fa-angle-up"></i></button>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <div class="panel-body">
-                <div class="col-md-12">
-                    <small>                        
-                        <div class="form-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Área</label>
-                                        <select name="areacod" id="areacod" class="form-control input-sm mb-15">
-                                                <option value="-999">Elija un área/nivel</option>
-                                                <option value="15">EDUCACIÓN DE PERSONAS JOVENES Y ADULTAS</option>
-                                                <option value="18">AGROPECUARIA</option>
-                                                <option value="19">INDUSTRIAL</option>
-                                                <option value="20">ARTES</option>
-                                                <option value="21">TURISMO</option>
-                                                <option value="22">SERVICIO</option>
-                                                <option value="23">COMERCIAL</option>
-                                                <option value="24">DEPORTES</option>
-                                                <option value="25">SALUD</option>                                                    
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Nivel/Especialidad</label>
-                                        <select name="nivelcod" id="nivelcod" class="form-control input-sm mb-15">
-                                            <option value="-999">Elija un área/especialidad</option>                                                
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <label class="control-label">Etapa/Acreditación</label>
-                                        <select name="etapacod" id="etapacod" class="form-control input-sm mb-15">
-                                            <option value="-999">Elija una etapa/acreditación</option>                                                
-                                        </select>
-                                    </div>
-                                </div>        
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <label class="control-label">Turno</label>
-                                        <select name="turnocod" id="turnocod" class="form-control input-sm mb-15">
-                                            <option value="-999">Elija un turno</option>                                            
-                                            <option value="1">MAÑANA</option>
-                                            <option value="2">TARDE</option>
-                                            <option value="4">NOCHE</option>
-                                            <option value="8">MAÑANA TARDE</option>
-                                            <option value="9">TARDE NOCHE</option>
-                                            <option value="10">MAÑANA, TARDE Y NOCHE</option>
-                                            <option value="11">MAÑANA, NOCHE</option>                                               
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label class="control-label">Paralelo</label>
-                                        <select name="paralelocod" id="paralelocod" class="form-control input-sm mb-15">
-                                            <option value="-999">Elija un paralelo</option>                                            
-                                        </select>
-                                    </div>
-                                </div> 
-                            </div>
-                            
-                        </div>                                                        
-                    </small>
-                </div>  
-            </div>
-        </div>
-        <div class="modal-footer">
-            <div class="form-footer">
-                <div class="col-sm-offset-5">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i> Cancelar</button>
-                    <button id="botonguardarmodulo" type="submit" class="btn btn-success btn-stroke">
-                        <i class="fa fa-floppy-o"></i> Guardar
-                    </button>
-                </div>
-            </div>
-        </div>
-        </form>
-        
-    </div><!-- /.modal-content -->
-</div><!-- /.modal-dialog -->
-<script>
-    $(function(){            
-            $("#areacod").change(function(){                            
-            var areacod = $(this).val();            
-            var route = Routing.generate('herramienta_areachange', { areacod: areacod });                        
-            var data;
-            $.ajax({
-                type: 'get',     
-                url: route,
-                data: data,
-                success: function(data) {                        
-                        datos = $.parseJSON(data);
-                        $("#nivelcod").html('');                       
-                        var areacodelement = $('#nivelcod');
-                        areacodelement.html('<option value="-999">Elija un área/especialidad</option> ');                        
-                        for (var i=0, total = datos.length; i < total; i++) {
-                            areacodelement.append('<option value="' + datos[i].id + '">' + datos[i].especialidad + '</option>');
-                        }    
-                        $("#etapacod").html('');
-                        var etapacodelement = $('#etapacod');
-                        etapacodelement.html('<option value="-999">Elija una etapa/acreditación</option> ');
-                        $("#turnocod option").each(function () {
-                            if ($(this).text() === '-999') {
-                                $(this).prop("selected", true);
-                                return;}
-                            else{
-                                $(this).prop("selected", false);
-                                return;}
-                            });
-                        $("#paralelocod").html('');
-                        var paralelocodelement = $('#paralelocod');
-                        paralelocodelement.html('<option value="-999">Elija un paralelo</option> ');
-                    }
-                });            
-            });
-            $("#nivelcod").change(function(){                            
-            var idniv = $(this).val();            
-            var route = Routing.generate('herramienta_nivelchange', { nivelid: idniv });                        
-            var data;            
-            $.ajax({
-                type: 'get',     
-                url: route,
-                data: data,
-                success: function(data) {                        
-                        datos = $.parseJSON(data);                       
-                        $("#etapacod").html('');                        
-                        var nivelcodelement = $('#etapacod');
-                        nivelcodelement.html('<option value="-999">Elija una etapa/acreditación</option>');                        
-                        for (var i=0, total = datos.length; i < total; i++) {
-                            nivelcodelement.append('<option value="' + datos[i].id + '">' + datos[i].acreditacion + '</option>');
-                        }
-                        $("#turnocod option").each(function () {
-                            if ($(this).text() === '-999') {
-                                $(this).prop("selected", true);
-                                return;}
-                            else{
-                                $(this).prop("selected", false);
-                                return;}
-                            });
-                        $("#paralelocod").html('');
-                        var paralelocodelement = $('#paralelocod');
-                        paralelocodelement.html('<option value="-999">Elija un paralelo</option> ');
-                    }
-                });            
-            });
-            $("#etapacod").change(function(){
-                $("#turnocod option").each(function () {
-                if ($(this).text() === '-999') {
-                    $(this).prop("selected", true);
-                    return;}
-                else{
-                    $(this).prop("selected", false);
-                    return;}
-                });
-                $("#paralelocod").html('');
-                var paralelocodelement = $('#paralelocod');
-                paralelocodelement.html('<option value="-999">Elija un paralelo</option> ');
-            });
-            
-            $("#turnocod").change(function(){                            
-            var areacod = $("#areacod").val();
-            var nivelid = $("#nivelcod").val(); 
-            var etapaid = $("#etapacod").val(); 
-            var turnoid = $(this).val();             
-            var route = Routing.generate('herramienta_turnochange', { areacod: areacod, nivelid: nivelid, etapaid: etapaid, turnoid: turnoid});                                    
-            var data;            
-            
-            $.ajax({
-                type: 'get',     
-                url: route,
-                data: data,
-                success: function(data) {                        
-                        datos = $.parseJSON(data);                       
-                        $("#paralelocod").html('');                        
-                        var paralelocodelement = $('#paralelocod');                        
-                        for (var i=0, total = datos.length; i < total; i++) {
-                            paralelocodelement.append('<option value="'+datos[i].id+'">'+datos[i].paralelo+'</option>');
-                        }                      
-                    }
-                });            
-            });
-            
-        });
-    
-    var newCurso = function(){
-        var areacod = $("#areacod").val();
-        var nivelid = $("#nivelcod").val(); 
-        var etapaid = $("#etapacod").val(); 
-        var turnoid = $("#turnocod").val(); 
-        var paraleloid = $("#paralelocod").val(); 
-        
-        if ((areacod != '-999') && (nivelid != '-999') && (etapaid != '-999') && (turnoid != '-999') && (paraleloid != '-999')) {
-            if(confirm('¿Esta seguro de adicionar el curso?\nPresione aceptar para confirmar.') ){
-                var formData = $('#formnuevocurso').serialize();
-                    $.ajax({
-                        type: 'post',
-                        url: Routing.generate('herramienta_curso_alternativa_new'),
-                        data: formData,
-                        beforeSend: function () {
-                            $('#mengestioncurso').empty();
-                            $("#botonguardarmodulo").prop("disabled", true);
-                            $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Agregando curso...</div>");            
-                        },
-                        success: function (data) {
-                            $('#mengestioncurso').empty();
-                            $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-                            $('#modal').modal('hide');
-                            window.location.href =  Routing.generate('herramienta_alter_cursos_index');                        
-                        },
-                        {#statusCode: {
-                        500: function () {
-                            $('#mengestioncurso').empty();
-                            $('#mengestioncurso').html("<div class='alert alert-danger alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Ocurrio un error al crear el curso!</strong></div>");                        
-                            $('#modal').modal('hide');                             
-                        },#}
-                        error: function(data){
-                            $('#mengestioncurso').empty();
-                            $('#mengestioncurso').html("<div class='alert alert-danger alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");                        
-                            $('#modal').modal('hide');                        
-                        }
-                    });
-                }
-            }
-        else{
-            alert('¡Ingrese todos lo datos!');
-            }
-        };    
-    
-</script>
-<style>
-    .arrow-before {
-        width:0px;
-        height:0px;
-        border-left: 6px solid transparent;  /* izquierda flecha */
-        border-right: 6px solid transparent; /* derecha flecha */
-        border-bottom: 6px solid #906094; /* base flecha y color*/
-        font-size:0px;
-        line-height:0px;
-        top: 6px;
-        left: 3px;
-        position: relative;
-    }
-    .arrow-after {
-        width:0px;
-        height:0px;
-        border-left: 6px solid transparent;  /* izquierda flecha */
-        border-right: 6px solid transparent; /* derecha flecha */
-        border-bottom: 6px solid #906094; /* base flecha y color*/
-        font-size:0px;
-        line-height:0px;
-        top: 1px;
-        left: 3px;
-        position: relative;
-    }
-    #popover-head{
-        width: 300px;
-        background-color: #6E89FF;
-    }
-</style>
+{% extends 'layoutPermanente.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-users"></i> Cursos y alumnos <span>Lista de cursos y alumnos del centro de educación alternativa.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                    <li>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                            <a href="{{path('principal_web')}}">Bienvenida</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <i class="fa fa-th-large"></i>
+                            <a href="{{path('herramienta_per_ceducativa_menu_principal')}}">Menu Principal</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <i class="fa fa-child"></i>
+                            Cursos y alumnos
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+
+    </div><!-- /.modal -->
+    <!--/ End body content -->
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+
+    </script>
+{%endblock%}

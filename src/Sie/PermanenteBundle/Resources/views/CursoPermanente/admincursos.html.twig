@@ -1,0 +1,276 @@
+{% extends 'layoutPermanente.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-users"></i> Cursos <span>Administración de cursos de educación Permanente.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                    <li>
+                        <i class="glyphicon glyphicon-leaf"></i>
+                            <a href="{{path('principal_web')}}">Bienvenida</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    {#<li>#}
+                        {#<i class="fa fa-th-large"></i>#}
+                            {#<a href="{{path('herramienta_per_ceducativa_menu_principal')}}">Menu Principal</a>#}
+                        {#<i class="fa fa-angle-right"></i>#}
+                    {#</li>#}
+                    {#<li>#}
+                        {#<i class="fa fa-child"></i>#}
+                            {#Cursos y alumnos#}
+                        {#<i class="fa fa-angle-right"></i>#}
+                    {#</li>#}
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p id="menestado">  </p>
+            <!-- Start basic wizard horizontal -->
+            <div id="basic-wizard-horizontal">
+
+                <div class="panel panel-tab rounded shadow">
+                    <!-- Start tabs heading -->
+                    <div class="panel-heading no-padding">
+                        <ul class="nav nav-tabs nav-pills">
+                            <li class="active">
+                                <a href="#tab1-1" data-toggle="tab" aria-expanded="true" >
+                                    <i class="fa fa-user"></i>
+                                    <div>
+                                        {#<span class="text-strong">Step 1</span>#}
+                                        <span>Cursos Cortos</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#tab1-2" data-toggle="tab" aria-expanded="false">
+                                    <i class="fa fa-file-text"></i>
+                                    <div>
+                                        {#<span class="text-strong">Step 2</span>#}
+                                        <span>Programa</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#tab1-3" data-toggle="tab" aria-expanded="false">
+                                    <i class="fa fa-credit-card"></i>
+                                    <div>
+                                        {#<span class="text-strong">Step 3</span>#}
+                                        <span>Area Tematica</span>
+                                    </div>
+                                </a>
+                            </li>
+                            {#<li class="">#}
+                                {#<a href="#tab1-4" data-toggle="tab" aria-expanded="false">#}
+                                    {#<i class="fa fa-check-circle"></i>#}
+                                    {#<div>#}
+                                        {#<span class="text-strong">Step 4</span>#}
+                                        {#<span>Confirmation</span>#}
+                                    {#</div>#}
+                                {#</a>#}
+                            {#</li>#}
+                        </ul>
+                    </div><!-- /.panel-heading -->
+                    <!--/ End tabs heading -->
+
+                    <!-- Start tabs content -->
+                    <div class="panel-body">
+                        <form id="formCursos" action="#" class="tab-content form-horizontal" >
+                            <div class="tab-pane fade inner-all active in" id="tab1-1">
+
+                                    <h4 class="page-header">Cursos Cortos</h4>
+
+                                    <div class="form-body col-lg-4 col-md-6">
+                                        <label> Ver Cursos cortos</label>
+                                        <select id="combocurso" class="chosen-select col-lg-10">
+                                            <option value="">Seleccionar...</option>
+                                            {% for at in cursoscortos %}
+                                                <option value="{{at.id}}">{{at.cursocorto}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <label> Crear Nuevo</label>
+                                        <strong>{{form_widget(form.curso)}}</strong>
+                                        {#<strong>{{form_widget(form.guardar)}}</strong>#}
+
+                                        <button type="button" class="btn btn-danger" onclick="asignarCurso()">Guardar</button>
+
+                                    </div>
+
+
+
+
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-2">
+                                <h4 class="page-header">Programa</h4>
+                                <div class="form-body col-lg-4 col-md-6">
+                                    <label> Ver Programas</label>
+                                    <select id="combocurso" class="chosen-select col-lg-10">
+                                        <option value="">Seleccionar...</option>
+                                        {% for at in programaper %}
+                                            <option value="{{at.id}}">{{at.programa}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label> Crear Nuevo Programa</label>
+                                    <strong>{{form_widget(form.programa)}}</strong>
+                                    {#<strong>{{form_widget(form.guardar)}}</strong>#}
+
+                                    <button type="button" class="btn btn-danger" onclick="asignarPrograma()">Guardar</button>
+
+                                </div>
+
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-3">
+                                <h4 class="page-header">Area Tematica</h4>
+                                <div class="form-body col-lg-4 col-md-6">
+                                    <label> Ver Area Tematica</label>
+                                    <select id="combocurso" class="chosen-select col-lg-10">
+                                        <option value="">Seleccionar...</option>
+                                        {% for at in areatematicaper %}
+                                            <option value="{{at.id}}">{{at.areatematica}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label> Crear Nueva Area Tematica</label>
+                                    <strong>{{form_widget(form.area)}}</strong>
+                                    {#<strong>{{form_widget(form.guardar)}}</strong>#}
+
+                                    <button type="button" class="btn btn-danger" onclick="asignarArea()">Guardar</button>
+
+                                </div>
+
+                            </div>
+                            {#<div class="tab-pane fade inner-all" id="tab1-4">#}
+                                {#<h4 class="page-header">Confirmation</h4>#}
+                            {#</div>#}
+                        </form>
+                    </div><!-- /.panel-body -->
+                    <!--/ End tabs content -->
+
+                    <!-- Start pager -->
+                    <div class="panel-footer">
+
+                    </div><!-- /.panel-footer -->
+                    <!--/ End pager -->
+
+                </div><!-- /.panel -->
+            </div><!-- /#basic-wizard-horizontal -->
+            <!--/ End basic wizard horizontal-->
+
+        </div>
+    </div>
+
+
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
+
+    </div><!-- /.modal -->
+    <!--/ End body content -->
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var asignarCurso = function(){
+            var nuevoCurso = $('#form_curso').val();
+            if(nuevoCurso == ''){
+                alert('Campo requerido, Ingrese el Nombre del curso');
+                return false;
+            }
+            var formData = $('#formCursos').serialize();
+             $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('herramienta_per_add_curso_nuevo') }}",
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                    if(data.reinicio == true)
+                    {
+                        window.location.href =  Routing.generate('herramienta_permanente_admin');
+                    }
+                 //
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+        var asignarPrograma = function(){
+            var nuevoCurso = $('#form_programa').val();
+            if(nuevoCurso == ''){
+                alert('Campo requerido, Ingrese el Nombre del Programa');
+                return false;
+            }
+            var formData = $('#formCursos').serialize();
+            $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('herramienta_per_add_programa') }}",
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                    if(data.reinicio == true)
+                    {
+                        window.location.href =  Routing.generate('herramienta_permanente_admin');
+                    }
+                    //
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+        var asignarArea = function(){
+            var nuevoCurso = $('#form_area').val();
+            if(nuevoCurso == ''){
+                alert('Campo requerido, Ingrese el Nombre del Area Tematica');
+                return false;
+            }
+            var formData = $('#formCursos').serialize();
+            $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('herramienta_per_add_areatematica') }}",
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#menestado').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                    if(data.reinicio == true)
+                    {
+                        window.location.href =  Routing.generate('herramienta_permanente_admin');
+                    }
+                    //
+
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+    </script>
+{%endblock%}

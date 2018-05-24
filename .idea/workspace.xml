@@ -2,40 +2,66 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fe4c829f-62fd-4024-ab0d-75a7e77d3a1b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/symfony2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/StudentsInscriptionsController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/studentInscriptions.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/cursosnuevos.html.twig" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/addMaestro.html.twig" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/edit.html.twig" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listEstudiante.html.twig" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listMaestro.html.twig" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/showEstudiante.html.twig" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/showMaestro.html.twig" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/StudentsInscriptions/index.html.twig" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/StudentsInscriptions/inscriptions.html.twig" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/StudentsInscriptions/lookforstudent.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InscriptionsCIController.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/InscriptionsCI.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/admincursos.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listCursos.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listCursosCortos.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/_result.html_1.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/alumnodirectfindrude.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/edit.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/index.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/indexstudent.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/indexstudent.html_1.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/mode1.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/new.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/result.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/resultHistory.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/resultstudent.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/searchstudent.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/show.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoEstudianteRequest/inscriptionWithCI.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/NewHistoryInscription/index.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/crearperiodo.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/listaceacerrado.html.twig" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/StudentsInscriptions/lookforstudentci.html.twig" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/PermanenteprogramaTipo.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/PermanenteprogramaTipoRepository.php" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Resources/views/layoutPermanente.html.twig" afterPath="$PROJECT_DIR$/app/Resources/views/layoutPermanente.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Controller/DefaultController.php" afterPath="$PROJECT_DIR$/src/Sie/AppWebBundle/Controller/DefaultController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/Carreraespecialidad.php" afterPath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/Carreraespecialidad.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/EstudianteInscripcion.php" afterPath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/EstudianteInscripcion.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/InstitucioneducativaCursoRepository.php" afterPath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/InstitucioneducativaCursoRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/PermanenteInstitucioneducativaCursocorto.php" afterPath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/PermanenteInstitucioneducativaCursocorto.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/PermanenteprogramaTipo.php" afterPath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/PermanenteprogramaTipo.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/PermanenteprogramaTipoRepository.php" afterPath="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/PermanenteprogramaTipoRepository.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Resources/config/doctrine/EstudianteInscripcion.orm.yml" afterPath="$PROJECT_DIR$/src/Sie/AppWebBundle/Resources/config/doctrine/EstudianteInscripcion.orm.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Resources/config/doctrine/PermanenteprogramaTipo.orm.yml" afterPath="$PROJECT_DIR$/src/Sie/AppWebBundle/Resources/config/doctrine/PermanenteprogramaTipo.orm.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/AppWebBundle/Resources/config/doctrine/PermanenteProgramaTipo.orm.yml" afterPath="$PROJECT_DIR$/src/Sie/AppWebBundle/Resources/config/doctrine/PermanenteProgramaTipo.orm.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/EstudianteInscripcionSocioeconomicoAlternativaController.php" afterPath="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/EstudianteInscripcionSocioeconomicoAlternativaController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Cursos/index.html.twig" afterPath="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Cursos/index.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Institucioneducativa/reporteDiversa.html.twig" afterPath="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Institucioneducativa/reporteDiversa.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/CursoPermanenteController.php" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/CursoPermanenteController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/CursosCortosController.php" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/CursosCortosController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InfoMaestroController.php" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InfoMaestroController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InstitucioneducativaController.php" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InstitucioneducativaController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/ReportesController.php" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/ReportesController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing.yml" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/cursoPermanente.yml" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/cursoPermanente.yml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/cursosCortos.yml" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/cursosCortos.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/reportes.yml" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/reportes.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/cursosnuevos.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/cursosnuevos.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/index.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/index.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Cursos/index.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Cursos/index.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/edit.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/edit.html.twig" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/index.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/index.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listMaestro.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listMaestro.html.twig" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/new.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/new.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/showMaestro.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/showMaestro.html.twig" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoEstudianteRequest/seeStudents.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoEstudianteRequest/seeStudents.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoMaestro/index.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoMaestro/index.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoPersonalAdm/index.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoPersonalAdm/index.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoPersonalAdm/search.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoPersonalAdm/search.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Institucioneducativa/index.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Institucioneducativa/index.html.twig" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Login/login.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Login/login.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Login/roles.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Login/roles.html.twig" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/index.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/index.html.twig" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/menuprincipal.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/menuprincipal.html.twig" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/operativos.html.twig" afterPath="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/operativos.html.twig" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/webPermanente/assets/admin/css/layout.css" afterPath="$PROJECT_DIR$/web/webPermanente/assets/admin/css/layout.css" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -49,26 +75,211 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="seeStudents.html.twig" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoEstudianteRequest/seeStudents.html.twig">
+      <file leaf-file-name="CursoPermanenteController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/CursoPermanenteController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="585" column="79" lean-forward="false" selection-start-line="585" selection-start-column="79" selection-end-line="585" selection-end-column="79" />
+            <state relative-caret-position="224">
+              <caret line="793" column="105" lean-forward="false" selection-start-line="793" selection-start-column="105" selection-end-line="793" selection-end-column="105" />
               <folding>
-                <marker date="1525726031953" expanded="true" signature="18719:18726" ph="×" />
-                <marker date="1525726031953" expanded="true" signature="24666:24698" ph="..." />
-                <marker date="1525726031953" expanded="true" signature="25023:25030" ph="×" />
+                <element signature="e#51#106#0#PHP" expanded="true" />
+                <element signature="e#1483#1490#1#PHP" expanded="true" />
+                <element signature="e#1534#1587#1#PHP" expanded="true" />
+                <element signature="e#1902#1909#1#PHP" expanded="true" />
+                <element signature="e#3134#3141#1#PHP" expanded="true" />
+                <element signature="e#4711#4718#1#PHP" expanded="true" />
+                <element signature="e#6880#6910#1#PHP" expanded="true" />
+                <element signature="e#7173#7203#1#PHP" expanded="true" />
+                <element signature="e#7424#7454#1#PHP" expanded="true" />
+                <element signature="e#8087#8094#1#PHP" expanded="true" />
+                <element signature="e#9713#9751#1#PHP" expanded="true" />
+                <element signature="e#9861#9911#1#PHP" expanded="true" />
+                <element signature="e#9997#10026#1#PHP" expanded="true" />
+                <element signature="e#10145#10191#1#PHP" expanded="true" />
+                <element signature="e#10298#10333#1#PHP" expanded="true" />
+                <element signature="e#10775#10812#1#PHP" expanded="true" />
+                <element signature="e#11247#11283#1#PHP" expanded="true" />
+                <element signature="e#11772#11808#1#PHP" expanded="true" />
+                <element signature="e#12306#12342#1#PHP" expanded="true" />
+                <element signature="e#12841#12877#1#PHP" expanded="true" />
+                <element signature="e#13375#13411#1#PHP" expanded="true" />
+                <element signature="e#13887#13940#1#PHP" expanded="true" />
+                <element signature="e#14201#14230#1#PHP" expanded="true" />
+                <element signature="e#14295#14322#1#PHP" expanded="true" />
+                <element signature="e#14387#14414#1#PHP" expanded="true" />
+                <element signature="e#14483#14513#1#PHP" expanded="true" />
+                <element signature="e#14584#14613#1#PHP" expanded="true" />
+                <element signature="e#14708#14735#1#PHP" expanded="true" />
+                <element signature="e#14804#14834#1#PHP" expanded="true" />
+                <element signature="e#14899#14926#1#PHP" expanded="true" />
+                <element signature="e#15015#15053#1#PHP" expanded="true" />
+                <element signature="e#18303#18346#1#PHP" expanded="true" />
+                <element signature="e#19050#19080#1#PHP" expanded="true" />
+                <element signature="e#20354#20397#1#PHP" expanded="true" />
+                <element signature="e#20648#20691#1#PHP" expanded="true" />
+                <element signature="e#21003#21046#1#PHP" expanded="true" />
+                <element signature="e#21174#21223#1#PHP" expanded="true" />
+                <element signature="e#21522#21578#1#PHP" expanded="true" />
+                <element signature="e#22349#22388#1#PHP" expanded="true" />
+                <element signature="e#23210#23263#1#PHP" expanded="true" />
+                <element signature="e#23368#23426#1#PHP" expanded="true" />
+                <element signature="e#23603#23652#1#PHP" expanded="true" />
+                <element signature="e#23961#24017#1#PHP" expanded="true" />
+                <element signature="e#24968#25017#1#PHP" expanded="true" />
+                <element signature="e#25326#25382#1#PHP" expanded="true" />
+                <element signature="e#31782#31821#1#PHP" expanded="true" />
+                <element signature="e#31920#31973#1#PHP" expanded="true" />
+                <element signature="e#34270#34323#1#PHP" expanded="true" />
+                <element signature="e#35309#35351#1#PHP" expanded="true" />
+                <element signature="e#35408#35452#1#PHP" expanded="true" />
+                <element signature="e#35505#35545#1#PHP" expanded="true" />
+                <element signature="e#35645#35678#1#PHP" expanded="true" />
+                <element signature="e#36258#36317#0#PHP" expanded="true" />
+                <marker date="1527176735657" expanded="true" signature="2031:2460" ph="select b.id superior_facultad_area_tipo" />
+                <marker date="1527176735657" expanded="true" signature="3305:4050" ph="select d.id superior_facultad_area_tipo" />
+                <marker date="1527176735657" expanded="true" signature="4839:6516" ph="select cast(... superior_facultad_area_tipo" />
+                <marker date="1527176735657" expanded="true" signature="8635:9214" ph="select c.id superior_facultad_area_tipo" />
+                <marker date="1527176735657" expanded="true" signature="9478:9559" ph="select * fro... sp_reinicia_secuencia" />
+                <marker date="1527176735657" expanded="true" signature="10476:10552" ph="select * fro... sp_reinicia_secuencia" />
+                <marker date="1527176735657" expanded="true" signature="11046:11108" ph="select * fro... sp_reinicia_secuencia" />
+                <marker date="1527176735657" expanded="true" signature="11571:11633" ph="select * fro... sp_reinicia_secuencia" />
+                <marker date="1527176735657" expanded="true" signature="12105:12167" ph="select * fro... sp_reinicia_secuencia" />
+                <marker date="1527176735657" expanded="true" signature="12640:12702" ph="select * fro... sp_reinicia_secuencia" />
+                <marker date="1527176735657" expanded="true" signature="13174:13236" ph="select * fro... sp_reinicia_secuencia" />
+                <marker date="1527176735657" expanded="true" signature="14016:14081" ph="select * fro... sp_reinicia_secuencia" />
+                <marker date="1527176735657" expanded="true" signature="15697:17830" ph="select * fro... institucioneducativa_id" />
+                <marker date="1527176735657" expanded="true" signature="15717:17784" ph="select h.ins... " />
+                <marker date="1527176735657" expanded="true" signature="18414:18678" ph="select * fro... institucioneducativa_curso" />
+                <marker date="1527176735657" expanded="true" signature="26648:29802" ph="select h.id superior_facultad_area_tipo" />
+                <marker date="1527176735657" expanded="true" signature="30535:31402" ph="select smp.i... superior_modulo_periodo" />
+                <marker date="1527176735657" expanded="true" signature="32850:33236" ph="select insti... " />
+                <marker date="1527176735657" expanded="true" signature="36849:36908" ph="select * fro... permanente_cursocorto_tipo" />
+                <marker date="1527176735657" expanded="true" signature="36849:36914" ph="select * fro... permanente_cursocorto_tipo" />
+                <marker date="1527176735657" expanded="true" signature="38517:38581" ph="select * fro... permanente_programa_tipo" />
+                <marker date="1527176735657" expanded="true" signature="39876:39941" ph="select * fro... permanente_area_tematica_tipo" />
+                <marker date="1527176735657" expanded="true" signature="39876:39945" ph="select * fro... permanente_area_tematica_tipo" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="new.html.twig" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/new.html.twig">
+      <file leaf-file-name="search.html.twig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoPersonalAdm/search.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="326">
+              <caret line="65" column="78" lean-forward="true" selection-start-line="65" selection-start-column="78" selection-end-line="65" selection-end-column="78" />
+              <folding>
+                <element signature="e#12#38#0#Twig" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InfoPersonalAdmController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InfoPersonalAdmController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="158">
+              <caret line="99" column="98" lean-forward="false" selection-start-line="99" selection-start-column="94" selection-end-line="99" selection-end-column="98" />
+              <folding>
+                <element signature="e#1016#1023#1#PHP" expanded="true" />
+                <element signature="e#1190#1197#1#PHP" expanded="true" />
+                <element signature="e#3628#3666#1#PHP" expanded="true" />
+                <marker date="1522332680865" expanded="true" signature="1688:1796" ph="SELECT ct FR... SieAppWebBundle" />
+                <marker date="1522332680865" expanded="true" signature="1955:2464" ph="SELECT mi, p... SieAppWebBundle" />
+                <marker date="1522332680865" expanded="true" signature="2845:3192" ph="SELECT count... SieAppWebBundle" />
+                <marker date="1522332680865" expanded="true" signature="5368:5479" ph="SELECT ct FR... SieAppWebBundle" />
+                <marker date="1522332680865" expanded="true" signature="5775:5884" ph="SELECT ft FR... SieAppWebBundle" />
+                <marker date="1522332680865" expanded="true" signature="6198:6308" ph="SELECT ft FR... SieAppWebBundle" />
+                <marker date="1522332680865" expanded="true" signature="9724:10101" ph="SELECT mi FR... SieAppWebBundle" />
+                <marker date="1522332680865" expanded="true" signature="10953:11011" ph="select * fro... sp_reinicia_secuencia" />
+                <marker date="1522332680865" expanded="true" signature="13925:13990" ph="select * fro... sp_reinicia_secuencia" />
+                <marker date="1522332680865" expanded="true" signature="19268:19379" ph="SELECT ct FR... SieAppWebBundle" />
+                <marker date="1522332680865" expanded="true" signature="19675:19784" ph="SELECT ft FR... SieAppWebBundle" />
+                <marker date="1522332680865" expanded="true" signature="20098:20208" ph="SELECT ft FR... SieAppWebBundle" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="result.html.twig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoPersonalAdm/result.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1122">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="e#12#38#0#Twig" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="infoPersonalAdm.yml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/infoPersonalAdm.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="layoutPermanente.html.twig" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Resources/views/layoutPermanente.html.twig">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-9879">
+              <caret line="520" column="52" lean-forward="false" selection-start-line="520" selection-start-column="52" selection-end-line="520" selection-end-column="52" />
+              <folding>
+                <element signature="e#32210#32229#0#Twig" expanded="true" />
+                <element signature="e#35013#35032#0#Twig" expanded="true" />
+                <element signature="e#35157#35199#0#Twig" expanded="true" />
+                <element signature="e#39314#39335#0#Twig" expanded="true" />
+                <element signature="e#39577#39594#0#Twig" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CursosCortosController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/CursosCortosController.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="17">
-              <caret line="2" column="7" lean-forward="false" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="30" />
-              <folding />
+              <caret line="725" column="15" lean-forward="false" selection-start-line="725" selection-start-column="15" selection-end-line="725" selection-end-column="15" />
+              <folding>
+                <element signature="e#51#105#0#PHP" expanded="true" />
+                <element signature="e#43198#50476#0#PHP" expanded="false" />
+                <element signature="e#50482#56482#0#PHP" expanded="false" />
+                <element signature="e#56488#57195#0#PHP" expanded="false" />
+                <element signature="e#57201#58122#0#PHP" expanded="false" />
+                <element signature="e#58204#59115#0#PHP" expanded="false" />
+                <element signature="e#59121#64181#0#PHP" expanded="false" />
+                <element signature="e#64187#69768#0#PHP" expanded="false" />
+                <element signature="e#69775#75862#0#PHP" expanded="false" />
+                <element signature="e#76936#78151#0#PHP" expanded="false" />
+                <element signature="e#78156#80788#0#PHP" expanded="false" />
+                <marker date="1527102738443" expanded="true" signature="1753:2974" ph="select a.id institucioneducativa_curso" />
+                <marker date="1527102738443" expanded="true" signature="4742:6731" ph="select a.id,... institucioneducativa_curso" />
+                <marker date="1527102738443" expanded="true" signature="9752:9927" ph="SELECT lt FR... SieAppWebBundle" />
+                <marker date="1527102738443" expanded="true" signature="22299:22474" ph="SELECT lt FR... SieAppWebBundle" />
+                <marker date="1527102738443" expanded="true" signature="23200:23391" ph="SELECT lt FR... SieAppWebBundle" />
+                <marker date="1527102738443" expanded="true" signature="23753:23944" ph="SELECT lt FR... SieAppWebBundle" />
+                <marker date="1527102738443" expanded="true" signature="38764:40356" ph="select a.id maestro_inscripcion" />
+                <marker date="1527102738443" expanded="true" signature="39404:40354" ph="select f.id institucioneducativa_curso" />
+                <marker date="1527102738443" expanded="true" signature="40717:42047" ph="select a.id,... institucioneducativa_curso" />
+                <marker date="1527102738443" expanded="true" signature="45507:47099" ph="select a.id maestro_inscripcion" />
+                <marker date="1527102738443" expanded="true" signature="46147:47097" ph="select f.id institucioneducativa_curso" />
+                <marker date="1527102738443" expanded="true" signature="47464:48794" ph="select a.id,... institucioneducativa_curso" />
+                <marker date="1527102738443" expanded="true" signature="51703:53295" ph="select a.id maestro_inscripcion" />
+                <marker date="1527102738443" expanded="true" signature="52343:53293" ph="select f.id institucioneducativa_curso" />
+                <marker date="1527102738443" expanded="true" signature="53660:54990" ph="select a.id,... institucioneducativa_curso" />
+                <marker date="1527102738443" expanded="true" signature="57404:57595" ph="SELECT lt FR... SieAppWebBundle" />
+                <marker date="1527102738443" expanded="true" signature="58380:58587" ph="SELECT lt FR... SieAppWebBundle" />
+                <marker date="1527102738443" expanded="true" signature="59603:60311" ph="select c.id estudiante" />
+                <marker date="1527102738443" expanded="true" signature="60532:62635" ph="select a.id,... institucioneducativa_curso" />
+                <marker date="1527102738443" expanded="true" signature="65045:65753" ph="select c.id estudiante" />
+                <marker date="1527102738443" expanded="true" signature="65990:68093" ph="select a.id,... institucioneducativa_curso" />
+                <marker date="1527102738443" expanded="true" signature="70652:71360" ph="select c.id estudiante" />
+                <marker date="1527102738443" expanded="true" signature="71597:73700" ph="select a.id,... institucioneducativa_curso" />
+                <marker date="1527102738443" expanded="true" signature="78695:80234" ph="select a.id,... institucioneducativa_curso" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -76,138 +287,9 @@
       <file leaf-file-name="cursosCortos.yml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/cursosCortos.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" column="33" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="33" />
+            <state relative-caret-position="170">
+              <caret line="105" column="28" lean-forward="false" selection-start-line="105" selection-start-column="0" selection-end-line="105" selection-end-column="28" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cursosnuevos.html.twig" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/cursosnuevos.html.twig">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="8" lean-forward="false" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CursosCortosController.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/CursosCortosController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="1384" column="38" lean-forward="false" selection-start-line="1384" selection-start-column="38" selection-end-line="1384" selection-end-column="38" />
-              <folding>
-                <element signature="e#51#105#0#PHP" expanded="true" />
-                <element signature="e#4397#4441#1#PHP" expanded="true" />
-                <element signature="e#7379#7418#1#PHP" expanded="true" />
-                <element signature="e#7479#7523#1#PHP" expanded="true" />
-                <element signature="e#7581#7622#1#PHP" expanded="true" />
-                <element signature="e#7679#7719#1#PHP" expanded="true" />
-                <element signature="e#7780#7822#1#PHP" expanded="true" />
-                <element signature="e#7876#7903#1#PHP" expanded="true" />
-                <element signature="e#8994#9020#1#PHP" expanded="true" />
-                <element signature="e#13343#13370#1#PHP" expanded="true" />
-                <element signature="e#13449#13476#1#PHP" expanded="true" />
-                <element signature="e#13553#13580#1#PHP" expanded="true" />
-                <element signature="e#13661#13691#1#PHP" expanded="true" />
-                <element signature="e#13770#13799#1#PHP" expanded="true" />
-                <element signature="e#13911#13941#1#PHP" expanded="true" />
-                <element signature="e#14060#14098#1#PHP" expanded="true" />
-                <element signature="e#14204#14233#1#PHP" expanded="true" />
-                <element signature="e#14483#14510#1#PHP" expanded="true" />
-                <element signature="e#15203#15242#1#PHP" expanded="true" />
-                <element signature="e#15363#15403#1#PHP" expanded="true" />
-                <element signature="e#15529#15573#1#PHP" expanded="true" />
-                <element signature="e#15701#15743#1#PHP" expanded="true" />
-                <element signature="e#15928#15969#1#PHP" expanded="true" />
-                <element signature="e#16101#16128#1#PHP" expanded="true" />
-                <element signature="e#16260#16287#1#PHP" expanded="true" />
-                <element signature="e#16416#16443#1#PHP" expanded="true" />
-                <element signature="e#18042#18081#1#PHP" expanded="true" />
-                <element signature="e#18142#18186#1#PHP" expanded="true" />
-                <element signature="e#18244#18285#1#PHP" expanded="true" />
-                <element signature="e#18342#18382#1#PHP" expanded="true" />
-                <element signature="e#18443#18485#1#PHP" expanded="true" />
-                <element signature="e#18539#18566#1#PHP" expanded="true" />
-                <element signature="e#18698#18741#1#PHP" expanded="true" />
-                <element signature="e#18816#18874#1#PHP" expanded="true" />
-                <element signature="e#20189#20215#1#PHP" expanded="true" />
-                <element signature="e#22017#22051#1#PHP" expanded="true" />
-                <element signature="e#27254#27297#1#PHP" expanded="true" />
-                <element signature="e#27790#27817#1#PHP" expanded="true" />
-                <element signature="e#27896#27923#1#PHP" expanded="true" />
-                <element signature="e#28000#28027#1#PHP" expanded="true" />
-                <element signature="e#28108#28138#1#PHP" expanded="true" />
-                <element signature="e#28217#28246#1#PHP" expanded="true" />
-                <element signature="e#28358#28388#1#PHP" expanded="true" />
-                <element signature="e#28507#28545#1#PHP" expanded="true" />
-                <element signature="e#28651#28680#1#PHP" expanded="true" />
-                <element signature="e#28931#28958#1#PHP" expanded="true" />
-                <element signature="e#29652#29691#1#PHP" expanded="true" />
-                <element signature="e#29812#29852#1#PHP" expanded="true" />
-                <element signature="e#29978#30022#1#PHP" expanded="true" />
-                <element signature="e#30150#30192#1#PHP" expanded="true" />
-                <element signature="e#30319#30360#1#PHP" expanded="true" />
-                <element signature="e#30492#30519#1#PHP" expanded="true" />
-                <element signature="e#30651#30678#1#PHP" expanded="true" />
-                <element signature="e#30807#30834#1#PHP" expanded="true" />
-                <element signature="e#32039#32082#1#PHP" expanded="true" />
-                <element signature="e#32324#32367#1#PHP" expanded="true" />
-                <element signature="e#32490#32539#1#PHP" expanded="true" />
-                <element signature="e#32832#32888#1#PHP" expanded="true" />
-                <element signature="e#33446#33485#1#PHP" expanded="true" />
-                <element signature="e#33748#33806#1#PHP" expanded="true" />
-                <element signature="e#35108#35152#1#PHP" expanded="true" />
-                <element signature="e#35213#35256#1#PHP" expanded="true" />
-                <element signature="e#40334#40377#1#PHP" expanded="true" />
-                <element signature="e#40896#40939#1#PHP" expanded="true" />
-                <element signature="e#41124#41156#1#PHP" expanded="true" />
-                <element signature="e#41700#41736#1#PHP" expanded="true" />
-                <element signature="e#47762#47805#1#PHP" expanded="true" />
-                <element signature="e#47880#47929#1#PHP" expanded="true" />
-                <element signature="e#47990#48046#1#PHP" expanded="true" />
-                <element signature="e#53547#53591#1#PHP" expanded="true" />
-                <element signature="e#59567#59604#1#PHP" expanded="true" />
-                <element signature="e#61314#61353#1#PHP" expanded="true" />
-                <element signature="e#64917#64954#1#PHP" expanded="true" />
-                <element signature="e#66852#66910#1#PHP" expanded="true" />
-                <element signature="e#70846#70885#1#PHP" expanded="true" />
-                <element signature="e#71020#71057#1#PHP" expanded="true" />
-                <element signature="e#71303#71340#1#PHP" expanded="true" />
-                <element signature="e#72765#72804#1#PHP" expanded="true" />
-                <element signature="e#72864#72901#1#PHP" expanded="true" />
-                <element signature="e#73027#73064#1#PHP" expanded="true" />
-                <element signature="e#74137#74197#0#PHP" expanded="true" />
-                <element signature="e#75012#75047#1#PHP" expanded="true" />
-                <marker date="1525786502154" expanded="true" signature="1723:2931" ph="select a.id institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="4526:6515" ph="select a.id,... institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="9143:9318" ph="SELECT lt FR... SieAppWebBundle" />
-                <marker date="1525786502154" expanded="true" signature="20340:20515" ph="SELECT lt FR... SieAppWebBundle" />
-                <marker date="1525786502154" expanded="true" signature="20881:21080" ph="SELECT lt FR... SieAppWebBundle" />
-                <marker date="1525786502154" expanded="true" signature="21463:21662" ph="SELECT lt FR... SieAppWebBundle" />
-                <marker date="1525786502154" expanded="true" signature="35339:35856" ph="select a.id,... maestro_inscripcion" />
-                <marker date="1525786502154" expanded="true" signature="35768:35856" ph="select a.id,... maestro_inscripcion" />
-                <marker date="1525786502154" expanded="true" signature="35980:36930" ph="select f.id institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="37293:38605" ph="select a.id,... institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="37293:38623" ph="select a.id,... institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="42083:43675" ph="select a.id maestro_inscripcion" />
-                <marker date="1525786502154" expanded="true" signature="42723:43673" ph="select f.id institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="44040:45370" ph="select a.id,... institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="48280:49872" ph="select a.id maestro_inscripcion" />
-                <marker date="1525786502154" expanded="true" signature="48920:49870" ph="select f.id institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="50237:51567" ph="select a.id,... institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="53955:54146" ph="SELECT lt FR... SieAppWebBundle" />
-                <marker date="1525786502154" expanded="true" signature="54932:55123" ph="SELECT lt FR... SieAppWebBundle" />
-                <marker date="1525786502154" expanded="true" signature="56127:56835" ph="select c.id estudiante" />
-                <marker date="1525786502154" expanded="true" signature="57055:59141" ph="select a.id,... institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="57055:59159" ph="select a.id,... institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="61569:62277" ph="select c.id estudiante" />
-                <marker date="1525786502154" expanded="true" signature="62514:64617" ph="select a.id,... institucioneducativa_curso" />
-                <marker date="1525786502154" expanded="true" signature="67176:67884" ph="select c.id estudiante" />
-                <marker date="1525786502154" expanded="true" signature="68121:70224" ph="select a.id,... institucioneducativa_curso" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -216,39 +298,40 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>gessubsemopen</find>
-      <find>reportar datos</find>
-      <find>brand</find>
-      <find>editarCurso</find>
-      <find>herramienta_alter_info_estudianterequest_see_students</find>
-      <find>addMaestro</find>
-      <find>gestion</find>
-      <find>cursoscortos</find>
-      <find>$em-&gt;getConnection()-&gt;</find>
-      <find>para</find>
-      <find>PermanenteProgramaTipo</find>
-      <find>inscriptionstudent_findstudent</find>
-      <find>sie_alt_ges_sub_sem_open</find>
-      <find>_alt</find>
-      <find>listaridiomasleehablaescribe</find>
-      <find>herramienta_listaridiomasleehablaescribe</find>
-      <find>PermanenteprogramaTipo</find>
-      <find>herramienta_alter_info_estudianterequest_get_students</find>
-      <find>array</find>
-      <find>herramienta_alter_estudianterequest_removeinscription</find>
-      <find>form_widget(</find>
-      <find>$objStudents</find>
-      <find>change(function()</find>
-      <find>toLowerCase</find>
-      <find>herramienta_per_info_estudianterequest_see_students</find>
-      <find>objStud</find>
-      <find>idest</find>
-      <find>addpop</find>
       <find>asignarMaestro</find>
+      <find>.append</find>
       <find>mengestioncurso</find>
+      <find>herramienta_per_cursos_index</find>
+      <find>deletecurso</find>
+      <find>herramienta_alter_cursos_index</find>
+      <find>herramienta_per_cursos_cortos_index</find>
+      <find>menuprincipalopenAction</find>
+      <find>page-content</find>
+      <find>penal</find>
+      <find>default</find>
+      <find>default.theme</find>
+      <find>\&lt;div class\=\&quot;col\-md\-3\&quot;\&gt;\n\n            \&lt;a href\=\&quot;\{\{path\(\'permanente_reporte_participantes_curso_corto\'\, \{ infoUe\: infoUe \}\)\}\}\&quot; class\=\&quot;btn btn\-inverse btn\-stroke\&quot;\&gt;\&lt;i class\=\&quot;fa fa\-print\&quot;\&gt;\&lt;\/i\&gt; Imprimir\&lt;\/a\&gt;\n\n            \{\#\&lt;button type\=\&quot;button\&quot; class\=\&quot;btn btn\-inverse btn\-stroke\&quot; data\-toggle\=\&quot;modal\&quot; data\-target\=\&quot;\.bs\-example\-modal\-table\&quot; onclick\=\&quot;Imprimir\(\'\{\{infoUe\}\}\'\)\;\&quot; \&gt;\#\}\n            \{\#\#\}\n            \{\#\&lt;\/button\&gt;\#\}\n        \&lt;\/div\&gt;\n    \&lt;div class\=\&quot;col\-md\-3\&quot;\&gt;\n\n        \&lt;a href\=\&quot;\{\{path\(\'permanente_reporte_participantes_curso_corto\'\, \{ infoUe\: infoUe \}\)\}\}\&quot; class\=\&quot;btn btn\-inverse btn\-stroke\&quot;\&gt;\&lt;i class\=\&quot;fa fa\-print\&quot;\&gt;\&lt;\/i\&gt; Imprimir  cer\&lt;\/a\&gt;\n\n        \{\#\&lt;button type\=\&quot;button\&quot; class\=\&quot;btn btn\-inverse btn\-stroke\&quot; data\-toggle\=\&quot;modal\&quot; data\-target\=\&quot;\.bs\-example\-modal\-table\&quot; onclick\=\&quot;Imprimir\(\'\{\{infoUe\}\}\'\)\;\&quot; \&gt;\#\}\n        \{\#\#\}\n        \{\#\&lt;\/button\&gt;\#\}\n    \&lt;\/div\&gt;</find>
+      <find>modal</find>
+      <find>sie_per_ges_sub_sem_panel_operativos</find>
+      <find>crearperiodo</find>
+      <find>sp_genera_inicio_sgte_gestion_alternativa</find>
+      <find>login_check</find>
+      <find>select</find>
+      <find>select2</find>
+      <find>chosen-select</find>
+      <find>addpop</find>
+      <find>materiaTecnica</find>
+      <find>onsubmit</find>
+      <find>button</find>
+      <find>&lt;button type=&quot;button&quot;</find>
+      <find>JsonResponse</find>
+      <find>herramienta_per_estudiantechange_estado</find>
+      <find>Json</find>
+      <find>Alternativa</find>
     </findStrings>
     <replaceStrings>
       <replace>_per</replace>
+      <replace>Permanente</replace>
     </replaceStrings>
     <dirStrings>
       <dir>C:\wamp\www\siged</dir>
@@ -260,42 +343,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/config/parameters.yml" />
-        <option value="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/AreasController.php" />
-        <option value="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/EstudianteInscripcionSocioeconomicoAlternativaController.php" />
-        <option value="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/PermanenteInstitucioneducativaCursocorto.php" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Login/login.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/index.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/addMaestro.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/showEstudiante.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Cursos/index.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/InstitucioneducativaCursoRepository.php" />
-        <option value="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Cursos/index.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InfoMaestroController.php" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/edit.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/menuprincipal.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Principal/seleccionarcea.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/CursosController.php" />
-        <option value="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/ReportesController.php" />
         <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/StudentsInscriptions/lookforstudent.html.twig" />
         <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/operativos.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/ceducativa.yml" />
         <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/liistMaestro.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/AppWebBundle/Controller/DefaultController.php" />
         <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/studentInscriptions.yml" />
         <option value="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/InfoEstudianteRequest/seeStudents.html.twig" />
         <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listEstudiante.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listMaestro.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/showMaestro.html.twig" />
         <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/StudentsInscriptionsController.php" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InstitucioneducativaController.php" />
-        <option value="$PROJECT_DIR$/app/Resources/views/layoutPermanente.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoEstudianteRequest/seeStudents.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/new.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/cursosCortos.yml" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoEstudianteRequest/inscriptionWithCI.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing.yml" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/InscriptionsCI.yml" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/StudentsInscriptions/lookforstudentci.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InscriptionsCIController.php" />
         <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/cursosnuevos.html.twig" />
-        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/index.html.twig" />
+        <option value="$PROJECT_DIR$/web/webPermanente/assets/admin/css/layout.css" />
+        <option value="$PROJECT_DIR$/src/Sie/AppWebBundle/Controller/DefaultController.php" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Login/roles.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/resultstudent.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Estudiante/searchstudent.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Cursos/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoPersonalAdm/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoMaestro/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/NewHistoryInscription/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listMaestro.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Institucioneducativa/reporteDiversa.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/showEstudiante.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/ReportesController.php" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/reportes.yml" />
+        <option value="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Cursos/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/showMaestro.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoEstudianteRequest/seeStudents.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listCursos.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/edit.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/ceducativa.yml" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/crearperiodo.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InstitucioneducativaController.php" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/new.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listCursosCortos.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/cursoPermanente.yml" />
         <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/CursosCortosController.php" />
+        <option value="$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/EstudianteInscripcionSocioeconomicoAlternativaController.php" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Login/login.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/cursosCortos.yml" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/CursoPermanenteController.php" />
+        <option value="$PROJECT_DIR$/app/Resources/views/layoutPermanente.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/admincursos.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/menuprincipal.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Institucioneducativa/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoPersonalAdm/search.html.twig" />
       </list>
     </option>
   </component>
@@ -371,6 +469,7 @@
     <option name="width" value="683" />
     <option name="height" value="728" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -386,6 +485,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -427,58 +527,6 @@
               <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="HerramientaAlternativaBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
-              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="HerramientaAlternativaBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Controller" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
-              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="HerramientaAlternativaBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Resources" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
-              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="HerramientaAlternativaBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Resources" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="views" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
-              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="HerramientaAlternativaBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Resources" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="views" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Cursos" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
-              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="HerramientaAlternativaBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Resources" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="views" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="SocioeconomicoAlternativa" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
-              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="PermanenteBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
@@ -488,6 +536,14 @@
               <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="PermanenteBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="Controller" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
+              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="PermanenteBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="DependencyInjection" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
               <item name="siged" type="b2602c69:ProjectViewProjectNode" />
@@ -543,6 +599,16 @@
               <item name="PermanenteBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="Resources" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="views" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Cursos" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
+              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="PermanenteBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Resources" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="views" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="CursosCortos" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
@@ -553,7 +619,7 @@
               <item name="PermanenteBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="Resources" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="views" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Default" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Estudiante" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
               <item name="siged" type="b2602c69:ProjectViewProjectNode" />
@@ -573,17 +639,7 @@
               <item name="PermanenteBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="Resources" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="views" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="InfoMaestro" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
-              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="PermanenteBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Resources" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="views" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Institucioneducativa" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="InfoPersonalAdm" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
               <item name="siged" type="b2602c69:ProjectViewProjectNode" />
@@ -608,18 +664,42 @@
             <path>
               <item name="siged" type="b2602c69:ProjectViewProjectNode" />
               <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Sie" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="PermanenteBundle" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Resources" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="views" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="StudentsInscriptions" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="web" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
+              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="web" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="webPermanente" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
+              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="web" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="webPermanente" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="assets" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
+              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="web" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="webPermanente" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="assets" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="admin" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="siged" type="b2602c69:ProjectViewProjectNode" />
+              <item name="siged" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="web" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="webPermanente" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="assets" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="admin" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="css" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -628,14 +708,18 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
+    <property name="node.js.path.for.package.jscs" value="project" />
+    <property name="node.js.detected.package.jscs" value="true" />
+    <property name="node.js.selected.package.jscs" value="" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\wamp\www\siged\src\Sie\PermanenteBundle\Resources\views\CursoPermanente" />
+      <recent name="C:\wamp\www\siged\src\Sie\PermanenteBundle\Resources\views\Principal" />
       <recent name="C:\wamp\www\siged\src\Sie\PermanenteBundle\Resources\views\CursosCortos" />
-      <recent name="C:\wamp\www\siged\src\Sie\PermanenteBundle\Controller" />
-      <recent name="C:\wamp\www\siged\src\Sie\PermanenteBundle\Resources\config\routing" />
       <recent name="C:\wamp\www\siged\src\Sie\PermanenteBundle\Resources\views" />
+      <recent name="C:\wamp\www\siged\src\Sie\PermanenteBundle\Resources\views\StudentsInscriptions" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -692,25 +776,41 @@
       <workItem from="1525353415619" duration="22703000" />
       <workItem from="1525437811432" duration="36011000" />
       <workItem from="1525696811261" duration="30270000" />
-      <workItem from="1525783896209" duration="2857000" />
+      <workItem from="1525783896209" duration="27983000" />
+      <workItem from="1525870581946" duration="25000" />
+      <workItem from="1525870708088" duration="2241000" />
+      <workItem from="1525874847635" duration="20384000" />
+      <workItem from="1525956654356" duration="23241000" />
+      <workItem from="1526052118182" duration="4977000" />
+      <workItem from="1526301417216" duration="9860000" />
+      <workItem from="1526396689425" duration="13293000" />
+      <workItem from="1526475473385" duration="9417000" />
+      <workItem from="1526561425316" duration="6275000" />
+      <workItem from="1526593836230" duration="2558000" />
+      <workItem from="1526647773920" duration="3394000" />
+      <workItem from="1526683243382" duration="409000" />
+      <workItem from="1526907898857" duration="15822000" />
+      <workItem from="1526993513924" duration="23453000" />
+      <workItem from="1527080085859" duration="22891000" />
+      <workItem from="1527166692797" duration="7958000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="503008000" />
+    <option name="totallyTimeSpent" value="694332000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26928896" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2579425" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12643678" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30706075" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32840723" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24962178" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32840723" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -719,29 +819,9 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32840723" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
-    <layout-to-restore>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.12643678" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32840723" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2655068" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -756,500 +836,702 @@
           <url>file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/InfoPersonalAdmController.php</url>
           <line>80</line>
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InstitucioneducativaController.php</url>
+          <line>1137</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="6" />
+      <option name="time" value="11" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/config/routing/inscriptionExcepcionales.yml">
+    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Cursos/seeStudents.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-170">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="595">
+          <caret line="44" column="113" lean-forward="true" selection-start-line="44" selection-start-column="113" selection-end-line="44" selection-end-column="113" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/config/routing/inscriptionHumanisticas.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-544">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/config/routing/studentInscriptions.yml">
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/config/routing/estudianteNotas.yml">
+    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Institucioneducativa/reporteDiversa.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="255">
+          <caret line="15" column="23" lean-forward="true" selection-start-line="13" selection-start-column="18" selection-end-line="15" selection-end-column="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/config/routing/estudiante.yml">
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/operativos.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
+        <state relative-caret-position="136">
+          <caret line="32" column="38" lean-forward="false" selection-start-line="32" selection-start-column="38" selection-end-line="32" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/phpstorm.jar!/resources/html5-schema/html5/core-scripting.rnc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="206" column="18" lean-forward="false" selection-start-line="206" selection-start-column="18" selection-end-line="206" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/showEstudiante.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
           <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoMaestro/index.html.twig">
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/reportes.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2003">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="391">
+          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listEstudiante.html.twig">
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/ReportesController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3689">
+        <state relative-caret-position="187">
+          <caret line="101" column="20" lean-forward="false" selection-start-line="101" selection-start-column="20" selection-end-line="101" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Cursos/index.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
           <caret line="217" column="0" lean-forward="false" selection-start-line="217" selection-start-column="0" selection-end-line="217" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/showMaestro.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listMaestro.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/AreasController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="123" column="126" lean-forward="false" selection-start-line="121" selection-start-column="12" selection-end-line="123" selection-end-column="126" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/studentInscriptions.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/InfoEstudianteRequest/students.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-966">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/InfoEstudianteRequest/inscriptionWithRude.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-694">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/InfoEstudianteRequest/_exeInscription.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/InfoMaestro/edit.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/EstudianteInscripcionSocioeconomicoAlternativaController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2193">
-          <caret line="467" column="9" lean-forward="false" selection-start-line="463" selection-start-column="6" selection-end-line="467" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/seleccionarcea.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="21" column="57" lean-forward="false" selection-start-line="21" selection-start-column="57" selection-end-line="21" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/operativos.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="18" lean-forward="true" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
+        <state relative-caret-position="168">
+          <caret line="164" column="60" lean-forward="false" selection-start-line="164" selection-start-column="60" selection-end-line="164" selection-end-column="60" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/index.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="67" column="44" lean-forward="false" selection-start-line="67" selection-start-column="44" selection-end-line="67" selection-end-column="44" />
+        <state relative-caret-position="17">
+          <caret line="61" column="60" lean-forward="false" selection-start-line="61" selection-start-column="60" selection-end-line="61" selection-end-column="60" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/AppWebBundle/Resources/config/routing/principal.yml">
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/edit.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="-31">
+          <caret line="143" column="14" lean-forward="false" selection-start-line="143" selection-start-column="14" selection-end-line="143" selection-end-column="14" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/AppWebBundle/Controller/PrincipalController.php">
+    <entry file="file://$PROJECT_DIR$/app/Resources/views/layoutHerramientaAlternativa.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6848">
-          <caret line="27" column="20" lean-forward="false" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/ceducativa.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="19" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/phpstorm.jar!/resources/html5-schema/html5/web-forms.rnc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="494" column="22" lean-forward="false" selection-start-line="494" selection-start-column="22" selection-end-line="494" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Login/login.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="148" column="61" lean-forward="true" selection-start-line="148" selection-start-column="61" selection-end-line="148" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/Cursos/index.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="346" column="20" lean-forward="false" selection-start-line="346" selection-start-column="20" selection-end-line="346" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/AppWebBundle/Controller/EstudianteUpdateController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="33" column="20" lean-forward="false" selection-start-line="33" selection-start-column="20" selection-end-line="33" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/RegularBundle/Controller/EstudianteController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="27" column="20" lean-forward="false" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="20" />
+        <state relative-caret-position="241">
+          <caret line="484" column="0" lean-forward="false" selection-start-line="483" selection-start-column="0" selection-end-line="484" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/InstitucioneducativaController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="1383" column="20" lean-forward="false" selection-start-line="1383" selection-start-column="20" selection-end-line="1383" selection-end-column="20" />
+        <state relative-caret-position="194">
+          <caret line="1107" column="20" lean-forward="false" selection-start-line="1107" selection-start-column="20" selection-end-line="1107" selection-end-column="20" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Resources/views/layoutPermanente.html.twig">
+    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/config/routing/ceducativa.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-661">
-          <caret line="444" column="0" lean-forward="false" selection-start-line="444" selection-start-column="0" selection-end-line="444" selection-end-column="0" />
+        <state relative-caret-position="194">
+          <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/InfoMaestro/index.html.twig">
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/listaceacerrado.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-255">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/StudentsInscriptionsController.php">
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/ceducativa.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-51">
-          <caret line="310" column="30" lean-forward="false" selection-start-line="310" selection-start-column="30" selection-end-line="310" selection-end-column="30" />
+        <state relative-caret-position="17">
+          <caret line="78" column="73" lean-forward="false" selection-start-line="78" selection-start-column="73" selection-end-line="78" selection-end-column="73" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Login/roles.html.twig">
+    <entry file="file://$PROJECT_DIR$/src/Sie/AppWebBundle/Controller/DefaultController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1479">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="34">
+          <caret line="35" column="20" lean-forward="false" selection-start-line="35" selection-start-column="20" selection-end-line="35" selection-end-column="20" />
+          <folding>
+            <element signature="e#43113#43133#1#PHP" expanded="false" />
+            <element signature="e#43331#43339#1#PHP" expanded="false" />
+            <marker date="1525882400936" expanded="true" signature="48692:48830" ph="select perso... " />
+            <marker date="1525882400936" expanded="true" signature="49208:50078" ph="select zzz.p... *" />
+            <marker date="1525882400936" expanded="true" signature="49265:50078" ph="select * fro... persona_id" />
+            <marker date="1525882400936" expanded="true" signature="49309:50078" ph="select perso... " />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Sie/AppWebBundle/Resources/config/routing.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="165" column="22" lean-forward="false" selection-start-line="165" selection-start-column="11" selection-end-line="165" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/menuprincipal.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/CursosController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="59" column="22" lean-forward="false" selection-start-line="59" selection-start-column="22" selection-end-line="59" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/BjpBundle/Resources/views/AbrirInstitucionesBono/listaAreasCurso.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="41" column="59" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InstitucioneducativaController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="994" column="51" lean-forward="false" selection-start-line="994" selection-start-column="51" selection-end-line="994" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/EspecialBundle/Resources/views/Areas/index.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="466">
-          <caret line="525" column="0" lean-forward="false" selection-start-line="481" selection-start-column="0" selection-end-line="525" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/EspecialBundle/Resources/config/routing/areaEspecial.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="78" column="0" lean-forward="false" selection-start-line="78" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/AppWebBundle/Entity/EstudianteInscripcionRepository.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="12" column="6" lean-forward="false" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="6" />
+        <state relative-caret-position="366">
+          <caret line="195" column="60" lean-forward="false" selection-start-line="195" selection-start-column="60" selection-end-line="195" selection-end-column="60" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/AppWebBundle/Resources/views/Services/Areas/lista.html.twig">
+    <entry file="file://$PROJECT_DIR$/src/Sie/AppWebBundle/Controller/LoginController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="21" column="57" lean-forward="false" selection-start-line="21" selection-start-column="57" selection-end-line="21" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Login/roles.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2258">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/crearperiodo.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
-          <caret line="21" column="30" lean-forward="false" selection-start-line="18" selection-start-column="23" selection-end-line="21" selection-end-column="30" />
+          <caret line="66" column="40" lean-forward="false" selection-start-line="62" selection-start-column="31" selection-end-line="66" selection-end-column="40" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/EspecialBundle/Controller/AreasController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="1194" column="63" lean-forward="true" selection-start-line="1194" selection-start-column="63" selection-end-line="1194" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/BjpBundle/Resources/views/InstitucionesPagadasBono/index.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="381">
-          <caret line="520" column="0" lean-forward="true" selection-start-line="488" selection-start-column="2" selection-end-line="520" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/EspecialBundle/Resources/views/Areas/maestros.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="12" lean-forward="false" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoEstudianteRequest/seeStudents.html.twig">
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/index.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="585" column="79" lean-forward="false" selection-start-line="585" selection-start-column="79" selection-end-line="585" selection-end-column="79" />
-          <folding>
-            <marker date="1525726031953" expanded="true" signature="18719:18726" ph="×" />
-            <marker date="1525726031953" expanded="true" signature="24666:24698" ph="..." />
-            <marker date="1525726031953" expanded="true" signature="25023:25030" ph="×" />
-          </folding>
+          <caret line="0" column="12" lean-forward="true" selection-start-line="0" selection-start-column="12" selection-end-line="0" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Cursos/index.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="45" lean-forward="true" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/cursoPermanente.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/RegularBundle/Resources/views/Areas/listaAreasCurso.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="73" column="7" lean-forward="false" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/EstudianteInscripcionSocioeconomicoAlternativaController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="263" column="48" lean-forward="false" selection-start-line="263" selection-start-column="48" selection-end-line="263" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Resources/views/InfoMaestro/new.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="197" column="58" lean-forward="true" selection-start-line="197" selection-start-column="58" selection-end-line="197" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listEstudiante.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="41" column="59" lean-forward="false" selection-start-line="41" selection-start-column="59" selection-end-line="41" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listMaestro.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="697">
+          <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/new.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-712">
+          <caret line="14" column="41" lean-forward="false" selection-start-line="14" selection-start-column="41" selection-end-line="14" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listCursosCortos.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="51" column="10" lean-forward="false" selection-start-line="51" selection-start-column="10" selection-end-line="51" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Cursos/seeStudents.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1248">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/cursosnuevos.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="8" lean-forward="false" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
-          <folding />
+        <state relative-caret-position="17">
+          <caret line="1" column="52" lean-forward="false" selection-start-line="1" selection-start-column="52" selection-end-line="1" selection-end-column="52" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/cursosCortos.yml">
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/listCursos.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="33" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="33" />
-          <folding />
+        <state relative-caret-position="1331">
+          <caret line="130" column="126" lean-forward="false" selection-start-line="130" selection-start-column="15" selection-end-line="130" selection-end-column="126" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Login/login.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="10" column="58" lean-forward="false" selection-start-line="10" selection-start-column="58" selection-end-line="10" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InstitucioneducativaController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="1174" column="107" lean-forward="false" selection-start-line="1173" selection-start-column="20" selection-end-line="1174" selection-end-column="107" />
+          <folding>
+            <element signature="e#1601#1647#1#PHP" expanded="true" />
+            <element signature="e#2000#2038#1#PHP" expanded="true" />
+            <element signature="e#2851#2891#1#PHP" expanded="true" />
+            <element signature="e#6268#6304#1#PHP" expanded="true" />
+            <element signature="e#6449#6485#1#PHP" expanded="true" />
+            <element signature="e#7389#7418#1#PHP" expanded="true" />
+            <element signature="e#7559#7597#1#PHP" expanded="true" />
+            <element signature="e#7666#7712#1#PHP" expanded="true" />
+            <element signature="e#10932#10978#1#PHP" expanded="true" />
+            <element signature="e#11408#11435#1#PHP" expanded="true" />
+            <element signature="e#15113#15159#1#PHP" expanded="true" />
+            <element signature="e#15254#15289#1#PHP" expanded="true" />
+            <element signature="e#15367#15398#1#PHP" expanded="true" />
+            <element signature="e#15474#15503#1#PHP" expanded="true" />
+            <element signature="e#16263#16290#1#PHP" expanded="true" />
+            <element signature="e#21828#21856#1#PHP" expanded="true" />
+            <element signature="e#24997#25025#1#PHP" expanded="true" />
+            <element signature="e#29179#29232#1#PHP" expanded="true" />
+            <element signature="e#29590#29621#1#PHP" expanded="true" />
+            <element signature="e#29744#29773#1#PHP" expanded="true" />
+            <element signature="e#29901#29932#1#PHP" expanded="true" />
+            <element signature="e#30042#30071#1#PHP" expanded="true" />
+            <element signature="e#31094#31140#1#PHP" expanded="true" />
+            <element signature="e#31227#31280#1#PHP" expanded="true" />
+            <element signature="e#34579#34610#1#PHP" expanded="true" />
+            <element signature="e#35233#35264#1#PHP" expanded="true" />
+            <element signature="e#36940#36971#1#PHP" expanded="true" />
+            <element signature="e#37557#37588#1#PHP" expanded="true" />
+            <element signature="e#39008#39039#1#PHP" expanded="true" />
+            <element signature="e#39691#39722#1#PHP" expanded="true" />
+            <element signature="e#41209#41255#1#PHP" expanded="true" />
+            <element signature="e#41371#41406#1#PHP" expanded="true" />
+            <element signature="e#41488#41519#1#PHP" expanded="true" />
+            <element signature="e#41629#41658#1#PHP" expanded="true" />
+            <element signature="e#42387#42414#1#PHP" expanded="true" />
+            <element signature="e#43334#43387#1#PHP" expanded="true" />
+            <element signature="e#43443#43489#1#PHP" expanded="true" />
+            <element signature="e#44291#44326#1#PHP" expanded="true" />
+            <element signature="e#44420#44451#1#PHP" expanded="true" />
+            <element signature="e#44568#44597#1#PHP" expanded="true" />
+            <element signature="e#45270#45297#1#PHP" expanded="true" />
+            <element signature="e#46790#46836#1#PHP" expanded="true" />
+            <element signature="e#47302#47337#1#PHP" expanded="true" />
+            <element signature="e#47442#47473#1#PHP" expanded="true" />
+            <element signature="e#47601#47630#1#PHP" expanded="true" />
+            <element signature="e#48402#48429#1#PHP" expanded="true" />
+            <element signature="e#49753#49799#1#PHP" expanded="true" />
+            <element signature="e#50265#50300#1#PHP" expanded="true" />
+            <element signature="e#50386#50417#1#PHP" expanded="true" />
+            <element signature="e#50545#50574#1#PHP" expanded="true" />
+            <element signature="e#51326#51353#1#PHP" expanded="true" />
+            <element signature="e#52956#52984#1#PHP" expanded="true" />
+            <element signature="e#55972#56010#1#PHP" expanded="true" />
+            <element signature="e#57351#57380#1#PHP" expanded="true" />
+            <element signature="e#57802#57831#1#PHP" expanded="true" />
+            <element signature="e#58202#58232#1#PHP" expanded="true" />
+            <element signature="e#60500#60538#1#PHP" expanded="true" />
+            <element signature="e#60824#60866#1#PHP" expanded="true" />
+            <element signature="e#61482#61520#1#PHP" expanded="true" />
+            <element signature="e#63148#63190#1#PHP" expanded="true" />
+            <element signature="e#65937#65979#1#PHP" expanded="true" />
+            <element signature="e#66208#66250#1#PHP" expanded="true" />
+            <element signature="e#71486#71514#1#PHP" expanded="true" />
+            <element signature="e#76151#76179#1#PHP" expanded="true" />
+            <element signature="e#94313#94341#1#PHP" expanded="true" />
+            <element signature="e#96182#96210#1#PHP" expanded="true" />
+            <element signature="e#97576#97604#1#PHP" expanded="true" />
+            <marker date="1527082353564" expanded="true" signature="5596:5919" ph="SELECT iec F... SieAppWebBundle" />
+            <marker date="1527082353564" expanded="true" signature="8567:8652" ph="SELECT tt FR... SieAppWebBundle" />
+            <marker date="1527082353564" expanded="true" signature="14872:14948" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527082353564" expanded="true" signature="18981:21689" ph="select w.id jurisdiccion_geografica" />
+            <marker date="1527082353564" expanded="true" signature="19795:19956" ph="select id, c... lugar_tipo" />
+            <marker date="1527082353564" expanded="true" signature="20120:20246" ph="select a.id,... institucioneducativa" />
+            <marker date="1527082353564" expanded="true" signature="20510:21071" ph="select id, u... institucioneducativa_sucursal_tramite" />
+            <marker date="1527082353564" expanded="true" signature="20717:21042" ph="select max(b... institucioneducativa_sucursal" />
+            <marker date="1527082353564" expanded="true" signature="22126:24861" ph="select w.id jurisdiccion_geografica" />
+            <marker date="1527082353564" expanded="true" signature="22940:23101" ph="select id, c... lugar_tipo" />
+            <marker date="1527082353564" expanded="true" signature="23265:23391" ph="select a.id,... institucioneducativa" />
+            <marker date="1527082353564" expanded="true" signature="23655:24216" ph="select id, u... institucioneducativa_sucursal_tramite" />
+            <marker date="1527082353564" expanded="true" signature="23862:24187" ph="select max(b... institucioneducativa_sucursal" />
+            <marker date="1527082353564" expanded="true" signature="25279:28279" ph="select w.id jurisdiccion_geografica" />
+            <marker date="1527082353564" expanded="true" signature="26105:26274" ph="select id, c... lugar_tipo" />
+            <marker date="1527082353564" expanded="true" signature="26454:26584" ph="select a.id,... institucioneducativa" />
+            <marker date="1527082353564" expanded="true" signature="26868:27646" ph="select id, u... institucioneducativa_sucursal_tramite" />
+            <marker date="1527082353564" expanded="true" signature="27168:27585" ph="select max(b... institucioneducativa_sucursal" />
+            <marker date="1527082353564" expanded="true" signature="29048:29124" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527082353564" expanded="true" signature="30964:31040" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527082353564" expanded="true" signature="32154:32907" ph="select count... estudiante_inscripcion_socioeconomico_alternativa" />
+            <marker date="1527082353564" expanded="true" signature="33225:33467" ph="select * fro... sp_genera_migracion_socioeconomicos_alter" />
+            <marker date="1527082353564" expanded="true" signature="33667:33868" ph="select * fro... sp_validacion_alternativa_ig_web" />
+            <marker date="1527082353564" expanded="true" signature="35844:36042" ph="select * fro... sp_validacion_alternativa_web" />
+            <marker date="1527082353564" expanded="true" signature="38113:38311" ph="select * fro... sp_validacion_alternativa_web" />
+            <marker date="1527082353564" expanded="true" signature="40431:40629" ph="select * fro... sp_validacion_alternativa_web" />
+            <marker date="1527082353564" expanded="true" signature="46967:47043" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527082353564" expanded="true" signature="49930:50006" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527082353564" expanded="true" signature="53163:54057" ph="select d.id jurisdiccion_geografica" />
+            <marker date="1527082353564" expanded="true" signature="53345:53493" ph="select id,co... lugar_tipo" />
+            <marker date="1527082353564" expanded="true" signature="53637:53821" ph="select a.id,... institucioneducativa" />
+            <marker date="1527082353564" expanded="true" signature="67090:71345" ph="select * fro... id" />
+            <marker date="1527082353564" expanded="true" signature="67207:69372" ph="select k.id jurisdiccion_geografica" />
+            <marker date="1527082353564" expanded="true" signature="67635:67853" ph="select id, l... lugar_tipo" />
+            <marker date="1527082353564" expanded="true" signature="68094:68980" ph="select a.id,... institucioneducativa" />
+            <marker date="1527082353564" expanded="true" signature="71629:75997" ph="select * fro... id" />
+            <marker date="1527082353564" expanded="true" signature="71746:73911" ph="select k.id jurisdiccion_geografica" />
+            <marker date="1527082353564" expanded="true" signature="72174:72392" ph="select id, l... lugar_tipo" />
+            <marker date="1527082353564" expanded="true" signature="72633:73519" ph="select a.id,... institucioneducativa" />
+            <marker date="1527082353564" expanded="true" signature="76373:80820" ph="select * fro... id" />
+            <marker date="1527082353564" expanded="true" signature="76490:78737" ph="select k.id jurisdiccion_geografica" />
+            <marker date="1527082353564" expanded="true" signature="76918:77136" ph="select id, l... lugar_tipo" />
+            <marker date="1527082353564" expanded="true" signature="77377:78263" ph="select a.id,... institucioneducativa" />
+            <marker date="1527082353564" expanded="true" signature="83989:88431" ph="select * fro... lugar" />
+            <marker date="1527082353564" expanded="true" signature="84061:86361" ph="select dd.lu... lugar" />
+            <marker date="1527082353564" expanded="true" signature="84175:86266" ph="select k.lug... jurisdiccion_geografica" />
+            <marker date="1527082353564" expanded="true" signature="84524:84742" ph="select id, l... lugar_tipo" />
+            <marker date="1527082353564" expanded="true" signature="84983:85896" ph="select a.id,... institucioneducativa" />
+            <marker date="1527082353564" expanded="true" signature="86415:88408" ph="select dd.lu... lugar" />
+            <marker date="1527082353564" expanded="true" signature="86537:88348" ph="select k.lug... jurisdiccion_geografica" />
+            <marker date="1527082353564" expanded="true" signature="86784:86993" ph="select id, c... lugar_tipo" />
+            <marker date="1527082353564" expanded="true" signature="87253:87403" ph="select a.id,... institucioneducativa" />
+            <marker date="1527082353564" expanded="true" signature="88624:93439" ph="select sum(c... *" />
+            <marker date="1527082353564" expanded="true" signature="88739:93403" ph="select * fro... lugar" />
+            <marker date="1527082353564" expanded="true" signature="88783:91203" ph="select dd.lu... lugar" />
+            <marker date="1527082353564" expanded="true" signature="88905:91064" ph="select k.lug... jurisdiccion_geografica" />
+            <marker date="1527082353564" expanded="true" signature="89278:89504" ph="select id, l... lugar_tipo" />
+            <marker date="1527082353564" expanded="true" signature="89761:90674" ph="select a.id,... institucioneducativa" />
+            <marker date="1527082353564" expanded="true" signature="91300:93380" ph="select dd.lu... lugar" />
+            <marker date="1527082353564" expanded="true" signature="91430:93316" ph="select k.lug... jurisdiccion_geografica" />
+            <marker date="1527082353564" expanded="true" signature="91689:91906" ph="select id, c... lugar_tipo" />
+            <marker date="1527082353564" expanded="true" signature="92182:92336" ph="select a.id,... institucioneducativa" />
+            <marker date="1527082353564" expanded="true" signature="99330:99521" ph="SELECT lt FR... SieAppWebBundle" />
+            <marker date="1527082353564" expanded="true" signature="100232:100423" ph="SELECT lt FR... SieAppWebBundle" />
+            <marker date="1527082353564" expanded="true" signature="101204:101395" ph="SELECT lt FR... SieAppWebBundle" />
+            <marker date="1527082353564" expanded="true" signature="102168:102359" ph="SELECT lt FR... SieAppWebBundle" />
+            <marker date="1527082353564" expanded="true" signature="103148:103347" ph="SELECT dt FR... SieAppWebBundle" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/index.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
-          <caret line="539" column="159" lean-forward="false" selection-start-line="539" selection-start-column="159" selection-end-line="539" selection-end-column="159" />
-          <folding>
-            <marker date="1525733828017" expanded="true" signature="24664:24730" ph="..." />
-          </folding>
+          <caret line="500" column="67" lean-forward="false" selection-start-line="500" selection-start-column="67" selection-end-line="500" selection-end-column="67" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/RegularBundle/Controller/AreasController.php">
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/cursosCortos.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="632" column="20" lean-forward="false" selection-start-line="632" selection-start-column="20" selection-end-line="632" selection-end-column="20" />
-          <folding>
-            <marker date="1522332191215" expanded="true" signature="6571:6891" ph="SELECT DISTI... SieAppWebBundle" />
-            <marker date="1522332191215" expanded="true" signature="10689:10868" ph="SELECT gt FR... SieAppWebBundle" />
-            <marker date="1522332191215" expanded="true" signature="11027:11206" ph="SELECT gt FR... SieAppWebBundle" />
-            <marker date="1522332191215" expanded="true" signature="12174:12494" ph="SELECT DISTI... SieAppWebBundle" />
-            <marker date="1522332191215" expanded="true" signature="13433:13800" ph="SELECT DISTI... SieAppWebBundle" />
-            <marker date="1522332191215" expanded="true" signature="14728:15142" ph="SELECT DISTI... SieAppWebBundle" />
-            <marker date="1522332191215" expanded="true" signature="16125:16592" ph="SELECT DISTI... SieAppWebBundle" />
-            <marker date="1522332191215" expanded="true" signature="19817:19966" ph="SELECT at FR... " />
-            <marker date="1522332191215" expanded="true" signature="23707:23779" ph="select * fro... sp_reinicia_secuencia" />
-            <marker date="1522332191215" expanded="true" signature="24929:25009" ph="select * fro... sp_reinicia_secuencia" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursosCortos/new.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="2" column="7" lean-forward="false" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="30" />
+        <state relative-caret-position="170">
+          <caret line="105" column="28" lean-forward="false" selection-start-line="105" selection-start-column="0" selection-end-line="105" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/CursosCortosController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="1384" column="38" lean-forward="false" selection-start-line="1384" selection-start-column="38" selection-end-line="1384" selection-end-column="38" />
+        <state relative-caret-position="17">
+          <caret line="725" column="15" lean-forward="false" selection-start-line="725" selection-start-column="15" selection-end-line="725" selection-end-column="15" />
           <folding>
             <element signature="e#51#105#0#PHP" expanded="true" />
-            <element signature="e#4397#4441#1#PHP" expanded="true" />
-            <element signature="e#7379#7418#1#PHP" expanded="true" />
-            <element signature="e#7479#7523#1#PHP" expanded="true" />
-            <element signature="e#7581#7622#1#PHP" expanded="true" />
-            <element signature="e#7679#7719#1#PHP" expanded="true" />
-            <element signature="e#7780#7822#1#PHP" expanded="true" />
-            <element signature="e#7876#7903#1#PHP" expanded="true" />
-            <element signature="e#8994#9020#1#PHP" expanded="true" />
-            <element signature="e#13343#13370#1#PHP" expanded="true" />
-            <element signature="e#13449#13476#1#PHP" expanded="true" />
-            <element signature="e#13553#13580#1#PHP" expanded="true" />
-            <element signature="e#13661#13691#1#PHP" expanded="true" />
-            <element signature="e#13770#13799#1#PHP" expanded="true" />
-            <element signature="e#13911#13941#1#PHP" expanded="true" />
-            <element signature="e#14060#14098#1#PHP" expanded="true" />
-            <element signature="e#14204#14233#1#PHP" expanded="true" />
-            <element signature="e#14483#14510#1#PHP" expanded="true" />
-            <element signature="e#15203#15242#1#PHP" expanded="true" />
-            <element signature="e#15363#15403#1#PHP" expanded="true" />
-            <element signature="e#15529#15573#1#PHP" expanded="true" />
-            <element signature="e#15701#15743#1#PHP" expanded="true" />
-            <element signature="e#15928#15969#1#PHP" expanded="true" />
-            <element signature="e#16101#16128#1#PHP" expanded="true" />
-            <element signature="e#16260#16287#1#PHP" expanded="true" />
-            <element signature="e#16416#16443#1#PHP" expanded="true" />
-            <element signature="e#18042#18081#1#PHP" expanded="true" />
-            <element signature="e#18142#18186#1#PHP" expanded="true" />
-            <element signature="e#18244#18285#1#PHP" expanded="true" />
-            <element signature="e#18342#18382#1#PHP" expanded="true" />
-            <element signature="e#18443#18485#1#PHP" expanded="true" />
-            <element signature="e#18539#18566#1#PHP" expanded="true" />
-            <element signature="e#18698#18741#1#PHP" expanded="true" />
-            <element signature="e#18816#18874#1#PHP" expanded="true" />
-            <element signature="e#20189#20215#1#PHP" expanded="true" />
-            <element signature="e#22017#22051#1#PHP" expanded="true" />
-            <element signature="e#27254#27297#1#PHP" expanded="true" />
-            <element signature="e#27790#27817#1#PHP" expanded="true" />
-            <element signature="e#27896#27923#1#PHP" expanded="true" />
-            <element signature="e#28000#28027#1#PHP" expanded="true" />
-            <element signature="e#28108#28138#1#PHP" expanded="true" />
-            <element signature="e#28217#28246#1#PHP" expanded="true" />
-            <element signature="e#28358#28388#1#PHP" expanded="true" />
-            <element signature="e#28507#28545#1#PHP" expanded="true" />
-            <element signature="e#28651#28680#1#PHP" expanded="true" />
-            <element signature="e#28931#28958#1#PHP" expanded="true" />
-            <element signature="e#29652#29691#1#PHP" expanded="true" />
-            <element signature="e#29812#29852#1#PHP" expanded="true" />
-            <element signature="e#29978#30022#1#PHP" expanded="true" />
-            <element signature="e#30150#30192#1#PHP" expanded="true" />
-            <element signature="e#30319#30360#1#PHP" expanded="true" />
-            <element signature="e#30492#30519#1#PHP" expanded="true" />
-            <element signature="e#30651#30678#1#PHP" expanded="true" />
-            <element signature="e#30807#30834#1#PHP" expanded="true" />
-            <element signature="e#32039#32082#1#PHP" expanded="true" />
-            <element signature="e#32324#32367#1#PHP" expanded="true" />
-            <element signature="e#32490#32539#1#PHP" expanded="true" />
-            <element signature="e#32832#32888#1#PHP" expanded="true" />
-            <element signature="e#33446#33485#1#PHP" expanded="true" />
-            <element signature="e#33748#33806#1#PHP" expanded="true" />
-            <element signature="e#35108#35152#1#PHP" expanded="true" />
-            <element signature="e#35213#35256#1#PHP" expanded="true" />
-            <element signature="e#40334#40377#1#PHP" expanded="true" />
-            <element signature="e#40896#40939#1#PHP" expanded="true" />
-            <element signature="e#41124#41156#1#PHP" expanded="true" />
-            <element signature="e#41700#41736#1#PHP" expanded="true" />
-            <element signature="e#47762#47805#1#PHP" expanded="true" />
-            <element signature="e#47880#47929#1#PHP" expanded="true" />
-            <element signature="e#47990#48046#1#PHP" expanded="true" />
-            <element signature="e#53547#53591#1#PHP" expanded="true" />
-            <element signature="e#59567#59604#1#PHP" expanded="true" />
-            <element signature="e#61314#61353#1#PHP" expanded="true" />
-            <element signature="e#64917#64954#1#PHP" expanded="true" />
-            <element signature="e#66852#66910#1#PHP" expanded="true" />
-            <element signature="e#70846#70885#1#PHP" expanded="true" />
-            <element signature="e#71020#71057#1#PHP" expanded="true" />
-            <element signature="e#71303#71340#1#PHP" expanded="true" />
-            <element signature="e#72765#72804#1#PHP" expanded="true" />
-            <element signature="e#72864#72901#1#PHP" expanded="true" />
-            <element signature="e#73027#73064#1#PHP" expanded="true" />
-            <element signature="e#74137#74197#0#PHP" expanded="true" />
-            <element signature="e#75012#75047#1#PHP" expanded="true" />
-            <marker date="1525786502154" expanded="true" signature="1723:2931" ph="select a.id institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="4526:6515" ph="select a.id,... institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="9143:9318" ph="SELECT lt FR... SieAppWebBundle" />
-            <marker date="1525786502154" expanded="true" signature="20340:20515" ph="SELECT lt FR... SieAppWebBundle" />
-            <marker date="1525786502154" expanded="true" signature="20881:21080" ph="SELECT lt FR... SieAppWebBundle" />
-            <marker date="1525786502154" expanded="true" signature="21463:21662" ph="SELECT lt FR... SieAppWebBundle" />
-            <marker date="1525786502154" expanded="true" signature="35339:35856" ph="select a.id,... maestro_inscripcion" />
-            <marker date="1525786502154" expanded="true" signature="35768:35856" ph="select a.id,... maestro_inscripcion" />
-            <marker date="1525786502154" expanded="true" signature="35980:36930" ph="select f.id institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="37293:38605" ph="select a.id,... institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="37293:38623" ph="select a.id,... institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="42083:43675" ph="select a.id maestro_inscripcion" />
-            <marker date="1525786502154" expanded="true" signature="42723:43673" ph="select f.id institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="44040:45370" ph="select a.id,... institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="48280:49872" ph="select a.id maestro_inscripcion" />
-            <marker date="1525786502154" expanded="true" signature="48920:49870" ph="select f.id institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="50237:51567" ph="select a.id,... institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="53955:54146" ph="SELECT lt FR... SieAppWebBundle" />
-            <marker date="1525786502154" expanded="true" signature="54932:55123" ph="SELECT lt FR... SieAppWebBundle" />
-            <marker date="1525786502154" expanded="true" signature="56127:56835" ph="select c.id estudiante" />
-            <marker date="1525786502154" expanded="true" signature="57055:59141" ph="select a.id,... institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="57055:59159" ph="select a.id,... institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="61569:62277" ph="select c.id estudiante" />
-            <marker date="1525786502154" expanded="true" signature="62514:64617" ph="select a.id,... institucioneducativa_curso" />
-            <marker date="1525786502154" expanded="true" signature="67176:67884" ph="select c.id estudiante" />
-            <marker date="1525786502154" expanded="true" signature="68121:70224" ph="select a.id,... institucioneducativa_curso" />
+            <element signature="e#43198#50476#0#PHP" expanded="false" />
+            <element signature="e#50482#56482#0#PHP" expanded="false" />
+            <element signature="e#56488#57195#0#PHP" expanded="false" />
+            <element signature="e#57201#58122#0#PHP" expanded="false" />
+            <element signature="e#58204#59115#0#PHP" expanded="false" />
+            <element signature="e#59121#64181#0#PHP" expanded="false" />
+            <element signature="e#64187#69768#0#PHP" expanded="false" />
+            <element signature="e#69775#75862#0#PHP" expanded="false" />
+            <element signature="e#76936#78151#0#PHP" expanded="false" />
+            <element signature="e#78156#80788#0#PHP" expanded="false" />
+            <marker date="1527102738443" expanded="true" signature="1753:2974" ph="select a.id institucioneducativa_curso" />
+            <marker date="1527102738443" expanded="true" signature="4742:6731" ph="select a.id,... institucioneducativa_curso" />
+            <marker date="1527102738443" expanded="true" signature="9752:9927" ph="SELECT lt FR... SieAppWebBundle" />
+            <marker date="1527102738443" expanded="true" signature="22299:22474" ph="SELECT lt FR... SieAppWebBundle" />
+            <marker date="1527102738443" expanded="true" signature="23200:23391" ph="SELECT lt FR... SieAppWebBundle" />
+            <marker date="1527102738443" expanded="true" signature="23753:23944" ph="SELECT lt FR... SieAppWebBundle" />
+            <marker date="1527102738443" expanded="true" signature="38764:40356" ph="select a.id maestro_inscripcion" />
+            <marker date="1527102738443" expanded="true" signature="39404:40354" ph="select f.id institucioneducativa_curso" />
+            <marker date="1527102738443" expanded="true" signature="40717:42047" ph="select a.id,... institucioneducativa_curso" />
+            <marker date="1527102738443" expanded="true" signature="45507:47099" ph="select a.id maestro_inscripcion" />
+            <marker date="1527102738443" expanded="true" signature="46147:47097" ph="select f.id institucioneducativa_curso" />
+            <marker date="1527102738443" expanded="true" signature="47464:48794" ph="select a.id,... institucioneducativa_curso" />
+            <marker date="1527102738443" expanded="true" signature="51703:53295" ph="select a.id maestro_inscripcion" />
+            <marker date="1527102738443" expanded="true" signature="52343:53293" ph="select f.id institucioneducativa_curso" />
+            <marker date="1527102738443" expanded="true" signature="53660:54990" ph="select a.id,... institucioneducativa_curso" />
+            <marker date="1527102738443" expanded="true" signature="57404:57595" ph="SELECT lt FR... SieAppWebBundle" />
+            <marker date="1527102738443" expanded="true" signature="58380:58587" ph="SELECT lt FR... SieAppWebBundle" />
+            <marker date="1527102738443" expanded="true" signature="59603:60311" ph="select c.id estudiante" />
+            <marker date="1527102738443" expanded="true" signature="60532:62635" ph="select a.id,... institucioneducativa_curso" />
+            <marker date="1527102738443" expanded="true" signature="65045:65753" ph="select c.id estudiante" />
+            <marker date="1527102738443" expanded="true" signature="65990:68093" ph="select a.id,... institucioneducativa_curso" />
+            <marker date="1527102738443" expanded="true" signature="70652:71360" ph="select c.id estudiante" />
+            <marker date="1527102738443" expanded="true" signature="71597:73700" ph="select a.id,... institucioneducativa_curso" />
+            <marker date="1527102738443" expanded="true" signature="78695:80234" ph="select a.id,... institucioneducativa_curso" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Resources/views/layoutPermanente.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-9879">
+          <caret line="520" column="52" lean-forward="false" selection-start-line="520" selection-start-column="52" selection-end-line="520" selection-end-column="52" />
+          <folding>
+            <element signature="e#32210#32229#0#Twig" expanded="true" />
+            <element signature="e#35013#35032#0#Twig" expanded="true" />
+            <element signature="e#35157#35199#0#Twig" expanded="true" />
+            <element signature="e#39314#39335#0#Twig" expanded="true" />
+            <element signature="e#39577#39594#0#Twig" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoEstudianteRequest/seeStudents.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4284">
+          <caret line="398" column="54" lean-forward="false" selection-start-line="398" selection-start-column="28" selection-end-line="398" selection-end-column="54" />
+          <folding>
+            <marker date="1526922774007" expanded="true" signature="21947:21954" ph="×" />
+            <marker date="1526922774007" expanded="true" signature="29181:29213" ph="..." />
+            <marker date="1526922774007" expanded="true" signature="29570:29577" ph="×" />
+            <marker date="1526922774007" expanded="true" signature="30059:30066" ph="×" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/CursoPermanente/admincursos.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="86">
+          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding>
+            <element signature="e#10199#10227#0#Twig" expanded="true" />
+            <element signature="e#11462#11494#0#Twig" expanded="true" />
+            <marker date="1527177220616" expanded="false" signature="749:790" ph="/menuprincipalopen/" />
+            <marker date="1527177220616" expanded="true" signature="9284:9291" ph="×" />
+            <marker date="1527177220616" expanded="true" signature="10547:10554" ph="×" />
+            <marker date="1527177220616" expanded="true" signature="11814:11821" ph="×" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Principal/menuprincipal.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="183" column="147" lean-forward="false" selection-start-line="183" selection-start-column="147" selection-end-line="183" selection-end-column="147" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/Institucioneducativa/index.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-98">
+          <caret line="453" column="50" lean-forward="false" selection-start-line="453" selection-start-column="50" selection-end-line="453" selection-end-column="50" />
+          <folding>
+            <element signature="e#31859#31900#0#Twig" expanded="true" />
+            <element signature="e#33180#33210#0#Twig" expanded="true" />
+            <element signature="e#33469#33506#0#Twig" expanded="true" />
+            <element signature="e#33771#33801#0#Twig" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/CursoPermanenteController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="793" column="105" lean-forward="false" selection-start-line="793" selection-start-column="105" selection-end-line="793" selection-end-column="105" />
+          <folding>
+            <element signature="e#51#106#0#PHP" expanded="true" />
+            <element signature="e#1483#1490#1#PHP" expanded="true" />
+            <element signature="e#1534#1587#1#PHP" expanded="true" />
+            <element signature="e#1902#1909#1#PHP" expanded="true" />
+            <element signature="e#3134#3141#1#PHP" expanded="true" />
+            <element signature="e#4711#4718#1#PHP" expanded="true" />
+            <element signature="e#6880#6910#1#PHP" expanded="true" />
+            <element signature="e#7173#7203#1#PHP" expanded="true" />
+            <element signature="e#7424#7454#1#PHP" expanded="true" />
+            <element signature="e#8087#8094#1#PHP" expanded="true" />
+            <element signature="e#9713#9751#1#PHP" expanded="true" />
+            <element signature="e#9861#9911#1#PHP" expanded="true" />
+            <element signature="e#9997#10026#1#PHP" expanded="true" />
+            <element signature="e#10145#10191#1#PHP" expanded="true" />
+            <element signature="e#10298#10333#1#PHP" expanded="true" />
+            <element signature="e#10775#10812#1#PHP" expanded="true" />
+            <element signature="e#11247#11283#1#PHP" expanded="true" />
+            <element signature="e#11772#11808#1#PHP" expanded="true" />
+            <element signature="e#12306#12342#1#PHP" expanded="true" />
+            <element signature="e#12841#12877#1#PHP" expanded="true" />
+            <element signature="e#13375#13411#1#PHP" expanded="true" />
+            <element signature="e#13887#13940#1#PHP" expanded="true" />
+            <element signature="e#14201#14230#1#PHP" expanded="true" />
+            <element signature="e#14295#14322#1#PHP" expanded="true" />
+            <element signature="e#14387#14414#1#PHP" expanded="true" />
+            <element signature="e#14483#14513#1#PHP" expanded="true" />
+            <element signature="e#14584#14613#1#PHP" expanded="true" />
+            <element signature="e#14708#14735#1#PHP" expanded="true" />
+            <element signature="e#14804#14834#1#PHP" expanded="true" />
+            <element signature="e#14899#14926#1#PHP" expanded="true" />
+            <element signature="e#15015#15053#1#PHP" expanded="true" />
+            <element signature="e#18303#18346#1#PHP" expanded="true" />
+            <element signature="e#19050#19080#1#PHP" expanded="true" />
+            <element signature="e#20354#20397#1#PHP" expanded="true" />
+            <element signature="e#20648#20691#1#PHP" expanded="true" />
+            <element signature="e#21003#21046#1#PHP" expanded="true" />
+            <element signature="e#21174#21223#1#PHP" expanded="true" />
+            <element signature="e#21522#21578#1#PHP" expanded="true" />
+            <element signature="e#22349#22388#1#PHP" expanded="true" />
+            <element signature="e#23210#23263#1#PHP" expanded="true" />
+            <element signature="e#23368#23426#1#PHP" expanded="true" />
+            <element signature="e#23603#23652#1#PHP" expanded="true" />
+            <element signature="e#23961#24017#1#PHP" expanded="true" />
+            <element signature="e#24968#25017#1#PHP" expanded="true" />
+            <element signature="e#25326#25382#1#PHP" expanded="true" />
+            <element signature="e#31782#31821#1#PHP" expanded="true" />
+            <element signature="e#31920#31973#1#PHP" expanded="true" />
+            <element signature="e#34270#34323#1#PHP" expanded="true" />
+            <element signature="e#35309#35351#1#PHP" expanded="true" />
+            <element signature="e#35408#35452#1#PHP" expanded="true" />
+            <element signature="e#35505#35545#1#PHP" expanded="true" />
+            <element signature="e#35645#35678#1#PHP" expanded="true" />
+            <element signature="e#36258#36317#0#PHP" expanded="true" />
+            <marker date="1527176735657" expanded="true" signature="2031:2460" ph="select b.id superior_facultad_area_tipo" />
+            <marker date="1527176735657" expanded="true" signature="3305:4050" ph="select d.id superior_facultad_area_tipo" />
+            <marker date="1527176735657" expanded="true" signature="4839:6516" ph="select cast(... superior_facultad_area_tipo" />
+            <marker date="1527176735657" expanded="true" signature="8635:9214" ph="select c.id superior_facultad_area_tipo" />
+            <marker date="1527176735657" expanded="true" signature="9478:9559" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527176735657" expanded="true" signature="10476:10552" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527176735657" expanded="true" signature="11046:11108" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527176735657" expanded="true" signature="11571:11633" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527176735657" expanded="true" signature="12105:12167" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527176735657" expanded="true" signature="12640:12702" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527176735657" expanded="true" signature="13174:13236" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527176735657" expanded="true" signature="14016:14081" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1527176735657" expanded="true" signature="15697:17830" ph="select * fro... institucioneducativa_id" />
+            <marker date="1527176735657" expanded="true" signature="15717:17784" ph="select h.ins... " />
+            <marker date="1527176735657" expanded="true" signature="18414:18678" ph="select * fro... institucioneducativa_curso" />
+            <marker date="1527176735657" expanded="true" signature="26648:29802" ph="select h.id superior_facultad_area_tipo" />
+            <marker date="1527176735657" expanded="true" signature="30535:31402" ph="select smp.i... superior_modulo_periodo" />
+            <marker date="1527176735657" expanded="true" signature="32850:33236" ph="select insti... " />
+            <marker date="1527176735657" expanded="true" signature="36849:36908" ph="select * fro... permanente_cursocorto_tipo" />
+            <marker date="1527176735657" expanded="true" signature="36849:36914" ph="select * fro... permanente_cursocorto_tipo" />
+            <marker date="1527176735657" expanded="true" signature="38517:38581" ph="select * fro... permanente_programa_tipo" />
+            <marker date="1527176735657" expanded="true" signature="39876:39941" ph="select * fro... permanente_area_tematica_tipo" />
+            <marker date="1527176735657" expanded="true" signature="39876:39945" ph="select * fro... permanente_area_tematica_tipo" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/HerramientaAlternativaBundle/Controller/InfoPersonalAdmController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="31" column="20" lean-forward="false" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
+          <folding>
+            <marker date="1522332188545" expanded="true" signature="1700:1808" ph="SELECT ct FR... SieAppWebBundle" />
+            <marker date="1522332188545" expanded="true" signature="1967:2476" ph="SELECT mi, p... SieAppWebBundle" />
+            <marker date="1522332188545" expanded="true" signature="2857:3204" ph="SELECT count... SieAppWebBundle" />
+            <marker date="1522332188545" expanded="true" signature="5380:5491" ph="SELECT ct FR... SieAppWebBundle" />
+            <marker date="1522332188545" expanded="true" signature="5787:5896" ph="SELECT ft FR... SieAppWebBundle" />
+            <marker date="1522332188545" expanded="true" signature="6210:6320" ph="SELECT ft FR... SieAppWebBundle" />
+            <marker date="1522332188545" expanded="true" signature="9736:10113" ph="SELECT mi FR... SieAppWebBundle" />
+            <marker date="1522332188545" expanded="true" signature="10965:11023" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1522332188545" expanded="true" signature="13937:14002" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1522332188545" expanded="true" signature="19280:19391" ph="SELECT ct FR... SieAppWebBundle" />
+            <marker date="1522332188545" expanded="true" signature="19687:19796" ph="SELECT ft FR... SieAppWebBundle" />
+            <marker date="1522332188545" expanded="true" signature="20110:20220" ph="SELECT ft FR... SieAppWebBundle" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoPersonalAdm/search.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="326">
+          <caret line="65" column="78" lean-forward="true" selection-start-line="65" selection-start-column="78" selection-end-line="65" selection-end-column="78" />
+          <folding>
+            <element signature="e#12#38#0#Twig" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/config/routing/infoPersonalAdm.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Resources/views/InfoPersonalAdm/result.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1122">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#12#38#0#Twig" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Sie/PermanenteBundle/Controller/InfoPersonalAdmController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="99" column="98" lean-forward="false" selection-start-line="99" selection-start-column="94" selection-end-line="99" selection-end-column="98" />
+          <folding>
+            <element signature="e#1016#1023#1#PHP" expanded="true" />
+            <element signature="e#1190#1197#1#PHP" expanded="true" />
+            <element signature="e#3628#3666#1#PHP" expanded="true" />
+            <marker date="1522332680865" expanded="true" signature="1688:1796" ph="SELECT ct FR... SieAppWebBundle" />
+            <marker date="1522332680865" expanded="true" signature="1955:2464" ph="SELECT mi, p... SieAppWebBundle" />
+            <marker date="1522332680865" expanded="true" signature="2845:3192" ph="SELECT count... SieAppWebBundle" />
+            <marker date="1522332680865" expanded="true" signature="5368:5479" ph="SELECT ct FR... SieAppWebBundle" />
+            <marker date="1522332680865" expanded="true" signature="5775:5884" ph="SELECT ft FR... SieAppWebBundle" />
+            <marker date="1522332680865" expanded="true" signature="6198:6308" ph="SELECT ft FR... SieAppWebBundle" />
+            <marker date="1522332680865" expanded="true" signature="9724:10101" ph="SELECT mi FR... SieAppWebBundle" />
+            <marker date="1522332680865" expanded="true" signature="10953:11011" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1522332680865" expanded="true" signature="13925:13990" ph="select * fro... sp_reinicia_secuencia" />
+            <marker date="1522332680865" expanded="true" signature="19268:19379" ph="SELECT ct FR... SieAppWebBundle" />
+            <marker date="1522332680865" expanded="true" signature="19675:19784" ph="SELECT ft FR... SieAppWebBundle" />
+            <marker date="1522332680865" expanded="true" signature="20098:20208" ph="SELECT ft FR... SieAppWebBundle" />
           </folding>
         </state>
       </provider>

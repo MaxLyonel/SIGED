@@ -1,3 +1,9 @@
+
+<html>
+<title>W3.CSS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 <div class="header-content" >
     {#<head>#}
         {#<meta charset="utf-8">#}
@@ -25,32 +31,116 @@
 {% if exist == true %}
 
   <small id="listEstudiante">
-        <div>
-            <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
-            <h4><i class="glyphicon glyphicon-list-alt"></i> {{ cursocorto[0].cursocorto }} <span>    -  Numero de Horas - {{ cursocorto[0].horasmes }} </span></h4>
-            <div class="breadcrumb-wrapper hidden-xs">
-                <span class="label"> Turno:  {{ cursocorto[0].turno }}</span>
-                <ol class="breadcrumb">
-                    <li>
-                        <a href=""> </a>
-                    </li>
-                </ol>
-            </div><!-- /.breadcrumb-wrapper -->
-        </div>
+
+      <div class="w3-container">
+          <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+          <h3><i class="glyphicon glyphicon-list-alt"></i> {{ cursocorto[0].cursocorto }} </h3>
+          <hr>
+          <h4> Número de Horas - {{ cursocorto[0].duracionhoras }} h. </h4>
+          {#<h2>London</h2>#}
+          <div class="breadcrumb-wrapper hidden-xs">
+              <span class="label"> Turno:  {{ cursocorto[0].turno }}</span>
+
+          </div><!-- /.breadcrumb-wrapper -->
+
+          {% if cursocorto is not empty %}
+
+              <div id="no-more-tables">
+                  <table class="table">
+                      <thead>
+                      <tr>
+                          <th>Facilitador(es)</th>
+                          <th> </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {% for cursocorto in cursocorto %}
+
+                        {% if cursocorto.maestro_inscripcion_id is not empty %}
+                          <tr>
+                              <td> {{ loop.index }}</td>
+                              <td data-title="Nombre">{{ cursocorto.paterno }} {{ cursocorto.materno }} {{ cursocorto.nombre }}</td>
+
+                          </tr>
+                        {% else %}
+                            <tr>
+                                <td> </td>
+                                <td data-title="Nombre"> No hay Facilitadores Registrados</td>
+
+                            </tr>
+
+                      {% endif %}
+                      {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+          {% else %}
+              No hay Facilitadores Registrados
+          {% endif %}
+
+
+
+          <h5> </h5>
+              <hr>
+      </div>
+
+
 
       {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') %}
           {#{% if existins == false  %} #}
-          <div class="col-md-3">
-          <button type="button" class="btn btn-danger btn-stroke" onclick="deletecurso('{{infoUe}}');" >
-          <i class="fa fa-eraser"></i> Eliminar Curso
-          </button>
-          </div>
+
+
+
            {#endif#}
-          <div class="col-md-3">
-              <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptions('{{infoUe}}');" >
-                  <i class="fa fa-user"></i> Inscrip. con Rudeal
-              </button>
-          </div>
+
+          {% if  cursocorto[0].esabierto ==true %}
+              <div class="col-md-3">
+                  <button type="button" class="btn btn-danger btn-stroke" onclick="deletecurso('{{infoUe}}');" >
+                      <i class="fa fa-eraser"></i> Eliminar Curso
+                  </button>
+              </div>
+              <div class="col-md-3">
+                  <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptions('{{infoUe}}');" >
+                      <i class="fa fa-user"></i> Inscrip. con Rudeal
+                  </button>
+              </div>
+              {#<div class="col-md-3">#}
+                  {#<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsCI('{{infoUe}}');" >#}
+                      {#<i class="fa fa-user"></i> Inscrip. con Carnet#}
+                  {#</button>#}
+              {#</div>#}
+              <div class="col-md-3">
+
+                  <a href="{{path('permanente_reporte_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
+
+                  {#<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="Imprimir('{{infoUe}}');" >#}
+                  {##}
+                  {#</button>#}
+              </div>
+
+    {% else %}
+        <div class="col-md-3">
+
+            <a href="{{path('permanente_reporte_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
+
+            {#<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="Imprimir('{{infoUe}}');" >#}
+            {##}
+            {#</button>#}
+        </div>
+        <div class="col-md-3">
+
+            <a href="{{path('permanente_reporte_cert_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Certificados</a>
+
+            {#<button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="Imprimir('{{infoUe}}');" >#}
+            {##}
+            {#</button>#}
+        </div>
+          {% endif %}
+
+
+
+
+
 
       {% endif %}
 
@@ -464,6 +554,52 @@
      });
    };
 
+    var doInscriptionsCI = function(data){
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('per_inscriptioncistudent_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var Imprimir = function(data){
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('permanente_reporte_participantes_curso_corto') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
 
     var closeInscriptions = function(data){
         if(confirm('¡¡Advertencia!! Esta por cerrar el curso, no se permitiran realizar modificaciones. ¿Esta seguro de continuar?')){
@@ -480,6 +616,8 @@
             success: function (data) {
                 $('#listEstudiante').empty();
                 $('#listEstudiante').append(data);
+                window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+
             },
             statusCode: {
                 500: function () {
@@ -576,25 +714,23 @@
          type: 'post',
          data: ({infoUe: infoUe }),
          url: "{{ path('herramienta_per_cursocorto_delete') }}",
-         beforeSend: function () {
-            $('#mengestioncurso').empty();
-            $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Eliminando curso...</div>");
-        },
-        success: function (data) {
-            $('#mengestioncurso').empty();
-            $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
-            window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
-        },
-                statusCode: {
-                    500: function () {
-
-                    },
-                    404: function () {
-
-                    }
+                beforeSend: function () {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Eliminando curso...</div>");
+                },
+                success: function (data) {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                    window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                },
+                error: function(data){
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar el curso debe antes eliminar lo siguiente: Toma de materias, inscripciones, materias/módulos maestro asignados.</div>");
+                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
                 }
-     });
-    }else{
+            });
+        }
+    else{
         return false;
     }
    };
