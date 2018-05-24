@@ -1,0 +1,138 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}     
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Registrados<span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">         
+                {% if nivel == 0 %}
+                    <li><i class="fa fa-home"></i><a href="#">Nivel Nacional</a></li>
+                {% endif %}
+                {% if nivel == 1 %}
+                    <li><i class="fa fa-home"></i><a href="javascript:history.back()">Nivel Nacional</a><i class="fa fa-angle-right"></i></li><li><a href="#">Nivel Departamental</a></li>
+                {% endif %}
+                {% if nivel == 7 %}                        
+                    <li><i class="fa fa-home"></i><a href="javascript:history.go(-2)">Nivel Nacional</a><i class="fa fa-angle-right"></i></li><li><a href="javascript:history.back()">Nivel Departamental</a><i class="fa fa-angle-right"></i></li><li><a href="#">Nivel Distrital</a></li>
+                {% endif %}
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>  
+
+    <div class="body-content animated fadeIn"> 
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel shadow">
+                    <div class="panel-heading">
+                        {% if estadistica is defined  %}
+                            <div class="pull-left">
+                                {% if nivel == 0 %}
+                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Departamento</h3>
+                                {% endif %}
+                                {% if nivel == 1 %}
+                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Distrito Educativo</h3>
+                                {% endif %}
+                                {% if nivel == 7 %}
+                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Unidad Educativa</h3>
+                                {% endif %}
+                            </div>
+                            <div class="pull-right">
+                                <form name="formEstadisticaPdf" id="formEstadisticaPdf"  action="{{ path('olimestadistica_registrados_pdf') }}" method="POST">  
+                                    <input type="hidden" name="codigo" id="codigo" value="{{estadistica[0]['codigo']|base64_encode }}" />
+                                    <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
+                                    <button type="submit" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                        <i class="fa fa-file-pdf-o"></i>
+                                    </button>
+                                </form> 
+                            </div>     
+                            <div class="pull-right">
+                                <form name="formEstadisticaXls" id="formEstadisticaXls"  action="{{ path('olimestadistica_registrados_xls') }}" method="POST">  
+                                    <input type="hidden" name="codigo" id="codigo" value="{{estadistica[0]['codigo']|base64_encode }}" />
+                                    <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
+                                    <button type="submit" title="Descargar en formato XLS" class="btn btn-success">
+                                        <i class="fa fa-file-excel-o"></i>
+                                    </button>
+                                </form> 
+                            </div>      
+                            <div class="clearfix"></div>
+                        {% endif %}
+                    </div>         
+                    <div class="panel-body">
+                        {% if estadistica is defined  %}
+                            {% set count = 0 %}
+                            {% set cantidadTotalGeneral = 0 %}
+                            {% for data in estadistica %}
+                                {% set count = count + 1 %}
+                                {% set id = data.id %}
+                                {% set codigo = data.codigo %}
+                                {% set lugar = data.nombre %}
+                                {% set cantidad = data.cantidad %}
+                                {% if count == 1 %}
+                                    {% set cantidadTotalGeneral = data.cantidad %}
+                                {% endif %}
+                                {% set porcentaje = ( cantidad * 100 ) / cantidadTotalGeneral %}
+
+                                {% if count == 1 %}
+                                    <span class="text-primary pull-right"><b>{{ cantidad }}</b></span><span class="text-primary"><b>{{ lugar }}</b></span>
+                                    {% if data.cantidad == 0 %}
+                                        <div class="progress progress-md">
+                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="0" title="0 Registrados" aria-valuemin="0" aria-valuemax="0" style="width: 0%">
+                                            </div>
+                                        </div><!-- /.progress -->
+                                    {% else %}
+                                        <div class="progress progress-md">
+                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" title="{{ porcentaje }}%" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                            </div>
+                                        </div><!-- /.progress -->
+                                    {% endif %}
+                                {% else %}
+                                    {% if data.cantidad == 0 %}
+                                        <span class="pull-right" style="width:150px; text-align:right"><b>{{ cantidad }}</b></span><span class="">{{ lugar }}</span>
+                                        <div class="progress progress-md">
+                                            <div class="progress-bar progress-bar-lilac" style="width: 0%" title="{{ cantidad|number_format(1,'.',',') }}%">
+                                                <span class="sr-only">{{ porcentaje }}%</span>
+                                            </div><!-- /.progress -->
+                                        </div>
+                                    {% else %}
+                                        {% if nivel == 7 %}
+                                            <span class="pull-right" style="width:150px; text-align:right"><b>{{ cantidad }}</b></span><span class="">{{ lugar }}</span>
+                                            <div class="progress progress-md">
+                                                <div class="progress-bar progress-bar-lilac" style="width: {{ porcentaje }}%" title="{{ porcentaje|number_format(1,'.',',') }}%">
+                                                    <span class="sr-only">{{ porcentaje }}%</span>
+                                                </div><!-- /.progress -->
+                                            </div>
+                                        {% else %}
+                                            <form name="form" role="form" action="{{ path('olimestadistica_registrados') }}" method="POST"> 
+                                                <input type="hidden" name="codigo" id="codigo" value="{{codigo|base64_encode }}" />
+                                                <input type="hidden" name="nivel" id="nivel" value="{{nivelSiguiente}}" />
+                                                <button type="submit" id="submit{{id}}" style="display:none;"></button>
+                                                <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{id}}').click();">
+                                                    <span class="pull-right" style="width:150px; text-align:right"><b>{{ cantidad }}</b></span><span class="">{{ lugar }}</span>
+                                                </a>                                             
+                                                <div class="progress progress-md">
+                                                    <div class="progress-bar progress-bar-lilac" style="width: {{ porcentaje }}%" title="{{ porcentaje|number_format(1,'.',',') }}%">
+                                                        <span class="sr-only">{{ porcentaje }}%</span>
+                                                    </div><!-- /.progress -->
+                                                </div>
+                                            </form>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+        $(function(){
+            
+        });        
+    </script>
+{% endblock %}

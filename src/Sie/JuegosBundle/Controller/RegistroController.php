@@ -43,14 +43,14 @@ class RegistroController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $faseId = 2;
+        $faseId = 1;
 
         $em = $this->getDoctrine()->getManager();
 
         return $this->render($this->session->get('pathSystem') . ':Registro:index.html.twig', array(
             'titulo' => 'REGISTRO',
-            'subtitulo' => 'Primera Fase',
-            'formBusqueda' => $this->creaFormularioBusqueda('sie_juegos_registro_f1_busqueda','',null,null,null,null,null)->createView(),
+            'subtitulo' => 'Fase Previa',
+            'formBusqueda' => $this->creaFormularioBusqueda('sie_juegos_registro_fp_busqueda','',null,null,null,null,null)->createView(),
         ));
     }
 
@@ -456,7 +456,7 @@ class RegistroController extends Controller {
         $pruebaId = $_POST['prueba'];
         //$posicionId = $_POST['posicion'];
         $posicionId = null;
-        $faseId = 2;
+        $faseId = 1;
         $ainscritos = array();
         $aInscritos = $this->getUnidadEducativaPruebaPosicion($sie,$gestionActual,$faseId,$pruebaId);
         foreach ($aInscritos as $inscrito) {
@@ -501,11 +501,35 @@ class RegistroController extends Controller {
         $deportistas = $_POST['deportistas'];
         $nivelId = $_POST['nivel'];
         //$posicionId = $_POST['posicion'];
-        $faseId = 2;
+        $faseId = 1;
         $posicionId = null;
 
         $msgEstudiantesRegistrados = '';
         $msgEstudiantesObservados = '';
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select * from fase_tipo where id = ".($faseId));
+        $query->execute();
+        $faseTipoEntity = $query->fetchAll();
+
+        $response = new JsonResponse();
+
+        if(count($faseTipoEntity)<1){
+            return $response->setData(array(
+                'registrados' => array(), 'msg_correcto' => '', 'msg_incorrecto' => 'No se cuenta habilitado la inscripcion de deportistas para la Fase Previa'
+            ));
+        }
+
+        if($nivelId == 12 and !$faseTipoEntity[0]['esactivo_primaria']){
+            return $response->setData(array(
+                'registrados' => array(), 'msg_correcto' => '', 'msg_incorrecto' => 'Las inscripciones para el Nivel Primario concluyeron'
+            ));
+        }
+        if($nivelId == 13 and !$faseTipoEntity[0]['esactivo_secundaria']){
+            return $response->setData(array(
+                'registrados' => array(), 'msg_correcto' => '', 'msg_incorrecto' => 'Las inscripciones para el Nivel Secundaria concluyeron'
+            ));
+        }
 
         foreach($deportistas as $deportista){
             $estInsId = base64_decode($deportista);
@@ -536,7 +560,6 @@ class RegistroController extends Controller {
             $ainscritos[base64_encode($inscrito->getId())] = $inscrito->getEstudianteInscripcion()->getEstudiante()->getPaterno().' '.$inscrito->getEstudianteInscripcion()->getEstudiante()->getMaterno().' '.$inscrito->getEstudianteInscripcion()->getEstudiante()->getNombre();
         }
 
-        $response = new JsonResponse();
         try {
             return $response->setData(array(
                 'registrados' => $ainscritos, 'msg_correcto' => $msgEstudiantesRegistrados, 'msg_incorrecto' => $msgEstudiantesObservados
@@ -811,7 +834,7 @@ class RegistroController extends Controller {
 
         $sie = 0;
         $pruebaId = 0;
-        $faseId = 2;
+        $faseId = 1;
 
         $inscripcion = base64_decode($_POST['inscripcion']);
 
@@ -827,7 +850,7 @@ class RegistroController extends Controller {
 
                 $sie = $institucionEducativaId;
                 $pruebaId = $pruebaId;
-                $faseId = 2;
+                $faseId = 1;
 
                 $query = $em->getConnection()->prepare("select * from fase_tipo where id = ".$faseId);
                 $query->execute();
@@ -1492,7 +1515,7 @@ class RegistroController extends Controller {
     public function verificaInscripcionEstudiante($inscripcionEstudiante){
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
-            select e.paterno, e.materno, e.nombre, e.codigo_rude, e.carnet_identidad, e.complemento, ie.id as sie, ie.institucioneducativa, to_char(e.fecha_nacimiento, 'yyyy') as gestion_nacimiento, to_char(e.fecha_nacimiento, 'MM') as mes_nacimiento, to_char(e.fecha_nacimiento, 'dd') as dia_nacimiento, (cast(to_char(cast('2017-06-30' as date),'yyyyMMdd') as integer) - cast(to_char(e.fecha_nacimiento,'yyyyMMdd') as integer))/10000 as edad, (cast(to_char(now(),'yyyy') as integer) - cast(to_char(e.fecha_nacimiento,'yyyy') as integer)) as edad_gestion
+            select e.paterno, e.materno, e.nombre, e.codigo_rude, e.carnet_identidad, e.complemento, ie.id as sie, ie.institucioneducativa, to_char(e.fecha_nacimiento, 'yyyy') as gestion_nacimiento, to_char(e.fecha_nacimiento, 'MM') as mes_nacimiento, to_char(e.fecha_nacimiento, 'dd') as dia_nacimiento, (cast(to_char(cast('2018-06-30' as date),'yyyyMMdd') as integer) - cast(to_char(e.fecha_nacimiento,'yyyyMMdd') as integer))/10000 as edad, (cast(to_char(now(),'yyyy') as integer) - cast(to_char(e.fecha_nacimiento,'yyyy') as integer)) as edad_gestion
             from estudiante_inscripcion as ei
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
             inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id

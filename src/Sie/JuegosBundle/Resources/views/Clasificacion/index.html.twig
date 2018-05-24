@@ -52,7 +52,7 @@
                         </div> 
                         <div class="pull-right">
                             <form name="formReport" id="formReport" role="form" action="{{ path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase',{'fase':fase,'usuario':app.session.get('userId')}) }}" method="POST">  
-                                <input type="hidden" name="codigo" value="{{ infoEntidad[0].id}}" />
+                                <input type="hidden" name="id" value="{{ infoEntidad[0].id}}" />
                                 <button id="tour-13" type="submit" title="Descargar en formato PDF" class="btn btn-googleplus">
                                     <i class="fa fa-1x fa-file-pdf-o" aria-hidden="true"></i> Descargar listado
                                 </button>

@@ -68,7 +68,7 @@
                                 <td align="">{{nombre}}</td>
                                 <td>
                                     <div class="ckbox ckbox-primary">
-                                        <input id="id{{data.eInsJueId}}" name="estudiantes[]" type="checkbox" value="{{data.eInsJueId}}" onclick="setDeportistas(this,'{{nombre}}')">
+                                        <input id="id{{data.eInsJueId}}" name="estudiantes[]" type="checkbox" value="{{data.eInsJueId}}" onclick="setDeportistas(this,'{{nombre|replace({"'":"&#39;"})}}')">
                                         <label for="id{{data.eInsJueId}}"></label>
                                     </div>
                                 </td>

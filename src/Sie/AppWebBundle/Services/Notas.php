@@ -1389,6 +1389,13 @@ class Notas{
     }
 
     public function especialRegistro(Request $request, $discapacidad){
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        // Validar si existe la session del usuario
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
         try {
             $this->em->getConnection()->beginTransaction();
             // DAtos de las notas cuantitativas

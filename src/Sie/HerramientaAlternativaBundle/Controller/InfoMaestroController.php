@@ -267,11 +267,17 @@ class InfoMaestroController extends Controller {
             $formacionArray[$fr->getId()] = $fr->getFormacion();
         }
 
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($idPersona);
+
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramientalt_info_maestro_create'))
                 ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('persona', 'hidden', array('data' => $idPersona))
+                ->add('genero', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $persona->getGeneroTipo()->getId()), 'label' => 'Género', 'required' => true, 'attr' => array('class' => 'form-control')))
+                ->add('celular', 'text', array('label' => 'Nro. de Celular', 'data' => $persona->getCelular(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+                ->add('correo', 'text', array('label' => 'Correo Electrónico', 'data' => $persona->getCorreo(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
+                ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'data' => $persona->getDireccion(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('funcion', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('financiamiento', 'choice', array('label' => 'Fuente de Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'attr' => array('class' => 'form-control')))
                 ->add('formacion', 'choice', array('label' => 'Último grado de formación alcanzado', 'required' => true, 'choices' => $formacionArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
@@ -418,6 +424,10 @@ class InfoMaestroController extends Controller {
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('idPersona', 'hidden', array('data' => $persona->getId()))
                 ->add('idMaestroInscripcion', 'hidden', array('data' => $maestroInscripcion->getId()))
+                ->add('genero', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $persona->getGeneroTipo()->getId()), 'label' => 'Género', 'required' => true, 'attr' => array('class' => 'form-control')))
+                ->add('celular', 'text', array('label' => 'Nro. de Celular', 'required' => false, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+                ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'data' => $persona->getCorreo(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
+                ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => false, 'data' => $persona->getDireccion(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
                 ->add('funcion', 'choice', array('label' => 'Función que desempeña', 'required' => true, 'choices' => $cargosArray, 'data' => $maestroInscripcion->getCargoTipo()->getId(), 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('financiamiento', 'choice', array('label' => 'Fuente de Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'data' => $maestroInscripcion->getFinanciamientoTipo()->getId(), 'attr' => array('class' => 'form-control')))
                 ->add('formacion', 'choice', array('label' => 'Último grado de formación alcanzado', 'required' => true, 'choices' => $formacionArray, 'data' => $maestroInscripcion->getFormacionTipo()->getId(), 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
@@ -460,15 +470,12 @@ class InfoMaestroController extends Controller {
                 $estudiaioma = 0;
             }
 
-
-
-
-            // verificamos si el maestro esta registrado ya en tabla maestro inscripcion
             $institucion = $this->session->get('ie_id');
             $gestion = $this->session->get('ie_gestion');
             $sucursal = $this->session->get('ie_suc_id');
             $periodo = $this->session->get('ie_per_cod');
 
+            // verificamos si el maestro esta registrado ya en tabla maestro inscripcion
             $queryIns = $em->createQuery(
                             'SELECT mi FROM SieAppWebBundle:MaestroInscripcion mi
                     WHERE mi.institucioneducativa = :idInstitucion
@@ -484,14 +491,21 @@ class InfoMaestroController extends Controller {
                     ->setParameter('periodo', $periodo)
                     ->setParameter('sucursal', $sucursal);
 
+            
             $maestroInscripcion = $queryIns->getResult();
 
-
-            if ($maestroInscripcion) { // Si  el personalAdministrativo ya esta inscrito
-                $em->getConnection()->commit();
+            if ($maestroInscripcion) { // verificamos si el maestro esta registrado ya en tabla maestro inscripcion
                 $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
                 return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
             }
+
+            //Actualizamos datos de la persona
+            $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));
+            $persona->setDireccion(mb_strtoupper($form['direccion']), 'utf-8');
+            $persona->setCelular($form['celular']);
+            $persona->setCorreo(mb_strtolower($form['correo']), 'utf-8');
+            $em->persist($persona);
+            $em->flush();            
 
             $edidm=$form['educacionDiversaTipo'];
 
@@ -548,6 +562,7 @@ class InfoMaestroController extends Controller {
             $maestroinscripcion->setRolTipo($em->getRepository('SieAppWebBundle:RolTipo')->findOneById(2));
             $maestroinscripcion->setItem($form['item']);
             $maestroinscripcion->setFechaRegistro(new \DateTime('now'));
+            $maestroinscripcion->setEsVigenteAdministrativo(1);
             $em->persist($maestroinscripcion);
             $em->flush();
 
@@ -644,6 +659,14 @@ class InfoMaestroController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
+
+            $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['idPersona']);
+            $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));
+            $persona->setDireccion(mb_strtoupper($form['direccion']), 'utf-8');
+            $persona->setCelular($form['celular']);
+            $persona->setCorreo(mb_strtolower($form['correo']), 'utf-8');
+            $em->persist($persona);
+            $em->flush();
 
             //Actualizacion en la tabla maestro inscripcion
             if ($form['idiomaOriginario']) {

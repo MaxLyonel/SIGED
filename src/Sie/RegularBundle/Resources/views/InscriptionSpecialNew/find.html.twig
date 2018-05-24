@@ -181,7 +181,7 @@
             if (id.length > 7) {
                 $.ajax({
                     type: 'get',
-                    url: Routing.generate('inscription_extranjeros_findIE', {'id': id, 'gestion':gestion}),
+                    url: Routing.generate('inscriptionSpecialNew_findIE', {'id': id, 'gestion':gestion}),
                     beforeSend: function () {
                     },
                     success: function (data) {
@@ -207,7 +207,7 @@
             gestion = $('#form_gestion').val();
             $.ajax({
                 type: 'get',
-                url: Routing.generate('inscription_extranjeros_findgrado', {'idnivel': idnivel, 'sie': sie, 'gestion':gestion}),
+                url: Routing.generate('inscriptionSpecialNew_findgrado', {'idnivel': idnivel, 'sie': sie, 'gestion':gestion}),
                 beforeSend: function () {
                 },
                 success: function (data) {

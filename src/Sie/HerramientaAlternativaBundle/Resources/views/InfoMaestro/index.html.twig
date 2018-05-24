@@ -152,9 +152,9 @@
                                                                 <input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">
                                                                 <input type="hidden" name="idCargo" value="{{maestro.cargoId}}">
                                                                 {% if maestro.esVigenteAdministrativo %}
-                                                                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Está segura/o de continuar?');">{{ maestro.cargo }} vigente</button>
+                                                                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Está segura/o de continuar?');">Vigente</button>
                                                                 {% else %}
-                                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está segura/o de continuar?');">Definir como {{ maestro.cargo }}</button>
+                                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está segura/o de continuar?');">Definir como Vigente</button>
                                                                 {% endif %}
                                                             </form>
                                                         </td>

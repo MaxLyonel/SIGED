@@ -286,12 +286,12 @@ class ClasificacionController extends Controller {
         $codigoEntidad = $objEntidad[0]['id'];
 
         $exist = true;
-
         $query = $em->getConnection()->prepare("
                     select nt.id as nivelid, nt.nivel as nivel, dt.id as disciplinaid, dt.disciplina as disciplina, pt.id as pruebaid, pt.prueba as prueba, gt.id as generoid, gt.genero as genero from prueba_tipo as pt
                     inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
                     inner join genero_tipo as gt on gt.id = pt.genero_tipo_id
                     inner join nivel_tipo as nt on nt.id = dt.nivel_tipo_id
+                    where dt.estado = 't' and pt.esactivo = 't'
                     order by nt.id, dt.id, pt.id, gt.id
                 ");
         $query->execute();
@@ -360,6 +360,7 @@ class ClasificacionController extends Controller {
                     inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
                     inner join genero_tipo as gt on gt.id = pt.genero_tipo_id
                     inner join nivel_tipo as nt on nt.id = dt.nivel_tipo_id
+                    where dt.estado = 't' and pt.esactivo = 't'
                     order by nt.id, dt.id, pt.id, gt.id
                 ");
         $query->execute();
@@ -429,7 +430,7 @@ class ClasificacionController extends Controller {
                     inner join disciplina_tipo as dt on dt.id = pt.disciplina_tipo_id
                     inner join genero_tipo as gt on gt.id = pt.genero_tipo_id
                     inner join nivel_tipo as nt on nt.id = dt.nivel_tipo_id
-                    where pt.esactivo = 't' --dt.nivel_tipo_id = 13
+                    where dt.estado = 't' and pt.esactivo = 't' --dt.nivel_tipo_id = 13
                     order by nt.id, dt.id, pt.id, gt.id
                 ");
         $query->execute();
@@ -520,7 +521,7 @@ class ClasificacionController extends Controller {
         }
 
         return $this->render($this->session->get('pathSystem') . ':Clasificacion:seeStudents.html.twig', array(
-                    'form' => $this->creaFormularioRegistro('sie_juegos_clasificacion_lista_deportistas_registro', $fase, $nivelId, 0, 0, 0, 0)->createView(),
+                    'form' => $this->creaFormularioRegistro('sie_juegos_clasificacion_lista_deportistas_registro', $fase, $nivelId, 0, $disciplinaId, 0, 0)->createView(),
                     'objStudents' => $objStudents,
                     'objDeportistasFase' => $objDeportistasFase,
                     'codigoEntidad' => $codigoEntidad,
@@ -594,7 +595,7 @@ class ClasificacionController extends Controller {
                 ->add('fase', 'hidden', array('attr' => array('value' => $value1)))
                 ->add('posicion','choice',
                       array('label' => 'Lugar Obtenido',
-                            'choices' => ($value2==12)?(array('1' => 'Primer Lugar')):(array('1' => 'Primer Lugar','2' => 'Segundo Lugar')),
+                            'choices' => ($value2==12 or $value4==2)?(array('1' => 'Primer Lugar')):(array('1' => 'Primer Lugar','2' => 'Segundo Lugar')),
                             'data' => $value3,
                             'attr' => array('class' => 'form-control')))
                 ->add('submit', 'submit', array('label' => 'Registrar', 'attr' => array('class' => 'btn btn-default')))
@@ -1026,8 +1027,8 @@ class ClasificacionController extends Controller {
                 select count(eij.id) as cant, eij.estudiante_inscripcion_id, COUNT(distinct disciplina) as cantdisc
                 , sum(case when dt.id = 3 or dt.id = 4 or dt.id = 5 or dt.id = 7 then 1 else 0 end)  as cant_dis_conj
                 , sum(case when dt.id <> 3 and dt.id <> 4 and dt.id <> 5 and dt.id <> 7 then 1 else 0 end)  as cant_dis_indi
-                , sum(case when dt.id = 2 and (pt.id = 27 or pt.id = 28) then 1 else 0 end)  as cant_pru_conj_atle
-                , sum(case when dt.id = 2 and (pt.id <> 27 and pt.id <> 28) then 1 else 0 end)  as cant_pru_indi_atle
+                , sum(case when dt.id = 2 and (pt.id = 174 or pt.id = 175 or pt.id = 200 or pt.id = 201) then 1 else 0 end)  as cant_pru_conj_atle
+                , sum(case when dt.id = 2 and (pt.id <> 174 and pt.id <> 175 and pt.id <> 200 and pt.id <> 201) then 1 else 0 end)  as cant_pru_indi_atle
                 , sum(case when dt.id = 8 and (pt.id = 63 or pt.id = 64 or pt.id = 75 or pt.id = 76) then 1 else 0 end)  as cant_pru_conj_nat
                 , sum(case when dt.id = 8 and (pt.id <> 63 and pt.id <> 64 and pt.id <> 75 and pt.id <> 76) then 1 else 0 end)  as cant_pru_indi_nat
                 , sum(case when dt.id = 6 then 1 else 0 end)  as cant_pru_cic
@@ -1048,7 +1049,7 @@ class ClasificacionController extends Controller {
         $xCupo = 1;
         if ($fase == 2){
           if ($entidadUsuarioId == 31642){ // MAGDALENA/ BAURES/ HUACARAJE
-                $xCupo = 1;
+                $xCupo = 3;
             }
             if ($entidadUsuarioId == 31637){
                 $xCupo = 2;
@@ -1185,15 +1186,15 @@ class ClasificacionController extends Controller {
         $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
 
         if($nivel == 13){
-            if($estudiante["gestion_nacimiento"] < 1998 or $estudiante["gestion_nacimiento"] > 2005){
+            if($estudiante["gestion_nacimiento"] < 1999 or $estudiante["gestion_nacimiento"] > 2006){
                 $msg = array('0'=>false, '1'=>$estudiante["nombre"]." (Edad y/o gestión del estudiante no válida para inscripción)");
-                $registroValido = false;
+                $edadValida = false;
             }
         }
         if($nivel == 12) {
-            if($estudiante["gestion_nacimiento"] < 2005 or $estudiante["gestion_nacimiento"] > 2011){
+            if($estudiante["gestion_nacimiento"] < 2006 or $estudiante["gestion_nacimiento"] > 2012){
                 $msg = array('0'=>false, '1'=>$estudiante["nombre"]." (Edad y/o gestión del estudiante no válida para inscripción)");
-                $registroValido = false;
+                $edadValida = false;
             }
         }
 
@@ -1225,20 +1226,38 @@ class ClasificacionController extends Controller {
             } else {
                 if ($tipoDisciplinaPrueba["idDisciplina"] == 8){ //natacion
                     if ($prueba == 65 or $prueba == 66 or $prueba == 67 or $prueba == 68 or $prueba == 69 or $prueba == 70 or $prueba == 71 or $prueba == 72 or $prueba == 73 or $prueba == 74 or $prueba == 124 or $prueba == 125 or $prueba == 126 or $prueba == 127 or $prueba == 128 or $prueba == 129 or $prueba == 130 or $prueba == 131 or $prueba == 132 or $prueba == 133){ // promocional
-                        if ($estudiante["gestion_nacimiento"] >= 2003 and $estudiante["gestion_nacimiento"]<=2005){
+                        if ($estudiante["gestion_nacimiento"] >= 2004 and $estudiante["gestion_nacimiento"]<=2006){
                             $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                         } else {
-                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2003 a 2005 en el año de nacimiento)');
+                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2004 a 2006 en el año de nacimiento)');
                         }
                     }
                     if ($prueba == 114 or $prueba == 115 or $prueba == 116 or $prueba == 117 or $prueba == 118 or $prueba == 119 or $prueba == 120 or $prueba == 121 or $prueba == 122 or $prueba == 123 or $prueba == 138 or $prueba == 139 or $prueba == 140 or $prueba == 141 or $prueba == 142 or $prueba == 143 or $prueba == 144 or $prueba == 145 or $prueba == 146 or $prueba == 147){ // avanzado
-                        if ($estudiante["gestion_nacimiento"] >= 1998 and $estudiante["gestion_nacimiento"]<=2002){
+                        if ($estudiante["gestion_nacimiento"] >= 1999 and $estudiante["gestion_nacimiento"]<=2003){
                             $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                         } else {
-                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 10 a 12 años y 1998 a 2002 en el año de nacimiento)');
+                            $$inscripcionEstudianteEntitymsg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 15 a 19 años y 1999 a 2003 en el año de nacimiento)');
                         }
                     }
                 }
+
+                if ($tipoDisciplinaPrueba["idDisciplina"] == 2){ //atletismo
+                    if ($prueba == 148 or $prueba == 149 or $prueba == 150 or $prueba == 151 or $prueba == 152 or $prueba == 153 or $prueba == 154 or $prueba == 155 or $prueba == 156 or $prueba == 157 or $prueba == 158 or $prueba == 159 or $prueba == 160 or $prueba == 161 or $prueba == 162 or $prueba == 163 or $prueba == 164 or $prueba == 165 or $prueba == 166 or $prueba == 167 or $prueba == 168 or $prueba == 169 or $prueba == 170 or $prueba == 171 or $prueba == 172 or $prueba == 173 or $prueba == 174 or $prueba == 175 or $prueba == 176 or $prueba == 177){ // 12-14
+                        if ($estudiante["gestion_nacimiento"] >= 2004 and $estudiante["gestion_nacimiento"]<=2006){
+                            $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
+                        } else {
+                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 12 a 14 años y 2004 a 2006 en el año de nacimiento)');
+                        }
+                    }
+                    if ($prueba == 178 or $prueba == 179 or $prueba == 180 or $prueba == 181 or $prueba == 182 or $prueba == 183 or $prueba == 184 or $prueba == 185 or $prueba == 186 or $prueba == 187 or $prueba == 188 or $prueba == 189 or $prueba == 190 or $prueba == 191 or $prueba == 192 or $prueba == 193 or $prueba == 194 or $prueba == 195 or $prueba == 196 or $prueba == 197 or $prueba == 198 or $prueba == 199 or $prueba == 200 or $prueba == 201 or $prueba == 202 or $prueba == 203 or $prueba == 204 or $prueba == 205 or $prueba == 206 or $prueba == 207 or $prueba == 208 or $prueba == 209 or $prueba == 210 or $prueba == 211 or $prueba == 212 or $prueba == 213){ // 15-19
+                        if ($estudiante["gestion_nacimiento"] >= 1999 and $estudiante["gestion_nacimiento"]<=2003){
+                            $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
+                        } else {
+                            $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (Su edad debe estar en el rango de 15 a 19 años y 1999 a 2003 en el año de nacimiento)');
+                        }
+                    }
+                }
+
                 if ($tipoDisciplinaPrueba["idDisciplina"] == 6){ //ciclismo
                     if (count($inscripcionEstudianteEntity) > 0){
                         if($inscripcionEstudianteGestionDisciplinaFase[0]){
@@ -1346,7 +1365,7 @@ class ClasificacionController extends Controller {
                                             case 2: //atletismo
                                                 if($tipoDisciplinaPrueba["tipoPrueba"] == 'Individual'){
                                                     if($inscripcionEstudianteEntity[0]["cant_pru_indi_atle"] >= 2){
-                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (no puede registrarse en mas pruebas individuales)');
+                                                        $msg = array('0'=>false, '1'=>$estudiante["nombre"].' (1 no puede registrarse en mas pruebas individuales)');
                                                     } else {
                                                         $msg = array('0'=>true, '1'=>$estudiante["nombre"]);
                                                     }
@@ -1595,7 +1614,7 @@ class ClasificacionController extends Controller {
     public function verificaInscripcionEstudiante($inscripcionEstudiante){
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
-            select e.paterno, e.materno, e.nombre, e.carnet_identidad, case when e.carnet_identidad is null then '' when trim(e.carnet_identidad) = '' then '' when trim(e.complemento) = '0' then '' else e.complemento end as complemento, ie.id as sie, ie.institucioneducativa, to_char(e.fecha_nacimiento, 'yyyy') as gestion_nacimiento, to_char(e.fecha_nacimiento, 'MM') as mes_nacimiento, to_char(e.fecha_nacimiento, 'dd') as dia_nacimiento, (cast(to_char(cast('2017-06-30' as date),'yyyyMMdd') as integer) - cast(to_char(e.fecha_nacimiento,'yyyyMMdd') as integer))/10000 as edad, (cast(to_char(now(),'yyyy') as integer) - cast(to_char(e.fecha_nacimiento,'yyyy') as integer)) as edad_gestion
+            select e.paterno, e.materno, e.nombre, e.carnet_identidad, case when e.carnet_identidad is null then '' when trim(e.carnet_identidad) = '' then '' when trim(e.complemento) = '0' then '' else e.complemento end as complemento, ie.id as sie, ie.institucioneducativa, to_char(e.fecha_nacimiento, 'yyyy') as gestion_nacimiento, to_char(e.fecha_nacimiento, 'MM') as mes_nacimiento, to_char(e.fecha_nacimiento, 'dd') as dia_nacimiento, (cast(to_char(cast('2018-06-30' as date),'yyyyMMdd') as integer) - cast(to_char(e.fecha_nacimiento,'yyyyMMdd') as integer))/10000 as edad, (cast(to_char(now(),'yyyy') as integer) - cast(to_char(e.fecha_nacimiento,'yyyy') as integer)) as edad_gestion
             from estudiante_inscripcion as ei
             inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
             inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
@@ -1729,7 +1748,7 @@ class ClasificacionController extends Controller {
                 $tipoPrueba = "Individual";
                 $tipoDisciplina = "Individual";
                 $cupo = 1;
-                if ($verInsDisPru[0]["prueba_id"] == 27 or $verInsDisPru[0]["prueba_id"] == 28 or $verInsDisPru[0]["prueba_id"] == 63 or $verInsDisPru[0]["prueba_id"] == 64 or $verInsDisPru[0]["prueba_id"] == 75 or $verInsDisPru[0]["prueba_id"] == 76){
+                if ($verInsDisPru[0]["prueba_id"] == 27 or $verInsDisPru[0]["prueba_id"] == 28 or $verInsDisPru[0]["prueba_id"] == 63 or $verInsDisPru[0]["prueba_id"] == 64 or $verInsDisPru[0]["prueba_id"] == 75 or $verInsDisPru[0]["prueba_id"] == 76 or $verInsDisPru[0]["prueba_id"] == 174 or $verInsDisPru[0]["prueba_id"] == 175 or $verInsDisPru[0]["prueba_id"] == 200 or $verInsDisPru[0]["prueba_id"] == 201){
                     $cupo = 5;
                 }
                 break;
@@ -2030,14 +2049,16 @@ class ClasificacionController extends Controller {
           $codigoEntidad = $objEntidad[0]['id'];
         }
 
-
         if (isset($_POST['id'])){
             $arch = $codigoEntidad.'_'.$gestionActual.'_JUEGOS_F'.$fase.'_'.date('YmdHis').'.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            if($fase == 0){
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f0_v2.rptdesign&__format=pdf&codue='.$codigoEntidad.'&codges='.$gestionActual));
+            }
             if($fase == 1){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f1_v2.rptdesign&__format=pdf&codue='.$codigoEntidad.'&codges='.$gestionActual));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f1_v1.rptdesign&__format=pdf&coddiseeee='.$codigoEntidad.'&codges='.$gestionActual));
             }
             if($fase == 2){
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_lst_EstudiantesJuegos_Participaciones_f2_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
@@ -2052,13 +2073,13 @@ class ClasificacionController extends Controller {
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
             if($fase == 1){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f1_distrito_v1.rptdesign&__format=pdf&coddis='.$codigoEntidad.'&codges='.$gestionActual));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f0_distrito_v1.rptdesign&__format=pdf&coddis='.$codigoEntidad.'&codges='.$gestionActual));
             }
             if($fase == 2){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f2_circunscripcion_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f1_circunscripcion_v1.rptdesign&__format=pdf&codcir='.$codigoEntidad.'&codges='.$gestionActual));
             }
             if($fase == 3){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f3_departamento_v1.rptdesign&__format=pdf&coddep='.$codigoEntidad.'&codges='.$gestionActual));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'jdp_est_Estudiantes_Participaciones_f2_departamento_v1.rptdesign&__format=pdf&coddep='.$codigoEntidad.'&codges='.$gestionActual));
             }
         }
 

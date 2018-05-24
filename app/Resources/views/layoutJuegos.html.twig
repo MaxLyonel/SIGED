@@ -11,7 +11,7 @@
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
             <meta name="description" content="Juegos Deportivos Estudiantiles Plurinacionales Presidente Evo">
             <meta name="keywords" content="Ministerio de Eduación">
-            <meta name="author" content="Djava UI">
+            <meta name="author" content="">
             <title>MinEdu | Juegos Deportivos Estudiantiles Plurinacionales Presidente Evo</title>
             <!--/ END META SECTION -->
 
@@ -271,10 +271,27 @@
                                 </a>
                                 <ul>
                                     {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 8 %}
-                                        <li><a href="{{path('sie_juegos_registro_f1_index')}}">Fase Previa</a></li>
+                                        <li><a href="{{path('sie_juegos_registro_fp_index')}}">Fase Previa</a></li>
+                                    {% endif %}
+                                    {% if app.session.get('roluser') == 10 %}
+                                    <li><a href="{{path('sie_juegos_clasificacion_f1_index')}}">Primera Fase</a></li>
                                     {% endif %}
                                     {% if app.session.get('roluser') == 10 %}
                                         <li><a href="{{path('sie_juegos_comision_entrenador_f1_lista_index')}}">Registro Entrenadores</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endif %}                        
+                        {% if app.session.get('roluser') in [10,11,6,7,8,20,28] %}    
+                            <!-- Start navigation - dashboard -->
+                            <li class="submenu">
+                                <a href="javascript:void(0);">
+                                    <span class="icon"><i class="fa fa-line-chart"></i></span>
+                                    <span class="text">Estadísticas</span>
+                                    <span class="arrow"></span>
+                                </a>
+                                <ul>
+                                    {% if app.session.get('roluser') == 10 %}
                                         <li><a href="{{ path('sie_juegos_clasificacion_lista_deportistas_inscritos_fase',{'fase':1,'usuario':app.session.get('userId')}) }}">Estadística Primera Fase</a></li>
                                     {% endif %}
                                 </ul>

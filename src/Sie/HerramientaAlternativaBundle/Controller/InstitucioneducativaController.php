@@ -100,7 +100,8 @@ class InstitucioneducativaController extends Controller {
                         inst.institucioneducativa,
                         lt.area2001,
                         estt.estadoinstitucion,
-                        inss.direccion')
+                        jg.direccion,
+                        jg.zona')
                 ->join('SieAppWebBundle:Institucioneducativa', 'inst', 'WITH', 'inst.leJuridicciongeografica = jg.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt', 'WITH', 'jg.lugarTipoLocalidad = lt.id')
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'lt1', 'WITH', 'lt.lugarTipo = lt1.id')
@@ -199,10 +200,10 @@ class InstitucioneducativaController extends Controller {
                 ->add('gestionSuc', 'hidden', array('data' => $sucursal->getGestionTipo()))
                 ->add('idSucursal', 'hidden', array('data' => $sucursal->getId()))
                 ->add('idPeriodo', 'hidden', array('data' => $sucursal->getPeriodoTipoId()))
-                ->add('telefono1', 'text', array('required' => false, 'label' => 'Número de teléfono del CEA', 'data' => $sucursal->getTelefono1(), 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
-                ->add('telefono2', 'text', array('required' => true, 'label' => 'Número de celular de la Directora o Director', 'data' => $sucursal->getTelefono2(), 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
+                ->add('telefono1', 'text', array('required' => false, 'label' => 'Número de teléfono del CEA', 'data' => $sucursal->getTelefono1(), 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,10}', 'maxlength' => '10')))
+                ->add('telefono2', 'text', array('required' => true, 'label' => 'Número de celular de la Directora o Director', 'data' => $sucursal->getTelefono2(), 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,10}', 'maxlength' => '10')))
                 ->add('email', 'text', array('required' => true, 'label' => 'Correo electrónico del CEA o de la Directora o Director', 'data' => $sucursal->getEmail(), 'attr' => array('class' => 'form-control')))
-                ->add('casilla', 'text', array('required' => false, 'label' => 'Casilla postal del CEA', 'data' => $sucursal->getCasilla(), 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
+                ->add('casilla', 'text', array('required' => false, 'label' => 'Casilla postal del CEA', 'data' => $sucursal->getCasilla(), 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,10}', 'maxlength' => '10')))
                 ->add('turno', 'choice', array('label' => 'Turno', 'required' => true, 'choices' => $turnosArray, 'data' => $sucursal->getTurnoTipo() ? $sucursal->getTurnoTipo()->getId() : 0, 'attr' => array('class' => 'form-control')))
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
@@ -221,7 +222,7 @@ class InstitucioneducativaController extends Controller {
 
             $iesucursal->setTelefono1($form['telefono1']);
             $iesucursal->setTelefono2($form['telefono2']);
-            $iesucursal->setEmail(mb_strtoupper($form['email'], 'utf-8'));
+            $iesucursal->setEmail(mb_strtolower($form['email'], 'utf-8'));
             $iesucursal->setCasilla($form['casilla']);
             $iesucursal->setReferenciaTelefono2(mb_strtoupper('DIRECTOR/A', 'utf-8'));
             $iesucursal->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById($form['turno']));

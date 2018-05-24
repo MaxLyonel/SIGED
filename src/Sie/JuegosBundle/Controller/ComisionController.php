@@ -1145,9 +1145,8 @@ class ComisionController extends Controller {
                 inner join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id 
                 inner join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id 
                 inner join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id 
-                where (case ".$fase." when 1 then  lt.id = ".$codigoEntidad." when 2 then jg.circunscripcion_tipo_id = ".$codigoEntidad." when 3 then det.id = ".$codigoEntidad." else true end) and ejd.gestion_tipo_id = ".$gestion." and pt.id = ".$pruebaId." and ejd.fase_tipo_id = ".($fase)."
+                where (case ".$fase." when 1 then  lt.id = ".$codigoEntidad." when 2 then jg.circunscripcion_tipo_id = ".$codigoEntidad." when 3 then det.id = ".$codigoEntidad." else true end) and ejd.gestion_tipo_id = ".$gestion." and pt.id = ".$pruebaId." and ejd.fase_tipo_id = ".($fase+1)."
                 order by dt.disciplina, pt.prueba, gtp.genero, nombre, paterno, materno
-
             ");
         $queryEntidad->execute();
         $objEntidad = $queryEntidad->fetchAll();
@@ -2423,7 +2422,7 @@ class ComisionController extends Controller {
             $exist = true;
         }
         $entityDatos = new ComisionJuegosDatos();
-        $form = $this->createEntrenadorEstudianteForm($entityDatos,$nivelId);
+        $form = $this->createEntrenadorEstudianteForm($entityDatos,$nivelId,$disciplinaId);
 
         return $this->render($this->session->get('pathSystem') . ':Comision:seeEntrenadores.html.twig', array(
                     'form' => $form->createView(),
@@ -2503,7 +2502,7 @@ class ComisionController extends Controller {
             $exist = true;
         }
         $entityDatos = new ComisionJuegosDatos();
-        $form = $this->createEntrenadorEstudianteForm($entityDatos,$nivelId);
+        $form = $this->createEntrenadorEstudianteForm($entityDatos,$nivelId,$disciplinaId);
 
         return $this->render($this->session->get('pathSystem') . ':Comision:seeEntrenadoresClasificacion.html.twig', array(
                     'form' => $form->createView(),
@@ -2527,10 +2526,10 @@ class ComisionController extends Controller {
      * @param type $entity
      * return form
      */
-    private function createEntrenadorEstudianteForm(ComisionJuegosDatos $entity, $nivelId)
+    private function createEntrenadorEstudianteForm(ComisionJuegosDatos $entity, $nivelId, $disciplinaId)
     {         
         //$entity->setPruebaTipo();
-        $form = $this->createForm(new ComisionJuegosEntrenadorType(array('nivelId' => $nivelId)), $entity, array(
+        $form = $this->createForm(new ComisionJuegosEntrenadorType(array('nivelId' => $nivelId, 'disciplinaId' => $disciplinaId)), $entity, array(
             'action' => $this->generateUrl('sie_juegos_comision_entrenador_lista_registro_save'),
             'method' => 'POST', 
         ));
@@ -2605,7 +2604,7 @@ class ComisionController extends Controller {
 
         try {
             $entityComisionJuegosDatos = new ComisionJuegosDatos();                      
-            $form = $this->createEntrenadorEstudianteForm($entityComisionJuegosDatos,$nivelId);
+            $form = $this->createEntrenadorEstudianteForm($entityComisionJuegosDatos,$nivelId,$disciplinaId);
             $form->handleRequest($request);
             $comisionId = $entityComisionJuegosDatos->getComisionTipoId();
             $posicion = $entityComisionJuegosDatos->getPosicion();
@@ -2898,7 +2897,7 @@ class ComisionController extends Controller {
         $xCupo = 1;
         if ($fase == 2){
           if ($entidadUsuarioId == 31642){ // MAGDALENA/ BAURES/ HUACARAJE
-                $xCupo = 1;
+                $xCupo = 3;
             }
             if ($entidadUsuarioId == 31637){
                 $xCupo = 2;

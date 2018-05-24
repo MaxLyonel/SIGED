@@ -42,8 +42,9 @@ class ConsolidationSieController extends Controller {
         $aAccess = array(5, 2, 9);
         if (in_array($this->session->get('roluser'), $aAccess)) {
             $institutionData = $this->intitucioneducativaData($this->session->get('personaId'), $this->session->get('currentyear'));
-
-            $institutionData1 = $this->getDataUe($this->session->get('userName'));
+            
+            $institutionData1 = $this->getDataUe($this->session->get('ie_id'));
+            
             //verificar si es IE
             if ($institutionData1) {
                 $objUe = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getUnidadEducativaInfo($institutionData1[0]['id']);
@@ -338,6 +339,15 @@ class ConsolidationSieController extends Controller {
                   $session->getFlashBag()->add('warningcons', 'El archivo ' . $aDataExtractFileUE[1] . ' debe ser subido por su Tecnico Distrito/Departamento');
                   system('rm -fr ' . $dirtmp);
                   return $this->redirect($this->generateUrl('consolidation_sie_web'));
+                }
+                //validation STATE of UE
+                $obDataUE =  $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($aDataExtractFileUE[1]);
+                if($obDataUE->getEstadoinstitucionTipo()->getId()==10){
+                    // nothing to do 
+                }else{
+                    $session->getFlashBag()->add('warningcons', 'La Unidad Educativa con SIE ' . $aDataExtractFileUE[1] . ', se encuentra cerrada');
+                    system('rm -fr ' . $dirtmp);
+                    return $this->redirect($this->generateUrl('consolidation_sie_web'));
                 }
 
                 //validate the correct sie send with the correct version in current year
