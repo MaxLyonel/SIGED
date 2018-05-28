@@ -354,15 +354,20 @@ class ChangeMatriculaController extends Controller {
       $notas = $this->get('notas')->regular($infoStudent['eInsId'],$this->operativo);
         if($form['estadoMatricula']==6){
           if(sizeof($notas)>1){
+            $message = 'Cambio no realizado, debido a que la/el estudiante cuenta con calificaciones';  
+            $this->addFlash('noinscription',$message);
             $swChangeStatus=false;
           }
         }
+        
         if($swChangeStatus){
           //find to update
           $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']);
           $currentInscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($form['estadoMatricula']));
           $em->persist($currentInscrip);
           $em->flush();
+          $message = 'Cambio de estado realizado';  
+          $this->addFlash('goodinscription',$message);
           // Try and commit the transaction
           $em->getConnection()->commit();
         }

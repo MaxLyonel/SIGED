@@ -254,7 +254,7 @@ class OlimGrupoProyectoController extends Controller
         $today    = date('d-m-Y');
         
         // check the limit date to do the inscription
-        if($dataStart <= $today && $today <= $dataEnd){
+        if( strtotime($dataStart) <= strtotime($today) && strtotime($today) <= strtotime($dataEnd) ){
             //nothing to do
         }else{
             $message = "No permitido, fecha de inscripción expirada";
