@@ -4727,7 +4727,7 @@ class ReporteController extends Controller {
                             alpha: 45
                         }
                     },
-                    colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+                    colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'],
                     title: {
                         text: '".$titulo."'
                     },
@@ -4798,7 +4798,7 @@ class ReporteController extends Controller {
                         plotShadow: false,
                         type: 'pie'
                     },
-                    colors: ['#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4','#058DC7', '#50B432'],
+                    colors: ['#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#7cb5ec', '#434348', '#90ed7d', '#f7a35c'],
                     title: {
                         text: '".$titulo."'
                     },
@@ -4862,7 +4862,7 @@ class ReporteController extends Controller {
                     chart: {
                         type: 'column'
                     },
-                    colors: ['#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4', '#058DC7', '#50B432', '#ED561B', '#DDDF00'],
+                    colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'],
                     title: {
                         text: '".$titulo."'
                     },
@@ -4936,7 +4936,7 @@ class ReporteController extends Controller {
                         plotBorderWidth: 0,
                         plotShadow: false
                     },
-                    colors: ['#FF9655', '#FFF263', '#6AF9C4', '#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572'],
+                    colors: ['#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#7cb5ec', '#434348', '#90ed7d', '#f7a35c'],
                     title: {
                         text: '".$titulo."',
                         align: 'center',
