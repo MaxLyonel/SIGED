@@ -21,7 +21,7 @@ class InscriptionSpecialNewController extends Controller
     /**
      * [indexAction description]
      * @return [type] [description]
-     */
+     */ 
     public function indexAction()
     {
         return $this->render('SieRegularBundle:InscriptionSpecialNew:index.html.twig', array(
@@ -58,7 +58,7 @@ class InscriptionSpecialNewController extends Controller
       //get one less inscription of student
       $inscriptionsGestionSelected = $this->getCurrentInscriptionsByGestoin($form['codigoRude'], $form['gestion']-1,4);
       $swDooInscription = $this->reviewInscription($inscriptionsGestionSelected);
-
+      
       //look for the current inscription
       $inscriptionsGestionSelected = $this->getCurrentInscriptionsByGestoin($form['codigoRude'], $form['gestion'],1);
       $swDooInscriptionCurrent = $this->reviewInscription($inscriptionsGestionSelected);
@@ -182,18 +182,19 @@ class InscriptionSpecialNewController extends Controller
                    ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
                    ->where('e.codigoRude = :id')
                    ->andwhere('iec.gestionTipo = :gestion')
-                   ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+                  //  ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                    ->andwhere('i.institucioneducativaTipo = :instTipo')
                    ->setParameter('id', $id)
                    ->setParameter('gestion', $gestion)
                    ->setParameter('instTipo', $instTipo)
-                   ->setParameter('mat', array( 4,5,26,37,55,56,57,58 ))
+                  //  ->setParameter('mat', array( 4,5,26,37,55,56,57,58 ))
                    ->orderBy('iec.gestionTipo', 'DESC')
                    ->getQuery();
            try {
                $objInfoInscription = $query->getResult();
-               //dump($objInfoInscription);
+               
                if(sizeof($objInfoInscription)>0){
+                 $swInscription = true;
                  foreach ($objInfoInscription as $key => $value) {
                    $objLastInscription = $value;
                  }
