@@ -4397,56 +4397,84 @@ class ReporteController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d H:i:s'));
         $gestionActual = date_format($fechaActual,'Y');
-        $fechaEstadisticaRegular = $fechaActual->format('d-m-Y H:i:s');
+        $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');
         
         $gestionProcesada = $gestionActual;
+
+        $codigo = 0;
+		$nivel = 0;	
+
+		if ($request->isMethod('POST')) {
+            $codigo = base64_decode($request->get('codigo'));
+			$rol = $request->get('rol');
+        } else {
+            $codigo = 0;
+			$rol = 0;	
+		}
 
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
 
-        $entidad = $this->buscaEntidadRol(0,0);
-        $subEntidades = $this->buscaSubEntidadRolEspecial(0,0);
+        $entidad = $this->buscaEntidadRol($codigo,$rol);
+        $subEntidades = $this->buscaSubEntidadRolEspecial($codigo,$rol);
 
         // devuelve un array con los diferentes tipos de reportes 1:sexo, 2:dependencia, 3:area de atencion, 4:modalidad  
-        $entityEstadistica = $this->buscaEstadisticaEspecialAreaRol(0,0); 
+        $entityEstadistica = $this->buscaEstadisticaEspecialAreaRol($codigo,$rol); 
 
-        foreach ($subEntidades as $key => $dato) {
-            if(isset(reset($entityEstadistica)['dato'][0]['cantidad'])){             
-                $subEntidades[$key]['total_general'] = reset($entityEstadistica)['dato'][0]['cantidad'];
-            } else {          
-                $subEntidades[$key]['total_general'] = 0;
-            } 
+        if(count($subEntidades)>0 and isset($subEntidades)){
+            foreach ($subEntidades as $key => $dato) {
+                if(isset(reset($entityEstadistica)['dato'][0]['cantidad'])){             
+                    $subEntidades[$key]['total_general'] = reset($entityEstadistica)['dato'][0]['cantidad'];
+                } else {          
+                    $subEntidades[$key]['total_general'] = 0;
+                } 
+            }
+        } else {
+            $subEntidades = null;
         }
         
         // para seleccionar ti
 
         //$chartMatricula = $this->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionProcesada,1,"chartContainerMatricula");
-        $chartDiscapacidad = $this->chartDonut3d($entityEstadistica[3],"Estudiantes participantes según Área de Atención",$gestionProcesada,"Participantes","chartContainerDiscapacidad");
+        $chartDiscapacidad = $this->chartDonut3d($entityEstadistica[3],"Estudiantes matriculados según Área de Atención",$gestionProcesada,"Estudiantes","chartContainerDiscapacidad");
         //$chartNivelGrado = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionProcesada,6,"chartContainerEfectivoNivelGrado");
-        $chartGenero = $this->chartPie($entityEstadistica[1],"Estudiantes Matriculados según Sexo",$gestionProcesada,"Participantes","chartContainerGenero");
+        $chartGenero = $this->chartPie($entityEstadistica[1],"Estudiantes matriculados según Sexo",$gestionProcesada,"Estudiantes","chartContainerGenero");
         //$chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
-        $chartDependencia = $this->chartColumn($entityEstadistica[2],"Estudiantes Matriculados según Dependencia",$gestionProcesada,"Participantes","chartContainerDependencia");
-        $chartModalidad = $this->chartSemiPieDonut3d($entityEstadistica[4],"Estudiantes Matriculados según Modalidad",$gestionProcesada,"Participantes","chartContainerModalidad");
-  
-        return $this->render('SieAppWebBundle:Reporte:matriculaEducativaEspecial.html.twig', array(
-            'infoEntidad'=>$entidad,
-            'infoSubEntidad'=>$subEntidades, 
-            /////'infoEstadistica'=>$entityEstadistica, 
-            //'infoEstadisticaUE'=>$entityEstadisticaUE,
-            //'infoEstadisticaEE'=>$entityEstadisticaEE,
-            /////'rol'=>0,
-            /////'datoGraficoMatricula'=>array(),
-            'datoGraficoDiscapacidad'=>$chartDiscapacidad,
-            /////'datoGraficoNivelGrado'=>array(),
-            'datoGraficoGenero'=>$chartGenero,
-            'datoGraficoModalidad'=>$chartModalidad,
-            /////'datoGraficoArea'=>array(),
-            'datoGraficoDependencia'=>$chartDependencia,
-            'mensaje'=>'$("#modal-bootstrap-tour").modal("show");',
-            'gestion'=>$gestionActual,
-            'fechaEstadisticaRegular'=>$fechaEstadisticaRegular,
-            'form' => $defaultController->createLoginForm()->createView()
-        ));
+        $chartDependencia = $this->chartColumn($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestionProcesada,"Estudiantes","chartContainerDependencia");
+        $chartModalidad = $this->chartSemiPieDonut3d($entityEstadistica[4],"Estudiantes matriculados según Modalidad",$gestionProcesada,"Estudiantes","chartContainerModalidad");
+
+        if($rol == 0){
+            $mensaje = '$("#modal-bootstrap-tour").modal("show");';
+        } else {
+            $mensaje = '$("#modal-bootstrap-tour").modal("hide");';
+        }
+
+        if(count($subEntidades)>0 and isset($subEntidades)){
+            return $this->render('SieAppWebBundle:Reporte:matriculaEducativaEspecial.html.twig', array(
+                'infoEntidad'=>$entidad,
+                'infoSubEntidad'=>$subEntidades, 
+                'datoGraficoDiscapacidad'=>$chartDiscapacidad,
+                'datoGraficoGenero'=>$chartGenero,
+                'datoGraficoModalidad'=>$chartModalidad,
+                'datoGraficoDependencia'=>$chartDependencia,
+                'mensaje'=>$mensaje,
+                'gestion'=>$gestionActual,
+                'fechaEstadistica'=>$fechaEstadistica,
+                'form' => $defaultController->createLoginForm()->createView()
+            ));
+        } else {
+            return $this->render('SieAppWebBundle:Reporte:matriculaEducativaEspecial.html.twig', array(
+                'infoEntidad'=>$entidad,
+                'datoGraficoDiscapacidad'=>$chartDiscapacidad,
+                'datoGraficoGenero'=>$chartGenero,
+                'datoGraficoModalidad'=>$chartModalidad,
+                'datoGraficoDependencia'=>$chartDependencia,
+                'mensaje'=>$mensaje,
+                'gestion'=>$gestionActual,
+                'fechaEstadistica'=>$fechaEstadistica,
+                'form' => $defaultController->createLoginForm()->createView()
+            ));
+        }
     }
 
     /**
@@ -4517,115 +4545,154 @@ class ReporteController extends Controller {
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
             $queryEntidad = $em->getConnection()->prepare("
-                    select 
-                    coalesce(sum(case when nivel_id = 11 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_inicial
-                    , coalesce(sum(case when nivel_id = 11 and grado_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_inicial_1
-                    , coalesce(sum(case when nivel_id = 11 and grado_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_inicial_2
-                    , coalesce(sum(case when nivel_id = 12 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_1
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_2
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 3 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_3
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 4 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_4
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 5 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_5
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 6 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_6
-                    , coalesce(sum(case when nivel_id = 13 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_1
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_2
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 3 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_3
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 4 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_4
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 5 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_5
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 6 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_6
-                    , coalesce(sum(case when genero_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_masculino
-                    , coalesce(sum(case when genero_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_femenino
-                    , coalesce(sum(case when area = 'U' and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_urbano
-                    , coalesce(sum(case when area = 'R' and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_rural
-                    , coalesce(sum(case when (dependencia_id = 1 or dependencia_id = 5) and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_publica
-                    , coalesce(sum(case when dependencia_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_convenio
-                    , coalesce(sum(case when dependencia_id = 3 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_privada
-                    , coalesce(sum(case when estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_efectivo
-                    , coalesce(sum(case when estadomatricula_id in (6) then cantidad else 0 end),0) as cant_no_incorporado
-                    , coalesce(sum(case when estadomatricula_id in (10,3,99) then cantidad else 0 end),0) as cant_retiro_abandono
-                    , coalesce(sum(case when estadomatricula_id in (9) then cantidad else 0 end),0) as cant_retiro_traslado
-                    , coalesce(sum(cantidad),0) as total_inscrito
-                    from vm_estudiantes_estadistica_regular 
-                    where nivel_id in (11,12,13) and institucioneducativa_id = ".$area." 
-                ");     
+                with tabla as (
+                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
+                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
+                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                    FROM estudiante AS e
+                    INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
+                    INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
+                    INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
+                    INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
+                    INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
+                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                    WHERE
+                    iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND ie.id = ".$area."
+                    GROUP BY
+                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                ) 
+                
+                select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join genero_tipo as gt on gt.id = t.genero_tipo_id
+                group by gt.id, gt.genero
+                
+                union all
+                
+                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
+                group by dt.id, dt.dependencia
+                
+                union all
+                
+                select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
+                group by eat.id, eat.area_especial
+                
+                union all
+                
+                select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                group by t.modalidad_id, t.modalidad
+                
+                order by tipo_id, id
+            ");     
         }  
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $queryEntidad = $em->getConnection()->prepare("
-                    select 
-                    coalesce(sum(case when nivel_id = 11 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_inicial
-                    , coalesce(sum(case when nivel_id = 11 and grado_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_inicial_1
-                    , coalesce(sum(case when nivel_id = 11 and grado_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_inicial_2
-                    , coalesce(sum(case when nivel_id = 12 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_1
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_2
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 3 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_3
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 4 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_4
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 5 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_5
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 6 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_6
-                    , coalesce(sum(case when nivel_id = 13 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_1
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_2
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 3 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_3
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 4 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_4
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 5 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_5
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 6 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_6
-                    , coalesce(sum(case when genero_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_masculino
-                    , coalesce(sum(case when genero_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_femenino
-                    , coalesce(sum(case when area = 'U' and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_urbano
-                    , coalesce(sum(case when area = 'R' and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_rural
-                    , coalesce(sum(case when (dependencia_id = 1 or dependencia_id = 5) and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_publica
-                    , coalesce(sum(case when dependencia_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_convenio
-                    , coalesce(sum(case when dependencia_id = 3 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_privada
-                    , coalesce(sum(case when estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_efectivo
-                    , coalesce(sum(case when estadomatricula_id in (6) then cantidad else 0 end),0) as cant_no_incorporado
-                    , coalesce(sum(case when estadomatricula_id in (10,3,99) then cantidad else 0 end),0) as cant_retiro_abandono
-                    , coalesce(sum(case when estadomatricula_id in (9) then cantidad else 0 end),0) as cant_retiro_traslado
-                    , coalesce(sum(cantidad),0) as total_inscrito
-                    from vm_estudiantes_estadistica_regular 
-                    where nivel_id in (11,12,13) and distrito_codigo = '".$area."' 
-                ");  
+            $queryEntidad = $em->getConnection()->prepare("    
+                with tabla as (
+                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
+                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
+                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                    FROM estudiante AS e
+                    INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
+                    INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
+                    INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
+                    INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
+                    INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
+                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                    left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
+                    WHERE
+                    iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND lt5.codigo = '".$area."'
+                    GROUP BY
+                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                ) 
+                
+                select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join genero_tipo as gt on gt.id = t.genero_tipo_id
+                group by gt.id, gt.genero
+                
+                union all
+                
+                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
+                group by dt.id, dt.dependencia
+                
+                union all
+                
+                select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
+                group by eat.id, eat.area_especial
+                
+                union all
+                
+                select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                group by t.modalidad_id, t.modalidad
+                
+                order by tipo_id, id
+            ");  
         }  
 
         if($rol == 7) // Tecnico Departamental
         {
             $queryEntidad = $em->getConnection()->prepare("
-                    select 
-                    coalesce(sum(case when nivel_id = 11 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_inicial
-                    , coalesce(sum(case when nivel_id = 11 and grado_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_inicial_1
-                    , coalesce(sum(case when nivel_id = 11 and grado_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_inicial_2
-                    , coalesce(sum(case when nivel_id = 12 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_1
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_2
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 3 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_3
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 4 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_4
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 5 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_5
-                    , coalesce(sum(case when nivel_id = 12 and grado_id = 6 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_primaria_6
-                    , coalesce(sum(case when nivel_id = 13 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_1
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_2
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 3 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_3
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 4 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_4
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 5 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_5
-                    , coalesce(sum(case when nivel_id = 13 and grado_id = 6 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_secundaria_6
-                    , coalesce(sum(case when genero_id = 1 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_masculino
-                    , coalesce(sum(case when genero_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_femenino
-                    , coalesce(sum(case when area = 'U' and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_urbano
-                    , coalesce(sum(case when area = 'R' and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_rural
-                    , coalesce(sum(case when (dependencia_id = 1 or dependencia_id = 5) and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_publica
-                    , coalesce(sum(case when dependencia_id = 2 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_convenio
-                    , coalesce(sum(case when dependencia_id = 3 and estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_privada
-                    , coalesce(sum(case when estadomatricula_id in (4,5,10,11,55) then cantidad else 0 end),0) as cant_efectivo
-                    , coalesce(sum(case when estadomatricula_id in (6) then cantidad else 0 end),0) as cant_no_incorporado
-                    , coalesce(sum(case when estadomatricula_id in (10,3,99) then cantidad else 0 end),0) as cant_retiro_abandono
-                    , coalesce(sum(case when estadomatricula_id in (9) then cantidad else 0 end),0) as cant_retiro_traslado
-                    , coalesce(sum(cantidad),0) as total_inscrito
-                    from vm_estudiantes_estadistica_regular 
-                    where nivel_id in (11,12,13) and departamento_codigo = '".$area."' 
-                ");  
+                with tabla as (
+                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
+                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
+                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
+                    FROM estudiante AS e
+                    INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
+                    INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
+                    INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
+                    INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
+                    INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
+                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                    left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+                    left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+                    left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+                    left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+                    left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+                    WHERE
+                    iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND lt4.codigo = '".$area."'
+                    GROUP BY
+                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
+                ) 
+                
+                select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join genero_tipo as gt on gt.id = t.genero_tipo_id
+                group by gt.id, gt.genero
+                
+                union all
+                
+                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
+                group by dt.id, dt.dependencia
+                
+                union all
+                
+                select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
+                group by eat.id, eat.area_especial
+                
+                union all
+                
+                select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
+                , sum(cantidad) as cantidad from tabla as t 
+                group by t.modalidad_id, t.modalidad
+                
+                order by tipo_id, id
+            ");  
         } 
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
@@ -4727,7 +4794,8 @@ class ReporteController extends Controller {
                             alpha: 45
                         }
                     },
-                    colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'],
+                    //colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'],
+                    colors: ['#89B440', '#D7AF29', '#E98E25', '#E55D2B', '#DB3F30', '#2C4853', '#688F9E', '#0F88B7', '#34B0AE', '#36B087'],
                     title: {
                         text: '".$titulo."'
                     },
@@ -4761,8 +4829,6 @@ class ReporteController extends Controller {
                         colorByPoint: true,
                         data: [".$datosTemp."]
                     }]
-
-
                 });
             }
         ";   
@@ -4798,7 +4864,7 @@ class ReporteController extends Controller {
                         plotShadow: false,
                         type: 'pie'
                     },
-                    colors: ['#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#7cb5ec', '#434348', '#90ed7d', '#f7a35c'],
+                    colors: ['#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#E55D2B', '#DB3F30', '#2C4853', '#688F9E'],
                     title: {
                         text: '".$titulo."'
                     },
@@ -4862,7 +4928,7 @@ class ReporteController extends Controller {
                     chart: {
                         type: 'column'
                     },
-                    colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'],
+                    colors: ['#E98E25', '#E55D2B', '#DB3F30', '#2C4853', '#688F9E', '#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29'],
                     title: {
                         text: '".$titulo."'
                     },
@@ -4936,7 +5002,7 @@ class ReporteController extends Controller {
                         plotBorderWidth: 0,
                         plotShadow: false
                     },
-                    colors: ['#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#7cb5ec', '#434348', '#90ed7d', '#f7a35c'],
+                    colors: ['#2C4853', '#688F9E', '#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#E55D2B', '#DB3F30'],
                     title: {
                         text: '".$titulo."',
                         align: 'center',
@@ -5102,7 +5168,7 @@ class ReporteController extends Controller {
         if (count($objEntidad)>0 and $rol != 9 and $rol != 5){
             return $objEntidad;
         } else {
-            return '';
+            return null;
         }
     }
 }

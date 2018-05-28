@@ -1,7 +1,7 @@
 {% extends 'layoutReporte.html.twig' %}
 {% block fechaReporte %}
     {% if fechaEstadisticaRegular is defined  %}
-        {{ fechaEstadisticaRegular }}
+        {{ fechaEstadistica }}
     {% endif %}
 {% endblock %}
 {% block contentoption %}
@@ -112,7 +112,7 @@
                                 {% set id = data.codigo %}
                                 {% set nombre = data.nombre %} 
                                 {% set rol = data.rolusuario %}                                 
-                                <form name="form" role="form" action="{{ path('reporte_regular_informacion_general') }}" method="POST"> 
+                                <form name="form" role="form" action="{{ path('reporte_especial_index') }}" method="POST"> 
                                     <input type="hidden" name="codigo" value="{{id|base64_encode}}" />
                                     <input type="hidden" name="rol" value="{{rol}}" />
                                     <button type="submit" id="submit{{id}}" style="display:none;"></button>
@@ -148,7 +148,7 @@
                             <div class="panel panel-default shadow">
                                 <div class="panel-heading">
                                     <div class="pull-left">
-                                        <h3 class="panel-title"><i class='fa fa-home'>1</i> Información</h3>
+                                        <h3 class="panel-title"><i class='fa fa-home'></i> Información</h3>
                                     </div><!-- /.pull-left -->
                                     <div class="pull-right">
                                         <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
@@ -178,7 +178,7 @@
                                             </form>
                                         </div>
                                     </div>-->
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="mini-stat-type-4 bg-warning shadow">
                                             <form name="formInformacionEstadistica" id="formInformacionEstadistica" role="form" action="{{ path('sie_ue_informacion_general_impresion_informacionestadistica') }}" method="POST">
                                                 <input type="hidden" name="gestion" value="{{ gestion }}" />
@@ -188,7 +188,7 @@
                                                 </a>
                                             </form>
                                         </div>
-                                    </div> 
+                                    </div> -->
                                     <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="mini-stat-type-4 bg-success shadow">
                                             <form name="formOfertaCurricular" id="formOfertaCurricular" role="form" action="{{ path('sie_ue_informacion_general_impresion_ofertacurricular') }}" method="POST">
@@ -227,21 +227,6 @@
                 <div class="row">                                       
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default shadow">
-                            <!--<div class="panel-heading">
-                                <div class="pull-left">
-                                    <h3 class="panel-title"><i class='fa fa-sort-amount-asc'></i> Estudiantes Matriculados - Nivel de Estudio</h3>
-                                </div>
-                                <div class="pull-right">
-                                    <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
-                                        <i class="fa fa-angle-up"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-inverse" onclick="seeGraphic(2,{{infoEntidad.id}},{{infoEntidad.rolactual}});">
-                                        <i class='fa fa-circle-o'></i>
-                                    </button>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            -->
                             <div class="panel-body">
                                 <!-- Start project overview -->
                                 <div class="row">         
@@ -258,28 +243,10 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default shadow">
-                            <!-- 
-                            <div class="panel-heading">
-                                <div class="pull-left">
-                                    <h3 class="panel-title"><i class='fa fa-venus-mars'></i> Estudiantes Matriculados - Género</h3>
-                                </div>
-                                <div class="pull-right">
-                                    <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
-                                        <i class="fa fa-angle-up"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-inverse" onclick="seeGraphic(3,{{infoEntidad.id}},{{infoEntidad.rolactual}});">
-                                        <i class='fa fa-pie-chart'></i>
-                                    </button>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div> 
-                            -->
                             <div class="panel-body">
                                 <!-- Start project overview -->
-                                <div class="row">
-                                    
+                                <div class="row">                                    
                                     <div id="chartContainerGenero" style="height: 300px;"> </div>
-
                                 </div>
                             </div><!-- /.panel-body -->
                         </div>
@@ -288,22 +255,6 @@
                 <div class="row">                   
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default shadow">
-                            <!--
-                            <div class="panel-heading">
-                                <div class="pull-left">
-                                    <h3 class="panel-title"><i class='fa fa-map'></i> Estudiantes Matriculados - Dependencia</h3>
-                                </div>
-                                <div class="pull-right">
-                                    <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
-                                        <i class="fa fa-angle-up"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-inverse" onclick="seeGraphic(5,{{infoEntidad.id}},{{infoEntidad.rolactual}});">
-                                        <i class='fa fa-bar-chart'></i>
-                                    </button>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            -->
                             <div class="panel-body">
                                 <!-- Start project overview -->
                                 <div class="row">    
@@ -316,25 +267,6 @@
                 <div class="row">                                       
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default shadow">
-                            <!--
-                                <div class="ribbon-wrapper top-left">
-                                    <div class="ribbon ribbon-danger">Nuevo</div>
-                                </div>
-                            <div class="panel-heading">
-                                <div class="pull-left">
-                                    <h3 class="panel-title"><i class='fa fa-sort-amount-asc'></i> Estudiantes Matriculados - Nivel de Estudio y Año de Escolaridad</h3>
-                                </div>
-                                <div class="pull-right">
-                                    <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
-                                        <i class="fa fa-angle-up"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-inverse" onclick="seeGraphic(2,{{infoEntidad.id}},{{infoEntidad.rolactual}});">
-                                        <i class='fa fa-circle-o'></i>
-                                    </button>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            -->
                             <div class="panel-body">
                                 <!-- Start project overview -->
                                 <div class="row">         
@@ -419,45 +351,7 @@
                             </div>
                         </div>
                     </div>    
-                {%endif%}                     
-                    {% if ingresa == 1 and 1 > 1 %} 
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="panel panel-default shadow">
-                                    <div class="panel-heading">
-                                        <div class="pull-left">
-                                            <h3 class="panel-title"><i class='fa fa-venus-mars'></i> Valoraciones Cuantitativas</h3>
-                                        </div><!-- /.pull-left -->
-                                        <div class="pull-right">
-                                            <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
-                                                <i class="fa fa-angle-up"></i>
-                                            </button>
-                                        </div><!-- /.pull-right -->
-                                        <div class="clearfix"></div>
-                                    </div><!-- /.panel-heading -->
-                                    <div class="panel-body">
-                                        <!-- Start project overview -->
-                                        <div class="row">
-                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <div class="panel-body bg-teal">
-                                                    <div class="ribbon-wrapper">
-                                                    </div><!-- /.ribbon-wrapper -->
-                                                    <ul class="inner-all list-unstyled">
-                                                        <li class="text-center" onclick="document.forms['formEstadisticaRegularValoracionEnDesarrolloXls'].submit();">
-                                                            <i class="fa fa-file-excel-o fa-5x"></i>
-                                                        </li>
-                                                        <li class="text-center" onclick="document.forms['formEstadisticaRegularValoracionEnDesarrolloXls'].submit();">
-                                                            <h4 class="text-capitalize">En Desarrollo</h4>
-                                                        </li>
-                                                    </ul><!-- /.list-unstyled -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div><!-- /.panel-body -->
-                                </div>
-                            </div>                    
-                        </div>  
-                    {%endif%}       
+                {%endif%}            
             </div> 
                
             {% if ingresa == 1 %} 
@@ -478,25 +372,8 @@
                 <span class="alert-icon"><i class="fa fa-info"></i></span>
                 <div class="notification-info">
                     <ul class="clearfix notification-meta">
-
                         <li class="pull-left notification-sender"><span><a>Estudiante matriculado: </a></span> Persona que se registró en el libro de inscripciones de una Unidad Educativa en cualquier año de escolaridad y nivel del Subsistema de Educación Regular durante una gestión escolar dada. </li>
-                        <li class="pull-right notification-time"></li>
-                        
-                        <li class="pull-left notification-sender"><span><a>Nivel educativo: </a></span> Se refiere a la estructura del subsistema de educación regular, que comprende a los niveles: i) Inicial en familia comunitaria; ii) Primaria comunitaria vocacional; y, iii) Secundaria comunitaria productiva. </li>
-                        <li class="pull-right notification-time"></li>
-
-                        <li class="pull-left notification-sender"><span><a>Año de escolaridad: </a></span> Se refiere al grado que cursa un estudiante en una gestión escolar dada. &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</li>
-                        <li class="pull-right notification-time"></li>
-                        
-                        <li class="pull-left notification-sender"><span><a>Unidad Educativa Fiscal o Estatal: </a></span> Instituciones financiadas y administradas por el Estado. Por tanto, son gratuitas. </li>
-                        <li class="pull-right notification-time"></li>
-                        
-                        <li class="pull-left notification-sender"><span><a>Unidad Educativa de Convenio: </a></span> Instituciones financiadas por privados y el Estado, pero administradas por privados. Por lo tanto, no son necesariamente gratuitas. </li>
-                        <li class="pull-right notification-time"></li>
-                        
-                        <li class="pull-left notification-sender"><span><a>Unidad Educativa Privada: </a></span> Instituciones financiadas y administradas por privados. Por tanto, no son de carácter gratuito.&emsp; </li>
-                        <li class="pull-right notification-time"></li>
-                        
+                        <li class="pull-right notification-time"></li>                        
                     </ul>
                 </div>
             </div> 
@@ -551,8 +428,46 @@
                 chartContainerDependenciaLoad(); 
                 chartContainerModalidadLoad(); 
             });  
+
+            function seeGraphic (infoTipo,infoCodigo,infoRol) {
+                $("#modal-page").modal(
+                    {
+                        show: true,
+                        backdrop: 'static',
+                        keyboard: false
+                    }
+                );                 
+            };
         });
-    </script>    
+    </script> 
+    {% if infoEntidad is defined %}
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+        <script>
+            function initialize() {
+                var marcadores = [['{{infoEntidad.id}}', {{infoEntidad.cordx}}, {{infoEntidad.cordy}}]];
+                var map = new google.maps.Map(document.getElementById('lienzoMapa'), {
+                    zoom: 16,
+                    center: new google.maps.LatLng({{infoEntidad.cordx}}, {{infoEntidad.cordy}}),
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
+                var infowindow = new google.maps.InfoWindow();
+                var marker, i;
+                for (i = 0; i < marcadores.length; i++) {
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(marcadores[i][1], marcadores[i][2]),
+                        map: map
+                    });
+                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                        return function () {
+                            infowindow.setContent('<div><b>Unidad Educativa: </b>' + marcadores[i][0] + '</div>');
+                            infowindow.open(map, marker);
+                        }
+                    })(marker, i));
+                }
+            }        
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+    {% endif %}   
 {% endblock %}
 
 
