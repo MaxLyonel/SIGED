@@ -4795,7 +4795,7 @@ class ReporteController extends Controller {
                         }
                     },
                     //colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'],
-                    colors: ['#89B440', '#D7AF29', '#E98E25', '#E55D2B', '#DB3F30', '#2C4853', '#688F9E', '#0F88B7', '#34B0AE', '#36B087'],
+                    colors: ['#89B440', '#D7AF29', '#E98E25', '#F2774D', '#DB3F30', '#2C4853', '#688F9E', '#0F88B7', '#34B0AE', '#36B087'],
                     title: {
                         text: '".$titulo."'
                     },
@@ -4864,7 +4864,7 @@ class ReporteController extends Controller {
                         plotShadow: false,
                         type: 'pie'
                     },
-                    colors: ['#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#E55D2B', '#DB3F30', '#2C4853', '#688F9E'],
+                    colors: ['#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#F2774D', '#DB3F30', '#2C4853', '#688F9E'],
                     title: {
                         text: '".$titulo."'
                     },
@@ -4928,7 +4928,7 @@ class ReporteController extends Controller {
                     chart: {
                         type: 'column'
                     },
-                    colors: ['#E98E25', '#E55D2B', '#DB3F30', '#2C4853', '#688F9E', '#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29'],
+                    colors: ['#E98E25', '#F2774D', '#DB3F30', '#2C4853', '#688F9E', '#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29'],
                     title: {
                         text: '".$titulo."'
                     },
@@ -5002,7 +5002,7 @@ class ReporteController extends Controller {
                         plotBorderWidth: 0,
                         plotShadow: false
                     },
-                    colors: ['#2C4853', '#688F9E', '#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#E55D2B', '#DB3F30'],
+                    colors: ['#2C4853', '#688F9E', '#0F88B7', '#34B0AE', '#36B087', '#89B440', '#D7AF29', '#E98E25', '#F2774D', '#DB3F30'],
                     title: {
                         text: '".$titulo."',
                         align: 'center',
