@@ -72,15 +72,10 @@
                                 <h3 class="panel-title"><i class='fa fa-cloud-download' aria-hidden="true"></i></h3>
                             </div>  
                             <div class="pull-right">
-                                {% if ingresaAdmin == 1 %}
-                                    <button id="tour-13" onclick="document.forms['formEstadisticaRegularPdfTemp'].submit();" title="Descargar en formato PDF" class="btn btn-primary">
-                                        <i class="fa fa-file-pdf-o"></i>
-                                    </button>
-                                {% endif %} 
-                                <button id="tour-13" onclick="document.forms['formEstadisticaRegularPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
                                     <i class="fa fa-file-pdf-o"></i>
                                 </button>
-                                <button id="tour-14" onclick="document.forms['formEstadisticaRegularXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
                                     <i class="fa fa-file-excel-o"></i>
                                 </button>
                             </div>     
@@ -352,27 +347,14 @@
                         </div>
                     </div>    
                 {%endif%}            
-            </div> 
-               
-            {% if ingresa == 1 %} 
-                <form name="formEstadisticaRegularValoracionEnDesarrolloXls" id="formEstadisticaRegularValoracionEnDesarrolloXls" role="form" action="{{ path('reporte_regular_informacion_general_valoracion_cuantitativa_endesarrollo_print_xls') }}" method="POST">  
-                    <input type="hidden" name="gestion" value="{{ gestion }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
-                </form>     
-                <form name="formEstadisticaRegularValoracionEnDesarrolloPdf" id="formEstadisticaRegularValoracionEnDesarrolloPdf" role="form" action="{{ path('reporte_regular_informacion_general_valoracion_cuantitativa_endesarrollo_print_pdf') }}" method="POST">  
-                    <input type="hidden" name="gestion" value="{{ gestion }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
-                </form>                      
-            {% endif %}        
+            </div>        
         </div>
         <div class="row">
             <div class="alert alert-info">
                 <span class="alert-icon"><i class="fa fa-info"></i></span>
                 <div class="notification-info">
                     <ul class="clearfix notification-meta">
-                        <li class="pull-left notification-sender"><span><a>Estudiante matriculado: </a></span> Persona que se registró en el libro de inscripciones de un Centro de Educación Especial en cualquier año de escolaridad y nivel del Subsistema de Educación Alternativa y Especial durante una gestión escolar dada. </li>
+                        <li class="pull-left notification-sender"><span><a>Estudiante matriculado: </a></span> Persona que se registró en el libro de inscripciones de un Centro de Educación Especial en cualquier área de atención del Subsistema de Educación Alternativa y Especial durante una gestión escolar dada. </li>
                         <li class="pull-right notification-time"></li>                        
                     </ul>
                 </div>
