@@ -13,7 +13,7 @@
         <form id="facilitadorsFormId" onsubmit="addMaestro({{ institucioncurso.id }}); return false;">
             <div class="row">
                 <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
-                <div class="form-group col-lg-4 col-md-6">
+                <div class="form-group col-lg-2">
                     <label for="form_facilitador" class="required"> Buscar Facilitador:</label>
                 </div>
                 <div class="form-group col-lg-4 col-md-6">
@@ -22,18 +22,31 @@
                             <option value="{{ maestro.id }}">{{ maestro.paterno }}  {{ maestro.materno }}  {{ maestro.nombre }}</option>
                         {% endfor %}
                     </select>
+
+
+
                 </div>
-                <div class="form-group col-lg-4 col-md-6">
 
+                <div class="form-group col-lg-6 col-md-6">
 
-
-                    {% if maestro is not empty %}
-
+                {% if maestro is not empty %}
+                    <div class="form-group col-lg-2 ">
+                        <laberl >{{ form_widget(form.horas ) }}</laberl>
+                    </div>
+                    <div class="form-group col-lg-2 ">
+                        <p>Hrs.</p>
+                    </div>
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-user"></i> Asignar Facilitador
                         </button>
-
-                    {% endif %}
+                {% else %}
+                    <div hidden class="form-group col-lg-2 " >
+                        <laberl >{{ form_widget(form.horas ) }}</laberl>
+                    </div>
+                    <div hidden class="form-group col-lg-1 ">
+                        <p>Hrs.</p>
+                    </div>
+                {% endif %}
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i> Cerrar</button>
 
 
@@ -56,6 +69,8 @@
                         <th>Materno</th>
                         <th>Nombre(s)</th>
                         <th>Formación</th>
+                        <th>Hrs. Maestro</th>
+                        <th>Hrs. Curso</th>
                         <th> </th>
 
 
@@ -70,8 +85,10 @@
                             <td data-title="Materno">{{ maestroins.materno }}</td>
                             <td data-title="Nombre(s)">{{ maestroins.nombre }}</td>
                             <td data-title="Formación">{{ maestroins.formacion }}</td>
+                            <td data-title="Hrs maestro" class="hmaestro">{{ maestroins.horasmes }}</td>
+                            <td data-title="Hrs Curso" class="hrcurso">{{ maestroins.duracionhoras }}</td>
                             <td data-title="cancel">
-                                <button class="btn btn-danger btn-xs" onclick="deleteMaestro({{ maestroins.id }},{{ maestroins.idoferta }},{{ maestroins.idofermaes }});" data-placement="top" data-original-title="Eliminar Facilitador">
+                                <button class="btn btn-danger btn-xs" onclick="deleteMaestro({{ maestroins.id }},{{ maestroins.idoferta }},{{ maestroins.idofermaes }},'{{ infoUe }}');" data-placement="top" data-original-title="Eliminar Facilitador">
                                     <i class="fa fa-times"></i>
                                 </button>
 

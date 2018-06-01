@@ -76,6 +76,7 @@ class ReportesController extends Controller {
     }    
     
     public function reportParticipantesAction(Request $request){
+
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
         $idcurso=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
@@ -122,6 +123,44 @@ class ReportesController extends Controller {
         return $response;
 
     }
+
+
+
+
+
+    public function reportCursosCortosFechaAction(Request $request){
+
+        $fechainicio = $request->get('fechainicio');
+        $fechafin = $request->get('fechafin');
+
+//        dump($fechainicio);
+//        dump($fechafin);die;
+
+        $sie = $this->session->get('ie_id');
+        $gestion = $this->session->get('ie_gestion');
+        $periodo = $this->session->get('ie_per_cod');
+        $suc=$this->session->get('ie_subcea');
+
+        $argum= 'REPORTE DE CURSOS CORTOS POR FECHAS';
+        $response = new Response();
+
+        $response->headers->set('Content-type', 'application/pdf');
+
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'_'. $periodo . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_cert_participantes_por_curso_v1_ma.rptdesign&Sie=' . $sie . '&Gestion=' .$gestion .  '&Periodo=' . $periodo. '&Subcea=' . $suc. '&Idcurso=' . $idcurso. '&&__format=pdf&'));
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+
+    }
+
+
+
+
+
 
 
 

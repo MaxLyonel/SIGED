@@ -239,8 +239,8 @@ class InstitucioneducativaController extends Controller {
     }
     
     public function gessubsemAction() {
-        $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipo($this->session->get('ie_id'));
-        //dump($iesubsea);die;
+        $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipoPer($this->session->get('ie_id'));
+       // dump($iesubsea);die;
 
         $reversed = array_reverse($iesubsea);
 
@@ -248,6 +248,16 @@ class InstitucioneducativaController extends Controller {
     }
 
     public function gessubsemopenAction(Request $request, $teid, $gestion, $subcea, $semestre, $idiesuc) {
+
+//      dump($request);
+//        dump($teid);
+//        dump($gestion);
+//        dump($subcea);
+//        dump($semestre);
+//        dump($idiesuc);die;
+//
+
+
         $sesion = $request->getSession();
         $sesion->set('ie_gestion', $gestion);
         $sesion->set('ie_subcea', $subcea);
@@ -1070,7 +1080,7 @@ class InstitucioneducativaController extends Controller {
         $gestion = $form['gestion'];
         //$periodo = $form['periodo'];
         $subcea = $form['subcea'];
-
+        $periodo='1';
         /*dump($idInstitucion);
         dump($gestion);
         dump($periodo);
@@ -1084,7 +1094,7 @@ class InstitucioneducativaController extends Controller {
         /*
         * verificamos si existe la Institución Educativa
         */
-        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $idInstitucion, 'institucioneducativaTipo' => 2));
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $idInstitucion, 'institucioneducativaTipo' => 5));
         if (!$institucioneducativa) {
             $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! El código SIE ingresado no es válido.');
             return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
@@ -1135,7 +1145,8 @@ class InstitucioneducativaController extends Controller {
                 return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
             }
             else {
-                $query = $em->getConnection()->prepare('SELECT sp_genera_inicio_sgte_gestion_alternativa(:sie, :gestion, :periodo, :subcea)');
+                // sp_genera_institucioneducativa_sucursal(icodue character varying, isucursal character varying, igestion character varying, iperiodo character varying)
+                $query = $em->getConnection()->prepare('SELECT sp_genera_institucioneducativa_sucursal(:sie, :subcea, :gestion, :periodo)');
                 $query->bindValue(':sie', $idInstitucion);
                 $query->bindValue(':gestion', $gestion);
                 $query->bindValue(':periodo', $periodo);
@@ -1143,7 +1154,7 @@ class InstitucioneducativaController extends Controller {
                 $query->execute();
                 $iesid = $query->fetchAll();
               //  dump($iesid);die;
-                if (($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '0') and ($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '')){
+                if (($iesid[0]["sp_genera_institucioneducativa_sucursal"] != '0') and ($iesid[0]["sp_genera_institucioneducativa_sucursal"] == '')){
 //                    $iesidnew = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"]);
 //                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();  
 //                    $iest = new InstitucioneducativaSucursalTramite();

@@ -176,7 +176,7 @@ class InfoPersonalAdmController extends Controller {
         }
 
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('herramientalt_info_personal_adm_create'))
+                ->setAction($this->generateUrl('permanente_info_personal_adm_create'))
                 ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('persona', 'hidden', array('data' => $idPersona))
@@ -234,7 +234,7 @@ class InfoPersonalAdmController extends Controller {
             if ($maestroInscripcion) { // Si  el personalAdministrativo ya esta inscrito
                 $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
-                return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+                return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
             }
 
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
@@ -286,7 +286,7 @@ class InfoPersonalAdmController extends Controller {
             }
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
-            return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+            return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
@@ -338,7 +338,7 @@ class InfoPersonalAdmController extends Controller {
             $em->persist($maestroInscripcion);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+            return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
         } catch (Exception $ex) {
             
         }
@@ -406,7 +406,7 @@ class InfoPersonalAdmController extends Controller {
         }
 
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('herramientalt_info_personal_adm_update'))
+                ->setAction($this->generateUrl('permanente_info_personal_adm_update'))
                 ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('idPersona', 'hidden', array('data' => $persona->getId()))
@@ -486,11 +486,11 @@ class InfoPersonalAdmController extends Controller {
             }
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('updateOk', 'Datos modificados correctamente');
-            return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+            return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificacion de datos');
-            return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+            return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
         }
     }
 
@@ -512,7 +512,7 @@ class InfoPersonalAdmController extends Controller {
                 if ($institucionCursoOfertaMaestro) {
 
                     $this->get('session')->getFlashBag()->add('eliminarError', 'El registro no se pudo eliminar, el maestro tiene areas asignadas.');
-                    return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index', array('op' => 'result')));
+                    return $this->redirect($this->generateUrl('permanente_info_personal_adm_index', array('op' => 'result')));
                 }
                 //eliminar idiomas del maestro
                 $idiomas = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $maestroInscripcion->getId()));
@@ -530,11 +530,11 @@ class InfoPersonalAdmController extends Controller {
                 $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('eliminarOk', 'El registro fue eliminado exitosamente');
 
-                return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+                return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
             }
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('eliminarError', 'El registro no se pudo eliminar');
-            return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+            return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
@@ -583,7 +583,7 @@ class InfoPersonalAdmController extends Controller {
      */
     private function searchForm() {
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('herramientalt_info_personal_adm_result'))
+                ->setAction($this->generateUrl('permanente_info_personal_adm_result'))
                 ->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
                 ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
                 ->add('buscar', 'submit', array('label' => 'Buscar coincidencias por C.I.', 'attr' => array('class' => 'btn btn-primary')))

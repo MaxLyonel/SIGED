@@ -24,7 +24,7 @@
                                     <strong>{{form_widget(form.programa)}}</strong>
                                 </div>
                                 <div class="form-group col-lg-4 col-md-6">
-                                    <label> Area Tematica </label>
+                                    <label> Área Temática </label>
                                     <strong>{{form_widget(form.areatematica)}}</strong>
                                 </div>
                             </div>
@@ -36,13 +36,13 @@
                                     {#<div class="arrow-after" style="display:none;margin-left:10px;" id="after5"></div>#}
                                     {#<div id="5" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-350px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros"></div>#}
 
-                                    {#<strong>{{form_widget(form.cursosCortos)}}</strong>#}
-                                    <select id="combocurso" class="chosen-select col-lg-10">
-                                        <option value="">Seleccionar...</option>
-                                        {% for at in cursos %}
-                                            <option value="{{at.id}}">{{at.cursocorto}}</option>
-                                        {% endfor %}
-                                    </select>
+                                    <strong>{{form_widget(form.cursosCortos)}}</strong>
+                                    {#<select id="combocurso" class="chosen-select col-lg-10">#}
+                                        {#<option value="">Seleccionar...</option>#}
+                                        {#{% for at in cursos %}#}
+                                            {#<option value="{{at.id}}">{{at.cursocorto}}</option>#}
+                                        {#{% endfor %}#}
+                                    {#</select>#}
 
                                 </div>
                                 <div class="form-group col-lg-4 col-md-6">
@@ -50,7 +50,7 @@
                                     <strong>{{form_widget(form.turno)}}</strong>
                                 </div>
                                 <div class="form-group col-lg-4 col-md-6">
-                                    <label> Poblacion</label>
+                                    <label> Población</label>
                                     <strong>{{form_widget(form.poblacion)}}</strong>
                                 </div>
 

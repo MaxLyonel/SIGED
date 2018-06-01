@@ -826,53 +826,7 @@
 
         };
 
-        var xhr5;
-        var addpop = function(idco){
-            if ($('#'+idco).is(':hidden')){
-                if (xhr5 && xhr5.readyState != 4) {
-                    xhr5.abort();
-                }
-                xhr5 = $.ajax({
-                    type: 'post',
-                    data: ({idco: idco}),
-                    url: "{{ path('herramienta_per_show_curso_nuevo') }}",
-                    beforeSend: function () {
-                        $('.divMaestros').hide();
-                        $('.arrow-before').hide();
-                        $('.arrow-after').hide();
-                        $("#"+idco).empty();
-                        $('#before'+idco).fadeIn();
-                        $('#after'+idco).fadeIn();
-                        $('#'+idco).fadeIn();
-                        $('#'+idco).append("<div style='background:#FFFFFF; text-align:center; color:#286AFB'><div style='padding:10px 0px 10px 0px;'>Cargando <br><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></div></div>");
-                    },
-                    success: function (data) {
-                        $("#"+idco).empty();
-                        $("#"+idco).append(data);
-                        $('.chosen-select').chosen({allow_single_deselect: false});
-                        $('#'+idco).fadeIn();
-                    },
-                    statusCode: {
-                        500: function () {
 
-                        },
-                        404: function () {
-
-                        }
-                    }
-                });
-            }else{
-                if (xhr5 && xhr5.readyState != 4) {
-                    xhr5.abort();
-                }
-                $('#'+idco).fadeOut();
-                $('#before'+idco).fadeOut();
-                $('#after'+idco).fadeOut();
-            }
-        }
-
-
-        var xhr6;
         var asignarCurso = function(){
             if (xhr6 && xhr6.readyState != 4) {
                 xhr6.abort();

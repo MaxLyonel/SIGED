@@ -100,7 +100,7 @@ class CursosCortosController extends Controller {
         }
 
         $areatematica = $em->getRepository('SieAppWebBundle:PermanenteAreaTematicaTipo')->findAll();
-     
+
         $query = $em->getConnection()->prepare('
                 select a.id, a.periodo_tipo_id, a.grado_tipo_id, a.gestion_tipo_id, a.nivel_tipo_id, a.turno_tipo_id,a.fecha_inicio,a.fecha_fin,a.duracionhoras,
                         b.esabierto, 
@@ -237,7 +237,7 @@ class CursosCortosController extends Controller {
                 ->add('areatematica', 'choice', array('required' => true, 'choices' => $areatematicaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('programa', 'choice', array('required' => true, 'choices' => $programaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-               // ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'chosen-select col-lg-10')))
              //   ->add('departamento', 'entity', array('label' => 'Departamento', 'required' => true, 'class' => 'SieAppWebBundle:DepartamentoTipo', 'property' => 'departamento', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value);')))
                 ->add('departamento', 'choice', array('label' => 'Departamento', 'required' => true, 'choices' => $dptoNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value)')))
                 ->add('provincia', 'choice', array('label' => 'Provincia', 'required' => true, 'choices' => $prov, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
@@ -692,9 +692,9 @@ class CursosCortosController extends Controller {
 //dump($maestros);die;
 
         $querya = $em->getConnection()->prepare('
-              select a.id, a.institucioneducativa_id,
+              select a.id, a.institucioneducativa_id,a.duracionhoras,
                     y.cursocorto,
-                    b.id as idoferta,
+                    b.id as idoferta,b.horasmes,
                     c.id as idofermaes,
                     d.id as idmaestro, d.persona_id, d.institucioneducativa_id,d.gestion_tipo_id,d.es_vigente_administrativo,
                     e.id as idformacion, e.formacion,
@@ -723,6 +723,7 @@ class CursosCortosController extends Controller {
           //  ->add('maestro', 'hidden', array('data' => $maestros))
             ->add('gestion', 'hidden', array('data' => $gestion))
             ->add('cursoscortos', 'hidden', array('data' => $idcurso))
+            ->add('horas', 'text', array( 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control','pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
             //->add('busqueda', 'text', array( 'required' => false, 'attr' => array('autocomplete' => 'on', 'class' => 'form-control')))
 
             ->getForm();
@@ -743,9 +744,10 @@ class CursosCortosController extends Controller {
     public function addMaestroCursoCortoAction(Request $request){
 
         //get send valus
-    //   dump($request);die;
+    //dump($request);die;
         $infoUe = $request->get('infoUe');
         $form =  $request->get('form');
+     //   dump($form);die;
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
@@ -758,8 +760,8 @@ class CursosCortosController extends Controller {
         $institucion = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $periodo = $this->session->get('ie_per_cod');
-        $horas = $institucioncurso->getDuracionhoras();
-       // dump($horas);die;
+        $horas = $form['horas'];
+      //  dump($horas);die;
         try
         {
          $form = $request->get('form');
@@ -816,9 +818,9 @@ class CursosCortosController extends Controller {
 
             $maestros= $query->fetchAll();
             $querya = $em->getConnection()->prepare('
-              select a.id, a.institucioneducativa_id,
+              select a.id, a.institucioneducativa_id,a.duracionhoras,
                     y.cursocorto,
-                    b.id as idoferta,
+                    b.id as idoferta,b.horasmes,
                     c.id as idofermaes,
                     d.id as idmaestro, d.persona_id, d.institucioneducativa_id,d.gestion_tipo_id,d.es_vigente_administrativo,
                     e.id as idformacion, e.formacion,
@@ -839,12 +841,14 @@ class CursosCortosController extends Controller {
             $querya->bindValue(':gestion', $gestion);
             $querya->execute();
             $maestrosins =$querya->fetchAll();
-
+//dump($maestrosins);die;
             $form = $this->createFormBuilder()
 //                ->setAction($this->generateUrl('herramienta_per_cursos_cortos_add_maestro'))
                 //  ->add('maestro', 'hidden', array('data' => $maestros))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('cursoscortos', 'hidden', array('data' => $idcurso))
+                ->add('horas', 'text', array( 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control','pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
+
                 //->add('busqueda', 'text', array( 'required' => false, 'attr' => array('autocomplete' => 'on', 'class' => 'form-control')))
 
                 ->getForm();
@@ -929,9 +933,9 @@ class CursosCortosController extends Controller {
 
             $maestros= $query->fetchAll();
             $querya = $em->getConnection()->prepare('
-              select a.id, a.institucioneducativa_id,
+              select a.id, a.institucioneducativa_id,a.duracionhoras,
                     y.cursocorto,
-                    b.id as idoferta,
+                    b.id as idoferta,b.horasmes,
                     c.id as idofermaes,
                     d.id as idmaestro, d.persona_id, d.institucioneducativa_id,d.gestion_tipo_id,d.es_vigente_administrativo,
                     e.id as idformacion, e.formacion,
@@ -958,6 +962,8 @@ class CursosCortosController extends Controller {
                 //  ->add('maestro', 'hidden', array('data' => $maestros))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('cursoscortos', 'hidden', array('data' => $idcurso))
+                ->add('horas', 'text', array( 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control','pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
+
                 //->add('busqueda', 'text', array( 'required' => false, 'attr' => array('autocomplete' => 'on', 'class' => 'form-control')))
 
                 ->getForm();
@@ -1026,9 +1032,7 @@ class CursosCortosController extends Controller {
             //$em->getConnection()->rollback();
         }
     }
-    /*
-     * Funciones para cargar los combos dependientes via ajax
-     */
+
     public function listarmunicipiosAction($prov) {
         try {
             $em = $this->getDoctrine()->getManager();
@@ -1264,7 +1268,6 @@ class CursosCortosController extends Controller {
         }
     }
 
-
     public function closeInscriptionAction(Request $request) {
 
       //  dump($request);die;
@@ -1411,9 +1414,6 @@ class CursosCortosController extends Controller {
 
     }
 
-
-
-
     public function listaCursoAction(Request $request)
     {
         try
@@ -1438,11 +1438,12 @@ class CursosCortosController extends Controller {
         }
 
     }
+
     public function showlistaCursoAction(Request $request)
     {
         //obtenemos los campos enviados
         $form = $request->get('form');
-//dump($request);die;
+//
         $institucion = $this->session->get('ie_id');
         try
         {
@@ -1482,7 +1483,9 @@ class CursosCortosController extends Controller {
 
 //dump($cursoCorto);die;
             return $this->render('SiePermanenteBundle:CursosCortos:listCursosCortos.html.twig', array(
-                 'cursocorto'=>$cursoCorto
+                 'cursocorto'=>$cursoCorto,
+                'fechainicio'=>$fechaini,
+                'fechafin'=>$fechafin
 
             ));
 

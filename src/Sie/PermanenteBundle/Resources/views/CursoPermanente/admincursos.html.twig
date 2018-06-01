@@ -58,7 +58,7 @@
                                     <i class="fa fa-credit-card"></i>
                                     <div>
                                         {#<span class="text-strong">Step 3</span>#}
-                                        <span>Area Tematica</span>
+                                        <span>Área Temática</span>
                                     </div>
                                 </a>
                             </li>
@@ -94,7 +94,7 @@
                                         <strong>{{form_widget(form.curso)}}</strong>
                                         {#<strong>{{form_widget(form.guardar)}}</strong>#}
 
-                                        <button type="button" class="btn btn-danger" onclick="asignarCurso()">Guardar</button>
+                                        <button type="button" class="btn btn-danger" onclick="asignarCursoCorto()">Guardar</button>
 
                                     </div>
 
@@ -122,16 +122,16 @@
 
                             </div>
                             <div class="tab-pane fade inner-all" id="tab1-3">
-                                <h4 class="page-header">Area Tematica</h4>
+                                <h4 class="page-header">Área Temática</h4>
                                 <div class="form-body col-lg-4 col-md-6">
-                                    <label> Ver Area Tematica</label>
+                                    <label> Ver Área Temática</label>
                                     <select id="combocurso" class="chosen-select col-lg-10">
                                         <option value="">Seleccionar...</option>
                                         {% for at in areatematicaper %}
                                             <option value="{{at.id}}">{{at.areatematica}}</option>
                                         {% endfor %}
                                     </select>
-                                    <label> Crear Nueva Area Tematica</label>
+                                    <label> Crear Nueva Área Temática</label>
                                     <strong>{{form_widget(form.area)}}</strong>
                                     {#<strong>{{form_widget(form.guardar)}}</strong>#}
 
@@ -171,7 +171,7 @@
 {% block javascripts %}
     {{parent()}}
     <script>
-        var asignarCurso = function(){
+        var asignarCursoCorto = function(){
             var nuevoCurso = $('#form_curso').val();
             if(nuevoCurso == ''){
                 alert('Campo requerido, Ingrese el Nombre del curso');
