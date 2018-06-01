@@ -63,6 +63,7 @@ class InfoEspecialController extends Controller{
      }
      //get all info about centro
      $objAllInfoCentro = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getInfoCentroSpecial($this->session->get('ie_id'));
+     
     // set the centro info
      $arrInfoCentro = array();
      $key = 0;
@@ -119,27 +120,31 @@ class InfoEspecialController extends Controller{
         $maxiesuc = $query->getResult();
         $codigosuc= $maxiesuc[0][1] + 1;
         $codigole= $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($data['idInstitucion'])->getLeJuridicciongeografica();
-
-        // Registramos la sucursal
-        $entity = new InstitucioneducativaSucursal();
-        $entity->setId($codigosuc);
-        $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($data['idInstitucion']));
-        $entity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($data['gestion']));
-        $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($codigole));
-        $entity->setTelefono1("");
-        $entity->setEmail("");
-        $entity->setDireccion("");
-        $entity->setZona("");
-        $entity->setNombreSubcea("");
-        $entity->setCodCerradaId(10);
-        $entity->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById(0));
-        $entity->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->findOneById(0));
-        $em->persist($entity);
-        $em->flush();
-        $em->getConnection()->commit();
+        try {
+            // Registramos la sucursal
+            $entity = new InstitucioneducativaSucursal();
+            $entity->setId($codigosuc);
+            $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($data['idInstitucion']));
+            $entity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($data['gestion']));
+            $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($codigole));
+            $entity->setTelefono1("");
+            $entity->setEmail("");
+            $entity->setDireccion("");
+            $entity->setZona("");
+            $entity->setNombreSubcea("");
+            $entity->setCodCerradaId(10);
+            $entity->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById(0));
+            $entity->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->findOneById(0));
+            $em->persist($entity);
+            $em->flush();
+            $em->getConnection()->commit();
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
     }
 
-    if(!$objInfoCentro){
+    /*if(!$objInfoCentro){
       try {
         $objNewRegistroConsolidation = new RegistroConsolidacion();
 
@@ -166,11 +171,7 @@ class InfoEspecialController extends Controller{
         $em->getConnection()->rollback();
         echo 'Excepción capturada: ', $ex->getMessage(), "\n";
       }
-
-
-
-
-    }
+    }*/
 
     //dump($data);die;
     $dataInfo = array('id' => $data['idInstitucion'], 'gestion' => $data['gestion'], 'institucioneducativa' => $data['institucioneducativa']);
@@ -228,33 +229,21 @@ class InfoEspecialController extends Controller{
 
       //get the current operativo
       $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
-      
+
       //update the close operativo to registro consolido table
       $objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
         'unidadEducativa' => $form['sie'],
         'gestion'         => $form['gestion']
       ));
 
-      $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
-      $periodo = 0;
-      if($registroConsol){
-          if($registroConsol->getBim1()      == '0' and $registroConsol->getBim2() == '0' and $registroConsol->getBim3() == '0' and $registroConsol->getBim4() == '0'){
-              $periodo = 1;
-          }
-          else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() == '0' and $registroConsol->getBim3() == '0' and $registroConsol->getBim4() == '0'){
-              $periodo = 2;
-          }
-          else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() >= '1' and $registroConsol->getBim3() == '0' and $registroConsol->getBim4() == '0'){
-              $periodo = 3;
-          }
-          else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() >= '1' and $registroConsol->getBim3() >= '1' and $registroConsol->getBim4() == '0'){
-              $periodo = 4;
-          }
-          else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() >= '1' and $registroConsol->getBim3() >= '1' and $registroConsol->getBim4() >= '1'){
-              $periodo = 4;
-          }
-      }
-      else{
+      $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+          'unidadEducativa' => $form['sie'], 
+          'gestion' => $form['gestion']
+        ));
+
+      $periodo = $this->operativo($form['sie'], $form['gestion']);
+
+      if(!$registroConsol){
           $rconsol = new RegistroConsolidacion();
           $rconsol->setTipo(1);
           $rconsol->setGestion($form['gestion']);
@@ -274,6 +263,7 @@ class InfoEspecialController extends Controller{
           $rconsol->setSubCea(0);
           $rconsol->setBan(1);
           $rconsol->setEsonline('t');
+          $rconsol->setInstitucioneducativaTipoId(4);
           $em->persist($rconsol);
           $em->flush();
           $em->getConnection()->commit();
@@ -325,13 +315,13 @@ class InfoEspecialController extends Controller{
                 $operativo = 1; // Primer Bimestre
             }
             if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 2; // Primer Bimestre
+                $operativo = 2; // Segundo Bimestre
             }
             if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 3; // Primer Bimestre
+                $operativo = 3; // Tercer Bimestre
             }
             if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 4; // Primer Bimestre
+                $operativo = 4; // Cuarto Bimestre
             }
             if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] >= 1){
                 $operativo = 5; // Fin de gestion o cerrado
