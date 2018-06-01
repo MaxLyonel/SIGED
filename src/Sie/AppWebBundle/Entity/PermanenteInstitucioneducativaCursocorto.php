@@ -332,4 +332,32 @@ class PermanenteInstitucioneducativaCursocorto
     {
         return $this->lugarTipoMunicipio;
     }
+    /**
+     * @var string
+     */
+    private $poblacionDetalle;
+
+
+    /**
+     * Set poblacionDetalle
+     *
+     * @param string $poblacionDetalle
+     * @return PermanenteInstitucioneducativaCursocorto
+     */
+    public function setPoblacionDetalle($poblacionDetalle)
+    {
+        $this->poblacionDetalle = $poblacionDetalle;
+    
+        return $this;
+    }
+
+    /**
+     * Get poblacionDetalle
+     *
+     * @return string 
+     */
+    public function getPoblacionDetalle()
+    {
+        return $this->poblacionDetalle;
+    }
 }
