@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\MaestroInscripcion;
 use Sie\AppWebBundle\Entity\MaestroInscripcionIdioma;
+use Sie\AppWebBundle\Form\BuscarPersonaSegipType;
 use GuzzleHttp\Client;
 
 /**
@@ -242,7 +243,16 @@ class InfoMaestroController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
 
+        $formBuscarPersona = $this->createForm(new BuscarPersonaSegipType(), 
+            null, 
+            array(
+                'action' => $this->generateUrl('herramienta_especial_info_maestro_result'), 
+                'method' => 'POST'
+            )
+        );
+
         return $this->render($this->session->get('pathSystem') . ':InfoMaestro:search.html.twig', array(
+                    //'form' => $formBuscarPersona->createView(),
                     'form' => $this->searchForm($request->getSession()->get('idInstitucion'), $request->getSession()->get('idGestion'))->createView(),
                     'institucion' => $institucion,
                     'gestion' => $request->getSession()->get('idGestion')
@@ -257,7 +267,7 @@ class InfoMaestroController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $form = $request->get('form');
+        $form = $request->get('form');        
 
         $persona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplemento($form);
         
@@ -277,11 +287,15 @@ class InfoMaestroController extends Controller {
     private function searchForm() {
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_especial_info_maestro_result'))
-                //->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
-                //->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
-                ->add('buscar', 'submit', array('label' => 'Buscar coincidencias por C.I.', 'attr' => array('class' => 'btn btn-md btn-facebook')))
+                //->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'maxlength' => '10')))
+                //->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control', 'maxlength' => '2', 'autocomplete' => 'off')))
+                ->add('buscar', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-md btn-facebook')))
                 ->getForm();
         return $form;
+
+        return $this->render('SieUsuariosBundle:Default:usuariocarnet.html.twig', array(           
+            'formBuscarPersona'   => $formBuscarPersona->createView(),            
+        ));
     }
 
     /*
@@ -498,7 +512,7 @@ class InfoMaestroController extends Controller {
             $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
             $maestroinscripcion->setIdiomaMaternoId(null);
             $maestroinscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucionEducativa']));
-            $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById(0));
+            $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'gestionTipo' => $form['gestion'])));
             $maestroinscripcion->setLeeescribebraile((isset($form['leeEscribeBraile'])) ? 1 : 0);
             $maestroinscripcion->setNormalista((isset($form['normalista'])) ? 1 : 0);
             $maestroinscripcion->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->findOneById(1));
@@ -639,7 +653,7 @@ class InfoMaestroController extends Controller {
             $maestroinscripcion->setFormacionTipo($em->getRepository('SieAppWebBundle:FormacionTipo')->findOneById($form['formacion']));
             $maestroinscripcion->setFormaciondescripcion(mb_strtoupper($form['formacionDescripcion'], 'utf-8'));
             $maestroinscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucionEducativa']));
-            $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById(0));
+            $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'gestionTipo' => $form['gestion'])));
             $maestroinscripcion->setLeeescribebraile((isset($form['leeEscribeBraile'])) ? 1 : 0);
             $maestroinscripcion->setNormalista((isset($form['normalista'])) ? 1 : 0);
             $maestroinscripcion->setItem($form['item']);

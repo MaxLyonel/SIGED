@@ -314,6 +314,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->add('seccionvEstudianteNacionoriginariaTipo', 'entity', array('label' => false, 'required' => false, 'class' => 'SieAppWebBundle:NacionOriginariaTipo', 'property' => 'nacion_originaria', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('seccionvEstudianteEsocupacion', 'choice', array('required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
             ->add('seccionvTrabaja', 'entity', array('multiple' => true, 'required' => false, 'label' => false, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltOcupacionTipo', 'property' => 'ocupacion', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control js-example-basic-multiple', 'style'=>'width: 100%')))
+            ->add('seccionvOtroTrabajo', 'text', array('required' => false, 'attr' => array('class' => 'form-control', 'maxlength' => '50')))
             ->add('seccionvEstudianteEsseguroSalud', 'choice', array('required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
             ->add('seccionvEstudianteSeguroSaludDonde', 'text', array('required' => false, 'attr' => array('class' => 'form-control')))
             ->add('seccionvEstudianteGrupoSanguineoTipo', 'entity', array('label' => false, 'required' => false, 'class' => 'SieAppWebBundle:SangreTipo', 'property' => 'grupo_sanguineo', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
@@ -321,6 +322,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->add('seccionvTransporte', 'entity', array('multiple' => true, 'label' => false, 'required' => false, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltTransporteTipo', 'property' => 'transporte', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control js-example-basic-multiple', 'style'=>'width: 100%')))
             ->add('seccionvEstudianteDemoraLlegarCentroHoras', 'text', array('data' => 0, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
             ->add('seccionvEstudianteDemoraLlegarCentroMinutos', 'text', array('data' => 0, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
+            ->add('seccionviModalidadEstudioTipo', 'entity', array('label' => false, 'required' => true, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltModalidadTipo', 'property' => 'modalidad', 'attr' => array('class' => 'form-control')))
             ->add('seccionviEstudiantePorqueInterrupcionservicios', 'textarea', array('required' => false, 'attr' => array('class' => 'form-control')))
             ->add('lugar', 'text', array('required' => true, 'attr' => array('class' => 'form-control')))
             ->add('fecha', 'date', array('format' => 'dd-MM-yyyy', 'data' => new \DateTime('now'), 'required' => false, 'attr' => array('class' => 'form-control')))
@@ -335,6 +337,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
      */
 
     private function editform($idInscripcion, $gestion, $socioeconomico) {
+        
         $em = $this->getDoctrine()->getManager();
 
         $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $idInscripcion));
@@ -689,7 +692,13 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->setParameter('tra', $transporteArray);
         $transporteArray = $query->getResult();
 
-                $form = $this->createFormBuilder()
+        $modalidad = 1;
+        if($socioeconomico->getSeccionviModalidadTipo() != null)
+        {
+            $modalidad = $socioeconomico->getSeccionviModalidadTipo()->getId();
+        }
+
+        $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('socioeconomicoalt_update'))
             ->add('estudianteInscripcion', 'hidden', array('data' => $idInscripcion))
             ->add('gestionId', 'hidden', array('data' => $gestion))
@@ -708,9 +717,6 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->add('seccioniiUnidadMilitarTipo', 'choice', array('data'=> $pertUM , 'required' => false, 'choices' => $unidadMilitarArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('seccioniiFuerzaMilitarTipo', 'text', array('data' => $nombreA , 'required' => false, 'attr' => array('class' => 'form-control','disabled' => true)))
             ->add('seccioniiEducacionDiversaTipo', 'choice', array('data'=> $pertED, 'required' => false, 'choices' => $EDEstudianteArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarmenu(this.value)')))
-//$auxARr = arry(34,343,343,34);
-                      //
- //               $objSer = unserialize($auxARr);
             ->add('pertUM', 'hidden', array('data'=>$pertUM ) )
             ->add('pertP', 'hidden', array('data'=>$pertP ) )
             ->add('nombreA', 'hidden', array('data'=>$nombreA ) )
@@ -718,14 +724,10 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->add('cea', 'hidden', array('data'=>$cea ) )
             ->add('umt', 'hidden', array('data'=>$umt ) )
             ->add('pt', 'hidden', array('data'=>$pt ) )
-           //  ->add('educaciondiversa', 'hidden', array('class'=>) )
-
             ->add('seccioniiRecintoPenitenciarioTipo', 'choice', array('data'=> $pertP , 'required' => false, 'choices' => $penalArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('seccioniiLugarReclusionTipo', 'text', array('data' => $nombreP , 'required' => false, 'attr' => array('class' => 'form-control','disabled' => true)))
             //end
             ->add('seccioniiHijos', 'text', array('data' => $socioeconomico->getSeccioniiHijos(), 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
-
-
             ->add('seccioniiEsserviciomilitar', 'choice', array('data' => $socioeconomico->getSeccioniiEsserviciomilitar(),'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
             ->add('seccioniiEsserviciomilitarCea', 'choice', array('data' => $socioeconomico->getSeccioniiEsserviciomilitarCea(),'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(true => 'El CEA', false => 'El Cuartel')))
             ->add('departamento', 'choice', array('data' => $d_id - 1, 'label' => 'Departamento', 'required' => true, 'choices' => $dptoArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value);')))
@@ -752,6 +754,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->add('seccionvEstudianteNacionoriginariaTipo', 'entity', array('data' => $em->getReference('SieAppWebBundle:NacionOriginariaTipo', $socioeconomico->getSeccionvEstudianteNacionoriginariaTipo()->getId()), 'label' => false, 'required' => false, 'class' => 'SieAppWebBundle:NacionOriginariaTipo', 'property' => 'nacion_originaria', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
             ->add('seccionvEstudianteEsocupacion', 'choice', array('data' => $socioeconomico->getSeccionvEstudianteEsocupacion(), 'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
             ->add('seccionvTrabaja', 'entity', array('data' => $ocupacionArray, 'multiple' => true, 'required' => false, 'label' => false, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltOcupacionTipo', 'property' => 'ocupacion', 'attr' => array('class' => 'form-control js-example-basic-multiple', 'style'=>'width: 100%')))
+            ->add('seccionvOtroTrabajo', 'text', array('data' => $socioeconomico->getSeccionvOtroTrabajo(), 'required' => false, 'attr' => array('class' => 'form-control', 'maxlength' => '50')))
             ->add('seccionvEstudianteEsseguroSalud', 'choice', array('data' => $socioeconomico->getSeccionvEstudianteEsseguroSalud(), 'required' => false, 'label' => false, 'empty_value' => false, 'choices' => array(false => 'NO', true => 'SI')))
             ->add('seccionvEstudianteSeguroSaludDonde', 'text', array('data' => $socioeconomico->getSeccionvEstudianteSeguroSaludDonde(), 'required' => false, 'attr' => array('class' => 'form-control')))
             ->add('seccionvEstudianteGrupoSanguineoTipo', 'entity', array('data' => $em->getReference('SieAppWebBundle:SangreTipo', $socioeconomico->getSeccionvEstudianteGrupoSanguineoTipo()->getId()), 'label' => false, 'required' => false, 'class' => 'SieAppWebBundle:SangreTipo', 'property' => 'grupo_sanguineo', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
@@ -759,6 +762,7 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             ->add('seccionvTransporte', 'entity', array('data' => $transporteArray, 'multiple' => true, 'label' => false, 'required' => false, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltTransporteTipo', 'property' => 'transporte', 'attr' => array('class' => 'form-control js-example-basic-multiple', 'style'=>'width: 100%')))//js-example-basic-multiple
             ->add('seccionvEstudianteDemoraLlegarCentroHoras', 'text', array('data' => $socioeconomico->getSeccionvEstudianteDemoraLlegarCentroHoras(), 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
             ->add('seccionvEstudianteDemoraLlegarCentroMinutos', 'text', array('data' => $socioeconomico->getSeccionvEstudianteDemoraLlegarCentroMinutos(), 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
+            ->add('seccionviModalidadEstudioTipo', 'entity', array('data' => $em->getReference('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltModalidadTipo', $modalidad), 'label' => false, 'required' => true, 'class' => 'SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltModalidadTipo', 'property' => 'modalidad', 'attr' => array('class' => 'form-control')))
             ->add('seccionviEstudiantePorqueInterrupcionservicios', 'textarea', array('data' => $socioeconomico->getSeccionviEstudiantePorqueInterrupcionservicios(), 'required' => false, 'attr' => array('class' => 'form-control')))
             ->add('lugar', 'text', array('data' => $socioeconomico->getLugar(), 'required' => true, 'attr' => array('class' => 'form-control')))
             ->add('fecha', 'date', array('format' => 'dd-MM-yyyy', 'data' => new \DateTime($socioeconomico->getFecha()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control')))
@@ -836,11 +840,13 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             $socioinscripcion->setSeccionvEstudianteGrupoSanguineoTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById($form['seccionvEstudianteGrupoSanguineoTipo'] ? $form['seccionvEstudianteGrupoSanguineoTipo'] : 0));
             $socioinscripcion->setSeccionvEstudianteDemoraLlegarCentroHoras($form['seccionvEstudianteDemoraLlegarCentroHoras'] ? $form['seccionvEstudianteDemoraLlegarCentroHoras'] : 0);
             $socioinscripcion->setSeccionvEstudianteDemoraLlegarCentroMinutos($form['seccionvEstudianteDemoraLlegarCentroMinutos'] ? $form['seccionvEstudianteDemoraLlegarCentroMinutos'] : 0);
+            $socioinscripcion->setSeccionviModalidadTipo($em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltModalidadTipo')->findOneById($form['seccionviModalidadEstudioTipo'] ? $form['seccionviModalidadEstudioTipo'] : 1));
             $socioinscripcion->setSeccionviEstudiantePorqueInterrupcionservicios($form['seccionviEstudiantePorqueInterrupcionservicios'] ? mb_strtoupper($form['seccionviEstudiantePorqueInterrupcionservicios'], 'utf-8') : '');
             //$socioinscripcion->setSeccioniiUnidadMilitar($em->getRepository('SieAppWebBundle:UnidadMilitar')->findOneById($form['seccioniiUnidadMilitar']));
             $socioinscripcion->setSeccioniiEducacionDiversaTipo($em->getRepository('SieAppWebBundle:EducacionDiversaTipo')->findOneById($form['seccioniiEducacionDiversaTipo']));
           //  $socioinscripcion->setSeccioniiPenal($em->getRepository('SieAppWebBundle:Penal')->findOneById($form['seccioniiPenal']));
             $socioinscripcion->setLugar($form['lugar'] ? mb_strtoupper($form['lugar'], 'utf-8') : '');
+            $socioinscripcion->setSeccionvOtroTrabajo($form['seccionvOtroTrabajo'] ? mb_strtoupper($form['seccionvOtroTrabajo'], 'utf-8') : '');
             $socioinscripcion->setFecha(new \DateTime($form['fecha']['year'].'-'.$form['fecha']['month'].'-'.$form['fecha']['day']));
             $socioinscripcion->setFechaRegistro(new \DateTime('now'));
             $socioinscripcion->setFechaModificacion(new \DateTime('now'));
@@ -1058,12 +1064,13 @@ class EstudianteInscripcionSocioeconomicoAlternativaController extends Controlle
             $socioinscripcion->setSeccionvEstudianteGrupoSanguineoTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById($form['seccionvEstudianteGrupoSanguineoTipo'] ? $form['seccionvEstudianteGrupoSanguineoTipo'] : 0));
             $socioinscripcion->setSeccionvEstudianteDemoraLlegarCentroHoras($form['seccionvEstudianteDemoraLlegarCentroHoras'] ? $form['seccionvEstudianteDemoraLlegarCentroHoras'] : 0);
             $socioinscripcion->setSeccionvEstudianteDemoraLlegarCentroMinutos($form['seccionvEstudianteDemoraLlegarCentroMinutos'] ? $form['seccionvEstudianteDemoraLlegarCentroMinutos'] : 0);
+            $socioinscripcion->setSeccionviModalidadTipo($em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAltModalidadTipo')->findOneById($form['seccionviModalidadEstudioTipo'] ? $form['seccionviModalidadEstudioTipo'] : 1));
             $socioinscripcion->setSeccionviEstudiantePorqueInterrupcionservicios($form['seccionviEstudiantePorqueInterrupcionservicios'] ? mb_strtoupper($form['seccionviEstudiantePorqueInterrupcionservicios'], 'utf-8') : '');
             $socioinscripcion->setLugar($form['lugar'] ? mb_strtoupper($form['lugar'], 'utf-8') : '');
+            $socioinscripcion->setSeccionvOtroTrabajo($form['seccionvOtroTrabajo'] ? mb_strtoupper($form['seccionvOtroTrabajo'], 'utf-8') : '');
             $socioinscripcion->setFecha(new \DateTime($form['fecha']['year'].'-'.$form['fecha']['month'].'-'.$form['fecha']['day']));
             $socioinscripcion->setFechaRegistro(new \DateTime('now'));
             $socioinscripcion->setFechaModificacion(new \DateTime('now'));
-
             $em->persist($socioinscripcion);
             $em->flush();
 

@@ -949,4 +949,60 @@ class EstudianteInscripcionSocioeconomicoAlternativa
     {
         return $this->seccioniiEducacionDiversaTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo
+     */
+    private $seccionviModalidadTipo;
+
+
+    /**
+     * Set seccionviModalidadTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo $seccionviModalidadTipo
+     * @return EstudianteInscripcionSocioeconomicoAlternativa
+     */
+    public function setSeccionviModalidadTipo(\Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo $seccionviModalidadTipo = null)
+    {
+        $this->seccionviModalidadTipo = $seccionviModalidadTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccionviModalidadTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAltModalidadTipo 
+     */
+    public function getSeccionviModalidadTipo()
+    {
+        return $this->seccionviModalidadTipo;
+    }
+    /**
+     * @var string
+     */
+    private $seccionvOtroTrabajo;
+
+
+    /**
+     * Set seccionvOtroTrabajo
+     *
+     * @param string $seccionvOtroTrabajo
+     * @return EstudianteInscripcionSocioeconomicoAlternativa
+     */
+    public function setSeccionvOtroTrabajo($seccionvOtroTrabajo)
+    {
+        $this->seccionvOtroTrabajo = $seccionvOtroTrabajo;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccionvOtroTrabajo
+     *
+     * @return string 
+     */
+    public function getSeccionvOtroTrabajo()
+    {
+        return $this->seccionvOtroTrabajo;
+    }
 }

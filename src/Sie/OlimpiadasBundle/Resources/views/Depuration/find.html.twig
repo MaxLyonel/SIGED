@@ -1,0 +1,127 @@
+
+
+    <div class="container">
+        <br>
+        <h3 class="text-primary"> <i class="fa fa-file-o"></i> Resultado de la Busqueda</h3>
+      
+	    {% if estudiante is defined %}
+			{% if estudiante is null %}
+              
+			{% else %}
+                
+				<div class="row">
+					<div class="col-md-12">
+                        <div class="panel panel-primary shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"> <i class="fa fa-user"></i> Datos Estudiante</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <!-- Start list message -->
+                                <div class="media-list">
+
+                                    
+                                        <div class="pull-left"><img src="{{asset('/webolimpiadas/img/avatar/50/24.png')}}" class="media-object img-circle" alt="..."></div>
+                                        <div class="media-body">
+                                            {# <span class="media-heading">{{ estudiante.nombre }} {{ estudiante.paterno }} {{ estudiante.materno }}</span> #}
+                                            {% if estudiante.carnetIdentidad != "" %}
+                                                <b>Carnet: </b> {{ estudiante.carnetIdentidad }} {{ estudiante.complemento }}</span><br>                                         
+                                            {% endif %}
+                                            <b>Rude: </b> {{ estudiante.codigoRude }}</span><br>
+                                            <b>Nombre: </b> {{ estudiante.nombre }}</span><br>
+                                            <b>Paterno: </b> {{ estudiante.paterno }}</span><br>
+                                            <b>Materno: </b> {{ estudiante.materno }}</span><br>
+                                            <span> <b>Fecha Nacimiento: </b> {{ estudiante.fechaNacimiento|date('d-m-Y') }}</span><br>
+                                            <!-- Start meta icon -->
+                                            <span class="media-meta pull-right"></span>
+                                            <!--/ End meta icon -->
+                                        </div><!-- /.media-body -->
+                                    
+
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+				</div>
+
+                {# {{ dump(array) }} #}
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"> <i class="fa fa-list"></i> Inscripción olimpiada</h3>
+                    </div>
+                    <div class="panel-body" style="background: #FFFFFF;">
+                        {% if array|length > 0 %}
+                            <table class="table table-default">
+                                <thead>
+                                    <tr>
+                                        <th>Área</th>
+                                        <th>Año de escolaridad</th>
+                                        <th>Categoría</th>
+                                        <th>Equipo</th>
+                                        <th>Discapacidad del estudiante</th>
+                                        <th>Tutor</th>
+                                        <th>Opci&oacute;n</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in array %}
+
+                                        <tr>
+                                            <td><strong>{{ item.regla.olimMateriaTipo.materia }}</strong></td>
+                                            <td>
+                                                {{ item.inscripcion.estudianteInscripcion.institucioneducativaCurso.gradoTipo.id }}  
+                                                {% if item.inscripcion.estudianteInscripcion.institucioneducativaCurso.nivelTipo.id == 12 %}
+                                                    Primaria
+                                                {% else %}
+                                                    Secundaria
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ item.regla.categoria }}</td>
+                                            <td>
+                                                {% if item.tipo == 'Grupo' %}
+                                                    {{ item.grupo[0].nombre }}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if item.inscripcion.discapacidadTipo %}
+                                                    {{ item.inscripcion.discapacidadTipo.discapacidad }}
+                                                {% else %}
+                                                    Ninguna
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if item.tipo == 'Grupo' %}
+                                                    {% if item.grupo[0].olimTutor != null %}
+                                                        {{ item.grupo[0].olimTutor.persona.nombre }} {{ item.grupo[0].olimTutor.persona.paterno }} {{ item.grupo[0].olimTutor.persona.materno }}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if item.tutor != null %}
+                                                        {{ item.tutor.persona.nombre }} {{ item.tutor.persona.paterno }} {{ item.tutor.persona.materno }}    
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                            <td align="center"><a href="#" onclick="removeOlimInscription('{{estudiante.codigoRude}}','{{item.inscripcion.id}}')">  <i class="fa fa-trash"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            
+                        {% else %}
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle"></i> El estudiante no cuenta con inscripciones, en la gestión actual
+                            </div>
+                        {% endif %}  
+                    </div>
+                </div>
+			{% endif %}
+			
+	    {% endif %}
+
+
+    </div>

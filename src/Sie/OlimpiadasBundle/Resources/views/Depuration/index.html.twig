@@ -1,0 +1,167 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Depuraci&oacute;n <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-pencil"></i>
+                    <a href="{{path('infra_list_index')}}">
+                       Inscripciones
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+    <div class="row">
+          <div class="col-md-6 col-md-offset-3">
+              <!-- this is the beginner -->
+
+                                    <!-- Start select fields - basic form -->
+                        <div class="panel rounded shadow no-overflow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title"></h3>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body no-padding">
+
+                            	    {{form_start(form)}}
+                                        <div class="form-body">                                            
+                                            <div class="form-group">
+                                                <div class="row">
+
+                                                    <div class="col-md-6">
+                                                        RUDE	:
+                                                        {{form_widget(form.codigoRude, {'attr':{'class':'form-control'} })}}
+                                                    </div>
+                                                </div>
+                                            </div>                                         
+                                        </div><!-- /.form-body -->
+                                        <div class="form-footer">
+                                            <div class="pull-left">
+                                                <!-- <button class="btn btn-danger mr-5">Cancel</button> -->
+                                                
+                                                        {{form_widget(form.sendData, {'attr':{'class':'btn btn-primary'} })}}
+                                                
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div><!-- /.form-footer -->
+                                    {{form_end(form)}}
+                              
+                            </div><!-- /.panel-body -->
+                        </div><!-- /.panel -->
+                        <!--/ End select fields - basic form -->
+
+                        
+
+            <!-- this is the end -->
+            
+            
+
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div id="idResult">
+            
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">      
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript" charset="utf-8" >
+
+    var findOlimStudent = function(){
+    	let codigoRude = $('#form_codigoRude').val();
+
+    	  $.ajax({
+             type: 'post',
+             url: Routing.generate('olimindepurations_find'),
+             data: {codigoRude: codigoRude},
+             beforeSend: function () {
+                 $("#idResult").empty();
+                 $("#idResult").empty();
+                 $("#idResult").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idResult").empty();
+                 $("#idResult").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+    };
+
+    var removeOlimInscription = function(codigoRude, olimStudentInscriptionId){
+
+    	if(confirm('Está seguro que desea eliminar el registro?')){
+
+    		$.ajax({
+             type: 'post',
+             url: Routing.generate('olimindepurations_removeOlimInscription'),
+             data: {codigoRude: codigoRude, olimStudentInscriptionId: olimStudentInscriptionId},
+             beforeSend: function () {
+                 $("#idResult").empty();
+                 $("#idResult").empty();
+                 $("#idResult").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="" /></div>');
+             },
+             success: function (data) {
+                 $("#idResult").empty();
+                 $("#idResult").append(data);
+                 //location.reload(true);
+             },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });
+
+    	}else{
+    		return false;
+    	}
+    	
+    	  
+    }
+
+
+
+
+
+
+
+
+    </script>
+
+    
+    
+{% endblock %}

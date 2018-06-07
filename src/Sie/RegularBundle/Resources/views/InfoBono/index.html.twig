@@ -150,6 +150,7 @@
                                                           <th class="text-center">Paralelo</th>
                                                           <th class="text-center">Turno</th>
                                                           <th class="text-center">Estado Matricula</th>
+                                                          <th class="text-center"> Opci&oacute;n</th>
 
                                                         </tr>
                                                     </thead>
@@ -166,6 +167,15 @@
                                                               <td data-title="Materno">{{data.paralelo|e}}</td>
                                                               <td data-title="Turno">{{data.turno}} </td>
                                                               <td data-title="Est. Matricula" class="text-center">{{data.em}}</td>
+                                                              {# <td><a href="#" > <i class="fa fa-eye"></i> Calificaci&oacute;n </a></td>
+                                                               #}
+
+                                                                <td data-title="VerNota" class="text-center">
+                                                                   
+                                                                   <a href="#" onclick="getreportCalifications('{{data.eiid}}', '{{data.eid}}')"><i class="glyphicon glyphicon-eye-open"></i> Ver Calificaciones</a>
+
+                                                                   
+                                                              </td>
 
                                                           </tr>
                                                   {% endfor %}
@@ -221,7 +231,7 @@
 {% block javascripts %}
     {{parent()}}
     <script>
-        var seeNotaNew = function (inscripcionid, idstudent, nivel, grado, paralelo, turno, gestion, sie, estadomatriculaTipo) {
+       /* var seeNotaNew = function (inscripcionid, idstudent, nivel, grado, paralelo, turno, gestion, sie, estadomatriculaTipo) {
 
             $('#myModalNotas').modal('show');
             $.ajax({
@@ -244,6 +254,40 @@
                     }
                 }
             });
+        };*/
+
+        // var getreportCalifications = function (inscripcionid) {
+        //     $('#myModalNotas').modal('show');
+
+        //     alert(inscripcionid);return false;
+        // };
+
+            var getreportCalifications = function(inscripcionid, studentid){  $('#myModalNotas').modal('show');
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('info_bono_getreportCalifications'),
+                data: {'inscripcionid': inscripcionid, 'studentid':studentid},
+                beforeSend: function () {
+                    $("#idNotas").empty();
+                    $("#idNotas").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#idNotas").empty();
+                    $("#idNotas").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
         }
+
+      
+
+
     </script>
 {% endblock %}
