@@ -1142,7 +1142,7 @@ class OlimEstadisticaController extends Controller{
 		$em = $this->getDoctrine()->getManager();
 
 		if($nivel == 0){
-			$query = $em->getConnection()->prepare("	
+			$query = $em->getConnection()->prepare("			
 				select lt4.id, lt4.codigo, UPPER(lt4.lugar) as nombre, omt.id as materia_id, UPPER(omt.materia) as materia, UPPER(orot.categoria) as categoria, count(*) as cantidad from (
 				select oigp1.olim_grupo_proyecto_id, ogp1.olim_reglas_olimpiadas_tipo_id, min(oei1.estudiante_inscripcion_id) as estudiante_inscripcion_id from olim_inscripcion_grupo_proyecto as oigp1
 				inner join olim_estudiante_inscripcion as oei1 on oei1.id = oigp1.olim_estudiante_inscripcion_id
@@ -1168,12 +1168,38 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
 				where iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
 				group by lt4.id, lt4.codigo, lt4.lugar, omt.id, omt.materia, orot.categoria
-				order by lt4.id, lt4.codigo, lt4.lugar, omt.id, omt.materia, orot.categoria
+				union all
+				select 1 as id, '0' as codigo, upper('Bolivia') as nombre, omt.id as materia_id, UPPER(omt.materia) as materia, UPPER(orot.categoria) as categoria, count(*) as cantidad from (
+				select oigp1.olim_grupo_proyecto_id, ogp1.olim_reglas_olimpiadas_tipo_id, min(oei1.estudiante_inscripcion_id) as estudiante_inscripcion_id from olim_inscripcion_grupo_proyecto as oigp1
+				inner join olim_estudiante_inscripcion as oei1 on oei1.id = oigp1.olim_estudiante_inscripcion_id
+				inner join olim_grupo_proyecto as ogp1 on ogp1.id = oigp1.olim_grupo_proyecto_id
+				where oei1.gestion_tipo_id = :gestion::double precision
+				group by oigp1.olim_grupo_proyecto_id, ogp1.olim_reglas_olimpiadas_tipo_id
+				union all
+				select 0 as olim_grupo_proyecto_id, orot2.id as olim_reglas_olimpiadas_tipo_id, oei2.estudiante_inscripcion_id as estudiante_inscripcion_id from olim_estudiante_inscripcion as oei2
+				inner join olim_reglas_olimpiadas_tipo as orot2 on orot2.id = oei2.olim_reglas_olimpiadas_tipo_id
+				left join olim_inscripcion_grupo_proyecto as oigp2 on oigp2.olim_estudiante_inscripcion_id = oei2.id
+				where oei2.gestion_tipo_id = :gestion::double precision and oigp2.id is null and (orot2.categoria is not null and orot2.categoria != '' and orot2.categoria != 'General')
+				) as oigp
+				inner join olim_reglas_olimpiadas_tipo as orot on orot.id = oigp.olim_reglas_olimpiadas_tipo_id
+				inner join olim_materia_tipo as omt on omt.id = orot.olim_materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oigp.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+				left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+				left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+				where iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by omt.id, omt.materia, orot.categoria
+				order by id, codigo, nombre, materia_id, materia, categoria
 			");
 		}
 
 		if($nivel == 1){
-			$query = $em->getConnection()->prepare("	
+			$query = $em->getConnection()->prepare("				
 				select lt5.id, lt5.codigo, UPPER(lt5.lugar) as nombre, omt.id as materia_id, UPPER(omt.materia) as materia, UPPER(orot.categoria) as categoria, count(*) as cantidad from (
 				select oigp1.olim_grupo_proyecto_id, ogp1.olim_reglas_olimpiadas_tipo_id, min(oei1.estudiante_inscripcion_id) as estudiante_inscripcion_id from olim_inscripcion_grupo_proyecto as oigp1
 				inner join olim_estudiante_inscripcion as oei1 on oei1.id = oigp1.olim_estudiante_inscripcion_id
@@ -1200,13 +1226,39 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
 				where lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
 				group by lt5.id, lt5.codigo, lt5.lugar, omt.id, omt.materia, orot.categoria
-				order by lt5.id, lt5.codigo, lt5.lugar, omt.id, omt.materia, orot.categoria	
+				union all
+				select lt4.id, lt4.codigo, UPPER(lt4.lugar) as nombre, omt.id as materia_id, UPPER(omt.materia) as materia, UPPER(orot.categoria) as categoria, count(*) as cantidad from (
+				select oigp1.olim_grupo_proyecto_id, ogp1.olim_reglas_olimpiadas_tipo_id, min(oei1.estudiante_inscripcion_id) as estudiante_inscripcion_id from olim_inscripcion_grupo_proyecto as oigp1
+				inner join olim_estudiante_inscripcion as oei1 on oei1.id = oigp1.olim_estudiante_inscripcion_id
+				inner join olim_grupo_proyecto as ogp1 on ogp1.id = oigp1.olim_grupo_proyecto_id
+				where oei1.gestion_tipo_id = :gestion::double precision
+				group by oigp1.olim_grupo_proyecto_id, ogp1.olim_reglas_olimpiadas_tipo_id
+				union all
+				select 0 as olim_grupo_proyecto_id, orot2.id as olim_reglas_olimpiadas_tipo_id, oei2.estudiante_inscripcion_id as estudiante_inscripcion_id from olim_estudiante_inscripcion as oei2
+				inner join olim_reglas_olimpiadas_tipo as orot2 on orot2.id = oei2.olim_reglas_olimpiadas_tipo_id
+				left join olim_inscripcion_grupo_proyecto as oigp2 on oigp2.olim_estudiante_inscripcion_id = oei2.id
+				where oei2.gestion_tipo_id = :gestion::double precision and oigp2.id is null and (orot2.categoria is not null and orot2.categoria != '' and orot2.categoria != 'General')
+				) as oigp
+				inner join olim_reglas_olimpiadas_tipo as orot on orot.id = oigp.olim_reglas_olimpiadas_tipo_id
+				inner join olim_materia_tipo as omt on omt.id = orot.olim_materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oigp.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+				left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+				left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+				where lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by lt4.id, lt4.codigo, lt4.lugar, omt.id, omt.materia, orot.categoria
+				order by id, codigo, nombre, materia_id, materia, categoria		
 			");
 		}
 
 		if($nivel == 7){
 			$query = $em->getConnection()->prepare("
-				select ie.id, ie.id as codigo, UPPER(ie.institucioneducativa) as nombre, omt.id as materia_id, UPPER(omt.materia) as materia, UPPER(orot.categoria) as categoria, count(*) as cantidad from (
+				select ie.id, cast(ie.id as varchar) as codigo, UPPER(ie.institucioneducativa) as nombre, omt.id as materia_id, UPPER(omt.materia) as materia, UPPER(orot.categoria) as categoria, count(*) as cantidad from (
 				select oigp1.olim_grupo_proyecto_id, ogp1.olim_reglas_olimpiadas_tipo_id, min(oei1.estudiante_inscripcion_id) as estudiante_inscripcion_id from olim_inscripcion_grupo_proyecto as oigp1
 				inner join olim_estudiante_inscripcion as oei1 on oei1.id = oigp1.olim_estudiante_inscripcion_id
 				inner join olim_grupo_proyecto as ogp1 on ogp1.id = oigp1.olim_grupo_proyecto_id
@@ -1227,10 +1279,31 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
 				where lt5.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
 				group by ie.id, ie.institucioneducativa, omt.id, omt.materia, orot.categoria
-				order by ie.id, ie.institucioneducativa, omt.id, omt.materia, orot.categoria	
+				union all
+				select lt5.id, lt5.codigo as codigo, UPPER(lt5.lugar) as nombre, omt.id as materia_id, UPPER(omt.materia) as materia, UPPER(orot.categoria) as categoria, count(*) as cantidad from (
+				select oigp1.olim_grupo_proyecto_id, ogp1.olim_reglas_olimpiadas_tipo_id, min(oei1.estudiante_inscripcion_id) as estudiante_inscripcion_id from olim_inscripcion_grupo_proyecto as oigp1
+				inner join olim_estudiante_inscripcion as oei1 on oei1.id = oigp1.olim_estudiante_inscripcion_id
+				inner join olim_grupo_proyecto as ogp1 on ogp1.id = oigp1.olim_grupo_proyecto_id
+				where oei1.gestion_tipo_id = :gestion::double precision
+				group by oigp1.olim_grupo_proyecto_id, ogp1.olim_reglas_olimpiadas_tipo_id
+				union all
+				select 0 as olim_grupo_proyecto_id, orot2.id as olim_reglas_olimpiadas_tipo_id, oei2.estudiante_inscripcion_id as estudiante_inscripcion_id from olim_estudiante_inscripcion as oei2
+				inner join olim_reglas_olimpiadas_tipo as orot2 on orot2.id = oei2.olim_reglas_olimpiadas_tipo_id
+				left join olim_inscripcion_grupo_proyecto as oigp2 on oigp2.olim_estudiante_inscripcion_id = oei2.id
+				where oei2.gestion_tipo_id = :gestion::double precision and oigp2.id is null and (orot2.categoria is not null and orot2.categoria != '' and orot2.categoria != 'General')
+				) as oigp
+				inner join olim_reglas_olimpiadas_tipo as orot on orot.id = oigp.olim_reglas_olimpiadas_tipo_id
+				inner join olim_materia_tipo as omt on omt.id = orot.olim_materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oigp.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
+				where lt5.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by lt5.id, lt5.codigo, lt5.lugar, omt.id, omt.materia, orot.categoria
+				order by id, codigo, nombre, materia_id, materia, categoria	
 			");
-		}
-		
+		}		
 		$query->bindValue(':gestion', $gestion);
 		$query->execute();
 		$inscritos = $query->fetchAll();
