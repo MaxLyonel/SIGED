@@ -1296,7 +1296,7 @@ class OlimEstudianteInscripcionController extends Controller{
                     //get students registered
                     $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
                     // dump($objStudentsInOlimpiadas);
-                    if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) == 2){
+                    if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) >= 2){
                     }else{
                         if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
                         $arrCorrectStudent[]=($value);    
