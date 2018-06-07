@@ -520,15 +520,17 @@ class RegistroController extends Controller {
             ));
         }
 
-        if($nivelId == 12 and !$faseTipoEntity[0]['esactivo_primaria']){
-            return $response->setData(array(
-                'registrados' => array(), 'msg_correcto' => '', 'msg_incorrecto' => 'Las inscripciones para el Nivel Primario concluyeron'
-            ));
-        }
-        if($nivelId == 13 and !$faseTipoEntity[0]['esactivo_secundaria']){
-            return $response->setData(array(
-                'registrados' => array(), 'msg_correcto' => '', 'msg_incorrecto' => 'Las inscripciones para el Nivel Secundaria concluyeron'
-            ));
+        if ($id_usuario != 13833121){
+            if($nivelId == 12 and !$faseTipoEntity[0]['esactivo_primaria']){
+                return $response->setData(array(
+                    'registrados' => array(), 'msg_correcto' => '', 'msg_incorrecto' => 'Las inscripciones para el Nivel Primario concluyeron'
+                ));
+            }
+            if($nivelId == 13 and !$faseTipoEntity[0]['esactivo_secundaria']){
+                return $response->setData(array(
+                    'registrados' => array(), 'msg_correcto' => '', 'msg_incorrecto' => 'Las inscripciones para el Nivel Secundaria concluyeron'
+                ));
+            }
         }
 
         foreach($deportistas as $deportista){

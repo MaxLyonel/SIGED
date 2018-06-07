@@ -63,19 +63,23 @@
                             {%for datoKey, datos in estadistica %}
                                 {% for lugarKey, lugares in datos['dato'] %}  
                                     {% set count = count + 1 %}
-                                    <div class="inner-all no-margin">
-                                        {% if nivel == 7 %}
-                                            <p class="badge badge-lilac col-md-12 text-left">{{datoKey}} - {{ lugarKey }}</p> 
+                                    <div class="inner-all no-margin">   
+                                        {% if count == 1 %}
+                                            <p class="badge badge-primary col-md-12 text-left">{{ lugarKey }}</p> 
                                         {% else %}
-                                            <form name="form" role="form" action="{{ path('olimestadistica_registrados_area_categoria') }}" method="POST"> 
-                                                <input type="hidden" name="codigo" id="codigo" value="{{datoKey|base64_encode }}" />
-                                                <input type="hidden" name="nivel" id="nivel" value="{{nivelSiguiente}}" />
-                                                <button type="submit" id="submit{{datoKey}}" style="display:none;"></button>
-                                                <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{datoKey}}').click();">
-                                                    <p class="badge badge-lilac col-md-12 text-left">{{ lugarKey }}</p>  
-                                                </a>        
-                                            </form>    
-                                        {% endif %}                                         
+                                            {% if nivel == 7 %}
+                                                <p class="badge badge-lilac col-md-12 text-left">{{datoKey}} - {{ lugarKey }}</p> 
+                                            {% else %}
+                                                <form name="form" role="form" action="{{ path('olimestadistica_registrados_area_categoria') }}" method="POST"> 
+                                                    <input type="hidden" name="codigo" id="codigo" value="{{datoKey|base64_encode }}" />
+                                                    <input type="hidden" name="nivel" id="nivel" value="{{nivelSiguiente}}" />
+                                                    <button type="submit" id="submit{{datoKey}}" style="display:none;"></button>
+                                                    <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{datoKey}}').click();">
+                                                        <p class="badge badge-lilac col-md-12 text-left">{{ lugarKey }}</p>  
+                                                    </a>        
+                                                </form>    
+                                            {% endif %}                                             
+                                        {% endif %}   
                                         {% for materiaKey, materias in lugares %}  
                                             <table class="table">
                                                 <thead>
