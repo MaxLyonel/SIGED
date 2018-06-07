@@ -550,6 +550,7 @@
                 success: function (data) {
                     $('#modal').empty();
                     $('#modal').append(data);
+                    $('.chosen-select').chosen({allow_single_deselect: false});
                  //   $('#modal').modal('show');
                 },
                 statusCode: {

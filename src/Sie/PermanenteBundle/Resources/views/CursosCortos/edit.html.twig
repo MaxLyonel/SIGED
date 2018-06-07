@@ -43,7 +43,18 @@
                                 </div>
 
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-8 col-md-6">
+                                <label> Ejemplos </label>
+                                <strong>{{form_widget(form.pobobs)}}</strong>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-6">
+                                <label> Nombre Población</label>
+                                <strong>{{form_widget(form.pobdetalle)}}</strong>
+                            </div>
 
+                        </div>
                             <div class="row">
                                 <div class="form-group col-lg-4 col-md-6">
                                     <label>  Fecha inicio </label>
@@ -155,7 +166,24 @@
             }
         });
     }
+    function mostrarPobDetalle(pob) {
 
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('sie_per_mostrarpob', {'pob': pob}),
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+
+                $("#form_pobobs").empty();
+                $("#form_pobobs").val(data.poblaciones.obs);
+
+            },
+
+        });
+
+    };
 </script>
 
 

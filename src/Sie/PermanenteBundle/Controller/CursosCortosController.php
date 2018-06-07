@@ -236,9 +236,9 @@ class CursosCortosController extends Controller {
                 ->add('subarea', 'choice', array('required' => true, 'choices' => $subareaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('areatematica', 'choice', array('required' => true, 'choices' => $areatematicaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('programa', 'choice', array('required' => true, 'choices' => $programaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-                ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'chosen-select col-lg-10')))
              //   ->add('departamento', 'entity', array('label' => 'Departamento', 'required' => true, 'class' => 'SieAppWebBundle:DepartamentoTipo', 'property' => 'departamento', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value);')))
+                ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'mostrarPobDetalle(this.value)')))
                 ->add('departamento', 'choice', array('label' => 'Departamento', 'required' => true, 'choices' => $dptoNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value)')))
                 ->add('provincia', 'choice', array('label' => 'Provincia', 'required' => true, 'choices' => $prov, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
                 ->add('municipio', 'choice', array('label' => 'Municipio', 'required' => true, 'choices' => $muni, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control')))
@@ -248,6 +248,8 @@ class CursosCortosController extends Controller {
                 // ->add('fechaInicio','text',array('label'=>'Fecha Inicio','attr'=>array('class'=>'form-control calendario','autocomplete'=>'off')))
                 ->add('horas', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true, 'pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
                 ->add('lugar', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
+                ->add('pobdetalle', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
+                ->add('pobobs', 'textarea', array( 'required' => false, 'attr' => array('class' => 'form-control','readonly' => true)))
                 ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'disbled' => true)))
                 ->getForm();
 //dump($cursosCortosArray);die;
@@ -305,6 +307,7 @@ class CursosCortosController extends Controller {
             $institucioncursocorto  ->setLugarTipoProvincia($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['provincia'])));
             $institucioncursocorto  ->setLugarTipoMunicipio($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['municipio'])));
             $institucioncursocorto  ->setLugarDetalle($form['lugar']);
+            $institucioncursocorto  ->setPoblacionDetalle($form['pobdetalle']);
             $em->persist($institucioncursocorto);
             $em->flush();
 
@@ -324,6 +327,7 @@ class CursosCortosController extends Controller {
        // dump($request);die;
        // $em = $this->getDoctrine()->getManager();
         $infoUe = $request->get('infoUe');
+       // dump($infoUe);die;
         $aInfoUeducativa = unserialize($infoUe);
         $idcurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
 
@@ -350,14 +354,24 @@ class CursosCortosController extends Controller {
            // $institucioncurso = new InstitucioneducativaCurso();
             $institucioncurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idcurso);
             $institucioncursocorto = $em->getRepository('SieAppWebBundle:PermanenteInstitucioneducativaCursocorto')->findOneBy(array('institucioneducativaCurso'=>$idcurso));
+
           //  $idcurso = $institucioncurso->getId();
          //  dump($institucioncurso);die;
           //  $em->getRepository('SieAppWebBundle:TurnoTipo')->findOneBy(array('id' => $form['turno']));
+          //  findOneBy(array('id' => $form['']));
+            //
             $deptoid=$institucioncursocorto->getLugarTipoDepartamento()->getId();
             $provid=$institucioncursocorto->getLugarTipoProvincia()->getId();
             $munid=$institucioncursocorto->getLugarTipoMunicipio()->getId();
             $lugar=$institucioncursocorto->getLugarDetalle();
+            $pobdetalle=$institucioncursocorto->getPoblacionDetalle();
             //dump($lugar);die;
+            $arraypob= array();
+            $pobobservacion=$em->getRepository('SieAppWebBundle:PermanentePoblacionTipo')->find($institucioncursocorto->getPoblacionTipo()->getId());
+
+           // dump($pobobservacion);die;
+           // dump($pobobservacion);die;
+
             $subareaArray= array();
             foreach ($subarea as $value) {
                 if ($value->getId() == 1) {
@@ -481,9 +495,12 @@ class CursosCortosController extends Controller {
                 ->add('subarea', 'choice', array('required' => true, 'choices' => $subareaArray, 'data' => $institucioncursocorto->getSubareaTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('programa', 'choice', array('required' => true, 'choices' => $programaArray, 'data' => $institucioncursocorto->getProgramaTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('areatematica', 'choice', array('required' => true, 'choices' => $areatematicaArray, 'data' => $institucioncursocorto->getAreatematicaTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-                ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionArray, 'data' => $institucioncursocorto->getPoblacionTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-                ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'data' => $institucioncursocorto->getCursocortoTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-               // ->add('departamento', 'entity', array('label' => 'Departamento', 'required' => true, 'class' => 'SieAppWebBundle:DepartamentoTipo', 'property' => 'departamento', 'data' => $institucioncursocorto->getLugarTipoDepartamento()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'onchange' => 'listarProvincias(this.value);')))
+                ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionArray, 'data' => $institucioncursocorto->getPoblacionTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control','onchange' => 'mostrarPobDetalle(this.value)', 'data-placeholder' => 'Seleccionar...')))
+                ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'data' => $institucioncursocorto->getCursocortoTipo()->getId() , 'attr' => array('class' => 'chosen-select col-lg-10')))
+             //   ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'chosen-select col-lg-10')))
+                // ->add('departamento', 'entity', array('label' => 'Departamento', 'required' => true, 'class' => 'SieAppWebBundle:DepartamentoTipo', 'property' => 'departamento', 'data' => $institucioncursocorto->getLugarTipoDepartamento()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'onchange' => 'listarProvincias(this.value);')))
+               ->add('pobdetalle', 'text', array( 'required' => true, 'data' => $pobdetalle,'attr' => array('class' => 'form-control','enabled' => true)))
+                ->add('pobobs', 'textarea', array( 'required' => false, 'data'=> $pobobservacion->getObs(),'attr' => array('class' => 'form-control','readonly' => true)))
                 ->add('departamento', 'choice', array('label' => 'departamento', 'required' => true, 'choices' => $dptoNacArray,'data' => $institucioncursocorto->getLugarTipoDepartamento()->getId(),  'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value)')))
                 ->add('provincia', 'choice', array('label' => 'Provincia', 'required' => true, 'choices' => $provinciasArray,'data' => $institucioncursocorto->getLugarTipoProvincia()->getId(),  'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
                 ->add('municipio', 'choice', array('label' => 'Municipio', 'required' => true, 'choices' => $municipiosArray, 'data' => $institucioncursocorto->getLugarTipoMunicipio()->getId(),'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control')))
@@ -554,6 +571,7 @@ class CursosCortosController extends Controller {
             $institucioncursocorto  ->setLugarTipoProvincia($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['provincia'])));
             $institucioncursocorto  ->setLugarTipoMunicipio($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['municipio'])));
             $institucioncursocorto  ->setLugarDetalle($form['lugar']);
+            $institucioncursocorto  ->setPoblacionDetalle($form['pobdetalle']);
             $em->persist($institucioncursocorto);
             $em->flush();
 //dump($institucioncursocorto);die;
@@ -1058,6 +1076,28 @@ class CursosCortosController extends Controller {
         }
     }
 
+    public function mostrarPobDetalleAction($pob) {
+        try {
+
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->getConnection()->prepare('select obs from permanente_poblacion_tipo
+                              where id=:pobla                  
+        ');
+            $query->bindValue(':pobla', $pob);
+            $query->execute();
+           $poblaciones= $query->fetch();
+
+        //   dump($poblaciones);die;
+
+
+            $response = new JsonResponse();
+            return $response->setData(array('poblaciones' => $poblaciones));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
     public function seeStudentsAction(Request $request) {
         //
         $em = $this->getDoctrine()->getManager();
@@ -1071,13 +1111,14 @@ class CursosCortosController extends Controller {
         $objStudents = array();
 
         $query = $em->getConnection()->prepare('
-                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid, d.estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
+                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,CASE d.estadomatricula when \'EFECTIVO\' THEN \'EFECTIVO\' when \'RETIRADO\' THEN \'RETIRADO\' when \'CONCLUIDO PERMANENTE\' THEN \'CONCLUIDO\' END AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
 
                 from estudiante a
                     inner join estudiante_inscripcion b on b.estudiante_id =a.id
                         inner join institucioneducativa_curso c on b.institucioneducativa_curso_id = c.id 
                             inner join estadomatricula_tipo d on d.id = b.estadomatricula_tipo_id
                                 inner join genero_tipo e on a.genero_tipo_id = e.id
+
                 
                 where c.id =:idcurso      
 
@@ -1129,9 +1170,18 @@ class CursosCortosController extends Controller {
         $estadomatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findAll();
         $estadomatriculaArray = array();
         foreach($estadomatricula as $value){
-            if( ($value->getId()==3)||($value->getId()==4)||($value->getId()==5))
+            if( ($value->getId()==3)||($value->getId()==4)||($value->getId()==75))
             {
-                $estadomatriculaArray[$value->getId()] = $value->getEstadomatricula();
+                if($value->getId()==75)
+                {
+                    $estadomatriculaArray[$value->getId()] ='CONCLUIDO';;
+                }
+                else
+                {
+                    $estadomatriculaArray[$value->getId()] = $value->getEstadomatricula();
+                }
+
+
             }
 
         }
@@ -1183,13 +1233,14 @@ class CursosCortosController extends Controller {
             $em->getConnection()->commit();
 
             $query = $em->getConnection()->prepare('
-                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid, d.estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
+                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,CASE d.estadomatricula when \'EFECTIVO\' THEN \'EFECTIVO\' when \'RETIRADO\' THEN \'RETIRADO\' when \'CONCLUIDO PERMANENTE\' THEN \'CONCLUIDO\' END AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
 
                 from estudiante a
                     inner join estudiante_inscripcion b on b.estudiante_id =a.id
                         inner join institucioneducativa_curso c on b.institucioneducativa_curso_id = c.id 
                             inner join estadomatricula_tipo d on d.id = b.estadomatricula_tipo_id
                                 inner join genero_tipo e on a.genero_tipo_id = e.id
+
                 
                 where c.id =:idcurso      
 
@@ -1270,7 +1321,7 @@ class CursosCortosController extends Controller {
 
     public function closeInscriptionAction(Request $request) {
 
-      //  dump($request);die;
+        //  dump($request);die;
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
         $dataUe=(unserialize($infoUe));
@@ -1289,13 +1340,14 @@ class CursosCortosController extends Controller {
 
 
             $query = $em->getConnection()->prepare('
-                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid, d.estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
+                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,CASE d.estadomatricula when \'EFECTIVO\' THEN \'EFECTIVO\' when \'RETIRADO\' THEN \'RETIRADO\' when \'CONCLUIDO PERMANENTE\' THEN \'CONCLUIDO\' END AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
 
                 from estudiante a
                     inner join estudiante_inscripcion b on b.estudiante_id =a.id
                         inner join institucioneducativa_curso c on b.institucioneducativa_curso_id = c.id 
                             inner join estadomatricula_tipo d on d.id = b.estadomatricula_tipo_id
                                 inner join genero_tipo e on a.genero_tipo_id = e.id
+
                 
                 where c.id =:idcurso      
 
@@ -1336,7 +1388,7 @@ class CursosCortosController extends Controller {
             $querya->execute();
 
             $cursoCorto= $querya->fetchAll();
-            //  dump($cursoCorto);die;
+            // dump($objStudents);die;
 
             if (count($objStudents) > 0){
                 $existins = true;
@@ -1350,8 +1402,8 @@ class CursosCortosController extends Controller {
                 if($value['estadomatriculaid']==4)
                 {
                     $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $value['idestins']));
-                    $estudianteInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
-                    // dump($estudianteInscripcion);die;
+                    $estudianteInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(75));
+                   //dump($estudianteInscripcion);die;
                     $em->persist($estudianteInscripcion);
                     $em->flush();
                 }
@@ -1361,9 +1413,16 @@ class CursosCortosController extends Controller {
             $estadomatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findAll();
             $estadomatriculaArray = array();
             foreach($estadomatricula as $value){
-                if( ($value->getId()==3)||($value->getId()==4)||($value->getId()==5))
+                if( ($value->getId()==3)||($value->getId()==4)||($value->getId()==75))
                 {
-                    $estadomatriculaArray[$value->getId()] = $value->getEstadomatricula();
+                    if($value->getId()==75)
+                    {
+                        $estadomatriculaArray[$value->getId()] ='CONCLUIDO';
+                    }
+                    else
+                    {
+                        $estadomatriculaArray[$value->getId()] = $value->getEstadomatricula();
+                    }
                 }
 
             }
@@ -1396,7 +1455,11 @@ class CursosCortosController extends Controller {
 
         $matricula = $request->get('matricula');
         $idestins = $request->get('idestins');
-  //dump($idestins);die;
+
+        if($matricula=='CONCLUIDO')
+        {
+            $matricula='CONCLUIDO PERMANENTE';
+        }
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $em->getConnection()->commit();

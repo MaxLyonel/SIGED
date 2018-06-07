@@ -42,6 +42,12 @@ sie_per_clistarmunicipios:
     options:
          expose: true
 
+sie_per_mostrarpob:
+    path:     /mostrarpob/{pob}
+    defaults: { _controller: "SiePermanenteBundle:CursosCortos:mostrarPobDetalle" }
+    options:
+         expose: true
+
 herramienta_per_cursos_cortos_show_maestro:
     path:   /showma/
     defaults: { _controller: SiePermanenteBundle:CursosCortos:showMaestroCursoCorto}

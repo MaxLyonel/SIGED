@@ -120,6 +120,11 @@
 
     {% else %}
         <div class="col-md-3">
+            <button type="button" class="btn btn-danger btn-stroke" onclick="deletecurso('{{infoUe}}');" >
+                <i class="fa fa-eraser"></i> Eliminar Curso
+            </button>
+        </div>
+        <div class="col-md-3">
 
             <a href="{{path('permanente_reporte_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
 

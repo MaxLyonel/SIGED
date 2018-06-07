@@ -243,15 +243,16 @@ class StudentsInscriptionsController extends Controller {
 
        // $objStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseAlter($aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid']);
           $query = $em->getConnection()->prepare('
-                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid, d.estadomatricula, b.estudiante_id as idest,  a.codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
+               select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,CASE d.estadomatricula when \'EFECTIVO\' THEN \'EFECTIVO\' when \'RETIRADO\' THEN \'RETIRADO\' when \'CONCLUIDO PERMANENTE\' THEN \'CONCLUIDO\' END AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
 
                 from estudiante a
                     inner join estudiante_inscripcion b on b.estudiante_id =a.id
                         inner join institucioneducativa_curso c on b.institucioneducativa_curso_id = c.id 
                             inner join estadomatricula_tipo d on d.id = b.estadomatricula_tipo_id
                                 inner join genero_tipo e on a.genero_tipo_id = e.id
+
                 
-                where c.id =:idcurso      
+                where c.id =:idcurso 
 
                
         ');
@@ -293,9 +294,16 @@ class StudentsInscriptionsController extends Controller {
           $estadomatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findAll();
           $estadomatriculaArray = array();
           foreach($estadomatricula as $value){
-              if( ($value->getId()==3)||($value->getId()==4)||($value->getId()==5))
+              if( ($value->getId()==3)||($value->getId()==4)||($value->getId()==75))
               {
-                  $estadomatriculaArray[$value->getId()] = $value->getEstadomatricula();
+                  if($value->getId()==75)
+                  {
+                      $estadomatriculaArray[$value->getId()] ='CONCLUIDO';;
+                  }
+                  else
+                  {
+                      $estadomatriculaArray[$value->getId()] = $value->getEstadomatricula();
+                  }
               }
 
           }
