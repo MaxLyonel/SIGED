@@ -64,7 +64,7 @@
                                         <th>Año de escolaridad</th>
                                         <th>Categoría</th>
                                         <th>Equipo</th>
-                                        <th>Discapacidad del estudiante</th>
+                                        {# <th>Discapacidad del estudiante</th> #}
                                         <th>Tutor</th>
                                         <th>Opci&oacute;n</th>
                                     </tr>
@@ -88,13 +88,13 @@
                                                     {{ item.grupo[0].nombre }}
                                                 {% endif %}
                                             </td>
-                                            <td>
+                                           {#  <td>
                                                 {% if item.inscripcion.discapacidadTipo %}
                                                     {{ item.inscripcion.discapacidadTipo.discapacidad }}
                                                 {% else %}
                                                     Ninguna
                                                 {% endif %}
-                                            </td>
+                                            </td> #}
                                             <td>
                                                 {% if item.tipo == 'Grupo' %}
                                                     {% if item.grupo[0].olimTutor != null %}
