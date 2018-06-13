@@ -80,6 +80,12 @@ class OlimEstudianteInscripcionController extends Controller{
      * @return [type]           [description]
      */
     public function getCategoryAction(Request $request){
+         //get the session user
+         $id_usuario = $this->session->get('userId');
+         //validation if the user is logged
+         if (!isset($id_usuario)) {
+             return $this->redirect($this->generateUrl('login'));
+         }
         // get the send values
         $idmateria = $request->get('idmateria');
 
@@ -833,6 +839,12 @@ class OlimEstudianteInscripcionController extends Controller{
     }
 
     public function selectInscriptionAction(Request $request){
+        //get the session user
+        $id_usuario = $this->session->get('userId');
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
         // get the send values
         $form = $request->get('form');
         // dump($form);die;
@@ -884,6 +896,12 @@ class OlimEstudianteInscripcionController extends Controller{
     }
 
     public function selectTemplateInscriptionAction(Request $request){
+         //get the session user
+         $id_usuario = $this->session->get('userId');
+         //validation if the user is logged
+         if (!isset($id_usuario)) {
+             return $this->redirect($this->generateUrl('login'));
+         }
         // dump($request);die;
         // get the send data
         $materiaId = $request->get('materiaId');
@@ -923,11 +941,12 @@ class OlimEstudianteInscripcionController extends Controller{
 
         $objInfoMateria = $em->getRepository('SieAppWebBundle:OlimMateriaTipo')->find($arrDataInscription['materiaId']);
         //get the start date and end date by materia
-        $dataStart = $objInfoMateria->getFechaInsIni()->format('d-m-Y H:i:s');
-        $dataEnd = $objInfoMateria->getFechaInsFin()->format('d-m-Y H:i:s');
-        $today    = date('d-m-Y H:i:s');
+        $dataStart = $objInfoMateria->getFechaInsIni()->format('d-m-Y');
+        $dataEnd = $objInfoMateria->getFechaInsFin()->format('d-m-Y');
+        $today    = date('d-m-Y');
+      
         // check the limit date to do the inscription
-        if($dataStart <= $today && $today <= $dataEnd){
+        if( strtotime($dataStart) <= strtotime($today) && strtotime($today) <= strtotime($dataEnd) ){
             //nothing to do
         }else{
             $message = "No permitido, fecha de inscripción expirada";
@@ -1046,6 +1065,12 @@ class OlimEstudianteInscripcionController extends Controller{
     }
 
   public function getGradosAction(Request $request){
+       //get the session user
+       $id_usuario = $this->session->get('userId');
+       //validation if the user is logged
+       if (!isset($id_usuario)) {
+           return $this->redirect($this->generateUrl('login'));
+       }
     // dump($request);die;
         //create db conexion
         $em = $this->getDoctrine()->getManager();
@@ -1077,6 +1102,12 @@ class OlimEstudianteInscripcionController extends Controller{
      * @return [type]           [description]
      */
     public function getParaleloAction(Request $request) {
+         //get the session user
+         $id_usuario = $this->session->get('userId');
+         //validation if the user is logged
+         if (!isset($id_usuario)) {
+             return $this->redirect($this->generateUrl('login'));
+         }
         // dump($request);
         // die;
         //get the send values        
@@ -1125,6 +1156,12 @@ class OlimEstudianteInscripcionController extends Controller{
      * @return [type]           [description]
      */
     public function getTurnoAction(Request $request) {
+         //get the session user
+         $id_usuario = $this->session->get('userId');
+         //validation if the user is logged
+         if (!isset($id_usuario)) {
+             return $this->redirect($this->generateUrl('login'));
+         }
         
         //get the send values     
         $paraleloId = $request->get('paraleloId');
@@ -1166,6 +1203,12 @@ class OlimEstudianteInscripcionController extends Controller{
 
 
     public function getStudentsAction(Request $request){
+         //get the session user
+         $id_usuario = $this->session->get('userId');
+         //validation if the user is logged
+         if (!isset($id_usuario)) {
+             return $this->redirect($this->generateUrl('login'));
+         }
         // dump($request);die;
         //create db conexino
         $em = $this->getDoctrine()->getManager();
@@ -1253,7 +1296,7 @@ class OlimEstudianteInscripcionController extends Controller{
                     //get students registered
                     $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
                     // dump($objStudentsInOlimpiadas);
-                    if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) == 2){
+                    if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) >= 2){
                     }else{
                         if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
                         $arrCorrectStudent[]=($value);    
@@ -1300,7 +1343,7 @@ class OlimEstudianteInscripcionController extends Controller{
                     //get students registered
                     $objStudentsInOlimpiadas = $this->get('olimfunctions')->getStudentsInOlimpiadas($materiaId, $categoryId, $gestion, $value['estinsid']);
                     // dump($objStudentsInOlimpiadas);
-                    if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) == 2){
+                    if($objStudentsInOlimpiadas || sizeof($studentObs)>0 || sizeof($studentsInscription) >= 2){
                     }else{
                         if(  $yearOldStudent >= $edadInicial && $yearOldStudent <= $edadFinal){
                         $arrCorrectStudent[]=($value);    

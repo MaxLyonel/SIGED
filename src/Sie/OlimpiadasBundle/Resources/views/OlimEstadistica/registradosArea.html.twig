@@ -36,10 +36,9 @@
                                     <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Unidad Educativa</h3>
                                 {% endif %}
                             </div>
-                            {% set keys = array|keys %}
                             <div class="pull-right">
                                 <form name="formEstadisticaPdf" id="formEstadisticaPdf"  action="{{ path('olimestadistica_registrados_area_pdf') }}" method="POST">  
-                                    <input type="hidden" name="codigo" id="codigo" value="{{ keys|first }}" />
+                                    <input type="hidden" name="codigo" id="codigo" value="{{estadistica[0]['codigo']|base64_encode }}" />
                                     <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
                                     <button type="submit" title="Descargar en formato PDF" class="btn btn-googleplus">
                                         <i class="fa fa-file-pdf-o"></i>

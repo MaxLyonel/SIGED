@@ -1,0 +1,132 @@
+{% extends 'layoutOlimpiadas.html.twig' %}
+
+{% block contentoption %} 
+    <div class="header-content">
+        <h2><i class="fa fa-pencil"></i> Registrados por área y categoría<span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">         
+                {% if nivel == 0 %}
+                    <li><i class="fa fa-home"></i><a href="#">Nivel Nacional</a></li>
+                {% endif %}
+                {% if nivel == 1 %}
+                    <li><i class="fa fa-home"></i><a href="javascript:history.back()">Nivel Nacional</a><i class="fa fa-angle-right"></i></li><li><a href="#">Nivel Departamental</a></li>
+                {% endif %}
+                {% if nivel == 7 %}                        
+                    <li><i class="fa fa-home"></i><a href="javascript:history.go(-2)">Nivel Nacional</a><i class="fa fa-angle-right"></i></li><li><a href="javascript:history.back()">Nivel Departamental</a><i class="fa fa-angle-right"></i></li><li><a href="#">Nivel Distrital</a></li>
+                {% endif %}
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>  
+    
+    <div class="body-content animated fadeIn">        
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel shadow">
+                    <div class="panel-heading">
+                        {% if estadistica is defined  %}
+                            <div class="pull-left">                             
+                                {% if nivel == 0 %}
+                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Departamento</h3>
+                                {% endif %}
+                                {% if nivel == 1 %}
+                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Distrito Educativo</h3>
+                                {% endif %}
+                                {% if nivel == 7 %}
+                                    <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Unidad Educativa</h3>
+                                {% endif %}
+                            </div>
+                            <div class="pull-right">
+                                    <form name="formEstadisticaPdf" id="formEstadisticaPdf"  action="{{ path('olimestadistica_registrados_area_categoria_pdf') }}" method="POST">  
+                                        <input type="hidden" name="codigo" id="codigo" value="{{estadistica|first.key|base64_encode }}" />
+                                        <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
+                                        <button type="submit" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                            <i class="fa fa-file-pdf-o"></i>
+                                        </button>
+                                    </form> 
+                                </div>     
+                                <div class="pull-right">
+                                    <form name="formEstadisticaXls" id="formEstadisticaXls"  action="{{ path('olimestadistica_registrados_area_categoria_xls') }}" method="POST">  
+                                        <input type="hidden" name="codigo" id="codigo" value="{{estadistica|first.key|base64_encode }}" />
+                                        <input type="hidden" name="nivel" id="nivel" value="{{nivel}}" />
+                                        <button type="submit" title="Descargar en formato XLS" class="btn btn-success">
+                                            <i class="fa fa-file-excel-o"></i>
+                                        </button>
+                                    </form> 
+                                </div>        
+                            <div class="clearfix"></div>
+                        {% endif %}
+                    </div>            
+                    <div class="panel-body no-padding">
+                        {% if estadistica is defined %}
+                            {% set count = 0 %}
+                            {%for datoKey, datos in estadistica %}
+                                {% for lugarKey, lugares in datos['dato'] %}  
+                                    {% set count = count + 1 %}
+                                    <div class="inner-all no-margin">   
+                                        {% if count == 1 %}
+                                            <p class="badge badge-primary col-md-12 text-left">{{ lugarKey }}</p> 
+                                        {% else %}
+                                            {% if nivel == 7 %}
+                                                <p class="badge badge-lilac col-md-12 text-left">{{datoKey}} - {{ lugarKey }}</p> 
+                                            {% else %}
+                                                <form name="form" role="form" action="{{ path('olimestadistica_registrados_area_categoria') }}" method="POST"> 
+                                                    <input type="hidden" name="codigo" id="codigo" value="{{datoKey|base64_encode }}" />
+                                                    <input type="hidden" name="nivel" id="nivel" value="{{nivelSiguiente}}" />
+                                                    <button type="submit" id="submit{{datoKey}}" style="display:none;"></button>
+                                                    <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{datoKey}}').click();">
+                                                        <p class="badge badge-lilac col-md-12 text-left">{{ lugarKey }}</p>  
+                                                    </a>        
+                                                </form>    
+                                            {% endif %}                                             
+                                        {% endif %}   
+                                        {% for materiaKey, materias in lugares %}  
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            <b>ÁREA {{ materiaKey }}</b>
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <span class="pull-left text-strong text-teal">CATEGORÍA</span>
+                                                            <span class="pull-right text-strong text-teal">NÚMERO DE INSCRITOS (PARTICIPANTES/GRUPOS/PROYECTOS)</span>
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for categoriaKey, categorias in materias %}                                        
+                                                    <tr>
+                                                        <td>
+                                                            <span class="pull-left text-capitalize">{{ categoriaKey }}</span>
+                                                            <span class="pull-right">{{ categorias }}</span>
+                                                        </td>
+                                                    </tr>                               
+                                                    {% endfor %} 
+                                                </tbody>
+                                            </table>                             
+                                        {% endfor %}
+                                    </div>
+                                    <div class="line no-margin"></div>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                    </div><!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript">
+        $(function(){
+            
+        });        
+    </script>
+{% endblock %}
+
+

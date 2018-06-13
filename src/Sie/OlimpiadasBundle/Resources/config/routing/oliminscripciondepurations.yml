@@ -1,0 +1,21 @@
+olimindepurations_index:
+    path:     /
+    defaults: { _controller: "SieOlimpiadasBundle:Depuration:index" }
+
+olimindepurations_find:
+    path:     /find
+    defaults: { _controller: "SieOlimpiadasBundle:Depuration:find" }
+    options:
+        expose: true
+
+olimindepurations_getOlimInscriptions:
+    path:     /getOlimInscriptions
+    defaults: { _controller: "SieOlimpiadasBundle:Depuration:getOlimInscriptions" }
+
+
+olimindepurations_removeOlimInscription:
+    path:     /removeOlimInscription
+    defaults: { _controller: "SieOlimpiadasBundle:Depuration:removeOlimInscription" }
+    options:
+        expose: true   
+ 

@@ -65,3 +65,15 @@ reporte_regular_juegos_plurinacionales_nacional_pdf:
 reporte_olimpiada_reporteOlimUE_pdf:
     path:    /reporteOlimUE
     defaults: { _controller: SieAppWebBundle:Reporte:reporteOlimUE } 
+
+reporte_especial_index:
+    path:     /especial
+    defaults: { _controller: SieAppWebBundle:Reporte:especialIndex }
+
+reporte_especial_informacion_general_print_pdf:
+    path:     /informacion/general/especial/print/pdf
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralEspecialPrintPdf }
+
+reporte_especial_informacion_general_print_xls:
+    path:     /informacion/general/especial/print/xls
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralEspecialPrintXls }

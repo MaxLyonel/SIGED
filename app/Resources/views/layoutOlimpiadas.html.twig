@@ -281,6 +281,7 @@
                             </a>
                             <ul>
                                 <li><a href="{{ path('olimregistroolimpiada')}}">Olimpiada</a></li>
+                                <li><a href="{{ path('olimindepurations_index')}}">Depuraci&oacute;n</a> </li>
                             </ul>
                         </li>
                     {% endif %}
@@ -298,7 +299,7 @@
                     {% endif %}
                     
 
-                    {% if app.session.get('roluser') in [8,35,20] %}
+                    {% if app.session.get('roluser') in [7,8,10,35,20] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-bars"></i></span>
@@ -308,7 +309,8 @@
                             <ul>
                                 <li><a href="{{ path('olimestadistica_registrados')}}">Registrados</a></li>
                                 <li><a href="{{ path('olimestadistica_registrados_area')}}">Registrados por área</a></li>
-                                <li><a href="{{ path('olimestadistica_registrados_area_grado')}}">Registrados por área y grado de escolaridad</a></li>
+                                <li><a href="{{ path('olimestadistica_registrados_area_grado')}}">Registrados por área y grado</a></li>
+                                <li><a href="{{ path('olimestadistica_registrados_area_categoria')}}">Registrados por área y categoría</a></li>
                             </ul>
                         </li>
                     {% endif %}

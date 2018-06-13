@@ -210,16 +210,16 @@ class ChangeMatriculaController extends Controller {
         $objStudents = array();
         $aData = array();
         //check if the data exist
-        if ($objNextCurso) {
-            //$objStudents = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsToInscription($objNextCurso->getId(), '5');
-            //get students list
-            $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourse($sie, $gestion, $nivel, $grado, $paralelo, $turno);
-            $aData = serialize(array('sie' => $sie, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno, 'gestion' => $gestion, 'iecId' => $iecId, 'ciclo' => $ciclo, 'iecNextLevl' => $objNextCurso->getId()));
-        } else {
-            $message = 'No existen estudiantes inscritos...';
-            $this->addFlash('warninsueall', $message);
-            $exist = false;
-        }
+        // if ($objNextCurso) {
+        //     //$objStudents = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsToInscription($objNextCurso->getId(), '5');
+        //     //get students list
+        //     $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourse($sie, $gestion, $nivel, $grado, $paralelo, $turno);
+        //     $aData = serialize(array('sie' => $sie, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno, 'gestion' => $gestion, 'iecId' => $iecId, 'ciclo' => $ciclo, 'iecNextLevl' => $objNextCurso->getId()));
+        // } else {
+        //     $message = 'No existen estudiantes inscritos...';
+        //     $this->addFlash('warninsueall', $message);
+        //     $exist = false;
+        // }
 
         // Para el centralizador
         $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
@@ -351,18 +351,30 @@ class ChangeMatriculaController extends Controller {
     $swChangeStatus = true;
     try {
       //ge notas to do the changeMatricula
-      $notas = $this->get('notas')->regular($infoStudent['eInsId'],$this->operativo);
+      $notas = $this->get('notas')->regular($infoStudent['eInsId'],1);
+      $notasStudent = $notas['cuantitativas'];
+      $notasRegistradas = array();
+      foreach ($notasStudent as $key => $value) {
+          if(isset($value['notas'][0]['nota']) && $value['notas'][0]['nota']>0)
+            $notasRegistradas[] = $value['notas'][0]['nota'];
+      }
+    
         if($form['estadoMatricula']==6){
-          if(sizeof($notas)>1){
+          if(sizeof($notasRegistradas)>1){
+            $message = 'Cambio no realizado, debido a que la/el estudiante cuenta con calificaciones';  
+            $this->addFlash('noinscription',$message);
             $swChangeStatus=false;
           }
         }
+        
         if($swChangeStatus){
           //find to update
           $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']);
           $currentInscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($form['estadoMatricula']));
           $em->persist($currentInscrip);
           $em->flush();
+          $message = 'Cambio de estado realizado';  
+          $this->addFlash('goodinscription',$message);
           // Try and commit the transaction
           $em->getConnection()->commit();
         }
@@ -371,7 +383,16 @@ class ChangeMatriculaController extends Controller {
       $em->getConnection()->rollback();
       echo 'Excepción capturada: ', $ex->getMessage(), "\n";
     }
-
+    if ($objNextCurso) {
+        //$objStudents = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsToInscription($objNextCurso->getId(), '5');
+        //get students list
+        $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourse($sie, $gestion, $nivel, $grado, $paralelo, $turno);
+        $aData = serialize(array('sie' => $sie, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno, 'gestion' => $gestion, 'iecId' => $iecId, 'ciclo' => $ciclo, 'iecNextLevl' => $objNextCurso->getId()));
+    } else {
+        $message = 'No existen estudiantes inscritos...';
+        $this->addFlash('warninsueall', $message);
+        $exist = false;
+    }
 
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,

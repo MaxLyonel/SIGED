@@ -212,6 +212,12 @@ class OlimTutorController extends Controller{
     }
 
     public function newTutorAction (Request $request){
+         //get the session user
+         $id_usuario = $this->session->get('userId');
+         //validation if the user is logged
+         if (!isset($id_usuario)) {
+             return $this->redirect($this->generateUrl('login'));
+         }
         //got the send data
 	    $form = $request->get('form');
 	    $data = json_decode($form['data'],true);
@@ -238,21 +244,47 @@ class OlimTutorController extends Controller{
     }
 
     public function resultTutoresAction(Request $request){
-        
+         //get the session user
+         $id_usuario = $this->session->get('userId');
+         //validation if the user is logged
+         if (!isset($id_usuario)) {
+             return $this->redirect($this->generateUrl('login'));
+         }
         //get the send data
         $form = $request->get('form');
         $em = $this->getDoctrine()->getManager();
         $arrForm = json_decode($form['data'],true);
         $tutorFound = true;
-        
+        $resultTutores = array();
         // $resultTutores = $this->get('olimfunctions')->lookForTutores($form);
-        $resultTutores = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
-                'carnet'=> $form['carnet'],
-                'complemento'=>$form['complemento'],
-                // 'fechaNacimiento'=> new \DateTime($form['fechanacimiento'])
-            ));
+        // $resultTutores = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+        //         'carnet'=> $form['carnet'],
+        //         'complemento'=>trim($form['complemento']),              
+        //         // 'fechaNacimiento'=> new \DateTime($form['fechanacimiento'])
+        //     ));
+            // new way to find the tutors
+        $entity = $em->getRepository('SieAppWebBundle:Persona');
+        $query = $entity->createQueryBuilder('p');
+        
+        if($form['complemento']){
+            $query = $query->where('p.complemento = :complemento');
+            $query = $query->setParameter('complemento', $form['complemento']);
+        } else{
+            $query = $query->where('p.complemento IS NULL');   
+            $query = $query->orwhere('p.complemento = :complemento');
+            $query = $query->setParameter('complemento', '');
+
+        }
+        $query = $query->andwhere('p.carnet = :carnet');
+        $query = $query->setParameter('carnet', $form['carnet']);
+        $query = $query->getQuery();
+        
+        $resultTutores = $query->getResult();    
+
         if(!$resultTutores){
             $tutorFound = false;
+        }else{
+            $resultTutores = $resultTutores[0];
         }
         // dump($resultTutores);die;
         return $this->render('SieOlimpiadasBundle:OlimTutor:resultTutores.html.twig', array(

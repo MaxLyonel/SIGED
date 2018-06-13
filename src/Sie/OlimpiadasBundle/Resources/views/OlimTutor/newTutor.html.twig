@@ -104,10 +104,11 @@
       $(function(){
             //$("#form_carnet").numeric("positiveInteger");
             $("#form_carnet").attr("maxlength",'20');
+            $("#form_complemento").attr("maxlength",'2');
 
             // aplicamos las mascaras para las fechas
             $("#form_fechanacimiento").inputmask({ "alias": "dd-mm-yyyy" });
-            $("#form_complemento").inputmask({mask: "9a"});
+            //  2323$("#form_complemento").inputmask({mask: "9a"});
 
         });
 
