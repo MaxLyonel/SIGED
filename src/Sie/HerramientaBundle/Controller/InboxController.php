@@ -586,15 +586,30 @@ class InboxController extends Controller {
           // $em->flush();
         }
 
-        return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
-                    'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
-                    'personalAdmform' => $this->InfoStudentForm('herramienta_info_personal_adm_index', 'Personal Administrativo',$data)->createView(),
-                    'infoMaestroform' => $this->InfoStudentForm('herramienta_info_maestro_index', 'Maestros',$data)->createView(),
-                    'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
-                    'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo',$data)->createView(),
-                    'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
-                    'data'=>$dataInfo
+      $form['reglas'] = '1,2,3,8,10,12,13,16';
+      $form['gestion'] = $data['gestion'];
+      $form['sie'] = $data['id'];
+      
+      $objObsQA = $this->getObservationQA($form);
+
+      if($objObsQA){
+        return $this->render($this->session->get('pathSystem') . ':Inbox:list_inconsistencia.html.twig', array(
+          'objObsQA' => $objObsQA,
+          'sie' =>  $form['sie'],
+          'institucion' => $ieducativa->getInstitucioneducativa(),
+          'gestion' => $form['gestion']
         ));
+      } else {
+        return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
+          'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
+          'personalAdmform' => $this->InfoStudentForm('herramienta_info_personal_adm_index', 'Personal Administrativo',$data)->createView(),
+          'infoMaestroform' => $this->InfoStudentForm('herramienta_info_maestro_index', 'Maestros',$data)->createView(),
+          'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
+          'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo',$data)->createView(),
+          'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
+          'data'=>$dataInfo
+        ));
+      }
     }
 
     /**
@@ -938,7 +953,7 @@ class InboxController extends Controller {
       * return observations UE *
       * *
       \************************************/
-      $form['reglas'] = '2,3,8,12,13';
+      $form['reglas'] = '1,2,3,8,10,12,13,16';
       $objObsQA = $this->getObservationQA($form);
       if( $inconsistencia || $objObsQA ){
         $observation = true;
