@@ -1172,4 +1172,200 @@ class InstitucioneducativaCurso
     {
         return $this->obs;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\FinanciamientoTipo
+     */
+    private $finDesEscolarTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\IdiomaTipo
+     */
+    private $terLenEnsenanzaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\IdiomaTipo
+     */
+    private $segLenEnsenanzaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\IdiomaTipo
+     */
+    private $priLenEnsenanzaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\IdiomaTipo
+     */
+    private $idiomaMenHabladoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\IdiomaTipo
+     */
+    private $idiomaRegHabladoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\IdiomaTipo
+     */
+    private $idiomaMasHabladoTipo;
+
+
+    /**
+     * Set finDesEscolarTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\FinanciamientoTipo $finDesEscolarTipo
+     * @return InstitucioneducativaCurso
+     */
+    public function setFinDesEscolarTipo(\Sie\AppWebBundle\Entity\FinanciamientoTipo $finDesEscolarTipo = null)
+    {
+        $this->finDesEscolarTipo = $finDesEscolarTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get finDesEscolarTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\FinanciamientoTipo 
+     */
+    public function getFinDesEscolarTipo()
+    {
+        return $this->finDesEscolarTipo;
+    }
+
+    /**
+     * Set terLenEnsenanzaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\IdiomaTipo $terLenEnsenanzaTipo
+     * @return InstitucioneducativaCurso
+     */
+    public function setTerLenEnsenanzaTipo(\Sie\AppWebBundle\Entity\IdiomaTipo $terLenEnsenanzaTipo = null)
+    {
+        $this->terLenEnsenanzaTipo = $terLenEnsenanzaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get terLenEnsenanzaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\IdiomaTipo 
+     */
+    public function getTerLenEnsenanzaTipo()
+    {
+        return $this->terLenEnsenanzaTipo;
+    }
+
+    /**
+     * Set segLenEnsenanzaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\IdiomaTipo $segLenEnsenanzaTipo
+     * @return InstitucioneducativaCurso
+     */
+    public function setSegLenEnsenanzaTipo(\Sie\AppWebBundle\Entity\IdiomaTipo $segLenEnsenanzaTipo = null)
+    {
+        $this->segLenEnsenanzaTipo = $segLenEnsenanzaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get segLenEnsenanzaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\IdiomaTipo 
+     */
+    public function getSegLenEnsenanzaTipo()
+    {
+        return $this->segLenEnsenanzaTipo;
+    }
+
+    /**
+     * Set priLenEnsenanzaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\IdiomaTipo $priLenEnsenanzaTipo
+     * @return InstitucioneducativaCurso
+     */
+    public function setPriLenEnsenanzaTipo(\Sie\AppWebBundle\Entity\IdiomaTipo $priLenEnsenanzaTipo = null)
+    {
+        $this->priLenEnsenanzaTipo = $priLenEnsenanzaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get priLenEnsenanzaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\IdiomaTipo 
+     */
+    public function getPriLenEnsenanzaTipo()
+    {
+        return $this->priLenEnsenanzaTipo;
+    }
+
+    /**
+     * Set idiomaMenHabladoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\IdiomaTipo $idiomaMenHabladoTipo
+     * @return InstitucioneducativaCurso
+     */
+    public function setIdiomaMenHabladoTipo(\Sie\AppWebBundle\Entity\IdiomaTipo $idiomaMenHabladoTipo = null)
+    {
+        $this->idiomaMenHabladoTipo = $idiomaMenHabladoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get idiomaMenHabladoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\IdiomaTipo 
+     */
+    public function getIdiomaMenHabladoTipo()
+    {
+        return $this->idiomaMenHabladoTipo;
+    }
+
+    /**
+     * Set idiomaRegHabladoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\IdiomaTipo $idiomaRegHabladoTipo
+     * @return InstitucioneducativaCurso
+     */
+    public function setIdiomaRegHabladoTipo(\Sie\AppWebBundle\Entity\IdiomaTipo $idiomaRegHabladoTipo = null)
+    {
+        $this->idiomaRegHabladoTipo = $idiomaRegHabladoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get idiomaRegHabladoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\IdiomaTipo 
+     */
+    public function getIdiomaRegHabladoTipo()
+    {
+        return $this->idiomaRegHabladoTipo;
+    }
+
+    /**
+     * Set idiomaMasHabladoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\IdiomaTipo $idiomaMasHabladoTipo
+     * @return InstitucioneducativaCurso
+     */
+    public function setIdiomaMasHabladoTipo(\Sie\AppWebBundle\Entity\IdiomaTipo $idiomaMasHabladoTipo = null)
+    {
+        $this->idiomaMasHabladoTipo = $idiomaMasHabladoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get idiomaMasHabladoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\IdiomaTipo 
+     */
+    public function getIdiomaMasHabladoTipo()
+    {
+        return $this->idiomaMasHabladoTipo;
+    }
 }
