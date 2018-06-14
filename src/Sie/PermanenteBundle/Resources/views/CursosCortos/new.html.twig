@@ -67,14 +67,29 @@
 
                             </div>
                             <div class="row">
-                                <div class="form-group col-lg-4 col-md-6">
-                                    <label>  Fecha inicio </label>
-                                    <strong>{{form_widget(form.fechaini)}}</strong>
+
+                                <div id='sandbox-container'>
+                                    <div class="input-daterange" id="datepicker">
+                                        <div class="form-group col-lg-3 col-md-6">
+                                            <label>  Fecha inicio </label>
+                                            {{form_widget(form.fechaInicio) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                        <div class="form-group col-lg-3 col-md-6">
+                                            <label> Fecha Fin</label>
+                                            {{form_widget(form.fechaFin) }}
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group col-lg-4 col-md-6">
-                                    <label> Fecha Fin</label>
-                                    <strong>{{form_widget(form.fechafin)}}</strong>
-                                </div>
+                                {#<div class="form-group col-lg-4 col-md-6">#}
+                                    {#<label>  Fecha inicio </label>#}
+                                    {#<strong>{{form_widget(form.fechaini)}}</strong>#}
+                                {#</div>#}
+                                {#<div class="form-group col-lg-4 col-md-6">#}
+                                    {#<label> Fecha Fin</label>#}
+                                    {#<strong>{{form_widget(form.fechafin)}}</strong>#}
+                                {#</div>#}
                                 <div class="form-group col-lg-4 col-md-6">
                                     <label> Horas</label>
                                     <strong>{{form_widget(form.horas)}}</strong>
@@ -210,6 +225,28 @@
         todayBtn: 'linked'
 
     });
+
+
+
+    // DateRangePicker
+    $('#sandbox-container .input-daterange').datepicker({
+        format: 'dd-mm-yyyy',
+        todayBtn: 'linked'
+    });
+    $('#form_fechaInicio').on('change',function(){
+        if($("#form_fechaFin").val().length < 1){
+            $("#form_fechaFin").val($('#form_fechaInicio').val());
+        }
+    });
+    $('#form_fechaFin').on('change',function(){
+        //if($("#form_fechaFin").val().length >= 1){
+     //   alert('adsjkfhkasd');
+        if($("#form_fechaFin").val() < $("#form_fechaInicio").val()){
+            $("#form_fechaInicio").val($('#form_fechaFin').val());
+        }
+        //}
+    });
+
 
 
 </script>

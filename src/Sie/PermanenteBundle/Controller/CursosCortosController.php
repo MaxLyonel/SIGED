@@ -151,6 +151,7 @@ class CursosCortosController extends Controller {
                 return $this->redirect($this->generateUrl('login'));
             }
 
+            //llama a los campos de las tablas para mostrar en la vista
             $em = $this->getDoctrine()->getManager();
             $subarea = $em->getRepository('SieAppWebBundle:PermanenteSubAreaTipo')->findAll();
             $areatematica = $em->getRepository('SieAppWebBundle:PermanenteAreaTematicaTipo')->findAll();
@@ -202,8 +203,6 @@ class CursosCortosController extends Controller {
             }
 
             $paisNac =  $em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => 1));
-          //  dump($paisNac);die;
-
             $query = $em->createQuery(
                 'SELECT lt
                 FROM SieAppWebBundle:LugarTipo lt
@@ -223,36 +222,28 @@ class CursosCortosController extends Controller {
                     $dptoNacArray[$value->getId()] = $value->getLugar();
                 }
             }
-
-
-
             $prov = array();
             $muni = array();
-
-
-
+            // Dibuja la Vista para la cracion de un nuevo curso
             $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_per_cursos_cortos_create'))
                 ->add('subarea', 'choice', array('required' => true, 'choices' => $subareaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('areatematica', 'choice', array('required' => true, 'choices' => $areatematicaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('programa', 'choice', array('required' => true, 'choices' => $programaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'chosen-select col-lg-10')))
-             //   ->add('departamento', 'entity', array('label' => 'Departamento', 'required' => true, 'class' => 'SieAppWebBundle:DepartamentoTipo', 'property' => 'departamento', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value);')))
                 ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'mostrarPobDetalle(this.value)')))
                 ->add('departamento', 'choice', array('label' => 'Departamento', 'required' => true, 'choices' => $dptoNacArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value)')))
                 ->add('provincia', 'choice', array('label' => 'Provincia', 'required' => true, 'choices' => $prov, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
                 ->add('municipio', 'choice', array('label' => 'Municipio', 'required' => true, 'choices' => $muni, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control')))
-                ->add('fechaini', 'datetime', array('widget' => 'single_text','date_format' => 'dd-MM-yyyy','attr' => array('class' => 'form-control calendario')))
-                ->add('fechafin', 'datetime', array('widget' => 'single_text','date_format' => 'dd-MM-yyyy','attr' => array('class' => 'form-control calendario')))
+                ->add('fechaInicio', 'datetime', array('widget' => 'single_text','date_format' => 'dd-MM-yyyy','attr' => array('class' => 'form-control calendario')))
+                ->add('fechaFin', 'datetime', array('widget' => 'single_text','date_format' => 'dd-MM-yyyy','attr' => array('class' => 'form-control calendario')))
                 ->add('turno', 'choice', array( 'required' => true, 'choices' => $turnoArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-                // ->add('fechaInicio','text',array('label'=>'Fecha Inicio','attr'=>array('class'=>'form-control calendario','autocomplete'=>'off')))
                 ->add('horas', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true, 'pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
                 ->add('lugar', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
                 ->add('pobdetalle', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
                 ->add('pobobs', 'textarea', array( 'required' => false, 'attr' => array('class' => 'form-control','readonly' => true)))
                 ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'disbled' => true)))
                 ->getForm();
-//dump($cursosCortosArray);die;
             return $this->render('SiePermanenteBundle:CursosCortos:new.html.twig', array(
                 'cursos'=>$cursosCortos,
                 'form' => $form->createView()
@@ -267,14 +258,18 @@ class CursosCortosController extends Controller {
     public function createCursoCortoAction(Request $request){
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
-
+        //LLama a variables de Sesion
         $institucion = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $sucursal = $this->session->get('ie_subcea');
         $periodo = $this->session->get('ie_per_cod');
-       // dump($periodo);die;
+
         try {
+           //recibe los datos del formulario de vista
             $form = $request->get('form');
+            //Invoca a una funcion de Base de Datos Necesaria para cualquier INSERT, para que se reinicie la secuencia de ingreso de datos
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
+            // Realiza un INSERT para la creacion de un curso nuevo con los datos extraidos de la vista
             $institucioncurso = new InstitucioneducativaCurso();
             $institucioncurso ->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(230));
             $institucioncurso ->setCicloTipo($em->getRepository('SieAppWebBundle:CicloTipo')->find(0));
@@ -284,17 +279,15 @@ class CursosCortosController extends Controller {
             $institucioncurso ->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->find($this->session->get('ie_subcea')));
             $institucioncurso ->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
             $institucioncurso ->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find($this->session->get('ie_per_cod')));
-           //$institucioncurso->setSucursalTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find($this->session->get('ie_per_cod')));
             $institucioncurso ->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneBy(array('id' => $form['turno'])));
             $institucioncurso ->setDuracionhoras($form['horas']);
-            $institucioncurso ->setFechaInicio(new \DateTime($form['fechaini']));
-            $institucioncurso ->setFechaFin(new \DateTime($form['fechafin']));
+            $institucioncurso ->setFechaInicio(new \DateTime($form['fechaInicio']));
+            $institucioncurso ->setFechaFin(new \DateTime($form['fechaFin']));
 
             $em->persist($institucioncurso);
-          //  dump($institucioncurso);die;
             $em->flush($institucioncurso);
-           // dump($institucioncurso);die;
 
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('permanente_institucioneducativa_cursocorto');")->execute();
             $institucioncursocorto = new PermanenteInstitucioneducativaCursocorto();
             $institucioncursocorto  ->setInstitucioneducativaCurso($institucioncurso);
             $institucioncursocorto  ->setSubAreaTipo($em->getRepository('SieAppWebBundle:PermanenteSubAreaTipo')->findOneBy(array('id' => $form['subarea'])));
@@ -324,13 +317,10 @@ class CursosCortosController extends Controller {
     }
 
     public function editCursoCortoAction(Request $request){
-       // dump($request);die;
-       // $em = $this->getDoctrine()->getManager();
+      //Recibe los datos de informacion para su edicion
         $infoUe = $request->get('infoUe');
-       // dump($infoUe);die;
         $aInfoUeducativa = unserialize($infoUe);
         $idcurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
-
         try {
             $this->session = $request->getSession();
             $id_usuario = $this->session->get('userId');
@@ -343,7 +333,7 @@ class CursosCortosController extends Controller {
             $gestion = $this->session->get('ie_gestion');
             $sucursal = $this->session->get('ie_subcea');
             $periodo = $this->session->get('ie_per_cod');
-
+            //Busca Todos los datos de las tablas de la BD para mostrarlos en la vista
             $em = $this->getDoctrine()->getManager();
             $subarea = $em->getRepository('SieAppWebBundle:PermanenteSubAreaTipo')->findAll();
             $areatematica = $em->getRepository('SieAppWebBundle:PermanenteAreaTematicaTipo')->findAll();
@@ -351,26 +341,16 @@ class CursosCortosController extends Controller {
             $programa = $em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findAll();
             $cursosCortos = $em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->findAll();
             $turno = $em->getRepository('SieAppWebBundle:TurnoTipo')->findAll();
-           // $institucioncurso = new InstitucioneducativaCurso();
             $institucioncurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idcurso);
             $institucioncursocorto = $em->getRepository('SieAppWebBundle:PermanenteInstitucioneducativaCursocorto')->findOneBy(array('institucioneducativaCurso'=>$idcurso));
-
-          //  $idcurso = $institucioncurso->getId();
-         //  dump($institucioncurso);die;
-          //  $em->getRepository('SieAppWebBundle:TurnoTipo')->findOneBy(array('id' => $form['turno']));
-          //  findOneBy(array('id' => $form['']));
-            //
             $deptoid=$institucioncursocorto->getLugarTipoDepartamento()->getId();
             $provid=$institucioncursocorto->getLugarTipoProvincia()->getId();
             $munid=$institucioncursocorto->getLugarTipoMunicipio()->getId();
             $lugar=$institucioncursocorto->getLugarDetalle();
             $pobdetalle=$institucioncursocorto->getPoblacionDetalle();
-            //dump($lugar);die;
+
             $arraypob= array();
             $pobobservacion=$em->getRepository('SieAppWebBundle:PermanentePoblacionTipo')->find($institucioncursocorto->getPoblacionTipo()->getId());
-
-           // dump($pobobservacion);die;
-           // dump($pobobservacion);die;
 
             $subareaArray= array();
             foreach ($subarea as $value) {
@@ -386,7 +366,6 @@ class CursosCortosController extends Controller {
             foreach ($programa as $value) {
                 if (($value->getId() == 0)||($value->getId() ==1 )||($value->getId() ==2 ))
                 {
-
                 }else
                 {
                     $programaArray[$value->getId()] = $value->getPrograma();
@@ -413,7 +392,6 @@ class CursosCortosController extends Controller {
             //Lugar de Nacimiento
 
             $paisNac =  $em->getRepository('SieAppWebBundle:PaisTipo')->findOneBy(array('id' => 1));
-            //  dump($paisNac);die;
 
             $query = $em->createQuery(
                 'SELECT lt
@@ -435,12 +413,6 @@ class CursosCortosController extends Controller {
                 }
             }
 
-//            $dpto = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findAll();
-//            $dptoArray = array();
-//            foreach($dpto as $value){
-//                $dptoArray[$value->getId()] = $value->getDepartamento();
-//            }
-
             $query = $em->createQuery(
                 'SELECT lt
                     FROM SieAppWebBundle:LugarTipo lt
@@ -455,7 +427,6 @@ class CursosCortosController extends Controller {
             foreach ($provincias as $c) {
                 $provinciasArray[$c->getId()] = $c->getLugar();
             }
-//
             $query = $em->createQuery(
                 'SELECT lt
                     FROM SieAppWebBundle:LugarTipo lt
@@ -471,15 +442,14 @@ class CursosCortosController extends Controller {
                 $municipiosArray[$c->getId()] = $c->getLugar();
             }
 
-
-
             $prov = array();
             $muni = array();
 
-
+            // Dibuja el formulario con los datos Seleccionados Anteriormente
             $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_per_cursos_cortos_update'))
                 ->add('idCursosCortos', 'hidden', array('data' => $idcurso))
+                ->add('idCursosCortosA', 'hidden', array('data' => $idcurso))
                 ->add('nivel', 'hidden', array('data' => 230))
                 ->add('ciclo', 'hidden', array('data' => 0))
                 ->add('grado', 'hidden', array('data' => 99))
@@ -490,16 +460,14 @@ class CursosCortosController extends Controller {
                 ->add('periodo', 'hidden', array('data' => $periodo))
                 ->add('turno', 'choice', array( 'required' => true, 'choices' => $turnoArray, 'data' => $institucioncurso->getTurnoTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('horas', 'text', array( 'required' => true, 'data' => $institucioncurso->getDuracionhoras(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control','pattern' => '[0-9]{1,2}', 'maxlength' => '2')))
-                ->add('fechaini', 'date', array('widget' => 'single_text','format' => 'dd-MM-yyyy','data' => new \DateTime($institucioncurso->getFechaInicio()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control calendario')))
-                ->add('fechafin', 'date', array('widget' => 'single_text','format' => 'dd-MM-yyyy','data' => new \DateTime($institucioncurso->getFechaFin()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control calendario')))
+                ->add('fechaInicio', 'date', array('widget' => 'single_text','format' => 'dd-MM-yyyy','data' => new \DateTime($institucioncurso->getFechaInicio()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control calendario')))
+                ->add('fechaFin', 'date', array('widget' => 'single_text','format' => 'dd-MM-yyyy','data' => new \DateTime($institucioncurso->getFechaFin()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control calendario')))
                 ->add('subarea', 'choice', array('required' => true, 'choices' => $subareaArray, 'data' => $institucioncursocorto->getSubareaTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('programa', 'choice', array('required' => true, 'choices' => $programaArray, 'data' => $institucioncursocorto->getProgramaTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('areatematica', 'choice', array('required' => true, 'choices' => $areatematicaArray, 'data' => $institucioncursocorto->getAreatematicaTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                 ->add('poblacion', 'choice', array( 'required' => true, 'choices' => $poblacionArray, 'data' => $institucioncursocorto->getPoblacionTipo()->getId() , 'attr' => array('class' => 'chosen-select form-control','onchange' => 'mostrarPobDetalle(this.value)', 'data-placeholder' => 'Seleccionar...')))
                 ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'data' => $institucioncursocorto->getCursocortoTipo()->getId() , 'attr' => array('class' => 'chosen-select col-lg-10')))
-             //   ->add('cursosCortos', 'choice', array( 'required' => true, 'choices' => $cursosCortosArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'chosen-select col-lg-10')))
-                // ->add('departamento', 'entity', array('label' => 'Departamento', 'required' => true, 'class' => 'SieAppWebBundle:DepartamentoTipo', 'property' => 'departamento', 'data' => $institucioncursocorto->getLugarTipoDepartamento()->getId() , 'attr' => array('class' => 'chosen-select form-control', 'onchange' => 'listarProvincias(this.value);')))
-               ->add('pobdetalle', 'text', array( 'required' => true, 'data' => $pobdetalle,'attr' => array('class' => 'form-control','enabled' => true)))
+                ->add('pobdetalle', 'text', array( 'required' => true, 'data' => $pobdetalle,'attr' => array('class' => 'form-control','enabled' => true)))
                 ->add('pobobs', 'textarea', array( 'required' => false, 'data'=> $pobobservacion->getObs(),'attr' => array('class' => 'form-control','readonly' => true)))
                 ->add('departamento', 'choice', array('label' => 'departamento', 'required' => true, 'choices' => $dptoNacArray,'data' => $institucioncursocorto->getLugarTipoDepartamento()->getId(),  'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincias(this.value)')))
                 ->add('provincia', 'choice', array('label' => 'Provincia', 'required' => true, 'choices' => $provinciasArray,'data' => $institucioncursocorto->getLugarTipoProvincia()->getId(),  'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipios(this.value)')))
@@ -507,38 +475,34 @@ class CursosCortosController extends Controller {
                 ->add('lugar', 'text', array( 'required' => true, 'data' => $lugar, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control')))
                 ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary', 'disbled' => true)))
                 ->getForm();
-        // dump($form );die;
-//
             return $this->render('SiePermanenteBundle:CursosCortos:edit.html.twig', array(
 
                 'form' => $form->createView()
+
             ));
         }
         catch (Exception $ex)
         {
-
         }
-
-
     }
 
     public function updateCursoCortoAction(Request $request){
+       //Recibe los datos del formulario editar
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         $institucion = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $sucursal = $this->session->get('ie_subcea');
         $periodo = $this->session->get('ie_per_cod');
-        //dump($request);die;
+
        $institucioncurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $form['idCursosCortos']));
         $institucioncursocorto = $em->getRepository('SieAppWebBundle:PermanenteInstitucioneducativaCursocorto')->findOneBy(array('institucioneducativaCurso' => $form['idCursosCortos']));
         $idcurso = $institucioncurso->getId();
-       //dump($idcurso);die;
+
+        //realiza el update de 2 tablas (InstitucioneducativaCurso,PermanenteInstitucioneducativaCursocorto)
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
-           // $institucioncurso = new InstitucioneducativaCurso();
-
             $institucioncurso ->getInstitucioneducativa($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $form['idCursosCortos'])));
             $institucioncurso ->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find(230));
             $institucioncurso ->setCicloTipo($em->getRepository('SieAppWebBundle:CicloTipo')->find(0));
@@ -548,19 +512,14 @@ class CursosCortosController extends Controller {
             $institucioncurso ->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->find($this->session->get('ie_subcea')));
             $institucioncurso ->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
             $institucioncurso ->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find($this->session->get('ie_per_cod')));
-            //$institucioncurso->setSucursalTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->find($this->session->get('ie_per_cod')));
             $institucioncurso ->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneBy(array('id' => $form['turno'])));
             $institucioncurso ->setDuracionhoras($form['horas']);
-            $institucioncurso ->setFechaInicio(new \DateTime($form['fechaini']));
-            $institucioncurso ->setFechaFin(new \DateTime($form['fechafin']));
-          //  dump($institucioncurso);die;
+            $institucioncurso ->setFechaInicio(new \DateTime($form['fechaInicio']));
+            $institucioncurso ->setFechaFin(new \DateTime($form['fechaFin']));
+
             $em->persist($institucioncurso);
 
             $em->flush($institucioncurso);
-       //      dump($institucioncurso);die;
-
-       //     $institucioncursocorto = new PermanenteInstitucioneducativaCursocorto();
-          //  $institucioncursocorto ->getInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:PermanenteInstitucioneducativaCursocorto')->findOneBy(array('institucioneducativaCurso' => $form['idCursosCortos'])));
             $institucioncursocorto  ->setInstitucioneducativaCurso($institucioncurso);
             $institucioncursocorto  ->setSubAreaTipo($em->getRepository('SieAppWebBundle:PermanenteSubAreaTipo')->findOneBy(array('id' => $form['subarea'])));
             $institucioncursocorto  ->setProgramaTipo($em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findOneBy(array('id' => $form['programa'])));
@@ -574,7 +533,6 @@ class CursosCortosController extends Controller {
             $institucioncursocorto  ->setPoblacionDetalle($form['pobdetalle']);
             $em->persist($institucioncursocorto);
             $em->flush();
-//dump($institucioncursocorto);die;
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
             return $this->redirect($this->generateUrl('herramienta_per_cursos_cortos_index'));
@@ -783,6 +741,8 @@ class CursosCortosController extends Controller {
         try
         {
          $form = $request->get('form');
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
+
             $institucioncursoferta = new InstitucioneducativaCursoOferta();
             $institucioncursoferta ->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $form['cursoscortos'])));
             $institucioncursoferta ->setHorasmes($horas);
@@ -793,6 +753,7 @@ class CursosCortosController extends Controller {
             $em->flush($institucioncursoferta);
             //dump($institucioncurso);die;
 
+            $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta_maestro');")->execute();
             $institucioncursofermaestro = new InstitucioneducativaCursoOfertaMaestro();
 
             $institucioncursofermaestro  ->setInstitucioneducativaCursoOferta($institucioncursoferta);
@@ -1486,8 +1447,8 @@ class CursosCortosController extends Controller {
 
                 // ->add('fechaInicio','text',array('label'=>'Fecha Inicio','attr'=>array('class'=>'form-control calendario','autocomplete'=>'off')))
 //                ->add('curso', 'text', array( 'required' => true, 'attr' => array('class' => 'form-control','enabled' => true)))
-                ->add('fechaini', 'datetime', array('widget' => 'single_text','date_format' => 'dd-MM-yyyy','attr' => array('class' => 'form-control calendario')))
-                ->add('fechafin', 'datetime', array('widget' => 'single_text','date_format' => 'dd-MM-yyyy','attr' => array('class' => 'form-control calendario')))
+                ->add('fechaInicio', 'datetime', array('widget' => 'single_text','date_format' => 'dd-MM-yyyy','attr' => array('class' => 'form-control calendario')))
+                ->add('fechaFin', 'datetime', array('widget' => 'single_text','date_format' => 'dd-MM-yyyy','attr' => array('class' => 'form-control calendario')))
 //                 ->add('mostrar', 'submit', array('label' => 'Mostrar ', 'attr' => array('class' => 'btn btn-primary', 'disbled' => true)))
                 ->getForm();
 
@@ -1511,8 +1472,8 @@ class CursosCortosController extends Controller {
         try
         {
 
-           $fechaini = $form['fechaini'] ;
-            $fechafin = $form['fechafin'] ;
+           $fechaini = $form['fechaInicio'] ;
+            $fechafin = $form['fechaFin'] ;
 
          //   dump($fechaini);die;
                //new \DateTime($->format('d-m-Y'));
@@ -1544,11 +1505,11 @@ class CursosCortosController extends Controller {
             $querya->execute();
             $cursoCorto= $querya->fetchAll();
 
-//dump($cursoCorto);die;
+            //dump($cursoCorto);die;
             return $this->render('SiePermanenteBundle:CursosCortos:listCursosCortos.html.twig', array(
                  'cursocorto'=>$cursoCorto,
-                'fechainicio'=>$fechaini,
-                'fechafin'=>$fechafin
+                'fechaInicio'=>$fechaini,
+                'fechaFin'=>$fechafin
 
             ));
 
@@ -1557,6 +1518,37 @@ class CursosCortosController extends Controller {
 
         }
 
+    }
+
+    public function openCursoAction(Request $request)
+    {
+        $em= $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
+        //get the send values
+        $infoUe = $request->get('infoUe');
+        $aInfoUeducativa = unserialize($infoUe);
+//          dump($aInfoUeducativa['ueducativaInfoId']['nivelId']);die;
+        $iecid = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+        //dump($iecid);die;
+        //$iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecid);
+        $em->getConnection()->beginTransaction();
+        try
+        {
+            $institucioncursocorto=$em->getRepository('SieAppWebBundle:PermanenteInstitucioneducativaCursocorto')->findOneBy(array('institucioneducativaCurso'=>$iecid));
+            $institucioncursocorto->setEsabierto(true);
+            $em->persist($institucioncursocorto);
+            $em->flush();
+            $response = new JsonResponse();
+
+            $em->getConnection()->commit();
+
+            return $response->setData(array('mensaje'=>'¡Proceso realizado exitosamente!'));
+        }
+       catch (Exception $ex)
+       {
+           return $ex;
+       }
     }
 
 }

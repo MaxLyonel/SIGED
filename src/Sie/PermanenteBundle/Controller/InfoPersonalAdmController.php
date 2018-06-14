@@ -129,10 +129,10 @@ class InfoPersonalAdmController extends Controller {
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['idPersona']);
 
         return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:new.html.twig', array(
-                    'form' => $this->newForm($form['idInstitucion'], $form['gestion'], $form['idPersona'])->createView(),
-                    'institucion' => $institucion,
-                    'gestion' => $this->session->get('ie_gestion'),
-                    'persona' => $persona
+            'form' => $this->newForm($form['idInstitucion'], $form['gestion'], $form['idPersona'])->createView(),
+            'institucion' => $institucion,
+            'gestion' => $this->session->get('ie_gestion'),
+            'persona' => $persona
         ));
     }
 
@@ -145,9 +145,9 @@ class InfoPersonalAdmController extends Controller {
         $em->getConnection()->beginTransaction();
 
         $query = $em->createQuery(
-                        'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+            'SELECT ct FROM SieAppWebBundle:CargoTipo ct
                         WHERE ct.rolTipo IN (:id) ORDER BY ct.cargo')
-                ->setParameter('id', array(5, 9));
+            ->setParameter('id', array(5, 9));
 
         $cargos = $query->getResult();
         $cargosArray = array();
@@ -156,40 +156,46 @@ class InfoPersonalAdmController extends Controller {
         }
 
         $financiamiento = $em->createQuery(
-                        'SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
+            'SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
                 WHERE ft.id NOT IN  (:id) ORDER BY ft.id')
-                ->setParameter('id', array(0, 5))
-                ->getResult();
+            ->setParameter('id', array(0, 5))
+            ->getResult();
         $financiamientoArray = array();
         foreach ($financiamiento as $f) {
             $financiamientoArray[$f->getId()] = $f->getFinanciamiento();
         }
 
         $formacion = $em->createQuery(
-                        'SELECT ft FROM SieAppWebBundle:FormacionTipo ft
+            'SELECT ft FROM SieAppWebBundle:FormacionTipo ft
                 WHERE ft.id NOT IN (:id) ORDER BY ft.formacion')
-                ->setParameter('id', array(0, 22))
-                ->getResult();
+            ->setParameter('id', array(0, 22))
+            ->getResult();
         $formacionArray = array();
         foreach ($formacion as $fr) {
             $formacionArray[$fr->getId()] = $fr->getFormacion();
         }
 
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($idPersona);
+
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('permanente_info_personal_adm_create'))
-                ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
-                ->add('gestion', 'hidden', array('data' => $gestion))
-                ->add('persona', 'hidden', array('data' => $idPersona))
-                ->add('funcion', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...')))
-                ->add('financiamiento', 'choice', array('label' => 'Fuente de Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'attr' => array('class' => 'form-control')))
-                ->add('formacion', 'choice', array('label' => 'Último grado de formación alcanzado', 'required' => true, 'choices' => $formacionArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...')))
-                ->add('formacionDescripcion', 'text', array('label' => 'Descripción del último grado de formación alcanzado', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
-                ->add('normalista', 'checkbox', array('required' => false, 'label' => 'Normalista', 'attr' => array('class' => 'checkbox')))
-                ->add('item', 'text', array('label' => 'Número de Item', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
-                ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => $em->getReference('SieAppWebBundle:IdiomaMaterno', 97), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-                ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille', 'attr' => array('class' => 'checkbox')))
-                ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
-                ->getForm();
+            ->setAction($this->generateUrl('permanente_info_personal_adm_create'))
+            ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
+            ->add('gestion', 'hidden', array('data' => $gestion))
+            ->add('persona', 'hidden', array('data' => $idPersona))
+//            ->add('genero', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $persona->getGeneroTipo()->getId()), 'label' => 'Género', 'required' => true, 'attr' => array('class' => 'form-control')))
+//            ->add('celular', 'text', array('label' => 'Nro. de Celular', 'data' => $persona->getCelular(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+//            ->add('correo', 'text', array('label' => 'Correo Electrónico', 'data' => $persona->getCorreo(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
+//            ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'data' => $persona->getDireccion(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
+            ->add('funcion', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...')))
+            ->add('financiamiento', 'choice', array('label' => 'Fuente de Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'attr' => array('class' => 'form-control')))
+            ->add('formacion', 'choice', array('label' => 'Último grado de formación alcanzado', 'required' => true, 'choices' => $formacionArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...')))
+            ->add('formacionDescripcion', 'text', array('label' => 'Descripción del último grado de formación alcanzado', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
+            ->add('normalista', 'checkbox', array('required' => false, 'label' => 'Normalista', 'attr' => array('class' => 'checkbox')))
+            ->add('item', 'text', array('label' => 'Número de Item', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
+            ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => $em->getReference('SieAppWebBundle:IdiomaMaterno', 97), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
+            ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille', 'attr' => array('class' => 'checkbox')))
+            ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
         $em->getConnection()->commit();
         return $form;
     }

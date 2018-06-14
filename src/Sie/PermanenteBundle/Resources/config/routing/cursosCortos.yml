@@ -109,14 +109,98 @@ herramienta_per_add_curso_nuevo:
     options:
          expose: true
 
+herramienta_per_edit_curso_nuevo:
+    path:     /cursoedit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:editCurso"}
+    options:
+         expose: true
+
+herramienta_per_delete_curso_nuevo:
+    path:     /cursodelete/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:deleteCurso"}
+    options:
+         expose: true
+
+herramienta_per_show_curso_nuevo:
+    path:     /showcursonuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showCursoNuevo"}
+    options:
+         expose: true
+
+herramienta_per_show_curso_edit:
+    path:     /showcursoedit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showCursoEdit"}
+    options:
+         expose: true
+
+herramienta_per_delete_programa_nuevo:
+    path:     /programadelete/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:deletePrograma"}
+    options:
+         expose: true
+
+herramienta_per_show_programa_nuevo:
+    path:     /showprogramanuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showProgramaNuevo"}
+    options:
+         expose: true
+
+herramienta_per_show_programa_edit:
+    path:     /showprogramadit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showProgramaEdit"}
+    options:
+         expose: true
+
+herramienta_per_delete_areatem_nuevo:
+    path:     /areatemdelete/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:deleteAreaTem"}
+    options:
+         expose: true
+
+herramienta_per_show_areatem_nuevo:
+    path:     /showareatemnuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showAreaTemNuevo"}
+    options:
+         expose: true
+
+herramienta_per_show_areatem_edit:
+    path:     /showtemdit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:showAreaTemEdit"}
+    options:
+         expose: true
+
+herramienta_per_open_curso_nuevo:
+    path:     /cursoopen/
+    defaults: { _controller: "SiePermanenteBundle:CursosCortos:openCurso"}
+    options:
+         expose: true
+
 herramienta_per_add_programa:
     path:     /programanuevo/
-    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:addPrograma"}
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:addProgramaNuevo"}
+    options:
+         expose: true
+
+herramienta_per_edit_programa:
+    path:     /programaedit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:editPrograma"}
+    options:
+         expose: true
+
+herramienta_per_add_areatem:
+    path:     /areatemnuevo/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:addAreaTemNuevo"}
+    options:
+         expose: true
+
+herramienta_per_edit_areatem:
+    path:     /areatemedit/
+    defaults: { _controller: "SiePermanenteBundle:CursoPermanente:editAreaTem"}
     options:
          expose: true
 
 herramienta_per_add_areatematica:
-    path:     /areanueva/
+    path:     /areatemnueva/
     defaults: { _controller: "SiePermanenteBundle:CursoPermanente:addAreaTematica"}
     options:
          expose: true

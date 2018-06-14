@@ -119,11 +119,11 @@
               </div>
 
     {% else %}
-        <div class="col-md-3">
-            <button type="button" class="btn btn-danger btn-stroke" onclick="deletecurso('{{infoUe}}');" >
-                <i class="fa fa-eraser"></i> Eliminar Curso
-            </button>
-        </div>
+        {#<div class="col-md-3">#}
+            {#<button type="button" class="btn btn-danger btn-stroke" onclick="deletecurso('{{infoUe}}');" >#}
+                {#<i class="fa fa-eraser"></i> Eliminar Curso#}
+            {#</button>#}
+        {#</div>#}
         <div class="col-md-3">
 
             <a href="{{path('permanente_reporte_participantes_curso_corto', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
@@ -140,7 +140,15 @@
             {##}
             {#</button>#}
         </div>
-          {% endif %}
+        {% if (app.session.get('roluser') == 10)or(app.session.get('roluser') == 7)or(app.session.get('roluser') == 8) or (app.session.get('roluser') == 31)%}
+
+            <div class="col-md-3">
+            <button type="button" class="btn btn-danger btn-stroke" onclick="opencurso('{{infoUe}}');" >
+                <i class="fa fa-check"></i> Habilitar Curso
+            </button>
+            </div>
+        {% endif %}
+    {% endif %}
 
 
 
@@ -740,7 +748,33 @@
     }
    };
 
+    var opencurso = function(infoUe){
+        if(confirm('¡¡Advertencia!! Se Abrira el curso para realizar operaciones. ¿Esta seguro de continuar?')){
 
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe }),
+                url: "{{ path('herramienta_per_open_curso_nuevo') }}",
+                beforeSend: function () {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').append("<div style='text-align:center; color:#5C9FFB'>Habilitando curso...</div>");
+                },
+                success: function (data) {
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
+                    window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                },
+                error: function(data){
+                    $('#mengestioncurso').empty();
+                    $('#mengestioncurso').html("<div class='alert alert-warning alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>¡Proceso detenido!</strong> Si desea eliminar el curso debe antes eliminar lo siguiente: Toma de materias, inscripciones, materias/módulos maestro asignados.</div>");
+                    //window.location.href =  Routing.generate('herramienta_per_cursos_cortos_index');
+                }
+            });
+        }
+        else{
+            return false;
+        }
+    };
 
 
 function getSelectedValue()

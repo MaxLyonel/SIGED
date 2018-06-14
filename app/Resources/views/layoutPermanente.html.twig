@@ -46,6 +46,7 @@
             <link href="{{asset('webPermanente/assets/global/plugins/bower_components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css')}}" rel="stylesheet">
             <link href="{{asset('webPermanente/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/typeaheadjs/lib/typeahead.js-bootstrap.css')}}" rel="stylesheet">
             <link href="{{asset('webPermanente/assets/global/plugins/bower_components/x-editable/dist/inputs-ext/address/address.css')}}" rel="stylesheet">
+
             {#<link href="{{asset('webherramienta/assets/global/plugins/bower_components/morrisjs/morris.css')}}" rel="stylesheet">#}
             {#NO EXSTE ESTE ARCHIVO#}
             {#<link href="{{asset('css/plugins/bootstrap-combined/combined.css') }}" rel="stylesheet"> #}
@@ -73,6 +74,7 @@
             <!--[if lt IE 9]>
             <script src="{{asset('webPermanente/assets/global/plugins/bower_components/html5shiv/dist/html5shiv.min.js')}}"></script>
             <script src="{{asset('webPermanente/assets/global/plugins/bower_components/respond-minmax/dest/respond.min.js')}}"></script>
+
             <![endif]-->
             <!--/ END IE SUPPORT -->
             <link rel="stylesheet" type="text/css" href="CSS.css">
@@ -221,28 +223,28 @@
                                 </div>
                             </li>#}
 
-                            <li class="dropdown navbar-notification">
-                                <a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell-o"></i>
-                                    <span class="rounded count label label-danger">Aviso</span>
-                                </a>
-                                <div class="dropdown-menu animated flipInX">
-                                    <div class="dropdown-header">
-                                        <span class="title">Notificaciones <strong>(1)</strong></span>
+                            {#<li class="dropdown navbar-notification">#}
+                                {#<a href="form-element.html#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell-o"></i>#}
+                                    {#<span class="rounded count label label-danger">Aviso</span>#}
+                                {#</a>#}
+                                {#<div class="dropdown-menu animated flipInX">#}
+                                    {#<div class="dropdown-header">#}
+                                        {#<span class="title">Notificaciones <strong>(1)</strong></span>#}
                                         {#<span class="option text-right"><a href="form-element.html#"><i class="fa fa-cog"></i> Configuración</a></span>#}
-                                    </div>
-                                    <div class="dropdown-body niceScroll">
-                                        <div class="media-list small">
-                                            {#{% if notification is defined  %}
-                                                {% for data in notification %}
-                                                    <a href="form-element.html#" class="media">
-                                                        <div class="media-object pull-left"><img class="img-circle" src="{{asset('webherramienta/img/avatar/50/10.png')}}" alt=""/></div>
-                                                        <div class="media-body">
-                                                            <span class="media-text">{{data.institucioneducativa_id}} {{data.institucioneducativa}} {{data.tramite_estado}}</span>
-                                                            <span class="media-meta">{{data.gestion_tipo_id}} {{data.sucursal_tipo_id}}</span>
-                                                        </div>
-                                                    </a>
-                                                {% endfor %}
-                                            {%endif%}                                            #}
+                                    {#</div>#}
+                                    {#<div class="dropdown-body niceScroll">#}
+                                        {#<div class="media-list small">#}
+                                            {#{% if notification is defined  %}#}
+                                                {#{% for data in notification %}#}
+                                                    {#<a href="form-element.html#" class="media">#}
+                                                        {#<div class="media-object pull-left"><img class="img-circle" src="{{asset('webherramienta/img/avatar/50/10.png')}}" alt=""/></div>#}
+                                                        {#<div class="media-body">#}
+                                                            {#<span class="media-text">{{data.institucioneducativa_id}} {{data.institucioneducativa}} {{data.tramite_estado}}</span>#}
+                                                            {#<span class="media-meta">{{data.gestion_tipo_id}} {{data.sucursal_tipo_id}}</span>#}
+                                                        {#</div>#}
+                                                    {#</a>#}
+                                                {#{% endfor %}#}
+                                            {#{%endif%}                                            #}
                                             {#{% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 7) %}#}
 
                                         {#MENSAJEEEEE#}
@@ -261,17 +263,17 @@
                                                 {#</div>#}
                                             {#</a>#}
 
-                                            {#<a href="form-element.html#" class="media indicator inline">
-                                                <span class="spinner">Leyendo mas notificaciones...</span>
-                                            </a>#}
-                                        </div>
-                                    </div>
-                                    {#<div class="dropdown-footer">
-                                        <a href="form-element.html#">Ver Todos</a>
-                                    </div>#}
-                                </div>
-                                <!--/ End dropdown menu -->
-                            </li><!-- /.navbar-notification -->
+                                            {#<a href="form-element.html#" class="media indicator inline">#}
+                                                {#<span class="spinner">Leyendo mas notificaciones...</span>#}
+                                            {#</a>#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                    {#<div class="dropdown-footer">#}
+                                        {#<a href="form-element.html#">Ver Todos</a>#}
+                                    {#</div>#}
+                                {#</div>#}
+                                {#<!--/ End dropdown menu -->#}
+                            {#</li><!-- /.navbar-notification -->#}
                             <!--/ End notifications -->
 
                             <!-- Start profile -->
@@ -397,7 +399,7 @@
                             <ul>
 
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>
+                                <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Gestión </a></li>
                                 <li><a href="{{path('herramienta_permanente_admin')}}">Administración de Cursos </a></li>
 
 
@@ -444,7 +446,7 @@
                                 {#<li><a href="{{path('declaracion_jurada_index')}}">Declaración Jurada</a></li>#}
                                 {#<li><a href="{{path('sie_estudiantes')}}">Modificación de Datos </a></li>#}
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>
+                                <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Gestión </a></li>
                                 <li><a href="{{path('herramienta_permanente_admin')}}">Administración de Cursos </a></li>
 
                                 {#<li><a onclick="getCeasCerradosShow();">Panel de control de operativos</a></li>#}
@@ -478,7 +480,7 @@
                             </a>
                             <ul>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
-                                <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Periodo </a></li>
+                                <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Gestión </a></li>
                                 <li><a href="{{path('herramienta_permanente_admin')}}">Administración de Cursos </a></li>
 
                                 {#<li><a onclick="selceadistritoShow();">Listar mis CEAS.</a></li>#}
@@ -506,25 +508,32 @@
                             </a>
                             <ul>
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>
+
+                                {% if (app.session.get('ie_id') != -1) %}
+                                    <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
+                                {% endif %}
+
                             </ul>
+
                         </li>
-                        <li class="submenu">
-                            <a href="javascript:void(0);">
-                                <span class="icon"><i class="fa fa-home"></i></span>
-                                <span class="text">Bachiller de Excelencia</span>
-                                <span class="arrow"></span>
-                            </a>
-                            <ul>
-                              <!-- <li><a href="#">Operativo Concluido</a></li> -->
+
+                        {#<li class="submenu">#}
+                            {#<a href="javascript:void(0);">#}
+                                {#<span class="icon"><i class="fa fa-home"></i></span>#}
+                                {#<span class="text">Bachiller de Excelencia</span>#}
+                                {#<span class="arrow"></span>#}
+                            {#</a>#}
+                            {#<ul>#}
+                              {#<!-- <li><a href="#">Operativo Concluido</a></li> -->#}
 
                               {#<li><a href="{{ path('bach_exc_alt_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>#}
-                              <li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
+                              {#<li><a href="{{ path('bach_exc_alt_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>#}
                               {#<li><a href="{{ path('bach_exc_alt')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>#}
-                              <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
-                            
+                              {#<li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>#}
+                            {##}
 
-                            </ul>
-                        </li>
+                            {#</ul>#}
+                        {#</li>#}
                     {% endif %}
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
@@ -567,7 +576,7 @@
 
                 <!-- Start footer content -->
                 <footer class="footer-content">
-                    <span id="copyright-year"></span> &copy; Malbis Admin. Creado por el: <a href="http://www.minedu.gob.bo" target="_blank">Ministerio de Educación</a> Estado Plurinacional de Bolivia
+                    <span id="copyright-year"></span> <a href="http://www.minedu.gob.bo" target="_blank">Ministerio de Educación</a> Estado Plurinacional de Bolivia
                     <span class="pull-right">0.01 GB(0%) of 15 GB used</span>
                 </footer><!-- /.footer-content -->
                 <!--/ End footer content -->
@@ -1043,6 +1052,7 @@
             <!--/ END CORE PLUGINS -->
 
             <!-- START @PAGE LEVEL PLUGINS -->
+            <script src="{{asset('web/js/initialize.js')}}"></script>
             <script src="{{asset('webPermanente/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js')}}"></script>
             <script src="{{asset('webPermanente/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/js/jasny-bootstrap.fileinput.min.js')}}"></script>
             <script src="{{asset('webPermanente/assets/global/plugins/bower_components/holderjs/holder.js')}}"></script>
@@ -1084,6 +1094,8 @@
             <script src="{{asset('webPermanente/assets/admin/js/pages/blankon.form.element.js')}}"></script>
             <script src="{{asset('webPermanente/assets/admin/js/pages/blankon.form.validation.js')}}"></script>
             <script src="{{asset('webPermanente/assets/admin/js/demo.js')}}"></script>
+            {#<script src="{{asset('webPermanente/assets/admin/js/initialize.js')}}"></script>#}
+            <script src="{{ asset('js/initialize.js')}}"></script>
             <script src="{{asset('webPermanente/assets/admin/js/menuTree.js')}}"></script>
             {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.chart.morris.js')}}"></script>            #}
             {#<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.project.portfolio.type4.js')}}"></script>#}

@@ -24,11 +24,11 @@ class ReportesController extends Controller {
     }
     
     public function siecaratulaAction() {
-        $arch = 'CARATULA_CEA_SIE100_'.$this->session->get('ie_id').'_' . date('YmdHis') . '.pdf';
+        $arch = 'CARATULA_CEA_PERMANENTE_'.$this->session->get('ie_id').'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja1_caratula_v1_rcm.rptdesign&__format=pdf&gestion_id='.$this->session->get('ie_gestion').'&cod_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));        
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_car_hoja1_caratula_v1_ma.rptdesign&__format=pdf&gestion_id='.$this->session->get('ie_gestion').'&cod_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -41,7 +41,7 @@ class ReportesController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja4_administrativo_v1_rcm.rptdesign&__format=pdf&gestion='.$this->session->get('ie_gestion').'&codigo_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_car_hoja4_administrativo_v1_ma.rptdesign&__format=pdf&gestion='.$this->session->get('ie_gestion').'&codigo_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -50,11 +50,11 @@ class ReportesController extends Controller {
     }
     
     public function siemaestrosAction() {
-        $arch = 'CARATULA_CEA_DOCENTES_'.$this->session->get('ie_id').'_' . date('YmdHis') . '.pdf';
+        $arch = 'CARATULA_CEA_FACILITADORES_'.$this->session->get('ie_id').'_' . date('YmdHis') . '.pdf';
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_sie100_hoja4_maestro_v1_rcm.rptdesign&__format=pdf&gestion='.$this->session->get('ie_gestion').'&codigo_ue='.$this->session->get('ie_id').'&periodo='.$this->session->get('ie_per_cod').'&sucursal='.$this->session->get('ie_subcea').'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_lst_facilitadores_cursos_v1_ma.rptdesign&__format=pdf&Gestion='.$this->session->get('ie_gestion').'&Sie='.$this->session->get('ie_id').'&Subcea='.$this->session->get('ie_subcea').'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -130,11 +130,15 @@ class ReportesController extends Controller {
 
     public function reportCursosCortosFechaAction(Request $request){
 
-        $fechainicio = $request->get('fechainicio');
-        $fechafin = $request->get('fechafin');
+        $fechainicio = $request->get('fechaInicio');
+        $fechafin = $request->get('fechaFin');
+       // dump($fechainicio);dump($fechafin);die;
+        $fechainicio = new \DateTime(date($fechainicio));
+        $fechafin = new \DateTime(date($fechafin));
+        $fechainicio = date_format($fechainicio,'Y-m-d');
+        $fechafin = date_format($fechafin,'Y-m-d');
 
-//        dump($fechainicio);
-//        dump($fechafin);die;
+      //  dump($fechainicio);dump($fechafin);die;
 
         $sie = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
@@ -146,8 +150,8 @@ class ReportesController extends Controller {
 
         $response->headers->set('Content-type', 'application/pdf');
 
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'_'. $periodo . '_' . $gestion . '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_cert_participantes_por_curso_v1_ma.rptdesign&Sie=' . $sie . '&Gestion=' .$gestion .  '&Periodo=' . $periodo. '&Subcea=' . $suc. '&Idcurso=' . $idcurso. '&&__format=pdf&'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $argum.'_'. $sie . '_' . $gestion . '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_lst_cursos_cortos_por_fechas_v1_ma.rptdesign&Sie=' . $sie . '&Gestion=' .$gestion . '&Subcea=' . $suc.  '&fechaini=' . $fechainicio. '&fechafin=' . $fechafin.'&&__format=pdf&'));
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');

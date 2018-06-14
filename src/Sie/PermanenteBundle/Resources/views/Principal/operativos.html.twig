@@ -69,79 +69,79 @@
                             </form>
                         </td>
                     {% endif %}
-                    {% if app.session.get('roluser') == 9 %} {#ROL DE DIRECTOR#}
-                        <td class="text-center"> {#INICIO DE SISTEMA INSCRIPCIONES Y NOTAS#}
-                            {% if (reg.gestionTipo == '2016') and (reg.periodoTipoId == '2') and (reg.teid is null) %}
-                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'12', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
-                                    <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡En operativo inicio de sistema Inscripción y Notas!">
+                    {#{% if app.session.get('roluser') == 9 %} #}{#ROL DE DIRECTOR#}
+                        {#<td class="text-center"> #}{#INICIO DE SISTEMA INSCRIPCIONES Y NOTAS#}
+                            {#{% if (reg.gestionTipo == '2016') and (reg.periodoTipoId == '2') and (reg.teid is null) %}#}
+                                {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'12', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                    {#<button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡En operativo inicio de sistema Inscripción y Notas!">#}
                                         {#<i class="fa fa-graduation-cap"></i>#}
-                                        <i class="fa fa-star"></i>
-                                    </button>
-                                </form>
-                            {% else %}
-                                {% if (reg.teid == '14') or (reg.teid == '8') or (reg.teid == '10') or (reg.teid == '12')  or (reg.teid == '9') %} {#14 VER FIN DE SEMESTRE TERMINADO-8 VER REGULARIZACION NOTAS-10 VER REGULARIZACIÓN GESTION PASADA 12-VER INSCRIPCIONES TERMINADAS 9-REGULARIZACION INSCRIPCIONES TERMINADAS#}
-                                    <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
-                                        <button type="submit" class="btn btn-circle btn-twitter btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">
-                                            <i class="fa fa-eye"></i>
-                                        </button>
-                                    </form>
-                                {% elseif reg.teid == '5'%} {#¡EN REGULARIZACIÓN GESTIONES PASADAS!#}
-                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
-                                        <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Ver.">
-                                            <i class="fa fa-eye"></i>
-                                        </button>
-                                    </form>#}
-                                    <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'12', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
-                                        <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">
-                                            <i class="fa fa-pencil-square"></i>
-                                        </button>
-                                    </form>
-                                    {#{% elseif ((reg.teid == '6') or (reg.teid == '13')) %}#} {#6 EN REGULARIZACIÓN NOTAS -13 NOTAS#}
-                                {% elseif (reg.teid == '13') %} {#-13 NOTAS#}
-                                    <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'11', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
-                                        <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">
-                                            <i class="fa fa-pencil-square"></i>
-                                        </button>
-                                    </form>
-                                {% elseif (reg.teid == '6') %} {#6 EN REGULARIZACIÓN NOTAS#}
-                                    <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'6', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
-                                        <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">
-                                            <i class="fa fa-pencil-square"></i>
-                                        </button>
-                                    </form>
-                                {% elseif ((reg.teid == '7') or (reg.teid == '11')) %} {#7 EN REGULARIZACION INSCRIPCIOENS -11 EN INSCRIPCION!#}
-                                    <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'10', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
-                                        <button type="submit" class="btn btn-circle btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">
-                                            <i class="fa fa-pencil-square"></i>
-                                        </button>
-                                    </form>
-                                {% else %} {#GESTIONES PASADAS MODO LECTURA#}
-                                    {% if (reg.gestionTipo < '2011') %}
-                                        <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
-                                            <button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Ver.">
-                                                <i class="fa fa-eye"></i>
-                                            </button>
-                                        </form>
-                                    {% else %}
-                                        <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
-                                            <button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Ver.">
-                                                <i class="fa fa-eye"></i>
-                                            </button>
-                                        </form>
-                                        {% if (reg.gestionTipo < '2016') %}
-                                            <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'13', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">
-                                                <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡Iniciar proceso de regularización!">
-                                                    <i class="fa fa-hourglass-start"></i>
-                                                </button>
-                                            </form>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
-                        </td>
-                    {% endif %}
+                                        {#<i class="fa fa-star"></i>#}
+                                    {#</button>#}
+                                {#</form>#}
+                            {#{% else %}#}
+                                {#{% if (reg.teid == '14') or (reg.teid == '8') or (reg.teid == '10') or (reg.teid == '12')  or (reg.teid == '9') %} #}{#14 VER FIN DE SEMESTRE TERMINADO-8 VER REGULARIZACION NOTAS-10 VER REGULARIZACIÓN GESTION PASADA 12-VER INSCRIPCIONES TERMINADAS 9-REGULARIZACION INSCRIPCIONES TERMINADAS#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-twitter btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">#}
+                                            {#<i class="fa fa-eye"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                {#{% elseif reg.teid == '5'%} #}{#¡EN REGULARIZACIÓN GESTIONES PASADAS!#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Ver.">#}
+                                            {#<i class="fa fa-eye"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'12', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">#}
+                                            {#<i class="fa fa-pencil-square"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                    {#{% elseif ((reg.teid == '6') or (reg.teid == '13')) %}#}{# #}{#6 EN REGULARIZACIÓN NOTAS -13 NOTAS#}
+                                {#{% elseif (reg.teid == '13') %} #}{#-13 NOTAS#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'11', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">#}
+                                            {#<i class="fa fa-pencil-square"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                {#{% elseif (reg.teid == '6') %} #}{#6 EN REGULARIZACIÓN NOTAS#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'6', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">#}
+                                            {#<i class="fa fa-pencil-square"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                {#{% elseif ((reg.teid == '7') or (reg.teid == '11')) %} #}{#7 EN REGULARIZACION INSCRIPCIOENS -11 EN INSCRIPCION!#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'10', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">#}
+                                            {#<i class="fa fa-pencil-square"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                {#{% else %} #}{#GESTIONES PASADAS MODO LECTURA#}
+                                    {#{% if (reg.gestionTipo < '2011') %}#}
+                                        {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                            {#<button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Ver.">#}
+                                                {#<i class="fa fa-eye"></i>#}
+                                            {#</button>#}
+                                        {#</form>#}
+                                    {#{% else %}#}
+                                        {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                            {#<button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Ver.">#}
+                                                {#<i class="fa fa-eye"></i>#}
+                                            {#</button>#}
+                                        {#</form>#}
+                                        {#{% if (reg.gestionTipo < '2016') %}#}
+                                            {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'13', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">#}
+                                                {#<button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡Iniciar proceso de regularización!">#}
+                                                    {#<i class="fa fa-hourglass-start"></i>#}
+                                                {#</button>#}
+                                            {#</form>#}
+                                        {#{% endif %}#}
+                                    {#{% endif %}#}
+                                {#{% endif %}#}
+                            {#{% endif %}#}
+                        {#</td>#}
+                    {#{% endif %}#}
                     {#10 DISTRITAL 7 DEPTO 8 NACIONAL#}
-                    {% if (app.session.get('roluser') == 10) or (app.session.get('roluser') == 7) or (app.session.get('roluser') == 8)%}
+                    {% if (app.session.get('roluser') == 10) or (app.session.get('roluser') == 7)  or (app.session.get('roluser') == 9)or (app.session.get('roluser') == 8)%}
                         <td class="text-center">
                             {% if (reg.teid == '7') or (reg.teid == '11')  %} {#-11 EN INSCRIPCION - 7 EN REGULARIZACION INSCRIPCIONES#}
                                 <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
