@@ -1,4 +1,5 @@
 <form method="post" action="{{path('sie_pnp_reconocimiento_saberes')}}">
+
 <div class="row">
     <div class="col-lg-12">
         <div class="portlet portlet-blue">
@@ -148,12 +149,21 @@
                                     <option value="5">Quinto</option>
                                     <option value="6">Sexto</option>
                                 </select>
-                                <input name="estudiante_id" id="estudiante_id" required="required" value="{{ result.id }}" style="visibility:hidden"  />
-                                <input name="tipo" id="tipo" required="required" value="{{ result.tipo }}" style="visibility:hidden"  />
+                                
                             </div>
                         </div>
+                        {% if opc == 0 %}
+                            <div class="col-lg-4 col-md-3" align="center">&nbsp;</div>
+                            <div class="col-lg-4 col-md-3" align="center">
+                                <h4>Fecha de Reconocimiento de Saberes (2009-2016)</h4>
+                                <input type="text" onkeypress="return false" name="fecha" id="fecha" value="01/01/2015" placeholder="FECHA" />
+                            </div><br/><br/><br/>
+                        {% endif %}
+                        <input name="estudiante_id" id="estudiante_id" required="required" value="{{ result.id }}" style="visibility:hidden"  />
+                        <input name="tipo" id="tipo" required="required" value="{{ result.tipo }}" style="visibility:hidden"  />
+                        <input name="opc" id="opc" required="required" value="{{ opc }}" style="visibility:hidden"  />
                         <div class="row" align="center">
-                            <button type="submit" class="btn btn-default">&nbsp;Registrar Datos</button>
+                            <button type="submit" {% if opc == 0 %} onclick="return ver_fecha()" {% endif %} class="btn btn-default">&nbsp;Registrar Datos</button>
                         </div>
                     </div>
                 </div>          
@@ -163,3 +173,28 @@
     </div>
 </div>
 </form>
+
+  
+    <script>
+     $(document).ready(function() {
+        $("#fecha").datepicker({
+            autoclose: true,
+            //todayHighlight: true,
+            format: 'dd/mm/yyyy',
+            language: "es",
+        });
+    });    
+    
+    function ver_fecha(){
+        
+        var f1 = document.getElementById("fecha").value;
+        var aFecha1 = f1.split('/'); 
+        var gestion = parseInt(aFecha1[2]); 
+        if (gestion>2009 && gestion <=2016)
+            return true;
+        else{
+            alert("ERROR!!!, la gestión del Reconocimiento de Saberes debe estar entre 2009 y 2016");
+            return false;
+        }
+    }  
+    </script>
