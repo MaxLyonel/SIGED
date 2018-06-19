@@ -227,7 +227,7 @@ sie_pnp_reconocimiento_saberes:
          expose: true
 
 sie_pnp_reconocimiento_saberes_buscar_estudiante:
-    path:     /pnp/reconocimiento_saberes/buscar_estudiante/{ci}/{complemento}/{rude}
+    path:     /pnp/reconocimiento_saberes/buscar_estudiante/{ci}/{complemento}/{rude}/{opc}
     defaults: { _controller: SiePnpBundle:Reconocimientosaberes:buscar_estudiante }
     options:
          expose: true

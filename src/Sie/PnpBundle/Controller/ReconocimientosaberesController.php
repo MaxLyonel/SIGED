@@ -46,6 +46,9 @@ class ReconocimientosaberesController extends Controller
             $alfabetizado=$request->get("alfabetizado");
             $idioma=$request->get("idioma");
             $ocupacion=$request->get("ocupacion");
+            $opc=$request->get("opc");
+            if ($opc == 0)
+                $fecha=$request->get("fecha");
             $observacionadicional=$alfabetizado.'|'.$idioma.'|'.$ocupacion;
         //meter datos
             try {
@@ -154,7 +157,10 @@ class ReconocimientosaberesController extends Controller
                 $registrar->setCurso($curso);
                 $registrar->setHomologado(false);
                 $registrar->setUsuario($em->getRepository('SieAppWebBundle:Usuario')->find($this->session->get('userId')));
-                $registrar->setFechaCreacion(new \DateTime('now'));
+                if($opc==1)
+                    $registrar->setFechaCreacion(new \DateTime('now'));
+                else
+                    $registrar->setFechaCreacion(\DateTime::createFromFormat('d/m/Y', $fecha));
                 $em->persist($registrar);
                 $em->flush();
                 $this->session->getFlashBag()->add('success', 'Estudiante de Reconocimiento de Saberes registrado con exito.');
@@ -288,13 +294,14 @@ class ReconocimientosaberesController extends Controller
             )); 
     }
   /////////////////////////////////////////////////////////////////////////////////////////////////////
-    public function buscar_estudianteAction($ci,$complemento,$rude,Request $request){
+    public function buscar_estudianteAction($ci,$complemento,$rude,$opc,Request $request){
         //return $this->render('SiePnpBundle:Default:mostrarestudiante.html.twig', array('cant'=>$cant));
         $em = $this->getDoctrine()->getManager();
         //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();
         $po = array();
-        $userId = $this->session->get('userId');    
+        $userId = $this->session->get('userId');   
+        ///$ opc = 1 -> actual    $opc = 0 -> antiguo (2009-2015) 
         /////////////conocer el departamento
          $query = "
                SELECT lt.lugar as lugar
@@ -344,7 +351,7 @@ class ReconocimientosaberesController extends Controller
             $nombre = $p["nombre"]." ".$p["paterno"]." ".$p["materno"];
             $estudiante_rec=1;
         }
-        if($estudiante_rec==1){
+        if($estudiante_rec==1 and $opc==1){
         //si no existe en el curso saber si el curso es aquel que le corresponde
             echo '<div class="alert alert-danger"><strong>Error, </strong>El Estudiante con CI o CODIGO RUDE '.$ci.' con nombre '.$nombre.', no puede ser beneficiado con Reconocimiento de Saberes porque tiene registro en el SIE.</div>'; die; 
         }
@@ -417,6 +424,7 @@ class ReconocimientosaberesController extends Controller
                         'result'=>$result,
                         'ci'=>$ci,
                         'ie'=>$ie,
+                        'opc'=>$opc
                     ));
             }
             else

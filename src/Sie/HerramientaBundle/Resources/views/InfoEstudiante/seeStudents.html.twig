@@ -45,9 +45,12 @@
                   {% if app.session.get('lastOperativo') == 5%}
                   {% else %}
 
-                    {# <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
-                        <i class="fa fa-user"></i> Inscrip. con Rude
-                    </button>
+                    {% if app.session.get('currentyear') < date('Y') %}
+                        <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
+                            <i class="fa fa-user"></i> Inscrip. con Rude
+                        </button>
+                    {% endif %}
+                    {# 
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick=" getCargaHorariaPlenaFinalizarRegistro('{{infoUe}}');" >
                         <i class="fa fa-check"></i> Finalizar Registro de Horas
                     </button> #}
