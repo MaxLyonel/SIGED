@@ -104,7 +104,7 @@ class StudentsInscriptionsController extends Controller {
     **/
     private function doInscriptionForm($data, $studentId){
       $form = $this->createFormBuilder()
-              ->add('caseespecial', 'checkbox', array('label'=>'Inscripción Menores:', 'attr'=>array('class'=>'form-control', 'checked'=>false, 'onclick'=>'showHideReq(this)' ) ))
+             // ->add('caseespecial', 'checkbox', array('label'=>'Inscripción Menores:', 'attr'=>array('class'=>'form-control', 'checked'=>false, 'onclick'=>'showHideReq(this)' ) ))
               ->add('data', 'hidden', array('data'=> $data))
               ->add('studentId', 'hidden', array('data'=> $studentId))
               ->add('inscriptionExcepacional', 'entity', array('label'=>'Motivo:','class' => 'SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo', 'property' => 'descripcion'))

@@ -1096,7 +1096,7 @@ class InstitucioneducativaController extends Controller {
         */
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $idInstitucion, 'institucioneducativaTipo' => 5));
         if (!$institucioneducativa) {
-            $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! El código SIE ingresado no es válido.');
+            $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! El código SIE ingresado no es válido. Seleccione un centro de Educación Permanente');
             return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
         }
 
@@ -1141,19 +1141,20 @@ class InstitucioneducativaController extends Controller {
 //            dump($inscripciones);
 //            die;
             if($inscripciones) {
-                $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! El CEA ya cuenta con el Perido seleccionado habilitado.');
+                $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! El CEA ya cuenta con el Periodo seleccionado habilitado.');
                 return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
             }
             else {
                 // sp_genera_institucioneducativa_sucursal(icodue character varying, isucursal character varying, igestion character varying, iperiodo character varying)
-                $query = $em->getConnection()->prepare('SELECT sp_genera_institucioneducativa_sucursal(:sie, :subcea, :gestion, :periodo)');
+                $query = $em->getConnection()->prepare('SELECT sp_genera_institucioneducativa_sucursal(:sie,:subcea,:gestion,:periodo)');
                 $query->bindValue(':sie', $idInstitucion);
+                $query->bindValue(':subcea', $subcea);
                 $query->bindValue(':gestion', $gestion);
                 $query->bindValue(':periodo', $periodo);
-                $query->bindValue(':subcea', $subcea);
+
                 $query->execute();
                 $iesid = $query->fetchAll();
-              //  dump($iesid);die;
+       //         dump($iesid);die;
                 if (($iesid[0]["sp_genera_institucioneducativa_sucursal"] != '0') and ($iesid[0]["sp_genera_institucioneducativa_sucursal"] == '')){
 //                    $iesidnew = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"]);
 //                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();  
