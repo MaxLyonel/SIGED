@@ -37,6 +37,8 @@ class OlimArchivoController extends Controller {
 
 		$response = new JsonResponse();
 
+		//dump($file);die;
+
 		// if($file and $_FILES['archivo']['error'] != 1){
 		if($file){
 
@@ -64,26 +66,28 @@ class OlimArchivoController extends Controller {
 		    $nombre_archivo = $sie.'_'.$gestion.'_'.$grupoId.'.'.$tipo[1];
 		    $archivador = $ruta.'/'.$nombre_archivo;
 		    //unlink($archivador);
-		    move_uploaded_file($_FILES['archivo']['tmp_name'], $archivador);
+		    if(move_uploaded_file($_FILES['archivo']['tmp_name'], $archivador)){
+		    	
+		    	$archivoAnterior = $grupo->getDocumentoPdf1();
+		    	if($archivoAnterior == null or $archivoAnterior == ''){
+		    		$msg = 'Archivo subido correctamente';
+		    	}else{
+		    		$msg = 'Archivo actualizado correctamente';
+		    	}
 
-		    $archivoAnterior = $grupo->getDocumentoPdf1();
-		    if($archivoAnterior == null or $archivoAnterior == ''){
-		    	$msg = 'Archivo subido correctamente';
-		    }else{
-		    	$msg = 'Archivo actualizado correctamente';
+		    	$grupo->setDocumentoPdf1($nombre_archivo);
+		    	$em->persist($grupo);
+		    	$em->flush();
+
+		    	return $response->setData(array(
+		    		'status'=>201,
+		    		'msg'=>$msg,
+		    		'categoriaId'=>$grupo->getOlimReglasOlimpiadasTipo()->getId(),
+		    		'archivo'=>$nombre_archivo,
+		    		'grupoId'=>$grupo->getId()
+		    	));
+
 		    }
-
-		    $grupo->setDocumentoPdf1($nombre_archivo);
-		    $em->persist($grupo);
-		    $em->flush();
-
-		    return $response->setData(array(
-		    	'status'=>201,
-		    	'msg'=>$msg,
-		    	'categoriaId'=>$grupo->getOlimReglasOlimpiadasTipo()->getId(),
-		    	'archivo'=>$nombre_archivo,
-		    	'grupoId'=>$grupo->getId()
-		    ));
 
 		}
 
