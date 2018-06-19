@@ -64,9 +64,12 @@
                             <label class="" for="complemento" id="l_complemento">Complemento</label>
                             <input type="text" class="form-control" id="complemento" onkeypress="return ValidarEspacios(event,this)" style="text-transform: uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();">
                         </div>
-                         <div class="col-lg-3 radio">
+                        {#}BORRAR LINEA PARA ANTIGUO O NO{#}
+                        <div class="hidden">
+                            <div class="col-lg-3 radio">
                             <input type="radio" class="form-control" id="opc" name="opc" value="1" checked> Actual<br>
                             <input type="radio" class="form-control" id="opc" name="opc" value="0"> Antiguo (2009-2016)<br>
+                        </div>
                         </div>
                         <div class="col-lg-1">
                             </br>
