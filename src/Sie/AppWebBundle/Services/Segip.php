@@ -63,37 +63,50 @@ class Segip {
 
         foreach($responseDecode as $value) {
             $response = [
-                /*'EsValido' => $value['EsValido'],
+                'EsValido' => $value['EsValido'],
                 'Mensaje' => $value['Mensaje'],
                 'TipoMensaje' => $value['TipoMensaje'],
                 'CodigoRespuesta' => $value['CodigoRespuesta'],
                 'CodigoUnico' => $value['CodigoUnico'],
-                'DescripcionRespuesta' => $value['DescripcionRespuesta'],*/
+                'DescripcionRespuesta' => $value['DescripcionRespuesta'],
+                'DatosPersonaEnFormatoJson' => $value['DatosPersonaEnFormatoJson']
+            ];
+        }
+
+		return $response;
+	}
+
+    public function verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNac) {
+
+        $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre;
+
+        if($complemento != ''){
+            $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&primer_apellido='.$paterno.'&segundo_apellido='.$materno.'&nombre='.$nombre.'&complemento='.$complemento;
+        }
+
+        $response = $this->client->request(
+            'GET', 
+            $url, 
+            ['headers' => ['Accept' => 'application/json', 'Authorization' => $this->token], 
+            ['debug' => true]])->getBody()->getContents();
+
+        $responseDecode = json_decode($response, true);
+
+        $response = array();
+
+        foreach($responseDecode as $value) {
+            $response = [
                 'DatosPersonaEnFormatoJson' => $value['DatosPersonaEnFormatoJson']
             ];
         }
 
         $persona = $response['DatosPersonaEnFormatoJson'];
+        $resultado = true;
 
         if($persona == 'null') {
-            $fechaNac = new \DateTime($fechaNac);
-            $repository = $this->em->getRepository('SieAppWebBundle:Persona');
-            $query = $repository->createQueryBuilder('p')
-                ->select('p.id perId, p.complemento, p.carnet, p.paterno, p.materno, p.nombre, p.fechaNacimiento')
-                ->where('p.carnet = :carnet')
-                ->andWhere('p.fechaNacimiento = :fechaNacimiento')
-                ->setParameter('carnet', $carnet)
-                ->setParameter('fechaNacimiento', $fechaNac->format('d-m-Y'))
-                ->getQuery();
-
-            $persona = $query->getResult();
-            dump($persona);
-        } else {
-            dump(json_decode($persona, true));
+            $resultado = false;
         }
-        die;
 
-		return $persona;
-	}
-
+        return $resultado;
+    }
 }
