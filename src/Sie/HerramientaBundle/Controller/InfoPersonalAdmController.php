@@ -229,6 +229,25 @@ class InfoPersonalAdmController extends Controller {
             }
         }
 
+        //get Institucioneducativasucursal
+        $objInfoSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findBy(array(
+          'institucioneducativa'=>$institucion->getId(),
+          'gestionTipo'=>$gestion,
+        ));
+
+        if(!$objInfoSucursal){
+            $em->getConnection()->beginTransaction();
+            try {
+                // Registramos la sucursal
+                $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$institucion->getId()."','0','".$gestion."','1')");
+                $query->execute();
+                $em->getConnection()->commit();
+            } catch (Exception $e) {
+                $em->getConnection()->rollback();
+                echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+            }
+        }
+
         return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:index.html.twig', array(
                 'personal' => $personal,
                 'institucion' => $institucion,

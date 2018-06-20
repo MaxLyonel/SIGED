@@ -34,15 +34,36 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCurso:
             columns:
                 - institucioneducativa_id
                 - gestion_tipo_id
+        IDX_9ED2FE15914B539C:
+            columns:
+                - fin_des_escolar_tipo_id
+        IDX_9ED2FE153E023359:
+            columns:
+                - ter_len_ensenanza_tipo_id
+        IDX_9ED2FE156A0F02FA:
+            columns:
+                - seg_len_ensenanza_tipo_id
+        IDX_9ED2FE15FCE2CDBF:
+            columns:
+                - pri_len_ensenanza_tipo_id
+        IDX_9ED2FE153F9AE768:
+            columns:
+                - idioma_men_hablado_tipo_id
+        IDX_9ED2FE15EF1CE71:
+            columns:
+                - idioma_reg_hablado_tipo_id
+        IDX_9ED2FE1531DD0A01:
+            columns:
+                - idioma_mas_hablado_tipo_id
+        IDX_9ED2FE1579D7A9C3:
+            columns:
+                - maestro_inscripcion_id_asesor
         IDX_9ED2FE1520CC201F:
             columns:
                 - nota_periodo_tipo_id
         IDX_9ED2FE15C35325:
             columns:
                 - superior_institucioneducativa_periodo_id
-        IDX_9ED2FE1579D7A9C3:
-            columns:
-                - maestro_inscripcion_id_asesor
     uniqueConstraints:
         indxalter_institucioneducativa_curso:
             columns:
@@ -79,48 +100,6 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCurso:
             unsigned: false
             comment: ''
             column: modalidad_ensenanza
-        idiomaMasHabladoTipoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: idioma_mas_hablado_tipo_id
-        idiomaRegHabladoTipoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: idioma_reg_hablado_tipo_id
-        idiomaMenHabladoTipoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: idioma_men_hablado_tipo_id
-        priLenEnsenanzaTipoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: pri_len_ensenanza_tipo_id
-        segLenEnsenanzaTipoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: seg_len_ensenanza_tipo_id
-        terLenEnsenanzaTipoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: ter_len_ensenanza_tipo_id
-        finDesEscolarTipoId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: fin_des_escolar_tipo_id
         nroMaterias:
             type: integer
             nullable: true
@@ -230,6 +209,78 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCurso:
             fixed: false
             comment: ''
     manyToOne:
+        finDesEscolarTipo:
+            targetEntity: FinanciamientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                fin_des_escolar_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        terLenEnsenanzaTipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                ter_len_ensenanza_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        segLenEnsenanzaTipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seg_len_ensenanza_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        priLenEnsenanzaTipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                pri_len_ensenanza_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaMenHabladoTipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_men_hablado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaRegHabladoTipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_reg_hablado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idiomaMasHabladoTipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_mas_hablado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        maestroInscripcionAsesor:
+            targetEntity: MaestroInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                maestro_inscripcion_id_asesor:
+                    referencedColumnName: id
+            orphanRemoval: false
         cicloTipo:
             targetEntity: CicloTipo
             cascade: {  }
@@ -327,15 +378,6 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCurso:
             inversedBy: null
             joinColumns:
                 superior_institucioneducativa_periodo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        maestroInscripcionAsesor:
-            targetEntity: MaestroInscripcion
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                maestro_inscripcion_id_asesor:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

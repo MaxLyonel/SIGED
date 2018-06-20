@@ -1,0 +1,51 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+    <div class="body-content animated fadeIn">
+
+        {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Inconsistencias / Observaciones', 'gestion': gestion,'sie': institucion, 'ieducativa':institucion, 'opcion': 'Lista'} %}
+
+		<div class="row">
+            <div class="col-md-12">
+				<div class="panel panel-info">
+					<div class="panel-heading">
+					    <div class="pull-left">
+					        <h3 class="panel-title">Inconsistencias / Observaciones</h3>
+					    </div>
+					    <div class="clearfix"></div>
+					</div><!-- /.panel-heading -->
+					<div class="panel-body no-padding">
+						<div class="alert alert-danger alert-dismissable">
+				            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				            <strong>¡Error!</strong> Se han encontrado inconsistencias para la Unidad Educativa: {{ institucion }}; Gestión: {{ gestion }}.<br />
+				            <i class="fa fa-info-circle"></i> Debe comunicarse con el Técnico SIE de su distrito para resolver estos casos a través del módulo de control de calidad.
+				    	</div>
+						{% for logs in objObsQA %}
+							<ul>
+								<li><code>{{ logs.obs }}</code></li>
+							</ul>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

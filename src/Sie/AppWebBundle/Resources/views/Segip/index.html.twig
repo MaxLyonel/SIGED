@@ -1,0 +1,156 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block contentoption %}
+	<div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Búsquedas SEGIP
+                    <small>Ejemplos</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-search"></i>  <a href="{{path('controlOperativoMenu')}}">Ejemplos</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+			<div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Formulario de búsqueda</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#formExample1"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="formExample1" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <p class="text-danger">(*) Campos requeridos</p>
+                        {{form_start(form1, {'attr': {'id': 'formSearch', 'onsubmit': 'buscarPersona(); return false;'}})}}
+                            <div class="form-group">
+                                <label>{{form_label(form1.carnet)}} (*):</label>
+                                {{form_widget(form1.carnet, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el número de C.I.'}})}}
+                            </div>
+                            <div class="form-group">
+                                <label>{{form_label(form1.complemento)}} (opcional):</label>
+                                {{form_widget(form1.complemento, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el complemento'}})}}
+                            </div>
+                            <div class="form-group">
+                                <label>{{form_label(form1.fechaNac)}} (*):</label>
+                                {{form_widget(form1.fechaNac, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca la fecha de nacimiento (dd/mm/yyyy)'}})}}
+                            </div>
+                            <div class="form-group text-right">
+                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Buscar</button>
+                            </div>
+                        {{form_end(form1)}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 well well-md">
+            <div id="resultado1"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="portlet portlet-blue">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>Formulario de verificación</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#formExample2"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="formExample2" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <p class="text-danger">(*) Campos requeridos</p>
+                        {{form_start(form2, {'attr': {'id': 'formVerify', 'onsubmit': 'verificarPersona(); return false;'}})}}
+                            <div class="form-group">
+                                <label>{{form_label(form2.carnet)}} (*):</label>
+                                {{form_widget(form2.carnet, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el número de C.I.'}})}}
+                            </div>
+                            <div class="form-group">
+                                <label>{{form_label(form2.complemento)}} (opcional):</label>
+                                {{form_widget(form2.complemento, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el complemento'}})}}
+                            </div>
+                            <div class="form-group">
+                                <label>{{form_label(form2.paterno)}} (*):</label>
+                                {{form_widget(form2.paterno, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el apellido paterno'}})}}
+                            </div>
+                            <div class="form-group">
+                                <label>{{form_label(form2.materno)}} (*):</label>
+                                {{form_widget(form2.materno, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el apellido materno'}})}}
+                            </div>
+                            <div class="form-group">
+                                <label>{{form_label(form2.nombre)}} (*):</label>
+                                {{form_widget(form2.nombre, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca el nombre'}})}}
+                            </div>
+                            <div class="form-group">
+                                <label>{{form_label(form2.fechaNac)}} (*):</label>
+                                {{form_widget(form2.fechaNac, {'attr': {'class': 'form-control', 'placeholder': 'Introduzca la fecha de nacimiento (dd/mm/yyyy)'}})}}
+                            </div>
+                            <div class="form-group text-right">
+                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> Buscar</button>
+                            </div>
+                        {{form_end(form2)}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 well well-md">
+            <div id="resultado2"></div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+	{{parent()}}
+	<script>
+		function buscarPersona(){
+			var formData = $('#formSearch').serialize();
+			$.ajax({
+                type: 'post',
+                url: Routing.generate('segip_search'),
+                data: formData,
+                beforeSend: function () {
+                	$("#resultado1").empty();
+                    $("#resultado1").append("<div style='text-align:center' id='img-loading'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#resultado1").empty();
+                    $("#resultado1").append(data);
+                },
+                error: function(data){
+                	$("#resultado1").empty();
+                    $("#img-loading").css('display','none');
+                    $("#resultado1").append("<div class='alert alert-danger'>Ocurrió un error interno.</div>");
+                }
+            });
+		}
+
+        function verificarPersona(){
+            var formData = $('#formVerify').serialize();
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('segip_verify'),
+                data: formData,
+                beforeSend: function () {
+                    $("#resultado2").empty();
+                    $("#resultado2").append("<div style='text-align:center' id='img-loading'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#resultado2").empty();
+                    $("#resultado2").append(data);
+                },
+                error: function(data){
+                    $("#resultado2").empty();
+                    $("#img-loading").css('display','none');
+                    $("#resultado2").append("<div class='alert alert-danger'>Ocurrió un error interno.</div>");
+                }
+            });
+        }
+	</script>
+{% endblock %}

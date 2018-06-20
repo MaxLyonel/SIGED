@@ -1,0 +1,15 @@
+segip_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:Segip:index }
+
+segip_search:
+    path:     /search
+    defaults: { _controller: "SieAppWebBundle:Segip:search" }
+    options:
+        expose: true
+
+segip_verify:
+    path:     /verify
+    defaults: { _controller: "SieAppWebBundle:Segip:verify" }
+    options:
+        expose: true

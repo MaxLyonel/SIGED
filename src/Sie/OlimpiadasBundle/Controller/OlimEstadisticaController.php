@@ -742,20 +742,20 @@ class OlimEstadisticaController extends Controller{
 				from (select * from lugar_tipo where lugar_nivel_id = 1) as dep
 				inner join (
 				select lt4.id as departamento_id, omt.id as materia_id
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
 				, COALESCE(count(*),0) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
@@ -775,20 +775,20 @@ class OlimEstadisticaController extends Controller{
 				inner join olim_materia_tipo as omt on omt.id = oli.materia_id
 				union all 
 				select 1 as id, '0' as codigo, upper('Bolivia') as nombre, omt.id as materia_id, omt.materia
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
 				, COALESCE(count(*),0) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
@@ -810,20 +810,20 @@ class OlimEstadisticaController extends Controller{
 				from (select distinct lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id inner join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
 				inner join (
 				select lt5.id, omt.id as materia_id
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
 				, COALESCE(count(*),0) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
@@ -844,20 +844,20 @@ class OlimEstadisticaController extends Controller{
 				inner join olim_materia_tipo as omt on omt.id = oli.materia_id
 				union all
 				select lt4.id, lt4.codigo, UPPER(lt4.lugar) as nombre, omt.id as materia_id, omt.materia
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
 				, COALESCE(count(*),0) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
@@ -893,20 +893,20 @@ class OlimEstadisticaController extends Controller{
 				) as ue
 				inner join (
 				select ie.id, omt.id as materia_id
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
 				, COALESCE(count(*),0) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
@@ -922,20 +922,20 @@ class OlimEstadisticaController extends Controller{
 				inner join olim_materia_tipo as omt on omt.id = oli.materia_id
 				union all 
 				select lt.id, lt.codigo, UPPER(lt.lugar) as nombre, omt.id as materia_id, omt.materia
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
-				, COALESCE(SUM(case when (case when oeics.id != null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 12 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 12 else iec.nivel_tipo_id = 12 end) then 1 else 0 end),0) as pri
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 1 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 1 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec1
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 2 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 2 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec2
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 3 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 3 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec3
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 4 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 4 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec4
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 5 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 5 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec5
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.grado_tipo_id = 6 and oeics.nivel_tipo_id = 13 else iec.grado_tipo_id = 6 and iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec6
+				, COALESCE(SUM(case when (case when oeics.id != null or oeics.id is not null then oeics.nivel_tipo_id = 13 else iec.nivel_tipo_id = 13 end) then 1 else 0 end),0) as sec
 				, COALESCE(count(*),0) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id

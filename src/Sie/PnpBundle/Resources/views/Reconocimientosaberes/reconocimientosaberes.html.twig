@@ -56,7 +56,7 @@
                     <input type="radio" name="rude" id="rude" value="1" onclick="codigo_rude()">
                     Código Rude
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <label class="" for="ci_buscar" id="l_ci">Carnet de identidad</label>
                             <input type="text" required="true" class="form-control" id="ci_buscar" onkeypress="return ValidarEspacios(event,this)">
                         </div>
@@ -64,7 +64,14 @@
                             <label class="" for="complemento" id="l_complemento">Complemento</label>
                             <input type="text" class="form-control" id="complemento" onkeypress="return ValidarEspacios(event,this)" style="text-transform: uppercase" onkeyup="javascript:this.value=this.value.toUpperCase();">
                         </div>
-                        <div class="col-lg-4">
+                        {#}BORRAR LINEA PARA ANTIGUO O NO{#}
+                        <div class="hidden">
+                            <div class="col-lg-3 radio">
+                            <input type="radio" class="form-control" id="opc" name="opc" value="1" checked> Actual<br>
+                            <input type="radio" class="form-control" id="opc" name="opc" value="0"> Antiguo (2009-2016)<br>
+                        </div>
+                        </div>
+                        <div class="col-lg-1">
                             </br>
                             <a type="button" class="btn btn-primary" href= "#" onclick="BuscarEstudiante()">Buscar</a>
                         </div>
@@ -174,10 +181,11 @@
         complemento=$("#complemento").val();
         if(complemento=="")complemento=0;
         rude=$('input:radio[name=rude]:checked').val();
+        opc=$('input:radio[name=opc]:checked').val();
         var formData = $('#formxls').serialize();
         $.ajax({
             type: 'get',
-            url: Routing.generate('sie_pnp_reconocimiento_saberes_buscar_estudiante', {'ci': ci,'complemento':complemento,'rude':rude}),
+            url: Routing.generate('sie_pnp_reconocimiento_saberes_buscar_estudiante', {'ci': ci,'complemento':complemento,'rude':rude, 'opc':opc}),
             data: formData,
             beforeSend: function () {
                 $("#estudiante").empty();

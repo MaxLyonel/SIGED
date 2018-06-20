@@ -338,8 +338,8 @@ class SolicitudModificacionCalificacionesController extends Controller {
             }
 
             //VAlidamos que la gestion sea del 2010 para arriba
-            if($gestion < 2008 or $gestion > 2017){
-                $this->get('session')->getFlashBag()->add('noSearch', 'Solo se pueden hacer modificacion de calificaciones entre las gestiones 2008 a 2017!');
+            if($gestion < 2008 or $gestion > 2018){
+                $this->get('session')->getFlashBag()->add('noSearch', 'Solo se pueden hacer modificacion de calificaciones entre las gestiones 2008 a 2018!');
                 return $this->render('SieRegularBundle:SolicitudModificacionCalificaciones:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
             }
 
@@ -389,6 +389,7 @@ class SolicitudModificacionCalificacionesController extends Controller {
                 case 2015:
                 case 2016:
                 case 2017:  
+                case 2018:  
                             if ($gestion == $this->session->get('currentyear')) {
                                 $tipo_nota = 'Bimestre';
                                 $cantidad_notas = 4;
