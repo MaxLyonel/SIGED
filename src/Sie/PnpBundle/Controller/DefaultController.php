@@ -3066,10 +3066,10 @@ GROUP BY depto
                 }          
                 $em->flush();
                 // Eliminar Maestro Inscripcion
-                $result=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findById($maestroinscripcion_id);
+               /* $result=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findById($maestroinscripcion_id);
                 foreach ($result as $element) {
                     $em->remove($element);
-                }           
+                }   */        
                 $em->flush();    
                 $this->get('session')->getFlashBag()->add(
                     'notice',
@@ -3576,10 +3576,10 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                 }          
                 $em->flush();
                 // Eliminar Maestro Inscripcion
-                $result=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findById($maestroinscripcion_id);
+               /* $result=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findById($maestroinscripcion_id);
                 foreach ($result as $element) {
                     $em->remove($element);
-                }           
+                }           */
                 $em->flush();    
                 $this->get('session')->getFlashBag()->add(
                     'notice',
