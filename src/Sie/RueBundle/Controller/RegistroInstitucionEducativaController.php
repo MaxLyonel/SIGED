@@ -175,9 +175,9 @@ class RegistroInstitucionEducativaController extends Controller {
     		$query = $em->createQuery(
     				'SELECT DISTINCT tn.id,tn.nivel
                         FROM SieAppWebBundle:NivelTipo tn
-						WHERE tn.id in (:id)
+						WHERE tn.id between 200 and 299
 						ORDER BY tn.id ASC'
-    				)->setParameter('id', array(201,202,203,204,205,206,207,208,211,212,213,214,215,216,217,218,219,220));
+                );
     				$niveles = $query->getResult();
     				$nivelesArray = array();
     				for($i=0;$i<count($niveles);$i++){
@@ -548,9 +548,9 @@ class RegistroInstitucionEducativaController extends Controller {
         	$query = $em->createQuery(
         			'SELECT DISTINCT tn.id,tn.nivel
                         FROM SieAppWebBundle:NivelTipo tn
-						WHERE tn.id in (:id)
+						WHERE tn.id between 200 and 299
 						ORDER BY tn.id ASC'
-        			)->setParameter('id', array(201,202,203,204,205,206,207,208,211,212,213,214,215,216,217,218,219,220));
+        			);
         			$niveles = $query->getResult();
         			$nivelesArray = array();
         			for($i=0;$i<count($niveles);$i++){

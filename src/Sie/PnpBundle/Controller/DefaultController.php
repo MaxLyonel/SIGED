@@ -14,6 +14,7 @@ use Sie\PnpBundle\Form\CursoType;
 use Symfony\Component\HttpFoundation\Request;
 use Sie\AppWebBundle\Entity\Estudiante;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
+use Sie\AppWebBundle\Entity\Institucioneducativa;
 use Sie\AppWebBundle\Entity\MaestroInscripcion;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoDatos;
@@ -3835,21 +3836,42 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
             $gestion_fin_t = $p["gestion_fin"];
         } 
              
-        ///////MODOFICAR FECHA
-
+        ///////MODOFICAR FECHA 
         $userId = $this->session->get('userId');
         if($request->getMethod()=="POST") {
             $curso_id=$request->get("curso_id");
             $fecha_inicio=$request->get("fecha_inicio");
             $fecha_fin=$request->get("fecha_fin");
             $gestion_g= substr($fecha_fin,-4);
+
+            $institucion_educativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($curso_id);
+            $ie=$institucion_educativa->getInstitucioneducativa()->getId();
+            $id_maestro_inscripcion=$institucion_educativa->getMaestroInscripcionAsesor()->getId();
+
+
+            $le_jurisdiccion_g=$em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($ie);
+            $le_jurisdiccion_g=$le_jurisdiccion_g->getLeJuridicciongeografica()->getId();
+
+            $institucioneducativa_sucursal_id=$em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array(
+                'institucioneducativa'  => $ie,
+                'gestionTipo' => $gestion_g,
+                'leJuridicciongeografica'=> $le_jurisdiccion_g,
+                'periodoTipoId'=>5));
+
+        $institucioneducativa_sucursal_id=$institucioneducativa_sucursal_id->getId();
+        //$maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($institucioneducativa_sucursal_id));
+
+            $product = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneById($id_maestro_inscripcion);
+            $product->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($institucioneducativa_sucursal_id));
+            $em->flush();
+            
             $product = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($curso_id);
             $product->setFechaInicio(\DateTime::createFromFormat('d/m/Y', $fecha_inicio));
             $product->setFechaFin(\DateTime::createFromFormat('d/m/Y', $fecha_fin));
             $product->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion_g));
             $em->flush();
         }
-
+/////////////////////////////////////
 
         if($id!=0){
             //VER SU CUMPLE LOS REQUESITIVOS PARA CERRAR EL CURSO
@@ -5150,7 +5172,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
             $estudiante->setNombre($persona->getNombre());
             //$genero=$persona->getGeneroTipo()->getId();
 
-            //$estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById(3));//carlos
+            //$estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById(3));//
             //echo $genero;die;
             $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($persona->getGeneroTipo()->getId()));
             $estudiante->setEstadoCivil($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($persona->getEstadoCivilTipo()->getId()));
@@ -5499,6 +5521,21 @@ public function registrar_cursoAction(Request $request){
             case 31662: $ie=82480050; break;
             default: $ie=0; break;
         }
+        ///////////////////// sacar datos para sucursal nuevo 2018
+        //
+        $le_jurisdiccion_g=$em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($ie);
+        $le_jurisdiccion_g=$le_jurisdiccion_g->getLeJuridicciongeografica()->getId();
+
+        $institucioneducativa_sucursal_id=$em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array(
+            'institucioneducativa'  => $ie,
+            'gestionTipo' => $gestion,
+            'leJuridicciongeografica'=> $le_jurisdiccion_g,
+            'periodoTipoId'=>5));
+
+        $institucioneducativa_sucursal_id=$institucioneducativa_sucursal_id->getId();
+        //$maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($institucioneducativa_sucursal_id));
+        //////////////////////////////
+
         $persona_id=$request->get("persona_id");
         $ciclo=$form['bloque'];
         $grado=$form['parte'];
@@ -5554,11 +5591,12 @@ public function registrar_cursoAction(Request $request){
             $maestroinscripcion->setPersona($persona);
             $maestroinscripcion->setRdaPlanillasId(0);
             $maestroinscripcion->setRef(0);
+            $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($institucioneducativa_sucursal_id));
             $em->persist($maestroinscripcion);
             $em->flush(); 
             ///////$id_maestroinscripcion=$maestroinscripcion->getId();
 
-            //Institucioneducativa_curso
+            //Institucioneducativa_cursoInstitucioneducativaSucursal
             
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');");
             $query->execute();
@@ -5956,8 +5994,9 @@ public function crear_curso_automaticoAction(Request $request){
         $bloque_actual=$institucion_educativa->getCicloTipo()->getId();
         $parte_actual=$institucion_educativa->getGradoTipo()->getId();
         $ci=$institucion_educativa->getFacilitador();
+        $ie=$institucion_educativa->getInstitucioneducativa()->getId();
         //buscamos el curso siguiente dependendiendo del bloque y parte numeor de materias y el modulo dependiendo de la gestion
-        $gestion= substr($fecha_inicio,-4);
+        $gestion= substr($fecha_fin,-4);
         if($gestion <= 2018){
             if($bloque_actual==1 and  $parte_actual==1){$bloque_nuevo=1;$parte_nuevo=2;$nroMaterias=6;$modulo=2;}
             elseif($bloque_actual==1 and  $parte_actual==2){$bloque_nuevo=2;$parte_nuevo=1;$nroMaterias=5;$modulo=3;}
@@ -5965,7 +6004,7 @@ public function crear_curso_automaticoAction(Request $request){
             else {$bloque_nuevo="";$parte_nuevo="";}
         }//else
         //Sacar la fecha, si fecha menor a 2017 sacamos las materias
-        $gestion= substr($fecha_inicio,-4);
+        $gestion= substr($fecha_fin,-4);
          if($gestion <= 2018){
             if($modulo==1)
                 $materias = array('2000','2002','2005','2006','2007');
@@ -6034,6 +6073,20 @@ public function crear_curso_automaticoAction(Request $request){
             }
             $facilitador_nombre="$nombre $paterno $materno";
 
+        ////////////JURISDICCION ///
+        $le_jurisdiccion_g=$em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($ie);
+        $le_jurisdiccion_g=$le_jurisdiccion_g->getLeJuridicciongeografica()->getId();
+
+        $institucioneducativa_sucursal_id=$em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array(
+            'institucioneducativa'  => $ie,
+            'gestionTipo' => $gestion,
+            'leJuridicciongeografica'=> $le_jurisdiccion_g,
+            'periodoTipoId'=>5));
+
+        $institucioneducativa_sucursal_id=$institucioneducativa_sucursal_id->getId();
+        //$maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($institucioneducativa_sucursal_id));
+        /////////////////////////////
+
         $em->getConnection()->beginTransaction();
         try {
             //Maestro Inscripcion
@@ -6054,6 +6107,7 @@ public function crear_curso_automaticoAction(Request $request){
             //$maestroinscripcion->setPersona($persona);
             $maestroinscripcion->setRdaPlanillasId(0);
             $maestroinscripcion->setRef(0);
+            $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($institucioneducativa_sucursal_id));
             $em->persist($maestroinscripcion);
             $em->flush(); 
             ///////$id_maestroinscripcion=$maestroinscripcion->getId();

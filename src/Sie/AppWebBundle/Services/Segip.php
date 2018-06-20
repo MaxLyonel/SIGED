@@ -43,11 +43,17 @@ class Segip {
 		return $response;
 	}
 
-    public function buscarPersonaPorCarnet($carnet) {
+    public function buscarPersona($carnet, $complemento, $fechaNac) {
+
+        $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac;
+
+        if($complemento != ''){
+            $url = 'segip/v2/personas/'.$carnet.'?fecha_nacimiento='.$fechaNac.'&complemento='.$complemento;
+        }
 
         $response = $this->client->request(
             'GET', 
-            'segip/v2/personas/'.$carnet, 
+            $url, 
             ['headers' => ['Accept' => 'application/json', 'Authorization' => $this->token], 
             ['debug' => true]])->getBody()->getContents();
 
@@ -57,17 +63,37 @@ class Segip {
 
         foreach($responseDecode as $value) {
             $response = [
-                'EsValido' => $value['EsValido'],
+                /*'EsValido' => $value['EsValido'],
                 'Mensaje' => $value['Mensaje'],
                 'TipoMensaje' => $value['TipoMensaje'],
                 'CodigoRespuesta' => $value['CodigoRespuesta'],
                 'CodigoUnico' => $value['CodigoUnico'],
-                'DescripcionRespuesta' => $value['DescripcionRespuesta'],
+                'DescripcionRespuesta' => $value['DescripcionRespuesta'],*/
                 'DatosPersonaEnFormatoJson' => $value['DatosPersonaEnFormatoJson']
             ];
         }
 
-		return $response;
+        $persona = $response['DatosPersonaEnFormatoJson'];
+
+        if($persona == 'null') {
+            $fechaNac = new \DateTime($fechaNac);
+            $repository = $this->em->getRepository('SieAppWebBundle:Persona');
+            $query = $repository->createQueryBuilder('p')
+                ->select('p.id perId, p.complemento, p.carnet, p.paterno, p.materno, p.nombre, p.fechaNacimiento')
+                ->where('p.carnet = :carnet')
+                ->andWhere('p.fechaNacimiento = :fechaNacimiento')
+                ->setParameter('carnet', $carnet)
+                ->setParameter('fechaNacimiento', $fechaNac->format('d-m-Y'))
+                ->getQuery();
+
+            $persona = $query->getResult();
+            dump($persona);
+        } else {
+            dump(json_decode($persona, true));
+        }
+        die;
+
+		return $persona;
 	}
 
 }

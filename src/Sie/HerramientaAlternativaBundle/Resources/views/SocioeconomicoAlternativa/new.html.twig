@@ -393,6 +393,10 @@
                                 <td><div class="col-md-12">{{ form_widget(form.seccionvTrabaja) }}</div></td>
                             </tr>
                             <tr>
+                                <td>En caso de haber seleccionado "Otro Trabajo" en el punto anterior, ingrese la descripción del trabajo realizado</td>
+                                <td><div class="col-md-12 form-group">{{ form_widget(form.seccionvOtroTrabajo) }}</div></td>
+                            </tr>
+                            <tr>
                                 <td>¿La o el estudiante/participante tiene seguro de salud?</td>
                                 <td><div class="col-md-12">{{ form_widget(form.seccionvEstudianteEsseguroSalud) }}</div></td>
                             </tr>
@@ -435,27 +439,34 @@
                             <div class="panel-body">
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover">
-                            <tr>
-                                <td>Si la o el estudiante /participante hubiera interrumpido<br /> sus estudios y sea nuevo en el CEA,<br /> Indique el motivo principal de la misma:</td>
-                                <td><div class="col-md-12">{{ form_widget(form.seccionviEstudiantePorqueInterrupcionservicios) }}</div></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Lugar donde se llenó el formulario<br /><span class="asterisk">* (Este campo es obligatorio)</span>
-                                </td>
-                                <td><div class="col-md-12">{{ form_widget(form.lugar) }}</div></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Fecha en la que se llenó el formulario
-                                    <br /><span class="asterisk">* (Especificar la fecha del formulario físico)</span>
-                                </td>
-                                <td><div class="col-md-12">{{ form_widget(form.fecha) }}</div></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="text-right">{{ form_widget(form.guardar) }}</div></td>
-                            </tr>
-                        </table>
+                                        <tr>
+                                            <td>
+                                                Modalidad de estudio
+                                                <br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                            </td>
+                                            <td><div class="col-md-12 form-group">{{ form_widget(form.seccionviModalidadEstudioTipo) }}</div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Si la o el estudiante /participante hubiera interrumpido<br /> sus estudios y sea nuevo en el CEA,<br /> Indique el motivo principal de la misma:</td>
+                                            <td><div class="col-md-12">{{ form_widget(form.seccionviEstudiantePorqueInterrupcionservicios) }}</div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Lugar donde se llenó el formulario<br /><span class="asterisk">* (Este campo es obligatorio)</span>
+                                            </td>
+                                            <td><div class="col-md-12">{{ form_widget(form.lugar) }}</div></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Fecha en la que se llenó el formulario
+                                                <br /><span class="asterisk">* (Especificar la fecha del formulario físico)</span>
+                                            </td>
+                                            <td><div class="col-md-12">{{ form_widget(form.fecha) }}</div></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="text-right">{{ form_widget(form.guardar) }}</div></td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>

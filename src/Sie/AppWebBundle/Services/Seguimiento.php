@@ -521,6 +521,56 @@ function bisiesto($anio_actual) {
   return $bisiesto;
 }
 
+
+
+public function getReportCalificationsByStudentInscription($studentInscription){
+
+  $query = $this->em->getConnection()->prepare("
+
+  select 
+  case when b1 > 0 then '1' else '' end b1,
+  case when b2 > 0 then '1' else '' end b2,
+  case when b3 > 0 then '1' else '' end b3,
+  case when b4 > 0 then '1' else '' end b4,
+  case when t1 > 0 then '1' else '' end t1,
+  case when t2 > 0 then '1' else '' end t2,
+  case when t3 > 0 then '1' else '' end t3
+  from (
+  SELECT
+  public.estudiante_inscripcion.id,
+  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 1 then public.estudiante_nota.nota_cuantitativa
+  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 1 then 1 else 0 end) b1,
+  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 2 then public.estudiante_nota.nota_cuantitativa
+  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 2 then 1 else 0 end) b2,
+  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 3 then public.estudiante_nota.nota_cuantitativa
+  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 3 then 1 else 0 end) b3,
+  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 4 then public.estudiante_nota.nota_cuantitativa
+  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 4 then 1 else 0 end) b4,
+  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 6 then public.estudiante_nota.nota_cuantitativa
+  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 6 then 1 else 0 end) t1,
+  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 7 then public.estudiante_nota.nota_cuantitativa
+  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 7 then 1 else 0 end) t2,
+  sum( case when public.institucioneducativa_curso.nivel_tipo_id in (2,3,12,13) and nota_tipo_id = 8 then public.estudiante_nota.nota_cuantitativa
+  when public.institucioneducativa_curso.nivel_tipo_id in (1,11) and public.estudiante_nota.nota_cualitativa <> '' and nota_tipo_id = 8 then 1 else 0 end) t3
+  FROM
+  public.estudiante_inscripcion
+  INNER JOIN public.estudiante_asignatura ON public.estudiante_asignatura.estudiante_inscripcion_id = public.estudiante_inscripcion.id
+  INNER JOIN public.estudiante_nota ON public.estudiante_nota.estudiante_asignatura_id = public.estudiante_asignatura.id
+  INNER JOIN public.institucioneducativa_curso ON public.estudiante_inscripcion.institucioneducativa_curso_id = public.institucioneducativa_curso.id
+  WHERE
+  public.estudiante_inscripcion.id = ".$studentInscription."
+  GROUP BY
+  public.estudiante_inscripcion.id) a
+  
+    ");
+  $query->execute();
+  $objReportCalifications = $query->fetch();
+  // dump($objReportCalifications);die;
+
+  return $objReportCalifications;
+
 }
 
+
+}
  ?>

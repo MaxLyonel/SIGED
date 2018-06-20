@@ -1,0 +1,60 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet portlet-basic">
+            <div class="portlet-body">
+                <h4>Datos Estudiante - {{studentInscription.institucioneducativaCurso.gestionTipo}} </h4>
+               
+                <p><code>C&Oacute;DIGO RUDE:</code>{{student.codigoRude}}
+                <code>NOMBRE:</code>{{student.nombre}}
+                <code>PATERNO:</code>{{student.paterno}}
+                <code>MATERNO:</code>{{student.materno}}</p>
+                
+                <p><code>NIVEL:</code>{{studentInscription.institucioneducativaCurso.nivelTipo}}
+                <code>GRADO:</code>{{studentInscription.institucioneducativaCurso.gradoTipo}}
+                <code>PARALELO:</code>{{studentInscription.institucioneducativaCurso.paraleloTipo}}
+                <code>TURNO:</code>{{studentInscription.institucioneducativaCurso.turnoTipo}}
+                </p>
+
+                {% if notasBim %}
+                  <div class="row show-grid">
+                    {% for key, nota in notasBim %}
+                       
+                            <div class="col-md-6">{{key}} 
+                                
+                            </div>
+                            <div class="col-md-6">
+                                {% if nota > 0 %}
+                                    <strong>SI</strong>
+                                {% else %}   
+                                    NO
+                                {% endif %}
+                            </div>
+                        
+                    {% endfor %}
+                    </div>    
+                
+                {% endif %}
+
+
+                 {% if notasTrim %}
+                 <div class="row show-grid">
+                    {% for key, nota in notasTrim %}
+                    <div class="col-md-6">{{key}}</div>
+                    <div class="col-md-6">
+                      {% if nota > 0 %}
+                            <strong>SI</strong>
+                        {% else %}   
+                            NO
+                        {% endif %}</div>
+
+                    
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+               
+            </div>
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>

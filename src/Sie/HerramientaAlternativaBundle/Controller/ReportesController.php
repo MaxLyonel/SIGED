@@ -386,7 +386,7 @@ class ReportesController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'rudelal_' . $rude . '_' . $gestion . '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v1_vcj.rptdesign&socioalteId=' . $socioalteId . '&rude=' . $rude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $dirDep . '&dirProv=' . $dirProv . '&dirSec=' . $dirSec . '&dirLoc=' . $dirLoc . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_rude_socioeconomico_gral_v2_vcj.rptdesign&socioalteId=' . $socioalteId . '&rude=' . $rude . '&sucursalId=' . $sucursalId . '&inscripcionId=' . $inscripcionId . '&dirDep=' . $dirDep . '&dirProv=' . $dirProv . '&dirSec=' . $dirSec . '&dirLoc=' . $dirLoc . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
