@@ -1,0 +1,146 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block stylesheetssnew %}
+    <style>
+        @media only screen and (max-width: 800px) {
+    
+        /* Force table to not be like tables anymore */
+            #no-more-tables table, 
+            #no-more-tables thead, 
+            #no-more-tables tbody, 
+            #no-more-tables th, 
+            #no-more-tables td, 
+            #no-more-tables tr { 
+                    display: block; 
+            }
+            
+            /* Hide table headers (but not display: none;, for accessibility) */
+            #no-more-tables thead tr { 
+                    position: absolute;
+                    top: -9999px;
+                    left: -9999px;
+            }
+
+            #no-more-tables tr { border: 0px solid #ccc; }
+
+            #no-more-tables td { 
+                    /* Behave  like a "row" */
+                    border: none;
+                    border-bottom: 1px solid #ccc; 
+                    position: relative;
+                    padding-left: 40%; 
+                    white-space: normal;
+                    text-align:left;
+            }
+
+            #no-more-tables td:before { 
+                    /* Now like a table header */
+                    position: absolute;
+                    /* Top/left values mimic padding */
+                    top: 6px;
+                    left: 6px;
+                    width: 55%; 
+                    padding-right: 10px; 
+                    white-space: nowrap;
+                    text-align:left;
+                    font-weight: bold;
+            }
+
+            /*
+            Label the data
+            */
+            #no-more-tables td:before { content: attr(data-title); 
+            }
+        }
+    </style>
+{% endblock %}
+{% block grid_title %} - {{ depto }} {% endblock %}
+{% block grid_panel_menu %}
+    <!--<li><i class="fa fa-dashboard"></i>  <a href="index.html"></a>
+    </li>-->
+    <li class="active">Departamento</li>
+{% endblock %}
+{% block grid_panel_content %}
+    <div id="no-more-tables">
+        
+        {% if dato is defined and entity is defined  %}
+            {% if entity|length > 60 and entity|length < 80 %}
+                {% set wt = "2500px" %}
+            {% endif %}
+            {% if entity|length > 40 and entity|length < 60 %}
+                {% set wt = "2000px" %}
+            {% endif %}
+            {% if entity|length > 20 and entity|length < 40 %}
+                {% set wt = "1500px" %}
+            {% endif %}
+            {% if entity|length > 10 and entity|length < 20 %}
+                {% set wt = "1000px" %}
+            {% endif %}
+            {% if entity|length > 0 and entity|length < 10 %}
+                {% set wt = "500px" %}
+            {% endif %}
+            <div class="panel panel-square">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Estadìgrafo de Consolidación
+                </div>
+                <div class="panel-body">                    
+                    <div class="row">  
+                            <div id="chartContainer" style="height: 600px; width: 100%;">
+                        </div>                   
+                    </div>   
+                </div>   
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i>
+                </div>
+                <div class="panel-body">                    
+                    <table class="col-md-4 col-md-offset-4 table-bordered table-striped table-condensed cf">
+                        <thead>
+                            <tr>
+                                <th style="width:50px;">Nro.</th>
+                                <th>Depto.</th>
+                                <th>Consolidado</th>
+                                <th>Sin Consolidar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set cont = 1 %}
+                            {% set total1 = 0 %}
+                            {% set total2 = 0 %}
+                            {% for i in 0..((entity|length)-1) %}
+                                {% set nombre = entity[i]['nombre'] %}
+                                {% set siConsolidado = entity[i]['cant_si_cons_b1'] %}  
+                                {% set noConsolidado = entity[i]['cant_no_cons_b1'] %}                              
+                                {% set total1 = total1 + siConsolidado %}                            
+                                {% set total2 = total2 + noConsolidado %}
+                                <tr>
+                                    <td data-title="Nro.">{{ cont }}</td>
+                                    <td data-title="Depto.">{{ nombre }}</td>
+                                    <td data-title="Consolidado">{{ siConsolidado }}</td>
+                                    <td data-title="Sin Consolidar">{{ noConsolidado }}</td>
+                                </tr>
+                                {% set cont = cont + 1 %}
+                            {% endfor %}
+                                <tr>
+                                    <td data-title="Nro.">-</td>
+                                    <td data-title="Depto.">TOTAL</td>
+                                    <td data-title="Consolidado">{{ total1 }}</td>
+                                    <td data-title="Sin Consolidar">{{ total2 }}</td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>   
+            </div>
+        {% endif %}         
+    </div>      
+{% endblock %}
+{% block javascriptsnew %}
+    <script>
+        window.onload = function () {
+            {% autoescape %}
+                {{ dato|raw }} {# var won't be escaped #}
+            {% endautoescape %}
+        }
+    </script>    
+    <script src="{{ asset('js/canvasjs.min.js') }}"></script>
+{% endblock %}

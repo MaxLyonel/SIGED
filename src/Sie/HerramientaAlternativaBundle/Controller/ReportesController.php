@@ -1197,4 +1197,5 @@ class ReportesController extends Controller {
 
     }
     ///********************************MARCELO */
+
 }

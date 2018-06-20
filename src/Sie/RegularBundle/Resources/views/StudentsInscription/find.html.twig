@@ -9,6 +9,7 @@
             width: 800px;
             margin-top:100px;
         }
+
     </style>
 
 
@@ -120,7 +121,7 @@
                                                         <td data-title="Grado">{{ entity.grado }}</td>
                                                         <td data-title="Paralelo">{{ entity.paralelo }}</td>
                                                         <td data-title="Turno" >{{ entity.turno }}</td>
-                                                        <td data-title="From">{{entity.students}}</td>
+                                                        <td data-title="Estudiantes">{{entity.students}}</td>
 
                                                         <td class="text-center">
                                                             <a href="#" class="btn btn-link" id="viewList" onclick="openList({{unidadEducativa.id}}, '{{gestionSelected}}',{{entity.nivelId}} ,{{entity.gradoId}} ,{{entity.paraleloId}} ,{{entity.turnoId}} )" >
@@ -153,7 +154,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 norelative">
                 <a href="{{path('students_inscriptions_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
             </div>
         </div>
