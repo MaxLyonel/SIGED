@@ -793,7 +793,7 @@ class EstudianteInscripcion
     private $acreditacionnivelTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\PermanenteprogramaTipo
+     * @var \Sie\AppWebBundle\Entity\PermanenteProgramaTipo
      */
     private $permanenteprogramaTipo;
 
@@ -985,10 +985,10 @@ class EstudianteInscripcion
     /**
      * Set permanenteprogramaTipo
      *
-     * @param \Sie\AppWebBundle\Entity\PermanenteprogramaTipo $permanenteprogramaTipo
+     * @param \Sie\AppWebBundle\Entity\PermanenteProgramaTipo $permanenteProgramaTipo
      * @return EstudianteInscripcion
      */
-    public function setPermanenteprogramaTipo(\Sie\AppWebBundle\Entity\PermanenteprogramaTipo $permanenteprogramaTipo = null)
+    public function setPermanenteprogramaTipo(\Sie\AppWebBundle\Entity\PermanenteProgramaTipo $permanenteprogramaTipo = null)
     {
         $this->permanenteprogramaTipo = $permanenteprogramaTipo;
     
@@ -998,7 +998,7 @@ class EstudianteInscripcion
     /**
      * Get permanenteprogramaTipo
      *
-     * @return \Sie\AppWebBundle\Entity\PermanenteprogramaTipo 
+     * @return \Sie\AppWebBundle\Entity\PermanenteProgramaTipo
      */
     public function getPermanenteprogramaTipo()
     {

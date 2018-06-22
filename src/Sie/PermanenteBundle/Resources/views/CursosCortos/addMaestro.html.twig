@@ -1,0 +1,136 @@
+{% extends 'layoutPermanente.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-users"></i> Cursos y alumnos <span>Lista de cursos y alumnos del centro de educación alternativa.</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-th-large"></i>
+                    <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-child"></i>
+                    Cursos y alumnos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+
+    </div>
+
+
+
+
+
+
+    <!--form id="formnuevocurso" onsubmit="newCurso(); return false;" method="post" style=""-->
+    {{ form_start(form) }}
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Adicionar Facilitador</h3>
+                </div>
+                <div class="body-content animated fadeIn">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel rounded shadow panel-teal">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">Facilitadores</h3>
+                                    </div>
+                                    {#<div class="pull-right">
+                                        <a href="{{path('herramienta_info_maestro_find')}}" class="btn btn-warning btn-sm"><i class="fa fa-user"></i> Nueva/o Maestra/o</a>
+                                    </div>#}
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div class="panel-body panel-primary">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                {{ form_end(form) }}
+    <!--/form-->
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        var peticion1;
+        //$('#form_turno').on('change',function(){
+        function listarProvincias(idDpto) {
+            if (peticion1 && peticion1.readyState != 4) {
+                peticion1.abort();
+            }
+
+            peticion1 = $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_alt_clistarprovincias', {'dpto': idDpto}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_provincia').empty();
+                    $('#form_municipio').empty();
+                    $('#form_canton').empty();
+                    $('#form_localidad').empty();
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listaprovincias, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        var peticion2;
+        //$('#form_turno').on('change',function(){
+        function listarMunicipios(idProv) {
+            if (peticion2 && peticion2.readyState != 4) {
+                peticion2.abort();
+            }
+
+            peticion2 = $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_alt_clistarmunicipios', {'prov': idProv}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_municipio').empty();
+                    $('#form_canton').empty();
+                    $('#form_localidad').empty();
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listamunicipios, function (i, value) {
+                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+    </script>
+
+{%endblock%}

@@ -129,10 +129,10 @@ class InfoPersonalAdmController extends Controller {
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['idPersona']);
 
         return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:new.html.twig', array(
-                    'form' => $this->newForm($form['idInstitucion'], $form['gestion'], $form['idPersona'])->createView(),
-                    'institucion' => $institucion,
-                    'gestion' => $this->session->get('ie_gestion'),
-                    'persona' => $persona
+            'form' => $this->newForm($form['idInstitucion'], $form['gestion'], $form['idPersona'])->createView(),
+            'institucion' => $institucion,
+            'gestion' => $this->session->get('ie_gestion'),
+            'persona' => $persona
         ));
     }
 
@@ -145,9 +145,9 @@ class InfoPersonalAdmController extends Controller {
         $em->getConnection()->beginTransaction();
 
         $query = $em->createQuery(
-                        'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+            'SELECT ct FROM SieAppWebBundle:CargoTipo ct
                         WHERE ct.rolTipo IN (:id) ORDER BY ct.cargo')
-                ->setParameter('id', array(5, 9));
+            ->setParameter('id', array(5, 9));
 
         $cargos = $query->getResult();
         $cargosArray = array();
@@ -156,40 +156,46 @@ class InfoPersonalAdmController extends Controller {
         }
 
         $financiamiento = $em->createQuery(
-                        'SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
+            'SELECT ft FROM SieAppWebBundle:FinanciamientoTipo ft
                 WHERE ft.id NOT IN  (:id) ORDER BY ft.id')
-                ->setParameter('id', array(0, 5))
-                ->getResult();
+            ->setParameter('id', array(0, 5))
+            ->getResult();
         $financiamientoArray = array();
         foreach ($financiamiento as $f) {
             $financiamientoArray[$f->getId()] = $f->getFinanciamiento();
         }
 
         $formacion = $em->createQuery(
-                        'SELECT ft FROM SieAppWebBundle:FormacionTipo ft
+            'SELECT ft FROM SieAppWebBundle:FormacionTipo ft
                 WHERE ft.id NOT IN (:id) ORDER BY ft.formacion')
-                ->setParameter('id', array(0, 22))
-                ->getResult();
+            ->setParameter('id', array(0, 22))
+            ->getResult();
         $formacionArray = array();
         foreach ($formacion as $fr) {
             $formacionArray[$fr->getId()] = $fr->getFormacion();
         }
 
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($idPersona);
+
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('herramientalt_info_personal_adm_create'))
-                ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
-                ->add('gestion', 'hidden', array('data' => $gestion))
-                ->add('persona', 'hidden', array('data' => $idPersona))
-                ->add('funcion', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...')))
-                ->add('financiamiento', 'choice', array('label' => 'Fuente de Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'attr' => array('class' => 'form-control')))
-                ->add('formacion', 'choice', array('label' => 'Último grado de formación alcanzado', 'required' => true, 'choices' => $formacionArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...')))
-                ->add('formacionDescripcion', 'text', array('label' => 'Descripción del último grado de formación alcanzado', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
-                ->add('normalista', 'checkbox', array('required' => false, 'label' => 'Normalista', 'attr' => array('class' => 'checkbox')))
-                ->add('item', 'text', array('label' => 'Número de Item', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
-                ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => $em->getReference('SieAppWebBundle:IdiomaMaterno', 97), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-                ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille', 'attr' => array('class' => 'checkbox')))
-                ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
-                ->getForm();
+            ->setAction($this->generateUrl('permanente_info_personal_adm_create'))
+            ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
+            ->add('gestion', 'hidden', array('data' => $gestion))
+            ->add('persona', 'hidden', array('data' => $idPersona))
+//            ->add('genero', 'entity', array('class' => 'SieAppWebBundle:GeneroTipo', 'data' => $em->getReference('SieAppWebBundle:GeneroTipo', $persona->getGeneroTipo()->getId()), 'label' => 'Género', 'required' => true, 'attr' => array('class' => 'form-control')))
+//            ->add('celular', 'text', array('label' => 'Nro. de Celular', 'data' => $persona->getCelular(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
+//            ->add('correo', 'text', array('label' => 'Correo Electrónico', 'data' => $persona->getCorreo(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
+//            ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'data' => $persona->getDireccion(), 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
+            ->add('funcion', 'choice', array('label' => 'Función que desempeña (cargo)', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...')))
+            ->add('financiamiento', 'choice', array('label' => 'Fuente de Financiamiento', 'required' => true, 'choices' => $financiamientoArray, 'attr' => array('class' => 'form-control')))
+            ->add('formacion', 'choice', array('label' => 'Último grado de formación alcanzado', 'required' => true, 'choices' => $formacionArray, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...')))
+            ->add('formacionDescripcion', 'text', array('label' => 'Descripción del último grado de formación alcanzado', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
+            ->add('normalista', 'checkbox', array('required' => false, 'label' => 'Normalista', 'attr' => array('class' => 'checkbox')))
+            ->add('item', 'text', array('label' => 'Número de Item', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
+            ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => $em->getReference('SieAppWebBundle:IdiomaMaterno', 97), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'chosen-select form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
+            ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille', 'attr' => array('class' => 'checkbox')))
+            ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
         $em->getConnection()->commit();
         return $form;
     }
@@ -234,7 +240,7 @@ class InfoPersonalAdmController extends Controller {
             if ($maestroInscripcion) { // Si  el personalAdministrativo ya esta inscrito
                 $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('newError', 'No se realizó el registro, la persona ya esta registrada');
-                return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+                return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
             }
 
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
@@ -286,7 +292,7 @@ class InfoPersonalAdmController extends Controller {
             }
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
-            return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+            return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
@@ -338,7 +344,7 @@ class InfoPersonalAdmController extends Controller {
             $em->persist($maestroInscripcion);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+            return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
         } catch (Exception $ex) {
             
         }
@@ -406,7 +412,7 @@ class InfoPersonalAdmController extends Controller {
         }
 
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('herramientalt_info_personal_adm_update'))
+                ->setAction($this->generateUrl('permanente_info_personal_adm_update'))
                 ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('idPersona', 'hidden', array('data' => $persona->getId()))
@@ -486,11 +492,11 @@ class InfoPersonalAdmController extends Controller {
             }
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('updateOk', 'Datos modificados correctamente');
-            return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+            return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
             $this->get('session')->getFlashBag()->add('updateError', 'Error en la modificacion de datos');
-            return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+            return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
         }
     }
 
@@ -512,7 +518,7 @@ class InfoPersonalAdmController extends Controller {
                 if ($institucionCursoOfertaMaestro) {
 
                     $this->get('session')->getFlashBag()->add('eliminarError', 'El registro no se pudo eliminar, el maestro tiene areas asignadas.');
-                    return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index', array('op' => 'result')));
+                    return $this->redirect($this->generateUrl('permanente_info_personal_adm_index', array('op' => 'result')));
                 }
                 //eliminar idiomas del maestro
                 $idiomas = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $maestroInscripcion->getId()));
@@ -530,11 +536,11 @@ class InfoPersonalAdmController extends Controller {
                 $em->getConnection()->commit();
                 $this->get('session')->getFlashBag()->add('eliminarOk', 'El registro fue eliminado exitosamente');
 
-                return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+                return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
             }
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('eliminarError', 'El registro no se pudo eliminar');
-            return $this->redirect($this->generateUrl('herramientalt_info_personal_adm_index'));
+            return $this->redirect($this->generateUrl('permanente_info_personal_adm_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
@@ -583,7 +589,7 @@ class InfoPersonalAdmController extends Controller {
      */
     private function searchForm() {
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('herramientalt_info_personal_adm_result'))
+                ->setAction($this->generateUrl('permanente_info_personal_adm_result'))
                 ->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
                 ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
                 ->add('buscar', 'submit', array('label' => 'Buscar coincidencias por C.I.', 'attr' => array('class' => 'btn btn-primary')))

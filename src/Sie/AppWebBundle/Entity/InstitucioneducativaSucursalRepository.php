@@ -47,5 +47,27 @@ class InstitucioneducativaSucursalRepository extends EntityRepository
         
         return $qb->getQuery()->getResult();
     }
-    
+    public function getAllSucursalTipoPer($ie_id) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+            ->select('d.id as gestionTipo, b.id as SucursalIE, a.id as IEsucursalId, a.periodoTipoId, h.id as teid, h.tramiteEstado as te, h.obs as observacion')
+            ->from('SieAppWebBundle:InstitucioneducativaSucursal', 'a')
+            ->innerJoin('SieAppWebBundle:SucursalTipo', 'b', 'WITH', 'b.id = a.sucursalTipo')
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'c', 'WITH', 'c.id = a.institucioneducativa')
+//                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'z', 'WITH', 'a.id = z.institucioneducativaSucursal')
+            ->innerJoin('SieAppWebBundle:GestionTipo', 'd', 'WITH', 'd.id = a.gestionTipo')
+            ->leftJoin('SieAppWebBundle:InstitucioneducativaSucursalTramite', 'g', 'WITH', 'g.institucioneducativaSucursal = a.id')
+            ->leftJoin('SieAppWebBundle:TramiteEstado', 'h', 'WITH', 'h.id = g.tramiteEstado')
+            ->where('c.id = '.$ie_id)
+            ->andWhere('a.periodoTipoId = 1')
+            ->groupBy('d.id, b.id, a.id, a.periodoTipoId, h.id')
+            ->orderBy('d.id, b.id, a.id, a.periodoTipoId')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+
+
+
 }

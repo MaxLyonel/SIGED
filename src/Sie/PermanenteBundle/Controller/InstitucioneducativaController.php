@@ -239,12 +239,25 @@ class InstitucioneducativaController extends Controller {
     }
     
     public function gessubsemAction() {
-        $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipo($this->session->get('ie_id'));
-        //dump($iesubsea);die;
-        return $this->render($this->session->get('pathSystem') . ':Centroeducativo:selgessubsem.html.twig', array('iesubsea' => $iesubsea));
+        $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipoPer($this->session->get('ie_id'));
+       // dump($iesubsea);die;
+
+        $reversed = array_reverse($iesubsea);
+
+        return $this->render($this->session->get('pathSystem') . ':Principal:operativos.html.twig', array('iesubsea' => $reversed));
     }
 
     public function gessubsemopenAction(Request $request, $teid, $gestion, $subcea, $semestre, $idiesuc) {
+
+//      dump($request);
+//        dump($teid);
+//        dump($gestion);
+//        dump($subcea);
+//        dump($semestre);
+//        dump($idiesuc);die;
+//
+
+
         $sesion = $request->getSession();
         $sesion->set('ie_gestion', $gestion);
         $sesion->set('ie_subcea', $subcea);
@@ -356,6 +369,7 @@ class InstitucioneducativaController extends Controller {
 //    }
     
     public function paneloperativosAction(Request $request) {//EX LISTA DE CEAS CERRADOS
+      //  dump($request);die;
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -964,6 +978,11 @@ class InstitucioneducativaController extends Controller {
     public function buscarceaAction(Request $request) {        
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+        $iesubsea = $this->getDoctrine()->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->getAllSucursalTipo($this->session->get('ie_id'));
+        //dump($iesubsea);die;
+
+
+
         /*
          * verificamos si tiene tuicion
          */        
@@ -986,7 +1005,10 @@ class InstitucioneducativaController extends Controller {
                 $sesion->set('ie_nombre', $ie->getInstitucioneducativa());
                 $sesion->set('ie_per_estado', '3');
                 $sesion->set('ie_operativo', '¡En modo edición!');
-                return $this->redirect($this->generateUrl('principal_web'));
+                $reversed = array_reverse($iesubsea);
+         //       return $this->render($this->session->get('pathSystem') . ':Principal:operativos.html.twig', array('iesubsea' => $reversed));
+
+                  return $this->redirect($this->generateUrl('sie_per_ges_sub_sem'));
             }
             else{           
                 $this->session->getFlashBag()->add('notfound', 'El código de institución educativo no se encuentra.');
@@ -1006,18 +1028,18 @@ class InstitucioneducativaController extends Controller {
         $repository = $em->getRepository('SieAppWebBundle:GestionTipo');
         $query = $repository->createQueryBuilder('g')
             ->orderBy('g.id', 'DESC')
-            ->where('g.id < 2016 AND g.id > 2008')
+            ->where('g.id < 2019 AND g.id > 2013')
             ->getQuery();
         $gestiones = $query->getResult();
         $gestionesArray = array();
         foreach ($gestiones as $g) {
             $gestionesArray[$g->getId()] = $g->getId();
         }
-
+//dump($gestionesArray);die;
         $repository = $em->getRepository('SieAppWebBundle:PeriodoTipo');
         $query = $repository->createQueryBuilder('p')
             ->orderBy('p.id')
-            ->where('p.id in (2,3)')
+            ->where('p.id in (1)')
             ->getQuery();
         $periodos = $query->getResult();
         $periodosArray = array();
@@ -1036,10 +1058,10 @@ class InstitucioneducativaController extends Controller {
         }
 
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('herramientalt_ceducativa_crear_periodo_cea'))
+                ->setAction($this->generateUrl('herramienta_per_ceducativa_crear_periodo_cea'))
                 ->add('idInstitucion', 'text', array('label' => 'Código SIE del CEA', 'required' => true, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => 8, 'pattern' => '[0-9]{8}')))
                 ->add('gestion', 'choice', array('label' => 'Gestión', 'required' => true, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
-                ->add('periodo', 'choice', array('label' => 'Periodo', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
+                //->add('periodo', 'choice', array('label' => 'Periodo', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
                 ->add('subcea', 'choice', array('label' => 'Sub CEA', 'required' => true, 'choices' => $sucursalesArray, 'attr' => array('class' => 'form-control')))
                 ->add('crear', 'submit', array('label' => 'Crear Periodo', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
@@ -1056,9 +1078,9 @@ class InstitucioneducativaController extends Controller {
         $form = $request->get('form');
         $idInstitucion = $form['idInstitucion'];
         $gestion = $form['gestion'];
-        $periodo = $form['periodo'];
+        //$periodo = $form['periodo'];
         $subcea = $form['subcea'];
-
+        $periodo='1';
         /*dump($idInstitucion);
         dump($gestion);
         dump($periodo);
@@ -1072,10 +1094,10 @@ class InstitucioneducativaController extends Controller {
         /*
         * verificamos si existe la Institución Educativa
         */
-        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $idInstitucion, 'institucioneducativaTipo' => 2));
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $idInstitucion, 'institucioneducativaTipo' => 5));
         if (!$institucioneducativa) {
-            $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! El código SIE ingresado no es válido.');
-            return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_periodo'));
+            $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! El código SIE ingresado no es válido. Seleccione un centro de Educación Permanente');
+            return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
         }
 
         /*
@@ -1087,7 +1109,7 @@ class InstitucioneducativaController extends Controller {
         $query->bindValue(':rolId', $usuario_rol);
         $query->execute();
         $aTuicion = $query->fetchAll();
-        
+      //  dump($aTuicion);die;
 //        dump($usuario_id.' '.$idInstitucion.' '.$usuario_rol);
 //        die;
 
@@ -1115,21 +1137,25 @@ class InstitucioneducativaController extends Controller {
                 ->getQuery();
 
             $inscripciones = $query->getResult();
+//            dump($inscripciones);die;
 //            dump($inscripciones);
 //            die;
             if($inscripciones) {
-                $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! El CEA ya cuenta con el Perido seleccionado habilitado.');
-                return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_periodo'));
+                $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! El CEA ya cuenta con el Periodo seleccionado habilitado.');
+                return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
             }
             else {
-                $query = $em->getConnection()->prepare('SELECT sp_genera_inicio_sgte_gestion_alternativa(:sie, :gestion, :periodo, :subcea)');
+                // sp_genera_institucioneducativa_sucursal(icodue character varying, isucursal character varying, igestion character varying, iperiodo character varying)
+                $query = $em->getConnection()->prepare('SELECT sp_genera_institucioneducativa_sucursal(:sie,:subcea,:gestion,:periodo)');
                 $query->bindValue(':sie', $idInstitucion);
+                $query->bindValue(':subcea', $subcea);
                 $query->bindValue(':gestion', $gestion);
                 $query->bindValue(':periodo', $periodo);
-                $query->bindValue(':subcea', $subcea);
+
                 $query->execute();
-                $iesid = $query->fetchAll();            
-                if (($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '0') and ($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"] != '')){
+                $iesid = $query->fetchAll();
+       //         dump($iesid);die;
+                if (($iesid[0]["sp_genera_institucioneducativa_sucursal"] != '0') and ($iesid[0]["sp_genera_institucioneducativa_sucursal"] == '')){
 //                    $iesidnew = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($iesid[0]["sp_genera_inicio_sgte_gestion_alternativa"]);
 //                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_sucursal_tramite');")->execute();  
 //                    $iest = new InstitucioneducativaSucursalTramite();
@@ -1155,15 +1181,15 @@ class InstitucioneducativaController extends Controller {
 //                    $em->flush();
 
                     $this->get('session')->getFlashBag()->add('successMsg', '¡Bien! Se ha habilitado el Periodo Seleccionado.');
-                    return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_periodo'));
+                    return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
                 }else{
                     $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! Ha ocurrido un problema en la generación del periodo.');
-                    return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_periodo'));                    
+                    return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
                 }
             }            
         } else {
             $this->get('session')->getFlashBag()->add('errorMsg', '¡Error! No tiene tuición sobre la unidad educativa.');
-            return $this->redirect($this->generateUrl('herramientalt_ceducativa_crear_periodo'));
+            return $this->redirect($this->generateUrl('herramienta_per_ceducativa_crear_periodo'));
         }
     }
     
@@ -1199,7 +1225,7 @@ class InstitucioneducativaController extends Controller {
                                                         inner join institucioneducativa_sucursal z on a.id = z.institucioneducativa_id 
                                                         inner join institucioneducativa_sucursal_tramite w on w.institucioneducativa_sucursal_id = z.id                      
                                                     where a.orgcurricular_tipo_id = 2
-                                                    and a.institucioneducativa_tipo_id = 2
+                                                    and a.institucioneducativa_tipo_id = 5
                                                     and z.gestion_tipo_id = '2016'
                                                     and z.periodo_tipo_id = '3'
                                                     and w.tramite_estado_id in (8,14) 
@@ -1363,7 +1389,7 @@ class InstitucioneducativaController extends Controller {
                                         and w.tramite_estado_id in (8,14) 
                                         and k.id = '".$idlugarusuario."' 
                                         group by k.lugar, ie.id, ie.institucioneducativa
-                                        order by k.lugar, ie.id
+                                                                            order by k.lugar, ie.id
                                         )";            
         }        
         $stmt = $db->prepare($query);
@@ -1640,6 +1666,223 @@ class InstitucioneducativaController extends Controller {
 //        dump($objUeducativa);die;
     }
 
+    public function operativosAction (Request $request)
+    {
+        $sesion = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getEntityManager();
+        $db = $em->getConnection();
+        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));
+        $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
+
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        //validationremoveInscriptionAction if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        $arrDataReport = array(
+            'roluser' => $this->session->get('roluser'),
+            'userId' => $this->session->get('userId'),
+            'sie' => $this->session->get('ie_id'),
+            'gestion' => $this->session->get('ie_gestion'),
+            'subcea' => $this->session->get('ie_subcea'),
+            'periodo' => $this->session->get('ie_per_cod'),
+            'lugarid'=> $idlugarusuario
+        );
+
+        return $this->render($this->session->get('pathSystem') . ':Principal:operativos.html.twig', array(
+            'dataReport' => $arrDataReport,
+            'dataInfo' => serialize($arrDataReport),
+        ));
+
+    }
+
+
+    public function manualesAction(Request $request){
+
+        $sesion = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getEntityManager();
+        $db = $em->getConnection();
+        $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->findBy(array('usuario'=>$sesion->get('userId'),'rolTipo'=>$sesion->get('roluser')));
+        $idlugarusuario = $usuariorol[0]->getLugarTipo()->getId();
+        // dump($idlugarusuario);die;
+
+
+        // dump($request);die;
+
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        //validationremoveInscriptionAction if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        //get and set the variables
+
+        $arrDataReport = array(
+            'roluser' => $this->session->get('roluser'),
+            'userId' => $this->session->get('userId'),
+            'sie' => $this->session->get('ie_id'),
+            'gestion' => $this->session->get('ie_gestion'),
+            'subcea' => $this->session->get('ie_subcea'),
+            'periodo' => $this->session->get('ie_per_cod'),
+            'lugarid'=> $idlugarusuario
+        );
+
+        return $this->render($this->session->get('pathSystem') . ':Institucioneducativa:manuales.html.twig', array(
+            'dataReport' => $arrDataReport,
+            'dataInfo' => serialize($arrDataReport),
+        ));
+
+
+
+//        $em = $this->getDoctrine()->getManager();
+//        $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPer($this->session->get('ie_id'), $this->session->get('ie_gestion'), $this->session->get('ie_subcea'), $this->session->get('ie_per_cod'));
+//        dump($objUeducativa);die;
+    }
+
+    public function listarprovinciasAction($dpto) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 2)
+                ->setParameter('lt1', $dpto + 1);
+            $provincias = $query->getResult();
+
+            $provinciasArray = array();
+            foreach ($provincias as $c) {
+                $provinciasArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listaprovincias' => $provinciasArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    public function listarmunicipiosAction($prov) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 3)
+                ->setParameter('lt1', $prov);
+            $municipios = $query->getResult();
+
+            $municipiosArray = array();
+            foreach ($municipios as $c) {
+                $municipiosArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listamunicipios' => $municipiosArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarcantonesAction($muni) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 4)
+                ->setParameter('lt1', $muni);
+            $cantones = $query->getResult();
+
+            $cantonesArray = array();
+            foreach ($cantones as $c) {
+                $cantonesArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listacantones' => $cantonesArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listarlocalidadesAction($cantn) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT lt
+                    FROM SieAppWebBundle:LugarTipo lt
+                    WHERE lt.lugarNivel = :nivel
+                    AND lt.lugarTipo = :lt1
+                    ORDER BY lt.id')
+                ->setParameter('nivel', 5)
+                ->setParameter('lt1', $cantn);
+            $localidades = $query->getResult();
+
+            $localidadesArray = array();
+            foreach ($localidades as $c) {
+                $localidadesArray[$c->getId()] = $c->getLugar();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listalocalidades' => $localidadesArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
+
+    /*
+     * Funciones para cargar los combos dependientes via ajax
+     */
+    public function listardistritosAction($dpto) {
+        try {
+            $em = $this->getDoctrine()->getManager();
+
+            $query = $em->createQuery(
+                'SELECT dt
+                    FROM SieAppWebBundle:DistritoTipo dt
+                    WHERE dt.id NOT IN (:ids)
+                    AND dt.departamentoTipo = :dpto
+                    ORDER BY dt.id')
+                ->setParameter('ids', array(1000,2000,3000,4000,5000,6000,7000,8000,9000))
+                ->setParameter('dpto', $dpto);
+            $distritos = $query->getResult();
+
+            $distritosArray = array();
+            foreach ($distritos as $c) {
+                $distritosArray[$c->getId()] = $c->getDistrito();
+            }
+
+            $response = new JsonResponse();
+            return $response->setData(array('listadistritos' => $distritosArray));
+        } catch (Exception $ex) {
+            //$em->getConnection()->rollback();
+        }
+    }
 
 
 }

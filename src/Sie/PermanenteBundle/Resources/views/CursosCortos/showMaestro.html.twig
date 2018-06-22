@@ -1,0 +1,268 @@
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+
+        <div class="panel panel-danger" id="listMaestro">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Facilitadores</h3>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+
+                {#{{ form_start(form, {'attr':{'id':'facilitadorsFormId' } }) }}#}
+                <form id="facilitadorsFormId" onsubmit="addMaestro({{ institucioncurso.id }}); return false;">
+                <div class="row">
+                    <input type="hidden" name="infoUe" id="infoUe" value="{{ infoUe }}">
+                    <div class="form-group col-lg-2">
+                        <label for="form_facilitador" class="required"> Buscar Facilitador:</label>
+                    </div>
+                    <div class="form-group col-lg-4 col-md-6">
+                        <select  id="form_facilitador" name="form[facilitador]">
+                            {% for maestro in maestro %}
+                                <option value="{{ maestro.id }}">{{ maestro.paterno }}  {{ maestro.materno }}  {{ maestro.nombre }}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+
+                    <div class="form-group col-lg-6 col-md-6">
+
+                        {% if maestro is not empty %}
+                            <div class="form-group col-lg-2 ">
+                                <laberl >{{ form_widget(form.horas ) }}</laberl>
+                            </div>
+                            <div class="form-group col-lg-2 ">
+                                <p>Hrs.</p>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-user"></i> Asignar Facilitador
+                            </button>
+                        {% else %}
+                            <div hidden class="form-group col-lg-2 " >
+                                <laberl >{{ form_widget(form.horas ) }}</laberl>
+                            </div>
+                            <div hidden class="form-group col-lg-2 ">
+                                <p>Hrs.</p>
+                            </div>
+                        {% endif %}
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-ban" aria-hidden="true"></i> Cerrar</button>
+
+                    </div>
+                </div>
+             {{ form_end(form) }}
+
+            </div><!-- /.panel-body -->
+        <div class="panel-body panel-primary" >
+            {% if maestroins is not empty %}
+
+                <div id="no-more-tables">
+                    <table class="table table-striped table-primary" id="listmaes">
+                        <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Carnet de Identidad</th>
+                            <th>Paterno</th>
+                            <th>Materno</th>
+                            <th>Nombre(s)</th>
+                            <th>Formación</th>
+                            <th>Hrs. Maestro</th>
+                            <th>Hrs. Curso</th>
+                            <th> </th>
+
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for maestroins in maestroins %}
+                            <tr>
+                                <td data-title="N°">{{ loop.index }}</td>
+                                <td data-title="Carnet">{{ maestroins.carnet }}</td>
+                                <td data-title="Paterno">{{ maestroins.paterno }}</td>
+                                <td data-title="Materno">{{ maestroins.materno }}</td>
+                                <td data-title="Nombre(s)">{{ maestroins.nombre }}</td>
+                                <td data-title="Formación">{{ maestroins.formacion }}</td>
+                                <td data-title="Hrs maestro" class="hmaestro">{{ maestroins.horasmes }}</td>
+                                <td data-title="Hrs Curso" class="hrcurso">{{ maestroins.duracionhoras }}</td>
+                                <td data-title="cancel">
+                                    <button class="btn btn-danger btn-xs" onclick="deleteMaestro({{ maestroins.id }},{{ maestroins.idoferta }},{{ maestroins.idofermaes }},'{{ infoUe }}');" data-placement="top" data-original-title="Eliminar Facilitador">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+
+
+                                </td>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                    {#<p>Total horas maestro: <span id="totalmaestro class="totalmaestro">  </span></p>#}
+                    {#<p>Total Horas del curso: $<span id="totalcurso" class="totaldeuda">{{ maestroins.duracionhoras[0] }}</span></p>#}
+                </div>
+            {% else %}
+                No hay Maestros Registrados
+            {% endif %}
+
+
+        </div>
+
+
+    </div><!-- /.panel -->
+
+
+</div>
+
+
+
+
+    <script>
+        var peticion1;
+        //$('#form_turno').on('change',function(){
+        function listarProvincias(idDpto) {
+            if (peticion1 && peticion1.readyState != 4) {
+                peticion1.abort();
+            }
+
+            peticion1 = $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_alt_clistarprovincias', {'dpto': idDpto}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_provincia').empty();
+                    $('#form_municipio').empty();
+                    $('#form_canton').empty();
+                    $('#form_localidad').empty();
+                    $("#form_provincia").append('<option value="">Seleccionar...</option>');
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listaprovincias, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        var peticion2;
+        //$('#form_turno').on('change',function(){
+        function listarMunicipios(idProv) {
+            if (peticion2 && peticion2.readyState != 4) {
+                peticion2.abort();
+            }
+
+            peticion2 = $.ajax({
+                type: 'get',
+                url: Routing.generate('sie_alt_clistarmunicipios', {'prov': idProv}),
+                beforeSend: function () {
+
+                },
+                success: function (data) {
+                    $('#form_municipio').empty();
+                    $('#form_canton').empty();
+                    $('#form_localidad').empty();
+                    $("#form_municipio").append('<option value="">Seleccionar...</option>');
+                    $("#form_canton").append('<option value="">Seleccionar...</option>');
+                    $("#form_localidad").append('<option value="">Seleccionar...</option>');
+                    $.each(data.listamunicipios, function (i, value) {
+                        $("#form_municipio").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                }
+            });
+        }
+
+        var
+            addMaestro = function (idcurso) {
+                 var formData = $('#facilitadorsFormId').serialize();
+
+
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('herramienta_per_cursos_cortos_add_maestro') }}",
+                    data: formData,
+                    beforeSend: function () {
+//                        $('#modal').empty();
+                        $("#listMaestro").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                    },
+                    success: function (data) {
+//                        nuevoMaestro(data.infoUe);
+                        $('#listMaestro').empty();
+                        $('#listMaestro').append(data);
+                        var totalmaestro=0;
+                        $(".hmaestro").each(function(){
+                            totalmaestro+=parseInt($(this).html()) || 0;
+                        });
+                        var cursos=0;
+                        $(".hrcurso").each(function(){
+                            cursos=parseInt($(this).html()) || 0;
+                        });
+
+                        if(totalmaestro>cursos)
+                        {
+                        alert('Alerta !!!, la Carga Horaria de sus Facilitadores Excede a la duración del curso');
+                        }
+
+                      //  $('#modal').modal('show');
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+
+
+            };
+
+
+
+        $(function() {
+            $('#maestropicked').change(function() {
+                var value= $(this).val();
+                alert(value);
+            })
+        });
+
+        var
+            deleteMaestro = function (id,idoferta,idofermaes,infoUe) {
+
+                $.ajax({
+                    type: 'post',
+                    data: {idcurso:id,idoferta: idoferta, idofermaes: idofermaes,infoUe:infoUe},
+                    url: "{{ path('herramienta_per_cursos_cortos_delete_maestro') }}",
+
+                    beforeSend: function () {
+//                        $('#modal').empty();
+                        $("#listMaestro").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+
+                    },
+                    success: function (data) {
+                        $('#listMaestro').empty();
+                        $('#listMaestro').append(data);
+                       // $('#modal').modal('show');
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            };
+
+
+
+    </script>
