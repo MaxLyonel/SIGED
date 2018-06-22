@@ -279,6 +279,11 @@
                                     {% if app.session.get('roluser') == 10 %}
                                         <li><a href="{{path('sie_juegos_comision_entrenador_f1_lista_index')}}">Registro Entrenadores</a></li>
                                     {% endif %}
+                                    {% if app.session.get('roluser') == 6 %}
+                                        <li><a href="{{path('sie_juegos_clasificacion_f2_index')}}">Segunda Fase</a></li>
+                                        <li><a href="{{path('sie_juegos_comision_entrenador_f2_lista_index')}}">Clasificacion Entrenadores</a></li>
+                                        <li><a href="{{path('estudiantedatopersonal_juegos_deportistas_fase2')}}">Deportistas Datos Personales</a></li>
+                                    {% endif %}
                                 </ul>
                             </li>
                         {% endif %}                        
