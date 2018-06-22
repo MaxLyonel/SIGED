@@ -808,4 +808,32 @@ class EstudianteInscripcionSocioeconomicoRegular
     {
         return $this->estudianteInscripcion;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegEstDiscapacidadTipo
+     */
+    private $seccionvEstudianteEsdiscapacidadTipo;
+
+
+    /**
+     * Set seccionvEstudianteEsdiscapacidadTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegEstDiscapacidadTipo $seccionvEstudianteEsdiscapacidadTipo
+     * @return EstudianteInscripcionSocioeconomicoRegular
+     */
+    public function setSeccionvEstudianteEsdiscapacidadTipo(\Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegEstDiscapacidadTipo $seccionvEstudianteEsdiscapacidadTipo = null)
+    {
+        $this->seccionvEstudianteEsdiscapacidadTipo = $seccionvEstudianteEsdiscapacidadTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccionvEstudianteEsdiscapacidadTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegEstDiscapacidadTipo 
+     */
+    public function getSeccionvEstudianteEsdiscapacidadTipo()
+    {
+        return $this->seccionvEstudianteEsdiscapacidadTipo;
+    }
 }

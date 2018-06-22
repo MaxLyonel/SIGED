@@ -5,36 +5,36 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegular:
         idx_estudiante_inscripcion_socioeconomico_regular_seccioniv_loc:
             columns:
                 - seccioniv_localidad_tipo_id
-        IDX_5055CFF8EEB7A641:
-            columns:
-                - seccionv_estudiante_esdiscapacidad_tipo_id
-        IDX_5055CFF82029A11A:
-            columns:
-                - seccionv_habla_ninez_tipo_id
-        IDX_5055CFF8282FF9D6:
-            columns:
-                - seccionv_tiempotrans_tipo_id
-        IDX_5055CFF862A3B514:
-            columns:
-                - seccionv_llega_tipo_id
-        IDX_5055CFF854F4B665:
-            columns:
-                - seccionv_frec_internet_tipo_id
         IDX_5055CFF8E8554974:
             columns:
                 - seccionv_actividad_tipo_id
-        IDX_5055CFF8949D0561:
-            columns:
-                - seccionv_desague_tipo_id
         IDX_5055CFF8FEDB50B:
             columns:
                 - seccionv_aguaproviene_tipo_id
-        IDX_5055CFF8CFDE9119:
-            columns:
-                - seccionv_discapacidad_tipo_id
         IDX_5055CFF86F60A43D:
             columns:
                 - seccionv_cant_centrosalud_tipo_id
+        IDX_5055CFF8949D0561:
+            columns:
+                - seccionv_desague_tipo_id
+        IDX_5055CFF8CFDE9119:
+            columns:
+                - seccionv_discapacidad_tipo_id
+        IDX_5055CFF854F4B665:
+            columns:
+                - seccionv_frec_internet_tipo_id
+        IDX_5055CFF82029A11A:
+            columns:
+                - seccionv_habla_ninez_tipo_id
+        IDX_5055CFF862A3B514:
+            columns:
+                - seccionv_llega_tipo_id
+        IDX_5055CFF8282FF9D6:
+            columns:
+                - seccionv_tiempotrans_tipo_id
+        IDX_5055CFF8EEB7A641:
+            columns:
+                - seccionv_estudiante_esdiscapacidad_tipo_id
     uniqueConstraints:
         uq_estudiante_inscripcion_socioeconomico_regular:
             columns:
@@ -149,42 +149,6 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegular:
             default: '0'
             column: registro_finalizado
     manyToOne:
-        seccionvHablaNinezTipo:
-            targetEntity: IdiomaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                seccionv_habla_ninez_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        seccionvTiempotransTipo:
-            targetEntity: EstudianteInscripcionSocioeconomicoRegTiempotransTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                seccionv_tiempotrans_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        seccionvLlegaTipo:
-            targetEntity: EstudianteInscripcionSocioeconomicoRegLlegaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                seccionv_llega_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        seccionvFrecInternetTipo:
-            targetEntity: EstudianteInscripcionSocioeconomicoRegFrecInternetTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                seccionv_frec_internet_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         seccionvActividadTipo:
             targetEntity: EstudianteInscripcionSocioeconomicoRegActividadTipo
             cascade: {  }
@@ -192,15 +156,6 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegular:
             inversedBy: null
             joinColumns:
                 seccionv_actividad_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        seccionvDesagueTipo:
-            targetEntity: EstudianteInscripcionSocioeconomicoRegDesagueTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                seccionv_desague_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         seccionvAguaprovieneTipo:
@@ -212,6 +167,24 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegular:
                 seccionv_aguaproviene_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
+        seccionvCantCentrosaludTipo:
+            targetEntity: EstudianteInscripcionSocioeconomicoRegCantCentrosaludTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccionv_cant_centrosalud_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccionvDesagueTipo:
+            targetEntity: EstudianteInscripcionSocioeconomicoRegDesagueTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccionv_desague_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         seccionvDiscapacidadTipo:
             targetEntity: EstudianteInscripcionSocioeconomicoRegDiscapacidadTipo
             cascade: {  }
@@ -221,13 +194,40 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegular:
                 seccionv_discapacidad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        seccionvCantCentrosaludTipo:
-            targetEntity: EstudianteInscripcionSocioeconomicoRegCantCentrosaludTipo
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                seccionv_cant_centrosalud_tipo_id:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccionvFrecInternetTipo:
+            targetEntity: EstudianteInscripcionSocioeconomicoRegFrecInternetTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccionv_frec_internet_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccionvHablaNinezTipo:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccionv_habla_ninez_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccionvLlegaTipo:
+            targetEntity: EstudianteInscripcionSocioeconomicoRegLlegaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccionv_llega_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         seccionivLocalidadTipo:
@@ -239,13 +239,22 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoRegular:
                 seccioniv_localidad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        estudianteInscripcion:
-            targetEntity: EstudianteInscripcion
+        seccionvTiempotransTipo:
+            targetEntity: EstudianteInscripcionSocioeconomicoRegTiempotransTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                estudiante_inscripcion_id:
+                seccionv_tiempotrans_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        seccionvEstudianteEsdiscapacidadTipo:
+            targetEntity: EstudianteInscripcionSocioeconomicoRegEstDiscapacidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                seccionv_estudiante_esdiscapacidad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
