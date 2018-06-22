@@ -1914,13 +1914,14 @@ class ClasificacionController extends Controller {
         try{
             $entityDatos = $em->getRepository('SieAppWebBundle:EstudianteInscripcionJuegos')->findOneBy(array('id'=>$inscripcion));
             if ($entityDatos) {
+                $borrar = true;
                 $nivel = $entityDatos->getPruebaTipo()->getDisciplinaTipo()->getNivelTipo()->getId();
                 $fase = $entityDatos->getFaseTipo()->getId();
                 $estudiante = $entityDatos->getEstudianteInscripcion()->getEstudiante()->getPaterno().' '.$entityDatos->getEstudianteInscripcion()->getEstudiante()->getMaterno().' '.$entityDatos->getEstudianteInscripcion()->getEstudiante()->getNombre();
 
                 $query = $em->getConnection()->prepare("select * from fase_tipo where id = ".$fase);
                 $query->execute();
-                $faseTipoEntity = $query->fetchAll();
+                $faseTipoEntity = $query->fetchAll();                
 
                 if ($nivel == 12 and !$faseTipoEntity[0]['esactivo_primaria']){
                     $borrar = false;
@@ -1935,9 +1936,9 @@ class ClasificacionController extends Controller {
                     $em->flush();
                     $em->getConnection()->commit();
                     $respuesta = array('0'=>true);
-                    $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Estudiante ".$estudiante." eliminado"));
+                    $this->session->getFlashBag()->set('success', array('title' => 'Eliminado', 'message' => "Estudiante ".$estudiante." eliminado"));
                 } else {
-                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => "Las listas estan cerradas, no puede eliminar estudiantes"));
+                    $this->session->getFlashBag()->set('warning', array('title' => 'Error', 'message' => "Las listas estan cerradas, no puede eliminar estudiantes"));
                 }
             }
         } catch (Exception $e) {
