@@ -2,191 +2,206 @@
 
 {% block contentoption%}
 
-    <!-- begin PAGE TITLE AREA -->
-    <!-- Use this section for each page's title and breadcrumb layout. In this example a date range picker is included within the breadcrumb. -->
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1>Panel Principal
-                    <small>Información sobre el usuario</small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li class="active"><i class="fa fa-dashboard"></i> Principal</li>
-                </ol>
-            </div>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
-    <!-- /.row -->
-
-
-    <div class="row">
-
-        <div class="col-lg-4">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="portlet portlet-green">
-                        <div class="portlet-heading">
-                            <div class="portlet-title">
-                                <h4><i class="fa fa-user"></i> Información del Usuario</h4>
-                            </div>
-                            <div class="portlet-widgets">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-white dropdown-toggle btn-xs" data-toggle="dropdown">
-                                        <i class="fa fa-circle text-green"></i> Datos
-                                        <span class="caret"></span>
+    <h3> Gestión, Sub Cea, Semestre del CEA.</h3>
+    <p>Por esta interfaz los usuarios del <code>Siged Alternativa</code> pueden seleccionar una gestión, sub centro y semestre para ver o reportar datos.</p>
+    <div class="panel panel-default">
+        <div class="panel-body"></div>
+        <table id="tablagessubsem" class="table table-striped table-danger">
+            <thead>
+            <tr>
+                <th class="text-center border-right">No.</th>
+                <th>Gestión</th>
+                <th>Sub Centro</th>
+                <th>Periodo</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for reg in iesubsea %}
+                <tr>
+                    <td class="text-center border-right">{{ loop.index }}</td>
+                    <td>
+                        {#<img class="img-circle img-bordered-theme" alt="..." src="../../../img/avatar/35/2.png">#}
+                        <span>{{ reg.gestionTipo }}{# - {{reg.teid}}#}</span>
+                    </td>
+                    <td>{{ reg.SucursalIE }}</td>
+                    {% if (reg.periodoTipoId == '2') %}
+                        <td>PRIMERO</td>
+                    {% elseif (reg.periodoTipoId == '3') %}
+                        <td>SEGUNDO</td>
+                    {% elseif (reg.periodoTipoId == '1') %}
+                        <td>ANUAL</td>
+                    {% else%}
+                        <td>{{reg.periodoTipoId}}</td>
+                    {% endif %}
+                    {% if (app.session.get('roluser') == 2) %} {#ROL DE MAESTRO#}
+                        <td class="text-center">
+                            {% if (reg.gestionTipo == '2016') and (reg.periodoTipoId == '2') and (reg.teid is null) %}  {#INICIO DE RESISTEMA REGULARIZACIÓN INSCRIPCIONES Y NOTAS herramienta_perer_notas_maestro_index#}
+                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'100', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                    <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡En operativo inicio de sistema Notas!">
+                                        <i class="fa fa-pencil"></i>
                                     </button>
-                                </div>
-                                <span class="divider"></span>
-                                <a data-toggle="collapse" data-parent="#accordion" href="index.html#infouser"><i class="fa fa-chevron-down"></i></a>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div id="infouser" class="panel-collapse collapse in">
-                            <table class="table table-bordered table-striped table-hover">
+                                </form>
+                            {% elseif ((reg.teid == '6') or (reg.teid == '13')) %} {#EN NOTAS O REGULARIZACION DE NOTAS#}
+                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'100', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                    <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡En operativo inicio de sistema Notas!">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                </form>
+                            {% endif%}
+                            {#{% if (reg.gestionTipo == '2016') %}
+                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'100', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                    <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡En operativo inicio de sistema Notas!">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                </form>
+                            {% else %}
+                                    -
+                            {% endif %}#}
+                        </td>
+                    {% endif %}
+                    {% if (app.session.get('roluser') == 20) %} {#ROL DE CONSULTA MODO LECTURA#}
+                        <td class="text-center">
+                            <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                <button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Ver.">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </form>
+                        </td>
+                    {% endif %}
+                    {#{% if app.session.get('roluser') == 9 %} #}{#ROL DE DIRECTOR#}
+                        {#<td class="text-center"> #}{#INICIO DE SISTEMA INSCRIPCIONES Y NOTAS#}
+                            {#{% if (reg.gestionTipo == '2016') and (reg.periodoTipoId == '2') and (reg.teid is null) %}#}
+                                {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'12', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                    {#<button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡En operativo inicio de sistema Inscripción y Notas!">#}
+                                        {#<i class="fa fa-graduation-cap"></i>#}
+                                        {#<i class="fa fa-star"></i>#}
+                                    {#</button>#}
+                                {#</form>#}
+                            {#{% else %}#}
+                                {#{% if (reg.teid == '14') or (reg.teid == '8') or (reg.teid == '10') or (reg.teid == '12')  or (reg.teid == '9') %} #}{#14 VER FIN DE SEMESTRE TERMINADO-8 VER REGULARIZACION NOTAS-10 VER REGULARIZACIÓN GESTION PASADA 12-VER INSCRIPCIONES TERMINADAS 9-REGULARIZACION INSCRIPCIONES TERMINADAS#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-twitter btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">#}
+                                            {#<i class="fa fa-eye"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                {#{% elseif reg.teid == '5'%} #}{#¡EN REGULARIZACIÓN GESTIONES PASADAS!#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Ver.">#}
+                                            {#<i class="fa fa-eye"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'12', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">#}
+                                            {#<i class="fa fa-pencil-square"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                    {#{% elseif ((reg.teid == '6') or (reg.teid == '13')) %}#}{# #}{#6 EN REGULARIZACIÓN NOTAS -13 NOTAS#}
+                                {#{% elseif (reg.teid == '13') %} #}{#-13 NOTAS#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'11', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">#}
+                                            {#<i class="fa fa-pencil-square"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                {#{% elseif (reg.teid == '6') %} #}{#6 EN REGULARIZACIÓN NOTAS#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'6', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">#}
+                                            {#<i class="fa fa-pencil-square"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                {#{% elseif ((reg.teid == '7') or (reg.teid == '11')) %} #}{#7 EN REGULARIZACION INSCRIPCIOENS -11 EN INSCRIPCION!#}
+                                    {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'10', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                        {#<button type="submit" class="btn btn-circle btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">#}
+                                            {#<i class="fa fa-pencil-square"></i>#}
+                                        {#</button>#}
+                                    {#</form>#}
+                                {#{% else %} #}{#GESTIONES PASADAS MODO LECTURA#}
+                                    {#{% if (reg.gestionTipo < '2011') %}#}
+                                        {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                            {#<button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Ver.">#}
+                                                {#<i class="fa fa-eye"></i>#}
+                                            {#</button>#}
+                                        {#</form>#}
+                                    {#{% else %}#}
+                                        {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">#}
+                                            {#<button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Ver.">#}
+                                                {#<i class="fa fa-eye"></i>#}
+                                            {#</button>#}
+                                        {#</form>#}
+                                        {#{% if (reg.gestionTipo < '2016') %}#}
+                                            {#<form action="{{path('sie_per_ges_sub_sem_open', {'teid':'13', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block" onsubmit="return verificarRegularizacion();">#}
+                                                {#<button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="¡Iniciar proceso de regularización!">#}
+                                                    {#<i class="fa fa-hourglass-start"></i>#}
+                                                {#</button>#}
+                                            {#</form>#}
+                                        {#{% endif %}#}
+                                    {#{% endif %}#}
+                                {#{% endif %}#}
+                            {#{% endif %}#}
+                        {#</td>#}
+                    {#{% endif %}#}
+                    {#10 DISTRITAL 7 DEPTO 8 NACIONAL#}
+                    {% if (app.session.get('roluser') == 10) or (app.session.get('roluser') == 7)  or (app.session.get('roluser') == 9)or (app.session.get('roluser') == 8)%}
+                        <td class="text-center">
+                            {% if (reg.teid == '7') or (reg.teid == '11')  %} {#-11 EN INSCRIPCION - 7 EN REGULARIZACION INSCRIPCIONES#}
+                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                    <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </form>
+                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'0', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                    <button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Editar.">
+                                        <i class="fa fa-pencil-square"></i>
+                                    </button>
+                                </form>
+                            {% elseif (reg.teid == '13') or (reg.teid == '6') %}{#-13 NOTAS - 6 EN REGULARIZACIÓN NOTAS#}
+                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                    <button type="submit" class="btn btn-circle btn-teal btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </form>
+                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'0', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                    <button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Editar.">
+                                        <i class="fa fa-pencil-square"></i>
+                                    </button>
+                                </form>
+                            {% elseif (reg.teid == '5') %} {#¡EN REGULARIZACIÓN GESTIONES PASADAS!#}
+                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                    <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                    <button type="submit" class="btn btn-circle btn-lilac btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="{{reg.observacion}}">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </form>
+                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'0', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                    <button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Editar.">
+                                        <i class="fa fa-pencil-square"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    {% endif %}
 
-                                <tr>
-                                    <td>Paterno:</td>
-                                    <td>{{ app.session.get('lastname') }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Materno:</td>
-                                    <td>{{ app.session.get('lastname2')}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Nombre:</td>
-                                    <td>{{ app.session.get('name') }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Usuario:</td>
-                                    <td>{{ app.session.get('userName') }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Cuenta:</td>
-                                    <td>{{ app.session.get('cuentauser') }}</td>
-                                </tr>
+                    {#CASO UNICO POR CUESTIONES SOCIALES#}
+                    {% if ((app.session.get('userName') == '4832802') and (app.session.get('ie_id') == '80730768'))%}
+                        <td class="text-center">       {#MODO EDICION#}
+                            <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'0', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">
+                                <button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Editar.">
+                                    <i class="fa fa-pencil-square"></i>
+                                </button>
+                            </form>
+                        </td>
+                    {% endif %}
 
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-12">
-                    <div class="portlet portlet-green">
-                        <div class="portlet-heading">
-                            <div class="portlet-title">
-                                <h4><i class="fa fa-exchange fa-fw"></i> Cambios Recientes</h4>
-                            </div>
-                            <div class="portlet-widgets">
-                                <a data-toggle="collapse" data-parent="#accordion" href="index.html#transactionsPortlet"><i class="fa fa-chevron-down"></i></a>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div id="transactionsPortlet" class="panel-collapse collapse in">
-                            <div class="portlet-body">
-                                <div class="table-responsive dashboard-demo-table">
-                                    <table class="table table-bordered table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Fecha</th>
-                                                <th>Hora</th>
-
-                                                <th>Estatus</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1/31/14</td>
-                                                <td>6:14 PM</td>
-
-                                                <td><a class="btn btn-xs btn-orange disabled"><i class="fa fa-clock-o"></i> Pending</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>1/31/14</td>
-                                                <td>6:02 PM</td>
-
-                                                <td><a class="btn btn-xs btn-orange disabled"><i class="fa fa-clock-o"></i> Pending</a>
-                                                </td>
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <a class="btn btn-blue">Ver todas las operaciones</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.col-lg-12 -->
-
-            </div>
-        </div>
-        <div class="col-lg-8">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="portlet portlet-blue">
-                        <div class="portlet-heading">
-                            <div class="portlet-title">
-                                <h4><i class="fa fa-map-marker fa-fw"></i> Información Operativos</h4>
-                            </div>
-                            <div class="portlet-widgets">
-                                <!-- Button Dropdown -->
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        {% if app.session.get('ie_id') %}
-                            <div class="portlet-body">
-                            <div id="map"></div>
-                            <br>
-                            <div class="table-responsive">
-
-                                <div class="table-responsive mb-20">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th class="text-center">#</th>
-                                            <th>Table heading</th>
-                                            <th>Table heading</th>
-                                            <th>Table heading</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td class="text-center">1</td>
-                                            <td>Table cell</td>
-                                            <td>Table cell</td>
-                                            <td>
-                                                <form action="{{path('sie_per_ges_sub_sem_open', {'teid':'0', 'gestion': '2017','subcea':'0','semestre':'2','idiesuc':'575465'})}}" method="post" style="display:inline-block">
-                                                    <button type="submit" class="btn btn-circle btn-danger btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="AAA">
-                                                        <i class="fa fa-eye"></i>
-                                                    </button>
-                                                </form>
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-center">2</td>
-                                            <td></td>
-                                            <td>Table cell</td>
-                                            <td>Table cell</td>
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- /.table-responsive -->
-                        </div>
-                        {% else %}
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
-
-
+    </div>
 
 {% endblock %}

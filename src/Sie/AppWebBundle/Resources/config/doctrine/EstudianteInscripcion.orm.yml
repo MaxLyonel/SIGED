@@ -174,7 +174,7 @@ Sie\AppWebBundle\Entity\EstudianteInscripcion:
                     referencedColumnName: id
             orphanRemoval: false
         permanenteprogramaTipo:
-            targetEntity: PermanenteprogramaTipo
+            targetEntity: PermanenteProgramaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null

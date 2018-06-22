@@ -1,0 +1,72 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}  
+    <div class="header-content">
+        <h2><i class="fa fa-search"></i> Resultado de la busqueda <span>Paterno, Materno, Nombre...</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>                    
+                <li>
+                    <i class="fa fa-th-large"></i>
+                    <a href="{{path('herramienta_ceducativa_menu_principal')}}">Menu Principal</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-search"></i>
+                    Resultado de la busqueda
+                    <i class="fa fa-angle-right"></i>
+                </li>                
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>
+                    
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4>Inscripciones encontradas en el periodo seleccionado.</h4>
+    </div>
+    <div id="tablaListadoPersonas_fil" style="visibility: hidden;">        
+    </div>
+    <div class="panel-body">
+        <table id="tablaListadoPersonas" class="display" cellspacing="0" width="100%">    
+            <thead>
+                <tr>
+                    <th>Rude</th>
+                    <th>Paterno</th>
+                    <th>Materno</th>
+                    <th>Nombre</th>
+                    <th>Humanistica-Técnica</th>
+                    <th>Nivel/Especialidad</th>
+                    <th>Etapa/Acreditación</th>
+                    <th>Turno</th>
+                    <th>Paralelo</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for persona in personas %}
+                <tr>                   
+                    <td>{{ persona.codigo_rude }}</td>
+                    <td>{{ persona.paterno }}</td>
+                    <td>{{ persona.materno }}</td>
+                    <td>{{ persona.nombre }}</td>
+                    <td>{{ persona.nivel }}</td>
+                    <td>{{ persona.ciclo }}</td>
+                    <td>{{ persona.grado }}</td>
+                    <td>{{ persona.turno }}</td>
+                    <td>{{ persona.paralelo }}</td>
+                </tr>                
+            {% endfor %}
+            {% if personas|length == 0 %}
+                 <tr>
+                    <td colspan="8">{{ mensaje }}</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

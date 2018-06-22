@@ -1,0 +1,397 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block fechaReporte %}
+    {% if fechaEstadisticaRegular is defined  %}
+        {{ fechaEstadisticaRegular|date("d/m/Y") }}
+    {% endif %}
+{% endblock %}
+{% block contentoption %}
+    {% set ingresa = 0 %}
+    {% set ingresaAdmin = 0 %}
+    {% for item in app.session.get('roluser') %} 
+        {% if item.id == 8 or item.id == 11 or item.id == 32 or item.id == 33 or item.id == 39 %} 
+             {% set ingresa = 1 %}
+             {% if item.id == 8 or item.id == 39 %} 
+                {% set ingresaAdmin = 1 %}
+             {% endif %} 
+        {% endif %} 
+    {% endfor %} 
+    <!-- Start page header -->
+    <div id="tour-6" class="header-content">
+        <h2><i class="fa fa-th-large"></i>Información Estadística<span>Subsistema de Educación Regular</span></h2>
+        <div" class="breadcrumb-wrapper hidden-xs btn-green date-picker">
+            <!--<span class="label">Info.:</span>-->
+            <ol class="breadcrumb">
+                <li>
+                    <a>Gestión</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">
+                    {{ form_start(formGestion, { 'attr': {'data-toggle': 'validator'} }) }}
+                        {{ form_widget(formGestion.codigo) }}
+                        {{ form_widget(formGestion.rol) }}
+                        {{ form_widget(formGestion.gestion,{'attr':{'onchange':'this.form.submit();'} }) }}
+                    {{form_end(formGestion)}}
+                </li>
+            </ol>            
+        </div>
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <!-- Start body content -->
+    <div class="body-content animated fadeIn">
+        {% if infoEntidad is defined  %}
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <!-- Start widget newsletter -->
+                    <div class="panel text-center rounded shadow">
+                        <div class="panel-body bg-lilac rounded">
+                            <!--<div class="inner-all">-->
+                                <h4 class="text-uc">{{infoEntidad.nombre}}</h4>
+                            <!--</div>-->
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel -->
+                    <!--/ End widget newsletter -->
+                </div>
+            </div><!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="page-content">
+                        {% for type, flashMessage in app.session.flashbag.all() %}
+                            <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {% if flashMessage.title is defined %}
+                                <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                                    {{ flashMessage.message }}
+                                {% else %}
+                                    {{ type }}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>        
+            </div>
+        {% endif %}
+        <div class="row">
+            <div id="tour-7" class="col-lg-{% if infoSubEntidad is defined %}9{% else %}12{% endif %} col-md-{% if infoSubEntidad is defined %}9{% else %}12{% endif %} col-sm-12 col-xs-12">
+                {% if infoEntidad is defined %}
+                    {% if infoEntidad.rolactual == 9 or infoEntidad.rolactual == 5 %}
+                        <div class="row">  
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">                        
+                                <div class="panel panel-default shadow">
+                                    <div class="panel-heading">
+                                        <div class="pull-left">
+                                            <h3 class="panel-title"><i class='fa fa-home'></i> Unidad Educativa - Información</h3>
+                                        </div><!-- /.pull-left -->
+                                        <div class="pull-right">
+                                            <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                                <i class="fa fa-angle-up"></i>
+                                            </button>
+                                        </div><!-- /.pull-right -->
+                                        <div class="clearfix"></div>
+                                    </div><!-- /.panel-heading -->
+                                    <div class="panel-body">
+                                        <!-- Start project overview -->
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <div class="mini-stat-type-4 bg-danger shadow">
+                                                        <form name="formCaratula" id="formCaratula" role="form" action="{{ path('sie_ue_informacion_general_impresion_caratula') }}" method="POST">
+                                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                            <input type="hidden" name="sie" value="{{ infoEntidad.id }}" />  
+                                                            <a class="btn btn-danger" onclick="document.forms['formCaratula'].submit();">
+                                                                <h4>Información</br>General</br><i class="fa fa-download fa-2x"></i></h4>
+                                                            </a>
+                                                        </form>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <div class="mini-stat-type-4 bg-warning shadow">
+                                                        <form name="formInformacionEstadistica" id="formInformacionEstadistica" role="form" action="{{ path('sie_ue_informacion_general_impresion_informacionestadistica') }}" method="POST">
+                                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                            <input type="hidden" name="sie" value="{{ infoEntidad.id }}" />  
+                                                            <a class="btn btn-warning" onclick="document.forms['formInformacionEstadistica'].submit();">
+                                                                <h4>Información</br>Estadística</br><i class="fa fa-download fa-2x"></i></h4>
+                                                            </a>
+                                                        </form>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <div class="mini-stat-type-4 bg-success shadow">
+                                                        <form name="formOfertaCurricular" id="formOfertaCurricular" role="form" action="{{ path('sie_ue_informacion_general_impresion_ofertacurricular') }}" method="POST">
+                                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                            <input type="hidden" name="sie" value="{{ infoEntidad.id }}" />  
+                                                            <a class="btn btn-success" onclick="document.forms['formOfertaCurricular'].submit();">
+                                                                <h4>Oferta</br>Curricular</br><i class="fa fa-download fa-2x"></i></h4>
+                                                            </a>
+                                                        </form>
+                                                    </div>
+                                                </div> 
+                                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <div class="mini-stat-type-4 bg-primary shadow">
+                                                        <form name="formDocente" id="formDocente" role="form" action="{{ path('sie_ue_informacion_general_impresion_docente') }}" method="POST">
+                                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                            <input type="hidden" name="sie" value="{{ infoEntidad.id }}" />  
+                                                            <a class="btn btn-primary" onclick="document.forms['formDocente'].submit();">
+                                                                <h4>Maestros <i class="fa fa-download"></i></h4>
+                                                            </a>
+                                                        </form>                 
+                                                        <form name="formAdministrativo" id="formAdministrativo" role="form" action="{{ path('sie_ue_informacion_general_impresion_administrativo') }}" method="POST">
+                                                            <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                            <input type="hidden" name="sie" value="{{ infoEntidad.id }}" />  
+                                                            <a class="btn btn-primary" onclick="document.forms['formAdministrativo'].submit();">
+                                                                <h4>Administrativos <i class="fa fa-download"></i></h4>
+                                                            </a>
+                                                        </form>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                        </div>                                        
+                                    </div><!-- /.panel-body -->
+                                </div>     
+                            </div>                 
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div class="panel-heading">
+                                <div id="tour-9" class="pull-left">
+                                    <h3 class="panel-title"><i class='fa fa-tasks'></i> Archivos de subida</h3>
+                                </div><!-- /.pull-left -->
+                                <div class="pull-right">
+                                        <button title="" data-original-title="" class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse">
+                                            <i class="fa fa-angle-up"></i>
+                                        </button>
+                                </div><!-- /.pull-right -->
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div id="tour-11" class="panel-body">
+                                <!-- Start project overview -->
+                                {% if rol == 0 or rol == 8 or rol == 20 %}
+                                    <div id="chartContainer" style="height: 400px; width: 100%;"> </div> 
+                                {% endif %}    
+                                <div class="table-responsive mb-20">                               
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2" style="text-align:center">#</th>
+                                                <th rowspan="2" style="text-align:center">Lugar</th>
+                                                <th colspan="2" style="text-align:center">IG</th>
+                                                <th colspan="2" style="text-align:center">B1</th>
+                                                <th colspan="2" style="text-align:center">B2</th>
+                                                <th colspan="2" style="text-align:center">B3</th>
+                                                <th colspan="2" style="text-align:center">B4</th>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align:center">SI</th>
+                                                <th style="text-align:center">NO</th>
+                                                <th style="text-align:center">SI</th>
+                                                <th style="text-align:center">NO</th>
+                                                <th style="text-align:center">SI</th>
+                                                <th style="text-align:center">NO</th>
+                                                <th style="text-align:center">SI</th>
+                                                <th style="text-align:center">NO</th>
+                                                <th style="text-align:center">SI</th>
+                                                <th style="text-align:center">NO</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% set cont = 1 %}
+                                            {% set total_si_b0 = 0 %}  
+                                            {% set total_no_b0 = 0  %}  
+                                            {% set total_si_b1 = 0 %}  
+                                            {% set total_no_b1 = 0 %} 
+                                            {% set total_si_b2 = 0 %}  
+                                            {% set total_no_b2 = 0 %}    
+                                            {% set total_si_b3 = 0 %}  
+                                            {% set total_no_b3 = 0 %}   
+                                            {% set total_si_b4 = 0 %}  
+                                            {% set total_no_b4 = 0 %} 
+                                            {% for i in 0..((infoEstadistica|length)-1) %}                                        
+                                                {% set codigo = infoEstadistica[i]['lugar_codigo'] %}
+                                                {% set nombre = infoEstadistica[i]['lugar_nombre'] %}
+                                                {% set si_b0 = infoEstadistica[i]['si_b0'] %}  
+                                                {% set no_b0 = infoEstadistica[i]['no_b0'] %}  
+                                                {% set si_b1 = infoEstadistica[i]['si_b1'] %}  
+                                                {% set no_b1 = infoEstadistica[i]['no_b1'] %} 
+                                                {% set si_b2 = infoEstadistica[i]['si_b2'] %}  
+                                                {% set no_b2 = infoEstadistica[i]['no_b2'] %}    
+                                                {% set si_b3 = infoEstadistica[i]['si_b3'] %}  
+                                                {% set no_b3 = infoEstadistica[i]['no_b3'] %}   
+                                                {% set si_b4 = infoEstadistica[i]['si_b4'] %}  
+                                                {% set no_b4 = infoEstadistica[i]['no_b4'] %}  
+                                                {% set total_si_b0 = total_si_b0 + si_b0 %}  
+                                                {% set total_no_b0 = total_no_b0 + no_b0  %}  
+                                                {% set total_si_b1 = total_si_b1 + si_b1 %}  
+                                                {% set total_no_b1 = total_no_b1 + no_b1 %} 
+                                                {% set total_si_b2 = total_si_b2 + si_b2 %}  
+                                                {% set total_no_b2 = total_no_b2 + no_b2 %}    
+                                                {% set total_si_b3 = total_si_b3 + si_b3 %}  
+                                                {% set total_no_b3 = total_no_b3 + no_b3 %}   
+                                                {% set total_si_b4 = total_si_b4 + si_b4 %}  
+                                                {% set total_no_b4 = total_no_b4 + no_b4 %}    
+                                                {% set avance_b0 = ((si_b0 * 100)/(si_b0 + no_b0))|round %}
+                                                {% set avance_b1 = ((si_b1 * 100)/(si_b1 + no_b1))|round %}
+                                                {% set avance_b2 = ((si_b2 * 100)/(si_b2 + no_b2))|round %}
+                                                {% set avance_b3 = ((si_b3 * 100)/(si_b3 + no_b3))|round %}
+                                                {% set avance_b4 = ((si_b4 * 100)/(si_b4 + no_b4))|round %}
+                                                <tr>
+                                                    <td class="text-center">{{ cont }}</td>     
+                                                    <td>
+                                                        {% if rol == 10 or rol == 11 or 1 == 1 %}
+                                                            {% if rol == 10 or rol == 11 %}
+                                                                {{ codigo }} - {{ nombre }}
+                                                            {% else %}
+                                                                {{ nombre }}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <form action="#" method="POST">
+                                                                <input type="hidden" name="id" value="{{ codigo }}">       
+                                                                <input type="hidden" name="name" value="{{ nombre }}">                                            
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn btn-success" style="width:100%; text-align:left;" type="submit">{{ nombre }}</button>
+                                                                </span>
+                                                            </form>
+                                                        {% endif %}
+                                                    </td>
+                                                    {% if rol == 10 or rol == 11 %}
+                                                        <td class="text-center">{% if si_b0 == 1 %}X{% else %}-{% endif %}</td>
+                                                        <td class="text-center">{% if no_b0 == 1 %}X{% else %}-{% endif %}</td>
+                                                        <td class="text-center">{% if si_b1 == 1 %}X{% else %}-{% endif %}</td>
+                                                        <td class="text-center">{% if no_b1 == 1 %}X{% else %}-{% endif %}</td>
+                                                        <td class="text-center">{% if si_b2 == 1 %}X{% else %}-{% endif %}</td>
+                                                        <td class="text-center">{% if no_b2 == 1 %}X{% else %}-{% endif %}</td>
+                                                        <td class="text-center">{% if si_b3 == 1 %}X{% else %}-{% endif %}</td>
+                                                        <td class="text-center">{% if no_b3 == 1 %}X{% else %}-{% endif %}</td>
+                                                        <td class="text-center">{% if si_b4 == 1 %}X{% else %}-{% endif %}</td>
+                                                        <td class="text-center">{% if no_b4 == 1 %}X{% else %}-{% endif %}</td>
+                                                    {% else %}
+                                                        <td class="text-center">{{ si_b0 }}</td>
+                                                        <td class="text-center">{{ no_b0 }}</td>
+                                                        <td class="text-center">{{ si_b1 }}</td>
+                                                        <td class="text-center">{{ no_b1 }}</td>
+                                                        <td class="text-center">{{ si_b2 }}</td>
+                                                        <td class="text-center">{{ no_b2 }}</td>
+                                                        <td class="text-center">{{ si_b3 }}</td>
+                                                        <td class="text-center">{{ no_b3 }}</td>
+                                                        <td class="text-center">{{ si_b4 }}</td>
+                                                        <td class="text-center">{{ no_b4 }}</td>
+                                                    {% endif %}                                                    
+                                                </tr>
+                                                {% set cont = cont + 1 %}
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>                                        
+                                            <tr style="background: #EEEEEE">
+                                                <td colspan="2" class="text-center">Total</td> 
+                                                <td class="text-center">{{ total_si_b0 }}</td>
+                                                <td class="text-center">{{ total_no_b0 }}</td>
+                                                <td class="text-center">{{ total_si_b1 }}</td>
+                                                <td class="text-center">{{ total_no_b1 }}</td>
+                                                <td class="text-center">{{ total_si_b2 }}</td>
+                                                <td class="text-center">{{ total_no_b2 }}</td>
+                                                <td class="text-center">{{ total_si_b3 }}</td>
+                                                <td class="text-center">{{ total_no_b3 }}</td>
+                                                <td class="text-center">{{ total_si_b4 }}</td>
+                                                <td class="text-center">{{ total_no_b4 }}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>    
+
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>   
+            </div> 
+            {% if infoSubEntidad is defined %}
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <div id="tour-8" class="panel panel-default shadow">
+                        <div class="panel-heading">
+                            <div id="tour-12" class="pull-left">
+                                <h3 class="panel-title">{% if infoSubEntidad is defined %}{{infoSubEntidad[0]['nombrearea']}}{%endif%}</h3>
+                            </div>
+                            <div class="pull-right">
+                                
+
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div id="animate-action" class="panel-scrollable">
+                            <div id="tour-15" style="display: block; height: 500px;" class="panel-body no-padding">
+                                <div class="list-group no-margin">                          
+                                    {% for data in infoSubEntidad%}
+                                        {% set id = data.codigo %}
+                                        {% set nombre = data.nombre %} 
+                                        {% set rolUsuario = data.rolusuario %}   
+                                        <form name="form" role="form" action="{{ path('reporte_regular_subida_archivos') }}" method="POST"> 
+                                            <input type="hidden" name="codigo" value="{{id}}" />
+                                            <input type="hidden" name="rol" value="{{rolUsuario}}" />
+                                            <input type="hidden" name="gestion" value="{{gestion}}" />
+                                            <button type="submit" class="list-group-item">{{nombre}}</button>   
+                                        </form> 
+                                    {% endfor %}
+                                </div>
+                            </div><!-- /.panel-body -->
+                        </div>
+                    </div>
+                </div>  
+                <form name="formEstadisticaRegularPdf" id="formEstadisticaRegularPdf" role="form" action="{{ path('reporte_regular_informacion_general_print_pdf') }}" method="POST">  
+                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />     
+                </form> 
+                {% if ingresaAdmin == 1 %} 
+                    <form name="formEstadisticaRegularPdfTemp" id="formEstadisticaRegularPdfTemp" role="form" action="{{ path('reporte_regular_informacion_general_print_pdf_temp') }}" method="POST">  
+                        <input type="hidden" name="gestion" value="{{ gestion }}" />
+                        <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
+                        <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />     
+                    </form>                     
+                {% endif %} 
+                <form name="formEstadisticaRegularXls" id="formEstadisticaRegularXls" role="form" action="{{ path('reporte_regular_informacion_general_print_xls') }}" method="POST">  
+                    <input type="hidden" name="gestion" value="{{ gestion }}" />
+                    <input type="hidden" name="codigo" value="{{ infoEntidad.id }}" />  
+                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
+                </form>                      
+            {% endif %}                   
+        </div>
+        <div class="row">
+            <div class="alert alert-info">
+                <span class="alert-icon"><i class="fa fa-info"></i></span>
+                <div class="notification-info">
+                    <ul class="clearfix notification-meta">
+                        <li class="notification-sender"><span><a>IG: </a></span> Inicio de gestión. </li>                        
+
+                        <li class="notification-sender"><span><a>B1: </a></span> Primer bimestre. </li>
+                        
+                        <li class="notification-sender"><span><a>B2: </a></span> Segundo Bimestre. </li>
+                        
+                        <li class="notification-sender"><span><a>B3: </a></span> Tercer bimestre. </li>
+                        
+                        <li class="notification-sender"><span><a>B4: </a></span> Cuarto bimestre. </li>
+                        
+                        {% if ingresa == 1 %} 
+
+                        {% endif %} 
+
+                    </ul>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <!--/ END ADDITIONAL ELEMENT -->
+    <script>  
+        $(function () {    
+            {% if rol == 0 or rol == 8 or rol == 20 %}                
+                {% autoescape %}
+                    {{ chartSubidaArchivo|raw }}
+                {% endautoescape %}
+            {% endif %} 
+        });  
+    </script>
+{% endblock %}
+
+
