@@ -1,0 +1,11 @@
+estadistica_alternativa_index:
+    path:     /alternativa
+    defaults: { _controller: HerramientaAlternativaBundle:Estadisticas:alternativaIndex }
+
+estadistica_alternativa_informacion_general_print_pdf:
+    path:     /informacion/general/alternativa/print/pdf
+    defaults: { _controller: HerramientaAlternativaBundle:Estadisticas:informacionGeneralalternativaPrintPdf }
+
+estadistica_alternativa_informacion_general_print_xls:
+    path:     /informacion/general/alternativa/print/xls
+    defaults: { _controller: HerramientaAlternativaBundle:Estadisticas:informacionGeneralalternativaPrintXls }

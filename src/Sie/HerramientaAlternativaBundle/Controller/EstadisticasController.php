@@ -5,6 +5,7 @@ namespace Sie\HerramientaAlternativaBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
+use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 
 class EstadisticasController extends Controller
 {
@@ -156,15 +157,12 @@ class EstadisticasController extends Controller
 
 
 
-    /**
-     * Pagina Inicial - Información General - Nacional - Educacion Especial
-     * rcanaviri
-     * @param Request $request
-     * @return type
-     */
-    public function especialIndexAction(Request $request) {
 
-        /*
+
+    public function alternativaIndexAction(Request $request) {
+
+      //  die;
+        /*di
          * Define la zona horaria y halla la fecha actual
          */
         date_default_timezone_set('America/La_Paz');
@@ -178,6 +176,7 @@ class EstadisticasController extends Controller
         $nivel = 0;
 
         if ($request->isMethod('POST')) {
+            //die;
             $codigo = base64_decode($request->get('codigo'));
             $rol = $request->get('rol');
         } else {
@@ -191,16 +190,27 @@ class EstadisticasController extends Controller
         $entidad = $this->buscaEntidadRol($codigo,$rol);
         $subEntidades = $this->buscaSubEntidadRolEspecial($codigo,$rol);
 
+    //   dump($subEntidades);die;
         // devuelve un array con los diferentes tipos de reportes 1:sexo, 2:dependencia, 3:area de atencion, 4:modalidad
-        $entityEstadistica = $this->buscaEstadisticaEspecialAreaRol($codigo,$rol);
+       $entityEstadistica = $this->buscaEstadisticaAlternativaAreaRol($codigo,$rol);
 
         if(count($subEntidades)>0 and isset($subEntidades)){
+            $totalgeneral=0;
             foreach ($subEntidades as $key => $dato) {
-                if(isset(reset($entityEstadistica)['dato'][0]['cantidad'])){
-                    $subEntidades[$key]['total_general'] = reset($entityEstadistica)['dato'][0]['cantidad'];
-                } else {
-                    $subEntidades[$key]['total_general'] = 0;
-                }
+//                if(isset(reset($entityEstadistica)['dato'][0]['cantidad'])){
+//                    $subEntidades[$key]['total_general'] = reset($entityEstadistica)['dato'][0]['cantidad'];
+//                } else {
+//                    $subEntidades[$key]['total_general'] = 0;
+//                }
+                $totalgeneral=$totalgeneral+ $dato['total_inscrito'];
+            }
+            foreach ($subEntidades as $key => $dato) {
+//                if(isset(reset($entityEstadistica)['dato'][0]['cantidad'])){
+//                    $subEntidades[$key]['total_general'] = reset($entityEstadistica)['dato'][0]['cantidad'];
+//                } else {
+//                    $subEntidades[$key]['total_general'] = 0;
+//                }
+                $subEntidades[$key]['total_general'] = $totalgeneral;
             }
         } else {
             $subEntidades = null;
@@ -209,43 +219,27 @@ class EstadisticasController extends Controller
         // para seleccionar ti
 
         //$chartMatricula = $this->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionProcesada,1,"chartContainerMatricula");
-        $chartDiscapacidad = $this->chartDonut3d($entityEstadistica[3],"Estudiantes matriculados según Área de Atención",$gestionProcesada,"Estudiantes","chartContainerDiscapacidad");
-        //$chartNivelGrado = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionProcesada,6,"chartContainerEfectivoNivelGrado");
-        $chartGenero = $this->chartPie($entityEstadistica[1],"Estudiantes matriculados según Sexo",$gestionProcesada,"Estudiantes","chartContainerGenero");
-        //$chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
-        $chartDependencia = $this->chartColumn($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestionProcesada,"Estudiantes","chartContainerDependencia");
-        $chartModalidad = $this->chartSemiPieDonut3d($entityEstadistica[4],"Estudiantes matriculados según Modalidad",$gestionProcesada,"Estudiantes","chartContainerModalidad");
+//        $chartDiscapacidad = $this->chartDonut3d($entityEstadistica[3],"Estudiantes matriculados según Área de Atención",$gestionProcesada,"Estudiantes","chartContainerDiscapacidad");
+//        //$chartNivelGrado = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionProcesada,6,"chartContainerEfectivoNivelGrado");
+//        $chartGenero = $this->chartPie($entityEstadistica[1],"Estudiantes matriculados según Sexo",$gestionProcesada,"Estudiantes","chartContainerGenero");
+//        //$chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
+//        $chartDependencia = $this->chartColumn($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestionProcesada,"Estudiantes","chartContainerDependencia");
+//        $chartModalidad = $this->chartSemiPieDonut3d($entityEstadistica[4],"Estudiantes matriculados según Modalidad",$gestionProcesada,"Estudiantes","chartContainerModalidad");
 
-        if($rol == 0){
-            $mensaje = '$("#modal-bootstrap-tour").modal("show");';
-        } else {
-            $mensaje = '$("#modal-bootstrap-tour").modal("hide");';
-        }
 
         if(count($subEntidades)>0 and isset($subEntidades)){
-            return $this->render('SieAppWebBundle:Reporte:matriculaEducativaEspecial.html.twig', array(
+            return $this->render('SieHerramientaAlternativaBundle:Reportes:matriculaEducativaAlternativa.html.twig', array(
                 'infoEntidad'=>$entidad,
                 'infoSubEntidad'=>$subEntidades,
-                'datoGraficoDiscapacidad'=>$chartDiscapacidad,
-                'datoGraficoGenero'=>$chartGenero,
-                'datoGraficoModalidad'=>$chartModalidad,
-                'datoGraficoDependencia'=>$chartDependencia,
-                'mensaje'=>$mensaje,
                 'gestion'=>$gestionActual,
-                'fechaEstadistica'=>$fechaEstadistica,
-                'form' => $defaultController->createLoginForm()->createView()
+                'fechaEstadistica'=>$fechaEstadistica
             ));
         } else {
-            return $this->render('SieAppWebBundle:Reporte:matriculaEducativaEspecial.html.twig', array(
+            return $this->render('SieHerramientaAlternativaBundle:Reportes:matriculaEducativaAlternativa.html.twig', array(
                 'infoEntidad'=>$entidad,
-                'datoGraficoDiscapacidad'=>$chartDiscapacidad,
-                'datoGraficoGenero'=>$chartGenero,
-                'datoGraficoModalidad'=>$chartModalidad,
-                'datoGraficoDependencia'=>$chartDependencia,
-                'mensaje'=>$mensaje,
                 'gestion'=>$gestionActual,
-                'fechaEstadistica'=>$fechaEstadistica,
-                'form' => $defaultController->createLoginForm()->createView()
+                'fechaEstadistica'=>$fechaEstadistica
+
             ));
         }
     }
@@ -256,62 +250,101 @@ class EstadisticasController extends Controller
      * @param Request $request
      * @return type
      */
-    public function buscaEstadisticaEspecialAreaRol($area,$rol) {
+    public function buscaEstadisticaAlternativaAreaRol($area,$rol) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        $gestionProcesada = $this->buscaGestionVistaMaterializadaRegular();
+        $gestionProcesada = $this->buscaGestionVistaMaterializadaAlternativa();
         //$gestionActual = 2016;
 
         $em = $this->getDoctrine()->getManager();
 
         $queryEntidad = $em->getConnection()->prepare("
-            with tabla as (
-                SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
-                FROM estudiante AS e
-                INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
-                INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
-                INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
-                INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
-                INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
-                WHERE
-                iec.gestion_tipo_id IN (".$gestionActual.") AND
-                ie.institucioneducativa_tipo_id = 4
-                GROUP BY
-                eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
-            ) 
-            
-            select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
+           with tabla as (
+ SELECT ie.dependencia_tipo_id as dependencia_id, a.id as area_id,b.id as especialidad_id,d.id as acreditacion_id,es.genero_tipo_id as genero_id
+            , count(*) as cantidad
+             from superior_facultad_area_tipo a  
+            inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
+            inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+            inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
+            inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
+            inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
+            inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
+            inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id 
+            inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id 
+            inner join estudiante as es on es.id = i.estudiante_id
+--inner join 	genero_tipo as gt on gt.id=es.genero_tipo_id
+						inner join institucioneducativa as ie on ie.id  =  h.institucioneducativa_id
+			--			inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+           -- inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+          --  left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+           -- left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+           -- left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+          --  left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+          --  left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+            where f.gestion_tipo_id = 2018 and f.periodo_tipo_id = 2 --and cast(substring(cod_dis,1,1) as integer)=2
+            and a.codigo in (15,18,19,20,21,22,23,24,25)
+            group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
+)
+
+select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre, '' as subnombre
             , sum(cantidad) as cantidad from tabla as t 
-            inner join genero_tipo as gt on gt.id = t.genero_tipo_id
+            inner join genero_tipo as gt on gt.id = t.genero_id
             group by gt.id, gt.genero
+
+union all
             
-            union all
-            
-            select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
+            select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre, '' as subnombre
             , sum(cantidad) as cantidad from tabla as t 
-            inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
+            inner join dependencia_tipo as dt on dt.id = t.dependencia_id
             group by dt.id, dt.dependencia
             
             union all
+  
+            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
+						from (
+								select 
+								case 
+									when a.codigo in (15) and b.codigo = '1' then 'EPA' -- Humanistico
+									when a.codigo in (15) and b.codigo = '2' then 'ESA' -- Humanistico
+									when a.codigo in (18,19,20,21,22,23,24,25)  then 'ETA' -- tecnico
+									else ''
+								end as nombre
+								, case 
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Basicos'
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 'Avanzados'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 'Aplicados'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 'Complementarios'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Epecializados'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Basico'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 'Auxiliar'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 'Medio'
+									else ''
+								end as subnombre
+								, case 
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 1
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 2
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 3
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 4
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 5
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 6
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 7
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 8
+									else 0
+								end as id
+								, cantidad as cantidad 
+								from tabla as t 
+								inner join superior_facultad_area_tipo as a on a.id=t.area_id
+								inner join superior_especialidad_tipo b on b.id=t.especialidad_id 
+							--inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+							inner join superior_acreditacion_tipo d on t.acreditacion_id=d.id 
+						) as v
+						group by id, nombre, subnombre
             
-            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-            , sum(cantidad) as cantidad from tabla as t 
-            inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
-            group by eat.id, eat.area_especial
-            
-            union all
-            
-            select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-            , sum(cantidad) as cantidad from tabla as t 
-            group by t.modalidad_id, t.modalidad
-            
-            order by tipo_id, id
+           
              
         ");
 
@@ -319,201 +352,343 @@ class EstadisticasController extends Controller
         {
             $queryEntidad = $em->getConnection()->prepare("
                 with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
-                    FROM estudiante AS e
-                    INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
-                    INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
-                    INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
-                    INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
-                    INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
-                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
-                    WHERE
-                    iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND ie.id = ".$area."
-                    GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
-                ) 
-                
-                select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join genero_tipo as gt on gt.id = t.genero_tipo_id
-                group by gt.id, gt.genero
-                
-                union all
-                
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
-                
-                union all
-                
-                select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
-                group by eat.id, eat.area_especial
-                
-                union all
-                
-                select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                group by t.modalidad_id, t.modalidad
-                
-                order by tipo_id, id
+ SELECT ie.dependencia_tipo_id as dependencia_id, a.id as area_id,b.id as especialidad_id,d.id as acreditacion_id,es.genero_tipo_id as genero_id
+            , count(*) as cantidad
+             from superior_facultad_area_tipo a  
+            inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
+            inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+            inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
+            inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
+            inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
+            inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
+            inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id 
+            inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id 
+            inner join estudiante as es on es.id = i.estudiante_id
+--inner join 	genero_tipo as gt on gt.id=es.genero_tipo_id
+						inner join institucioneducativa as ie on ie.id  =  h.institucioneducativa_id
+			--			inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+           -- inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+          --  left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+           -- left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+           -- left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+          --  left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+          --  left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+            where f.gestion_tipo_id = 2018 and f.periodo_tipo_id = 2 --and cast(substring(cod_dis,1,1) as integer)=2
+            and a.codigo in (15,18,19,20,21,22,23,24,25)
+            group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
+)
+
+select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre, '' as subnombre
+            , sum(cantidad) as cantidad from tabla as t 
+            inner join genero_tipo as gt on gt.id = t.genero_id
+            group by gt.id, gt.genero
+
+union all
+            
+            select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre, '' as subnombre
+            , sum(cantidad) as cantidad from tabla as t 
+            inner join dependencia_tipo as dt on dt.id = t.dependencia_id
+            group by dt.id, dt.dependencia
+            
+            union all
+  
+            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
+						from (
+								select 
+								case 
+									when a.codigo in (15) and b.codigo = '1' then 'EPA' -- Humanistico
+									when a.codigo in (15) and b.codigo = '2' then 'ESA' -- Humanistico
+									when a.codigo in (18,19,20,21,22,23,24,25)  then 'ETA' -- tecnico
+									else ''
+								end as nombre
+								, case 
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Basicos'
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 'Avanzados'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 'Aplicados'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 'Complementarios'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Epecializados'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Basico'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 'Auxiliar'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 'Medio'
+									else ''
+								end as subnombre
+								, case 
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 1
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 2
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 3
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 4
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 5
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 6
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 7
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 8
+									else 0
+								end as id
+								, cantidad as cantidad 
+								from tabla as t 
+								inner join superior_facultad_area_tipo as a on a.id=t.area_id
+								inner join superior_especialidad_tipo b on b.id=t.especialidad_id 
+							--inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+							inner join superior_acreditacion_tipo d on t.acreditacion_id=d.id 
+						) as v
+						group by id, nombre, subnombre
+            
+           
+ 
             ");
         }
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
             $queryEntidad = $em->getConnection()->prepare("    
-                with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
-                    FROM estudiante AS e
-                    INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
-                    INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
-                    INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
-                    INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
-                    INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
-                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                     with tabla as (
+ SELECT ie.dependencia_tipo_id as dependencia_id, a.id as area_id,b.id as especialidad_id,d.id as acreditacion_id,es.genero_tipo_id as genero_id
+            , count(*) as cantidad
+             from superior_facultad_area_tipo a  
+            inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
+            inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+            inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
+            inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
+            inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
+            inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
+            inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id 
+            inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id 
+            inner join estudiante as es on es.id = i.estudiante_id
+--inner join 	genero_tipo as gt on gt.id=es.genero_tipo_id
+						inner join institucioneducativa as ie on ie.id  =  h.institucioneducativa_id
+			--			inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+            inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                     left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                    WHERE
-                    iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND lt5.codigo = '".$area."'
-                    GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
-                ) 
-                
-                select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join genero_tipo as gt on gt.id = t.genero_tipo_id
-                group by gt.id, gt.genero
-                
-                union all
-                
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
-                
-                union all
-                
-                select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
-                group by eat.id, eat.area_especial
-                
-                union all
-                
-                select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                group by t.modalidad_id, t.modalidad
-                
-                order by tipo_id, id
+                    where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 and lt5.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
+                       and a.codigo in (15,18,19,20,21,22,23,24,25)
+            group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
+)
+
+select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre, '' as subnombre
+            , sum(cantidad) as cantidad from tabla as t 
+            inner join genero_tipo as gt on gt.id = t.genero_id
+            group by gt.id, gt.genero
+
+union all
+            
+            select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre, '' as subnombre
+            , sum(cantidad) as cantidad from tabla as t 
+            inner join dependencia_tipo as dt on dt.id = t.dependencia_id
+            group by dt.id, dt.dependencia
+            
+            union all
+  
+            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
+						from (
+								select 
+								case 
+									when a.codigo in (15) and b.codigo = '1' then 'EPA' -- Humanistico
+									when a.codigo in (15) and b.codigo = '2' then 'ESA' -- Humanistico
+									when a.codigo in (18,19,20,21,22,23,24,25)  then 'ETA' -- tecnico
+									else ''
+								end as nombre
+								, case 
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Basicos'
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 'Avanzados'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 'Aplicados'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 'Complementarios'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Epecializados'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Basico'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 'Auxiliar'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 'Medio'
+									else ''
+								end as subnombre
+								, case 
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 1
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 2
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 3
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 4
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 5
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 6
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 7
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 8
+									else 0
+								end as id
+								, cantidad as cantidad 
+								from tabla as t 
+								inner join superior_facultad_area_tipo as a on a.id=t.area_id
+								inner join superior_especialidad_tipo b on b.id=t.especialidad_id 
+							--inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+							inner join superior_acreditacion_tipo d on t.acreditacion_id=d.id 
+						) as v
+						group by id, nombre, subnombre
             ");
         }
 
         if($rol == 7) // Tecnico Departamental
         {
             $queryEntidad = $em->getConnection()->prepare("
-                with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
-                    FROM estudiante AS e
-                    INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
-                    INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
-                    INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
-                    INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
-                    INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
-                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
-                    left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
-                    left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
-                    left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
-                    left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
-                    left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-                    WHERE
-                    iec.gestion_tipo_id IN (".$gestionActual.") AND ie.institucioneducativa_tipo_id = 4 AND lt4.codigo = '".$area."'
-                    GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
-                ) 
-                
-                select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join genero_tipo as gt on gt.id = t.genero_tipo_id
-                group by gt.id, gt.genero
-                
-                union all
-                
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
-                
-                union all
-                
-                select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
-                group by eat.id, eat.area_especial
-                
-                union all
-                
-                select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                group by t.modalidad_id, t.modalidad
-                
-                order by tipo_id, id
+                     with tabla as (
+ SELECT ie.dependencia_tipo_id as dependencia_id, a.id as area_id,b.id as especialidad_id,d.id as acreditacion_id,es.genero_tipo_id as genero_id
+            , count(*) as cantidad
+             from superior_facultad_area_tipo a  
+            inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
+            inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+            inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
+            inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
+            inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
+            inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
+            inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id 
+            inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id 
+            inner join estudiante as es on es.id = i.estudiante_id
+--inner join 	genero_tipo as gt on gt.id=es.genero_tipo_id
+						inner join institucioneducativa as ie on ie.id  =  h.institucioneducativa_id
+			--			inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+         inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                                left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+                                left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+                                left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+                                left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+                                left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+                                left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
+                                where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 and lt4.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
+                            and a.codigo in (15,18,19,20,21,22,23,24,25)
+            group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
+)
+
+select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre, '' as subnombre
+            , sum(cantidad) as cantidad from tabla as t 
+            inner join genero_tipo as gt on gt.id = t.genero_id
+            group by gt.id, gt.genero
+
+union all
+            
+            select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre, '' as subnombre
+            , sum(cantidad) as cantidad from tabla as t 
+            inner join dependencia_tipo as dt on dt.id = t.dependencia_id
+            group by dt.id, dt.dependencia
+            
+            union all
+  
+            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
+						from (
+								select 
+								case 
+									when a.codigo in (15) and b.codigo = '1' then 'EPA' -- Humanistico
+									when a.codigo in (15) and b.codigo = '2' then 'ESA' -- Humanistico
+									when a.codigo in (18,19,20,21,22,23,24,25)  then 'ETA' -- tecnico
+									else ''
+								end as nombre
+								, case 
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Basicos'
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 'Avanzados'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 'Aplicados'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 'Complementarios'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Epecializados'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Basico'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 'Auxiliar'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 'Medio'
+									else ''
+								end as subnombre
+								, case 
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 1
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 2
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 3
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 4
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 5
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 6
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 7
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 8
+									else 0
+								end as id
+								, cantidad as cantidad 
+								from tabla as t 
+								inner join superior_facultad_area_tipo as a on a.id=t.area_id
+								inner join superior_especialidad_tipo b on b.id=t.especialidad_id 
+							--inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+							inner join superior_acreditacion_tipo d on t.acreditacion_id=d.id 
+						) as v
+						group by id, nombre, subnombre
             ");
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
             $queryEntidad = $em->getConnection()->prepare("
-                with tabla as (
-                    SELECT eat.id as area_tipo_id, ie.dependencia_tipo_id, e.genero_tipo_id, count(*) as cantidad
-                    , case eat.id when 99 then 1 when 100 then 1 else 2 end as modalidad_id
-                    , case eat.id when 99 then 'Indirecta' when 100 then 'Indirecta' else 'Directa' end as modalidad
-                    FROM estudiante AS e
-                    INNER JOIN estudiante_inscripcion AS ei ON ei.estudiante_id = e.id
-                    INNER JOIN estudiante_inscripcion_especial AS eie ON eie.estudiante_inscripcion_id = ei.id
-                    INNER JOIN especial_area_tipo AS eat ON eie.especial_area_tipo_id = eat.id
-                    INNER JOIN institucioneducativa_curso AS iec ON ei.institucioneducativa_curso_id = iec.id
-                    INNER JOIN institucioneducativa AS ie ON iec.institucioneducativa_id = ie.id
-                    WHERE
-                    iec.gestion_tipo_id IN (".$gestionActual.") AND
-                    ie.institucioneducativa_tipo_id = 4
-                    GROUP BY
-                    eat.id, ie.dependencia_tipo_id, e.genero_tipo_id
-                ) 
-                
-                select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join genero_tipo as gt on gt.id = t.genero_tipo_id
-                group by gt.id, gt.genero
-                
-                union all
-                
-                select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join dependencia_tipo as dt on dt.id = t.dependencia_tipo_id
-                group by dt.id, dt.dependencia
-                
-                union all
-                
-                select 3 as tipo_id, 'Área de Atención' as tipo_nombre, eat.id, eat.area_especial as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                inner join especial_area_tipo as eat on eat.id = t.area_tipo_id
-                group by eat.id, eat.area_especial
-                
-                union all
-                
-                select 4 as tipo_id, 'Modalidad' as tipo_nombre, t.modalidad_id, t.modalidad as nombre
-                , sum(cantidad) as cantidad from tabla as t 
-                group by t.modalidad_id, t.modalidad
-                
-                order by tipo_id, id
+                      with tabla as (
+ SELECT ie.dependencia_tipo_id as dependencia_id, a.id as area_id,b.id as especialidad_id,d.id as acreditacion_id,es.genero_tipo_id as genero_id
+            , count(*) as cantidad
+             from superior_facultad_area_tipo a  
+            inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
+            inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+            inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
+            inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
+            inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
+            inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
+            inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id 
+            inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id 
+            inner join estudiante as es on es.id = i.estudiante_id
+--inner join 	genero_tipo as gt on gt.id=es.genero_tipo_id
+						inner join institucioneducativa as ie on ie.id  =  h.institucioneducativa_id
+			--			inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+           -- inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+          --  left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+           -- left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+           -- left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+          --  left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+          --  left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+            where f.gestion_tipo_id = 2018 and f.periodo_tipo_id = 2 --and cast(substring(cod_dis,1,1) as integer)=2
+            and a.codigo in (15,18,19,20,21,22,23,24,25)
+            group by ie.dependencia_tipo_id,a.id,b.id,d.id,es.genero_tipo_id
+)
+
+select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre, '' as subnombre
+            , sum(cantidad) as cantidad from tabla as t 
+            inner join genero_tipo as gt on gt.id = t.genero_id
+            group by gt.id, gt.genero
+
+union all
+            
+            select 2 as tipo_id, 'Dependencia' as tipo_nombre, dt.id, dt.dependencia as nombre, '' as subnombre
+            , sum(cantidad) as cantidad from tabla as t 
+            inner join dependencia_tipo as dt on dt.id = t.dependencia_id
+            group by dt.id, dt.dependencia
+            
+            union all
+  
+            select 3 as tipo_id, 'Área de Atención' as tipo_nombre, id, nombre, subnombre, sum(cantidad) as cantidad 
+						from (
+								select 
+								case 
+									when a.codigo in (15) and b.codigo = '1' then 'EPA' -- Humanistico
+									when a.codigo in (15) and b.codigo = '2' then 'ESA' -- Humanistico
+									when a.codigo in (18,19,20,21,22,23,24,25)  then 'ETA' -- tecnico
+									else ''
+								end as nombre
+								, case 
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 'Basicos'
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 'Avanzados'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 'Aplicados'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 'Complementarios'
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 'Epecializados'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 'Basico'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 'Auxiliar'
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 'Medio'
+									else ''
+								end as subnombre
+								, case 
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '1' then 1
+									when a.codigo in (15) and b.codigo = '1' and d.codigo = '2' then 2
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '1' then 3
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '2' then 4
+									when a.codigo in (15) and b.codigo = '2' and d.codigo = '3' then 5
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 1 then 6
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 2 then 7
+									when a.codigo in (18,19,20,21,22,23,24,25) and  d.codigo = 3 then 8
+									else 0
+								end as id
+								, cantidad as cantidad 
+								from tabla as t 
+								inner join superior_facultad_area_tipo as a on a.id=t.area_id
+								inner join superior_especialidad_tipo b on b.id=t.especialidad_id 
+							--inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+							inner join superior_acreditacion_tipo d on t.acreditacion_id=d.id 
+						) as v
+						group by id, nombre, subnombre
             ");
         }
 
@@ -831,7 +1006,7 @@ class EstadisticasController extends Controller
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
-        $gestionProcesada = $this->buscaGestionVistaMaterializadaRegular();
+     //   $gestionProcesada = $this->buscaGestionVistaMaterializadaAlternativa();
         //$gestionActual = 2016;
 
         $em = $this->getDoctrine()->getManager();
@@ -867,7 +1042,32 @@ class EstadisticasController extends Controller
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
             $queryEntidad = $em->getConnection()->prepare("
-                    SELECT 'Distrito Educativo' as nombreArea, lt5.codigo as codigo, lt5.lugar  as nombre, 10 as rolUsuario 
+                     SELECT 'Centro de Educación Alternativa' as nombreArea, ie.id as codigo, ie.id::varchar||' - '||ie.institucioneducativa as nombre, 9 as rolUsuario 
+
+                    , count(*) as total_inscrito
+                     from superior_facultad_area_tipo a  
+                    inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
+                    inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
+                    inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
+                    inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
+                    inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
+                    inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
+                    inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id 
+                    inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id 
+                    inner join institucioneducativa as ie on ie.id  =  h.institucioneducativa_id
+                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                    left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
+                    where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 and lt5.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
+                    and a.codigo in (15,18,19,20,21,22,23,24,25)
+                    group by ie.id, ie.institucioneducativa
+                    order by ie.id, ie.institucioneducativa
+                ");
+        }
+
+        if($rol == 7) // Tecnico Departamental
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+ SELECT 'Distrito Educativo' as nombreArea, lt5.codigo as codigo, lt5.lugar  as nombre, 10 as rolUsuario 
 
                                 , count(*) as total_inscrito
                                  from superior_facultad_area_tipo a  
@@ -891,31 +1091,8 @@ class EstadisticasController extends Controller
                                 and a.codigo in (15,18,19,20,21,22,23,24,25)
                                 group by lt5.id, lt5.codigo, lt5.lugar
                                 order by lt5.id, lt5.codigo, lt5.lugar
-                ");
-        }
 
-        if($rol == 7) // Tecnico Departamental
-        {
-            $queryEntidad = $em->getConnection()->prepare("
-                SELECT 'Centro de Educación Alternativa' as nombreArea, ie.id as codigo, ie.id::varchar||' - '||ie.institucioneducativa as nombre, 9 as rolUsuario 
-
-                    , count(*) as total_inscrito
-                     from superior_facultad_area_tipo a  
-                    inner join superior_especialidad_tipo b on a.id=b.superior_facultad_area_tipo_id 
-                    inner join superior_acreditacion_especialidad c on b.id=c.superior_especialidad_tipo_id 
-                    inner join superior_acreditacion_tipo d on c.superior_acreditacion_tipo_id=d.id 
-                    inner join superior_institucioneducativa_acreditacion e on e.acreditacion_especialidad_id=c.id 
-                    inner join institucioneducativa_sucursal f on e.institucioneducativa_sucursal_id=f.id 
-                    inner join superior_institucioneducativa_periodo g on g.superior_institucioneducativa_acreditacion_id=e.id 
-                    inner join institucioneducativa_curso h on h.superior_institucioneducativa_periodo_id=g.id 
-                    inner join estudiante_inscripcion i on h.id=i.institucioneducativa_curso_id 
-                    inner join institucioneducativa as ie on ie.id  =  h.institucioneducativa_id
-                    inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
-                    left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                    where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = 2 and lt5.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
-                    and a.codigo in (15,18,19,20,21,22,23,24,25)
-                    group by ie.id, ie.institucioneducativa
-                    order by ie.id, ie.institucioneducativa
+              
 
             ");
         }
@@ -1147,17 +1324,16 @@ class EstadisticasController extends Controller
             $sucursalesArray[$s->getId()] = $s->getId();
         }
         $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('sie_alt_reportes_por_CEA'))
-            ->add('idInstitucion', 'text', array('label' => 'Código SIE del CEA', 'required' => true, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => 8, 'pattern' => '[0-9]{8}')))
-            ->add('gestion', 'choice', array('label' => 'Gestión', 'required' => true, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
-            ->add('periodo', 'choice', array('label' => 'Periodo', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
-            ->add('gestionest', 'choice', array('label' => 'Gestión', 'required' => true, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
-            ->add('periodoest', 'choice', array('label' => 'Periodo', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
-          //  ->add('gestionesp', 'choice', array('label' => 'Gestión', 'required' => true, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
-            //->add('periodoesp', 'choice', array('label' => 'Periodo', 'required' => true, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
-
-            ->add('subcea', 'choice', array('label' => 'Sub CEA', 'required' => true, 'choices' => $sucursalesArray, 'attr' => array('class' => 'form-control')))
-            ->add('crear', 'submit', array('label' => 'Crear Periodo', 'attr' => array('class' => 'btn btn-primary')))
+            ->setAction($this->generateUrl('estadistica_alternativa_index'))
+//            ->add('idInstitucion', 'text', array('label' => 'Código SIE del CEA', 'required' => false, 'attr' => array('class' => 'form-control', 'autocomplete' => 'off', 'maxlength' => 8, 'pattern' => '[0-9]{8}')))
+          //  ->add('gestion', 'choice', array('label' => 'Gestión', 'required' => false, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
+  //          ->add('periodo', 'choice', array('label' => 'Periodo', 'required' => false, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
+//            ->add('gestionest', 'choice', array('label' => 'Gestión', 'required' => false, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
+//            ->add('periodoest', 'choice', array('label' => 'Periodo', 'required' => false, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
+//            ->add('gestionesp', 'choice', array('label' => 'Gestión', 'required' => false, 'choices' => $gestionesArray, 'attr' => array('class' => 'form-control')))
+//            ->add('periodoesp', 'choice', array('label' => 'Periodo', 'required' => false, 'choices' => $periodosArray, 'attr' => array('class' => 'form-control')))
+//            ->add('subcea', 'choice', array('label' => 'Sub CEA', 'required' => false, 'choices' => $sucursalesArray, 'attr' => array('class' => 'form-control')))
+            ->add('crear', 'submit', array('label' => 'Crear', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
 
 
@@ -1175,6 +1351,161 @@ class EstadisticasController extends Controller
             dump($request);die;
     }
 
+
+    public function buscaEntidadRol($codigo,$rol) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        //$gestionProcesada = $this->buscaGestionVistaMaterializadaAlternativa();
+        //$gestionActual = 2016;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $queryEntidad = $em->getConnection()->prepare("
+                select lt.codigo as id, lt.lugar as nombre, 0 as rolActual, -16.2256989 as cordx, -68.0441409 as cordy from lugar_tipo as lt 
+                where cast(lt.codigo as integer) = ".$codigo." and lugar_nivel_id = 0 and lugar_tipo_id = 0
+            ");
+
+
+        if($rol == 9 or $rol == 5) // Director o Administrativo
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                select ie.id as id, 'U.E.: '|| cast(ie.id as varchar) ||' - '|| ie.institucioneducativa as nombre, ".$rol." as rolActual, coalesce(jg.cordx,-16.2256989) as cordx, coalesce(jg.cordy,-68.0441409) as cordy from institucioneducativa as ie
+                left join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                where ie.id = ".$codigo."
+            ");
+            /*
+            $queryEntidad = $em->getConnection()->prepare("
+                    select ie.id, ie.id||' - '||ie.institucioneducativa as nombre from usuario_rol as ur
+                    inner join usuario as u on u.id = ur.usuario_id
+                    inner join persona as p on p.id = u.persona_id
+                    inner join maestro_inscripcion as mi on mi.persona_id = p.id
+                    inner join institucioneducativa as ie on ie.id = mi.institucioneducativa_id
+                    where ur.usuario_id = ".$usuario." and ur.rol_tipo_id = ".$rol ." and mi.gestion_tipo_id = ".$gestionActual." and mi.es_vigente_administrativo = 1
+                ");
+            */
+        }
+
+        if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                select lt.codigo as id, 'DISTRITO: '||lt.lugar as nombre, ".$rol." as rolActual, coalesce(jg.cordx,-16.2256989) as cordx, coalesce(jg.cordy,-68.0441409) as cordy from lugar_tipo as lt 
+                left join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id
+                where cast(lt.codigo as integer) = ".$codigo." and lugar_nivel_id = 7 and lt.codigo not in ('1000','2000','3000','4000','5000','6000','7000','8000','9000')
+            ");
+            /*
+            $queryEntidad = $em->getConnection()->prepare("
+                    select lt.id, lt.lugar as nombre from usuario as u
+                    inner join usuario_rol as ur on ur.usuario_id = u.id
+                    inner join lugar_tipo as lt on lt.id = ur.lugar_tipo_id
+                    where u.id = ".$usuario." and rol_tipo_id = ".$rol."
+                ");
+            */
+        }
+
+        if($rol == 7) // Tecnico Departamental
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                select lt.codigo as id, 'Departamento: '||lt.lugar as nombre, ".$rol." as rolActual, -16.2256989 as cordx, -68.0441409 as cordy from lugar_tipo as lt 
+                where cast(lt.codigo as integer) = ".$codigo." and lugar_nivel_id = 1
+            ");
+            /*
+            $queryEntidad = $em->getConnection()->prepare("
+                    select lt.codigo as id, lt.lugar as nombre from usuario as u
+                    inner join usuario_rol as ur on ur.usuario_id = u.id
+                    inner join lugar_tipo as lt on lt.id = ur.lugar_tipo_id
+                    where u.id = ".$usuario." and rol_tipo_id = ".$rol."
+                ");
+            */
+        }
+
+        if($rol == 8 or $rol == 20) // Tecnico Nacional
+        {
+            $queryEntidad = $em->getConnection()->prepare("
+                select lt.codigo as id, lt.lugar as nombre, ".$rol." as rolActual, coalesce(jg.cordx,-16.2256989) as cordx, coalesce(jg.cordy,-68.0441409) as cordy from lugar_tipo as lt 
+                left join jurisdiccion_geografica as jg on jg.lugar_tipo_id_localidad = lt.id
+                where cast(lt.codigo as integer) = ".$codigo." and lugar_nivel_id = 0 and lugar_tipo_id = 0
+            ");
+            /*
+            $queryEntidad = $em->getConnection()->prepare("
+                    select lt.codigo as id, lt.lugar as nombre from usuario as u
+                    inner join usuario_rol as ur on ur.usuario_id = u.id
+                    inner join lugar_tipo as lt on lt.id = ur.lugar_tipo_id
+                    where u.id = ".$usuario." and rol_tipo_id = ".$rol ."
+                ");
+            */
+        }
+
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        if (count($objEntidad)>0){
+            return $objEntidad[0];
+        } else {
+            return '';
+        }
+    }
+
+
+    /**
+     * Busca gestion a la cual pertenece la informacion de la vista materializada
+     * Jurlan
+     * @param Request $request
+     * @return type
+     */
+    public function buscaGestionVistaMaterializadaAlternativaInstitucionEducativa() {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        //$gestionActual = 2016;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $queryEntidad = $em->getConnection()->prepare("
+            select date_part('year', fecha_vista) as gestion from vm_instituciones_educativas limit 1
+        ");
+
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+
+        if (count($objEntidad)>0){
+            return $objEntidad[0]['gestion'];
+        } else {
+            return 0;
+        }
+    }
+
+
+    public function buscaGestionVistaMaterializadaAlternativa() {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        //$gestionActual = 2016;
+
+        $em = $this->getDoctrine()->getManager();
+
+        $queryEntidad = $em->getConnection()->prepare("
+            select cast(gestion as integer) as gestion
+            from vm_estudiantes_estadistica_regular limit 1
+        ");
+
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+
+        if (count($objEntidad)>0){
+            return $objEntidad[0]['gestion'];
+        } else {
+            return 0;
+        }
+    }
 
 
 

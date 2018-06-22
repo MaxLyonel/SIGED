@@ -82,4 +82,8 @@ sie_herramienta_alternativa_info_estudiante:
 
 sie_herramienta_alternativa_curso:
     resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/cursoAlternativa.yml"
-    prefix:   /altsie/cursoAlternativa 
+    prefix:   /altsie/cursoAlternativa
+
+sie_herramienta_alternativa_estadistica:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/estadistica.yml"
+    prefix:   /altsie/estadistica
