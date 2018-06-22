@@ -836,4 +836,32 @@ class EstudianteInscripcionSocioeconomicoRegular
     {
         return $this->seccionvEstudianteEsdiscapacidadTipo;
     }
+    /**
+     * @var string
+     */
+    private $seccionivDescLocalidad;
+
+
+    /**
+     * Set seccionivDescLocalidad
+     *
+     * @param string $seccionivDescLocalidad
+     * @return EstudianteInscripcionSocioeconomicoRegular
+     */
+    public function setSeccionivDescLocalidad($seccionivDescLocalidad)
+    {
+        $this->seccionivDescLocalidad = $seccionivDescLocalidad;
+    
+        return $this;
+    }
+
+    /**
+     * Get seccionivDescLocalidad
+     *
+     * @return string 
+     */
+    public function getSeccionivDescLocalidad()
+    {
+        return $this->seccionivDescLocalidad;
+    }
 }

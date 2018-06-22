@@ -1,0 +1,53 @@
+Sie\AppWebBundle\Entity\ImagenesInstitucioneducativa:
+    type: entity
+    table: imagenes_institucioneducativa
+    indexes:
+        IDX_A02991953AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_A02991956BD5D528:
+            columns:
+                - imagen_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nombreArchivo:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+            column: nombre_archivo
+        descripcion:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        imagenTipo:
+            targetEntity: ImagenTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                imagen_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
