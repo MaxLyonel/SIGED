@@ -30,7 +30,7 @@
         </div>
     </div>
 </div> 
-{% set fecha_nac = filas.fecha_nac|date("Y") %}{% set edad = gestion_ini - fecha_nac - 1 %}
+{% set fecha_nac = filas.fecha_nac|date("Y") %}{% set edad = gestion_ini - fecha_nac + 1 %}
 {% if edad >= 15 or (app.session.get('roluser') == '8') %}
     <div class="row"
         <div class="col-xs-12">

@@ -850,7 +850,7 @@ class EstudianteRepository extends EntityRepository {
      * @param type $fecNac
      * @return error with the id of student
      */
-    public function getDataStudentByCiOrdataStudentNoAcredit($ci, $nombre, $paterno, $materno, $fechaNacimiento, $gestion) {
+    public function getDataStudentByCiOrdataStudentNoAcredit($ci, $nombre, $paterno, $materno, $fechaNacimiento, $gestion, $complemento) {
         //echo "($ci, $paterno, $materno, $nombre, $fechaNacimiento)";
         //die("$ci $paterno $materno $nombre");
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -868,57 +868,88 @@ class EstudianteRepository extends EntityRepository {
                 ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
                 ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
         ;
-        //todo some validation to find the student
-        switch (true) {
-          /*case ($ci):
-            $qb
-                    ->Where('e.carnetIdentidad = :ci')
-                    ->setParameter('ci', $ci);
-          break;*/
 
-          case ($paterno && $materno && $nombre):
-            $qb
-                    ->Where('e.paterno like :paterno')
-                    ->AndWhere('e.materno like :materno')
-                    ->andWhere('e.nombre like :nombre')
-                    ->andWhere('e.fechaNacimiento = :fechaNacimiento')
-                    ->setParameter('paterno', $paterno . '%')
-                    ->setParameter('materno', $materno . '%')
-                    ->setParameter('nombre', $nombre . '%')
-                    ->setParameter('fechaNacimiento', $fechaNacimiento )
-                    ;
-          break;
-
-          case ($paterno && !$materno && $nombre):
-            $qb
-                    ->Where('e.paterno like :paterno')
-                    ->andWhere('e.nombre like :nombre')
-                    ->andWhere('e.fechaNacimiento = :fechaNacimiento')
-                    ->setParameter('paterno', $paterno . '%')
-                    ->setParameter('nombre', $nombre . '%')
-                    ->setParameter('fechaNacimiento', $fechaNacimiento )
-                    ;
-          break;
-          case (!$paterno && $materno && $nombre):
-            $qb
-                    ->Where('e.materno like :materno')
-                    ->andWhere('e.nombre like :nombre')
-                    ->andWhere('e.fechaNacimiento = :fechaNacimiento')
-                    ->setParameter('materno', $materno . '%')
-                    ->setParameter('nombre', $nombre . '%')
-                    ->setParameter('fechaNacimiento', $fechaNacimiento )
-                    ;
-          break;
-          default:
-          # krlos was wherecode...
-          break;
+        if($complemento){
+            $qb = $qb->where('e.complemento = :complemento');
+            $qb = $qb->setParameter('complemento', $form['complemento']);
+        }else{
+            $qb = $qb->where('e.complemento IS NULL');
+            $qb = $qb->orwhere('e.complemento = :complemento');
+            $qb = $qb->setParameter('complemento', '');
         }
-        $qb->andWhere('iec.gestionTipo = :cyear');
+        if($ci){
+            $qb = $qb->andwhere('e.carnetIdentidad = :carnetIdentidad');
+            $qb = $qb->setParameter('carnetIdentidad', $ci);
+        }
+        // else{
+        //     $qb = $qb->andwhere('e.carnetIdentidad IS NULL');
+        //     $qb = $qb->orwhere('e.carnetIdentidad = :carnetIdentidad');
+        //     $qb = $qb->setParameter('carnetIdentidad', '');
+        // }
+
+      $qb
+                ->andWhere('e.paterno like :paterno')
+                ->AndWhere('e.materno like :materno')
+                ->andWhere('e.nombre like :nombre')
+                ->andWhere('e.fechaNacimiento = :fechaNacimiento')
+                ->setParameter('paterno', $paterno . '%')
+                ->setParameter('materno', $materno . '%')
+                ->setParameter('nombre', $nombre . '%')
+                ->setParameter('fechaNacimiento', $fechaNacimiento )
+                ;
+       $qb->andWhere('iec.gestionTipo = :cyear');
         $qb->andwhere('ei.estadomatriculaTipo IN (:matricula)');
         $qb->setParameter('cyear', $gestion);
         $qb->setParameter('matricula', array(4,5));
         $qb->orderBy('iec.gestionTipo', 'DESC');
+
         return $qb->getQuery()->getResult();
+        //todo some validation to find the student
+    //     switch (true) {
+    //       /*case ($ci):
+    //         $qb
+    //                 ->Where('e.carnetIdentidad = :ci')
+    //                 ->setParameter('ci', $ci);
+    //       break;*/
+
+    //       case ($paterno && $materno && $nombre):
+    //         $qb
+    //                 ->Where('e.paterno like :paterno')
+    //                 ->AndWhere('e.materno like :materno')
+    //                 ->andWhere('e.nombre like :nombre')
+    //                 ->andWhere('e.fechaNacimiento = :fechaNacimiento')
+    //                 ->setParameter('paterno', $paterno . '%')
+    //                 ->setParameter('materno', $materno . '%')
+    //                 ->setParameter('nombre', $nombre . '%')
+    //                 ->setParameter('fechaNacimiento', $fechaNacimiento )
+    //                 ;
+    //       break;
+
+    //       case ($paterno && !$materno && $nombre):
+    //         $qb
+    //                 ->Where('e.paterno like :paterno')
+    //                 ->andWhere('e.nombre like :nombre')
+    //                 ->andWhere('e.fechaNacimiento = :fechaNacimiento')
+    //                 ->setParameter('paterno', $paterno . '%')
+    //                 ->setParameter('nombre', $nombre . '%')
+    //                 ->setParameter('fechaNacimiento', $fechaNacimiento )
+    //                 ;
+    //       break;
+    //       case (!$paterno && $materno && $nombre):
+    //         $qb
+    //                 ->Where('e.materno like :materno')
+    //                 ->andWhere('e.nombre like :nombre')
+    //                 ->andWhere('e.fechaNacimiento = :fechaNacimiento')
+    //                 ->setParameter('materno', $materno . '%')
+    //                 ->setParameter('nombre', $nombre . '%')
+    //                 ->setParameter('fechaNacimiento', $fechaNacimiento )
+    //                 ;
+    //       break;
+    //       default:
+    //       # krlos was wherecode...
+    //       break;
+    //     }
+     
     }
     /**
     *

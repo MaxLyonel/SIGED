@@ -1578,7 +1578,8 @@ GROUP BY depto
                     //$maestroinscripcion->setLeeescribebraile('');
                     //$maestroinscripcion->setNormalista((isset('');
                     $maestroinscripcion->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->findOneById(5));
-                    $maestroinscripcion->setPersona($persona);
+                    $maestroinscripcion->setPersona($em->getRepository('SieAppWebBundle:Persona')->findOneById($persona));
+                   // $maestroinscripcion->setPersona($persona);
                     $maestroinscripcion->setRdaPlanillasId(0);
                     //$maestroinscripcion->setItem('');
                     $maestroinscripcion->setRef(0);
@@ -3065,10 +3066,10 @@ GROUP BY depto
                 }          
                 $em->flush();
                 // Eliminar Maestro Inscripcion
-                $result=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findById($maestroinscripcion_id);
+               /* $result=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findById($maestroinscripcion_id);
                 foreach ($result as $element) {
                     $em->remove($element);
-                }           
+                }   */        
                 $em->flush();    
                 $this->get('session')->getFlashBag()->add(
                     'notice',
@@ -3575,10 +3576,10 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                 }          
                 $em->flush();
                 // Eliminar Maestro Inscripcion
-                $result=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findById($maestroinscripcion_id);
+               /* $result=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findById($maestroinscripcion_id);
                 foreach ($result as $element) {
                     $em->remove($element);
-                }           
+                }           */
                 $em->flush();    
                 $this->get('session')->getFlashBag()->add(
                     'notice',
@@ -3887,7 +3888,7 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
              $maestroinscripcion=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array(
                 'cargoTipo'  => 14, 'institucioneducativa' => $ie, 'gestionTipo'=>$gestion_g, 'persona'=>$persona,'periodoTipo'=>5,'institucioneducativaSucursal'=>$institucioneducativa_sucursal_id
             ));
-            if (!$maestroinscripcion){
+            if (!$maestroinscripcion){//carlos
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');");
                 $query->execute();
                 $maestroinscripcion = new MaestroInscripcion();
@@ -3901,7 +3902,8 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
                 $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion_g));
                 $maestroinscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ie));
                 $maestroinscripcion->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->findOneById(5));
-                $maestroinscripcion->setPersona($persona);
+                $maestroinscripcion->setPersona($em->getRepository('SieAppWebBundle:Persona')->findOneById($persona));
+                //$maestroinscripcion->setPersona($persona);
                 $maestroinscripcion->setRdaPlanillasId(0);
                 $maestroinscripcion->setRef(0);
                 $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($institucioneducativa_sucursal_id));
@@ -5655,7 +5657,8 @@ public function registrar_cursoAction(Request $request){
                 $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion));
                 $maestroinscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ie));
                 $maestroinscripcion->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->findOneById(5));
-                $maestroinscripcion->setPersona($persona);
+                //$maestroinscripcion->setPersona($persona);
+                $maestroinscripcion->setPersona($em->getRepository('SieAppWebBundle:Persona')->findOneById($persona));
                 $maestroinscripcion->setRdaPlanillasId(0);
                 $maestroinscripcion->setRef(0);
                 $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($institucioneducativa_sucursal_id));
@@ -6504,7 +6507,8 @@ public function cambiar_facilitadorAction(Request $request){
                 $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestion_g));
                 $maestroinscripcion->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ie));
                 $maestroinscripcion->setPeriodoTipo($em->getRepository('SieAppWebBundle:PeriodoTipo')->findOneById(5));
-                $maestroinscripcion->setPersona($persona);
+                $maestroinscripcion->setPersona($em->getRepository('SieAppWebBundle:Persona')->findOneById($persona));
+                //$maestroinscripcion->setPersona($persona);
                 $maestroinscripcion->setRdaPlanillasId(0);
                 $maestroinscripcion->setRef(0);
                 $maestroinscripcion->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneById($institucioneducativa_sucursal_id));

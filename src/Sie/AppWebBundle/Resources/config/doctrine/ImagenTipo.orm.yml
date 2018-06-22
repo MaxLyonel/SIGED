@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\ImagenTipo:
+    type: entity
+    table: imagen_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        imagen:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        descAbreviada:
+            type: string
+            nullable: true
+            length: 4
+            fixed: false
+            comment: ''
+            column: desc_abreviada
+    lifecycleCallbacks: {  }

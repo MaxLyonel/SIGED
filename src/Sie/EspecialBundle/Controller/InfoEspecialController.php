@@ -112,31 +112,10 @@ class InfoEspecialController extends Controller{
     ));
 
     if(!$objInfoSucursal){
-        $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal');
-        $query = $repository->createQueryBuilder('iesuc')
-            ->select('max(iesuc.id)')
-            ->getQuery();
-
-        $maxiesuc = $query->getResult();
-        $codigosuc= $maxiesuc[0][1] + 1;
-        $codigole= $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($data['idInstitucion'])->getLeJuridicciongeografica();
         try {
             // Registramos la sucursal
-            $entity = new InstitucioneducativaSucursal();
-            $entity->setId($codigosuc);
-            $entity->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($data['idInstitucion']));
-            $entity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($data['gestion']));
-            $entity->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($codigole));
-            $entity->setTelefono1("");
-            $entity->setEmail("");
-            $entity->setDireccion("");
-            $entity->setZona("");
-            $entity->setNombreSubcea("");
-            $entity->setCodCerradaId(10);
-            $entity->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->findOneById(0));
-            $entity->setSucursalTipo($em->getRepository('SieAppWebBundle:SucursalTipo')->findOneById(0));
-            $em->persist($entity);
-            $em->flush();
+            $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$data['idInstitucion']."','0','".$data['gestion']."','1')");
+            $query->execute();
             $em->getConnection()->commit();
         } catch (Exception $e) {
             $em->getConnection()->rollback();
