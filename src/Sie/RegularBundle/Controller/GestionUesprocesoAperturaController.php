@@ -510,6 +510,8 @@ class GestionUesprocesoAperturaController extends Controller {
       }
       $form = $this->createFormBuilder()
               ->add('carnetIdentidad','text', array('label'=>'Carnet Identidad', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Carnet Identidad', 'pattern' => '[A-Za-z0-9\sñÑ]{3,10}', 'maxlength' => '10', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
+              ->add('complemento','text', array('label'=>'Complemento', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Complemento', 'pattern' => '[A-Za-z0-9\sñÑ]{3,10}', 'maxlength' => '2', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
+              ->add('ueprocedencia','text', array('label'=>'Unidad Educativa de Procedencia - SIE', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Unidad Educativa de Procedencia', 'pattern' => '[A-Za-z0-9\sñÑ]{3,10}', 'maxlength' => '10', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
               ->add('paterno','text', array('label'=>'Paterno', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Paterno', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '50', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
               ->add('materno','text', array('label'=>'Materno', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Materno', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '50', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
               ->add('nombre','text', array('label'=>'Nombre', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Nombre', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '50', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
@@ -562,7 +564,8 @@ class GestionUesprocesoAperturaController extends Controller {
                                                                                                       mb_strtoupper($form['paterno'], 'UTF-8'),
                                                                                                       mb_strtoupper($form['materno'], 'UTF-8'),
                                                                                                       $form['year'].'-'.$form['month'].'-'.$form['day'],
-                                                                                                      $this->session->get('currentyear')
+                                                                                                      $this->session->get('currentyear'), 
+                                                                                                      $form['complemento']
                                                                                                     );
       //check if it has data
       $student = array();
@@ -611,7 +614,7 @@ class GestionUesprocesoAperturaController extends Controller {
       $aInfoUeducativa = json_decode($form['data'],true);
       //convert values send
       $newStudent = json_decode($form['fullData'], true);
-      //dump($newStudent);
+      // dump($newStudent);die;
       //dump($aInfoUeducativa);die;
       $arrInfoUe = $aInfoUeducativa;
 
@@ -632,12 +635,16 @@ class GestionUesprocesoAperturaController extends Controller {
         $student->setMaterno(mb_strtoupper($newStudent['materno'], 'UTF-8'));
         $student->setNombre(mb_strtoupper($newStudent['nombre'], 'UTF-8'));
         $student->setCarnetIdentidad($newStudent['carnetIdentidad']);
+        $student->setComplemento($newStudent['complemento']);
         //$student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
         $student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
         $student->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($newStudent['pais']));
-        $student->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($newStudent['departamento']));
-        $student->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($newStudent['provincia']));
-        $student->setLocalidadNac(mb_strtoupper($newStudent['localidad'], 'UTF-8'));        
+        if($newStudent['pais']==1){
+          $student->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($newStudent['departamento']));
+          $student->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($newStudent['provincia']));
+          $student->setLocalidadNac(mb_strtoupper($newStudent['localidad'], 'UTF-8'));        
+        }
+        
         $student->setCodigoRude($rude);
         $em->persist($student);
         $em->flush();
@@ -661,13 +668,13 @@ class GestionUesprocesoAperturaController extends Controller {
         $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
         $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
         $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($student->getId()));
-        $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
+        // $studentInscription->setCodUeProcedenciaId($this->session->get('ie_id'));
         $studentInscription->setObservacion(1);
         $studentInscription->setFechaInscripcion(new \DateTime(date('Y-m-d')));
         $studentInscription->setFechaRegistro(new \DateTime(date('Y-m-d')));
         $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($newStudent['idCurso']));
         //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
-        $studentInscription->setCodUeProcedenciaId(0);
+        $studentInscription->setCodUeProcedenciaId($newStudent['ueprocedencia']);
         $em->persist($studentInscription);
         $em->flush();
         //to do the submit data into DB
